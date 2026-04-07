@@ -279,9 +279,34 @@
       letter-spacing: 0.02em;
     }
 
-    .detail-badge.danger {
+    .detail-badge.immediate {
+      color: #ffffff;
+      background: #6b46c1;
+    }
+
+    .detail-badge.critical {
       color: #ffffff;
       background: #c53030;
+    }
+
+    .detail-badge.high {
+      color: #7b341e;
+      background: #f6ad55;
+    }
+
+    .detail-badge.watch {
+      color: #744210;
+      background: #f6e05e;
+    }
+
+    .detail-badge.normal {
+      color: #ffffff;
+      background: #2f855a;
+    }
+
+    .detail-badge.benchmark {
+      color: #ffffff;
+      background: #2b6cb0;
     }
 
     .detail-badge.warning {
@@ -880,12 +905,12 @@
     function getSchoolBadge(row = {}) {
       const outlierType = getOutlierType(row);
       const caseType = Number(row.case_type);
-      if (outlierType === "low") return { text: "즉각 지원", className: "danger" };
-      if (outlierType === "high") return { text: "벤치마크", className: "success" };
-      if (caseType === 3) return { text: "최우선 지원", className: "danger" };
-      if (caseType === 2) return { text: "우선 지원", className: "danger" };
-      if (caseType === 1) return { text: "관심 필요", className: "warning" };
-      return { text: "일반 관리", className: "neutral" };
+      if (outlierType === "low") return { text: "즉각 지원", className: "immediate" };
+      if (outlierType === "high") return { text: "벤치마크", className: "benchmark" };
+      if (caseType === 3) return { text: "최우선 지원", className: "critical" };
+      if (caseType === 2) return { text: "우선 지원", className: "high" };
+      if (caseType === 1) return { text: "관심 필요", className: "watch" };
+      return { text: "일반 관리", className: "normal" };
     }
 
     function formatAccessRatio(value) {
