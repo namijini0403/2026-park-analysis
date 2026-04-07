@@ -364,7 +364,6 @@
       schools: "./data_processed/school_priority.csv",
       schoolCoords: "./data_processed/schools.csv",
       beneficiaryForecast: "./data_processed/beneficiary_forecast.csv",
-      studentTrend: "./data_processed/school_student_trend.csv",
       parks: "./data_processed/parks.csv",
       isochrone: "./data_processed/school_isochrone_500m.geojson",
       buffer: "./data_processed/school_buffer_500m.geojson",
@@ -393,7 +392,6 @@
         schools: [],
         schoolCoords: [],
         beneficiaryForecast: [],
-        studentTrend: [],
         parks: [],
         childcare: [],
         redevelopment: [],
@@ -542,10 +540,6 @@
       return [getSchoolId(row), getSchoolName(row)].filter(Boolean);
     }
 
-    function normalizeSchoolName(name) {
-      return String(name || "").trim();
-    }
-
     function createRowMap(rows, keySelector) {
       const map = new Map();
       rows.forEach((row) => {
@@ -575,19 +569,16 @@
       });
     }
 
-    function enrichSchoolRows(rows, beneficiaryRows, trendRows) {
+    function enrichSchoolRows(rows, beneficiaryRows) {
       const beneficiaryById = createRowMap(beneficiaryRows, (row) => row["학교ID"] || row.school_id || "");
-      const trendByName = createRowMap(trendRows, (row) => normalizeSchoolName(row["학교명"] || row.school_name || row.name));
 
       return rows.map((row) => {
         const schoolId = getSchoolId(row);
         const schoolName = getSchoolName(row);
         const beneficiary = beneficiaryById.get(schoolId) || {};
-        const trend = trendByName.get(normalizeSchoolName(schoolName)) || {};
         return {
           ...row,
           ...beneficiary,
-          ...trend,
           학교ID: schoolId,
           학교명: schoolName
         };
@@ -609,22 +600,6 @@
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) return "-";
       return Math.round(numeric).toLocaleString("ko-KR");
-    }
-
-    function formatSignedPercent(value) {
-      const numeric = Number(value);
-      if (!Number.isFinite(numeric)) return "데이터 준비 중";
-      const sign = numeric > 0 ? "+" : "";
-      return `${sign}${numeric.toFixed(1)}%`;
-    }
-
-    function getTrendDisplay(row) {
-      const direction = row.trend_direction;
-      const rate = Number(row.change_rate);
-      if (!direction || !Number.isFinite(rate)) return "데이터 준비 중";
-      if (direction === "up") return `▲${formatSignedPercent(rate)} (2019→2024)`;
-      if (direction === "down") return `▼${formatSignedPercent(rate)} (2019→2024)`;
-      return `■${formatSignedPercent(rate)} (2019→2024)`;
     }
 
     function formatBeneficiaryTriple(row) {
@@ -659,24 +634,20 @@
       const caseType = Number(row.case_type);
       const caseTypeLabel = getCaseTypeLabel(caseType);
       const isoParkCount = row.iso_park_count ?? "-";
-      const isoChild = row.iso_child_6_12 ?? "-";
-      const gapCount = row.gap_count ?? "-";
       const priorityScore = row.priority_score ?? "-";
       const beneficiaryTriple = formatBeneficiaryTriple(row);
-      const studentTrend = getTrendDisplay(row);
+      const priorityFlag = Number(priorityScore) >= 3 ? "예" : "아니오";
 
       return `
         <div style="padding:14px 16px; min-width:260px; line-height:1.65; font-family:Pretendard,'Noto Sans KR',sans-serif;">
           <b>${schoolName}</b> (${gu})<br>
           ─────────────────<br>
           🏷 유형: case_type ${caseType} — ${caseTypeLabel}<br>
-          🌳 도보 500m 내 공원: ${isoParkCount}개<br>
-          👶 초등학령 아동: ${isoChild}명<br>
-          📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)<br>
-          📉 공원 부족: ${gapCount}개 (평균 대비)<br>
+          ⭐ 우선순위 점수: ${priorityScore}점<br>
           수혜인구(현재/2029/2031): ${beneficiaryTriple}<br>
-          학생수 추세: ${studentTrend}<br>
-          ⭐ 우선순위: ${priorityScore}점<br>
+          🌳 등시선 내 공원 수: ${isoParkCount}개<br>
+          📊 access_ratio: ${formatAccessRatio(row.access_ratio)}<br>
+          우선지원 여부: ${priorityFlag}<br>
         </div>
       `;
     }
@@ -978,7 +949,6 @@
         schoolPriority,
         schoolCoords,
         beneficiaryForecast,
-        studentTrend,
         parks,
         isochrone,
         buffer,
@@ -988,7 +958,6 @@
         loadCSV(PATHS.schools),
         loadCSV(PATHS.schoolCoords),
         loadCSV(PATHS.beneficiaryForecast),
-        loadCSV(PATHS.studentTrend),
         loadCSV(PATHS.parks),
         loadGeoJSON(PATHS.isochrone),
         loadGeoJSON(PATHS.buffer),
@@ -998,11 +967,9 @@
 
       state.datasets.schoolCoords = schoolCoords;
       state.datasets.beneficiaryForecast = beneficiaryForecast;
-      state.datasets.studentTrend = studentTrend;
       state.datasets.schools = enrichSchoolRows(
         mergeSchoolPriorityWithCoords(schoolPriority, schoolCoords),
-        beneficiaryForecast,
-        studentTrend
+        beneficiaryForecast
       );
       state.datasets.parks = parks;
       state.datasets.isochrone = isochrone;
@@ -1017,7 +984,6 @@
           `학교 우선순위: ${schoolPriority.length}건`,
           `학교 좌표: ${schoolCoords.length}건`,
           `수혜인구 예측: ${beneficiaryForecast.length}건`,
-          `학생수 추세: ${studentTrend.length}건`,
           `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
           `공원·놀이터: ${parks.length}건`,
           `어린이집·유치원: ${childcare.length}건`,
