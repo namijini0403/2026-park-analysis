@@ -1,0 +1,353 @@
+# -*- coding: utf-8 -*-
+"""
+STEP 1. parks.csv를 공공데이터 기준(parks_backup3)으로 롤백
+STEP 2. school_priority.csv 전체 재산출
+        (analysis_school_priority.py 동일 로직)
+STEP 3. 재개발 단계별 플래그 추가
+        redev_완료수 / redev_진행중수 / redev_예정수 / redev_status
+STEP 4. 저장
+"""
+import sys, os, warnings, zipfile, tempfile
+sys.stdout.reconfigure(encoding="utf-8")
+warnings.filterwarnings("ignore")
+
+import pandas as pd
+import geopandas as gpd
+import numpy as np
+
+RAW = r"c:\2026_data_analysis_park\data_raw"
+OUT = r"c:\2026_data_analysis_park\data_processed"
+CRS = "EPSG:5179"
+
+ISO_PATH    = os.path.join(OUT, "school_isochrone_500m.geojson")
+BUF_PATH    = os.path.join(OUT, "school_buffer_500m.geojson")
+PARKS_CSV   = os.path.join(OUT, "parks.csv")
+BACKUP3_CSV = os.path.join(OUT, "parks_backup3.csv")
+GRID_CSV    = os.path.join(OUT, "population_grid_1k.csv")
+REDEV_CSV   = os.path.join(OUT, "redevelopment.csv")
+OUT_CSV     = os.path.join(OUT, "school_priority.csv")
+
+ZIP_DASA = os.path.join(RAW, "_grid_border_grid_2025_grid_다사_grid_다사.zip")
+ZIP_NASA = os.path.join(RAW, "_grid_border_grid_2025_grid_나사_grid_나사.zip")
+INCHEON_BOUNDS = (740634, 1899394, 946455, 2010915)
+
+TARGET_SCHOOLS = [
+    "인천주안초등학교", "인천남부초등학교", "인천주안남초등학교",
+    "인천석암초등학교", "인천대화초등학교",
+]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 1. parks.csv 롤백
+# ─────────────────────────────────────────────────────────────────────────────
+print("=" * 60)
+print("STEP 1. parks.csv 롤백 (공공데이터 기준 parks_backup3)")
+print("=" * 60)
+
+parks_pub = pd.read_csv(BACKUP3_CSV, encoding="utf-8-sig")
+parks_pub.to_csv(PARKS_CSV, index=False, encoding="utf-8-sig")
+print(f"  parks.csv ← parks_backup3.csv ({len(parks_pub)}행)")
+print(f"  시설유형: {parks_pub['시설유형'].value_counts().to_dict()}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 데이터 로드
+# ─────────────────────────────────────────────────────────────────────────────
+print()
+print("=" * 60)
+print("데이터 로드")
+print("=" * 60)
+
+gdf_iso = gpd.read_file(ISO_PATH).to_crs(CRS)
+gdf_buf = gpd.read_file(BUF_PATH).to_crs(CRS)
+print(f"  등시선: {len(gdf_iso)}개  |  직선버퍼: {len(gdf_buf)}개")
+
+parks = pd.read_csv(PARKS_CSV, encoding="utf-8-sig")
+gdf_parks = gpd.GeoDataFrame(
+    parks,
+    geometry=gpd.points_from_xy(parks["경도"], parks["위도"]),
+    crs="EPSG:4326",
+).to_crs(CRS)
+print(f"  parks: {len(gdf_parks)}개")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 2-A. 등시선/버퍼 내 공원 집계
+# ─────────────────────────────────────────────────────────────────────────────
+print()
+print("=" * 60)
+print("STEP 2-A. 등시선/버퍼 내 공원 집계")
+print("=" * 60)
+
+def count_parks_in_zone(gdf_zone, gdf_pts, id_col="학교ID"):
+    joined = gpd.sjoin(
+        gdf_pts[["geometry", "공원면적", "시설유형"]],
+        gdf_zone[[id_col, "geometry"]],
+        how="right", predicate="within",
+    )
+    grp = joined.groupby(id_col).agg(
+        park_count=("시설유형", "count"),
+        park_area=("공원면적", "sum"),
+    ).reset_index()
+    return grp
+
+iso_stats = count_parks_in_zone(gdf_iso, gdf_parks)
+iso_stats.columns = ["학교ID", "iso_park_count", "iso_park_area"]
+
+buf_stats = count_parks_in_zone(gdf_buf, gdf_parks)
+buf_stats.columns = ["학교ID", "buf_park_count", "buf_park_area"]
+
+result = gdf_iso[["학교ID", "학교명", "gu"]].copy()
+result = result.merge(iso_stats, on="학교ID", how="left")
+result = result.merge(buf_stats, on="학교ID", how="left")
+result[["iso_park_count","buf_park_count"]] = result[["iso_park_count","buf_park_count"]].fillna(0).astype(int)
+result[["iso_park_area","buf_park_area"]]   = result[["iso_park_area","buf_park_area"]].fillna(0)
+
+result["access_ratio"] = np.where(
+    result["buf_park_count"] > 0,
+    result["iso_park_count"] / result["buf_park_count"],
+    np.nan,
+)
+print(f"  iso_park_count 평균: {result['iso_park_count'].mean():.2f}")
+print(f"  buf_park_count 평균: {result['buf_park_count'].mean():.2f}")
+print(f"  공원 0개(등시선): {(result['iso_park_count']==0).sum()}개 학교")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 2-B. 아동인구 집계 (면적 비례)
+# ─────────────────────────────────────────────────────────────────────────────
+print()
+print("=" * 60)
+print("STEP 2-B. 아동인구 집계 (면적 비례 배분)")
+print("=" * 60)
+
+gdfs_shp = []
+for label, zpath in [("나사", ZIP_NASA), ("다사", ZIP_DASA)]:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        with zipfile.ZipFile(zpath) as z:
+            for item in z.infolist():
+                try:   fname = item.filename.encode("cp437").decode("cp949")
+                except: fname = item.filename
+                if "1K" in fname:
+                    ext = os.path.splitext(fname)[1]
+                    with open(os.path.join(tmpdir, f"{label}_1K{ext}"), "wb") as f:
+                        f.write(z.read(item.filename))
+        shp = os.path.join(tmpdir, f"{label}_1K.shp")
+        if os.path.exists(shp):
+            gdf_shp = gpd.read_file(shp)
+            if gdf_shp.crs is None or gdf_shp.crs.to_epsg() != 5179:
+                gdf_shp = gdf_shp.to_crs(CRS)
+            gdf_inch = gdf_shp.cx[
+                INCHEON_BOUNDS[0]:INCHEON_BOUNDS[2],
+                INCHEON_BOUNDS[1]:INCHEON_BOUNDS[3],
+            ].copy()
+            gdfs_shp.append(gdf_inch[["GRID_CD", "geometry"]])
+
+gdf_grid_poly = pd.concat(gdfs_shp, ignore_index=True)
+gdf_grid_poly = gpd.GeoDataFrame(gdf_grid_poly, geometry="geometry", crs=CRS)
+gdf_grid_poly["grid_area"] = gdf_grid_poly.geometry.area
+print(f"  1K 격자 폴리곤: {len(gdf_grid_poly)}개")
+
+pop = pd.read_csv(GRID_CSV, encoding="utf-8-sig")
+gdf_pop_poly = gdf_grid_poly.merge(pop, left_on="GRID_CD", right_on="격자코드", how="inner")
+print(f"  인구-격자 매칭: {len(gdf_pop_poly)}/{len(pop)}")
+
+iso_for_overlay = gdf_iso[["학교ID", "geometry"]].copy()
+pop_for_overlay = gdf_pop_poly[["GRID_CD","grid_area",
+                                 "child_pop_0_5","child_pop_6_12","total_pop","geometry"]].copy()
+
+print("  등시선 × 격자 overlay 계산 중...")
+overlay = gpd.overlay(iso_for_overlay, pop_for_overlay, how="intersection", keep_geom_type=False)
+overlay["inter_area"] = overlay.geometry.area
+overlay["weight"] = overlay["inter_area"] / overlay["grid_area"]
+for col in ["child_pop_0_5","child_pop_6_12","total_pop"]:
+    overlay[col] = overlay[col] * overlay["weight"]
+
+pop_grp = overlay.groupby("학교ID").agg(
+    iso_child_0_5  =("child_pop_0_5",  "sum"),
+    iso_child_6_12 =("child_pop_6_12", "sum"),
+    iso_total_pop  =("total_pop",       "sum"),
+).reset_index()
+
+result = result.merge(pop_grp, on="학교ID", how="left")
+result[["iso_child_0_5","iso_child_6_12","iso_total_pop"]] = \
+    result[["iso_child_0_5","iso_child_6_12","iso_total_pop"]].fillna(0)
+result["iso_child_0_5"]  = result["iso_child_0_5"].round().astype(int)
+result["iso_child_6_12"] = result["iso_child_6_12"].round().astype(int)
+result["iso_total_pop"]  = result["iso_total_pop"].round().astype(int)
+result["iso_child_total"] = result["iso_child_0_5"] + result["iso_child_6_12"]
+
+print(f"  iso_child_total 평균: {result['iso_child_total'].mean():.0f}")
+print(f"  iso_child_total == 0: {(result['iso_child_total']==0).sum()}개 학교")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 2-C. gap 산출
+# ─────────────────────────────────────────────────────────────────────────────
+print()
+print("=" * 60)
+print("STEP 2-C. gap 산출")
+print("=" * 60)
+
+result["child_pop_quartile"] = pd.qcut(
+    result["iso_child_total"].rank(method="first"),
+    q=4, labels=["Q1","Q2","Q3","Q4"]
+)
+q_means = result.groupby("child_pop_quartile", observed=True)[["iso_park_count","iso_park_area"]].mean()
+print("  분위별 공원 평균:")
+print(q_means.to_string())
+
+result = result.merge(
+    q_means.rename(columns={"iso_park_count":"expected_park_count","iso_park_area":"expected_park_area"}),
+    on="child_pop_quartile", how="left"
+)
+result["gap_count"] = result["iso_park_count"] - result["expected_park_count"]
+result["gap_area"]  = result["iso_park_area"]  - result["expected_park_area"]
+print(f"\n  gap_count < 0 학교: {(result['gap_count']<0).sum()}개")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 2-D. case_type + priority_score
+# ─────────────────────────────────────────────────────────────────────────────
+print()
+print("=" * 60)
+print("STEP 2-D. case_type 분류")
+print("=" * 60)
+
+child_median = result["iso_child_total"].median()
+child_q75    = result["iso_child_total"].quantile(0.75)
+
+ct1 = (result["buf_park_count"] >= 2) & (result["iso_park_count"] <= 1)
+ct2 = (result["gap_count"] < 0) & (result["iso_child_total"] > child_median)
+ct3 = (ct1 & ct2) | (result["iso_park_count"] == 0)
+
+case_type = pd.Series("4", index=result.index)
+case_type[ct1 & ~ct3] = "1"
+case_type[ct2 & ~ct3] = "2"
+case_type[ct3]         = "3"
+result["case_type"] = case_type
+
+score = pd.Series(1, index=result.index)
+score[result["case_type"] == "3"] = 3
+score[(result["case_type"] == "1") | (result["case_type"] == "2")] = 2
+score += (result["iso_child_total"] >= child_q75).astype(int)
+result["priority_score"] = score
+
+print(f"  case_type 분포: {result['case_type'].value_counts().sort_index().to_dict()}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 3. 재개발 단계별 플래그
+# ─────────────────────────────────────────────────────────────────────────────
+print()
+print("=" * 60)
+print("STEP 3. 재개발 단계별 플래그")
+print("=" * 60)
+
+redev = pd.read_csv(REDEV_CSV, encoding="utf-8-sig")
+print(f"  재개발 구역: {len(redev)}개  (좌표 있음: {redev['위도'].notna().sum()})")
+
+# 단계 매핑
+def map_stage(s):
+    s = str(s).strip()
+    if s == "준공":
+        return "완료"
+    elif s == "착공":
+        return "진행중"
+    else:
+        return "예정"
+
+redev["단계"] = redev["진행단계"].apply(map_stage)
+print(f"  단계 분포: {redev['단계'].value_counts().to_dict()}")
+
+redev_valid = redev.dropna(subset=["위도","경도"]).copy()
+gdf_redev = gpd.GeoDataFrame(
+    redev_valid,
+    geometry=gpd.points_from_xy(redev_valid["경도"], redev_valid["위도"]),
+    crs="EPSG:4326",
+).to_crs(CRS)
+
+# 등시선과 교차 (중심점 within 등시선)
+joined_redev = gpd.sjoin(
+    gdf_redev[["구역명","단계","geometry"]],
+    gdf_iso[["학교ID","geometry"]],
+    how="inner", predicate="within",
+)
+
+# 단계별 집계
+for stage, col in [("완료","redev_완료수"), ("진행중","redev_진행중수"), ("예정","redev_예정수")]:
+    grp = (
+        joined_redev[joined_redev["단계"] == stage]
+        .groupby("학교ID").size()
+        .reset_index(name=col)
+    )
+    result = result.merge(grp, on="학교ID", how="left")
+    result[col] = result[col].fillna(0).astype(int)
+
+# redev_status 요약
+def make_status(row):
+    if row["redev_완료수"] >= 1:
+        return "완료포함"
+    elif row["redev_진행중수"] >= 1:
+        return "진행중포함"
+    elif row["redev_예정수"] >= 1:
+        return "예정만"
+    else:
+        return "없음"
+
+result["redev_status"] = result.apply(make_status, axis=1)
+print(f"\n  redev_status 분포: {result['redev_status'].value_counts().to_dict()}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 4. 저장
+# ─────────────────────────────────────────────────────────────────────────────
+keep_cols = [
+    "학교ID","학교명","gu",
+    "iso_park_count","iso_park_area",
+    "buf_park_count","buf_park_area",
+    "access_ratio",
+    "iso_child_total","iso_child_6_12",
+    "child_pop_quartile",
+    "expected_park_count","gap_count",
+    "expected_park_area","gap_area",
+    "case_type","priority_score",
+    "redev_완료수","redev_진행중수","redev_예정수","redev_status",
+]
+result[keep_cols].to_csv(OUT_CSV, index=False, encoding="utf-8-sig")
+print()
+print(f"저장 완료: {OUT_CSV}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 출력 요약
+# ─────────────────────────────────────────────────────────────────────────────
+print()
+print("=" * 60)
+print("결과 요약")
+print("=" * 60)
+
+print("\n[미추홀구 case_type 분포]")
+mich = result[result["gu"] == "미추홀구"]
+print(mich["case_type"].value_counts().sort_index().to_string())
+
+print("\n[우선지원 5개교 priority_score + redev_status]")
+t5 = result[result["학교명"].isin(TARGET_SCHOOLS)][
+    ["학교명","case_type","priority_score","iso_park_count","gap_count",
+     "redev_완료수","redev_진행중수","redev_예정수","redev_status"]
+]
+print(t5.to_string(index=False))
+
+print("\n[redev_status별 학교 수 (전체)]")
+print(result["redev_status"].value_counts().to_string())
+
+print("\n[redev_status별 학교 수 (미추홀구)]")
+print(mich["redev_status"].value_counts().to_string())
+
+print("\n[gu별 평균 iso_park_count]")
+gu_stats = result.groupby("gu").agg(
+    학교수=("학교명","count"),
+    평균iso공원수=("iso_park_count","mean"),
+    평균access_ratio=("access_ratio","mean"),
+    평균gap_count=("gap_count","mean"),
+).round(2)
+print(gu_stats.sort_values("평균iso공원수").to_string())
