@@ -213,23 +213,20 @@ print("=" * 60)
 print("STEP 2-D. case_type 분류")
 print("=" * 60)
 
-child_median = result["iso_child_total"].median()
-child_q75    = result["iso_child_total"].quantile(0.75)
-
-ct1 = (result["buf_park_count"] >= 2) & (result["iso_park_count"] <= 1)
-ct2 = (result["gap_count"] < 0) & (result["iso_child_total"] > child_median)
-ct3 = (ct1 & ct2) | (result["iso_park_count"] == 0)
+ct3 = (result["iso_park_count"] == 0) & (result["buf_park_count"] == 0)
+ct2 = (result["child_pop_quartile"] == "Q4") & (result["iso_park_count"] <= 1)
+ct1 = (result["buf_park_count"] >= 1) & (result["iso_park_count"] == 0)
 
 case_type = pd.Series("4", index=result.index)
-case_type[ct1 & ~ct3] = "1"
-case_type[ct2 & ~ct3] = "2"
-case_type[ct3]         = "3"
+case_type[ct1] = "1"
+case_type[ct2] = "2"
+case_type[ct3] = "3"
 result["case_type"] = case_type
 
 score = pd.Series(1, index=result.index)
-score[result["case_type"] == "3"] = 3
-score[(result["case_type"] == "1") | (result["case_type"] == "2")] = 2
-score += (result["iso_child_total"] >= child_q75).astype(int)
+score[result["case_type"] == "1"] = 2
+score[result["case_type"] == "2"] = 3
+score[result["case_type"] == "3"] = 4
 result["priority_score"] = score
 
 print(f"  case_type 분포: {result['case_type'].value_counts().sort_index().to_dict()}")

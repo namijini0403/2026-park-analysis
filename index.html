@@ -268,6 +268,37 @@
       color: var(--muted);
     }
 
+    .detail-badge {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .detail-badge.danger {
+      color: #ffffff;
+      background: #c53030;
+    }
+
+    .detail-badge.warning {
+      color: #7b341e;
+      background: #fbd38d;
+    }
+
+    .detail-badge.neutral {
+      color: #4b5563;
+      background: #e5e7eb;
+    }
+
+    .detail-badge.success {
+      color: #ffffff;
+      background: #2f855a;
+    }
+
     .detail-message {
       margin: 0 0 12px;
       padding: 12px 14px;
@@ -328,6 +359,13 @@
       background: rgba(254, 226, 226, 0.92);
       border-color: rgba(229, 62, 62, 0.24);
       font-weight: 800;
+    }
+
+    .metric-item.success {
+      color: #22543d;
+      background: rgba(198, 246, 213, 0.9);
+      border-color: rgba(47, 133, 90, 0.22);
+      font-weight: 700;
     }
 
     .trend-card {
@@ -533,16 +571,24 @@
           <section class="section">
             <div class="legend">
               <div class="legend-item">
+                <span class="swatch" style="background:#111111;"></span>
+                <span>즉각 지원(outlier_low)</span>
+              </div>
+              <div class="legend-item">
                 <span class="swatch" style="background:#E53E3E;"></span>
-                <span>우선지원 대상 (3~4점)</span>
+                <span>우선지원(case 2·3)</span>
               </div>
               <div class="legend-item">
                 <span class="swatch" style="background:#ED8936;"></span>
-                <span>관심 필요 (2점)</span>
+                <span>관심 필요(case 1)</span>
               </div>
               <div class="legend-item">
                 <span class="swatch" style="background:#38A169;"></span>
-                <span>양호 (1점)</span>
+                <span>일반 관리(case 4)</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch" style="background:#2F855A;"></span>
+                <span>벤치마크(outlier_high)</span>
               </div>
             </div>
           </section>
@@ -613,9 +659,9 @@
     };
 
     const CASE_TYPE_LABELS = {
-      1: "행정 착시",
-      2: "인구 대비 부족",
-      3: "복합 취약",
+      1: "접근 취약",
+      2: "인구 취약",
+      3: "최우선 취약",
       4: "양호"
     };
 
@@ -697,11 +743,14 @@
       });
     }
 
-    function createMarkerImage(color) {
+    function createMarkerImage(color, symbol = "") {
+      const inner = symbol
+        ? `<text x="15" y="19" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">${symbol}</text>`
+        : `<circle cx="15" cy="15" r="4" fill="#ffffff" fill-opacity="0.95" />`;
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
           <circle cx="15" cy="15" r="11" fill="${color}" fill-opacity="0.95" />
-          <circle cx="15" cy="15" r="4" fill="#ffffff" fill-opacity="0.95" />
+          ${inner}
         </svg>
       `.trim();
 
@@ -712,11 +761,19 @@
       );
     }
 
-    function getPriorityColor(score) {
-      const numericScore = Number(score) || 1;
-      if (numericScore >= 3) return "#E53E3E";
-      if (numericScore >= 2) return "#ED8936";
-      return "#38A169";
+    function getOutlierType(row = {}) {
+      const value = String(row.outlier_type || "").trim().toLowerCase();
+      return value === "low" || value === "high" ? value : "";
+    }
+
+    function getMarkerStyle(row = {}) {
+      const outlierType = getOutlierType(row);
+      const caseType = Number(row.case_type);
+      if (outlierType === "low") return { color: "#111111", symbol: "" };
+      if (outlierType === "high") return { color: "#2F855A", symbol: "★" };
+      if (caseType === 2 || caseType === 3) return { color: "#E53E3E", symbol: "" };
+      if (caseType === 1) return { color: "#ED8936", symbol: "" };
+      return { color: "#38A169", symbol: "" };
     }
 
     function detectGu(row) {
@@ -818,6 +875,17 @@
     function getCaseTypeLabel(caseType) {
       const numeric = Number(caseType);
       return CASE_TYPE_LABELS[numeric] || "데이터 준비 중";
+    }
+
+    function getSchoolBadge(row = {}) {
+      const outlierType = getOutlierType(row);
+      const caseType = Number(row.case_type);
+      if (outlierType === "low") return { text: "즉각 지원", className: "danger" };
+      if (outlierType === "high") return { text: "벤치마크", className: "success" };
+      if (caseType === 3) return { text: "최우선 지원", className: "danger" };
+      if (caseType === 2) return { text: "우선 지원", className: "danger" };
+      if (caseType === 1) return { text: "관심 필요", className: "warning" };
+      return { text: "일반 관리", className: "neutral" };
     }
 
     function formatAccessRatio(value) {
@@ -954,21 +1022,34 @@
       `;
     }
 
-    function getDiagnosticMessage(caseType) {
-      const numeric = Number(caseType);
+    function getDiagnosticMessage(row = {}) {
+      const outlierType = getOutlierType(row);
+      const numeric = Number(row.case_type);
+      if (outlierType === "low") {
+        return "인천 전체에서 야외활동 환경이 가장 취약한 학교입니다. 즉각적인 지원이 필요합니다.";
+      }
+      if (outlierType === "high") {
+        return "인천 전체에서 야외활동 환경이 가장 우수한 학교입니다. 타 지역 정책 벤치마크 대상입니다.";
+      }
       if (numeric === 1) return "도보 접근은 가능하나 공원 수가 부족합니다. 관심 필요 학교입니다.";
       if (numeric === 2) return "인근 아동 대비 공원이 현저히 부족합니다. 우선 지원 대상입니다.";
       if (numeric === 3) return "접근성과 공원 수 모두 취약합니다. 최우선 지원 대상입니다.";
       return "공원 접근성이 양호합니다. 일반 관리 대상입니다.";
     }
 
-    function getCaseThemeClass(caseType) {
-      const numeric = Number(caseType);
+    function getCaseThemeClass(row = {}) {
+      const outlierType = getOutlierType(row);
+      if (outlierType === "low") return "case-3";
+      if (outlierType === "high") return "case-4";
+      const numeric = Number(row.case_type);
       return `case-${Number.isFinite(numeric) ? numeric : 4}`;
     }
 
-    function getMetricClass(caseType, metricType) {
-      const numeric = Number(caseType);
+    function getMetricClass(row, metricType) {
+      const outlierType = getOutlierType(row);
+      const numeric = Number(row.case_type);
+      if (outlierType === "low") return "metric-item danger";
+      if (outlierType === "high") return "metric-item success";
       if (numeric === 4) return "metric-item muted";
       if (numeric === 1 && metricType === "park") return "metric-item warning";
       if (numeric === 2 && metricType === "parkPressure") return "metric-item danger";
@@ -987,40 +1068,36 @@
 
       const caseType = Number(row.case_type);
       const caseLabel = getCaseTypeLabel(caseType);
+      const badge = getSchoolBadge(row);
       const gu = detectGu(row) || "-";
       const showAccess = caseType >= 1 && caseType <= 3;
       const showGap = caseType >= 1 && caseType <= 3;
-      const message = getDiagnosticMessage(caseType);
+      const message = getDiagnosticMessage(row);
       const trendMarkup = getStudentTrendMarkup(row);
-      const scoreText = `${formatCount(row.priority_score)}점`;
 
-      ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(caseType)}`;
+      ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
       ui.schoolDetailBox.innerHTML = `
         <div class="detail-head">
           <h3 class="detail-name">${getSchoolName(row)} (${gu})</h3>
           <div class="detail-subtitle">${caseLabel}</div>
+          <div class="detail-badge ${badge.className}">[${badge.text}]</div>
         </div>
-        <div class="detail-message ${getCaseThemeClass(caseType)}">${message}</div>
+        <div class="detail-message ${getCaseThemeClass(row)}">${message}</div>
 
         <div class="detail-section">
           <div class="detail-section-title">공원·놀이터 현황</div>
           <div class="metric-list">
-            <div class="${getMetricClass(caseType, "park")}">🌳 도보 500m 내 공원: ${formatCount(row.iso_park_count)}개</div>
-            <div class="${getMetricClass(caseType, "park")}">🛝 공공 놀이터: ${formatCount(row.buf_park_count)}개</div>
+            <div class="${getMetricClass(row, "park")}">🌳 도보 500m 내 공원: ${formatCount(row.iso_park_count)}개</div>
+            <div class="${getMetricClass(row, "park")}">🛝 공공 놀이터: ${formatCount(row.buf_park_count)}개</div>
             <div class="metric-item muted">🏘️ 단지내 놀이터(민간): - (데이터 준비 중)</div>
-            ${showAccess ? `<div class="${getMetricClass(caseType, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
-            ${showGap ? `<div class="${getMetricClass(caseType, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
+            ${showAccess ? `<div class="${getMetricClass(row, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
+            ${showGap ? `<div class="${getMetricClass(row, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
           </div>
         </div>
 
         <div class="detail-section">
           <div class="detail-section-title">학생수 추세</div>
           ${trendMarkup}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">우선순위 점수</div>
-          <div class="detail-score">⭐ 우선순위 ${scoreText}</div>
         </div>
       `;
     }
@@ -1163,7 +1240,7 @@
 
         const marker = new kakao.maps.Marker({
           position: latLng,
-          image: createMarkerImage(getPriorityColor(row.priority_score)),
+          image: createMarkerImage(getMarkerStyle(row).color, getMarkerStyle(row).symbol),
           title: getSchoolName(row)
         });
 

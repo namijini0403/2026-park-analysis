@@ -214,21 +214,21 @@ child_median = result["iso_child_total"].median()
 child_q75    = result["iso_child_total"].quantile(0.75)
 print(f"  iso_child_total 중앙값: {child_median:.0f}  /  75%: {child_q75:.0f}")
 
-ct1 = (result["buf_park_count"] >= 2) & (result["iso_park_count"] <= 1)   # 행정 착시
-ct2 = (result["gap_count"] < 0) & (result["iso_child_total"] > child_median)  # 인구 대비 부족
-ct3 = (ct1 & ct2) | (result["iso_park_count"] == 0)  # 복합 취약 + 공원 전무
+ct3 = (result["iso_park_count"] == 0) & (result["buf_park_count"] == 0)   # 최우선 취약
+ct2 = (result["child_pop_quartile"] == "Q4") & (result["iso_park_count"] <= 1)  # 인구취약
+ct1 = (result["buf_park_count"] >= 1) & (result["iso_park_count"] == 0)   # 접근취약
 
 case_type = pd.Series("4", index=result.index)   # 기본: 양호
-case_type[ct1 & ~ct3] = "1"
-case_type[ct2 & ~ct3] = "2"
-case_type[ct3]         = "3"
+case_type[ct1] = "1"
+case_type[ct2] = "2"
+case_type[ct3] = "3"
 result["case_type"] = case_type
 
 # priority_score
 score = pd.Series(1, index=result.index)
-score[result["case_type"] == "3"] = 3
-score[(result["case_type"] == "1") | (result["case_type"] == "2")] = 2
-score += (result["iso_child_total"] >= child_q75).astype(int)  # 상위 25% +1
+score[result["case_type"] == "1"] = 2
+score[result["case_type"] == "2"] = 3
+score[result["case_type"] == "3"] = 4
 result["priority_score"] = score
 
 print()
