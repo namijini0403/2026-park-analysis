@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>인천 초등학교 아동 야외활동 환경 격차 지도</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    :root {
+      --bg: #f3efe4;
+      --panel: rgba(255, 251, 243, 0.96);
+      --panel-border: rgba(110, 89, 51, 0.18);
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #14532d;
+      --accent-soft: #d9ead3;
+      --danger: #e53e3e;
+      --warning: #ed8936;
+      --success: #38a169;
+      --shadow: 0 18px 48px rgba(61, 42, 20, 0.16);
+      --radius: 22px;
+      --touch: 44px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 232, 186, 0.9), transparent 28%),
+        radial-gradient(circle at top right, rgba(193, 232, 201, 0.8), transparent 26%),
+        linear-gradient(180deg, #f9f4ea 0%, #f0ece3 100%);
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    .app-shell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .panel {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 20;
+      width: min(360px, calc(100vw - 36px));
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px 10px;
+      border-bottom: 1px solid rgba(110, 89, 51, 0.09);
+      background: linear-gradient(135deg, rgba(243, 223, 180, 0.4), rgba(210, 233, 216, 0.45));
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7c5c27;
+      font-weight: 700;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .panel-subtitle {
+      margin: 8px 0 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .panel-body {
+      padding: 16px 18px 18px;
+      max-height: calc(100vh - 130px);
+      overflow: auto;
+    }
+
+    .section {
+      margin-bottom: 18px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #775f34;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    select, .toggle-row {
+      min-height: var(--touch);
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid rgba(99, 78, 40, 0.18);
+      border-radius: 14px;
+      background: #fffdfa;
+      padding: 10px 14px;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .toggle-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(99, 78, 40, 0.12);
+    }
+
+    .toggle-row input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .toggle-row label {
+      flex: 1;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .legend {
+      display: grid;
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: var(--touch);
+      padding: 8px 0;
+      font-size: 14px;
+    }
+
+    .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.75);
+    }
+
+    .status-box {
+      min-height: 92px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #fffdfa;
+      border: 1px dashed rgba(99, 78, 40, 0.2);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .mobile-handle {
+      display: none;
+      width: 48px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(73, 54, 21, 0.2);
+      margin: 0 auto 12px;
+    }
+
+    .floating-button {
+      display: none;
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      z-index: 30;
+      min-width: var(--touch);
+      min-height: var(--touch);
+      padding: 0 16px;
+      border: 0;
+      border-radius: 999px;
+      background: #1f5136;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 768px) {
+      .panel {
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: none;
+        border-radius: 24px 24px 0 0;
+        transform: translateY(calc(100% - 118px));
+        transition: transform 0.28s ease;
+      }
+
+      .panel.open {
+        transform: translateY(0);
+      }
+
+      .mobile-handle {
+        display: block;
+      }
+
+      .panel-body {
+        max-height: 52vh;
+        padding-top: 2px;
+      }
+
+      .floating-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div id="map"></div>
+
+    <button class="floating-button" id="panelToggleButton" type="button">필터 열기</button>
+
+    <aside class="panel" id="controlPanel">
+      <div class="panel-header">
+        <div class="mobile-handle"></div>
+        <p class="eyebrow">Incheon Outdoor Equity</p>
+        <h1 class="panel-title">초등학교 야외활동 환경 격차 지도</h1>
+        <p class="panel-subtitle">
+          카카오맵 기반 발표용 프로토타입입니다. 파일이 아직 없거나 형식이 바뀌어도 앱이 중단되지 않도록 로딩 오류는 콘솔에만 기록합니다.
+        </p>
+      </div>
+
+      <div class="panel-body">
+        <section class="section">
+          <h2 class="section-title">구 필터</h2>
+          <label class="field-label" for="guFilter">구 선택</label>
+          <select id="guFilter">
+            <option value="전체">전체</option>
+            <option value="미추홀구">미추홀구</option>
+            <option value="서구">서구</option>
+            <option value="남동구">남동구</option>
+            <option value="계양구">계양구</option>
+            <option value="연수구">연수구</option>
+            <option value="중구">중구</option>
+            <option value="동구">동구</option>
+            <option value="강화군">강화군</option>
+            <option value="옹진군">옹진군</option>
+          </select>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">레이어 토글</h2>
+          <div class="toggle-list">
+            <div class="toggle-row">
+              <input type="checkbox" id="toggleIsochrone" />
+              <label for="toggleIsochrone">도보 등시선</label>
+            </div>
+            <div class="toggle-row">
+              <input type="checkbox" id="toggleBuffer" />
+              <label for="toggleBuffer">직선 버퍼</label>
+            </div>
+            <div class="toggle-row">
+              <input type="checkbox" id="toggleParks" checked />
+              <label for="toggleParks">공원·놀이터</label>
+            </div>
+            <div class="toggle-row">
+              <input type="checkbox" id="toggleRedevelopment" />
+              <label for="toggleRedevelopment">재개발 구역</label>
+            </div>
+            <div class="toggle-row">
+              <input type="checkbox" id="toggleChildcare" />
+              <label for="toggleChildcare">어린이집·유치원</label>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">우선순위 범례</h2>
+          <div class="legend">
+            <div class="legend-item">
+              <span class="swatch" style="background:#E53E3E;"></span>
+              <span>`priority_score` 3~4</span>
+            </div>
+            <div class="legend-item">
+              <span class="swatch" style="background:#ED8936;"></span>
+              <span>`priority_score` 2</span>
+            </div>
+            <div class="legend-item">
+              <span class="swatch" style="background:#38A169;"></span>
+              <span>`priority_score` 1</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">로딩 상태</h2>
+          <div class="status-box" id="statusBox">카카오맵 SDK를 불러오는 중입니다.</div>
+        </section>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 
+    카카오맵 키 설정 방법:
+    1. .env 파일에서 KAKAO_MAP_KEY 복사
+    2. 아래 YOUR_KEY_HERE 교체
+    또는
+    로컬 서버 실행 시 ?key=발급키 쿼리스트링으로 주입 가능
+  -->
+  <script>
+    const urlKey = new URLSearchParams(window.location.search).get("key");
+    window.KAKAO_MAP_KEY = urlKey || "YOUR_KEY_HERE";
+
+    const PATHS = {
+      schools: "../data_processed/school_priority.csv",
+      schoolCoords: "../data_processed/schools.csv",
+      parks: "../data_processed/parks.csv",
+      isochrone: "../data_processed/school_isochrone_500m.geojson",
+      buffer: "../data_processed/school_buffer_500m.geojson",
+      redevelopment: "../data_processed/redevelopment.csv",
+      childcare: "../data_processed/childcare_michuhol.csv"
+    };
+
+    const INCHEON_CENTER = { lat: 37.4563, lng: 126.7052 };
+    const DEFAULT_LEVEL = 11;
+
+    const state = {
+      map: null,
+      infoWindow: null,
+      selectedGu: "전체",
+      selectedSchoolJoinKey: null,
+      overlays: {
+        schoolMarkers: [],
+        parkMarkers: [],
+        childcareMarkers: [],
+        redevelopmentMarkers: [],
+        isochronePolygons: [],
+        bufferPolygons: []
+      },
+      datasets: {
+        schools: [],
+        schoolCoords: [],
+        parks: [],
+        childcare: [],
+        redevelopment: [],
+        isochrone: null,
+        buffer: null
+      }
+    };
+
+    const CASE_TYPE_LABELS = {
+      1: "행정 착시",
+      2: "인구 대비 부족",
+      3: "복합 취약",
+      4: "양호"
+    };
+
+    const ui = {
+      statusBox: document.getElementById("statusBox"),
+      guFilter: document.getElementById("guFilter"),
+      panel: document.getElementById("controlPanel"),
+      panelToggleButton: document.getElementById("panelToggleButton"),
+      toggles: {
+        isochrone: document.getElementById("toggleIsochrone"),
+        buffer: document.getElementById("toggleBuffer"),
+        parks: document.getElementById("toggleParks"),
+        redevelopment: document.getElementById("toggleRedevelopment"),
+        childcare: document.getElementById("toggleChildcare")
+      }
+    };
+
+    function setStatus(message) {
+      ui.statusBox.textContent = message;
+    }
+
+    function appendStatus(message) {
+      ui.statusBox.textContent += `\n${message}`;
+    }
+
+    function loadCSV(path) {
+      return new Promise((resolve) => {
+        Papa.parse(path, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            if (results.errors && results.errors.length) {
+              console.error(`[loadCSV] ${path}`, results.errors);
+            }
+            resolve(results.data || []);
+          },
+          error: (error) => {
+            console.error(`[loadCSV] ${path}`, error);
+            resolve([]);
+          }
+        });
+      });
+    }
+
+    async function loadGeoJSON(path) {
+      try {
+        const response = await fetch(path);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error(`[loadGeoJSON] ${path}`, error);
+        return null;
+      }
+    }
+
+    function loadKakaoMapSdk() {
+      return new Promise((resolve, reject) => {
+        if (window.kakao && window.kakao.maps) {
+          resolve();
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${window.KAKAO_MAP_KEY}`;
+        script.onload = () => {
+          if (!window.kakao || !window.kakao.maps) {
+            reject(new Error("카카오맵 객체가 초기화되지 않았습니다."));
+            return;
+          }
+          window.kakao.maps.load(resolve);
+        };
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    function createMarkerImage(color) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+          <circle cx="15" cy="15" r="11" fill="${color}" fill-opacity="0.95" />
+          <circle cx="15" cy="15" r="4" fill="#ffffff" fill-opacity="0.95" />
+        </svg>
+      `.trim();
+
+      return new kakao.maps.MarkerImage(
+        `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
+        new kakao.maps.Size(30, 30),
+        { offset: new kakao.maps.Point(15, 15) }
+      );
+    }
+
+    function getPriorityColor(score) {
+      const numericScore = Number(score) || 1;
+      if (numericScore >= 3) return "#E53E3E";
+      if (numericScore >= 2) return "#ED8936";
+      return "#38A169";
+    }
+
+    function detectGu(row) {
+      return (
+        row.gu ||
+        row["구"] ||
+        row["구명"] ||
+        row["행정구역"] ||
+        extractGuFromAddress(row["소재지도로명주소"] || row["주소"] || row["위치"] || "")
+      );
+    }
+
+    function extractGuFromAddress(text) {
+      const source = String(text || "");
+      const match = source.match(/(미추홀구|서구|남동구|계양구|연수구|중구|동구|강화군|옹진군)/);
+      return match ? match[1] : "";
+    }
+
+    function toLatLng(row, latKey = "위도", lngKey = "경도") {
+      const lat = Number(row[latKey]);
+      const lng = Number(row[lngKey]);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+      return new kakao.maps.LatLng(lat, lng);
+    }
+
+    function getSchoolId(row = {}) {
+      return row["학교ID"] || row.school_id || row.schoolId || "";
+    }
+
+    function getSchoolName(row = {}) {
+      return row["학교명"] || row.school_name || row.name || "학교";
+    }
+
+    function getSchoolJoinKeys(row = {}) {
+      return [getSchoolId(row), getSchoolName(row)].filter(Boolean);
+    }
+
+    function mergeSchoolPriorityWithCoords(priorityRows, coordRows) {
+      const coordMap = new Map(
+        coordRows.map((row) => [getSchoolId(row), row])
+      );
+
+      return priorityRows.map((row) => {
+        const schoolId = getSchoolId(row);
+        const coordRow = coordMap.get(schoolId) || {};
+        return {
+          ...coordRow,
+          ...row,
+          학교ID: schoolId || coordRow["학교ID"] || "",
+          학교명: row["학교명"] || coordRow["학교명"] || "",
+          위도: row["위도"] ?? coordRow["위도"],
+          경도: row["경도"] ?? coordRow["경도"],
+          gu: row.gu || coordRow.gu || detectGu(row) || detectGu(coordRow)
+        };
+      });
+    }
+
+    function getCaseTypeLabel(caseType) {
+      const numeric = Number(caseType);
+      return CASE_TYPE_LABELS[numeric] || "데이터 준비 중";
+    }
+
+    function formatAccessRatio(value) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return "데이터 준비 중";
+      return `${(numeric * 100).toFixed(1)}%`;
+    }
+
+    function getPopupHtml(row) {
+      const schoolName = getSchoolName(row);
+      const gu = detectGu(row) || "-";
+
+      const hasPriorityData =
+        row.priority_score !== undefined &&
+        row.case_type !== undefined &&
+        row.iso_park_count !== undefined &&
+        row.iso_child_6_12 !== undefined &&
+        row.access_ratio !== undefined &&
+        row.gap_count !== undefined;
+
+      if (!hasPriorityData) {
+        return `
+          <div style="padding:14px 16px; min-width:220px; font-family:Pretendard,'Noto Sans KR',sans-serif;">
+            <div style="font-weight:800; font-size:15px; margin-bottom:6px;">${schoolName}</div>
+            <div style="font-size:12px; color:#6b7280;">${gu}</div>
+            <div style="margin-top:12px; font-size:12px; color:#4b5563;">데이터 준비 중</div>
+          </div>
+        `;
+      }
+
+      const caseType = Number(row.case_type);
+      const caseTypeLabel = getCaseTypeLabel(caseType);
+      const isoParkCount = row.iso_park_count ?? "-";
+      const isoChild = row.iso_child_6_12 ?? "-";
+      const gapCount = row.gap_count ?? "-";
+      const priorityScore = row.priority_score ?? "-";
+
+      return `
+        <div style="padding:14px 16px; min-width:260px; line-height:1.65; font-family:Pretendard,'Noto Sans KR',sans-serif;">
+          <b>${schoolName}</b> (${gu})<br>
+          ─────────────────<br>
+          🏷 유형: case_type ${caseType} — ${caseTypeLabel}<br>
+          🌳 도보 500m 내 공원: ${isoParkCount}개<br>
+          👶 초등학령 아동: ${isoChild}명<br>
+          📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)<br>
+          📉 공원 부족: ${gapCount}개 (평균 대비)<br>
+          ⭐ 우선순위: ${priorityScore}점<br>
+        </div>
+      `;
+    }
+
+    function applyPolygonStyle(polygon, style) {
+      polygon.setOptions({
+        strokeWeight: style.strokeWeight,
+        strokeColor: style.strokeColor,
+        strokeOpacity: style.strokeOpacity,
+        strokeStyle: style.strokeStyle || "solid",
+        fillColor: style.fillColor,
+        fillOpacity: style.fillOpacity
+      });
+    }
+
+    function highlightIsochroneForSchool(row) {
+      const joinKeys = new Set(getSchoolJoinKeys(row));
+      state.selectedSchoolJoinKey = Array.from(joinKeys)[0] || null;
+
+      state.overlays.isochronePolygons.forEach((polygon) => {
+        const matched = polygon.__schoolKeys?.some((key) => joinKeys.has(key));
+        applyPolygonStyle(polygon, matched ? polygon.__highlightStyle : polygon.__defaultStyle);
+      });
+
+      updateOverlayVisibility();
+    }
+
+    function clearOverlayGroup(groupName) {
+      state.overlays[groupName].forEach((overlay) => {
+        if (typeof overlay.setMap === "function") overlay.setMap(null);
+      });
+      state.overlays[groupName] = [];
+    }
+
+    function shouldShowByGu(row) {
+      if (state.selectedGu === "전체") return true;
+      return detectGu(row) === state.selectedGu;
+    }
+
+    function bindSchoolPopup(marker, row) {
+      kakao.maps.event.addListener(marker, "click", () => {
+        highlightIsochroneForSchool(row);
+        state.infoWindow.setContent(getPopupHtml(row));
+        state.infoWindow.open(state.map, marker);
+      });
+    }
+
+    function renderSchoolMarkers() {
+      clearOverlayGroup("schoolMarkers");
+
+      const rows = state.datasets.schools.filter(shouldShowByGu);
+      rows.forEach((row) => {
+        const latLng = toLatLng(row, row.위도 !== undefined ? "위도" : "lat", row.경도 !== undefined ? "경도" : "lng");
+        if (!latLng) return;
+
+        const marker = new kakao.maps.Marker({
+          position: latLng,
+          image: createMarkerImage(getPriorityColor(row.priority_score)),
+          title: getSchoolName(row)
+        });
+
+        bindSchoolPopup(marker, row);
+        marker.setMap(state.map);
+        state.overlays.schoolMarkers.push(marker);
+      });
+    }
+
+    function renderPointMarkers(groupName, rows, options) {
+      clearOverlayGroup(groupName);
+
+      rows.filter(shouldShowByGu).forEach((row) => {
+        const latLng = toLatLng(row, options.latKey, options.lngKey);
+        if (!latLng) return;
+
+        const marker = new kakao.maps.Marker({
+          position: latLng,
+          title: row[options.titleKey] || options.fallbackTitle,
+          image: createMarkerImage(options.color)
+        });
+
+        const popupName = row[options.titleKey] || options.fallbackTitle;
+        kakao.maps.event.addListener(marker, "click", () => {
+          state.infoWindow.setContent(`
+            <div style="padding:12px 14px; min-width:160px; font-family:Pretendard,'Noto Sans KR',sans-serif;">
+              <div style="font-weight:800; font-size:14px; margin-bottom:6px;">${popupName}</div>
+              <div style="font-size:12px; color:#6b7280;">${detectGu(row) || "-"}</div>
+            </div>
+          `);
+          state.infoWindow.open(state.map, marker);
+        });
+
+        marker.setMap(options.visible ? state.map : null);
+        state.overlays[groupName].push(marker);
+      });
+    }
+
+    function geometryToOverlays(geojson, style) {
+      const overlays = [];
+      if (!geojson || !Array.isArray(geojson.features)) return overlays;
+
+      geojson.features.forEach((feature) => {
+        if (!shouldShowByGu(feature.properties || {})) return;
+
+        const geometry = feature.geometry;
+        if (!geometry) return;
+
+        if (geometry.type === "Polygon") {
+          const polygon = new kakao.maps.Polygon({
+            path: geometry.coordinates[0].map(([lng, lat]) => new kakao.maps.LatLng(lat, lng)),
+            strokeWeight: style.strokeWeight,
+            strokeColor: style.strokeColor,
+            strokeOpacity: style.strokeOpacity,
+            strokeStyle: style.strokeStyle || "solid",
+            fillColor: style.fillColor,
+            fillOpacity: style.fillOpacity
+          });
+          polygon.__schoolKeys = [feature.properties?.["학교ID"], feature.properties?.["학교명"]].filter(Boolean);
+          polygon.__defaultStyle = { ...style };
+          polygon.__highlightStyle = {
+            strokeWeight: 3,
+            strokeColor: "#E53E3E",
+            strokeOpacity: 1,
+            strokeStyle: "solid",
+            fillColor: "#FEB2B2",
+            fillOpacity: 0.4
+          };
+          overlays.push(polygon);
+        }
+
+        if (geometry.type === "MultiPolygon") {
+          geometry.coordinates.forEach((polygonCoords) => {
+            const polygon = new kakao.maps.Polygon({
+              path: polygonCoords[0].map(([lng, lat]) => new kakao.maps.LatLng(lat, lng)),
+              strokeWeight: style.strokeWeight,
+              strokeColor: style.strokeColor,
+              strokeOpacity: style.strokeOpacity,
+              strokeStyle: style.strokeStyle || "solid",
+              fillColor: style.fillColor,
+              fillOpacity: style.fillOpacity
+            });
+            polygon.__schoolKeys = [feature.properties?.["학교ID"], feature.properties?.["학교명"]].filter(Boolean);
+            polygon.__defaultStyle = { ...style };
+            polygon.__highlightStyle = {
+              strokeWeight: 3,
+              strokeColor: "#E53E3E",
+              strokeOpacity: 1,
+              strokeStyle: "solid",
+              fillColor: "#FEB2B2",
+              fillOpacity: 0.4
+            };
+            overlays.push(polygon);
+          });
+        }
+      });
+
+      return overlays;
+    }
+
+    function renderGeoJsonLayer(groupName, geojson, style, visible) {
+      clearOverlayGroup(groupName);
+      const overlays = geometryToOverlays(geojson, style);
+      overlays.forEach((overlay) => applyPolygonStyle(overlay, overlay.__defaultStyle || style));
+      overlays.forEach((overlay) => overlay.setMap(visible ? state.map : null));
+      state.overlays[groupName] = overlays;
+    }
+
+    function renderRedevelopmentLayer() {
+      clearOverlayGroup("redevelopmentMarkers");
+      const rows = state.datasets.redevelopment.filter(shouldShowByGu);
+
+      rows.forEach((row) => {
+        const hasCoords = Number.isFinite(Number(row.위도)) && Number.isFinite(Number(row.경도));
+        if (!hasCoords) return;
+
+        const marker = new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(Number(row.위도), Number(row.경도)),
+          title: row.구역명 || "재개발 구역",
+          image: createMarkerImage("#6B46C1")
+        });
+
+        marker.setMap(ui.toggles.redevelopment.checked ? state.map : null);
+        state.overlays.redevelopmentMarkers.push(marker);
+      });
+
+      if (!state.overlays.redevelopmentMarkers.length && state.datasets.redevelopment.length) {
+        console.warn("[redevelopment] 좌표 컬럼이 없어 지도 렌더링을 생략했습니다.");
+      }
+    }
+
+    function updateOverlayVisibility() {
+      state.overlays.parkMarkers.forEach((marker) => marker.setMap(ui.toggles.parks.checked ? state.map : null));
+      state.overlays.childcareMarkers.forEach((marker) => marker.setMap(ui.toggles.childcare.checked ? state.map : null));
+      state.overlays.redevelopmentMarkers.forEach((marker) => marker.setMap(ui.toggles.redevelopment.checked ? state.map : null));
+      state.overlays.isochronePolygons.forEach((polygon) => polygon.setMap(ui.toggles.isochrone.checked ? state.map : null));
+      state.overlays.bufferPolygons.forEach((polygon) => polygon.setMap(ui.toggles.buffer.checked ? state.map : null));
+    }
+
+    function rerenderAll() {
+      renderSchoolMarkers();
+      renderPointMarkers("parkMarkers", state.datasets.parks, {
+        latKey: "위도",
+        lngKey: "경도",
+        titleKey: "공원명",
+        fallbackTitle: "공원",
+        color: "#2B6CB0",
+        visible: ui.toggles.parks.checked
+      });
+      renderPointMarkers("childcareMarkers", state.datasets.childcare, {
+        latKey: "위도",
+        lngKey: "경도",
+        titleKey: "기관명",
+        fallbackTitle: "어린이집·유치원",
+        color: "#2F855A",
+        visible: ui.toggles.childcare.checked
+      });
+      renderRedevelopmentLayer();
+      renderGeoJsonLayer("isochronePolygons", state.datasets.isochrone, {
+        strokeWeight: 2,
+        strokeColor: "#2B6CB0",
+        strokeOpacity: 0.9,
+        fillColor: "#90CDF4",
+        fillOpacity: 0.22
+      }, ui.toggles.isochrone.checked);
+      renderGeoJsonLayer("bufferPolygons", state.datasets.buffer, {
+        strokeWeight: 2,
+        strokeColor: "#ED8936",
+        strokeOpacity: 0.9,
+        strokeStyle: "dash",
+        fillColor: "#FBD38D",
+        fillOpacity: 0.12
+      }, ui.toggles.buffer.checked);
+      updateOverlayVisibility();
+    }
+
+    async function loadData() {
+      setStatus("데이터를 불러오는 중입니다.");
+
+      const [
+        schoolPriority,
+        schoolCoords,
+        parks,
+        isochrone,
+        buffer,
+        redevelopment,
+        childcare
+      ] = await Promise.all([
+        loadCSV(PATHS.schools),
+        loadCSV(PATHS.schoolCoords),
+        loadCSV(PATHS.parks),
+        loadGeoJSON(PATHS.isochrone),
+        loadGeoJSON(PATHS.buffer),
+        loadCSV(PATHS.redevelopment),
+        loadCSV(PATHS.childcare)
+      ]);
+
+      state.datasets.schoolCoords = schoolCoords;
+      state.datasets.schools = mergeSchoolPriorityWithCoords(schoolPriority, schoolCoords);
+      state.datasets.parks = parks;
+      state.datasets.isochrone = isochrone;
+      state.datasets.buffer = buffer;
+      state.datasets.redevelopment = redevelopment;
+      state.datasets.childcare = childcare;
+
+      rerenderAll();
+
+      setStatus(
+        [
+          `학교 우선순위: ${schoolPriority.length}건`,
+          `학교 좌표: ${schoolCoords.length}건`,
+          `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
+          `공원·놀이터: ${parks.length}건`,
+          `어린이집·유치원: ${childcare.length}건`,
+          `재개발: ${redevelopment.length}건`,
+          `도보 등시선: ${isochrone?.features?.length || 0}건`,
+          `직선 버퍼: ${buffer?.features?.length || 0}건`
+        ].join("\n")
+      );
+
+      if (!schoolPriority.length) {
+        appendStatus("school_priority.csv가 아직 없거나 로딩에 실패했습니다.");
+      }
+    }
+
+    function wireEvents() {
+      ui.guFilter.addEventListener("change", (event) => {
+        state.selectedGu = event.target.value;
+        rerenderAll();
+      });
+
+      Object.values(ui.toggles).forEach((toggle) => {
+        toggle.addEventListener("change", updateOverlayVisibility);
+      });
+
+      ui.panelToggleButton.addEventListener("click", () => {
+        ui.panel.classList.toggle("open");
+        ui.panelToggleButton.textContent = ui.panel.classList.contains("open") ? "필터 닫기" : "필터 열기";
+      });
+    }
+
+    async function init() {
+      try {
+        await loadKakaoMapSdk();
+      } catch (error) {
+        console.error("[kakao-sdk]", error);
+        setStatus("카카오맵 SDK 로딩에 실패했습니다. API 키와 네트워크 상태를 확인하세요.");
+        return;
+      }
+
+      state.map = new kakao.maps.Map(document.getElementById("map"), {
+        center: new kakao.maps.LatLng(INCHEON_CENTER.lat, INCHEON_CENTER.lng),
+        level: DEFAULT_LEVEL
+      });
+
+      state.infoWindow = new kakao.maps.InfoWindow({ removable: true });
+      wireEvents();
+      await loadData();
+    }
+
+    init();
+  </script>
+</body>
+</html>
