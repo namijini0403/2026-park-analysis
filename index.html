@@ -202,6 +202,43 @@
       white-space: pre-line;
     }
 
+    .summary-box {
+      min-height: 120px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #fffdfa;
+      border: 1px solid rgba(99, 78, 40, 0.16);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .summary-grid {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .school-link {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(99, 78, 40, 0.16);
+      border-radius: 12px;
+      background: rgba(217, 234, 211, 0.35);
+      padding: 8px 10px;
+      font: inherit;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .school-link:hover {
+      background: rgba(217, 234, 211, 0.6);
+    }
+
     .mobile-handle {
       display: none;
       width: 48px;
@@ -298,6 +335,11 @@
         </section>
 
         <section class="section">
+          <h2 class="section-title">구별 요약</h2>
+          <div class="summary-box" id="guSummaryBox">구를 선택하면 요약을 표시합니다.</div>
+        </section>
+
+        <section class="section">
           <h2 class="section-title">레이어 토글</h2>
           <div class="toggle-list">
             <div class="toggle-row">
@@ -328,15 +370,15 @@
           <div class="legend">
             <div class="legend-item">
               <span class="swatch" style="background:#E53E3E;"></span>
-              <span>`priority_score` 3~4</span>
+              <span>우선지원 대상 (3~4점)</span>
             </div>
             <div class="legend-item">
               <span class="swatch" style="background:#ED8936;"></span>
-              <span>`priority_score` 2</span>
+              <span>관심 필요 (2점)</span>
             </div>
             <div class="legend-item">
               <span class="swatch" style="background:#38A169;"></span>
-              <span>`priority_score` 1</span>
+              <span>양호 (1점)</span>
             </div>
           </div>
         </section>
@@ -364,6 +406,7 @@
       schools: "./data_processed/school_priority.csv",
       schoolCoords: "./data_processed/schools.csv",
       beneficiaryForecast: "./data_processed/beneficiary_forecast.csv",
+      guSummary: "./data_processed/gu_summary.csv",
       parks: "./data_processed/parks.csv",
       isochrone: "./data_processed/school_isochrone_500m.geojson",
       buffer: "./data_processed/school_buffer_500m.geojson",
@@ -377,9 +420,11 @@
     const state = {
       map: null,
       infoWindow: null,
+      clusterer: null,
       selectedGu: "전체",
       selectedSchoolJoinKey: null,
       suppressNextMapClick: false,
+      schoolMarkerIndex: new Map(),
       overlays: {
         schoolMarkers: [],
         parkMarkers: [],
@@ -392,6 +437,7 @@
         schools: [],
         schoolCoords: [],
         beneficiaryForecast: [],
+        guSummary: [],
         parks: [],
         childcare: [],
         redevelopment: [],
@@ -409,6 +455,7 @@
 
     const ui = {
       statusBox: document.getElementById("statusBox"),
+      guSummaryBox: document.getElementById("guSummaryBox"),
       guFilter: document.getElementById("guFilter"),
       panel: document.getElementById("controlPanel"),
       panelToggleButton: document.getElementById("panelToggleButton"),
@@ -470,7 +517,7 @@
         }
 
         const script = document.createElement("script");
-        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${window.KAKAO_MAP_KEY}`;
+        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${window.KAKAO_MAP_KEY}&libraries=clusterer`;
         script.onload = () => {
           if (!window.kakao || !window.kakao.maps) {
             reject(new Error("카카오맵 객체가 초기화되지 않았습니다."));
@@ -602,11 +649,23 @@
       return Math.round(numeric).toLocaleString("ko-KR");
     }
 
+    function formatDecimal(value, digits = 2) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return "-";
+      return numeric.toFixed(digits);
+    }
+
     function formatBeneficiaryTriple(row) {
       const current = formatCount(row.current_beneficiary);
       const forecast2029 = formatCount(row.forecast_2029);
       const forecast2031 = formatCount(row.forecast_2031);
-      return `${current} / ${forecast2029} / ${forecast2031}`;
+      return `${current} / ${forecast2029} / ${forecast2031}명`;
+    }
+
+    function formatSummaryPercent(value) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return "-";
+      return `${(numeric * 100).toFixed(1)}%`;
     }
 
     function getPopupHtml(row) {
@@ -634,20 +693,23 @@
       const caseType = Number(row.case_type);
       const caseTypeLabel = getCaseTypeLabel(caseType);
       const isoParkCount = row.iso_park_count ?? "-";
+      const isoChild = row.iso_child_6_12 ?? "-";
+      const gapCount = formatDecimal(row.gap_count, 2);
       const priorityScore = row.priority_score ?? "-";
       const beneficiaryTriple = formatBeneficiaryTriple(row);
-      const priorityFlag = Number(priorityScore) >= 3 ? "예" : "아니오";
+      const priorityFlag = Number(priorityScore) >= 3 ? "우선지원 대상" : "일반 관리";
 
       return `
         <div style="padding:14px 16px; min-width:260px; line-height:1.65; font-family:Pretendard,'Noto Sans KR',sans-serif;">
           <b>${schoolName}</b> (${gu})<br>
           ─────────────────<br>
-          🏷 유형: case_type ${caseType} — ${caseTypeLabel}<br>
-          ⭐ 우선순위 점수: ${priorityScore}점<br>
-          수혜인구(현재/2029/2031): ${beneficiaryTriple}<br>
-          🌳 등시선 내 공원 수: ${isoParkCount}개<br>
-          📊 access_ratio: ${formatAccessRatio(row.access_ratio)}<br>
-          우선지원 여부: ${priorityFlag}<br>
+          🏷 유형: case_type ${caseType} (${caseTypeLabel})<br>
+          🌳 도보 500m 내 공원: ${isoParkCount}개<br>
+          👶 초등학령 아동: ${formatCount(isoChild)}명<br>
+          📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)<br>
+          📉 공원 부족: ${gapCount}개 (평균 대비)<br>
+          💡 수혜인구(현재/2029/2031): ${beneficiaryTriple}<br>
+          ⭐ 우선순위: ${priorityScore}점 (${priorityFlag})<br>
         </div>
       `;
     }
@@ -680,6 +742,72 @@
           </ul>
         </div>
       `;
+    }
+
+    function shouldUseSchoolClusterer() {
+      return Boolean(state.map) && state.map.getLevel() < 11;
+    }
+
+    function getSummaryRow() {
+      return state.datasets.guSummary.find((row) => String(row.gu || "").trim() === state.selectedGu) || null;
+    }
+
+    function renderGuSummary() {
+      if (state.selectedGu === "전체") {
+        ui.guSummaryBox.innerHTML = "구를 선택하면 요약을 표시합니다.";
+        return;
+      }
+
+      const summary = getSummaryRow();
+      if (!summary) {
+        ui.guSummaryBox.innerHTML = "선택한 구의 요약 데이터가 없습니다.";
+        return;
+      }
+
+      const prioritySchools = state.datasets.schools
+        .filter((row) => detectGu(row) === state.selectedGu && Number(row.priority_score) >= 3)
+        .sort((left, right) => Number(right.priority_score) - Number(left.priority_score) || getSchoolName(left).localeCompare(getSchoolName(right), "ko"))
+        .map((row) => `<button class="school-link" type="button" data-school-id="${getSchoolId(row)}">${getSchoolName(row)} (${row.priority_score}점)</button>`)
+        .join("");
+
+      ui.guSummaryBox.innerHTML = `
+        <div class="summary-grid">
+          <div>총 학교 수: ${formatCount(summary.total_school_count)}개</div>
+          <div>우선지원 학교 수: ${formatCount(summary.priority_score_3plus_count)}개</div>
+          <div>평균 접근성 비율: ${formatSummaryPercent(summary.avg_access_ratio)}</div>
+          <div>공원 0개 학교 수: ${formatCount(summary.iso_park_count_0_count)}개</div>
+          <div>case_type 분포: 1형 ${formatCount(summary.case_type_1_count)}개 / 2형 ${formatCount(summary.case_type_2_count)}개 / 3형 ${formatCount(summary.case_type_3_count)}개 / 4형 ${formatCount(summary.case_type_4_count)}개</div>
+        </div>
+        <div style="font-weight:800; margin-bottom:8px;">우선지원 학교 목록</div>
+        <div class="summary-list">${prioritySchools || '<div style="color:#6b7280;">우선지원 학교가 없습니다.</div>'}</div>
+      `;
+
+      ui.guSummaryBox.querySelectorAll("[data-school-id]").forEach((button) => {
+        button.addEventListener("click", () => focusSchoolById(button.dataset.schoolId));
+      });
+    }
+
+    function focusSchoolById(schoolId) {
+      const row = state.datasets.schools.find((item) => getSchoolId(item) === schoolId);
+      if (!row) return;
+
+      const latLng = toLatLng(row, row["위도"] !== undefined ? "위도" : "lat", row["경도"] !== undefined ? "경도" : "lng");
+      if (!latLng) return;
+
+      highlightIsochroneForSchool(row);
+      state.map.setLevel(11);
+      state.map.panTo(latLng);
+
+      window.setTimeout(() => {
+        const marker = state.schoolMarkerIndex.get(schoolId);
+        state.infoWindow.setContent(getPopupHtml(row));
+        if (marker) {
+          state.infoWindow.open(state.map, marker);
+        } else {
+          state.infoWindow.setPosition(latLng);
+          state.infoWindow.open(state.map);
+        }
+      }, 220);
     }
 
     function distanceInMeters(lat1, lng1, lat2, lng2) {
@@ -757,6 +885,10 @@
 
     function renderSchoolMarkers() {
       clearOverlayGroup("schoolMarkers");
+      state.schoolMarkerIndex = new Map();
+      if (state.clusterer) {
+        state.clusterer.clear();
+      }
 
       const rows = state.datasets.schools.filter(shouldShowByGu);
       rows.forEach((row) => {
@@ -770,9 +902,17 @@
         });
 
         bindSchoolPopup(marker, row);
-        marker.setMap(state.map);
+        marker.__schoolId = getSchoolId(row);
+        marker.__schoolRow = row;
+        state.schoolMarkerIndex.set(marker.__schoolId, marker);
         state.overlays.schoolMarkers.push(marker);
       });
+
+      if (shouldUseSchoolClusterer()) {
+        state.clusterer.addMarkers(state.overlays.schoolMarkers);
+      } else {
+        state.overlays.schoolMarkers.forEach((marker) => marker.setMap(state.map));
+      }
     }
 
     function renderPointMarkers(groupName, rows, options) {
@@ -940,6 +1080,7 @@
         fillOpacity: 0.12
       }, ui.toggles.buffer.checked);
       updateOverlayVisibility();
+      renderGuSummary();
     }
 
     async function loadData() {
@@ -949,6 +1090,7 @@
         schoolPriority,
         schoolCoords,
         beneficiaryForecast,
+        guSummary,
         parks,
         isochrone,
         buffer,
@@ -958,6 +1100,7 @@
         loadCSV(PATHS.schools),
         loadCSV(PATHS.schoolCoords),
         loadCSV(PATHS.beneficiaryForecast),
+        loadCSV(PATHS.guSummary),
         loadCSV(PATHS.parks),
         loadGeoJSON(PATHS.isochrone),
         loadGeoJSON(PATHS.buffer),
@@ -967,6 +1110,7 @@
 
       state.datasets.schoolCoords = schoolCoords;
       state.datasets.beneficiaryForecast = beneficiaryForecast;
+      state.datasets.guSummary = guSummary;
       state.datasets.schools = enrichSchoolRows(
         mergeSchoolPriorityWithCoords(schoolPriority, schoolCoords),
         beneficiaryForecast
@@ -978,12 +1122,14 @@
       state.datasets.childcare = childcare;
 
       rerenderAll();
+      renderGuSummary();
 
       setStatus(
         [
           `학교 우선순위: ${schoolPriority.length}건`,
           `학교 좌표: ${schoolCoords.length}건`,
           `수혜인구 예측: ${beneficiaryForecast.length}건`,
+          `구 요약: ${guSummary.length}건`,
           `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
           `공원·놀이터: ${parks.length}건`,
           `어린이집·유치원: ${childcare.length}건`,
@@ -1013,6 +1159,10 @@
         ui.panelToggleButton.textContent = ui.panel.classList.contains("open") ? "필터 닫기" : "필터 열기";
       });
 
+      kakao.maps.event.addListener(state.map, "zoom_changed", () => {
+        renderSchoolMarkers();
+      });
+
       kakao.maps.event.addListener(state.map, "click", (mouseEvent) => {
         if (state.suppressNextMapClick) {
           state.suppressNextMapClick = false;
@@ -1040,6 +1190,28 @@
         level: DEFAULT_LEVEL
       });
 
+      state.clusterer = new kakao.maps.MarkerClusterer({
+        map: state.map,
+        averageCenter: true,
+        minLevel: 1,
+        disableClickZoom: true,
+        styles: [
+          {
+            width: "44px",
+            height: "44px",
+            background: "rgba(20, 83, 45, 0.88)",
+            borderRadius: "22px",
+            color: "#fff",
+            textAlign: "center",
+            fontWeight: "800",
+            lineHeight: "44px",
+            border: "2px solid rgba(255,255,255,0.9)"
+          }
+        ]
+      });
+      kakao.maps.event.addListener(state.clusterer, "clusterclick", (cluster) => {
+        state.map.setLevel(Math.max(state.map.getLevel() - 1, 1), { anchor: cluster.getCenter() });
+      });
       state.infoWindow = new kakao.maps.InfoWindow({ removable: true });
       wireEvents();
       await loadData();
