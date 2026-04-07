@@ -413,6 +413,7 @@
     const PATHS = {
       schools: "./data_processed/school_priority.csv",
       schoolCoords: "./data_processed/schools.csv",
+      studentTrend: "./data_processed/student_trend.csv",
       beneficiaryForecast: "./data_processed/beneficiary_forecast.csv",
       guSummary: "./data_processed/gu_summary.csv",
       parks: "./data_processed/parks.csv",
@@ -444,6 +445,7 @@
       datasets: {
         schools: [],
         schoolCoords: [],
+        studentTrend: [],
         beneficiaryForecast: [],
         guSummary: [],
         parks: [],
@@ -624,16 +626,32 @@
       });
     }
 
-    function enrichSchoolRows(rows, beneficiaryRows) {
+    function enrichSchoolRows(rows, beneficiaryRows, studentTrendRows) {
       const beneficiaryById = createRowMap(beneficiaryRows, (row) => row["학교ID"] || row.school_id || "");
+      const trendById = new Map();
+
+      studentTrendRows.forEach((row) => {
+        const schoolId = getSchoolId(row);
+        if (!schoolId) return;
+        const current = trendById.get(schoolId) || [];
+        current.push({
+          year: Number(row["연도"] ?? row.year),
+          students: Number(row["학생수"] ?? row.students)
+        });
+        trendById.set(schoolId, current);
+      });
 
       return rows.map((row) => {
         const schoolId = getSchoolId(row);
         const schoolName = getSchoolName(row);
         const beneficiary = beneficiaryById.get(schoolId) || {};
+        const studentTrend = (trendById.get(schoolId) || [])
+          .filter((item) => Number.isFinite(item.year) && Number.isFinite(item.students))
+          .sort((left, right) => left.year - right.year);
         return {
           ...row,
           ...beneficiary,
+          studentTrend,
           학교ID: schoolId,
           학교명: schoolName
         };
@@ -663,17 +681,46 @@
       return numeric.toFixed(digits);
     }
 
-    function formatBeneficiaryTriple(row) {
-      const current = formatCount(row.current_beneficiary);
-      const forecast2029 = formatCount(row.forecast_2029);
-      const forecast2031 = formatCount(row.forecast_2031);
-      return `${current} / ${forecast2029} / ${forecast2031}명`;
-    }
-
     function formatSummaryPercent(value) {
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) return "-";
       return `${(numeric * 100).toFixed(1)}%`;
+    }
+
+    function getStudentTrendMarkup(row) {
+      const trend = Array.isArray(row.studentTrend) ? row.studentTrend : [];
+      if (!trend.length) {
+        return `
+          <div style="margin-top:6px;">
+            <div style="font-weight:700; margin-bottom:4px;">👥 학생수 추세</div>
+            <div style="font-size:12px; color:#6b7280;">보유 연도 데이터 없음</div>
+          </div>
+        `;
+      }
+
+      const maxStudents = Math.max(...trend.map((item) => item.students), 1);
+      const labels = trend
+        .map((item) => `${item.year} ${formatCount(item.students)}명`)
+        .join(" · ");
+      const bars = trend
+        .map((item) => {
+          const height = Math.max(18, Math.round((item.students / maxStudents) * 48));
+          return `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <div style="width:18px; height:${height}px; border-radius:6px 6px 3px 3px; background:linear-gradient(180deg,#2f855a 0%,#68d391 100%);"></div>
+              <div style="font-size:10px; color:#4b5563;">${item.year}</div>
+            </div>
+          `;
+        })
+        .join("");
+
+      return `
+        <div style="margin-top:6px;">
+          <div style="font-weight:700; margin-bottom:4px;">👥 학생수 추세</div>
+          <div style="display:flex; align-items:flex-end; gap:8px; margin:6px 0 4px;">${bars}</div>
+          <div style="font-size:11px; color:#4b5563;">${labels}</div>
+        </div>
+      `;
     }
 
     function getPopupHtml(row) {
@@ -704,12 +751,8 @@
       const isoChild = row.iso_child_6_12 ?? "-";
       const gapCount = formatDecimal(row.gap_count, 2);
       const priorityScore = row.priority_score ?? "-";
-      const beneficiaryTriple = formatBeneficiaryTriple(row);
       const priorityFlag = Number(priorityScore) >= 3 ? "우선지원 대상" : "일반 관리";
-      const hasRedevScenario = String(row.redev_flag).toLowerCase() === "true";
-      const forecastBlock = hasRedevScenario
-        ? `💡 수혜인구(현재/2029/2031):<br>&nbsp;&nbsp;- 기본 시나리오: ${formatCount(row.current_beneficiary)} / ${formatCount(row.forecast_2029_base)} / ${formatCount(row.forecast_2031_base)}명<br>&nbsp;&nbsp;- 재개발 반영: ${formatCount(row.current_beneficiary)} / ${formatCount(row.forecast_2029_redev)} / ${formatCount(row.forecast_2031_redev)}명<br>&nbsp;&nbsp;(재개발 변수 불확실성 포함)<br>`
-        : `💡 수혜인구(현재/2029/2031): ${beneficiaryTriple}<br>`;
+      const trendMarkup = getStudentTrendMarkup(row);
 
       return `
         <div style="padding:14px 16px; min-width:260px; line-height:1.65; font-family:Pretendard,'Noto Sans KR',sans-serif;">
@@ -720,7 +763,7 @@
           👶 초등학령 아동: ${formatCount(isoChild)}명<br>
           📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)<br>
           📉 공원 부족: ${gapCount}개 (평균 대비)<br>
-          ${forecastBlock}
+          ${trendMarkup}
           ⭐ 우선순위: ${priorityScore}점 (${priorityFlag})<br>
         </div>
       `;
@@ -1101,6 +1144,7 @@
       const [
         schoolPriority,
         schoolCoords,
+        studentTrend,
         beneficiaryForecast,
         guSummary,
         parks,
@@ -1111,6 +1155,7 @@
       ] = await Promise.all([
         loadCSV(PATHS.schools),
         loadCSV(PATHS.schoolCoords),
+        loadCSV(PATHS.studentTrend),
         loadCSV(PATHS.beneficiaryForecast),
         loadCSV(PATHS.guSummary),
         loadCSV(PATHS.parks),
@@ -1120,12 +1165,14 @@
         loadCSV(PATHS.childcare)
       ]);
 
+      state.datasets.studentTrend = studentTrend;
       state.datasets.schoolCoords = schoolCoords;
       state.datasets.beneficiaryForecast = beneficiaryForecast;
       state.datasets.guSummary = guSummary;
       state.datasets.schools = enrichSchoolRows(
         mergeSchoolPriorityWithCoords(schoolPriority, schoolCoords),
-        beneficiaryForecast
+        beneficiaryForecast,
+        studentTrend
       );
       state.datasets.parks = parks;
       state.datasets.isochrone = isochrone;
@@ -1140,6 +1187,7 @@
         [
           `학교 우선순위: ${schoolPriority.length}건`,
           `학교 좌표: ${schoolCoords.length}건`,
+          `학생수 추세: ${studentTrend.length}건`,
           `수혜인구 예측: ${beneficiaryForecast.length}건`,
           `구 요약: ${guSummary.length}건`,
           `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
