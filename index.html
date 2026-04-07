@@ -55,7 +55,7 @@
     .panel {
       position: absolute;
       top: 18px;
-      left: 18px;
+      right: 18px;
       z-index: 20;
       width: min(360px, calc(100vw - 36px));
       background: var(--panel);
@@ -96,7 +96,7 @@
 
     .panel-body {
       padding: 16px 18px 18px;
-      max-height: calc(100vh - 130px);
+      max-height: calc(100vh - 60px);
       overflow: auto;
     }
 
@@ -229,6 +229,161 @@
       gap: 6px;
     }
 
+    .school-detail-box {
+      min-height: 280px;
+      padding: 16px;
+      border-radius: 18px;
+      background: #fffdfa;
+      border: 1px solid rgba(99, 78, 40, 0.16);
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .school-detail-box.case-3 {
+      background: #fff1f1;
+      border-color: rgba(229, 62, 62, 0.24);
+    }
+
+    .school-detail-box.case-4 {
+      color: var(--muted);
+    }
+
+    .detail-head {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(99, 78, 40, 0.12);
+    }
+
+    .detail-name {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .detail-subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .detail-message {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(217, 234, 211, 0.32);
+      border: 1px solid rgba(20, 83, 45, 0.12);
+    }
+
+    .detail-message.case-2 {
+      background: rgba(254, 226, 226, 0.65);
+      border-color: rgba(229, 62, 62, 0.18);
+    }
+
+    .detail-message.case-3 {
+      background: rgba(254, 226, 226, 0.9);
+      border-color: rgba(229, 62, 62, 0.28);
+    }
+
+    .detail-section {
+      margin-top: 14px;
+    }
+
+    .detail-section-title {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #7c5c27;
+    }
+
+    .metric-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .metric-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(99, 78, 40, 0.1);
+    }
+
+    .metric-item.muted {
+      color: var(--muted);
+      background: rgba(243, 244, 246, 0.72);
+    }
+
+    .metric-item.warning {
+      color: #9c4221;
+      background: rgba(254, 235, 200, 0.9);
+      border-color: rgba(237, 137, 54, 0.2);
+      font-weight: 700;
+    }
+
+    .metric-item.danger {
+      color: #9b2c2c;
+      background: rgba(254, 226, 226, 0.92);
+      border-color: rgba(229, 62, 62, 0.24);
+      font-weight: 800;
+    }
+
+    .trend-card {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(99, 78, 40, 0.1);
+    }
+
+    .trend-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      min-height: 72px;
+      margin: 8px 0 6px;
+    }
+
+    .trend-bar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .trend-bar {
+      width: 18px;
+      min-height: 18px;
+      border-radius: 6px 6px 3px 3px;
+      background: linear-gradient(180deg, #2f855a 0%, #68d391 100%);
+    }
+
+    .trend-year {
+      font-size: 10px;
+      color: #4b5563;
+    }
+
+    .trend-labels {
+      font-size: 11px;
+      color: #4b5563;
+    }
+
+    .detail-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255, 247, 237, 0.9);
+      border: 1px solid rgba(237, 137, 54, 0.2);
+      font-weight: 800;
+    }
+
+    .panel-util {
+      display: none;
+    }
+
     .school-link {
       width: 100%;
       position: relative;
@@ -319,14 +474,12 @@
         <div class="mobile-handle"></div>
         <p class="eyebrow">Incheon Outdoor Equity</p>
         <h1 class="panel-title">초등학교 야외활동 환경 격차 지도</h1>
-        <p class="panel-subtitle">
-          카카오맵 기반 발표용 프로토타입입니다. 파일이 아직 없거나 형식이 바뀌어도 앱이 중단되지 않도록 로딩 오류는 콘솔에만 기록합니다.
-        </p>
+        <p class="panel-subtitle">구 전체 현황과 학교별 진단을 한 화면에서 확인합니다.</p>
       </div>
 
       <div class="panel-body">
         <section class="section">
-          <h2 class="section-title">구 필터</h2>
+          <h2 class="section-title">구 선택</h2>
           <label class="field-label" for="guFilter">구 선택</label>
           <select id="guFilter">
             <option value="전체">전체</option>
@@ -343,58 +496,60 @@
         </section>
 
         <section class="section">
-          <h2 class="section-title">구별 요약</h2>
+          <h2 class="section-title">구 전체 통계</h2>
           <div class="summary-box" id="guSummaryBox">구를 선택하면 요약을 표시합니다.</div>
         </section>
 
         <section class="section">
-          <h2 class="section-title">레이어 토글</h2>
-          <div class="toggle-list">
-            <div class="toggle-row">
-              <input type="checkbox" id="toggleIsochrone" />
-              <label for="toggleIsochrone">도보 등시선</label>
-            </div>
-            <div class="toggle-row">
-              <input type="checkbox" id="toggleBuffer" />
-              <label for="toggleBuffer">직선 버퍼</label>
-            </div>
-            <div class="toggle-row">
-              <input type="checkbox" id="toggleParks" checked />
-              <label for="toggleParks">공원·놀이터</label>
-            </div>
-            <div class="toggle-row">
-              <input type="checkbox" id="toggleRedevelopment" />
-              <label for="toggleRedevelopment">재개발 구역</label>
-            </div>
-            <div class="toggle-row">
-              <input type="checkbox" id="toggleChildcare" />
-              <label for="toggleChildcare">어린이집·유치원</label>
-            </div>
-          </div>
+          <h2 class="section-title">학교 상세</h2>
+          <div class="school-detail-box" id="schoolDetailBox">학교 마커를 클릭하면 상세 정보를 표시합니다.</div>
         </section>
 
-        <section class="section">
-          <h2 class="section-title">우선순위 범례</h2>
-          <div class="legend">
-            <div class="legend-item">
-              <span class="swatch" style="background:#E53E3E;"></span>
-              <span>우선지원 대상 (3~4점)</span>
+        <div class="panel-util" aria-hidden="true">
+          <section class="section">
+            <div class="toggle-list">
+              <div class="toggle-row">
+                <input type="checkbox" id="toggleIsochrone" />
+                <label for="toggleIsochrone">도보 등시선</label>
+              </div>
+              <div class="toggle-row">
+                <input type="checkbox" id="toggleBuffer" />
+                <label for="toggleBuffer">직선 버퍼</label>
+              </div>
+              <div class="toggle-row">
+                <input type="checkbox" id="toggleParks" checked />
+                <label for="toggleParks">공원·놀이터</label>
+              </div>
+              <div class="toggle-row">
+                <input type="checkbox" id="toggleRedevelopment" />
+                <label for="toggleRedevelopment">재개발 구역</label>
+              </div>
+              <div class="toggle-row">
+                <input type="checkbox" id="toggleChildcare" />
+                <label for="toggleChildcare">어린이집·유치원</label>
+              </div>
             </div>
-            <div class="legend-item">
-              <span class="swatch" style="background:#ED8936;"></span>
-              <span>관심 필요 (2점)</span>
+          </section>
+          <section class="section">
+            <div class="legend">
+              <div class="legend-item">
+                <span class="swatch" style="background:#E53E3E;"></span>
+                <span>우선지원 대상 (3~4점)</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch" style="background:#ED8936;"></span>
+                <span>관심 필요 (2점)</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch" style="background:#38A169;"></span>
+                <span>양호 (1점)</span>
+              </div>
             </div>
-            <div class="legend-item">
-              <span class="swatch" style="background:#38A169;"></span>
-              <span>양호 (1점)</span>
-            </div>
-          </div>
-        </section>
-
-        <section class="section">
-          <h2 class="section-title">로딩 상태</h2>
-          <div class="status-box" id="statusBox">카카오맵 SDK를 불러오는 중입니다.</div>
-        </section>
+          </section>
+          <section class="section">
+            <div class="status-box" id="statusBox">카카오맵 SDK를 불러오는 중입니다.</div>
+          </section>
+        </div>
       </div>
     </aside>
   </div>
@@ -432,6 +587,7 @@
       clusterer: null,
       selectedGu: "전체",
       selectedSchoolJoinKey: null,
+      selectedSchoolId: null,
       suppressNextMapClick: false,
       schoolMarkerIndex: new Map(),
       overlays: {
@@ -466,6 +622,7 @@
     const ui = {
       statusBox: document.getElementById("statusBox"),
       guSummaryBox: document.getElementById("guSummaryBox"),
+      schoolDetailBox: document.getElementById("schoolDetailBox"),
       guFilter: document.getElementById("guFilter"),
       panel: document.getElementById("controlPanel"),
       panelToggleButton: document.getElementById("panelToggleButton"),
@@ -691,8 +848,7 @@
       const trend = Array.isArray(row.studentTrend) ? row.studentTrend : [];
       if (!trend.length) {
         return `
-          <div style="margin-top:6px;">
-            <div style="font-weight:700; margin-bottom:4px;">👥 학생수 추세</div>
+          <div class="trend-card">
             <div style="font-size:12px; color:#6b7280;">보유 연도 데이터 없음</div>
           </div>
         `;
@@ -706,19 +862,18 @@
         .map((item) => {
           const height = Math.max(18, Math.round((item.students / maxStudents) * 48));
           return `
-            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
-              <div style="width:18px; height:${height}px; border-radius:6px 6px 3px 3px; background:linear-gradient(180deg,#2f855a 0%,#68d391 100%);"></div>
-              <div style="font-size:10px; color:#4b5563;">${item.year}</div>
+            <div class="trend-bar-col">
+              <div class="trend-bar" style="height:${height}px;"></div>
+              <div class="trend-year">${item.year}</div>
             </div>
           `;
         })
         .join("");
 
       return `
-        <div style="margin-top:6px;">
-          <div style="font-weight:700; margin-bottom:4px;">👥 학생수 추세</div>
-          <div style="display:flex; align-items:flex-end; gap:8px; margin:6px 0 4px;">${bars}</div>
-          <div style="font-size:11px; color:#4b5563;">${labels}</div>
+        <div class="trend-card">
+          <div class="trend-bars">${bars}</div>
+          <div class="trend-labels">${labels}</div>
         </div>
       `;
     }
@@ -799,6 +954,77 @@
       `;
     }
 
+    function getDiagnosticMessage(caseType) {
+      const numeric = Number(caseType);
+      if (numeric === 1) return "도보 접근은 가능하나 공원 수가 부족합니다. 관심 필요 학교입니다.";
+      if (numeric === 2) return "인근 아동 대비 공원이 현저히 부족합니다. 우선 지원 대상입니다.";
+      if (numeric === 3) return "접근성과 공원 수 모두 취약합니다. 최우선 지원 대상입니다.";
+      return "공원 접근성이 양호합니다. 일반 관리 대상입니다.";
+    }
+
+    function getCaseThemeClass(caseType) {
+      const numeric = Number(caseType);
+      return `case-${Number.isFinite(numeric) ? numeric : 4}`;
+    }
+
+    function getMetricClass(caseType, metricType) {
+      const numeric = Number(caseType);
+      if (numeric === 4) return "metric-item muted";
+      if (numeric === 1 && metricType === "park") return "metric-item warning";
+      if (numeric === 2 && metricType === "parkPressure") return "metric-item danger";
+      if (numeric === 3 && (metricType === "park" || metricType === "access" || metricType === "parkPressure")) {
+        return "metric-item danger";
+      }
+      return "metric-item";
+    }
+
+    function renderSchoolDetail(row = null) {
+      if (!row) {
+        ui.schoolDetailBox.className = "school-detail-box";
+        ui.schoolDetailBox.innerHTML = "학교 마커를 클릭하면 상세 정보를 표시합니다.";
+        return;
+      }
+
+      const caseType = Number(row.case_type);
+      const caseLabel = getCaseTypeLabel(caseType);
+      const gu = detectGu(row) || "-";
+      const showAccess = caseType >= 1 && caseType <= 3;
+      const showGap = caseType >= 1 && caseType <= 3;
+      const message = getDiagnosticMessage(caseType);
+      const trendMarkup = getStudentTrendMarkup(row);
+      const scoreText = `${formatCount(row.priority_score)}점`;
+
+      ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(caseType)}`;
+      ui.schoolDetailBox.innerHTML = `
+        <div class="detail-head">
+          <h3 class="detail-name">${getSchoolName(row)} (${gu})</h3>
+          <div class="detail-subtitle">${caseLabel}</div>
+        </div>
+        <div class="detail-message ${getCaseThemeClass(caseType)}">${message}</div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">공원·놀이터 현황</div>
+          <div class="metric-list">
+            <div class="${getMetricClass(caseType, "park")}">🌳 도보 500m 내 공원: ${formatCount(row.iso_park_count)}개</div>
+            <div class="${getMetricClass(caseType, "park")}">🛝 공공 놀이터: ${formatCount(row.buf_park_count)}개</div>
+            <div class="metric-item muted">🏘️ 단지내 놀이터(민간): - (데이터 준비 중)</div>
+            ${showAccess ? `<div class="${getMetricClass(caseType, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
+            ${showGap ? `<div class="${getMetricClass(caseType, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">학생수 추세</div>
+          ${trendMarkup}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">우선순위 점수</div>
+          <div class="detail-score">⭐ 우선순위 ${scoreText}</div>
+        </div>
+      `;
+    }
+
     function shouldUseSchoolClusterer() {
       return Boolean(state.map) && state.map.getLevel() < 11;
     }
@@ -809,7 +1035,13 @@
 
     function renderGuSummary() {
       if (state.selectedGu === "전체") {
-        ui.guSummaryBox.innerHTML = "구를 선택하면 요약을 표시합니다.";
+        ui.guSummaryBox.innerHTML = `
+          <div class="summary-grid">
+            <div>총 학교 수: ${formatCount(state.datasets.schools.length)}개</div>
+            <div>우선지원 학교 수: ${formatCount(state.datasets.schools.filter((row) => Number(row.priority_score) >= 3).length)}개</div>
+            <div>공원 0개 학교 수: ${formatCount(state.datasets.schools.filter((row) => Number(row.iso_park_count) === 0).length)}개</div>
+          </div>
+        `;
         return;
       }
 
@@ -819,27 +1051,13 @@
         return;
       }
 
-      const prioritySchools = state.datasets.schools
-        .filter((row) => detectGu(row) === state.selectedGu && Number(row.priority_score) >= 3)
-        .sort((left, right) => Number(right.priority_score) - Number(left.priority_score) || getSchoolName(left).localeCompare(getSchoolName(right), "ko"))
-        .map((row) => `<button class="school-link" type="button" data-school-id="${getSchoolId(row)}">${getSchoolName(row)} (${row.priority_score}점)</button>`)
-        .join("");
-
       ui.guSummaryBox.innerHTML = `
         <div class="summary-grid">
           <div>총 학교 수: ${formatCount(summary.total_school_count)}개</div>
           <div>우선지원 학교 수: ${formatCount(summary.priority_score_3plus_count)}개</div>
-          <div>평균 접근성 비율: ${formatSummaryPercent(summary.avg_access_ratio)}</div>
           <div>공원 0개 학교 수: ${formatCount(summary.iso_park_count_0_count)}개</div>
-          <div>case_type 분포: 1형 ${formatCount(summary.case_type_1_count)}개 / 2형 ${formatCount(summary.case_type_2_count)}개 / 3형 ${formatCount(summary.case_type_3_count)}개 / 4형 ${formatCount(summary.case_type_4_count)}개</div>
         </div>
-        <div style="font-weight:800; margin-bottom:8px;">우선지원 학교 목록</div>
-        <div class="summary-list">${prioritySchools || '<div style="color:#6b7280;">우선지원 학교가 없습니다.</div>'}</div>
       `;
-
-      ui.guSummaryBox.querySelectorAll("[data-school-id]").forEach((button) => {
-        button.addEventListener("click", () => focusSchoolById(button.dataset.schoolId));
-      });
     }
 
     function focusSchoolById(schoolId) {
@@ -850,19 +1068,11 @@
       if (!latLng) return;
 
       highlightIsochroneForSchool(row);
+      state.selectedSchoolId = schoolId;
+      renderSchoolDetail(row);
       state.map.setLevel(11);
       state.map.panTo(latLng);
-
-      window.setTimeout(() => {
-        const marker = state.schoolMarkerIndex.get(schoolId);
-        state.infoWindow.setContent(getPopupHtml(row));
-        if (marker) {
-          state.infoWindow.open(state.map, marker);
-        } else {
-          state.infoWindow.setPosition(latLng);
-          state.infoWindow.open(state.map);
-        }
-      }, 220);
+      state.infoWindow.close();
     }
 
     function distanceInMeters(lat1, lng1, lat2, lng2) {
@@ -933,8 +1143,9 @@
       kakao.maps.event.addListener(marker, "click", () => {
         state.suppressNextMapClick = true;
         highlightIsochroneForSchool(row);
-        state.infoWindow.setContent(getPopupHtml(row));
-        state.infoWindow.open(state.map, marker);
+        state.selectedSchoolId = getSchoolId(row);
+        renderSchoolDetail(row);
+        state.infoWindow.close();
       });
     }
 
@@ -1136,6 +1347,13 @@
       }, ui.toggles.buffer.checked);
       updateOverlayVisibility();
       renderGuSummary();
+      const selectedRow = state.datasets.schools.find((row) => getSchoolId(row) === state.selectedSchoolId);
+      if (selectedRow && shouldShowByGu(selectedRow)) {
+        renderSchoolDetail(selectedRow);
+      } else {
+        state.selectedSchoolId = null;
+        renderSchoolDetail(null);
+      }
     }
 
     async function loadData() {
