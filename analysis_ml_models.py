@@ -41,10 +41,12 @@ import shap
 
 ROOT = Path(r"c:\2026_data_analysis_park")
 DATA = ROOT / "data_processed"
+RAW = ROOT / "data_raw"
 
 POP_GRID_CSV = DATA / "population_grid_1k.csv"
 PRIORITY_CSV = DATA / "school_priority.csv"
 GU_SUMMARY_CSV = DATA / "gu_summary.csv"
+YEARLY_STUDENT_XLSX = RAW / "2025_연도별 학생수.xlsx"
 
 FORECAST_CSV = DATA / "beneficiary_forecast.csv"
 PRIORITY_ML_CSV = DATA / "priority_ml.csv"
@@ -99,6 +101,26 @@ def build_cluster(df: pd.DataFrame) -> pd.Series:
     scaled = StandardScaler().fit_transform(features)
     labels = KMeans(n_clusters=3, random_state=42, n_init=10).fit_predict(scaled)
     return pd.Series(labels, index=df.index, name="cluster")
+
+
+def load_citywide_elementary_decline() -> dict[str, float]:
+    yearly = pd.read_excel(YEARLY_STUDENT_XLSX, sheet_name="Sheet0")
+    body = yearly.iloc[2:].copy()
+    year_col, sido_col, elementary_col = body.columns[0], body.columns[1], body.columns[6]
+    body = body[body[year_col].astype(str).str.fullmatch(r"\d{4}")]
+    incheon = body[body[sido_col].astype(str) == "인천"].copy()
+
+    elementary_2019 = float(incheon.loc[incheon[year_col].astype(str) == "2019", elementary_col].iloc[0])
+    elementary_2024 = float(incheon.loc[incheon[year_col].astype(str) == "2024", elementary_col].iloc[0])
+    annual_factor = (elementary_2024 / elementary_2019) ** (1 / 5)
+
+    return {
+        "elementary_2019": elementary_2019,
+        "elementary_2024": elementary_2024,
+        "annual_factor": annual_factor,
+        "factor_2029": annual_factor**5,
+        "factor_2031": annual_factor**7,
+    }
 
 
 def prepare_base_frame() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -418,6 +440,8 @@ def prepare_base_frame_v2() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
     city_mean_child = gu_base["gu_current_mean_child"].mean()
     density_index = gu_base["gu_current_mean_child"] / city_mean_child
+    decline = load_citywide_elementary_decline()
+    local_decline_pressure = np.minimum(density_index - 1.0, 0.0)
     gu_base["cohort_change_2029"] = np.clip(
         1.0 + 0.18 * (density_index - 1.0) + 0.015 * gu_base["gu_redev_per_school"],
         0.88,
@@ -428,9 +452,31 @@ def prepare_base_frame_v2() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         0.84,
         1.30,
     )
+    gu_base["cohort_change_2029_base"] = np.clip(
+        decline["factor_2029"] * (1.0 + 0.12 * local_decline_pressure),
+        0.70,
+        1.00,
+    )
+    gu_base["cohort_change_2031_base"] = np.clip(
+        decline["factor_2031"] * (1.0 + 0.18 * local_decline_pressure),
+        0.64,
+        1.00,
+    )
+    gu_base["citywide_birth_factor_2029"] = decline["factor_2029"]
+    gu_base["citywide_birth_factor_2031"] = decline["factor_2031"]
 
     schools = schools.merge(
-        gu_base[[GU_COL, "cohort_change_2029", "cohort_change_2031"]],
+        gu_base[
+            [
+                GU_COL,
+                "cohort_change_2029",
+                "cohort_change_2031",
+                "cohort_change_2029_base",
+                "cohort_change_2031_base",
+                "citywide_birth_factor_2029",
+                "citywide_birth_factor_2031",
+            ]
+        ],
         on=GU_COL,
         how="left",
     )
@@ -519,17 +565,54 @@ def train_xgboost_forecast_v2(schools: pd.DataFrame, pop: pd.DataFrame) -> tuple
             "access_ratio",
             "cohort_change_2029",
             "cohort_change_2031",
+            "cohort_change_2029_base",
+            "cohort_change_2031_base",
+            "citywide_birth_factor_2029",
+            "citywide_birth_factor_2031",
         ]
     ].copy()
     forecast = forecast.rename(columns={"iso_child_total": "current_beneficiary"})
     forecast["predicted_current"] = np.clip(pred_current, 0, None).round().astype(int)
-    forecast["forecast_2029"] = np.clip(forecast["predicted_current"] * forecast["cohort_change_2029"], 0, None).round().astype(int)
-    forecast["forecast_2031"] = np.clip(forecast["predicted_current"] * forecast["cohort_change_2031"], 0, None).round().astype(int)
+    forecast["redev_flag"] = (forecast[[redev_cols[1], redev_cols[2]]].sum(axis=1) > 0)
+    forecast["forecast_2029_base"] = np.clip(
+        forecast["predicted_current"] * forecast["cohort_change_2029_base"],
+        0,
+        None,
+    ).round().astype(int)
+    forecast["forecast_2031_base"] = np.clip(
+        forecast["predicted_current"] * forecast["cohort_change_2031_base"],
+        0,
+        None,
+    ).round().astype(int)
+    forecast["forecast_2029_redev"] = np.where(
+        forecast["redev_flag"],
+        np.clip(forecast["predicted_current"] * forecast["cohort_change_2029"], 0, None).round(),
+        forecast["forecast_2029_base"],
+    ).astype(int)
+    forecast["forecast_2031_redev"] = np.where(
+        forecast["redev_flag"],
+        np.clip(forecast["predicted_current"] * forecast["cohort_change_2031"], 0, None).round(),
+        forecast["forecast_2031_base"],
+    ).astype(int)
+    forecast["forecast_2029"] = forecast["forecast_2029_redev"]
+    forecast["forecast_2031"] = forecast["forecast_2031_redev"]
     forecast["confidence_low"] = np.clip(forecast["predicted_current"] - 1.96 * residual_std, 0, None).round().astype(int)
     forecast["confidence_high"] = np.clip(forecast["predicted_current"] + 1.96 * residual_std, 0, None).round().astype(int)
     forecast["citywide_child_share"] = round(city_child_share, 6)
-    forecast["redev_flag"] = (forecast[[redev_cols[0], redev_cols[1], redev_cols[2]]].sum(axis=1) > 0).map({True: "Y", False: "N"})
-    forecast = round_columns(forecast, ["gu_avg_grid_total_pop", "cohort_change_2029", "cohort_change_2031"], digits=3)
+    forecast["redev_flag"] = forecast["redev_flag"].astype(bool)
+    forecast = round_columns(
+        forecast,
+        [
+            "gu_avg_grid_total_pop",
+            "cohort_change_2029",
+            "cohort_change_2031",
+            "cohort_change_2029_base",
+            "cohort_change_2031_base",
+            "citywide_birth_factor_2029",
+            "citywide_birth_factor_2031",
+        ],
+        digits=3,
+    )
     forecast.to_csv(FORECAST_CSV, index=False, encoding="utf-8-sig")
 
     shap_importance = pd.DataFrame(
@@ -682,8 +765,25 @@ def main() -> None:
     print("\n=== Scenario multipliers by gu ===")
     print(
         round_columns(
-            gu_base[["gu", "gu_current_mean_child", "gu_redev_per_school", "cohort_change_2029", "cohort_change_2031"]].copy(),
-            ["gu_current_mean_child", "gu_redev_per_school", "cohort_change_2029", "cohort_change_2031"],
+            gu_base[
+                [
+                    "gu",
+                    "gu_current_mean_child",
+                    "gu_redev_per_school",
+                    "cohort_change_2029_base",
+                    "cohort_change_2031_base",
+                    "cohort_change_2029",
+                    "cohort_change_2031",
+                ]
+            ].copy(),
+            [
+                "gu_current_mean_child",
+                "gu_redev_per_school",
+                "cohort_change_2029_base",
+                "cohort_change_2031_base",
+                "cohort_change_2029",
+                "cohort_change_2031",
+            ],
             digits=3,
         ).to_string(index=False)
     )
@@ -696,9 +796,19 @@ def main() -> None:
     print("\n=== Forecast preview ===")
     print(
         forecast_df[
-            ["학교명", "gu", "current_beneficiary", "predicted_current", "forecast_2029", "forecast_2031"]
+            [
+                "학교명",
+                "gu",
+                "current_beneficiary",
+                "predicted_current",
+                "forecast_2029_base",
+                "forecast_2031_base",
+                "forecast_2029_redev",
+                "forecast_2031_redev",
+                "redev_flag",
+            ]
         ]
-        .sort_values("forecast_2031", ascending=False)
+        .sort_values("forecast_2031_redev", ascending=False)
         .head(15)
         .to_string(index=False)
     )

@@ -204,12 +204,18 @@
 
     .summary-box {
       min-height: 120px;
+      max-height: 320px;
       padding: 14px;
+      position: relative;
+      z-index: 2;
       border-radius: 16px;
       background: #fffdfa;
       border: 1px solid rgba(99, 78, 40, 0.16);
       font-size: 13px;
       line-height: 1.7;
+      white-space: normal;
+      word-break: break-word;
+      overflow-y: auto;
     }
 
     .summary-grid {
@@ -225,6 +231,8 @@
 
     .school-link {
       width: 100%;
+      position: relative;
+      z-index: 3;
       text-align: left;
       border: 1px solid rgba(99, 78, 40, 0.16);
       border-radius: 12px;
@@ -698,6 +706,10 @@
       const priorityScore = row.priority_score ?? "-";
       const beneficiaryTriple = formatBeneficiaryTriple(row);
       const priorityFlag = Number(priorityScore) >= 3 ? "우선지원 대상" : "일반 관리";
+      const hasRedevScenario = String(row.redev_flag).toLowerCase() === "true";
+      const forecastBlock = hasRedevScenario
+        ? `💡 수혜인구(현재/2029/2031):<br>&nbsp;&nbsp;- 기본 시나리오: ${formatCount(row.current_beneficiary)} / ${formatCount(row.forecast_2029_base)} / ${formatCount(row.forecast_2031_base)}명<br>&nbsp;&nbsp;- 재개발 반영: ${formatCount(row.current_beneficiary)} / ${formatCount(row.forecast_2029_redev)} / ${formatCount(row.forecast_2031_redev)}명<br>&nbsp;&nbsp;(재개발 변수 불확실성 포함)<br>`
+        : `💡 수혜인구(현재/2029/2031): ${beneficiaryTriple}<br>`;
 
       return `
         <div style="padding:14px 16px; min-width:260px; line-height:1.65; font-family:Pretendard,'Noto Sans KR',sans-serif;">
@@ -708,7 +720,7 @@
           👶 초등학령 아동: ${formatCount(isoChild)}명<br>
           📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)<br>
           📉 공원 부족: ${gapCount}개 (평균 대비)<br>
-          💡 수혜인구(현재/2029/2031): ${beneficiaryTriple}<br>
+          ${forecastBlock}
           ⭐ 우선순위: ${priorityScore}점 (${priorityFlag})<br>
         </div>
       `;
