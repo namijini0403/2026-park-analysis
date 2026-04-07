@@ -75,11 +75,14 @@ REGRESSION_FEATURES = [
     "cluster",
 ]
 
+# Leakage-reduced LightGBM feature set:
+# priority_score is derived from case_type and child-population thresholds, and
+# variables such as gap_count / cluster / iso_park_count / access_ratio are
+# directly or indirectly connected to that rule logic. We therefore keep only
+# child_pop_quartile and redev_total for the final classifier.
 CLASSIFICATION_FEATURES = [
-    "gap_count",
     "child_pop_quartile",
     "redev_total",
-    "cluster",
 ]
 
 
@@ -562,7 +565,10 @@ def train_lightgbm_priority_v2(schools: pd.DataFrame) -> tuple[pd.DataFrame, dic
     X = schools[CLASSIFICATION_FEATURES].copy()
     y = schools["priority_binary"].to_numpy(dtype=int)
 
-    numeric_features = ["gap_count", "redev_total", "cluster"]
+    # Final leakage-reduced classifier: do not reuse gap_count, cluster,
+    # iso_park_count, or access_ratio because they overlap with the rule-based
+    # priority_score construction path.
+    numeric_features = ["redev_total"]
     categorical_features = ["child_pop_quartile"]
     preprocessor = ColumnTransformer(
         transformers=[
@@ -622,10 +628,8 @@ def train_lightgbm_priority_v2(schools: pd.DataFrame) -> tuple[pd.DataFrame, dic
             school_name_col,
             GU_COL,
             "priority_score",
-            "gap_count",
             "child_pop_quartile",
             "redev_total",
-            "cluster",
         ]
     ].copy()
     result["rule_based_priority_3plus"] = y
@@ -640,7 +644,7 @@ def train_lightgbm_priority_v2(schools: pd.DataFrame) -> tuple[pd.DataFrame, dic
         ["rule_high_ml_low", "rule_low_ml_high"],
         default="match",
     )
-    result = round_columns(result, ["gap_count", "ml_probability"], digits=4)
+    result = round_columns(result, ["ml_probability"], digits=4)
     result.to_csv(PRIORITY_ML_CSV, index=False, encoding="utf-8-sig")
 
     mismatches = result[result["mismatch_flag"] == 1].copy()
