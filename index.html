@@ -1029,7 +1029,21 @@
     }
 
     function openSchoolPanel(row) {
-      focusSchool(row);
+      if (!row || !state.map) return;
+      const latLng = toLatLng(
+        row,
+        row["위도"] !== undefined ? "위도" : "lat",
+        row["경도"] !== undefined ? "경도" : "lng"
+      );
+      if (!latLng) return;
+
+      highlightIsochroneForSchool(row);
+      state.selectedSchoolId = getSchoolId(row);
+      renderSchoolDetail(row);
+      state.map.setLevel(5);
+      state.map.panTo(latLng);
+      state.infoWindow.close();
+      openPanel();
     }
 
     function handleSchoolSearchSelection() {
