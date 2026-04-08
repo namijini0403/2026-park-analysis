@@ -1028,6 +1028,10 @@
       openPanel();
     }
 
+    function openSchoolPanel(row) {
+      focusSchool(row);
+    }
+
     function handleSchoolSearchSelection() {
       const row = findSchoolBySearch(ui.schoolSearchInput?.value);
       if (!row) return;
@@ -1036,7 +1040,7 @@
         state.selectedGu = ui.guFilter.value;
         rerenderAll();
       }
-      focusSchool(row);
+      openSchoolPanel(row);
     }
 
     function loadCSV(path) {
@@ -1587,7 +1591,7 @@
     function focusSchoolById(schoolId) {
       const row = state.datasets.schools.find((item) => getSchoolId(item) === schoolId);
       if (!row) return;
-      focusSchool(row);
+      openSchoolPanel(row);
     }
 
     function distanceInMeters(lat1, lng1, lat2, lng2) {
@@ -1657,7 +1661,7 @@
     function bindSchoolPopup(marker, row) {
       kakao.maps.event.addListener(marker, "click", () => {
         state.suppressNextMapClick = true;
-        focusSchool(row);
+        openSchoolPanel(row);
       });
     }
 
