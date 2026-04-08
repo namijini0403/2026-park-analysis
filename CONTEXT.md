@@ -556,3 +556,17 @@ data_processed/age_ratio_incheon.csv
 - 500세대 이상 단지 536개 전수 카카오 지오코딩 완료,
   학교 반경 300m 기준 150개교 인접 확인.
   단지 내 실제 놀이터 수는 미집계로 참고용 플래그.
+
+---
+
+## 분류 체계 v2 확정 (2026-04-09)
+- case1 즉시개선필요: `nearest_park_dist_m > 500 AND child_pop_quartile in [3,4]`
+- case2 우선검토대상: `(nearest_park_dist_m > 500 AND child_pop_quartile in [1,2]) OR (nearest_park_dist_m > 400 AND nearest_park_dist_m <= 500 AND child_pop_quartile in [3,4])`
+- case3 수요관리필요: `nearest_park_dist_m <= 400 AND iso_playground_count <= 2 AND child_pop_quartile in [3,4]`
+- case4 현상유지: 나머지
+- island 별도정책필요: `is_island == True`
+
+### 검증 방식
+- 규칙 기반 확정, 모델 검증 미사용
+- 사유: 규칙 자체가 정답 기준이므로 LightGBM 검증은 구조적으로 부적합함
+- 기존 LightGBM accuracy 95.95% 및 불일치 11건 메모, `Q4 AND iso<=1 -> Q4 AND iso<=3` 변경 이력은 본 버전에서 사용하지 않음
