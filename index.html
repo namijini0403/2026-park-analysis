@@ -579,6 +579,77 @@
       box-shadow: var(--shadow);
     }
 
+    .layer-toggle-bar {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 25;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 251, 243, 0.92);
+      border: 1px solid rgba(110, 89, 51, 0.14);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      max-width: calc(100vw - 36px);
+    }
+
+    .layer-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(99, 78, 40, 0.14);
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, color 0.18s ease;
+    }
+
+    .layer-toggle-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .layer-toggle-btn.is-on[data-layer="isochrone"] {
+      background: rgba(16, 185, 129, 0.16);
+      border-color: rgba(16, 185, 129, 0.38);
+      color: #065f46;
+    }
+
+    .layer-toggle-btn.is-on[data-layer="buffer"] {
+      background: rgba(59, 130, 246, 0.14);
+      border-color: rgba(59, 130, 246, 0.34);
+      color: #1d4ed8;
+    }
+
+    .layer-toggle-btn.is-on[data-layer="parks"] {
+      background: rgba(34, 197, 94, 0.14);
+      border-color: rgba(34, 197, 94, 0.34);
+      color: #166534;
+    }
+
+    .layer-toggle-btn.is-on[data-layer="redevelopment"] {
+      background: rgba(245, 158, 11, 0.16);
+      border-color: rgba(245, 158, 11, 0.34);
+      color: #92400e;
+    }
+
+    .layer-toggle-btn.is-on[data-layer="childcare"] {
+      background: rgba(168, 85, 247, 0.14);
+      border-color: rgba(168, 85, 247, 0.34);
+      color: #7c3aed;
+    }
+
     @media (max-width: 768px) {
       .panel {
         top: auto;
@@ -610,6 +681,20 @@
         align-items: center;
         justify-content: center;
       }
+
+      .layer-toggle-bar {
+        left: 12px;
+        right: 12px;
+        bottom: 74px;
+        gap: 8px;
+        padding: 10px;
+      }
+
+      .layer-toggle-btn {
+        flex: 1 1 calc(50% - 8px);
+        font-size: 13px;
+        min-width: 0;
+      }
     }
   </style>
 </head>
@@ -618,6 +703,14 @@
     <div id="map"></div>
 
     <button class="floating-button" id="panelToggleButton" type="button">필터 열기</button>
+
+    <div class="layer-toggle-bar" id="layerToggleBar" aria-label="지도 레이어 토글">
+      <button class="layer-toggle-btn" type="button" data-layer="isochrone">🚶 실제 도보이동 500m</button>
+      <button class="layer-toggle-btn" type="button" data-layer="buffer">⭕ 직선거리 500m</button>
+      <button class="layer-toggle-btn" type="button" data-layer="parks">🌳 공원·놀이터</button>
+      <button class="layer-toggle-btn" type="button" data-layer="redevelopment">🏗️ 재개발</button>
+      <button class="layer-toggle-btn" type="button" data-layer="childcare">🏫 어린이집·유치원</button>
+    </div>
 
     <aside class="panel" id="controlPanel">
       <div class="panel-header">
@@ -786,13 +879,15 @@
       guFilter: document.getElementById("guFilter"),
       panel: document.getElementById("controlPanel"),
       panelToggleButton: document.getElementById("panelToggleButton"),
+      layerToggleBar: document.getElementById("layerToggleBar"),
       toggles: {
         isochrone: document.getElementById("toggleIsochrone"),
         buffer: document.getElementById("toggleBuffer"),
         parks: document.getElementById("toggleParks"),
         redevelopment: document.getElementById("toggleRedevelopment"),
         childcare: document.getElementById("toggleChildcare")
-      }
+      },
+      layerButtons: Array.from(document.querySelectorAll(".layer-toggle-btn"))
     };
 
     function setStatus(message) {
@@ -801,6 +896,30 @@
 
     function appendStatus(message) {
       ui.statusBox.textContent += `\n${message}`;
+    }
+
+    function syncLayerToggleButtons() {
+      ui.layerButtons.forEach((button) => {
+        const layer = button.dataset.layer;
+        const input = ui.toggles[layer];
+        const isOn = Boolean(input?.checked);
+        button.classList.toggle("is-on", isOn);
+        button.setAttribute("aria-pressed", String(isOn));
+      });
+    }
+
+    function setupLayerToggleBar() {
+      ui.layerButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const layer = button.dataset.layer;
+          const input = ui.toggles[layer];
+          if (!input) return;
+          input.checked = !input.checked;
+          updateOverlayVisibility();
+          syncLayerToggleButtons();
+        });
+      });
+      syncLayerToggleButtons();
     }
 
     function loadCSV(path) {
@@ -1577,6 +1696,7 @@
       state.overlays.redevelopmentMarkers.forEach((marker) => marker.setMap(ui.toggles.redevelopment.checked ? state.map : null));
       state.overlays.isochronePolygons.forEach((polygon) => polygon.setMap(ui.toggles.isochrone.checked ? state.map : null));
       state.overlays.bufferPolygons.forEach((polygon) => polygon.setMap(ui.toggles.buffer.checked ? state.map : null));
+      syncLayerToggleButtons();
     }
 
     function rerenderAll() {
@@ -1700,6 +1820,8 @@
         state.selectedGu = event.target.value;
         rerenderAll();
       });
+
+      setupLayerToggleBar();
 
       Object.values(ui.toggles).forEach((toggle) => {
         toggle.addEventListener("change", updateOverlayVisibility);
