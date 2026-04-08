@@ -286,13 +286,18 @@
       word-break: break-word;
     }
 
-    .school-detail-box.case-3 {
+    .school-detail-box.case-case1 {
       background: #fff1f1;
       border-color: rgba(229, 62, 62, 0.24);
     }
 
-    .school-detail-box.case-4 {
+    .school-detail-box.case-case4 {
       color: var(--muted);
+    }
+
+    .school-detail-box.case-island {
+      background: #eef5ff;
+      border-color: rgba(30, 136, 229, 0.24);
     }
 
     .detail-head {
@@ -349,6 +354,11 @@
       background: #2f855a;
     }
 
+    .detail-badge.island {
+      color: #ffffff;
+      background: #1e88e5;
+    }
+
     .detail-badge-row {
       display: flex;
       flex-wrap: wrap;
@@ -386,14 +396,24 @@
       border: 1px solid rgba(20, 83, 45, 0.12);
     }
 
-    .detail-message.case-2 {
-      background: rgba(254, 226, 226, 0.65);
-      border-color: rgba(229, 62, 62, 0.18);
+    .detail-message.case-case2 {
+      background: rgba(255, 243, 224, 0.9);
+      border-color: rgba(251, 140, 0, 0.22);
     }
 
-    .detail-message.case-3 {
-      background: rgba(254, 226, 226, 0.9);
-      border-color: rgba(229, 62, 62, 0.28);
+    .detail-message.case-case1 {
+      background: rgba(255, 235, 238, 0.95);
+      border-color: rgba(229, 57, 53, 0.28);
+    }
+
+    .detail-message.case-case3 {
+      background: rgba(255, 249, 196, 0.9);
+      border-color: rgba(253, 216, 53, 0.28);
+    }
+
+    .detail-message.case-island {
+      background: rgba(227, 242, 253, 0.95);
+      border-color: rgba(30, 136, 229, 0.28);
     }
 
     .detail-section {
@@ -930,6 +950,14 @@
       2: "인구 취약",
       3: "최우선 취약",
       4: "양호"
+    };
+
+    const CASE_META = {
+      case1: { label: "즉시개선필요", badge: "즉시개선필요", color: "#E53935", className: "critical" },
+      case2: { label: "우선검토대상", badge: "우선검토대상", color: "#FB8C00", className: "high" },
+      case3: { label: "수요관리필요", badge: "수요관리필요", color: "#FDD835", className: "watch" },
+      case4: { label: "현상유지", badge: "현상유지", color: "#43A047", className: "normal" },
+      island: { label: "🏝️ 별도정책필요", badge: "🏝️ 별도정책필요", color: "#1E88E5", className: "island" }
     };
 
     const ui = {
@@ -2002,6 +2030,162 @@
       });
     }
 
+    function normalizeCaseType(value) {
+      const raw = String(value || "").trim().toLowerCase();
+      if (CASE_META[raw]) return raw;
+      const numeric = Number(value);
+      if (numeric === 1) return "case1";
+      if (numeric === 2) return "case2";
+      if (numeric === 3) return "case3";
+      if (numeric === 4) return "case4";
+      return "case4";
+    }
+
+    function getCaseMeta(rowOrType = {}) {
+      const caseType = typeof rowOrType === "string"
+        ? normalizeCaseType(rowOrType)
+        : normalizeCaseType(rowOrType.case_type);
+      return CASE_META[caseType] || CASE_META.case4;
+    }
+
+    function getMarkerStyle(row = {}) {
+      const outlierType = getOutlierType(row);
+      const borderColor = outlierType === "李⑹떆" ? "#6B46C1" : "";
+      return { color: getCaseMeta(row).color, symbol: "", borderColor };
+    }
+
+    function getCaseTypeLabel(row = {}) {
+      const csvLabel = String(row.case_label || "").trim();
+      if (csvLabel && csvLabel !== "????") return csvLabel;
+      return getCaseMeta(row).label;
+    }
+
+    function getSchoolBadge(row = {}) {
+      const caseMeta = getCaseMeta(row);
+      return { text: caseMeta.badge, className: caseMeta.className };
+    }
+
+    function getDiagnosticMessage(row = {}) {
+      const caseType = normalizeCaseType(row.case_type);
+      if (caseType === "case1") return "가까운 공원까지의 도보 거리가 길고 아동 수요도 높은 편입니다. 즉시 개선이 필요합니다.";
+      if (caseType === "case2") return "공원 접근 거리가 다소 길거나 아동 수요 대비 보완이 필요합니다. 우선 검토 대상입니다.";
+      if (caseType === "case3") return "가까운 공원은 있지만 놀이터 수가 적어 수요 관리가 필요합니다.";
+      if (caseType === "island") return "도서 지역 특성을 고려한 별도 정책 검토가 필요합니다.";
+      return "현재 기준에서 공원 접근성과 놀이터 여건이 비교적 안정적입니다.";
+    }
+
+    function getCaseThemeClass(row = {}) {
+      return `case-${normalizeCaseType(row.case_type)}`;
+    }
+
+    function getMetricClass(row, metricType) {
+      const caseType = normalizeCaseType(row.case_type);
+      if (caseType === "case4") return "metric-item muted";
+      if (caseType === "island") return "metric-item";
+      if (caseType === "case1" && (metricType === "park" || metricType === "access")) return "metric-item danger";
+      if (caseType === "case2" && metricType === "park") return "metric-item warning";
+      if (caseType === "case3" && metricType === "parkPressure") return "metric-item warning";
+      return "metric-item";
+    }
+
+    function refreshLegend() {
+      const legend = document.querySelector(".legend");
+      if (!legend) return;
+      legend.innerHTML = `
+        <div class="legend-item">
+          <span class="swatch" style="background:#ffffff; border:3px solid #6B46C1; box-sizing:border-box;"></span>
+          <span>행정착시(보라 테두리)</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#E53935;"></span>
+          <span>즉시개선필요</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#FB8C00;"></span>
+          <span>우선검토대상</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#FDD835;"></span>
+          <span>수요관리필요</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#43A047;"></span>
+          <span>현상유지</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#1E88E5;"></span>
+          <span>🏝️ 별도정책필요</span>
+        </div>
+      `;
+    }
+
+    function renderSchoolDetail(row = null) {
+      if (!row) {
+        ui.schoolDetailBox.className = "school-detail-box";
+        ui.schoolDetailBox.innerHTML = "학교 마커를 클릭하면 상세 정보를 표시합니다.";
+        return;
+      }
+
+      const caseLabel = getCaseTypeLabel(row);
+      const badge = getSchoolBadge(row);
+      const mirageBadge = getMirageBadge(row);
+      const gu = detectGu(row) || "-";
+      const caseType = normalizeCaseType(row.case_type);
+      const showAccess = caseType !== "case4" && caseType !== "island";
+      const showGap = caseType !== "case4" && caseType !== "island";
+      const message = getDiagnosticMessage(row);
+      const trendMarkup = getStudentTrendMarkup(row);
+      const redevelopmentMarkup = getRedevelopmentMarkup(row);
+      const nearestParkName = row.nearest_park_name || "공원 정보 없음";
+      const nearestParkDistance = formatDistanceMeters(row.nearest_park_dist_m);
+      const isoCnt = Number(row.iso_park_count);
+      const bufCnt = Number(row.buf_park_count);
+      const nearestParkStatus = isoCnt >= 1
+        ? "🟢 도보 500m 내 공원 있음"
+        : bufCnt >= 1
+          ? "🟡 직선 500m 내 공원 있음 (도보 경로 미확인)"
+          : "🔴 500m 내 공원 없음";
+      const hasLargeApt = String(row.has_large_apt || "").toLowerCase() === "true";
+
+      ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
+      ui.schoolDetailBox.innerHTML = `
+        <div class="detail-head">
+          <h3 class="detail-name">${getSchoolName(row)} (${gu})</h3>
+          <div class="detail-subtitle">${caseLabel}</div>
+          <div class="detail-badge-row">
+            <div class="detail-badge ${badge.className}">[${badge.text}]</div>
+            ${mirageBadge ? `<div class="detail-badge ${mirageBadge.className}">[${mirageBadge.text}]</div>` : ""}
+          </div>
+        </div>
+        <div class="detail-message ${getCaseThemeClass(row)}">
+          ${message}
+          ${mirageBadge ? `<div class="detail-message-extra">📍 행정 기준과 실제 도보 접근 환경 간 괴리가 큰 학교입니다.</div>` : ""}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">공원·놀이터 현황</div>
+          <div class="metric-list">
+            <div class="${getMetricClass(row, "park")}">🌳 가장 가까운 공원: 약 ${nearestParkDistance}m (${nearestParkName})</div>
+            <div class="${getMetricClass(row, "park")}">${nearestParkStatus}</div>
+            <div class="${getMetricClass(row, "park")}">🛝 도보 접근 놀이터: ${formatCount(row.iso_playground_count)}개 / 직선 반경 내 놀이터: ${formatCount(row.buf_playground_count)}개</div>
+            ${hasLargeApt ? `<div class="metric-item warning">🏘️ 인근 대단지 아파트 존재 — 미집계 민간 놀이터가 있을 수 있습니다.</div>` : ""}
+            ${showAccess ? `<div class="${getMetricClass(row, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
+            ${showGap ? `<div class="${getMetricClass(row, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">학생수 추세</div>
+          ${trendMarkup}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">🏗️ 인근 재개발 구역 (500m 이내)</div>
+          ${redevelopmentMarkup}
+        </div>
+      `;
+    }
+
     async function init() {
       try {
         await loadKakaoMapSdk();
@@ -2039,6 +2223,7 @@
         state.map.setLevel(Math.max(state.map.getLevel() - 1, 1), { anchor: cluster.getCenter() });
       });
       state.infoWindow = new kakao.maps.InfoWindow({ removable: true });
+      refreshLegend();
       wireEvents();
       await loadData();
     }
