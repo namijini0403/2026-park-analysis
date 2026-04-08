@@ -6,7 +6,7 @@
 1. 주택 공시가격 정보에서 인천 단지별 세대수(행 수) 집계
 2. 500세대 이상 단지 추출
 3. 로컬 공동주택 체육시설 점데이터와 단지명 매칭으로 좌표 추정
-4. 학교 반경 300m 내 500세대 이상 단지 존재 여부 판정
+4. 좌표 미매칭 단지는 시군구 + 동/읍/면 기준 텍스트 매칭으로 보완
 5. school_priority.csv has_large_apt 덮어쓰기
 
 주의
@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import csv
 import re
+from collections import Counter, defaultdict
 from pathlib import Path
 
 import geopandas as gpd
@@ -49,8 +50,26 @@ def normalize_name(value: str) -> str:
     return text
 
 
+def extract_road_name(address: str) -> str:
+    parts = str(address or "").split()
+    if len(parts) < 3:
+        return ""
+    road = parts[2]
+    road = re.sub(r"\d.*$", "", road)
+    return road.strip()
+
+
+def extract_local_unit(text: str) -> str:
+    parts = str(text or "").split()
+    for token in parts:
+        if token.endswith(("동", "읍", "면")):
+            return token
+    return ""
+
+
 def main() -> None:
-    counts: dict[tuple[str, str, str, str, str], int] = {}
+    counts: dict[tuple[str, str, str, str, str, str], int] = {}
+    road_dong_counts: dict[tuple[str, str], Counter] = defaultdict(Counter)
 
     with PRICE_PATH.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.reader(f)
@@ -58,6 +77,7 @@ def main() -> None:
         idx_addr = header.index("도로명주소")
         idx_sido = header.index("시도")
         idx_sigungu = header.index("시군구")
+        idx_dong = header.index("동리")
         idx_complex = header.index("단지명")
         idx_code = header.index("단지코드")
 
@@ -66,10 +86,15 @@ def main() -> None:
                 continue
             if row[idx_sido] != "인천광역시":
                 continue
+            road_name = extract_road_name(row[idx_addr])
+            dong_name = row[idx_dong]
+            if road_name and dong_name:
+                road_dong_counts[(row[idx_sigungu], road_name)][dong_name] += 1
             key = (
                 row[idx_sido],
                 row[idx_sigungu],
                 row[idx_addr],
+                row[idx_dong],
                 row[idx_complex],
                 row[idx_code],
             )
@@ -80,10 +105,11 @@ def main() -> None:
             "시도": k[0],
             "시군구": k[1],
             "도로명주소": k[2],
-            "단지명": k[3],
-            "단지코드": k[4],
+            "동리": k[3],
+            "단지명": k[4],
+            "단지코드": k[5],
             "세대수": v,
-            "단지명_norm": normalize_name(k[3]),
+            "단지명_norm": normalize_name(k[4]),
         }
         for k, v in counts.items()
     ]
@@ -111,6 +137,7 @@ def main() -> None:
                 "시도": row.시도,
                 "시군구": row.시군구,
                 "도로명주소": row.도로명주소,
+                "동리": row.동리,
                 "단지명": row.단지명,
                 "단지코드": row.단지코드,
                 "세대수": row.세대수,
@@ -121,11 +148,29 @@ def main() -> None:
         )
 
     matched_large = pd.DataFrame(matched_records)
-    matched_large.to_csv(LARGE_OUT, index=False, encoding="utf-8-sig")
-
+    large_out = large.merge(
+        matched_large[
+            ["단지코드", "X좌표", "Y좌표", "matched_point_count"]
+        ].drop_duplicates(subset=["단지코드"]),
+        on="단지코드",
+        how="left",
+    )
     schools = pd.read_csv(SCHOOLS_PATH, encoding="utf-8-sig")
     priority = pd.read_csv(PRIORITY_PATH, encoding="utf-8-sig")
     old_has = priority["has_large_apt"].copy() if "has_large_apt" in priority.columns else pd.Series(False, index=priority.index)
+
+    schools["road_name"] = schools["소재지도로명주소"].map(extract_road_name)
+
+    def infer_school_dong(row: pd.Series) -> str:
+        direct = extract_local_unit(row["소재지도로명주소"])
+        if direct:
+            return direct
+        parts = str(row["소재지도로명주소"]).split()
+        sigungu = parts[1] if len(parts) > 1 else ""
+        candidates = road_dong_counts.get((sigungu, row["road_name"]), Counter())
+        return candidates.most_common(1)[0][0] if candidates else ""
+
+    schools["dong_guess"] = schools.apply(infer_school_dong, axis=1)
 
     gdf_schools = gpd.GeoDataFrame(
         schools.copy(),
@@ -155,6 +200,29 @@ def main() -> None:
             .rename("has_large_apt")
             .reset_index()
         )
+
+    large_local_keys = {
+        (str(row.시군구), str(row.동리))
+        for row in large.itertuples(index=False)
+        if str(row.동리).strip()
+    }
+    text_has = schools[["학교ID"]].copy()
+    text_has["has_large_apt_text"] = schools.apply(
+        lambda r: ((
+            str(r["소재지도로명주소"]).split()[1] if len(str(r["소재지도로명주소"]).split()) > 1 else "",
+            r["dong_guess"],
+        ) in large_local_keys),
+        axis=1,
+    )
+
+    new_has = new_has.merge(text_has, on="학교ID", how="left")
+    new_has["has_large_apt"] = (
+        new_has["has_large_apt"].fillna(False).astype(bool)
+        | new_has["has_large_apt_text"].fillna(False).astype(bool)
+    )
+    new_has = new_has[["학교ID", "has_large_apt"]]
+
+    large_out.to_csv(LARGE_OUT, index=False, encoding="utf-8-sig")
 
     priority = priority.drop(columns=["has_large_apt"], errors="ignore")
     priority = priority.merge(new_has, on="학교ID", how="left")
