@@ -11,7 +11,7 @@ Output:
 Rules
 - "착시" if either:
   A) buf_park_count >= 1 and iso_park_count == 0
-  B) buf_playground_count >= 3 and iso_playground_count <= 2
+  B) buf_playground_count >= 3 and iso_playground_count <= 1
 - otherwise null
 """
 
@@ -34,7 +34,7 @@ def main() -> None:
             df = df.drop(columns=col)
 
     cond_a = (df["buf_park_count"] >= 1) & (df["iso_park_count"] == 0)
-    cond_b = (df["buf_playground_count"] >= 3) & (df["iso_playground_count"] <= 2)
+    cond_b = (df["buf_playground_count"] >= 3) & (df["iso_playground_count"] <= 1)
     df["outlier_type"] = np.where(cond_a | cond_b, "착시", pd.NA)
 
     print(f"outlier_type counts: {df['outlier_type'].fillna('normal').value_counts().to_dict()}")

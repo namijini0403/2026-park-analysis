@@ -462,7 +462,7 @@ data_processed/age_ratio_incheon.csv
 - `outlier_type` 정의:
   - `착시` = 아래 조건 중 하나라도 만족
   - A) `buf_park_count >= 1 AND iso_park_count == 0`
-  - B) `buf_playground_count >= 3 AND iso_playground_count <= 2`
+  - B) `buf_playground_count >= 3 AND iso_playground_count <= 1`
   - 그 외는 null
 
 ## 발표 서사 업데이트 (2026-04-08)
