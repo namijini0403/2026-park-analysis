@@ -441,6 +441,84 @@
       color: #4b5563;
     }
 
+    .redevelopment-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .redevelopment-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(99, 78, 40, 0.1);
+    }
+
+    .redevelopment-item.critical {
+      border: 2px solid #e03c31;
+      background: rgba(254, 226, 226, 0.88);
+    }
+
+    .redevelopment-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .redevelopment-name {
+      font-weight: 800;
+      color: #1f2937;
+      word-break: break-word;
+    }
+
+    .redevelopment-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .redevelopment-stage-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.2;
+      border: 1px solid transparent;
+    }
+
+    .redevelopment-stage-badge.gray {
+      background: rgba(158, 158, 158, 0.16);
+      color: #616161;
+    }
+
+    .redevelopment-stage-badge.blue {
+      background: rgba(92, 155, 214, 0.16);
+      color: #336b9b;
+    }
+
+    .redevelopment-stage-badge.orange {
+      background: rgba(240, 165, 0, 0.16);
+      color: #9a6700;
+    }
+
+    .redevelopment-stage-badge.red {
+      background: rgba(224, 60, 49, 0.12);
+      color: #b1261e;
+      border-color: rgba(224, 60, 49, 0.5);
+      font-weight: 900;
+    }
+
+    .redevelopment-distance {
+      color: #4b5563;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
     .detail-score {
       display: inline-flex;
       align-items: center;
@@ -655,7 +733,7 @@
       parks: "./data_processed/parks.csv",
       isochrone: "./data_processed/school_isochrone_500m.geojson",
       buffer: "./data_processed/school_buffer_500m.geojson",
-      redevelopment: "./data_processed/redevelopment.csv",
+      redevelopment: "./data_processed/redevelopment_geocoded.csv",
       childcare: "./data_processed/childcare_michuhol.csv"
     };
 
@@ -962,6 +1040,65 @@
       return `${(numeric * 100).toFixed(1)}%`;
     }
 
+    function getRedevelopmentBadgeMeta(stage) {
+      const value = String(stage || "").trim();
+      const grayStages = ["정비구역지정(후보지 1차/2차)", "주민합의체"];
+      const blueStages = ["조합설립인가", "건축심의 접수", "건축심의완료"];
+      const orangeStages = ["사업시행계획인가"];
+      const redStages = ["관리처분계획인가", "착공", "준공"];
+
+      if (redStages.includes(value)) return { className: "red", prefix: "⚠️ " };
+      if (orangeStages.includes(value)) return { className: "orange", prefix: "" };
+      if (blueStages.includes(value)) return { className: "blue", prefix: "" };
+      if (grayStages.includes(value)) return { className: "gray", prefix: "" };
+      return { className: "gray", prefix: "" };
+    }
+
+    function getNearbyRedevelopmentZones(row, radiusMeters = 500) {
+      const schoolLat = Number(row["위도"]);
+      const schoolLng = Number(row["경도"]);
+      if (!Number.isFinite(schoolLat) || !Number.isFinite(schoolLng)) return [];
+
+      return state.datasets.redevelopment
+        .map((zone) => {
+          const zoneLat = Number(zone["위도"]);
+          const zoneLng = Number(zone["경도"]);
+          if (!Number.isFinite(zoneLat) || !Number.isFinite(zoneLng)) return null;
+          const distance = distanceInMeters(schoolLat, schoolLng, zoneLat, zoneLng);
+          if (distance > radiusMeters) return null;
+          return { ...zone, __distance: distance };
+        })
+        .filter(Boolean)
+        .sort((left, right) => left.__distance - right.__distance);
+    }
+
+    function getRedevelopmentMarkup(row) {
+      const nearbyZones = getNearbyRedevelopmentZones(row, 500);
+      if (!nearbyZones.length) {
+        return `<div class="metric-item muted">인근 재개발 구역 없음</div>`;
+      }
+
+      const items = nearbyZones
+        .map((zone) => {
+          const badge = getRedevelopmentBadgeMeta(zone["진행단계"]);
+          const criticalClass = badge.className === "red" ? " critical" : "";
+          return `
+            <div class="redevelopment-item${criticalClass}">
+              <div class="redevelopment-topline">
+                <div class="redevelopment-name">${zone["구역명"] || "재개발 구역"}</div>
+                <div class="redevelopment-distance">${formatDistanceMeters(zone.__distance)}m</div>
+              </div>
+              <div class="redevelopment-meta">
+                <span class="redevelopment-stage-badge ${badge.className}">${badge.prefix}${zone["진행단계"] || "단계 정보 없음"}</span>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+
+      return `<div class="redevelopment-list">${items}</div>`;
+    }
+
     function getStudentTrendMarkup(row) {
       const trend = Array.isArray(row.studentTrend) ? row.studentTrend : [];
       if (!trend.length) {
@@ -1110,6 +1247,7 @@
       const showGap = caseType >= 1 && caseType <= 3;
       const message = getDiagnosticMessage(row);
       const trendMarkup = getStudentTrendMarkup(row);
+      const redevelopmentMarkup = getRedevelopmentMarkup(row);
       const nearestParkName = row.nearest_park_name || "공원 정보 없음";
       const nearestParkDistance = formatDistanceMeters(row.nearest_park_dist_m);
       const nearestParkStatus = Number(row.iso_park_count) >= 1 ? "도보 500m 내 접근 가능" : "도보 500m 내 접근 불가";
@@ -1145,6 +1283,11 @@
         <div class="detail-section">
           <div class="detail-section-title">학생수 추세</div>
           ${trendMarkup}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">🏗️ 인근 재개발 구역 (500m 이내)</div>
+          ${redevelopmentMarkup}
         </div>
       `;
     }
