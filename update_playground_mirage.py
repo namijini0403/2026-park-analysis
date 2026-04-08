@@ -6,9 +6,8 @@ Playground definition:
 - 시설유형 in ("놀이터", "어린이공원")
 
 outlier_type:
-- "착시" if either:
-  A) buf_park_count >= 1 and iso_park_count == 0
-  B) buf_playground_count >= 3 and iso_playground_count <= 1
+- "착시" if:
+  buf_park_count >= 1 and iso_park_count == 0 and iso_playground_count <= 2
 - otherwise null
 """
 
@@ -75,9 +74,12 @@ def main() -> None:
     keep_priority["iso_playground_count"] = keep_priority["iso_playground_count"].fillna(0).astype(int)
     keep_priority["buf_playground_count"] = keep_priority["buf_playground_count"].fillna(0).astype(int)
 
-    cond_a = (keep_priority["buf_park_count"] >= 1) & (keep_priority["iso_park_count"] == 0)
-    cond_b = (keep_priority["buf_playground_count"] >= 3) & (keep_priority["iso_playground_count"] <= 1)
-    keep_priority["outlier_type"] = np.where(cond_a | cond_b, "착시", pd.NA)
+    cond = (
+        (keep_priority["buf_park_count"] >= 1)
+        & (keep_priority["iso_park_count"] == 0)
+        & (keep_priority["iso_playground_count"] <= 2)
+    )
+    keep_priority["outlier_type"] = np.where(cond, "착시", pd.NA)
 
     insert_after = keep_priority.columns.get_loc("buf_park_area") + 1
     ordered = keep_priority.columns.tolist()
