@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import csv
 import re
-from collections import Counter, defaultdict
 from pathlib import Path
 
 import geopandas as gpd
@@ -59,17 +58,8 @@ def extract_road_name(address: str) -> str:
     return road.strip()
 
 
-def extract_local_unit(text: str) -> str:
-    parts = str(text or "").split()
-    for token in parts:
-        if token.endswith(("동", "읍", "면")):
-            return token
-    return ""
-
-
 def main() -> None:
     counts: dict[tuple[str, str, str, str, str, str], int] = {}
-    road_dong_counts: dict[tuple[str, str], Counter] = defaultdict(Counter)
 
     with PRICE_PATH.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.reader(f)
@@ -86,10 +76,6 @@ def main() -> None:
                 continue
             if row[idx_sido] != "인천광역시":
                 continue
-            road_name = extract_road_name(row[idx_addr])
-            dong_name = row[idx_dong]
-            if road_name and dong_name:
-                road_dong_counts[(row[idx_sigungu], road_name)][dong_name] += 1
             key = (
                 row[idx_sido],
                 row[idx_sigungu],
@@ -159,19 +145,6 @@ def main() -> None:
     priority = pd.read_csv(PRIORITY_PATH, encoding="utf-8-sig")
     old_has = priority["has_large_apt"].copy() if "has_large_apt" in priority.columns else pd.Series(False, index=priority.index)
 
-    schools["road_name"] = schools["소재지도로명주소"].map(extract_road_name)
-
-    def infer_school_dong(row: pd.Series) -> str:
-        direct = extract_local_unit(row["소재지도로명주소"])
-        if direct:
-            return direct
-        parts = str(row["소재지도로명주소"]).split()
-        sigungu = parts[1] if len(parts) > 1 else ""
-        candidates = road_dong_counts.get((sigungu, row["road_name"]), Counter())
-        return candidates.most_common(1)[0][0] if candidates else ""
-
-    schools["dong_guess"] = schools.apply(infer_school_dong, axis=1)
-
     gdf_schools = gpd.GeoDataFrame(
         schools.copy(),
         geometry=gpd.points_from_xy(schools["경도"], schools["위도"]),
@@ -201,25 +174,6 @@ def main() -> None:
             .reset_index()
         )
 
-    large_local_keys = {
-        (str(row.시군구), str(row.동리))
-        for row in large.itertuples(index=False)
-        if str(row.동리).strip()
-    }
-    text_has = schools[["학교ID"]].copy()
-    text_has["has_large_apt_text"] = schools.apply(
-        lambda r: ((
-            str(r["소재지도로명주소"]).split()[1] if len(str(r["소재지도로명주소"]).split()) > 1 else "",
-            r["dong_guess"],
-        ) in large_local_keys),
-        axis=1,
-    )
-
-    new_has = new_has.merge(text_has, on="학교ID", how="left")
-    new_has["has_large_apt"] = (
-        new_has["has_large_apt"].fillna(False).astype(bool)
-        | new_has["has_large_apt_text"].fillna(False).astype(bool)
-    )
     new_has = new_has[["학교ID", "has_large_apt"]]
 
     large_out.to_csv(LARGE_OUT, index=False, encoding="utf-8-sig")
