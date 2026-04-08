@@ -460,7 +460,9 @@ data_processed/age_ratio_incheon.csv
   - `iso_playground_count`
   - `buf_playground_count`
 - `outlier_type` 정의:
-  - `착시` = `buf_park_count >= 1 AND iso_park_count == 0 AND iso_playground_count <= 2`
+  - `착시` = 아래 두 유형 중 하나라도 만족
+  - 유형1 (공원 착시): `buf_park_count >= 1 AND iso_park_count == 0 AND iso_playground_count <= 2`
+  - 유형2 (놀이터 착시): `buf_park_count == 0 AND buf_playground_count >= 4 AND iso_playground_count <= 2`
   - 그 외는 null
 
 ## 발표 서사 업데이트 (2026-04-08)
