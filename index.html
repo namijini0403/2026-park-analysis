@@ -1369,7 +1369,13 @@
       const redevelopmentMarkup = getRedevelopmentMarkup(row);
       const nearestParkName = row.nearest_park_name || "공원 정보 없음";
       const nearestParkDistance = formatDistanceMeters(row.nearest_park_dist_m);
-      const nearestParkStatus = Number(row.iso_park_count) >= 1 ? "도보 500m 내 접근 가능" : "도보 500m 내 접근 불가";
+      const isoCnt = Number(row.iso_park_count);
+      const bufCnt = Number(row.buf_park_count);
+      const nearestParkStatus = isoCnt >= 1
+        ? "🟢 도보 500m 내 공원 있음"
+        : bufCnt >= 1
+          ? "🟡 직선 500m 내 공원 있음 (도보 경로 미확인)"
+          : "🔴 500m 내 공원 없음";
       const hasLargeApt = String(row.has_large_apt || "").toLowerCase() === "true";
 
       ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
