@@ -98,8 +98,51 @@
 
     .panel-body {
       padding: 16px 18px 18px;
+      padding-bottom: 140px;
       max-height: calc(100vh - 60px);
       overflow: auto;
+    }
+
+    .map-search-box {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 26;
+      width: min(320px, calc(100vw - var(--sidebar-width) - 54px));
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255, 251, 243, 0.94);
+      border: 1px solid rgba(110, 89, 51, 0.14);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .map-search-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #7c5c27;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .map-search-input {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(99, 78, 40, 0.16);
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .map-search-input:focus {
+      border-color: rgba(20, 83, 45, 0.38);
+      box-shadow: 0 0 0 3px rgba(20, 83, 45, 0.08);
     }
 
     .section {
@@ -695,6 +738,12 @@
         max-width: none;
       }
 
+      .map-search-box {
+        top: 12px;
+        left: 12px;
+        width: calc(100vw - 24px);
+      }
+
       .layer-toggle-btn {
         flex: 1 1 calc(50% - 8px);
         font-size: 13px;
@@ -706,6 +755,12 @@
 <body>
   <div class="app-shell">
     <div id="map"></div>
+
+    <div class="map-search-box" aria-label="학교 검색">
+      <label class="map-search-label" for="schoolSearchInput">학교 검색</label>
+      <input class="map-search-input" id="schoolSearchInput" type="search" list="schoolSearchList" placeholder="학교명을 입력하세요" autocomplete="off" />
+      <datalist id="schoolSearchList"></datalist>
+    </div>
 
     <button class="floating-button" id="panelToggleButton" type="button">필터 열기</button>
 
@@ -882,6 +937,8 @@
       guSummaryBox: document.getElementById("guSummaryBox"),
       schoolDetailBox: document.getElementById("schoolDetailBox"),
       guFilter: document.getElementById("guFilter"),
+      schoolSearchInput: document.getElementById("schoolSearchInput"),
+      schoolSearchList: document.getElementById("schoolSearchList"),
       panel: document.getElementById("controlPanel"),
       panelToggleButton: document.getElementById("panelToggleButton"),
       layerToggleBar: document.getElementById("layerToggleBar"),
@@ -901,6 +958,11 @@
 
     function appendStatus(message) {
       ui.statusBox.textContent += `\n${message}`;
+    }
+
+    function openPanel() {
+      ui.panel.classList.add("open");
+      ui.panelToggleButton.textContent = "?꾪꽣 ?リ린";
     }
 
     function syncLayerToggleButtons() {
@@ -925,6 +987,56 @@
         });
       });
       syncLayerToggleButtons();
+    }
+
+    function populateSchoolSearchOptions() {
+      if (!ui.schoolSearchList) return;
+      const seen = new Set();
+      const rows = [...state.datasets.schools].sort((a, b) => getSchoolName(a).localeCompare(getSchoolName(b), "ko"));
+      ui.schoolSearchList.innerHTML = rows
+        .map((row) => {
+          const schoolName = getSchoolName(row);
+          if (!schoolName || seen.has(schoolName)) return "";
+          seen.add(schoolName);
+          return `<option value="${schoolName}"></option>`;
+        })
+        .join("");
+    }
+
+    function findSchoolBySearch(query) {
+      const keyword = String(query || "").trim();
+      if (!keyword) return null;
+
+      const exact = state.datasets.schools.find((row) => getSchoolName(row) === keyword);
+      if (exact) return exact;
+
+      const partial = state.datasets.schools.find((row) => getSchoolName(row).includes(keyword));
+      return partial || null;
+    }
+
+    function focusSchool(row) {
+      if (!row || !state.map) return;
+      const latLng = toLatLng(row, row["?꾨룄"] !== undefined ? "?꾨룄" : "lat", row["寃쎈룄"] !== undefined ? "寃쎈룄" : "lng");
+      if (!latLng) return;
+
+      highlightIsochroneForSchool(row);
+      state.selectedSchoolId = getSchoolId(row);
+      renderSchoolDetail(row);
+      state.map.setLevel(5);
+      state.map.panTo(latLng);
+      state.infoWindow.close();
+      openPanel();
+    }
+
+    function handleSchoolSearchSelection() {
+      const row = findSchoolBySearch(ui.schoolSearchInput?.value);
+      if (!row) return;
+      if (ui.guFilter && detectGu(row)) {
+        ui.guFilter.value = detectGu(row);
+        state.selectedGu = ui.guFilter.value;
+        rerenderAll();
+      }
+      focusSchool(row);
     }
 
     function loadCSV(path) {
@@ -1472,6 +1584,12 @@
       state.infoWindow.close();
     }
 
+    function focusSchoolById(schoolId) {
+      const row = state.datasets.schools.find((item) => getSchoolId(item) === schoolId);
+      if (!row) return;
+      focusSchool(row);
+    }
+
     function distanceInMeters(lat1, lng1, lat2, lng2) {
       const toRadians = (degrees) => (degrees * Math.PI) / 180;
       const earthRadius = 6371000;
@@ -1539,10 +1657,7 @@
     function bindSchoolPopup(marker, row) {
       kakao.maps.event.addListener(marker, "click", () => {
         state.suppressNextMapClick = true;
-        highlightIsochroneForSchool(row);
-        state.selectedSchoolId = getSchoolId(row);
-        renderSchoolDetail(row);
-        state.infoWindow.close();
+        focusSchool(row);
       });
     }
 
@@ -1800,6 +1915,7 @@
       state.datasets.buffer = buffer;
       state.datasets.redevelopment = redevelopment;
       state.datasets.childcare = childcare;
+      populateSchoolSearchOptions();
 
       rerenderAll();
       renderGuSummary();
@@ -1830,6 +1946,14 @@
       ui.guFilter.addEventListener("change", (event) => {
         state.selectedGu = event.target.value;
         rerenderAll();
+      });
+
+      ui.schoolSearchInput?.addEventListener("change", handleSchoolSearchSelection);
+      ui.schoolSearchInput?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          handleSchoolSearchSelection();
+        }
       });
 
       setupLayerToggleBar();
