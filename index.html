@@ -649,6 +649,7 @@
       schools: "./data_processed/school_priority.csv",
       schoolCoords: "./data_processed/schools.csv",
       studentTrend: "./data_processed/student_trend.csv",
+      nearestPark: "./data_processed/school_nearest_park.csv",
       beneficiaryForecast: "./data_processed/beneficiary_forecast.csv",
       guSummary: "./data_processed/gu_summary.csv",
       parks: "./data_processed/parks.csv",
@@ -682,6 +683,7 @@
         schools: [],
         schoolCoords: [],
         studentTrend: [],
+        nearestPark: [],
         beneficiaryForecast: [],
         guSummary: [],
         parks: [],
@@ -878,8 +880,9 @@
       });
     }
 
-    function enrichSchoolRows(rows, beneficiaryRows, studentTrendRows) {
+    function enrichSchoolRows(rows, beneficiaryRows, studentTrendRows, nearestParkRows) {
       const beneficiaryById = createRowMap(beneficiaryRows, (row) => row["학교ID"] || row.school_id || "");
+      const nearestParkById = createRowMap(nearestParkRows, (row) => row["학교ID"] || row.school_id || "");
       const trendById = new Map();
 
       studentTrendRows.forEach((row) => {
@@ -897,12 +900,14 @@
         const schoolId = getSchoolId(row);
         const schoolName = getSchoolName(row);
         const beneficiary = beneficiaryById.get(schoolId) || {};
+        const nearestPark = nearestParkById.get(schoolId) || {};
         const studentTrend = (trendById.get(schoolId) || [])
           .filter((item) => Number.isFinite(item.year) && Number.isFinite(item.students))
           .sort((left, right) => left.year - right.year);
         return {
           ...row,
           ...beneficiary,
+          ...nearestPark,
           studentTrend,
           학교ID: schoolId,
           학교명: schoolName
@@ -943,6 +948,12 @@
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) return "-";
       return numeric.toFixed(digits);
+    }
+
+    function formatDistanceMeters(value) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return "-";
+      return Math.round(numeric).toLocaleString("ko-KR");
     }
 
     function formatSummaryPercent(value) {
@@ -1099,6 +1110,10 @@
       const showGap = caseType >= 1 && caseType <= 3;
       const message = getDiagnosticMessage(row);
       const trendMarkup = getStudentTrendMarkup(row);
+      const nearestParkName = row.nearest_park_name || "공원 정보 없음";
+      const nearestParkDistance = formatDistanceMeters(row.nearest_park_dist_m);
+      const nearestParkStatus = Number(row.iso_park_count) >= 1 ? "도보 500m 내 접근 가능" : "도보 500m 내 접근 불가";
+      const hasLargeApt = String(row.has_large_apt || "").toLowerCase() === "true";
 
       ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
       ui.schoolDetailBox.innerHTML = `
@@ -1118,8 +1133,10 @@
         <div class="detail-section">
           <div class="detail-section-title">공원·놀이터 현황</div>
           <div class="metric-list">
-            <div class="${getMetricClass(row, "park")}">🌳 도보 접근 공원: ${formatCount(row.iso_park_count)}개 / 직선 반경 내 공원: ${formatCount(row.buf_park_count)}개</div>
+            <div class="${getMetricClass(row, "park")}">🌳 가장 가까운 공원: 약 ${nearestParkDistance}m (${nearestParkName})</div>
+            <div class="${getMetricClass(row, "park")}">${nearestParkStatus}</div>
             <div class="${getMetricClass(row, "park")}">🛝 도보 접근 놀이터: ${formatCount(row.iso_playground_count)}개 / 직선 반경 내 놀이터: ${formatCount(row.buf_playground_count)}개</div>
+            ${hasLargeApt ? `<div class="metric-item warning">🏘️ 인근 대단지 아파트 존재 — 미집계 민간 놀이터가 있을 수 있습니다.</div>` : ""}
             ${showAccess ? `<div class="${getMetricClass(row, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
             ${showGap ? `<div class="${getMetricClass(row, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
           </div>
@@ -1471,6 +1488,7 @@
         schoolPriority,
         schoolCoords,
         studentTrend,
+        nearestPark,
         beneficiaryForecast,
         guSummary,
         parks,
@@ -1482,6 +1500,7 @@
         loadCSV(PATHS.schools),
         loadCSV(PATHS.schoolCoords),
         loadCSV(PATHS.studentTrend),
+        loadCSV(PATHS.nearestPark),
         loadCSV(PATHS.beneficiaryForecast),
         loadCSV(PATHS.guSummary),
         loadCSV(PATHS.parks),
@@ -1492,13 +1511,15 @@
       ]);
 
       state.datasets.studentTrend = studentTrend;
+      state.datasets.nearestPark = nearestPark;
       state.datasets.schoolCoords = schoolCoords;
       state.datasets.beneficiaryForecast = beneficiaryForecast;
       state.datasets.guSummary = guSummary;
       state.datasets.schools = enrichSchoolRows(
         mergeSchoolPriorityWithCoords(schoolPriority, schoolCoords),
         beneficiaryForecast,
-        studentTrend
+        studentTrend,
+        nearestPark
       );
       state.datasets.parks = parks;
       state.datasets.isochrone = isochrone;
@@ -1514,6 +1535,7 @@
           `학교 우선순위: ${schoolPriority.length}건`,
           `학교 좌표: ${schoolCoords.length}건`,
           `학생수 추세: ${studentTrend.length}건`,
+          `최근접 공원 거리: ${nearestPark.length}건`,
           `수혜인구 예측: ${beneficiaryForecast.length}건`,
           `구 요약: ${guSummary.length}건`,
           `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
