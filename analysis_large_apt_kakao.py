@@ -31,7 +31,7 @@ DIFF_PATH = PROCESSED / "has_large_apt_diff.csv"
 
 CRS_WGS84 = "EPSG:4326"
 CRS_METRIC = "EPSG:5179"
-BUFFER_M = 300
+BUFFER_M = 500
 DELAY_SEC = 0.1
 
 
