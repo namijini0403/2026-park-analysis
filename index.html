@@ -2186,6 +2186,95 @@
       `;
     }
 
+    function getGreenLeafMeta(row = {}) {
+      const leaf = Number(row.green_leaf);
+      if (leaf === 3) return { text: "🍃 상위 25%", className: "success" };
+      if (leaf === 2) return { text: "🍂 25~75%", className: "neutral" };
+      if (leaf === 1) return { text: "🥀 하위 25%", className: "warning" };
+      return null;
+    }
+
+    function getMarkerStyle(row = {}) {
+      const outlierType = getOutlierType(row);
+      const hasExtremeFlag = Number(row.extreme_flag || 0) === 1;
+      const borderColor = hasExtremeFlag
+        ? "#FFD700"
+        : outlierType === "착시"
+          ? "#6B46C1"
+          : "";
+      return { color: getCaseMeta(row).color, symbol: "", borderColor };
+    }
+
+    function renderSchoolDetail(row = null) {
+      if (!row) {
+        ui.schoolDetailBox.className = "school-detail-box";
+        ui.schoolDetailBox.innerHTML = "학교 마커를 클릭하면 상세 정보를 표시합니다.";
+        return;
+      }
+
+      const caseLabel = getCaseTypeLabel(row);
+      const badge = getSchoolBadge(row);
+      const mirageBadge = getMirageBadge(row);
+      const greenLeafBadge = getGreenLeafMeta(row);
+      const gu = detectGu(row) || "-";
+      const caseType = normalizeCaseType(row.case_type);
+      const showAccess = caseType !== "case4" && caseType !== "island";
+      const showGap = caseType !== "case4" && caseType !== "island";
+      const message = getDiagnosticMessage(row);
+      const trendMarkup = getStudentTrendMarkup(row);
+      const redevelopmentMarkup = getRedevelopmentMarkup(row);
+      const nearestParkName = row.nearest_park_name || "공원 정보 없음";
+      const nearestParkDistance = formatDistanceMeters(row.nearest_park_dist_m);
+      const isoCnt = Number(row.iso_park_count);
+      const bufCnt = Number(row.buf_park_count);
+      const nearestParkStatus = isoCnt >= 1
+        ? "🟢 도보 500m 내 공원 있음"
+        : bufCnt >= 1
+          ? "🟡 직선 500m 내 공원 있음 (도보 경로 미확인)"
+          : "🔴 500m 내 공원 없음";
+      const hasLargeApt = String(row.has_large_apt || "").toLowerCase() === "true";
+
+      ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
+      ui.schoolDetailBox.innerHTML = `
+        <div class="detail-head">
+          <h3 class="detail-name">${getSchoolName(row)} (${gu})</h3>
+          <div class="detail-subtitle">${caseLabel}</div>
+          <div class="detail-badge-row">
+            <div class="detail-badge ${badge.className}">[${badge.text}]</div>
+            ${mirageBadge ? `<div class="detail-badge ${mirageBadge.className}">[${mirageBadge.text}]</div>` : ""}
+            ${greenLeafBadge ? `<div class="detail-badge ${greenLeafBadge.className}">${greenLeafBadge.text}</div>` : ""}
+          </div>
+        </div>
+        <div class="detail-message ${getCaseThemeClass(row)}">
+          ${message}
+          ${mirageBadge ? `<div class="detail-message-extra">📍 행정 기준과 실제 도보 접근 환경 간 괴리가 큰 학교입니다.</div>` : ""}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">공원·놀이터 현황</div>
+          <div class="metric-list">
+            <div class="${getMetricClass(row, "park")}">🌳 가장 가까운 공원: 약 ${nearestParkDistance}m (${nearestParkName})</div>
+            <div class="${getMetricClass(row, "park")}">${nearestParkStatus}</div>
+            <div class="${getMetricClass(row, "park")}">🛝 도보 접근 놀이터: ${formatCount(row.iso_playground_count)}개 / 직선 반경 내 놀이터: ${formatCount(row.buf_playground_count)}개</div>
+            <div class="metric-item">🌿 반경 500m 내 녹지 ${formatDecimal(row.iso_green_ratio, 1)}%</div>
+            ${hasLargeApt ? `<div class="metric-item warning">🏘️ 인근 대단지 아파트 존재 — 미집계 민간 놀이터가 있을 수 있습니다.</div>` : ""}
+            ${showAccess ? `<div class="${getMetricClass(row, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
+            ${showGap ? `<div class="${getMetricClass(row, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">학생수 추세</div>
+          ${trendMarkup}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">🏗️ 인근 재개발 구역 (500m 이내)</div>
+          ${redevelopmentMarkup}
+        </div>
+      `;
+    }
+
     async function init() {
       try {
         await loadKakaoMapSdk();
