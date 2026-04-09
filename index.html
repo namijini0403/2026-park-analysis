@@ -1072,6 +1072,37 @@
       state.map.panTo(latLng);
       state.infoWindow.close();
       openPanel();
+      pulseSchoolMarker(getSchoolId(row));
+    }
+
+    function pulseSchoolMarker(schoolId) {
+      if (!schoolId) return;
+      const marker = state.schoolMarkerIndex.get(schoolId);
+      if (!marker) return;
+      const row = marker.__schoolRow || state.datasets.schools.find((item) => getSchoolId(item) === schoolId);
+      if (!row) return;
+
+      if (marker.__pulseTimeout) {
+        clearTimeout(marker.__pulseTimeout);
+      }
+
+      const markerStyle = getMarkerStyle(row);
+      marker.setImage(
+        createMarkerImage(
+          markerStyle.color,
+          markerStyle.symbol,
+          markerStyle.borderColor,
+          { size: 45, outerBorderColor: "#FFFFFF", outerBorderWidth: 3 }
+        )
+      );
+
+      marker.__pulseTimeout = setTimeout(() => {
+        const resetStyle = getMarkerStyle(row);
+        marker.setImage(
+          createMarkerImage(resetStyle.color, resetStyle.symbol, resetStyle.borderColor)
+        );
+        marker.__pulseTimeout = null;
+      }, 500);
     }
 
     function handleSchoolSearchSelection() {
@@ -1139,25 +1170,36 @@
       });
     }
 
-    function createMarkerImage(color, symbol = "", borderColor = "") {
+    function createMarkerImage(color, symbol = "", borderColor = "", options = {}) {
+      const size = Number(options.size || 30);
+      const center = size / 2;
+      const outerRadius = size * 0.4167;
+      const innerRadius = size * 0.3667;
+      const dotRadius = size * 0.1333;
+      const outerBorderColor = options.outerBorderColor || "";
+      const outerBorderWidth = Number(options.outerBorderWidth || 0);
       const inner = symbol
-        ? `<text x="15" y="19" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">${symbol}</text>`
-        : `<circle cx="15" cy="15" r="4" fill="#ffffff" fill-opacity="0.95" />`;
+        ? `<text x="${center}" y="${center + size * 0.1333}" text-anchor="middle" font-size="${size * 0.4}" font-weight="800" fill="#ffffff">${symbol}</text>`
+        : `<circle cx="${center}" cy="${center}" r="${dotRadius}" fill="#ffffff" fill-opacity="0.95" />`;
+      const outerStroke = outerBorderColor
+        ? `<circle cx="${center}" cy="${center}" r="${outerRadius + 2}" fill="none" stroke="${outerBorderColor}" stroke-width="${outerBorderWidth || 3}" />`
+        : "";
       const stroke = borderColor
-        ? `<circle cx="15" cy="15" r="12.5" fill="none" stroke="${borderColor}" stroke-width="3" />`
+        ? `<circle cx="${center}" cy="${center}" r="${outerRadius}" fill="none" stroke="${borderColor}" stroke-width="3" />`
         : "";
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+        <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+          ${outerStroke}
           ${stroke}
-          <circle cx="15" cy="15" r="11" fill="${color}" fill-opacity="0.95" />
+          <circle cx="${center}" cy="${center}" r="${innerRadius}" fill="${color}" fill-opacity="0.95" />
           ${inner}
         </svg>
       `.trim();
 
       return new kakao.maps.MarkerImage(
         `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
-        new kakao.maps.Size(30, 30),
-        { offset: new kakao.maps.Point(15, 15) }
+        new kakao.maps.Size(size, size),
+        { offset: new kakao.maps.Point(center, center) }
       );
     }
 
