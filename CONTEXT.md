@@ -1,4 +1,4 @@
-# 프로젝트 컨텍스트 (Claude Code 작업 시 반드시 먼저 읽을 것)
+﻿# 프로젝트 컨텍스트 (Claude Code 작업 시 반드시 먼저 읽을 것)
 
 ## 프로젝트 개요
 - **목적**: 교육공공데이터 AI활용 분석 공모전 제출
@@ -641,3 +641,89 @@ data_processed/age_ratio_incheon.csv
 ???????? | ???? | 269m
 ???????? | ?????? | 338m
 ????????? | ???????? | 497m
+
+---
+
+## 최신 운영 기준 우선 적용 (2026-04-11)
+- 이 섹션은 기존 `case_type`, `island`, `access_ratio` 관련 어떤 예전 규칙보다도 우선한다.
+- 실측 봉인값(`nearest_park_dist_m`)은 절대 봉인하며 자동 재산출 결과보다 항상 우선한다.
+- `parks.csv` 재분류 시 기본적으로 `시설유형 == 놀이터`는 제외한다.
+- 단, 실측 검수상 공원으로 확인된 `가경공원`, `수차공원`은 예외적으로 공원으로 포함한다.
+- `인천영종초등학교금산분교장`은 예외적으로 `근처 공원 없음`, `nearest_park_dist_m = null`, `iso_park_count = 0`, `buf_park_count = 0` 유지한다.
+
+### 5차 봉인 (2026-04-11, 2개교)
+인천가현초등학교 | 수차공원 | 240m
+인천구산초등학교 | 부개공원 | 105m
+
+### 6차 봉인 (2026-04-11, 15개교)
+인천송명초등학교 | 마음공원 | 95m
+인천영종초등학교 | 영종하늘체육공원 | 235m
+인천미송초등학교 | 송도랜드마크시티9호근린공원 | 489m
+인천첨단초등학교 | 어울림공원 | 100m
+인천아라초등학교 | 아라노을공원 | 166m
+인천해든초등학교 | 해든공원 | 175m
+인천원당초등학교 | 원당공원 | 320m
+인천하늘초등학교 | 박석공원 | 124m
+인천한별초등학교 | 웃목어린이공원 | 213m
+인천계산초등학교 | 고향골어린이공원 | 444m
+상인천초등학교 | 중앙근린공원 | 575m
+인천장도초등학교 | 동녘어린이공원 | 298m
+인천부평동초등학교 | 꿈나무어린이공원 | 409m
+인천부곡초등학교 | 마장공원 | 420m
+인천석천초등학교 | 하늘공원 | 180m
+
+### 새 분류체계
+- `is_separate_bundle_tag = 1`
+  - `gu == 강화군`
+  - 또는 `gu == 옹진군`
+  - 또는 학교명이 `분교`, `분교장` 포함
+- 별도 묶음 대상은 `case1~4` 분포 집계에서 제외하고 별도 관리한다.
+
+- `is_low_access_tag = 1`
+  - `iso_park_count >= 1`
+  - 그리고 `access_ratio <= 0.5`
+- 의미: 도보권 공원은 최소 1개 있으나, 직선 500m 내 공원 대비 실제 보행 접근성이 낮다.
+
+- `is_case_conflict_tag = 1`
+  - `nearest_park_dist_m < 500` 이지만 `iso_park_count == 0`
+  - 또는 `nearest_park_dist_m >= 500` 이지만 `iso_park_count >= 1`
+- 운영 규칙: 충돌 케이스는 임시로 `case2`에 편입하고, 이후 실측 검수로 재보정한다.
+
+### case 정의
+- `case1`
+  - `nearest_park_dist_m >= 500`
+  - 그리고 `iso_park_count == 0`
+- `case2`
+  - `nearest_park_dist_m < 500`
+  - 그리고 `iso_park_count >= 1`
+  - 그리고 `iso_green_ratio` 하위 1/3
+- `case3`
+  - `nearest_park_dist_m < 500`
+  - 그리고 `iso_park_count >= 1`
+  - 그리고 `iso_green_ratio` 중간 1/3
+- `case4`
+  - `nearest_park_dist_m < 500`
+  - 그리고 `iso_park_count >= 1`
+  - 그리고 `iso_green_ratio` 상위 1/3
+
+### 산출 원칙
+- `iso_park_count`, `iso_park_area`는 `시설유형 != 놀이터` 공공공원 기준으로 재산출한다.
+- `iso_green_ratio = iso_park_area / isochrone_area_m2 * 100`
+- `iso_green_ratio` 3분위 경계는 본류 학교 중 `nearest_park_dist_m < 500 AND iso_park_count >= 1` 비교군에서 계산한다.
+- 실측 봉인값이 `500m 미만`인 학교는 공원 접근이 확인된 것으로 간주하며, 공간조인 결과 `iso_park_count == 0`이면 최소 `1`로 보정한다.
+
+### 내부 정렬 기준
+- `case1`
+  - `child_pop_quartile`: `Q4 > Q3 > Q2 > Q1`
+  - `iso_green_ratio` 낮을수록 우선
+  - `iso_playground_count` 적을수록 우선
+  - `nearest_park_dist_m` 멀수록 우선
+  - `student_slope` 높을수록 우선
+- `case2`
+  - `child_pop_quartile`: `Q4 > Q3 > Q2 > Q1`
+  - `is_low_access_tag = 1` 우선
+  - `is_case_conflict_tag = 1` 우선 검토
+  - `iso_green_ratio` 낮을수록 우선
+  - `iso_playground_count` 적을수록 우선
+  - `nearest_park_dist_m` 멀수록 우선
+  - `student_slope` 높을수록 우선
