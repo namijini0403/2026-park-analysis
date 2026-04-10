@@ -672,6 +672,9 @@ data_processed/age_ratio_incheon.csv
 인천부곡초등학교 | 마장공원 | 420m
 인천석천초등학교 | 하늘공원 | 180m
 
+### 7차 봉인 (2026-04-11, 1개교)
+상인천초등학교 | 소공원 | 473m
+
 ### 새 분류체계
 - `is_separate_bundle_tag = 1`
   - `gu == 강화군`

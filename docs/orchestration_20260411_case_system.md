@@ -81,6 +81,9 @@
 - 인천부곡초등학교 | 마장공원 | 420m
 - 인천석천초등학교 | 하늘공원 | 180m
 
+### 7차 봉인
+- 상인천초등학교 | 소공원 | 473m
+
 ## 저장된 파일
 - 실행 스크립트
   - `apply_case_system_20260411.py`
@@ -109,21 +112,17 @@
 ## 현재 결과
 - 본류 학교 기준
   - `case1 = 27`
-  - `case2 = 72`
-  - `case3 = 70`
+  - `case2 = 71`
+  - `case3 = 71`
   - `case4 = 71`
 - 별도 묶음
   - `is_separate_bundle_tag = 32`
 - 별도 태그
   - `is_low_access_tag = 96`
-  - `is_case_conflict_tag = 1`
+  - `is_case_conflict_tag = 0`
 
 ## 현재 남은 충돌 학교
-- `상인천초등학교`
-  - 실측 최근접 거리 `575m`
-  - 현재 `iso_park_count = 2`
-  - 운영상 임시 `case2`
-  - 향후 실측/공간조인 재검토 대상
+- 없음
 
 ## 검증 완료 사항
 - 실측 봉인 JSON과 `school_priority.csv`의 `nearest_park_dist_m` 불일치: `0건`

@@ -40,7 +40,7 @@ MANUAL_OVERRIDES = {
     "인천하늘초등학교": {"park": "박석공원", "dist": 124.0},
     "인천한별초등학교": {"park": "웃목어린이공원", "dist": 213.0},
     "인천계산초등학교": {"park": "고향골어린이공원", "dist": 444.0},
-    "상인천초등학교": {"park": "중앙근린공원", "dist": 575.0},
+    "상인천초등학교": {"park": "소공원", "dist": 473.0},
     "인천장도초등학교": {"park": "동녘어린이공원", "dist": 298.0},
     "인천부평동초등학교": {"park": "꿈나무어린이공원", "dist": 409.0},
     "인천부곡초등학교": {"park": "마장공원", "dist": 420.0},
@@ -108,6 +108,20 @@ def main() -> None:
 
     with open(SEALED_PATH, "r", encoding="utf-8") as f:
         sealed = json.load(f)
+
+    # Make the script idempotent when rerunning on an already-classified CSV.
+    derived_cols = [
+        "iso_green_ratio",
+        "iso_playground_count",
+        "is_separate_bundle_tag",
+        "is_low_access_tag",
+        "is_case_conflict_tag",
+        "isochrone_area_m2",
+        "iso_park_count_raw",
+        "iso_park_area_raw",
+        "green_bucket",
+    ]
+    school_priority = school_priority.drop(columns=[c for c in derived_cols if c in school_priority.columns], errors="ignore")
 
     id_by_name = dict(zip(school_priority["학교명"], school_priority["학교ID"]))
 
