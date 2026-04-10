@@ -1310,6 +1310,9 @@
           ...row,
           ...beneficiary,
           ...nearestPark,
+          nearest_park_dist_m: Number.isFinite(Number(row.nearest_park_dist_m))
+            ? row.nearest_park_dist_m
+            : nearestPark.nearest_park_dist_m,
           studentTrend,
           학교ID: schoolId,
           학교명: schoolName
