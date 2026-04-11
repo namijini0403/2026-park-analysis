@@ -1516,7 +1516,7 @@
           <div class="detail-section-title" style="margin-top:10px;">유사학교 5개</div>
           <ul style="margin:6px 0 0 18px; padding:0; line-height:1.7;">${items}</ul>
           <div class="detail-section-title" style="margin-top:12px;">공통점</div>
-          <div class="metric-item">${row.common_points || "유사학교 평균 대비 공통점 정보 없음"}</div>
+          <div class="metric-item">${row.common_points || row.common_traits || "유사학교 평균 대비 공통점 정보 없음"}</div>
           <div class="detail-section-title" style="margin-top:12px;">상대 강점</div>
           <div class="metric-item">${row.relative_strengths || "유사학교 대비 강점 정보 없음"}</div>
           <div class="detail-section-title" style="margin-top:12px;">상대 약점</div>
@@ -1582,12 +1582,12 @@
       const items = rows
         .map((row) => {
           const schoolName = getSchoolName(row);
-          const beneficiary = formatCount(
+          const potentialDemand = formatCount(
             row.predicted_2029 ?? row.iso_child_total ?? row.current_beneficiary
           );
           const parkCount = formatCount(row.iso_park_count);
           const star = Number(row.priority_score) >= 3 ? " ⭐" : "";
-          return `<li style="margin-bottom:8px;">${schoolName} | 수혜인구 ${beneficiary} | 등시선 내 공원 ${parkCount}${star}</li>`;
+          return `<li style="margin-bottom:8px;">${schoolName} | 2029 잠재 수요 ${potentialDemand} | 등시선 내 공원 ${parkCount}${star}</li>`;
         })
         .join("");
 
@@ -1623,83 +1623,6 @@
         return "metric-item danger";
       }
       return "metric-item";
-    }
-
-    function renderSchoolDetail(row = null) {
-      if (!row) {
-        ui.schoolDetailBox.className = "school-detail-box";
-        ui.schoolDetailBox.innerHTML = "학교 마커를 클릭하면 상세 정보를 표시합니다.";
-        return;
-      }
-
-      const caseType = Number(row.case_type);
-      const caseLabel = getCaseTypeLabel(caseType);
-      const badge = getSchoolBadge(row);
-      const mirageBadge = getMirageBadge(row);
-      const gu = detectGu(row) || "-";
-      const showAccess = caseType >= 1 && caseType <= 3;
-      const showGap = caseType >= 1 && caseType <= 3;
-      const message = getDiagnosticMessage(row);
-      const trendMarkup = getStudentTrendMarkup(row);
-      const redevelopmentMarkup = getRedevelopmentMarkup(row);
-      const nearestParkName = row.nearest_park_name || "공원 정보 없음";
-      const nearestParkDistance = formatDistanceMeters(row.nearest_park_dist_m);
-      const isoCnt = Number(row.iso_park_count);
-      const bufCnt = Number(row.buf_park_count);
-      const nearestParkStatus = isoCnt >= 1
-        ? "🟢 도보 500m 내 공원 있음"
-        : bufCnt >= 1
-          ? "🟡 직선 500m 내 공원 있음 (도보 경로 미확인)"
-          : "🔴 500m 내 공원 없음";
-      const hasLargeApt = hasTruthyFlag(row.has_large_apt || row.large_apt_flag);
-
-      ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
-      ui.schoolDetailBox.innerHTML = `
-        <div class="detail-head">
-          <h3 class="detail-name">${getSchoolName(row)} (${gu})</h3>
-          <div class="detail-subtitle">${caseLabel}</div>
-          <div class="detail-badge-row">
-            <div class="detail-badge ${badge.className}">[${badge.text}]</div>
-            ${mirageBadge ? `<div class="detail-badge ${mirageBadge.className}">[${mirageBadge.text}]</div>` : ""}
-          </div>
-        </div>
-        <div class="detail-message ${getCaseThemeClass(row)}">
-          ${message}
-          ${mirageBadge ? `<div class="detail-message-extra">📍 행정 기준과 실제 도보 접근 환경 간 괴리가 큰 학교입니다.</div>` : ""}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">공원·놀이터 현황</div>
-          <div class="metric-list">
-            <div class="${getMetricClass(row, "park")}">🌳 가장 가까운 공원: 약 ${nearestParkDistance}m (${nearestParkName})</div>
-            <div class="${getMetricClass(row, "park")}">${nearestParkStatus}</div>
-            <div class="${getMetricClass(row, "park")}">🛝 도보 접근 놀이터: ${formatCount(row.iso_playground_count)}개 / 직선 반경 내 놀이터: ${formatCount(row.buf_playground_count)}개</div>
-            ${hasLargeApt ? `<div class="metric-item warning">🏘️ 인근 대단지 아파트 존재 — 미집계 민간 놀이터가 있을 수 있습니다.</div>` : ""}
-            ${showAccess ? `<div class="${getMetricClass(row, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
-            ${showGap ? `<div class="${getMetricClass(row, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
-          </div>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">학생수 추세</div>
-          ${trendMarkup}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">잠재 수요 추정</div>
-          ${getPotentialDemandMarkup(row)}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">유사학교 비교</div>
-          ${getSimilarSchoolsMarkup(row)}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">🏗️ 인근 재개발 구역 (500m 이내)</div>
-          ${redevelopmentMarkup}
-        </div>
-      `;
     }
 
     function shouldUseSchoolClusterer() {
@@ -2098,7 +2021,7 @@
           `학교 좌표: ${schoolCoords.length}건`,
           `학생수 추세: ${studentTrend.length}건`,
           `최근접 공원 거리: ${nearestPark.length}건`,
-          `수혜인구 예측: ${beneficiaryForecast.length}건`,
+          `잠재 수요 추정: ${beneficiaryForecast.length}건`,
           `유사학교 비교: ${similarSchools.length}건`,
           `구 요약: ${guSummary.length}건`,
           `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
@@ -2246,73 +2169,6 @@
       `;
     }
 
-    function renderSchoolDetail(row = null) {
-      if (!row) {
-        ui.schoolDetailBox.className = "school-detail-box";
-        ui.schoolDetailBox.innerHTML = "학교 마커를 클릭하면 상세 정보를 표시합니다.";
-        return;
-      }
-
-      const caseLabel = getCaseTypeLabel(row);
-      const badge = getSchoolBadge(row);
-      const mirageBadge = getMirageBadge(row);
-      const gu = detectGu(row) || "-";
-      const caseType = normalizeCaseType(row.case_type);
-      const showAccess = caseType !== "case4" && caseType !== "island";
-      const showGap = caseType !== "case4" && caseType !== "island";
-      const message = getDiagnosticMessage(row);
-      const trendMarkup = getStudentTrendMarkup(row);
-      const redevelopmentMarkup = getRedevelopmentMarkup(row);
-      const nearestParkName = row.nearest_park_name || "공원 정보 없음";
-      const nearestParkDistance = formatDistanceMeters(row.nearest_park_dist_m);
-      const isoCnt = Number(row.iso_park_count);
-      const bufCnt = Number(row.buf_park_count);
-      const nearestParkStatus = isoCnt >= 1
-        ? "🟢 도보 500m 내 공원 있음"
-        : bufCnt >= 1
-          ? "🟡 직선 500m 내 공원 있음 (도보 경로 미확인)"
-          : "🔴 500m 내 공원 없음";
-      const hasLargeApt = String(row.has_large_apt || "").toLowerCase() === "true";
-
-      ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
-      ui.schoolDetailBox.innerHTML = `
-        <div class="detail-head">
-          <h3 class="detail-name">${getSchoolName(row)} (${gu})</h3>
-          <div class="detail-subtitle">${caseLabel}</div>
-          <div class="detail-badge-row">
-            <div class="detail-badge ${badge.className}">[${badge.text}]</div>
-            ${mirageBadge ? `<div class="detail-badge ${mirageBadge.className}">[${mirageBadge.text}]</div>` : ""}
-          </div>
-        </div>
-        <div class="detail-message ${getCaseThemeClass(row)}">
-          ${message}
-          ${mirageBadge ? `<div class="detail-message-extra">📍 행정 기준과 실제 도보 접근 환경 간 괴리가 큰 학교입니다.</div>` : ""}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">공원·놀이터 현황</div>
-          <div class="metric-list">
-            <div class="${getMetricClass(row, "park")}">🌳 가장 가까운 공원: 약 ${nearestParkDistance}m (${nearestParkName})</div>
-            <div class="${getMetricClass(row, "park")}">${nearestParkStatus}</div>
-            <div class="${getMetricClass(row, "park")}">🛝 도보 접근 놀이터: ${formatCount(row.iso_playground_count)}개 / 직선 반경 내 놀이터: ${formatCount(row.buf_playground_count)}개</div>
-            ${hasLargeApt ? `<div class="metric-item warning">🏘️ 인근 대단지 아파트 존재 — 미집계 민간 놀이터가 있을 수 있습니다.</div>` : ""}
-            ${showAccess ? `<div class="${getMetricClass(row, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
-            ${showGap ? `<div class="${getMetricClass(row, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
-          </div>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">학생수 추세</div>
-          ${trendMarkup}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">🏗️ 인근 재개발 구역 (500m 이내)</div>
-          ${redevelopmentMarkup}
-        </div>
-      `;
-    }
-
     function getGreenLeafMeta(row = {}) {
       const leaf = Number(row.green_leaf);
       if (leaf === 3) return { text: "🍃 상위 25%", className: "success" };
@@ -2359,7 +2215,7 @@
         : bufCnt >= 1
           ? "🟡 직선 500m 내 공원 있음 (도보 경로 미확인)"
           : "🔴 500m 내 공원 없음";
-      const hasLargeApt = String(row.has_large_apt || "").toLowerCase() === "true";
+      const hasLargeApt = hasTruthyFlag(row.has_large_apt || row.large_apt_flag);
 
       ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
       ui.schoolDetailBox.innerHTML = `
@@ -2393,6 +2249,16 @@
         <div class="detail-section">
           <div class="detail-section-title">학생수 추세</div>
           ${trendMarkup}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">잠재 수요 추정</div>
+          ${getPotentialDemandMarkup(row)}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">유사학교 비교</div>
+          ${getSimilarSchoolsMarkup(row)}
         </div>
 
         <div class="detail-section">
