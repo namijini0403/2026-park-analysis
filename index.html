@@ -901,7 +901,8 @@
       schoolCoords: "./data_processed/schools.csv",
       studentTrend: "./data_processed/student_trend.csv",
       nearestPark: "./data_processed/school_nearest_park.csv",
-      beneficiaryForecast: "./data_processed/beneficiary_forecast.csv",
+      beneficiaryForecast: "./data_processed/beneficiary_forecast_v3.csv",
+      similarSchools: "./data_processed/school_similar_schools_top5.csv",
       guSummary: "./data_processed/gu_summary.csv",
       parks: "./data_processed/parks.csv",
       isochrone: "./data_processed/isochrone_valhalla.geojson",
@@ -936,6 +937,7 @@
         studentTrend: [],
         nearestPark: [],
         beneficiaryForecast: [],
+        similarSchools: [],
         guSummary: [],
         parks: [],
         childcare: [],
@@ -1282,9 +1284,10 @@
       });
     }
 
-    function enrichSchoolRows(rows, beneficiaryRows, studentTrendRows, nearestParkRows) {
+    function enrichSchoolRows(rows, beneficiaryRows, studentTrendRows, nearestParkRows, similarRows) {
       const beneficiaryById = createRowMap(beneficiaryRows, (row) => row["학교ID"] || row.school_id || "");
       const nearestParkById = createRowMap(nearestParkRows, (row) => row["학교ID"] || row.school_id || "");
+      const similarById = createRowMap(similarRows, (row) => row["학교ID"] || row.school_id || "");
       const trendById = new Map();
 
       studentTrendRows.forEach((row) => {
@@ -1303,6 +1306,7 @@
         const schoolName = getSchoolName(row);
         const beneficiary = beneficiaryById.get(schoolId) || {};
         const nearestPark = nearestParkById.get(schoolId) || {};
+        const similar = similarById.get(schoolId) || {};
         const studentTrend = (trendById.get(schoolId) || [])
           .filter((item) => Number.isFinite(item.year) && Number.isFinite(item.students))
           .sort((left, right) => left.year - right.year);
@@ -1310,6 +1314,7 @@
           ...row,
           ...beneficiary,
           ...nearestPark,
+          ...similar,
           nearest_park_dist_m: Number.isFinite(Number(row.nearest_park_dist_m))
             ? row.nearest_park_dist_m
             : nearestPark.nearest_park_dist_m,
@@ -1359,6 +1364,13 @@
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) return "-";
       return Math.round(numeric).toLocaleString("ko-KR");
+    }
+
+    function hasTruthyFlag(value) {
+      if (typeof value === "boolean") return value;
+      const numeric = Number(value);
+      if (Number.isFinite(numeric)) return numeric === 1;
+      return String(value || "").trim().toLowerCase() === "true";
     }
 
     function formatSummaryPercent(value) {
@@ -1460,6 +1472,59 @@
       `;
     }
 
+    function getPotentialDemandMarkup(row) {
+      const demand2029 = Number(row.predicted_2029);
+      const demand2031 = Number(row.predicted_2031);
+      if (!Number.isFinite(demand2029) && !Number.isFinite(demand2031)) {
+        return `<div class="metric-item muted">잠재 수요 추정 데이터 없음</div>`;
+      }
+
+      return `
+        <div class="metric-list">
+          <div class="metric-item">이 지역에 공원을 추가할 경우 영향을 받을 수 있는 잠재 수요 규모입니다.</div>
+          <div class="metric-item muted">(정밀 예측이 아닌 비교용 지표입니다)</div>
+          ${Number.isFinite(demand2029) ? `<div class="metric-item">📈 2029 잠재 수요: ${formatCount(demand2029)}명</div>` : ""}
+          ${Number.isFinite(demand2031) ? `<div class="metric-item">📈 2031 잠재 수요: ${formatCount(demand2031)}명</div>` : ""}
+        </div>
+      `;
+    }
+
+    function getSimilarSchoolsMarkup(row) {
+      const similarIds = [1, 2, 3, 4, 5]
+        .map((rank) => ({
+          name: row[`similar_school_${rank}_name`],
+          gu: row[`similar_school_${rank}_gu`],
+          distance: row[`similar_school_${rank}_distance`]
+        }))
+        .filter((item) => item.name);
+
+      if (!similarIds.length) {
+        return `<div class="metric-item muted">유사학교 추천 데이터 없음</div>`;
+      }
+
+      const items = similarIds
+        .map(
+          (item, index) =>
+            `<li>${index + 1}. ${item.name}${item.gu ? ` (${item.gu})` : ""}${Number.isFinite(Number(item.distance)) ? ` · 거리 ${Number(item.distance).toFixed(2)}` : ""}</li>`
+        )
+        .join("");
+
+      return `
+        <div class="metric-list">
+          <div class="metric-item">이 학교와 공간 특성이 유사한 학교입니다.</div>
+          <div class="metric-item muted">공원 접근성, 주변 인구, 주거 환경 등을 기준으로 비교됩니다.</div>
+          <div class="detail-section-title" style="margin-top:10px;">유사학교 5개</div>
+          <ul style="margin:6px 0 0 18px; padding:0; line-height:1.7;">${items}</ul>
+          <div class="detail-section-title" style="margin-top:12px;">공통점</div>
+          <div class="metric-item">${row.common_points || "유사학교 평균 대비 공통점 정보 없음"}</div>
+          <div class="detail-section-title" style="margin-top:12px;">상대 강점</div>
+          <div class="metric-item">${row.relative_strengths || "유사학교 대비 강점 정보 없음"}</div>
+          <div class="detail-section-title" style="margin-top:12px;">상대 약점</div>
+          <div class="metric-item">${row.relative_weaknesses || "유사학교 대비 약점 정보 없음"}</div>
+        </div>
+      `;
+    }
+
     function getPopupHtml(row) {
       const schoolName = getSchoolName(row);
       const gu = detectGu(row) || "-";
@@ -1517,7 +1582,9 @@
       const items = rows
         .map((row) => {
           const schoolName = getSchoolName(row);
-          const beneficiary = formatCount(row.current_beneficiary);
+          const beneficiary = formatCount(
+            row.predicted_2029 ?? row.iso_child_total ?? row.current_beneficiary
+          );
           const parkCount = formatCount(row.iso_park_count);
           const star = Number(row.priority_score) >= 3 ? " ⭐" : "";
           return `<li style="margin-bottom:8px;">${schoolName} | 수혜인구 ${beneficiary} | 등시선 내 공원 ${parkCount}${star}</li>`;
@@ -1584,7 +1651,7 @@
         : bufCnt >= 1
           ? "🟡 직선 500m 내 공원 있음 (도보 경로 미확인)"
           : "🔴 500m 내 공원 없음";
-      const hasLargeApt = String(row.has_large_apt || "").toLowerCase() === "true";
+      const hasLargeApt = hasTruthyFlag(row.has_large_apt || row.large_apt_flag);
 
       ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
       ui.schoolDetailBox.innerHTML = `
@@ -1616,6 +1683,16 @@
         <div class="detail-section">
           <div class="detail-section-title">학생수 추세</div>
           ${trendMarkup}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">잠재 수요 추정</div>
+          ${getPotentialDemandMarkup(row)}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">유사학교 비교</div>
+          ${getSimilarSchoolsMarkup(row)}
         </div>
 
         <div class="detail-section">
@@ -1970,6 +2047,7 @@
         studentTrend,
         nearestPark,
         beneficiaryForecast,
+        similarSchools,
         guSummary,
         parks,
         isochrone,
@@ -1982,6 +2060,7 @@
         loadCSV(PATHS.studentTrend),
         loadCSV(PATHS.nearestPark),
         loadCSV(PATHS.beneficiaryForecast),
+        loadCSV(PATHS.similarSchools),
         loadCSV(PATHS.guSummary),
         loadCSV(PATHS.parks),
         loadGeoJSON(PATHS.isochrone),
@@ -1994,12 +2073,14 @@
       state.datasets.nearestPark = nearestPark;
       state.datasets.schoolCoords = schoolCoords;
       state.datasets.beneficiaryForecast = beneficiaryForecast;
+      state.datasets.similarSchools = similarSchools;
       state.datasets.guSummary = guSummary;
       state.datasets.schools = enrichSchoolRows(
         mergeSchoolPriorityWithCoords(schoolPriority, schoolCoords),
         beneficiaryForecast,
         studentTrend,
-        nearestPark
+        nearestPark,
+        similarSchools
       );
       state.datasets.parks = parks;
       state.datasets.isochrone = isochrone;
@@ -2018,6 +2099,7 @@
           `학생수 추세: ${studentTrend.length}건`,
           `최근접 공원 거리: ${nearestPark.length}건`,
           `수혜인구 예측: ${beneficiaryForecast.length}건`,
+          `유사학교 비교: ${similarSchools.length}건`,
           `구 요약: ${guSummary.length}건`,
           `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
           `공원·놀이터: ${parks.length}건`,
