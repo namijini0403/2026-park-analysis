@@ -903,6 +903,7 @@
       nearestPark: "./data_processed/school_nearest_park.csv",
       beneficiaryForecast: "./data_processed/beneficiary_forecast_v3.csv",
       similarSchools: "./data_processed/school_similar_schools_top5.csv",
+      candidatePanelExamples: "./data/examples/candidate_panel_examples.json",
       guSummary: "./data_processed/gu_summary.csv",
       parks: "./data_processed/parks.csv",
       isochrone: "./data_processed/isochrone_valhalla.geojson",
@@ -913,18 +914,143 @@
 
     const INCHEON_CENTER = { lat: 37.4563, lng: 126.7052 };
     const DEFAULT_LEVEL = 11;
+    const FALLBACK_CANDIDATE_PANEL_EXAMPLES = [
+      {
+        candidate_meta: {
+          candidate_id: "ext_grid_demo_001",
+          candidate_type: "external_grid",
+          center_x: 126.70521,
+          center_y: 37.53482,
+          gu: "계양구",
+          dong: "작전동"
+        },
+        demand_summary: {
+          nearby_child_total: 1460,
+          predicted_2029: 1820.4,
+          predicted_2031: 1762.8,
+          demand_label: "잠재 수요 추정",
+          demand_note: "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+        },
+        accessibility_summary: {
+          nearest_park_dist_m: 710.2,
+          nearby_park_count: 0,
+          nearby_playground_count: 1,
+          has_large_apt: true,
+          redev_status_simple: "계획·진행",
+          land_feasibility_level: "medium",
+          land_feasibility_note: "공개데이터 기준으로는 외부 설치 가능성이 불명확해 현장 검토가 필요합니다."
+        },
+        strategy_recommendation: {
+          primary_recommendation: "외부 검토",
+          secondary_option: "내부 병행 검토"
+        },
+        explanation: {
+          recommendation_reason_summary: "500m 내 공원 부족 + 아동 밀집 + 외부 설치 불확실",
+          explanation_tags: ["공원부족", "아동밀집", "대단지주거", "현장검토필요"]
+        },
+        linked_schools: {
+          linked_school_count: 2,
+          linked_school_ids: ["B000003077", "B000003026"],
+          linked_school_names: ["상인천초등학교", "인천동수초등학교"],
+          schools: [
+            {
+              school_id: "B000003077",
+              school_name: "상인천초등학교",
+              case_label: "접근 가능, 중간 수준",
+              predicted_2029: 396.8,
+              predicted_2031: 216.5
+            },
+            {
+              school_id: "B000003026",
+              school_name: "인천동수초등학교",
+              case_label: "접근 가능하나 녹지 부족",
+              predicted_2029: 422.1,
+              predicted_2031: 401.7
+            }
+          ]
+        },
+        ui_flags: {
+          requires_field_review: true,
+          show_demand_cards: true,
+          show_accessibility_metrics: true,
+          show_linked_schools: true,
+          show_coordinates: true,
+          show_land_feasibility_badge: true,
+          show_internal_note: false
+        }
+      },
+      {
+        candidate_meta: {
+          candidate_id: "internal_demo_B000002962_01",
+          candidate_type: "school_internal",
+          school_id: "B000002962",
+          school_name: "인천영종초등학교금산분교장",
+          gu: "중구",
+          dong: null
+        },
+        demand_summary: {
+          predicted_2029: 3.16,
+          predicted_2031: 2.92,
+          demand_label: "잠재 수요 추정",
+          demand_note: "학교권 기준 비교용 잠재 수요 추정입니다."
+        },
+        accessibility_summary: {
+          install_option: "학교 내부 놀이공간 검토",
+          space_constraint_level: "medium",
+          expected_benefit_scope: "교내 중심",
+          land_feasibility_note: "학교 내부 유휴공간 여부는 현장 확인 전 확정할 수 없습니다.",
+          external_candidate_available: false
+        },
+        strategy_recommendation: {
+          primary_recommendation: "학교 내부 설치",
+          secondary_option: "인접 학교/공공시설 연계"
+        },
+        explanation: {
+          recommendation_reason_summary: "외부 설치 어려움 → 내부 대안 필요",
+          explanation_tags: ["외부설치애매", "내부대안", "현장검토필요"]
+        },
+        linked_schools: {
+          linked_school_count: 1,
+          linked_school_ids: ["B000002962"],
+          linked_school_names: ["인천영종초등학교금산분교장"],
+          schools: [
+            {
+              school_id: "B000002962",
+              school_name: "인천영종초등학교금산분교장",
+              case_label: "별도 묶음",
+              predicted_2029: 3.16,
+              predicted_2031: 2.92
+            }
+          ]
+        },
+        ui_flags: {
+          requires_field_review: true,
+          show_demand_cards: true,
+          show_accessibility_metrics: false,
+          show_linked_schools: true,
+          show_coordinates: false,
+          show_land_feasibility_badge: false,
+          show_internal_note: true
+        }
+      }
+    ];
 
     const state = {
       map: null,
       infoWindow: null,
       clusterer: null,
+      currentPanelMode: null,
       selectedGu: "전체",
       selectedSchoolJoinKey: null,
       selectedSchoolId: null,
+      selectedPanelData: null,
+      selectedCandidateId: null,
+      selectedCandidateData: null,
       suppressNextMapClick: false,
       schoolMarkerIndex: new Map(),
       overlays: {
         schoolMarkers: [],
+        candidateMarkers: [],
         parkMarkers: [],
         childcareMarkers: [],
         redevelopmentMarkers: [],
@@ -938,6 +1064,7 @@
         nearestPark: [],
         beneficiaryForecast: [],
         similarSchools: [],
+        candidatePanelExamples: [],
         guSummary: [],
         parks: [],
         childcare: [],
@@ -1044,14 +1171,43 @@
       return partial || null;
     }
 
+    function clearDetailPanelSelection(options = {}) {
+      const preservePanel = Boolean(options.preservePanel);
+      state.currentPanelMode = null;
+      state.selectedSchoolId = null;
+      state.selectedCandidateId = null;
+      state.selectedCandidateData = null;
+      state.selectedPanelData = null;
+
+      if (!preservePanel) {
+        renderDetailPanel(null);
+      }
+    }
+
+    function setSchoolPanelSelection(row) {
+      state.currentPanelMode = "school";
+      state.selectedSchoolId = getSchoolId(row);
+      state.selectedCandidateId = null;
+      state.selectedCandidateData = null;
+      state.selectedPanelData = row;
+    }
+
+    function setCandidatePanelSelection(rawCandidateResponse) {
+      state.currentPanelMode = "candidate";
+      state.selectedSchoolId = null;
+      state.selectedCandidateId = rawCandidateResponse?.candidate_meta?.candidate_id || null;
+      state.selectedCandidateData = rawCandidateResponse;
+      state.selectedPanelData = rawCandidateResponse;
+    }
+
     function focusSchool(row) {
       if (!row || !state.map) return;
       const latLng = toLatLng(row, row["?꾨룄"] !== undefined ? "?꾨룄" : "lat", row["寃쎈룄"] !== undefined ? "寃쎈룄" : "lng");
       if (!latLng) return;
 
       highlightIsochroneForSchool(row);
-      state.selectedSchoolId = getSchoolId(row);
-      renderSchoolDetail(row);
+      setSchoolPanelSelection(row);
+      renderDetailPanel(row);
       state.map.setLevel(5);
       state.map.panTo(latLng);
       state.infoWindow.close();
@@ -1068,8 +1224,8 @@
       if (!latLng) return;
 
       highlightIsochroneForSchool(row);
-      state.selectedSchoolId = getSchoolId(row);
-      renderSchoolDetail(row);
+      setSchoolPanelSelection(row);
+      renderDetailPanel(row);
       state.map.setLevel(5);
       state.map.panTo(latLng);
       state.infoWindow.close();
@@ -1149,6 +1305,34 @@
         console.error(`[loadGeoJSON] ${path}`, error);
         return null;
       }
+    }
+
+    async function loadJSON(path) {
+      try {
+        const response = await fetch(path);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error(`[loadJSON] ${path}`, error);
+        return null;
+      }
+    }
+
+    function getFallbackCandidateExamples() {
+      return FALLBACK_CANDIDATE_PANEL_EXAMPLES.map((item) => ({ ...item }));
+    }
+
+    async function loadCandidateExamples() {
+      const examples = await loadJSON(PATHS.candidatePanelExamples);
+      if (Array.isArray(examples) && examples.length) {
+        return examples;
+      }
+
+      console.warn("[candidate-panel] example fetch failed, fallback examples will be used.");
+      appendStatus("후보지 예시 데이터 fetch 실패: fallback 예시로 디버그 패널을 제공합니다.");
+      return getFallbackCandidateExamples();
     }
 
     function loadKakaoMapSdk() {
@@ -1668,8 +1852,8 @@
       if (!latLng) return;
 
       highlightIsochroneForSchool(row);
-      state.selectedSchoolId = schoolId;
-      renderSchoolDetail(row);
+      setSchoolPanelSelection(row);
+      renderDetailPanel(row);
       state.map.setLevel(11);
       state.map.panTo(latLng);
       state.infoWindow.close();
@@ -1752,6 +1936,13 @@
       });
     }
 
+    function bindCandidatePopup(marker, candidate) {
+      kakao.maps.event.addListener(marker, "click", () => {
+        state.suppressNextMapClick = true;
+        openCandidatePanel(candidate);
+      });
+    }
+
     function renderSchoolMarkers() {
       clearOverlayGroup("schoolMarkers");
       state.schoolMarkerIndex = new Map();
@@ -1783,6 +1974,72 @@
       } else {
         state.overlays.schoolMarkers.forEach((marker) => marker.setMap(state.map));
       }
+    }
+
+    function getCandidateLatLng(candidate) {
+      if (!candidate || !candidate.candidate_meta) return null;
+      if (candidate.candidate_meta.candidate_type === "external_grid") {
+        const lat = Number(candidate.candidate_meta.center_y);
+        const lng = Number(candidate.candidate_meta.center_x);
+        if (Number.isFinite(lat) && Number.isFinite(lng)) {
+          return new kakao.maps.LatLng(lat, lng);
+        }
+      }
+
+      if (candidate.candidate_meta.candidate_type === "school_internal") {
+        const schoolId = candidate.candidate_meta.school_id;
+        const schoolRow = state.datasets.schools.find((row) => getSchoolId(row) === schoolId);
+        if (!schoolRow) return null;
+        return toLatLng(
+          schoolRow,
+          schoolRow["?꾨룄"] !== undefined ? "?꾨룄" : "lat",
+          schoolRow["寃쎈룄"] !== undefined ? "寃쎈룄" : "lng"
+        );
+      }
+
+      return null;
+    }
+
+    function findCandidateById(candidateId) {
+      return (state.datasets.candidatePanelExamples || []).find(
+        (candidate) => candidate?.candidate_meta?.candidate_id === candidateId
+      ) || null;
+    }
+
+    function openCandidatePanelById(candidateId) {
+      const candidate = findCandidateById(candidateId);
+      if (!candidate) {
+        console.warn(`[candidate-panel] candidate not found: ${candidateId}`);
+        return;
+      }
+
+      openCandidatePanel(candidate);
+    }
+
+    function renderCandidateMarkers() {
+      clearOverlayGroup("candidateMarkers");
+      const rows = Array.isArray(state.datasets.candidatePanelExamples)
+        ? state.datasets.candidatePanelExamples
+        : [];
+
+      rows.forEach((candidate) => {
+        const latLng = getCandidateLatLng(candidate);
+        if (!latLng) return;
+
+        const markerColor = candidate?.candidate_meta?.candidate_type === "school_internal" ? "#805AD5" : "#D69E2E";
+        const markerSymbol = candidate?.candidate_meta?.candidate_type === "school_internal" ? "I" : "C";
+        const marker = new kakao.maps.Marker({
+          position: latLng,
+          title: candidate?.candidate_meta?.candidate_id || "candidate",
+          image: createMarkerImage(markerColor, markerSymbol, "", { size: 34 })
+        });
+
+        marker.__candidateId = candidate?.candidate_meta?.candidate_id || null;
+        marker.__candidateRow = candidate;
+        bindCandidatePopup(marker, candidate);
+        marker.setMap(state.map);
+        state.overlays.candidateMarkers.push(marker);
+      });
     }
 
     function renderPointMarkers(groupName, rows, options) {
@@ -1908,6 +2165,7 @@
     }
 
     function updateOverlayVisibility() {
+      state.overlays.candidateMarkers.forEach((marker) => marker.setMap(state.map));
       state.overlays.parkMarkers.forEach((marker) => marker.setMap(ui.toggles.parks.checked ? state.map : null));
       state.overlays.childcareMarkers.forEach((marker) => marker.setMap(ui.toggles.childcare.checked ? state.map : null));
       state.overlays.redevelopmentMarkers.forEach((marker) => marker.setMap(ui.toggles.redevelopment.checked ? state.map : null));
@@ -1918,6 +2176,7 @@
 
     function rerenderAll() {
       renderSchoolMarkers();
+      renderCandidateMarkers();
       renderPointMarkers("parkMarkers", state.datasets.parks, {
         latKey: "위도",
         lngKey: "경도",
@@ -1953,11 +2212,13 @@
       updateOverlayVisibility();
       renderGuSummary();
       const selectedRow = state.datasets.schools.find((row) => getSchoolId(row) === state.selectedSchoolId);
-      if (selectedRow && shouldShowByGu(selectedRow)) {
-        renderSchoolDetail(selectedRow);
+      if (state.currentPanelMode === "school" && selectedRow && shouldShowByGu(selectedRow)) {
+        setSchoolPanelSelection(selectedRow);
+        renderDetailPanel(selectedRow);
+      } else if (state.currentPanelMode === "candidate" && isCandidatePanelResponse(state.selectedCandidateData)) {
+        renderDetailPanel(state.selectedCandidateData);
       } else {
-        state.selectedSchoolId = null;
-        renderSchoolDetail(null);
+        clearDetailPanelSelection();
       }
     }
 
@@ -1971,6 +2232,7 @@
         nearestPark,
         beneficiaryForecast,
         similarSchools,
+        candidatePanelExamples,
         guSummary,
         parks,
         isochrone,
@@ -1984,6 +2246,7 @@
         loadCSV(PATHS.nearestPark),
         loadCSV(PATHS.beneficiaryForecast),
         loadCSV(PATHS.similarSchools),
+        loadCandidateExamples(),
         loadCSV(PATHS.guSummary),
         loadCSV(PATHS.parks),
         loadGeoJSON(PATHS.isochrone),
@@ -1997,6 +2260,9 @@
       state.datasets.schoolCoords = schoolCoords;
       state.datasets.beneficiaryForecast = beneficiaryForecast;
       state.datasets.similarSchools = similarSchools;
+      state.datasets.candidatePanelExamples = Array.isArray(candidatePanelExamples)
+        ? candidatePanelExamples
+        : getFallbackCandidateExamples();
       state.datasets.guSummary = guSummary;
       state.datasets.schools = enrichSchoolRows(
         mergeSchoolPriorityWithCoords(schoolPriority, schoolCoords),
@@ -2187,6 +2453,400 @@
           : "";
       return { color: getCaseMeta(row).color, symbol: "", borderColor };
     }
+
+    function isCandidatePanelResponse(payload) {
+      return Boolean(
+        payload &&
+        typeof payload === "object" &&
+        payload.candidate_meta &&
+        typeof payload.candidate_meta === "object" &&
+        typeof payload.candidate_meta.candidate_type === "string"
+      );
+    }
+
+    function getCandidateBadgeToneClass(tone) {
+      if (tone === "positive") return "success";
+      if (tone === "warning") return "warning";
+      if (tone === "danger") return "critical";
+      return "neutral";
+    }
+
+    function getCandidateTypeLabel(type) {
+      return type === "school_internal" ? "학교 내부 대안" : "외부 후보지";
+    }
+
+    function getCandidateLandFeasibilityLabel(level) {
+      if (level === "high") return "실행 가능성 높음";
+      if (level === "medium") return "현장 검토 필요";
+      if (level === "low") return "외부 설치 어려움";
+      return "실행 가능성 정보 없음";
+    }
+
+    function formatCandidateValue(value, suffix = "") {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return suffix ? `정보 없음` : "정보 없음";
+      const rounded = Math.abs(numeric % 1) > 0 ? numeric.toFixed(1) : Math.round(numeric).toLocaleString("ko-KR");
+      return `${rounded}${suffix}`;
+    }
+
+    function formatCandidatePotentialDemand(value) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return "추정값 없음";
+      return Math.abs(numeric % 1) > 0 ? numeric.toFixed(1) : Math.round(numeric).toLocaleString("ko-KR");
+    }
+
+    function getCandidateSecondaryOptionDisplayValue(secondaryOption) {
+      return secondaryOption || "보조 대안 없음";
+    }
+
+    function getCandidateExplanationTagsDisplay(tags) {
+      return Array.isArray(tags) && tags.length ? tags : [];
+    }
+
+    function mapCandidatePanelResponseToViewModel(panel) {
+      const candidateType = panel?.candidate_meta?.candidate_type;
+      const linkedSchools = panel?.linked_schools || {};
+      const linkedSchoolNames = Array.isArray(linkedSchools.linked_school_names) ? linkedSchools.linked_school_names : [];
+      const linkedSchoolIds = Array.isArray(linkedSchools.linked_school_ids) ? linkedSchools.linked_school_ids : [];
+      const linkedSchoolRows = Array.isArray(linkedSchools.schools) ? linkedSchools.schools : [];
+      const explanationTags = getCandidateExplanationTagsDisplay(panel?.explanation?.explanation_tags);
+      const secondaryOption = panel?.strategy_recommendation?.secondary_option || null;
+
+      if (candidateType === "school_internal") {
+        const badges = [
+          { key: "candidate_type", label: getCandidateTypeLabel(candidateType), tone: "info" }
+        ];
+        if (panel?.ui_flags?.requires_field_review) {
+          badges.push({ key: "requires_field_review", label: "현장 검토 필요", tone: "warning" });
+        }
+
+        return {
+          panel_kind: "school_internal",
+          title: `${panel.candidate_meta.school_name} 내부 후보지`,
+          subtitle: "설치 검토 가능한 정책 대안",
+          badges,
+          demand_cards: panel?.ui_flags?.show_demand_cards === false ? [] : [
+            {
+              key: "predicted_2029",
+              label: "2029 잠재 수요",
+              value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2029),
+              note: panel?.demand_summary?.demand_note || "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+            },
+            {
+              key: "predicted_2031",
+              label: "2031 잠재 수요",
+              value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2031),
+              note: panel?.demand_summary?.demand_note || "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+            }
+          ],
+          accessibility_items: [
+            { key: "install_option", label: "설치 검토 옵션", value: panel?.accessibility_summary?.install_option || "정보 없음" },
+            { key: "space_constraint_level", label: "공간 제약 수준", value: panel?.accessibility_summary?.space_constraint_level || "정보 없음" },
+            { key: "expected_benefit_scope", label: "기대 효과 범위", value: panel?.accessibility_summary?.expected_benefit_scope || "정보 없음" },
+            { key: "land_feasibility_note", label: "현장 검토 메모", value: panel?.accessibility_summary?.land_feasibility_note || "정보 없음" }
+          ],
+          strategy_section: {
+            title: "설치 전략 제안",
+            primary_label: "우선 권장",
+            primary_value: panel?.strategy_recommendation?.primary_recommendation || "정보 없음",
+            secondary_label: "보조 대안",
+            secondary_value: secondaryOption,
+            secondary_visible: Boolean(secondaryOption)
+          },
+          explanation_section: {
+            title: "판단 근거",
+            summary: panel?.explanation?.recommendation_reason_summary || "설명 정보 없음",
+            tags: explanationTags,
+            note: panel?.accessibility_summary?.land_feasibility_note || null,
+            tags_visible: explanationTags.length > 0
+          },
+          linked_school_section: {
+            title: "도보 500m 내 학교",
+            count_label: `도보 500m 내 학교 ${Number(linkedSchools.linked_school_count || 0)}개`,
+            names: linkedSchoolNames.length ? linkedSchoolNames : linkedSchoolIds,
+            ids: linkedSchoolIds,
+            items: linkedSchoolRows.map((school) => ({
+              school_id: school.school_id,
+              school_name: school.school_name,
+              display_name: school.school_name || school.school_id,
+              case_label: school.case_label || null
+            })),
+            empty_message: Number(linkedSchools.linked_school_count || 0) > 0 ? null : "연결 학교 정보 없음"
+          },
+          warning_flags: panel?.ui_flags?.requires_field_review
+            ? [{ key: "requires_field_review", label: "현장 검토 필요", tone: "warning" }]
+            : []
+        };
+      }
+
+      const landFeasibilityLevel = panel?.accessibility_summary?.land_feasibility_level || null;
+      const badges = [
+        { key: "candidate_type", label: getCandidateTypeLabel(candidateType), tone: "info" }
+      ];
+      if (panel?.ui_flags?.show_land_feasibility_badge !== false) {
+        badges.push({
+          key: "land_feasibility_level",
+          label: getCandidateLandFeasibilityLabel(landFeasibilityLevel),
+          tone: landFeasibilityLevel === "high" ? "positive" : landFeasibilityLevel === "low" ? "danger" : "warning"
+        });
+      }
+
+      const warningFlags = [];
+      if (panel?.ui_flags?.requires_field_review) {
+        warningFlags.push({ key: "requires_field_review", label: "현장 검토 필요", tone: "warning" });
+      }
+      if (landFeasibilityLevel === "low") {
+        warningFlags.push({ key: "external_low_feasibility", label: "외부 설치 어려움", tone: "danger" });
+      }
+
+      return {
+        panel_kind: "external_grid",
+        title: `${[panel?.candidate_meta?.gu, panel?.candidate_meta?.dong].filter(Boolean).join(" ")} 외부 후보지`.trim(),
+        subtitle: `연결 학교 ${Number(linkedSchools.linked_school_count || 0)}개 · 생활권 설치 검토 후보`,
+        badges,
+        demand_cards: panel?.ui_flags?.show_demand_cards === false ? [] : [
+          {
+            key: "predicted_2029",
+            label: "2029 잠재 수요",
+            value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2029),
+            note: panel?.demand_summary?.demand_note || "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+          },
+          {
+            key: "predicted_2031",
+            label: "2031 잠재 수요",
+            value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2031),
+            note: panel?.demand_summary?.demand_note || "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+          }
+        ],
+        accessibility_items: panel?.ui_flags?.show_accessibility_metrics === false ? [] : [
+          { key: "nearby_park_count", label: "등시권 내 공원 수", value: formatCandidateValue(panel?.accessibility_summary?.nearby_park_count) },
+          { key: "nearby_playground_count", label: "등시권 내 놀이터 수", value: formatCandidateValue(panel?.accessibility_summary?.nearby_playground_count) },
+          { key: "nearest_park_dist_m", label: "최근접 공원 거리", value: formatCandidateValue(panel?.accessibility_summary?.nearest_park_dist_m, "m") },
+          { key: "has_large_apt", label: "대단지 여부", value: panel?.accessibility_summary?.has_large_apt === null ? "정보 없음" : panel?.accessibility_summary?.has_large_apt ? "대단지 있음" : "대단지 없음" },
+          { key: "redev_status_simple", label: "재개발 상태", value: panel?.accessibility_summary?.redev_status_simple || "정보 없음" }
+        ],
+        strategy_section: {
+          title: "설치 전략 제안",
+          primary_label: "우선 권장",
+          primary_value: panel?.strategy_recommendation?.primary_recommendation || "정보 없음",
+          secondary_label: "보조 대안",
+          secondary_value: secondaryOption,
+          secondary_visible: Boolean(secondaryOption)
+        },
+        explanation_section: {
+          title: "판단 근거",
+          summary: panel?.explanation?.recommendation_reason_summary || "설명 정보 없음",
+          tags: explanationTags,
+          note: panel?.accessibility_summary?.land_feasibility_note || null,
+          tags_visible: explanationTags.length > 0
+        },
+        linked_school_section: {
+          title: "도보 500m 내 학교",
+          count_label: `도보 500m 내 학교 ${Number(linkedSchools.linked_school_count || 0)}개`,
+          names: linkedSchoolNames.length ? linkedSchoolNames : linkedSchoolIds,
+          ids: linkedSchoolIds,
+          items: linkedSchoolRows.map((school) => ({
+            school_id: school.school_id,
+            school_name: school.school_name,
+            display_name: school.school_name || school.school_id,
+            case_label: school.case_label || null
+          })),
+          empty_message: Number(linkedSchools.linked_school_count || 0) > 0 ? null : "연결 학교 정보 없음"
+        },
+        warning_flags: warningFlags
+      };
+    }
+
+    function renderCandidateBadgeList(badges) {
+      if (!Array.isArray(badges) || !badges.length) return "";
+      return `
+        <div class="detail-badge-row">
+          ${badges.map((badge) => `<div class="detail-badge ${getCandidateBadgeToneClass(badge.tone)}">${badge.label}</div>`).join("")}
+        </div>
+      `;
+    }
+
+    function renderCandidateWarningFlags(warningFlags) {
+      if (!Array.isArray(warningFlags) || !warningFlags.length) return "";
+      return warningFlags
+        .map((flag) => `<div class="detail-message-extra">${flag.label}</div>`)
+        .join("");
+    }
+
+    function renderCandidateInfoCards(cards) {
+      if (!Array.isArray(cards) || !cards.length) return "";
+      return `
+        <div class="metric-list">
+          ${cards.map((card) => `
+            <div class="metric-item">
+              <strong>${card.label}</strong>: ${card.value}
+              ${card.note ? `<div class="metric-item muted" style="margin-top:6px;">${card.note}</div>` : ""}
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderCandidateLabeledValues(items) {
+      if (!Array.isArray(items) || !items.length) return "";
+      return `
+        <div class="metric-list">
+          ${items.map((item) => `<div class="metric-item"><strong>${item.label}</strong>: ${item.value}</div>`).join("")}
+        </div>
+      `;
+    }
+
+    function renderCandidateStrategySection(strategySection) {
+      if (!strategySection) return "";
+      const secondaryValue = getCandidateSecondaryOptionDisplayValue(strategySection.secondary_value);
+      const secondaryClass = strategySection.secondary_visible ? "metric-item" : "metric-item muted";
+      return `
+        <div class="metric-list">
+          <div class="metric-item"><strong>${strategySection.primary_label}</strong>: ${strategySection.primary_value}</div>
+          <div class="${secondaryClass}"><strong>${strategySection.secondary_label}</strong>: ${secondaryValue}</div>
+        </div>
+      `;
+    }
+
+    function renderCandidateExplanationSection(explanationSection) {
+      if (!explanationSection) return "";
+      const tagsMarkup = explanationSection.tags_visible
+        ? `<div class="detail-badge-row">${explanationSection.tags.map((tag) => `<div class="detail-badge neutral">${tag}</div>`).join("")}</div>`
+        : "";
+
+      return `
+        <div class="metric-list">
+          <div class="metric-item">${explanationSection.summary}</div>
+          ${explanationSection.note ? `<div class="metric-item muted">${explanationSection.note}</div>` : ""}
+          ${tagsMarkup}
+        </div>
+      `;
+    }
+
+    function renderCandidateLinkedSchoolSection(linkedSchoolSection) {
+      if (!linkedSchoolSection) return "";
+      if (!linkedSchoolSection.items.length) {
+        return `<div class="metric-item muted">${linkedSchoolSection.empty_message || "연결 학교 정보 없음"}</div>`;
+      }
+
+      return `
+        <div class="metric-list">
+          <div class="metric-item">${linkedSchoolSection.count_label}</div>
+          <ul style="margin:6px 0 0 18px; padding:0; line-height:1.7;">
+            ${linkedSchoolSection.items.map((item) => `
+              <li>
+                ${item.display_name}
+                ${item.case_label ? ` · ${item.case_label}` : ""}
+              </li>
+            `).join("")}
+          </ul>
+        </div>
+      `;
+    }
+
+    function renderCandidatePanel(rawCandidateResponse = null) {
+      if (!rawCandidateResponse) {
+        ui.schoolDetailBox.className = "school-detail-box";
+        ui.schoolDetailBox.innerHTML = "후보지 패널 데이터가 없습니다.";
+        return;
+      }
+
+      const viewModel = mapCandidatePanelResponseToViewModel(rawCandidateResponse);
+      const panelThemeClass = viewModel.panel_kind === "school_internal" ? "case-island" : "case-case2";
+
+      ui.schoolDetailBox.className = `school-detail-box ${panelThemeClass}`;
+      ui.schoolDetailBox.innerHTML = `
+        <div class="detail-head">
+          <h3 class="detail-name">${viewModel.title}</h3>
+          <div class="detail-subtitle">${viewModel.subtitle}</div>
+          ${renderCandidateBadgeList(viewModel.badges)}
+          ${state.selectedCandidateId ? `<div class="detail-message-extra">candidate_id: ${state.selectedCandidateId}</div>` : ""}
+        </div>
+        <div class="detail-message ${panelThemeClass}">
+          ${viewModel.panel_kind === "school_internal"
+            ? "학교 내부 후보지는 좌표 기반 확정 설치지가 아니라 설치 검토 가능한 내부 대안입니다."
+            : "외부 후보지는 생활권 내 설치 검토 후보이며, 실제 토지 가능성은 현장 검토가 필요합니다."}
+          ${renderCandidateWarningFlags(viewModel.warning_flags)}
+        </div>
+        ${viewModel.demand_cards.length ? `
+          <div class="detail-section">
+            <div class="detail-section-title">잠재 수요 추정</div>
+            ${renderCandidateInfoCards(viewModel.demand_cards)}
+          </div>
+        ` : ""}
+        ${viewModel.accessibility_items.length ? `
+          <div class="detail-section">
+            <div class="detail-section-title">${viewModel.panel_kind === "school_internal" ? "내부 대안 검토 정보" : "지역 접근성 요약"}</div>
+            ${renderCandidateLabeledValues(viewModel.accessibility_items)}
+          </div>
+        ` : ""}
+        <div class="detail-section">
+          <div class="detail-section-title">${viewModel.strategy_section.title}</div>
+          ${renderCandidateStrategySection(viewModel.strategy_section)}
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">${viewModel.explanation_section.title}</div>
+          ${renderCandidateExplanationSection(viewModel.explanation_section)}
+        </div>
+        ${(viewModel.linked_school_section.items.length || viewModel.linked_school_section.empty_message) ? `
+          <div class="detail-section">
+            <div class="detail-section-title">${viewModel.linked_school_section.title}</div>
+            ${renderCandidateLinkedSchoolSection(viewModel.linked_school_section)}
+          </div>
+        ` : ""}
+      `;
+    }
+
+    function renderDetailPanel(payload = null) {
+      if (isCandidatePanelResponse(payload)) {
+        renderCandidatePanel(payload);
+        return;
+      }
+
+      renderSchoolDetail(payload);
+    }
+
+    function openCandidatePanel(rawCandidateResponse) {
+      if (!isCandidatePanelResponse(rawCandidateResponse)) {
+        console.warn("[candidate-panel] invalid candidate response", rawCandidateResponse);
+        return;
+      }
+
+      setCandidatePanelSelection(rawCandidateResponse);
+      renderDetailPanel(rawCandidateResponse);
+      openPanel();
+      // TODO: connect selectedCandidateId to candidate marker highlight when real candidate API/layer is added.
+    }
+
+    async function debugOpenCandidateExample(index = 0) {
+      const examples =
+        Array.isArray(state.datasets.candidatePanelExamples) && state.datasets.candidatePanelExamples.length
+          ? state.datasets.candidatePanelExamples
+          : await loadCandidateExamples();
+      const candidate = examples[index];
+      if (!candidate) {
+        console.warn(`[candidate-panel] example not found for index ${index}`);
+        return;
+      }
+
+      openCandidatePanel(candidate);
+    }
+
+    function debugOpenExternalCandidateExample() {
+      return debugOpenCandidateExample(0);
+    }
+
+    function debugOpenInternalCandidateExample() {
+      return debugOpenCandidateExample(1);
+    }
+
+    window.openCandidatePanel = openCandidatePanel;
+    window.openCandidatePanelById = openCandidatePanelById;
+    window.findCandidateById = findCandidateById;
+    window.debugOpenCandidateExample = debugOpenCandidateExample;
+    window.debugOpenExternalCandidateExample = debugOpenExternalCandidateExample;
+    window.debugOpenInternalCandidateExample = debugOpenInternalCandidateExample;
+    window.clearDetailPanelSelection = clearDetailPanelSelection;
 
     function renderSchoolDetail(row = null) {
       if (!row) {
