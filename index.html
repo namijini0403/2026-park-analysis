@@ -1766,12 +1766,20 @@
       const items = rows
         .map((row) => {
           const schoolName = getSchoolName(row);
-          const potentialDemand = formatCount(
-            row.predicted_2029 ?? row.iso_child_total ?? row.current_beneficiary
-          );
+          const demand2029 = Number(row.predicted_2029);
+          const demand2031 = Number(row.predicted_2031);
           const parkCount = formatCount(row.iso_park_count);
+          const playgroundCount = formatCount(row.iso_playground_count);
           const star = Number(row.priority_score) >= 3 ? " ⭐" : "";
-          return `<li style="margin-bottom:8px;">${schoolName} | 2029 잠재 수요 ${potentialDemand} | 등시선 내 공원 ${parkCount}${star}</li>`;
+          return `
+            <li style="margin-bottom:10px;">
+              <div style="font-weight:700; color:#111827;">${schoolName}${star}</div>
+              <div>2029 잠재 수요: ${Number.isFinite(demand2029) ? `${formatCount(demand2029)}명` : "추정값 없음"}</div>
+              <div>2031 잠재 수요: ${Number.isFinite(demand2031) ? `${formatCount(demand2031)}명` : "추정값 없음"}</div>
+              <div>등시권 내 공원 수: ${parkCount}개</div>
+              <div>등시권 내 놀이터 수: ${playgroundCount}개</div>
+            </li>
+          `;
         })
         .join("");
 
