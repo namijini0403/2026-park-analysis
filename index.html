@@ -1229,6 +1229,31 @@
       };
     }
 
+    function getCandidatePopupHtml(properties = {}) {
+      const predicted2029 = Number(
+        properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
+      );
+      const predicted2031 = Number(
+        properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
+      );
+      const feasibility = properties.land_feasibility_level || "low";
+      const feasibilityLabel =
+        feasibility === "high" ? "즉시 검토" :
+        feasibility === "medium" ? "중점 검토" :
+        "후순위 검토";
+
+      return `
+        <div style="padding:12px 14px; min-width:220px; font-family:Pretendard,'Noto Sans KR',sans-serif;">
+          <div style="font-weight:800; font-size:14px; margin-bottom:6px;">후보지 ${properties.grid_id || ""}</div>
+          <div style="font-size:12px; color:#4b5563; margin-bottom:8px;">${feasibilityLabel} · 연결 학교 ${Number(properties.linked_school_count || 0)}개</div>
+          <div style="font-size:12px; line-height:1.65; color:#111827;">
+            <div>2029 XGBoost 예측 잠재수혜인원: <strong>${Math.round(predicted2029).toLocaleString("ko-KR")}명</strong></div>
+            <div>2031 XGBoost 예측 잠재수혜인원: <strong>${Math.round(predicted2031).toLocaleString("ko-KR")}명</strong></div>
+          </div>
+        </div>
+      `;
+    }
+
     function populateSchoolSearchOptions() {
       if (!ui.schoolSearchList) return;
       const seen = new Set();
@@ -2133,6 +2158,10 @@
           });
 
           kakao.maps.event.addListener(circle, "click", () => {
+            state.suppressNextMapClick = true;
+            state.infoWindow.setContent(getCandidatePopupHtml(p));
+            state.infoWindow.setPosition(pos);
+            state.infoWindow.open(state.map);
             openCandidatePanel(buildCandidatePanelPayload(p));
           });
 
