@@ -311,14 +311,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "\uc778\ucc9c\uc6a9\ud559\ucd08\ub4f1\ud559\uad50",
+        "schoolName": "\uc778\ucc9c\uc5f0\ud559\ucd08\ub4f1\ud559\uad50",
         "districtName": "\ubbf8\ucd94\ud640\uad6c",
         "casePolicyLabel": "\uc720\uc9c0\u00b7\uad00\ub9ac \ub300\uc0c1",
         "caseStatusLabel": "\uc811\uadfc \uc591\ud638",
-        "potentialDemand2029": 147,
-        "potentialDemand2031": 143,
-        "nearestParkDistanceM": 0.0,
-        "greenRatio": 6.1,
+        "potentialDemand2029": 764,
+        "potentialDemand2031": 804,
+        "nearestParkDistanceM": 121.4,
+        "greenRatio": 13.0,
         "playgroundCount": 0
       }
     },
@@ -489,14 +489,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "\uc778\ucc9c\ubd80\uc77c\ucd08\ub4f1\ud559\uad50",
+        "schoolName": "\uc778\ucc9c\ubd80\ub0b4\ucd08\ub4f1\ud559\uad50",
         "districtName": "\ubd80\ud3c9\uad6c",
         "casePolicyLabel": "\uc720\uc9c0\u00b7\uad00\ub9ac \ub300\uc0c1",
         "caseStatusLabel": "\uc811\uadfc \uc591\ud638",
-        "potentialDemand2029": 797,
-        "potentialDemand2031": 777,
-        "nearestParkDistanceM": 0.0,
-        "greenRatio": 5.5,
+        "potentialDemand2029": 500,
+        "potentialDemand2031": 488,
+        "nearestParkDistanceM": 263.6,
+        "greenRatio": 14.0,
         "playgroundCount": 0
       }
     },
@@ -578,14 +578,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "\uc778\ucc9c\ubc15\ubb38\ucd08\ub4f1\ud559\uad50",
+        "schoolName": "\uc778\ucc9c\ud568\ubc15\ucd08\ub4f1\ud559\uad50",
         "districtName": "\uc5f0\uc218\uad6c",
         "casePolicyLabel": "\uc720\uc9c0\u00b7\uad00\ub9ac \ub300\uc0c1",
         "caseStatusLabel": "\uc811\uadfc \uc591\ud638",
-        "potentialDemand2029": 302,
-        "potentialDemand2031": 294,
-        "nearestParkDistanceM": 0.0,
-        "greenRatio": 55.0,
+        "potentialDemand2029": 781,
+        "potentialDemand2031": 794,
+        "nearestParkDistanceM": 271.8,
+        "greenRatio": 90.6,
         "playgroundCount": 0
       }
     },
@@ -667,15 +667,15 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "\uc778\ucc9c\uc7a5\uc544\ucd08\ub4f1\ud559\uad50",
+        "schoolName": "\uc778\ucc9c\uc1a1\ucc9c\ucd08\ub4f1\ud559\uad50",
         "districtName": "\ub0a8\ub3d9\uad6c",
         "casePolicyLabel": "\uc720\uc9c0\u00b7\uad00\ub9ac \ub300\uc0c1",
         "caseStatusLabel": "\uc811\uadfc \uc591\ud638",
-        "potentialDemand2029": 560,
-        "potentialDemand2031": 546,
-        "nearestParkDistanceM": 0.0,
-        "greenRatio": 68.1,
-        "playgroundCount": 0
+        "potentialDemand2029": 672,
+        "potentialDemand2031": 655,
+        "nearestParkDistanceM": 180.7,
+        "greenRatio": 73.0,
+        "playgroundCount": 1
       }
     },
     {
@@ -756,14 +756,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "\uacbd\uc778\uad50\uc721\ub300\ud559\uad50\ubd80\uc124\ucd08\ub4f1\ud559\uad50",
+        "schoolName": "\uc778\ucc9c\uc2e0\ub300\ucd08\ub4f1\ud559\uad50",
         "districtName": "\uacc4\uc591\uad6c",
         "casePolicyLabel": "\uc720\uc9c0\u00b7\uad00\ub9ac \ub300\uc0c1",
         "caseStatusLabel": "\uc811\uadfc \uc591\ud638",
-        "potentialDemand2029": 289,
-        "potentialDemand2031": 294,
-        "nearestParkDistanceM": 53.9,
-        "greenRatio": 6.3,
+        "potentialDemand2029": 220,
+        "potentialDemand2031": 215,
+        "nearestParkDistanceM": 148.0,
+        "greenRatio": 9.6,
         "playgroundCount": 0
       }
     },
@@ -845,14 +845,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "\uc778\ucc9c\uc655\uae38\ucd08\ub4f1\ud559\uad50",
+        "schoolName": "\uc778\ucc9c\uccad\uc77c\ucd08\ub4f1\ud559\uad50",
         "districtName": "\uc11c\uad6c",
         "casePolicyLabel": "\uc720\uc9c0\u00b7\uad00\ub9ac \ub300\uc0c1",
         "caseStatusLabel": "\uc811\uadfc \uc591\ud638",
-        "potentialDemand2029": 320,
-        "potentialDemand2031": 312,
-        "nearestParkDistanceM": 0.0,
-        "greenRatio": 3.6,
+        "potentialDemand2029": 897,
+        "potentialDemand2031": 874,
+        "nearestParkDistanceM": 140.0,
+        "greenRatio": 78.8,
         "playgroundCount": 0
       }
     },
@@ -934,14 +934,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "\ud569\uc77c\ucd08\ub4f1\ud559\uad50",
+        "schoolName": "\uac11\ub8e1\ucd08\ub4f1\ud559\uad50",
         "districtName": "\uac15\ud654\uad70",
         "casePolicyLabel": "\ubcc4\ub3c4 \uc815\ucc45 \uc801\uc6a9",
         "caseStatusLabel": "\ubcc4\ub3c4 \ubb36\uc74c",
-        "potentialDemand2029": 65,
-        "potentialDemand2031": 59,
-        "nearestParkDistanceM": 0.0,
-        "greenRatio": 12.7,
+        "potentialDemand2029": 3,
+        "potentialDemand2031": 3,
+        "nearestParkDistanceM": 285.0,
+        "greenRatio": 0.0,
         "playgroundCount": 0
       }
     }
@@ -1070,14 +1070,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
   ],
   "cityBestSchool": {
     "rank": 1,
-    "schoolName": "\uc778\ucc9c\uc7a5\uc544\ucd08\ub4f1\ud559\uad50",
-    "districtName": "\ub0a8\ub3d9\uad6c",
+    "schoolName": "\uc778\ucc9c\ud568\ubc15\ucd08\ub4f1\ud559\uad50",
+    "districtName": "\uc5f0\uc218\uad6c",
     "casePolicyLabel": "\uc720\uc9c0\u00b7\uad00\ub9ac \ub300\uc0c1",
     "caseStatusLabel": "\uc811\uadfc \uc591\ud638",
-    "potentialDemand2029": 560,
-    "potentialDemand2031": 546,
-    "nearestParkDistanceM": 0.0,
-    "greenRatio": 68.1,
+    "potentialDemand2029": 781,
+    "potentialDemand2031": 794,
+    "nearestParkDistanceM": 271.8,
+    "greenRatio": 90.6,
     "playgroundCount": 0
   }
 };

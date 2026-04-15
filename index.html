@@ -3053,28 +3053,58 @@
         }
       }
 
-      // 시/구 최우수 학교: case 4 우선, 그 안에서 공원거리 짧고 녹지/놀이터가 좋은 학교
-      const _pickBestEnvironmentSchool = (rows) =>
-        rows
-          .filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0)
-          .sort((a, b) => {
-            const rankCase = (value) => {
-              const num = Number(value);
-              if (num === 4) return 0;
-              if (num === 3) return 1;
-              if (num === 2) return 2;
-              if (num === 1) return 3;
-              return 4;
-            };
-            return (
-              rankCase(a.case_type) - rankCase(b.case_type) ||
-              Number(a.nearest_park_dist_m) - Number(b.nearest_park_dist_m) ||
-              Number(b.iso_green_ratio || 0) - Number(a.iso_green_ratio || 0) ||
-              Number(b.iso_playground_count || 0) - Number(a.iso_playground_count || 0)
-            );
-          })[0];
+      const _safeAvg = (rows, key) => {
+        const values = rows
+          .map((item) => Number(item[key]))
+          .filter((value) => Number.isFinite(value));
+        if (!values.length) return 0;
+        return values.reduce((sum, value) => sum + value, 0) / values.length;
+      };
 
-      const _cityBest = _pickBestEnvironmentSchool(state.datasets.schools || []);
+      const _allSchools = state.datasets.schools || [];
+      const _validSchools = _allSchools.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0);
+      const _cityAvg = {
+        nearestParkDistanceM: _safeAvg(_validSchools, "nearest_park_dist_m"),
+        greenRatio: _safeAvg(_allSchools, "iso_green_ratio"),
+        playgroundCount: _safeAvg(_allSchools, "iso_playground_count"),
+      };
+      _enrichedRow._cityAvg = _cityAvg;
+
+      const _scoreBestEnvironmentSchool = (rows) => {
+        const valid = rows.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0);
+        if (!valid.length) return [];
+        const maxDist = Math.max(...valid.map((s) => Number(s.nearest_park_dist_m) || 0), 1);
+        const maxGreen = Math.max(...valid.map((s) => Number(s.iso_green_ratio) || 0), 1);
+        const maxPlayground = Math.max(...valid.map((s) => Number(s.iso_playground_count) || 0), 1);
+        const rankCase = (value) => {
+          const num = Number(value);
+          if (num === 4) return 0;
+          if (num === 3) return 1;
+          if (num === 2) return 2;
+          if (num === 1) return 3;
+          return 4;
+        };
+        return valid
+          .map((school) => {
+            const parkScore = 1 - Math.min((Number(school.nearest_park_dist_m) || 0) / maxDist, 1);
+            const greenScore = Math.min((Number(school.iso_green_ratio) || 0) / maxGreen, 1);
+            const playgroundScore = Math.min((Number(school.iso_playground_count) || 0) / maxPlayground, 1);
+            const caseBonus = rankCase(school.case_type) === 0 ? 0.05 : rankCase(school.case_type) === 1 ? 0.02 : 0;
+            return {
+              school,
+              score: parkScore * 0.45 + greenScore * 0.45 + playgroundScore * 0.1 + caseBonus,
+            };
+          })
+          .sort((a, b) =>
+            b.score - a.score ||
+            rankCase(a.school.case_type) - rankCase(b.school.case_type) ||
+            Number(a.school.nearest_park_dist_m) - Number(b.school.nearest_park_dist_m) ||
+            Number(b.school.iso_green_ratio || 0) - Number(a.school.iso_green_ratio || 0) ||
+            Number(b.school.iso_playground_count || 0) - Number(a.school.iso_playground_count || 0)
+          );
+      };
+
+      const _cityBest = (_scoreBestEnvironmentSchool(_allSchools)[0] || {}).school;
       if (_cityBest) {
         _enrichedRow._cityBest = {
           schoolName: getSchoolName(_cityBest),
@@ -3087,9 +3117,13 @@
 
       // 구 최우수 학교
       if (_gu) {
-        const _distBest = _pickBestEnvironmentSchool(
-          (state.datasets.schools || []).filter((s) => (detectGu(s) || "") === _gu)
-        );
+        const _districtRows = _allSchools.filter((s) => (detectGu(s) || "") === _gu);
+        _enrichedRow._districtAvg = {
+          nearestParkDistanceM: _safeAvg(_districtRows.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0), "nearest_park_dist_m"),
+          greenRatio: _safeAvg(_districtRows, "iso_green_ratio"),
+          playgroundCount: _safeAvg(_districtRows, "iso_playground_count"),
+        };
+        const _distBest = (_scoreBestEnvironmentSchool(_districtRows)[0] || {}).school;
         if (_distBest) {
           _enrichedRow._districtBest = {
             schoolName: getSchoolName(_distBest),

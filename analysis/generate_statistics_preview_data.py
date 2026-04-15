@@ -42,20 +42,51 @@ def school_record(row: pd.Series, rank: int) -> dict:
 
 
 def choose_best_school(df: pd.DataFrame) -> pd.Series:
-    eligible = df[df["case_type"] == 4.0].copy()
-    if eligible.empty:
-        eligible = df[df["case_type"] == 3.0].copy()
+    eligible = df[pd.to_numeric(df["nearest_park_dist_m"], errors="coerce").notna()].copy()
+    eligible = eligible[pd.to_numeric(eligible["nearest_park_dist_m"], errors="coerce") > 0]
     if eligible.empty:
         eligible = df.copy()
 
+    eligible["nearest_park_dist_m"] = pd.to_numeric(eligible["nearest_park_dist_m"], errors="coerce").fillna(0)
+    eligible["iso_green_ratio"] = pd.to_numeric(eligible["iso_green_ratio"], errors="coerce").fillna(0)
+    eligible["iso_playground_count"] = pd.to_numeric(eligible["iso_playground_count"], errors="coerce").fillna(0)
+
+    max_dist = max(float(eligible["nearest_park_dist_m"].max()), 1.0)
+    max_green = max(float(eligible["iso_green_ratio"].max()), 1.0)
+    max_playground = max(float(eligible["iso_playground_count"].max()), 1.0)
+
+    def rank_case(value: float | int | None) -> int:
+        if pd.isna(value):
+            return 4
+        num = float(value)
+        if num == 4.0:
+            return 0
+        if num == 3.0:
+            return 1
+        if num == 2.0:
+            return 2
+        if num == 1.0:
+            return 3
+        return 4
+
+    eligible["_case_rank"] = eligible["case_type"].apply(rank_case)
+    eligible["_environment_score"] = (
+        (1 - (eligible["nearest_park_dist_m"] / max_dist).clip(0, 1)) * 0.45
+        + (eligible["iso_green_ratio"] / max_green).clip(0, 1) * 0.45
+        + (eligible["iso_playground_count"] / max_playground).clip(0, 1) * 0.10
+        + eligible["_case_rank"].map({0: 0.05, 1: 0.02}).fillna(0.0)
+    )
+
     eligible = eligible.sort_values(
         by=[
+            "_environment_score",
+            "_case_rank",
             "nearest_park_dist_m",
             "iso_green_ratio",
             "iso_playground_count",
             "forecast_2029",
         ],
-        ascending=[True, False, False, False],
+        ascending=[False, True, True, False, False, False],
     )
     return eligible.iloc[0]
 
