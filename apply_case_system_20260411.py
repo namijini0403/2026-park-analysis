@@ -93,6 +93,45 @@ def summarize_points_within(
     return result
 
 
+def summarize_equivalent_circle_area_within(
+    points: gpd.GeoDataFrame,
+    polygons_ll: gpd.GeoDataFrame,
+    school_id_col: str,
+    area_col: str,
+    sum_col: str,
+) -> pd.DataFrame:
+    joined = gpd.sjoin(
+        points[[area_col, "geometry"]],
+        polygons_ll[[school_id_col, "geometry"]],
+        predicate="within",
+        how="left",
+    )
+    joined = joined[joined[school_id_col].notna()].copy()
+    if joined.empty:
+        result = polygons_ll[[school_id_col]].copy()
+        result[sum_col] = 0.0
+        return result
+
+    joined_metric = gpd.GeoDataFrame(joined, geometry="geometry", crs="EPSG:4326").to_crs("EPSG:5179")
+    polygons_metric = polygons_ll[[school_id_col, "geometry"]].to_crs("EPSG:5179")
+    polygon_map = dict(zip(polygons_metric[school_id_col], polygons_metric.geometry))
+
+    joined_metric[area_col] = pd.to_numeric(joined_metric[area_col], errors="coerce").fillna(0.0)
+    joined_metric[sum_col] = 0.0
+    for idx, row in joined_metric.iterrows():
+        area = float(row[area_col])
+        if area <= 0:
+            continue
+        radius_m = np.sqrt(area / np.pi)
+        circle = row.geometry.buffer(radius_m)
+        joined_metric.at[idx, sum_col] = circle.intersection(polygon_map[row[school_id_col]]).area
+
+    agg = joined_metric.groupby(school_id_col)[sum_col].sum().reset_index()
+    result = polygons_ll[[school_id_col]].merge(agg, on=school_id_col, how="left")
+    result[sum_col] = result[sum_col].fillna(0.0)
+    return result
+
+
 def quartile_score(value: str) -> int:
     mapping = {"Q4": 4, "Q3": 3, "Q2": 2, "Q1": 1}
     return mapping.get(value, 0)
@@ -112,6 +151,7 @@ def main() -> None:
     # Make the script idempotent when rerunning on an already-classified CSV.
     derived_cols = [
         "iso_green_ratio",
+        "iso_green_ratio_raw",
         "iso_playground_count",
         "is_separate_bundle_tag",
         "is_low_access_tag",
@@ -144,13 +184,21 @@ def main() -> None:
         json.dump(sealed, f, ensure_ascii=False, indent=2, sort_keys=True)
 
     public_parks = parks[(parks["시설유형"] != "놀이터") | (parks["공원명"].isin(PUBLIC_PARK_EXCEPTIONS))].copy()
+    public_parks = public_parks.drop_duplicates(subset=["관리번호", "공원명", "위도", "경도", "공원면적"])
     playgrounds = parks[parks["시설유형"] == "놀이터"].copy()
 
     public_gdf = build_park_gdf(public_parks)
     playground_gdf = build_park_gdf(playgrounds)
     isochrone = isochrone.to_crs("EPSG:4326")
 
-    iso_public = summarize_points_within(public_gdf, isochrone, "iso_park_count_raw", "iso_park_area_raw")
+    iso_public = summarize_points_within(public_gdf, isochrone, "iso_park_count_raw")
+    iso_public_area = summarize_equivalent_circle_area_within(
+        public_gdf,
+        isochrone,
+        "학교ID",
+        "공원면적",
+        "iso_park_area_raw",
+    )
     iso_play = summarize_points_within(playground_gdf, isochrone, "iso_playground_count")
 
     isochrone_area = isochrone.to_crs("EPSG:5179")
@@ -162,6 +210,7 @@ def main() -> None:
     )
 
     school_priority = school_priority.merge(iso_public, on="학교ID", how="left")
+    school_priority = school_priority.merge(iso_public_area, on="학교ID", how="left")
     school_priority = school_priority.merge(iso_play, on="학교ID", how="left")
     school_priority = school_priority.merge(area_df, on="학교ID", how="left")
 
@@ -200,11 +249,12 @@ def main() -> None:
         (school_priority["iso_park_count"] >= 1) & (school_priority["access_ratio"] <= 0.5)
     ).astype(int)
 
-    school_priority["iso_green_ratio"] = np.where(
+    school_priority["iso_green_ratio_raw"] = np.where(
         school_priority["isochrone_area_m2"] > 0,
         (school_priority["iso_park_area"] / school_priority["isochrone_area_m2"]) * 100.0,
         0.0,
     )
+    school_priority["iso_green_ratio"] = school_priority["iso_green_ratio_raw"].clip(lower=0.0, upper=100.0)
 
     active_mask = school_priority["is_separate_bundle_tag"] == 0
     candidate_mask = active_mask & school_priority["nearest_park_dist_m"].lt(500) & school_priority["iso_park_count"].ge(1)
@@ -271,6 +321,7 @@ def main() -> None:
     ordered_cols = list(pd.read_csv(SCHOOL_PRIORITY_PATH, nrows=0).columns)
     for extra_col in [
         "iso_green_ratio",
+        "iso_green_ratio_raw",
         "iso_playground_count",
         "is_separate_bundle_tag",
         "is_low_access_tag",
