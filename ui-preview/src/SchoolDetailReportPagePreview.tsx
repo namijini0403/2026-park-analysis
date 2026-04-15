@@ -613,14 +613,50 @@ function ProblemSection({
   problemTags,
   studentTrend,
   studentTrendChangePct,
-}: Pick<SchoolDetailReportProps, "problemTags" | "studentTrend" | "studentTrendChangePct">) {
+  noParkWithin500m,
+  nearestParkDistanceM,
+  greenRatio,
+  playgroundCount,
+}: Pick<
+  SchoolDetailReportProps,
+  "problemTags" | "studentTrend" | "studentTrendChangePct" | "noParkWithin500m" | "nearestParkDistanceM" | "greenRatio" | "playgroundCount"
+>) {
   const first = studentTrend[0]?.value ?? 0;
   const last = studentTrend[studentTrend.length - 1]?.value ?? 0;
   const changePercent = studentTrendChangePct ?? (first ? ((last - first) / first) * 100 : 0);
-  const decisionText =
-    changePercent > 0
-      ? "다른 학교와 달리 학생 수가 증가하고 있는 학교인데도, 도보로 접근 가능한 공원이 없고 생활권 안 녹지와 놀이터도 확인되지 않는 상태입니다."
-      : "학생 수 변화와 별개로, 도보로 접근 가능한 공원이 없고 생활권 안 녹지와 놀이터도 확인되지 않는 상태입니다.";
+  const hasNoWalkablePark = noParkWithin500m ?? nearestParkDistanceM >= 500;
+  const lowGreen = greenRatio <= 0;
+  const noPlayground = playgroundCount <= 0;
+
+  let decisionText = "";
+  if (hasNoWalkablePark && lowGreen && noPlayground) {
+    decisionText =
+      changePercent > 0
+        ? "학생 수가 늘고 있는 학교인데도 도보권 공원이 없고, 생활권 안 녹지와 놀이터도 확인되지 않아 우선 개선 검토가 필요한 상태입니다."
+        : "도보권 공원이 없고, 생활권 안 녹지와 놀이터도 함께 부족해 생활환경 보완이 시급한 상태입니다.";
+  } else if (hasNoWalkablePark && lowGreen) {
+    decisionText =
+      changePercent > 0
+        ? `학생 수는 증가 추세인데, 도보권 공원이 없고 녹지 비율도 ${formatDecimal(greenRatio, 1)}% 수준에 머물러 있습니다.`
+        : `도보권 공원이 없고 녹지 비율도 ${formatDecimal(greenRatio, 1)}% 수준에 머물러 있어 생활권 보완이 필요합니다.`;
+  } else if (hasNoWalkablePark) {
+    decisionText =
+      changePercent > 0
+        ? `학생 수는 증가 추세지만, 가장 가까운 공원까지 ${formatNumber(nearestParkDistanceM)}m 떨어져 있어 공원 접근성 부담이 큽니다.`
+        : `가장 가까운 공원까지 ${formatNumber(nearestParkDistanceM)}m 떨어져 있어 공원 접근성 보완이 필요한 학교입니다.`;
+  } else if (lowGreen || noPlayground) {
+    const greenText = lowGreen ? "녹지 비율이 거의 없고" : `녹지 비율은 ${formatDecimal(greenRatio, 1)}% 수준이며`;
+    const playgroundText = noPlayground ? "도보권 놀이터도 확인되지 않습니다." : `도보권 놀이터는 ${formatNumber(playgroundCount)}개 수준입니다.`;
+    decisionText =
+      changePercent > 0
+        ? `공원 접근은 가능하지만 ${greenText} ${playgroundText} 학생 수 증가를 고려하면 생활권 보완이 필요합니다.`
+        : `공원 접근은 가능하지만 ${greenText} ${playgroundText} 생활권 질 개선이 필요한 상태입니다.`;
+  } else {
+    decisionText =
+      changePercent > 0
+        ? "공원 접근과 생활권 지표는 확보되어 있지만, 학생 수 증가를 감안하면 지속적인 모니터링이 필요한 학교입니다."
+        : "공원 접근과 생활권 지표는 비교적 안정적이며, 현재로서는 모니터링 중심으로 관리할 수 있는 학교입니다.";
+  }
   return (
     <SectionShell kicker="Decision" title="핵심 판단">
       <Card className="p-5">

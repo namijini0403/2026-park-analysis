@@ -3053,10 +3053,28 @@
         }
       }
 
-      // 시 최우수 학교 (가장 가까운 공원 기준)
-      const _cityBest = state.datasets.schools
-        .filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0)
-        .sort((a, b) => Number(a.nearest_park_dist_m) - Number(b.nearest_park_dist_m))[0];
+      // 시/구 최우수 학교: case 4 우선, 그 안에서 공원거리 짧고 녹지/놀이터가 좋은 학교
+      const _pickBestEnvironmentSchool = (rows) =>
+        rows
+          .filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0)
+          .sort((a, b) => {
+            const rankCase = (value) => {
+              const num = Number(value);
+              if (num === 4) return 0;
+              if (num === 3) return 1;
+              if (num === 2) return 2;
+              if (num === 1) return 3;
+              return 4;
+            };
+            return (
+              rankCase(a.case_type) - rankCase(b.case_type) ||
+              Number(a.nearest_park_dist_m) - Number(b.nearest_park_dist_m) ||
+              Number(b.iso_green_ratio || 0) - Number(a.iso_green_ratio || 0) ||
+              Number(b.iso_playground_count || 0) - Number(a.iso_playground_count || 0)
+            );
+          })[0];
+
+      const _cityBest = _pickBestEnvironmentSchool(state.datasets.schools || []);
       if (_cityBest) {
         _enrichedRow._cityBest = {
           schoolName: getSchoolName(_cityBest),
@@ -3069,9 +3087,9 @@
 
       // 구 최우수 학교
       if (_gu) {
-        const _distBest = state.datasets.schools
-          .filter((s) => (detectGu(s) || "") === _gu && Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0)
-          .sort((a, b) => Number(a.nearest_park_dist_m) - Number(b.nearest_park_dist_m))[0];
+        const _distBest = _pickBestEnvironmentSchool(
+          (state.datasets.schools || []).filter((s) => (detectGu(s) || "") === _gu)
+        );
         if (_distBest) {
           _enrichedRow._districtBest = {
             schoolName: getSchoolName(_distBest),
