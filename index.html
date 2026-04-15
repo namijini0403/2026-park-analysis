@@ -1243,12 +1243,12 @@
         "후순위 검토";
 
       return `
-        <div style="padding:12px 14px; min-width:220px; font-family:Pretendard,'Noto Sans KR',sans-serif;">
-          <div style="font-weight:800; font-size:14px; margin-bottom:6px;">후보지 ${properties.grid_id || ""}</div>
+        <div style="padding:12px 16px; min-width:260px; max-width:300px; font-family:Pretendard,'Noto Sans KR',sans-serif; word-break:keep-all;">
+          <div style="font-weight:800; font-size:14px; margin-bottom:4px;">후보지 ${properties.grid_id || ""}</div>
           <div style="font-size:12px; color:#4b5563; margin-bottom:8px;">${feasibilityLabel} · 연결 학교 ${Number(properties.linked_school_count || 0)}개</div>
-          <div style="font-size:12px; line-height:1.65; color:#111827;">
-            <div>2029 XGBoost 예측 잠재수혜인원: <strong>${Math.round(predicted2029).toLocaleString("ko-KR")}명</strong></div>
-            <div>2031 XGBoost 예측 잠재수혜인원: <strong>${Math.round(predicted2031).toLocaleString("ko-KR")}명</strong></div>
+          <div style="font-size:12px; line-height:1.8; color:#111827; border-top:1px solid #e5e7eb; padding-top:8px;">
+            <div>📈 2029 예측 수혜인원: <strong>${Math.round(predicted2029).toLocaleString("ko-KR")}명</strong></div>
+            <div>📈 2031 예측 수혜인원: <strong>${Math.round(predicted2031).toLocaleString("ko-KR")}명</strong></div>
           </div>
         </div>
       `;
@@ -2993,32 +2993,16 @@
     function renderSchoolDetail(row = null) {
       if (!row) {
         ui.schoolDetailBox.className = "school-detail-box";
-        ui.schoolDetailBox.innerHTML = "학교 마커를 클릭하면 상세 정보를 표시합니다.";
+        ui.schoolDetailBox.innerHTML = "학교 마커를 클릭하면 상세 리포트가 열립니다.";
         return;
       }
 
+      const gu = detectGu(row) || "-";
       const caseLabel = getCaseTypeLabel(row);
       const badge = getSchoolBadge(row);
       const mirageBadge = getMirageBadge(row);
-      const greenLeafBadge = getGreenLeafMeta(row);
-      const gu = detectGu(row) || "-";
-      const caseType = normalizeCaseType(row.case_type);
-      const showAccess = caseType !== "case4" && caseType !== "island";
-      const showGap = caseType !== "case4" && caseType !== "island";
-      const message = getDiagnosticMessage(row);
-      const trendMarkup = getStudentTrendMarkup(row);
-      const redevelopmentMarkup = getRedevelopmentMarkup(row);
-      const nearestParkName = row.nearest_park_name || "공원 정보 없음";
-      const nearestParkDistance = formatDistanceMeters(row.nearest_park_dist_m);
-      const isoCnt = Number(row.iso_park_count);
-      const bufCnt = Number(row.buf_park_count);
-      const nearestParkStatus = isoCnt >= 1
-        ? "🟢 도보 500m 내 공원 있음"
-        : bufCnt >= 1
-          ? "🟡 직선 500m 내 공원 있음 (도보 경로 미확인)"
-          : "🔴 500m 내 공원 없음";
-      const hasLargeApt = hasTruthyFlag(row.has_large_apt || row.large_apt_flag);
 
+      // 우측 패널: 미니멀 요약 카드만 표시
       ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
       ui.schoolDetailBox.innerHTML = `
         <div class="detail-head">
@@ -3027,60 +3011,30 @@
           <div class="detail-badge-row">
             <div class="detail-badge ${badge.className}">[${badge.text}]</div>
             ${mirageBadge ? `<div class="detail-badge ${mirageBadge.className}">[${mirageBadge.text}]</div>` : ""}
-            ${greenLeafBadge ? `<div class="detail-badge ${greenLeafBadge.className}">${greenLeafBadge.text}</div>` : ""}
           </div>
         </div>
-        <div class="detail-message ${getCaseThemeClass(row)}">
-          ${message}
-          ${mirageBadge ? `<div class="detail-message-extra">📍 행정 기준과 실제 도보 접근 환경 간 괴리가 큰 학교입니다.</div>` : ""}
+        <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:13px; margin-bottom:16px;">
+          ${getDiagnosticMessage(row)}
         </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">공원·놀이터 현황</div>
-          <div class="metric-list">
-            <div class="${getMetricClass(row, "park")}">🌳 가장 가까운 공원: 약 ${nearestParkDistance}m (${nearestParkName})</div>
-            <div class="${getMetricClass(row, "park")}">${nearestParkStatus}</div>
-            <div class="${getMetricClass(row, "park")}">🛝 도보 접근 놀이터: ${formatCount(row.iso_playground_count)}개 / 직선 반경 내 놀이터: ${formatCount(row.buf_playground_count)}개</div>
-            <div class="metric-item">🌿 반경 500m 내 녹지 ${formatDecimal(row.iso_green_ratio, 1)}%</div>
-            ${hasLargeApt ? `<div class="metric-item warning">🏘️ 인근 대단지 아파트 존재 — 미집계 민간 놀이터가 있을 수 있습니다.</div>` : ""}
-            ${showAccess ? `<div class="${getMetricClass(row, "access")}">📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)</div>` : ""}
-            ${showGap ? `<div class="${getMetricClass(row, "parkPressure")}">📉 공원 부족: ${formatDecimal(row.gap_count, 2)}개 (평균 대비)</div>` : ""}
-          </div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.7; margin-bottom:20px;">
+          🌳 최근접 공원 ${formatDistanceMeters(row.nearest_park_dist_m)}m &nbsp;·&nbsp;
+          🛝 도보 놀이터 ${formatCount(row.iso_playground_count)}개 &nbsp;·&nbsp;
+          🌿 녹지 ${formatDecimal(row.iso_green_ratio, 1)}%
         </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">학생수 추세</div>
-          ${trendMarkup}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">잠재 수요 추정</div>
-          ${getPotentialDemandMarkup(row)}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">유사학교 비교</div>
-          ${getSimilarSchoolsMarkup(row)}
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">🏗️ 인근 재개발 구역 (500m 이내)</div>
-          ${redevelopmentMarkup}
-        </div>
-
-        <div class="detail-section" style="margin-top:12px">
-          <button
-            onclick="openSimulationOverlay()"
-            style="
-              width:100%; padding:12px 0;
-              border-radius:10px; border:none; cursor:pointer;
-              background:#1a1a2e; color:#fff;
-              font-size:14px; font-weight:700;
-              letter-spacing:0.02em;
-            "
-          >📊 후보지 시뮬레이션 열기</button>
-        </div>
+        <button
+          onclick="openSimulationOverlay()"
+          style="
+            width:100%; padding:13px 0;
+            border-radius:10px; border:none; cursor:pointer;
+            background:#1a1a2e; color:#fff;
+            font-size:14px; font-weight:700;
+            letter-spacing:0.02em;
+          "
+        >📊 상세 리포트 · 시뮬레이션 열기</button>
       `;
+
+      // 클릭과 동시에 상세 리포트 오버레이 자동 열기
+      openSimulationOverlay();
     }
 
     async function init() {
