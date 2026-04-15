@@ -924,7 +924,7 @@
     };
 
     const INCHEON_CENTER = { lat: 37.4563, lng: 126.7052 };
-    const DEFAULT_LEVEL = 11;
+    const DEFAULT_LEVEL = 8;
     const FALLBACK_CANDIDATE_PANEL_EXAMPLES = [
       {
         candidate_meta: {
@@ -1081,7 +1081,8 @@
         childcare: [],
         redevelopment: [],
         isochrone: null,
-        buffer: null
+        buffer: null,
+        candidateFeatures: []
       }
     };
 
@@ -2170,6 +2171,7 @@
           state.overlays.candidateMarkers.push(circle);
         });
 
+        state.datasets.candidateFeatures = geojson.features.map((f) => f.properties || {});
         console.log(`후보지 마커 ${state.overlays.candidateMarkers.length}개 로드 완료`);
       } catch (error) {
         console.error("후보지 레이어 로드 실패:", error);
@@ -3033,6 +3035,14 @@
         >📊 상세 리포트 · 시뮬레이션 열기</button>
       `;
 
+      // localStorage에 학교 데이터 저장 (iframe 브릿지)
+      localStorage.setItem("parkAnalysis_school", JSON.stringify(row));
+      const _schoolName = getSchoolName(row);
+      const _linkedCandidates = (state.datasets.candidateFeatures || [])
+        .filter((p) => Array.isArray(p.linked_schools) && p.linked_schools.includes(_schoolName))
+        .slice(0, 20);
+      localStorage.setItem("parkAnalysis_candidates", JSON.stringify(_linkedCandidates));
+
       // 클릭과 동시에 상세 리포트 오버레이 자동 열기
       openSimulationOverlay();
     }
@@ -3085,6 +3095,8 @@
     /* ── 시뮬레이션 오버레이 ──────────────────────────── */
     function openSimulationOverlay() {
       document.getElementById("simulationOverlay").style.display = "flex";
+      const frame = document.getElementById("simulationFrame");
+      frame.src = "ui-preview/dist/index.html?t=" + Date.now();
     }
     function closeSimulationOverlay() {
       document.getElementById("simulationOverlay").style.display = "none";
