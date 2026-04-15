@@ -120,22 +120,46 @@ export function mapSchoolRowToReportProps(
     ? rawTrend[rawTrend.length - 1].students
     : n(row.predicted_current);
 
-  const potentialDemand2029 = n(row.forecast_2029 ?? row.cohort_change_2029);
-  const potentialDemand2031 = n(row.forecast_2031 ?? row.cohort_change_2031);
+  // forecast_2029/2031 는 beneficiary_forecast.csv의 절대 인원수(명)
+  // cohort_change는 비율(0.946 등)이므로 절대 fallback으로 사용 금지
+  const potentialDemand2029 = n(row.forecast_2029);
+  const potentialDemand2031 = n(row.forecast_2031);
 
   // 유사 학교 (similar_school_1_name ~ similar_school_5_name)
+  // index.html renderSchoolDetail에서 similar_school_i_nearest_park_dist_m 등을 보강해 저장
   const similarSchools = [1, 2, 3, 4, 5]
     .map((i) => ({
       schoolName: s(row[`similar_school_${i}_name`]),
       districtName: s(row[`similar_school_${i}_gu`] ?? ""),
-      nearestParkDistanceM: 0,
-      greenRatio: 0,
-      playgroundCount: 0,
+      nearestParkDistanceM: n(row[`similar_school_${i}_nearest_park_dist_m`]),
+      greenRatio: n(row[`similar_school_${i}_iso_green_ratio`]),
+      playgroundCount: n(row[`similar_school_${i}_iso_playground_count`]),
     }))
     .filter((sc) => sc.schoolName !== "");
 
   const noParkWithin500m = nearestParkDistanceM === 0 || nearestParkDistanceM >= 500;
   const accessibilityRatio = n(row.access_ratio);
+
+  // 시·구 최우수 학교 (index.html에서 보강 저장)
+  const cityBestEnvironmentSchool = row._cityBest
+    ? {
+        schoolName: s(row._cityBest.schoolName),
+        districtName: s(row._cityBest.districtName),
+        nearestParkDistanceM: n(row._cityBest.nearestParkDistanceM),
+        greenRatio: n(row._cityBest.greenRatio),
+        playgroundCount: n(row._cityBest.playgroundCount),
+      }
+    : undefined;
+
+  const districtBestEnvironmentSchool = row._districtBest
+    ? {
+        schoolName: s(row._districtBest.schoolName),
+        districtName: s(row._districtBest.districtName),
+        nearestParkDistanceM: n(row._districtBest.nearestParkDistanceM),
+        greenRatio: n(row._districtBest.greenRatio),
+        playgroundCount: n(row._districtBest.playgroundCount),
+      }
+    : undefined;
 
   return {
     schoolName,
@@ -162,6 +186,8 @@ export function mapSchoolRowToReportProps(
     noParkWithin500m,
     accessibilityRatio,
     similarSchools: similarSchools.length ? similarSchools : undefined,
+    ...(cityBestEnvironmentSchool ? { cityBestEnvironmentSchool } : {}),
+    ...(districtBestEnvironmentSchool ? { districtBestEnvironmentSchool } : {}),
     problemTags: buildProblemTags(row),
     contextTags: buildContextTags(row),
     ...(onSimulationClick ? { onSimulationClick } : {}),

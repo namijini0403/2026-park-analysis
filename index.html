@@ -3036,7 +3036,54 @@
       `;
 
       // localStorage에 학교 데이터 저장 (iframe 브릿지)
-      localStorage.setItem("parkAnalysis_school", JSON.stringify(row));
+      // 유사학교 공원 데이터 보강 + 시·구 최우수학교 보강
+      const _enrichedRow = Object.assign({}, row);
+      const _gu = detectGu(row) || "";
+
+      // 유사학교 공원 데이터 보강
+      for (let _i = 1; _i <= 5; _i++) {
+        const _simName = row["similar_school_" + _i + "_name"];
+        if (_simName) {
+          const _sim = state.datasets.schools.find((s) => getSchoolName(s) === _simName);
+          if (_sim) {
+            _enrichedRow["similar_school_" + _i + "_nearest_park_dist_m"] = _sim.nearest_park_dist_m;
+            _enrichedRow["similar_school_" + _i + "_iso_green_ratio"] = _sim.iso_green_ratio;
+            _enrichedRow["similar_school_" + _i + "_iso_playground_count"] = _sim.iso_playground_count;
+          }
+        }
+      }
+
+      // 시 최우수 학교 (가장 가까운 공원 기준)
+      const _cityBest = state.datasets.schools
+        .filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0)
+        .sort((a, b) => Number(a.nearest_park_dist_m) - Number(b.nearest_park_dist_m))[0];
+      if (_cityBest) {
+        _enrichedRow._cityBest = {
+          schoolName: getSchoolName(_cityBest),
+          districtName: "인천광역시 " + (detectGu(_cityBest) || ""),
+          nearestParkDistanceM: Number(_cityBest.nearest_park_dist_m),
+          greenRatio: Number(_cityBest.iso_green_ratio) || 0,
+          playgroundCount: Number(_cityBest.iso_playground_count) || 0,
+        };
+      }
+
+      // 구 최우수 학교
+      if (_gu) {
+        const _distBest = state.datasets.schools
+          .filter((s) => (detectGu(s) || "") === _gu && Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0)
+          .sort((a, b) => Number(a.nearest_park_dist_m) - Number(b.nearest_park_dist_m))[0];
+        if (_distBest) {
+          _enrichedRow._districtBest = {
+            schoolName: getSchoolName(_distBest),
+            districtName: "인천광역시 " + _gu,
+            nearestParkDistanceM: Number(_distBest.nearest_park_dist_m),
+            greenRatio: Number(_distBest.iso_green_ratio) || 0,
+            playgroundCount: Number(_distBest.iso_playground_count) || 0,
+          };
+        }
+      }
+
+      localStorage.setItem("parkAnalysis_school", JSON.stringify(_enrichedRow));
       const _schoolName = getSchoolName(row);
       const _linkedCandidates = (state.datasets.candidateFeatures || [])
         .filter((p) => Array.isArray(p.linked_schools) && p.linked_schools.includes(_schoolName))

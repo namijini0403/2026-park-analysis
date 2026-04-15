@@ -202,25 +202,53 @@ function buildTrendTone(points: StudentTrendPoint[]): StatusTone {
   return "positive";
 }
 
+// nearestParkDistance: share_ge 기준 — percentile 낮을수록 불리(거리 긴 학교가 적다 = 이 학교가 나쁨)
 function parkToneFromPercentile(percentile: number | undefined): StatusTone {
   if (percentile == null) return "caution";
   if (percentile <= 25) return "danger";
   if (percentile <= 50) return "warning";
-  return "caution";
+  if (percentile <= 70) return "caution";
+  return "positive";
 }
 
+// 백분위 없을 때 거리 직접 비교로 tone 산출
+function parkToneFromDistance(distanceM: number, cityAvg: number): StatusTone {
+  if (distanceM <= cityAvg * 0.45) return "positive";  // 시 평균의 절반 이하 → 양호
+  if (distanceM <= cityAvg) return "caution";
+  if (distanceM <= cityAvg * 1.6) return "warning";
+  return "danger";
+}
+
+// greenRatio: share_le 기준 — percentile 높을수록 불리(녹지 낮은 학교가 많다 = 이 학교가 나쁨)
 function greenToneFromPercentile(percentile: number | undefined): StatusTone {
   if (percentile == null) return "caution";
-  if (percentile <= 33) return "danger";
-  if (percentile <= 50) return "warning";
-  return "caution";
+  if (percentile >= 80) return "danger";
+  if (percentile >= 60) return "warning";
+  if (percentile >= 40) return "caution";
+  return "positive";
 }
 
+function greenToneFromValue(value: number, cityAvg: number): StatusTone {
+  if (value >= cityAvg * 1.2) return "positive";
+  if (value >= cityAvg * 0.5) return "caution";
+  if (value > 0) return "warning";
+  return "danger";
+}
+
+// playgroundCount: share_le 기준 — percentile 높을수록 불리
 function playgroundToneFromPercentile(percentile: number | undefined): StatusTone {
   if (percentile == null) return "caution";
-  if (percentile >= 75) return "danger";
-  if (percentile >= 50) return "warning";
-  return "caution";
+  if (percentile >= 80) return "danger";
+  if (percentile >= 60) return "warning";
+  if (percentile >= 40) return "caution";
+  return "positive";
+}
+
+function playgroundToneFromValue(count: number, cityAvg: number): StatusTone {
+  if (count >= cityAvg * 1.5) return "positive";
+  if (count >= cityAvg) return "caution";
+  if (count > 0) return "warning";
+  return "danger";
 }
 
 function trendToneFromChange(changePercent: number): StatusTone {
@@ -406,11 +434,17 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
   const playgroundPercentile = comparisonBasis === "city" ? props.playgroundCountCityPercentile : props.playgroundCountDistrictPercentile;
   const greenPercentileLt = comparisonBasis === "city" ? props.greenRatioCityPercentile_lt : props.greenRatioDistrictPercentile_lt;
   const playgroundPercentileLt = comparisonBasis === "city" ? props.playgroundCountCityPercentile_lt : props.playgroundCountDistrictPercentile_lt;
-  const parkTone = parkToneFromPercentile(parkPercentile);
+  const parkTone = parkPercentile != null
+    ? parkToneFromPercentile(parkPercentile)
+    : parkToneFromDistance(props.nearestParkDistanceM, comparisonBasis === "city" ? props.nearestParkDistanceCityAvg : props.nearestParkDistanceDistrictAvg);
   const displayedGreenPercentile = getDisplayPercentile(props.greenRatio, greenPercentile, greenPercentileLt);
   const displayedPlaygroundPercentile = getDisplayPercentile(props.playgroundCount, playgroundPercentile, playgroundPercentileLt);
-  const greenTone = greenToneFromPercentile(displayedGreenPercentile);
-  const playgroundTone = playgroundToneFromPercentile(displayedPlaygroundPercentile);
+  const greenTone = displayedGreenPercentile != null
+    ? greenToneFromPercentile(displayedGreenPercentile)
+    : greenToneFromValue(props.greenRatio, comparisonBasis === "city" ? props.greenRatioCityAvg : props.greenRatioDistrictAvg);
+  const playgroundTone = displayedPlaygroundPercentile != null
+    ? playgroundToneFromPercentile(displayedPlaygroundPercentile)
+    : playgroundToneFromValue(props.playgroundCount, comparisonBasis === "city" ? props.playgroundCountCityAvg : props.playgroundCountDistrictAvg);
   const first = props.studentTrend[0]?.value ?? 0;
   const last = props.studentTrend[props.studentTrend.length - 1]?.value ?? 0;
   const changePercent = props.studentTrendChangePct ?? (first ? ((last - first) / first) * 100 : 0);
@@ -468,7 +502,12 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           value={formatNumber(props.nearestParkDistanceM)}
           unit="m"
           tone={parkTone}
-          headline="위험! 공원이 너무 멀어요."
+          headline={
+            parkTone === "positive" ? "공원이 가까운 편입니다." :
+            parkTone === "caution"  ? "공원 거리가 다소 멉니다." :
+            parkTone === "warning"  ? "공원까지의 거리가 평균보다 멉니다." :
+                                      "위험! 공원이 너무 멀어요."
+          }
           emphasisLine={upperPercentileLine(basisLabel, parkPercentile, "공원 거리가 먼 편") ?? undefined}
           comparisonVisual={
             <ComparisonBar
@@ -483,7 +522,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
               directionLabel="거리 짧을수록 유리"
             />
           }
-          footer={<div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">{props.nearestParkName ? `가장 가까운 공원은 ${props.nearestParkName}이지만, 도보 접근성은 여전히 불리한 편입니다.` : "최근접 공원명을 연결할 수 있습니다."}</div>}
+          footer={props.nearestParkName ? <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">가장 가까운 공원: {props.nearestParkName}</div> : null}
         />
         <MetricCard
           title="녹지 비율"
@@ -491,7 +530,12 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           value={formatDecimal(props.greenRatio, 1)}
           unit="%"
           tone={greenTone}
-          headline="위험! 녹지가 부족한 편이에요."
+          headline={
+            greenTone === "positive" ? "녹지 비율이 양호합니다." :
+            greenTone === "caution"  ? "녹지 비율이 다소 낮습니다." :
+            greenTone === "warning"  ? "녹지 비율이 평균보다 낮습니다." :
+                                       "위험! 녹지가 부족한 편이에요."
+          }
           emphasisLine={lowerPercentileLine(basisLabel, displayedGreenPercentile, "녹지 비율이 낮은 편") ?? undefined}
           comparisonVisual={
             <ComparisonBar
@@ -513,7 +557,12 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           value={formatNumber(props.playgroundCount)}
           unit="개"
           tone={playgroundTone}
-          headline="위험! 놀이터가 부족한 편이에요."
+          headline={
+            playgroundTone === "positive" ? "도보권 놀이터가 충분합니다." :
+            playgroundTone === "caution"  ? "도보권 놀이터가 다소 부족합니다." :
+            playgroundTone === "warning"  ? "도보권 놀이터가 평균보다 부족합니다." :
+                                            "위험! 놀이터가 부족한 편이에요."
+          }
           emphasisLine={lowerPercentileLine(basisLabel, displayedPlaygroundPercentile, "도보권 놀이터 수가 적은 편") ?? undefined}
           comparisonVisual={
             <ComparisonBar
