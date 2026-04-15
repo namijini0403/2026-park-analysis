@@ -3,6 +3,7 @@ import pandas as pd
 import geopandas as gpd
 import json
 import numpy as np
+import re
 
 BASE = "c:/2026_data_analysis_park/"
 
@@ -15,8 +16,15 @@ grid = gpd.read_file(BASE + "data_processed/candidate_grid_final_v3.geojson")
 
 def parse_schools(val):
     if isinstance(val, (list, np.ndarray)):
-        return list(val)
+        if len(val) == 1 and isinstance(val[0], str):
+            val = val[0]
+        else:
+            return [str(x) for x in list(val)]
     if isinstance(val, str):
+        # GeoJSON roundtrip can leave values like "[np.str_('인천석암초등학교')]"
+        np_matches = re.findall(r"np\.str_\('([^']+)'\)", val)
+        if np_matches:
+            return np_matches
         val = val.strip()
         try:
             return json.loads(val.replace("'", '"'))
@@ -94,8 +102,10 @@ print(f"평균 2029: {grid['xgb_predicted_2029'].mean():.1f}")
 print(f"평균 2031: {grid['xgb_predicted_2031'].mean():.1f}")
 
 # 저장
-grid.to_file(BASE + "data_processed/candidate_grid_xgb.geojson", driver="GeoJSON")
+geojson_out = BASE + "data_processed/candidate_grid_xgb_v2.geojson"
+csv_out = BASE + "data_processed/candidate_grid_xgb_v2.csv"
+grid.to_file(geojson_out, driver="GeoJSON")
 grid[[c for c in grid.columns if c != "geometry"]].to_csv(
-    BASE + "data_processed/candidate_grid_xgb.csv", index=False, encoding="utf-8-sig"
+    csv_out, index=False, encoding="utf-8-sig"
 )
-print("\n저장 완료: candidate_grid_xgb.geojson / candidate_grid_xgb.csv")
+print(f"\n저장 완료: {geojson_out} / {csv_out}")
