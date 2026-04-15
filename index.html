@@ -1169,6 +1169,12 @@
       const linkedSchoolNames = Array.isArray(properties.linked_schools)
         ? properties.linked_schools
         : [];
+      const predicted2029 = Number(
+        properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
+      );
+      const predicted2031 = Number(
+        properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
+      );
 
       return {
         candidate_meta: {
@@ -1180,9 +1186,10 @@
           dong: properties.dong || ""
         },
         demand_summary: {
-          predicted_2029: Number(properties.forecast_2029 || 0),
-          predicted_2031: Number(properties.forecast_2031 || 0),
-          demand_note: "격자 기반 후보지 검토용 잠재 수요 추정치입니다."
+          demand_label: "XGBoost 예측 잠재수혜인원",
+          predicted_2029: predicted2029,
+          predicted_2031: predicted2031,
+          demand_note: "250m 격자 단위 XGBoost 예측 잠재수혜인원입니다."
         },
         accessibility_summary: {
           land_feasibility_level: properties.land_feasibility_level || "low",
@@ -1198,7 +1205,7 @@
           secondary_option: linkedSchoolCount > 1 ? "연결 학교 공동 수요 검토" : null
         },
         explanation: {
-          recommendation_reason_summary: `2029 잠재 수요 ${Number(properties.forecast_2029 || 0).toLocaleString("ko-KR")}명, 2031 잠재 수요 ${Number(properties.forecast_2031 || 0).toLocaleString("ko-KR")}명 기준 후보지입니다.`,
+          recommendation_reason_summary: `2029 XGBoost 예측 잠재수혜인원 ${predicted2029.toLocaleString("ko-KR")}명, 2031 예측 잠재수혜인원 ${predicted2031.toLocaleString("ko-KR")}명 기준 후보지입니다.`,
           explanation_tags: [
             `최악 case ${properties.worst_case_type || "-"}`,
             `평균 녹지 ${Number(properties.avg_green_ratio ?? 0).toFixed(1)}%`,
@@ -2102,7 +2109,7 @@
 
     async function loadCandidateLayer() {
       try {
-        const res = await fetch("./data_processed/candidate_grid_final_v3.geojson");
+        const res = await fetch("./data_processed/candidate_grid_xgb.geojson");
         const geojson = await res.json();
 
         clearOverlayGroup("candidateMarkers");
@@ -2634,15 +2641,15 @@
           demand_cards: panel?.ui_flags?.show_demand_cards === false ? [] : [
             {
               key: "predicted_2029",
-              label: "2029 잠재 수요",
+              label: "2029 XGBoost 예측 잠재수혜인원",
               value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2029),
-              note: panel?.demand_summary?.demand_note || "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+              note: panel?.demand_summary?.demand_note || "250m 격자 단위 XGBoost 예측 잠재수혜인원입니다."
             },
             {
               key: "predicted_2031",
-              label: "2031 잠재 수요",
+              label: "2031 XGBoost 예측 잠재수혜인원",
               value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2031),
-              note: panel?.demand_summary?.demand_note || "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+              note: panel?.demand_summary?.demand_note || "250m 격자 단위 XGBoost 예측 잠재수혜인원입니다."
             }
           ],
           accessibility_items: [
@@ -2713,15 +2720,15 @@
         demand_cards: panel?.ui_flags?.show_demand_cards === false ? [] : [
           {
             key: "predicted_2029",
-            label: "2029 잠재 수요",
+            label: "2029 XGBoost 예측 잠재수혜인원",
             value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2029),
-            note: panel?.demand_summary?.demand_note || "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+            note: panel?.demand_summary?.demand_note || "250m 격자 단위 XGBoost 예측 잠재수혜인원입니다."
           },
           {
             key: "predicted_2031",
-            label: "2031 잠재 수요",
+            label: "2031 XGBoost 예측 잠재수혜인원",
             value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2031),
-            note: panel?.demand_summary?.demand_note || "정밀 예측이 아닌 비교용 잠재 수요 추정입니다."
+            note: panel?.demand_summary?.demand_note || "250m 격자 단위 XGBoost 예측 잠재수혜인원입니다."
           }
         ],
         accessibility_items: panel?.ui_flags?.show_accessibility_metrics === false ? [] : [
@@ -2876,7 +2883,7 @@
         </div>
         ${viewModel.demand_cards.length ? `
           <div class="detail-section">
-            <div class="detail-section-title">잠재 수요 추정</div>
+            <div class="detail-section-title">${viewModel.panel_kind === "external_grid" ? "XGBoost 예측 잠재수혜인원" : "잠재 수요 추정"}</div>
             ${renderCandidateInfoCards(viewModel.demand_cards)}
           </div>
         ` : ""}
