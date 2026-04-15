@@ -3061,21 +3061,95 @@
         return values.reduce((sum, value) => sum + value, 0) / values.length;
       };
 
+      const _shareGe = (rows, key, value) => {
+        const values = rows
+          .map((item) => Number(item[key]))
+          .filter((num) => Number.isFinite(num));
+        if (!values.length || !Number.isFinite(Number(value))) return null;
+        return Math.round((values.filter((num) => num >= Number(value)).length / values.length) * 1000) / 10;
+      };
+
+      const _shareLe = (rows, key, value) => {
+        const values = rows
+          .map((item) => Number(item[key]))
+          .filter((num) => Number.isFinite(num));
+        if (!values.length || !Number.isFinite(Number(value))) return null;
+        return Math.round((values.filter((num) => num <= Number(value)).length / values.length) * 1000) / 10;
+      };
+
+      const _shareLt = (rows, key, value) => {
+        const values = rows
+          .map((item) => Number(item[key]))
+          .filter((num) => Number.isFinite(num));
+        if (!values.length || !Number.isFinite(Number(value))) return null;
+        return Math.round((values.filter((num) => num < Number(value)).length / values.length) * 1000) / 10;
+      };
+
+      const _lastStudentCount = (school) => {
+        const trend = Array.isArray(school.studentTrend) ? school.studentTrend : [];
+        if (!trend.length) return Number(school.predicted_current) || null;
+        const sorted = trend
+          .filter((item) => Number.isFinite(Number(item.students)) || Number.isFinite(Number(item.value)))
+          .sort((a, b) => Number(a.year) - Number(b.year));
+        if (!sorted.length) return Number(school.predicted_current) || null;
+        const last = sorted[sorted.length - 1];
+        const count = Number(last.students ?? last.value);
+        return Number.isFinite(count) ? count : Number(school.predicted_current) || null;
+      };
+
       const _allSchools = state.datasets.schools || [];
       const _validSchools = _allSchools.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0);
       const _cityAvg = {
         nearestParkDistanceM: _safeAvg(_validSchools, "nearest_park_dist_m"),
         greenRatio: _safeAvg(_allSchools, "iso_green_ratio"),
         playgroundCount: _safeAvg(_allSchools, "iso_playground_count"),
+        studentTrendPct: _safeAvg(
+          _allSchools.map((school) => {
+            const trend = Array.isArray(school.studentTrend) ? school.studentTrend : [];
+            if (trend.length < 2) return null;
+            const first = Number(trend[0].students ?? trend[0].value);
+            const last = Number(trend[trend.length - 1].students ?? trend[trend.length - 1].value);
+            if (!Number.isFinite(first) || !Number.isFinite(last) || first <= 0) return null;
+            return { studentTrendPct: ((last - first) / first) * 100 };
+          }).filter(Boolean),
+          "studentTrendPct"
+        ),
       };
       _enrichedRow._cityAvg = _cityAvg;
+
+      _enrichedRow.nearestParkDistanceCityPercentile = _shareGe(_validSchools, "nearest_park_dist_m", row.nearest_park_dist_m);
+      _enrichedRow.greenRatioCityPercentile = _shareLe(_allSchools, "iso_green_ratio", row.iso_green_ratio);
+      _enrichedRow.greenRatioCityPercentile_lt = _shareLt(_allSchools, "iso_green_ratio", row.iso_green_ratio);
+      _enrichedRow.playgroundCountCityPercentile = _shareLe(_allSchools, "iso_playground_count", row.iso_playground_count);
+      _enrichedRow.playgroundCountCityPercentile_lt = _shareLt(_allSchools, "iso_playground_count", row.iso_playground_count);
+      const _cityStudentCounts = _allSchools.map((school) => _lastStudentCount(school)).filter((value) => Number.isFinite(value));
+      const _currentStudentCount = _lastStudentCount(row);
+      _enrichedRow.currentStudentCountCityPercentile = _cityStudentCounts.length && Number.isFinite(_currentStudentCount)
+        ? Math.round((_cityStudentCounts.filter((value) => value >= _currentStudentCount).length / _cityStudentCounts.length) * 1000) / 10
+        : null;
+
+      const _isSuspiciousGreenSchool = (school) => {
+        const green = Number(school.iso_green_ratio) || 0;
+        const playground = Number(school.iso_playground_count) || 0;
+        const parkCount = Number(school.iso_park_count) || 0;
+        const parkDist = Number(school.nearest_park_dist_m) || 0;
+        return (
+          (green >= 40 && playground === 0) ||
+          (green >= 25 && parkDist > 350) ||
+          (green >= 20 && playground === 0 && parkCount <= 1)
+        );
+      };
 
       const _scoreBestEnvironmentSchool = (rows) => {
         const valid = rows.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0);
         if (!valid.length) return [];
-        const maxDist = Math.max(...valid.map((s) => Number(s.nearest_park_dist_m) || 0), 1);
-        const maxGreen = Math.max(...valid.map((s) => Number(s.iso_green_ratio) || 0), 1);
-        const maxPlayground = Math.max(...valid.map((s) => Number(s.iso_playground_count) || 0), 1);
+        const eligibleCase4 = valid.filter((school) => Number(school.case_type) === 4 && !_isSuspiciousGreenSchool(school));
+        const eligibleClean = valid.filter((school) => !_isSuspiciousGreenSchool(school));
+        const scoredTarget = eligibleCase4.length ? eligibleCase4 : (eligibleClean.length ? eligibleClean : valid);
+        const maxDist = Math.max(...scoredTarget.map((s) => Number(s.nearest_park_dist_m) || 0), 1);
+        const maxGreen = Math.max(...scoredTarget.map((s) => Number(s.iso_green_ratio) || 0), 1);
+        const maxPlayground = Math.max(...scoredTarget.map((s) => Number(s.iso_playground_count) || 0), 1);
+        const maxParkCount = Math.max(...scoredTarget.map((s) => Number(s.iso_park_count) || 0), 1);
         const rankCase = (value) => {
           const num = Number(value);
           if (num === 4) return 0;
@@ -3084,15 +3158,16 @@
           if (num === 1) return 3;
           return 4;
         };
-        return valid
+        return scoredTarget
           .map((school) => {
             const parkScore = 1 - Math.min((Number(school.nearest_park_dist_m) || 0) / maxDist, 1);
             const greenScore = Math.min((Number(school.iso_green_ratio) || 0) / maxGreen, 1);
             const playgroundScore = Math.min((Number(school.iso_playground_count) || 0) / maxPlayground, 1);
+            const parkCountScore = Math.min((Number(school.iso_park_count) || 0) / maxParkCount, 1);
             const caseBonus = rankCase(school.case_type) === 0 ? 0.05 : rankCase(school.case_type) === 1 ? 0.02 : 0;
             return {
               school,
-              score: parkScore * 0.45 + greenScore * 0.45 + playgroundScore * 0.1 + caseBonus,
+              score: parkScore * 0.35 + greenScore * 0.3 + playgroundScore * 0.2 + parkCountScore * 0.1 + caseBonus,
             };
           })
           .sort((a, b) =>
@@ -3100,7 +3175,8 @@
             rankCase(a.school.case_type) - rankCase(b.school.case_type) ||
             Number(a.school.nearest_park_dist_m) - Number(b.school.nearest_park_dist_m) ||
             Number(b.school.iso_green_ratio || 0) - Number(a.school.iso_green_ratio || 0) ||
-            Number(b.school.iso_playground_count || 0) - Number(a.school.iso_playground_count || 0)
+            Number(b.school.iso_playground_count || 0) - Number(a.school.iso_playground_count || 0) ||
+            Number(b.school.iso_park_count || 0) - Number(a.school.iso_park_count || 0)
           );
       };
 
@@ -3122,7 +3198,28 @@
           nearestParkDistanceM: _safeAvg(_districtRows.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0), "nearest_park_dist_m"),
           greenRatio: _safeAvg(_districtRows, "iso_green_ratio"),
           playgroundCount: _safeAvg(_districtRows, "iso_playground_count"),
+          studentTrendPct: _safeAvg(
+            _districtRows.map((school) => {
+              const trend = Array.isArray(school.studentTrend) ? school.studentTrend : [];
+              if (trend.length < 2) return null;
+              const first = Number(trend[0].students ?? trend[0].value);
+              const last = Number(trend[trend.length - 1].students ?? trend[trend.length - 1].value);
+              if (!Number.isFinite(first) || !Number.isFinite(last) || first <= 0) return null;
+              return { studentTrendPct: ((last - first) / first) * 100 };
+            }).filter(Boolean),
+            "studentTrendPct"
+          ),
         };
+        const _validDistrictSchools = _districtRows.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0);
+        _enrichedRow.nearestParkDistanceDistrictPercentile = _shareGe(_validDistrictSchools, "nearest_park_dist_m", row.nearest_park_dist_m);
+        _enrichedRow.greenRatioDistrictPercentile = _shareLe(_districtRows, "iso_green_ratio", row.iso_green_ratio);
+        _enrichedRow.greenRatioDistrictPercentile_lt = _shareLt(_districtRows, "iso_green_ratio", row.iso_green_ratio);
+        _enrichedRow.playgroundCountDistrictPercentile = _shareLe(_districtRows, "iso_playground_count", row.iso_playground_count);
+        _enrichedRow.playgroundCountDistrictPercentile_lt = _shareLt(_districtRows, "iso_playground_count", row.iso_playground_count);
+        const _districtStudentCounts = _districtRows.map((school) => _lastStudentCount(school)).filter((value) => Number.isFinite(value));
+        _enrichedRow.currentStudentCountDistrictPercentile = _districtStudentCounts.length && Number.isFinite(_currentStudentCount)
+          ? Math.round((_districtStudentCounts.filter((value) => value >= _currentStudentCount).length / _districtStudentCounts.length) * 1000) / 10
+          : null;
         const _distBest = (_scoreBestEnvironmentSchool(_districtRows)[0] || {}).school;
         if (_distBest) {
           _enrichedRow._districtBest = {

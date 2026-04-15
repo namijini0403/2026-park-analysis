@@ -338,7 +338,7 @@ function ComparisonBar({
   directionLabel,
 }: {
   label: string;
-  percentile: number;
+  percentile?: number;
   percentileLabel: string;
   currentRatio: number;
   avgRatio: number;
@@ -354,8 +354,12 @@ function ComparisonBar({
       <div className="rounded-2xl bg-white/80 px-3 py-3">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{label}</p>
         <div className="mt-2 flex items-end justify-between gap-3">
-          <p className="text-2xl font-black tracking-tight text-slate-950">{formatDecimal(percentile, 1)}%</p>
-          <p className="text-xs font-medium text-slate-500">{percentileLabel}</p>
+          <p className="text-2xl font-black tracking-tight text-slate-950">
+            {percentile == null ? "-" : `${formatDecimal(percentile, 1)}%`}
+          </p>
+          <p className="text-xs font-medium text-slate-500">
+            {percentile == null ? "비교 분포 계산 중" : percentileLabel}
+          </p>
         </div>
       </div>
 
@@ -512,7 +516,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           comparisonVisual={
             <ComparisonBar
               label={`${basisLabel} 해석`}
-              percentile={parkPercentile ?? 0}
+              percentile={parkPercentile}
               percentileLabel="공원 거리가 먼 편 상위"
               currentRatio={scaleToRatio(props.nearestParkDistanceM, parkScaleMax, false)}
               avgRatio={scaleToRatio(parkAvg, parkScaleMax, false)}
@@ -540,7 +544,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           comparisonVisual={
             <ComparisonBar
               label={`${basisLabel} 해석`}
-              percentile={displayedGreenPercentile ?? 0}
+              percentile={displayedGreenPercentile}
               percentileLabel="녹지 비율이 낮은 편 하위"
               currentRatio={greenExists ? scaleToRatio(greenRatioCont ?? 0, greenScaleMax, true) : 0}
               avgRatio={scaleToRatio(greenAvg, greenScaleMax, true)}
@@ -567,7 +571,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           comparisonVisual={
             <ComparisonBar
               label={`${basisLabel} 해석`}
-              percentile={displayedPlaygroundPercentile ?? 0}
+              percentile={displayedPlaygroundPercentile}
               percentileLabel="도보권 놀이터 수가 적은 편 하위"
               currentRatio={scaleToRatio(props.playgroundCount, playgroundScaleMax, true)}
               avgRatio={scaleToRatio(playgroundAvg, playgroundScaleMax, true)}

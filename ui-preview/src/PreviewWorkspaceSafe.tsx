@@ -4,7 +4,7 @@ import SimulationPage from "./SimulationPage";
 import StatisticsPageSafe from "./StatisticsPageSafe";
 import { previewSchoolDetailReport } from "./previewData";
 import { cityStatisticsPreviewDataSafe } from "./statisticsPreviewDataSafe";
-import { mapSchoolRowToReportProps, mapCandidateFeatures } from "./schoolDataMapperSafe";
+import { mapSchoolRowToReportProps, mapCandidateFeatures } from "./schoolDataBridge";
 
 type ViewMode = "report" | "simulation" | "statistics";
 
