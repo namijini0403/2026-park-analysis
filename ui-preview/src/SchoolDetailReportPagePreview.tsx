@@ -67,6 +67,12 @@ export type SchoolDetailReportProps = {
   greenRatioDistrictPercentile?: number;
   greenRatioCityPercentile_lt?: number;
   greenRatioDistrictPercentile_lt?: number;
+  greenRatioCityZeroShare?: number;
+  greenRatioDistrictZeroShare?: number;
+  greenRatioCityNonZeroPercentile?: number;
+  greenRatioDistrictNonZeroPercentile?: number;
+  greenRatioCityNonZeroAvg?: number;
+  greenRatioDistrictNonZeroAvg?: number;
   playgroundCount: number;
   straightLinePlaygroundCount?: number | null;
   playgroundCountCityAvg: number;
@@ -75,6 +81,12 @@ export type SchoolDetailReportProps = {
   playgroundCountDistrictPercentile?: number;
   playgroundCountCityPercentile_lt?: number;
   playgroundCountDistrictPercentile_lt?: number;
+  playgroundCountCityZeroShare?: number;
+  playgroundCountDistrictZeroShare?: number;
+  playgroundCountCityNonZeroPercentile?: number;
+  playgroundCountDistrictNonZeroPercentile?: number;
+  playgroundCountCityNonZeroAvg?: number;
+  playgroundCountDistrictNonZeroAvg?: number;
   noParkWithin500m?: boolean;
   accessibilityRatio?: number;
   parkShortageVsAvg?: number;
@@ -166,6 +178,89 @@ function getDisplayPercentile(value: number, percentileLe?: number, percentileLt
   if (percentileLt == null) return Math.round(percentileLe * 10) / 10;
   if (value === 0) return Math.max(1, Math.round((percentileLt + 1) * 10) / 10);
   return Math.round((percentileLt + 1) * 10) / 10;
+}
+
+type ZeroInflatedDisplayModel = {
+  isZero: boolean;
+  zeroShare?: number;
+  nonZeroPercentile?: number;
+  nonZeroAvg?: number;
+  comparisonDisabled: boolean;
+  emphasisLine?: string;
+  percentileLabel: string;
+  avgLabel?: string;
+  currentRatio?: number;
+  avgRatio?: number;
+  directionLabel: string;
+};
+
+function getZeroGroupStats(zeroShare?: number) {
+  return zeroShare != null ? `${formatDecimal(zeroShare, 1)}%` : undefined;
+}
+
+function buildZeroInflatedDisplayModel({
+  value,
+  zeroShare,
+  nonZeroPercentile,
+  nonZeroAvg,
+  basisLabel,
+  zeroMessage,
+  nonZeroMessage,
+  directionLabel,
+  scaleMax,
+}: {
+  value: number;
+  zeroShare?: number;
+  nonZeroPercentile?: number;
+  nonZeroAvg?: number;
+  basisLabel: string;
+  zeroMessage: string;
+  nonZeroMessage: string;
+  directionLabel: string;
+  scaleMax: number;
+}): ZeroInflatedDisplayModel {
+  const zeroShareText = getZeroGroupStats(zeroShare);
+  if (!Number.isFinite(value)) {
+    return {
+      isZero: false,
+      comparisonDisabled: true,
+      percentileLabel: "비교 불가",
+      directionLabel,
+      emphasisLine: `${basisLabel} 비교에 필요한 값이 없습니다.`,
+    };
+  }
+
+  if (value === 0) {
+    return {
+      isZero: true,
+      zeroShare,
+      comparisonDisabled: true,
+      percentileLabel: "0인 학교 그룹",
+      directionLabel,
+      emphasisLine: zeroShareText
+        ? `${zeroMessage} ${basisLabel} 전체 학교의 ${zeroShareText}는 같은 0값 그룹입니다.`
+        : zeroMessage,
+    };
+  }
+
+  const clamp = (target: number) => clampPercent((target / Math.max(scaleMax, 1)) * 100);
+
+  return {
+    isZero: false,
+    zeroShare,
+    nonZeroPercentile,
+    nonZeroAvg,
+    comparisonDisabled: false,
+    percentileLabel: nonZeroMessage,
+    directionLabel,
+    avgLabel: nonZeroAvg != null ? `${formatDecimal(nonZeroAvg, 1)}` : undefined,
+    currentRatio: clamp(value),
+    avgRatio: nonZeroAvg != null ? clamp(nonZeroAvg) : undefined,
+    emphasisLine:
+      nonZeroPercentile != null
+        ? `${basisLabel} ${zeroShareText ? `전체 학교의 ${zeroShareText}는 0값 그룹이며, ` : ""}${nonZeroMessage} 상위 ${formatDecimal(nonZeroPercentile, 1)}%입니다.`
+        : `${basisLabel} ${zeroShareText ? `전체 학교의 ${zeroShareText}는 0값 그룹입니다.` : "비교 가능한 비0 학교가 부족합니다."}`,
+  };
 }
 
 function getToneMeta(tone: StatusTone) {
@@ -336,16 +431,20 @@ function ComparisonBar({
   avgLabel,
   avgTitle,
   directionLabel,
+  disabled,
+  disabledMessage,
 }: {
   label: string;
   percentile?: number;
   percentileLabel: string;
-  currentRatio: number;
-  avgRatio: number;
+  currentRatio?: number;
+  avgRatio?: number;
   currentLabel: string;
   avgLabel: string;
   avgTitle: string;
   directionLabel: string;
+  disabled?: boolean;
+  disabledMessage?: string;
 }) {
   const marker = (value: number) => `${clampPercent(value)}%`;
 
@@ -369,11 +468,22 @@ function ComparisonBar({
           <span>{directionLabel}</span>
           <span>유리</span>
         </div>
-        <div className="relative h-3 rounded-full bg-white/90 ring-1 ring-slate-200">
-          <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-red-200 via-yellow-200 to-green-200" style={{ width: "100%" }} />
-          <div className="absolute top-1/2 h-5 w-[2px] -translate-y-1/2 bg-slate-500" style={{ left: marker(avgRatio) }} />
-          <div className="absolute top-1/2 h-6 w-6 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-white bg-slate-950 shadow-sm" style={{ left: marker(currentRatio) }} />
+        <div className={cx("relative h-3 rounded-full ring-1 ring-slate-200", disabled ? "bg-slate-100" : "bg-white/90")}>
+          <div
+            className={cx(
+              "absolute inset-y-0 left-0 rounded-full",
+              disabled ? "bg-slate-300" : "bg-gradient-to-r from-red-200 via-yellow-200 to-green-200",
+            )}
+            style={{ width: "100%" }}
+          />
+          {!disabled && avgRatio != null ? (
+            <div className="absolute top-1/2 h-5 w-[2px] -translate-y-1/2 bg-slate-500" style={{ left: marker(avgRatio) }} />
+          ) : null}
+          {!disabled && currentRatio != null ? (
+            <div className="absolute top-1/2 h-6 w-6 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-white bg-slate-950 shadow-sm" style={{ left: marker(currentRatio) }} />
+          ) : null}
         </div>
+        {disabled && disabledMessage ? <p className="text-[11px] text-slate-500">{disabledMessage}</p> : null}
         <div className="grid gap-2 text-xs text-slate-700">
           <div className="flex items-center justify-between rounded-xl bg-white/70 px-3 py-2">
             <span className="font-semibold text-slate-500">현재</span>
@@ -431,24 +541,22 @@ function SchoolHeader({ schoolName, districtName, casePolicyLabel, caseStatusLab
   );
 }
 
-function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "nearestParkDistanceCityAvg" | "nearestParkDistanceDistrictAvg" | "nearestParkDistanceCityPercentile" | "nearestParkDistanceDistrictPercentile" | "greenRatio" | "greenRatioCityAvg" | "greenRatioDistrictAvg" | "greenRatioCityPercentile" | "greenRatioDistrictPercentile" | "greenRatioCityPercentile_lt" | "greenRatioDistrictPercentile_lt" | "playgroundCount" | "playgroundCountCityAvg" | "playgroundCountDistrictAvg" | "playgroundCountCityPercentile" | "playgroundCountDistrictPercentile" | "playgroundCountCityPercentile_lt" | "playgroundCountDistrictPercentile_lt" | "studentTrend" | "studentTrendChangePct" | "studentTrendCityAvg" | "studentTrendDistrictAvg" | "currentStudentCount2025" | "currentStudentCountCityPercentile" | "currentStudentCountDistrictPercentile" | "nearestParkName" | "straightLinePlaygroundCount" | "noParkWithin500m" | "accessibilityRatio" | "parkShortageVsAvg">) {
+function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "nearestParkDistanceCityAvg" | "nearestParkDistanceDistrictAvg" | "nearestParkDistanceCityPercentile" | "nearestParkDistanceDistrictPercentile" | "greenRatio" | "greenRatioCityAvg" | "greenRatioDistrictAvg" | "greenRatioCityPercentile" | "greenRatioDistrictPercentile" | "greenRatioCityPercentile_lt" | "greenRatioDistrictPercentile_lt" | "greenRatioCityZeroShare" | "greenRatioDistrictZeroShare" | "greenRatioCityNonZeroPercentile" | "greenRatioDistrictNonZeroPercentile" | "greenRatioCityNonZeroAvg" | "greenRatioDistrictNonZeroAvg" | "playgroundCount" | "playgroundCountCityAvg" | "playgroundCountDistrictAvg" | "playgroundCountCityPercentile" | "playgroundCountDistrictPercentile" | "playgroundCountCityPercentile_lt" | "playgroundCountDistrictPercentile_lt" | "playgroundCountCityZeroShare" | "playgroundCountDistrictZeroShare" | "playgroundCountCityNonZeroPercentile" | "playgroundCountDistrictNonZeroPercentile" | "playgroundCountCityNonZeroAvg" | "playgroundCountDistrictNonZeroAvg" | "studentTrend" | "studentTrendChangePct" | "studentTrendCityAvg" | "studentTrendDistrictAvg" | "currentStudentCount2025" | "currentStudentCountCityPercentile" | "currentStudentCountDistrictPercentile" | "nearestParkName" | "straightLinePlaygroundCount" | "noParkWithin500m" | "accessibilityRatio" | "parkShortageVsAvg">) {
   const [comparisonBasis, setComparisonBasis] = React.useState<"city" | "district">("city");
   const parkPercentile = comparisonBasis === "city" ? props.nearestParkDistanceCityPercentile : props.nearestParkDistanceDistrictPercentile;
-  const greenPercentile = comparisonBasis === "city" ? props.greenRatioCityPercentile : props.greenRatioDistrictPercentile;
-  const playgroundPercentile = comparisonBasis === "city" ? props.playgroundCountCityPercentile : props.playgroundCountDistrictPercentile;
-  const greenPercentileLt = comparisonBasis === "city" ? props.greenRatioCityPercentile_lt : props.greenRatioDistrictPercentile_lt;
-  const playgroundPercentileLt = comparisonBasis === "city" ? props.playgroundCountCityPercentile_lt : props.playgroundCountDistrictPercentile_lt;
+  const basisLabel = comparisonBasis === "city" ? "인천시 기준" : "구 기준";
+  const parkAvg = comparisonBasis === "city" ? props.nearestParkDistanceCityAvg : props.nearestParkDistanceDistrictAvg;
   const parkTone = parkPercentile != null
     ? parkToneFromPercentile(parkPercentile)
-    : parkToneFromDistance(props.nearestParkDistanceM, comparisonBasis === "city" ? props.nearestParkDistanceCityAvg : props.nearestParkDistanceDistrictAvg);
-  const displayedGreenPercentile = getDisplayPercentile(props.greenRatio, greenPercentile, greenPercentileLt);
-  const displayedPlaygroundPercentile = getDisplayPercentile(props.playgroundCount, playgroundPercentile, playgroundPercentileLt);
-  const greenTone = displayedGreenPercentile != null
-    ? greenToneFromPercentile(displayedGreenPercentile)
-    : greenToneFromValue(props.greenRatio, comparisonBasis === "city" ? props.greenRatioCityAvg : props.greenRatioDistrictAvg);
-  const playgroundTone = displayedPlaygroundPercentile != null
-    ? playgroundToneFromPercentile(displayedPlaygroundPercentile)
-    : playgroundToneFromValue(props.playgroundCount, comparisonBasis === "city" ? props.playgroundCountCityAvg : props.playgroundCountDistrictAvg);
+    : parkToneFromDistance(props.nearestParkDistanceM, parkAvg);
+  const greenZeroShare = comparisonBasis === "city" ? props.greenRatioCityZeroShare : props.greenRatioDistrictZeroShare;
+  const greenNonZeroPercentile = comparisonBasis === "city" ? props.greenRatioCityNonZeroPercentile : props.greenRatioDistrictNonZeroPercentile;
+  const greenNonZeroAvg = comparisonBasis === "city" ? props.greenRatioCityNonZeroAvg : props.greenRatioDistrictNonZeroAvg;
+  const playgroundZeroShare = comparisonBasis === "city" ? props.playgroundCountCityZeroShare : props.playgroundCountDistrictZeroShare;
+  const playgroundNonZeroPercentile = comparisonBasis === "city" ? props.playgroundCountCityNonZeroPercentile : props.playgroundCountDistrictNonZeroPercentile;
+  const playgroundNonZeroAvg = comparisonBasis === "city" ? props.playgroundCountCityNonZeroAvg : props.playgroundCountDistrictNonZeroAvg;
+  const greenAvg = comparisonBasis === "city" ? props.greenRatioCityAvg : props.greenRatioDistrictAvg;
+  const playgroundAvg = comparisonBasis === "city" ? props.playgroundCountCityAvg : props.playgroundCountDistrictAvg;
   const first = props.studentTrend[0]?.value ?? 0;
   const last = props.studentTrend[props.studentTrend.length - 1]?.value ?? 0;
   const changePercent = props.studentTrendChangePct ?? (first ? ((last - first) / first) * 100 : 0);
@@ -456,20 +564,44 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
   const cityTrendDelta = changePercent - props.studentTrendCityAvg;
   const districtTrendDelta = changePercent - props.studentTrendDistrictAvg;
   const currentStudentCount = props.currentStudentCount2025 ?? last;
-  const basisLabel = comparisonBasis === "city" ? "인천시 기준" : "구 기준";
-  const parkAvg = comparisonBasis === "city" ? props.nearestParkDistanceCityAvg : props.nearestParkDistanceDistrictAvg;
-  const greenAvg = comparisonBasis === "city" ? props.greenRatioCityAvg : props.greenRatioDistrictAvg;
-  const playgroundAvg = comparisonBasis === "city" ? props.playgroundCountCityAvg : props.playgroundCountDistrictAvg;
   const parkScaleMax = Math.max(1200, props.nearestParkDistanceM, parkAvg, props.nearestParkDistanceDistrictAvg, props.nearestParkDistanceCityAvg);
-  const greenExists = props.greenRatio > 0 ? 1 : 0;
-  const greenRatioCont = props.greenRatio > 0 ? props.greenRatio : null;
-  const greenScaleMax = Math.max(12, props.greenRatioCityAvg, props.greenRatioDistrictAvg, props.greenRatio, greenAvg);
-  const playgroundScaleMax = Math.max(3, props.playgroundCountCityAvg * 4, props.playgroundCountDistrictAvg * 6, props.playgroundCount + 1, playgroundAvg * 3);
+  const greenScaleMax = Math.max(12, props.greenRatio, greenAvg, greenNonZeroAvg ?? 0);
+  const playgroundScaleMax = Math.max(3, props.playgroundCount + 1, playgroundAvg * 3, (playgroundNonZeroAvg ?? 0) * 3);
   const scaleToRatio = (value: number, max: number, higherIsBetter: boolean) => {
     if (max <= 0) return higherIsBetter ? 100 : 0;
     const normalized = clampPercent((value / max) * 100);
     return higherIsBetter ? normalized : 100 - normalized;
   };
+  const greenDisplayModel = buildZeroInflatedDisplayModel({
+    value: props.greenRatio,
+    zeroShare: greenZeroShare,
+    nonZeroPercentile: greenNonZeroPercentile,
+    nonZeroAvg: greenNonZeroAvg,
+    basisLabel,
+    zeroMessage: "이 학교는 녹지비율 0% 학교입니다.",
+    nonZeroMessage: "녹지가 있는 학교들 중",
+    directionLabel: "녹지 많을수록 유리",
+    scaleMax: greenScaleMax,
+  });
+  const playgroundDisplayModel = buildZeroInflatedDisplayModel({
+    value: props.playgroundCount,
+    zeroShare: playgroundZeroShare,
+    nonZeroPercentile: playgroundNonZeroPercentile,
+    nonZeroAvg: playgroundNonZeroAvg,
+    basisLabel,
+    zeroMessage: "이 학교는 반경 내 놀이터가 0개입니다.",
+    nonZeroMessage: "놀이터가 있는 학교들 중",
+    directionLabel: "놀이터 많을수록 유리",
+    scaleMax: playgroundScaleMax,
+  });
+  const displayedGreenPercentile = greenDisplayModel.nonZeroPercentile;
+  const displayedPlaygroundPercentile = playgroundDisplayModel.nonZeroPercentile;
+  const greenTone = displayedGreenPercentile != null
+    ? greenToneFromPercentile(100 - displayedGreenPercentile)
+    : greenToneFromValue(props.greenRatio, greenAvg);
+  const playgroundTone = displayedPlaygroundPercentile != null
+    ? playgroundToneFromPercentile(100 - displayedPlaygroundPercentile)
+    : playgroundToneFromValue(props.playgroundCount, playgroundAvg);
 
   return (
     <SectionShell kicker="Profile" title="핵심 취약성·현황">
@@ -535,23 +667,26 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           unit="%"
           tone={greenTone}
           headline={
+            props.greenRatio === 0 ? "녹지 비율이 0%입니다." :
             greenTone === "positive" ? "녹지 비율이 양호합니다." :
             greenTone === "caution"  ? "녹지 비율이 다소 낮습니다." :
             greenTone === "warning"  ? "녹지 비율이 평균보다 낮습니다." :
                                        "위험! 녹지가 부족한 편이에요."
           }
-          emphasisLine={lowerPercentileLine(basisLabel, displayedGreenPercentile, "녹지 비율이 낮은 편") ?? undefined}
+          emphasisLine={greenDisplayModel.emphasisLine}
           comparisonVisual={
             <ComparisonBar
               label={`${basisLabel} 해석`}
               percentile={displayedGreenPercentile}
-              percentileLabel="녹지 비율이 낮은 편 하위"
-              currentRatio={greenExists ? scaleToRatio(greenRatioCont ?? 0, greenScaleMax, true) : 0}
-              avgRatio={scaleToRatio(greenAvg, greenScaleMax, true)}
+              percentileLabel={greenDisplayModel.percentileLabel}
+              currentRatio={greenDisplayModel.currentRatio}
+              avgRatio={greenDisplayModel.avgRatio}
               currentLabel={`${formatDecimal(props.greenRatio, 1)}%`}
-              avgLabel={`${formatDecimal(greenAvg, 1)}%`}
-              avgTitle={comparisonBasis === "city" ? "인천시 평균" : "구 평균"}
-              directionLabel="녹지 많을수록 유리"
+              avgLabel={greenDisplayModel.avgLabel ? `${greenDisplayModel.avgLabel}%` : "-"}
+              avgTitle={comparisonBasis === "city" ? "비0 학교 평균" : "구 내 비0 학교 평균"}
+              directionLabel={greenDisplayModel.directionLabel}
+              disabled={greenDisplayModel.comparisonDisabled}
+              disabledMessage="0이 아닌 학교들 내부 분포는 회색 처리했습니다."
             />
           }
         />
@@ -562,23 +697,26 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           unit="개"
           tone={playgroundTone}
           headline={
+            props.playgroundCount === 0 ? "반경 내 놀이터가 0개입니다." :
             playgroundTone === "positive" ? "도보권 놀이터가 충분합니다." :
             playgroundTone === "caution"  ? "도보권 놀이터가 다소 부족합니다." :
             playgroundTone === "warning"  ? "도보권 놀이터가 평균보다 부족합니다." :
                                             "위험! 놀이터가 부족한 편이에요."
           }
-          emphasisLine={lowerPercentileLine(basisLabel, displayedPlaygroundPercentile, "도보권 놀이터 수가 적은 편") ?? undefined}
+          emphasisLine={playgroundDisplayModel.emphasisLine}
           comparisonVisual={
             <ComparisonBar
               label={`${basisLabel} 해석`}
               percentile={displayedPlaygroundPercentile}
-              percentileLabel="도보권 놀이터 수가 적은 편 하위"
-              currentRatio={scaleToRatio(props.playgroundCount, playgroundScaleMax, true)}
-              avgRatio={scaleToRatio(playgroundAvg, playgroundScaleMax, true)}
+              percentileLabel={playgroundDisplayModel.percentileLabel}
+              currentRatio={playgroundDisplayModel.currentRatio}
+              avgRatio={playgroundDisplayModel.avgRatio}
               currentLabel={`${formatNumber(props.playgroundCount)}개`}
-              avgLabel={`${formatDecimal(playgroundAvg, 1)}개`}
-              avgTitle={comparisonBasis === "city" ? "인천시 평균" : "구 평균"}
-              directionLabel="놀이터 많을수록 유리"
+              avgLabel={playgroundDisplayModel.avgLabel ? `${playgroundDisplayModel.avgLabel}개` : "-"}
+              avgTitle={comparisonBasis === "city" ? "비0 학교 평균" : "구 내 비0 학교 평균"}
+              directionLabel={playgroundDisplayModel.directionLabel}
+              disabled={playgroundDisplayModel.comparisonDisabled}
+              disabledMessage="0이 아닌 학교들 내부 분포는 회색 처리했습니다."
             />
           }
           footer={props.straightLinePlaygroundCount != null ? <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">500m 직선거리 반경 안에는 놀이터가 {formatNumber(props.straightLinePlaygroundCount)}개 있지만, 실제 도보 이동 500m 이내 놀이터는 {formatNumber(props.playgroundCount)}개입니다.</div> : null}
@@ -862,22 +1000,24 @@ function SimulationEntry({
       <Card className="p-6">
         <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
-            <p className="text-lg font-semibold text-slate-950">이 위치 기준으로 설치 시뮬레이션 검토</p>
-            <p className="mt-1 text-sm text-slate-500">후보지 시뮬레이션과 설치 검토 단계로 바로 넘어갑니다.</p>
+            <p className="text-lg font-semibold text-slate-950">학교 기준 수혜 학생수 추정</p>
+            <p className="mt-1 text-sm text-slate-500">현재 학생 규모와 생활권 수요를 바탕으로 본 학교에서 예상되는 수혜 학생수 추정치입니다.</p>
             <div className="mt-4 flex flex-wrap gap-3">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2029 잠재 수요 추정</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2029년 수혜 학생수 추정</p>
                 <p className="mt-2 text-3xl font-bold text-slate-950">{formatNumber(potentialDemand2029)}명</p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2031 잠재 수요 추정</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2031년 수혜 학생수 추정</p>
                 <p className="mt-2 text-3xl font-bold text-slate-950">{formatNumber(potentialDemand2031)}명</p>
               </div>
             </div>
           </div>
-          <div className="flex justify-start lg:justify-end">
-            <Button onClick={onSimulationClick}>시뮬레이션 검토로 이동</Button>
-          </div>
+          {onSimulationClick ? (
+            <div className="flex justify-start lg:justify-end">
+              <Button onClick={onSimulationClick}>후보지 시뮬레이션 열기</Button>
+            </div>
+          ) : null}
         </div>
       </Card>
     </SectionShell>
