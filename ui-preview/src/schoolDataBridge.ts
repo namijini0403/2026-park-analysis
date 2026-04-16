@@ -136,6 +136,21 @@ function bestSchoolBlock(value: unknown) {
   };
 }
 
+function isFiniteSimilarSchool(item: {
+  schoolName?: string;
+  districtName?: string;
+  nearestParkDistanceM?: number;
+  greenRatio?: number;
+  playgroundCount?: number;
+}) {
+  return (
+    s(item.schoolName) !== "" &&
+    Number.isFinite(Number(item.nearestParkDistanceM)) &&
+    Number.isFinite(Number(item.greenRatio)) &&
+    Number.isFinite(Number(item.playgroundCount))
+  );
+}
+
 export function applyLegacySchoolSnapshot(
   base: SchoolDetailReportProps,
   snapshotValue: unknown,
@@ -167,15 +182,27 @@ export function applyLegacySchoolSnapshot(
     ...(Array.isArray(snapshot.legacy_student_trend) && snapshot.legacy_student_trend.length
       ? { studentTrend: snapshot.legacy_student_trend.map((item) => ({ year: String(item.year), value: n(item.value) })) }
       : {}),
-    ...(Array.isArray(snapshot.legacy_similar_schools) && snapshot.legacy_similar_schools.length
+    ...(Array.isArray(snapshot.legacy_similar_schools) &&
+    snapshot.legacy_similar_schools.some((item) =>
+      isFiniteSimilarSchool({
+        schoolName: s(item.schoolName),
+        districtName: s(item.districtName),
+        nearestParkDistanceM: Number(item.nearestParkDistanceM),
+        greenRatio: Number(item.greenRatio),
+        playgroundCount: Number(item.playgroundCount),
+      }),
+    )
       ? {
-          similarSchools: snapshot.legacy_similar_schools.map((item) => ({
-            schoolName: s(item.schoolName),
-            districtName: s(item.districtName),
-            nearestParkDistanceM: n(item.nearestParkDistanceM),
-            greenRatio: n(item.greenRatio),
-            playgroundCount: n(item.playgroundCount),
-          })),
+          similarSchools: snapshot.legacy_similar_schools
+            .map((item) => ({
+              schoolName: s(item.schoolName),
+              districtName: s(item.districtName),
+              nearestParkDistanceM: Number(item.nearestParkDistanceM),
+              greenRatio: Number(item.greenRatio),
+              playgroundCount: Number(item.playgroundCount),
+            }))
+            .filter(isFiniteSimilarSchool)
+            .slice(0, 4),
         }
       : {}),
   };
@@ -240,7 +267,8 @@ export function mapSchoolRowToReportProps(
       greenRatio: n(row[`similar_school_${i}_iso_green_ratio`]),
       playgroundCount: n(row[`similar_school_${i}_iso_playground_count`]),
     }))
-    .filter((item) => item.schoolName !== "");
+    .filter(isFiniteSimilarSchool)
+    .slice(0, 4);
 
   const cityBestEnvironmentSchool = bestSchoolBlock(row._cityBest);
   const districtBestEnvironmentSchool = bestSchoolBlock(row._districtBest);
