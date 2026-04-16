@@ -4,9 +4,17 @@ import SimulationPage from "./SimulationPage";
 import StatisticsPageSafe from "./StatisticsPageSafe";
 import { previewSchoolDetailReport } from "./previewData";
 import { cityStatisticsPreviewDataSafe } from "./statisticsPreviewDataSafe";
-import { mapSchoolRowToReportProps, mapCandidateFeatures } from "./schoolDataBridge";
+import { applyLegacySchoolSnapshot, mapSchoolRowToReportProps, mapCandidateFeatures } from "./schoolDataBridge";
 
 type ViewMode = "report" | "simulation" | "statistics";
+
+type RedevelopmentProject = {
+  name: string;
+  stage: string;
+  distanceM: number;
+  type?: string;
+  area?: number | null;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function readSchoolFromStorage(): Record<string, any> | null {
@@ -31,6 +39,20 @@ function readCandidatesFromStorage(): Record<string, any>[] {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function readRedevelopmentProjects(schoolRow: Record<string, any> | null): RedevelopmentProject[] {
+  if (!schoolRow || !Array.isArray(schoolRow._redevelopmentProjects)) return [];
+  return schoolRow._redevelopmentProjects
+    .map((item: Record<string, unknown>) => ({
+      name: String(item.name ?? ""),
+      stage: String(item.stage ?? ""),
+      distanceM: Number(item.distanceM ?? 0),
+      type: item.type != null ? String(item.type) : undefined,
+      area: item.area == null ? undefined : Number(item.area),
+    }))
+    .filter((item: RedevelopmentProject) => item.name !== "");
+}
+
 export default function PreviewWorkspaceSafe() {
   const [view, setView] = useState<ViewMode>("report");
 
@@ -49,7 +71,8 @@ export default function PreviewWorkspaceSafe() {
         onSimulationClick: () => setView("simulation"),
       };
     }
-    return mapSchoolRowToReportProps(schoolRow, () => setView("simulation"));
+    const mapped = mapSchoolRowToReportProps(schoolRow, () => setView("simulation"));
+    return applyLegacySchoolSnapshot(mapped, schoolRow._legacySnapshot);
   }, [schoolRow]);
 
   const candidates = useMemo(() => {
@@ -64,6 +87,8 @@ export default function PreviewWorkspaceSafe() {
     }
     return mapCandidateFeatures(rawCandidates, schoolLat, schoolLng);
   }, [schoolRow, rawCandidates, schoolLat, schoolLng]);
+
+  const redevelopmentProjects = useMemo(() => readRedevelopmentProjects(schoolRow), [schoolRow]);
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -107,6 +132,7 @@ export default function PreviewWorkspaceSafe() {
           schoolLng={schoolLng}
           casePolicyLabel={detailProps.casePolicyLabel}
           candidates={candidates}
+          redevelopmentProjects={redevelopmentProjects}
           onBack={() => setView("report")}
         />
       ) : view === "statistics" ? (

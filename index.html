@@ -1731,6 +1731,16 @@
       return `<div class="redevelopment-list">${items}</div>`;
     }
 
+    function buildRedevelopmentProjectList(row, radiusMeters = 500) {
+      return getNearbyRedevelopmentZones(row, radiusMeters).map((zone) => ({
+        name: zone["구역명"] || zone["援ъ뿭紐?"] || "재개발 구역",
+        stage: zone["진행단계"] || zone["吏꾪뻾?④퀎"] || "단계 정보 없음",
+        distanceM: Math.round(Number(zone.__distance) || 0),
+        type: zone["사업유형"] || "",
+        area: Number(zone["면적"]) || null,
+      }));
+    }
+
     function getStudentTrendMarkup(row) {
       const trend = Array.isArray(row.studentTrend) ? row.studentTrend : [];
       if (!trend.length) {
@@ -3365,6 +3375,8 @@
           };
         }
       }
+
+      _enrichedRow._redevelopmentProjects = buildRedevelopmentProjectList(row, 500);
 
       localStorage.setItem("parkAnalysis_school", JSON.stringify(_enrichedRow));
       localStorage.setItem("parkAnalysis_legacySnapshotLog", JSON.stringify(_enrichedRow._legacySnapshotLog));

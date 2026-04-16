@@ -20,12 +20,21 @@ interface Candidate {
   ai_score?: number;
 }
 
+interface RedevelopmentProject {
+  name: string;
+  stage: string;
+  distanceM: number;
+  type?: string;
+  area?: number;
+}
+
 interface SimulationPageProps {
   schoolName: string;
   schoolLat: number;
   schoolLng: number;
   casePolicyLabel: string;
   candidates: Candidate[];
+  redevelopmentProjects?: RedevelopmentProject[];
   onBack: () => void;
 }
 
@@ -112,6 +121,7 @@ export default function SimulationPage({
   schoolLng,
   casePolicyLabel,
   candidates,
+  redevelopmentProjects = [],
   onBack,
 }: SimulationPageProps) {
   const [mode, setMode] = useState<FilterMode>("ai");
@@ -531,6 +541,75 @@ export default function SimulationPage({
               <Bar dataKey="value" fill="#4ecdc4" radius={4} />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+      )}
+
+      {redevelopmentProjects.length > 0 && (
+        <div
+          style={{
+            marginTop: 24,
+            padding: 20,
+            borderRadius: 16,
+            background: "#fff",
+            border: "1px solid #e5e7eb",
+          }}
+        >
+          <div style={{ fontSize: 12, fontWeight: 700, color: "#9a3412", marginBottom: 6 }}>
+            BEFORE YOU DECIDE
+          </div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+            시설 설치 판단 전에 함께 볼 변화 요인
+          </div>
+          <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, marginBottom: 14 }}>
+            학교 반경 500m 안에서 확인된 재개발·정비사업입니다. 설치 위치를 정할 때 향후 보행 동선과 생활권 수요 변화 가능성을 함께 보세요.
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {redevelopmentProjects.map((project, index) => (
+              <div
+                key={`${project.name}-${index}`}
+                style={{
+                  border: "1px solid #e5e7eb",
+                  borderRadius: 12,
+                  padding: "14px 16px",
+                  background: "#fafafa",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 6, flexWrap: "wrap" }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{project.name}</div>
+                  <div style={{ fontSize: 12, color: "#6b7280" }}>{project.distanceM.toLocaleString()}m</div>
+                </div>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
+                  <span
+                    style={{
+                      padding: "3px 8px",
+                      borderRadius: 999,
+                      background: "#fff7ed",
+                      color: "#c2410c",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {project.stage || "단계 정보 없음"}
+                  </span>
+                  {project.type ? (
+                    <span
+                      style={{
+                        padding: "3px 8px",
+                        borderRadius: 999,
+                        background: "#eff6ff",
+                        color: "#1d4ed8",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {project.type}
+                    </span>
+                  ) : null}
+                  {Number.isFinite(project.area) ? (
+                    <span style={{ color: "#6b7280" }}>면적 {Math.round(project.area ?? 0).toLocaleString()}㎡</span>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
