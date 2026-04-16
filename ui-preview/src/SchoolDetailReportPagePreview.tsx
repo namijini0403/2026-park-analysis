@@ -150,6 +150,14 @@ function formatDecimal(value: number, digits = 1) {
   }).format(value);
 }
 
+function formatWholeNumber(value: number) {
+  return formatNumber(Math.round(value));
+}
+
+function formatWholePercent(value: number) {
+  return `${formatWholeNumber(value)}%`;
+}
+
 function formatSignedPercent(value: number) {
   return `${value > 0 ? "+" : ""}${formatDecimal(value, 1)}%`;
 }
@@ -160,17 +168,17 @@ function clampPercent(value: number) {
 
 function percentileLine(scopeLabel: string, percentile: number | undefined, emphasis: string) {
   if (percentile == null) return null;
-  return `${scopeLabel} ${emphasis} ${formatDecimal(percentile, 0)}%에 해당합니다.`;
+  return `${scopeLabel} ${emphasis} ${formatWholePercent(percentile)}에 해당합니다.`;
 }
 
 function upperPercentileLine(scopeLabel: string, percentile: number | undefined, emphasis: string) {
   if (percentile == null) return null;
-  return `${scopeLabel} ${emphasis} 상위 ${formatDecimal(percentile, 1)}%에 해당합니다.`;
+  return `${scopeLabel} ${emphasis} 상위 ${formatWholePercent(percentile)}에 해당합니다.`;
 }
 
 function lowerPercentileLine(scopeLabel: string, percentile: number | undefined, emphasis: string) {
   if (percentile == null) return null;
-  return `${scopeLabel} ${emphasis} 하위 ${formatDecimal(percentile, 1)}%에 해당합니다.`;
+  return `${scopeLabel} ${emphasis} 하위 ${formatWholePercent(percentile)}에 해당합니다.`;
 }
 
 function getDisplayPercentile(value: number, percentileLe?: number, percentileLt?: number) {
@@ -195,7 +203,7 @@ type ZeroInflatedDisplayModel = {
 };
 
 function getZeroGroupStats(zeroShare?: number) {
-  return zeroShare != null ? `${formatDecimal(zeroShare, 1)}%` : undefined;
+  return zeroShare != null ? formatWholePercent(zeroShare) : undefined;
 }
 
 function buildZeroInflatedDisplayModel({
@@ -253,14 +261,37 @@ function buildZeroInflatedDisplayModel({
     comparisonDisabled: false,
     percentileLabel: nonZeroMessage,
     directionLabel,
-    avgLabel: nonZeroAvg != null ? `${formatDecimal(nonZeroAvg, 1)}` : undefined,
+    avgLabel: nonZeroAvg != null ? `${formatWholeNumber(nonZeroAvg)}` : undefined,
     currentRatio: clamp(value),
     avgRatio: nonZeroAvg != null ? clamp(nonZeroAvg) : undefined,
     emphasisLine:
       nonZeroPercentile != null
-        ? `${basisLabel} ${zeroShareText ? `전체 학교의 ${zeroShareText}는 0값 그룹이며, ` : ""}${nonZeroMessage} 상위 ${formatDecimal(nonZeroPercentile, 1)}%입니다.`
+        ? `${basisLabel} ${zeroShareText ? `전체 학교의 ${zeroShareText}는 0값 그룹이며, ` : ""}${nonZeroMessage} 상위 ${formatWholePercent(nonZeroPercentile)}입니다.`
         : `${basisLabel} ${zeroShareText ? `전체 학교의 ${zeroShareText}는 0값 그룹입니다.` : "비교 가능한 비0 학교가 부족합니다."}`,
   };
+}
+
+function getParkHeadline(distanceM: number) {
+  if (distanceM <= 200) return "도보로 접근하기 편리한 거리입니다.";
+  if (distanceM <= 300) return "도보로 접근하기 무난한 거리입니다.";
+  if (distanceM <= 500) return "도보 접근은 가능하지만 바로 인접하진 않습니다.";
+  return "도보로 이용하기에는 거리가 멀어 접근성이 낮습니다.";
+}
+
+function getGreenHeadline(tone: StatusTone, value: number) {
+  if (value === 0) return "생활권 안에 확인된 녹지가 없습니다.";
+  if (tone === "positive") return "비교적 녹지가 잘 조성된 편입니다.";
+  if (tone === "caution") return "녹지가 적지는 않지만 여유 있는 수준은 아닙니다.";
+  if (tone === "warning") return "녹지가 다소 부족한 편입니다.";
+  return "녹지가 부족해 보행권 체류환경이 아쉽습니다.";
+}
+
+function getPlaygroundHeadline(tone: StatusTone, count: number) {
+  if (count === 0) return "도보권 안에 확인된 놀이터가 없습니다.";
+  if (tone === "positive") return "도보권 놀이터가 비교적 잘 갖춰진 편입니다.";
+  if (tone === "caution") return "도보권 놀이터는 있는 편이지만 여유롭진 않습니다.";
+  if (tone === "warning") return "도보권 놀이터가 다소 부족한 편입니다.";
+  return "도보권 놀이터가 부족해 놀이 접근성이 낮습니다.";
 }
 
 function getToneMeta(tone: StatusTone) {
@@ -454,7 +485,7 @@ function ComparisonBar({
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{label}</p>
         <div className="mt-2 flex items-end justify-between gap-3">
           <p className="text-2xl font-black tracking-tight text-slate-950">
-            {percentile == null ? "-" : `${formatDecimal(percentile, 1)}%`}
+            {percentile == null ? "-" : formatWholePercent(percentile)}
           </p>
           <p className="text-xs font-medium text-slate-500">
             {percentile == null ? "비교 분포 계산 중" : percentileLabel}
@@ -532,7 +563,7 @@ function SchoolHeader({ schoolName, districtName, casePolicyLabel, caseStatusLab
         </div>
         <div className="flex flex-wrap gap-2">
           <DarkChip>🌳 최근접 공원 {formatNumber(nearestParkDistanceM)}m</DarkChip>
-          <DarkChip>🌿 녹지 {formatDecimal(greenRatio, 1)}%</DarkChip>
+          <DarkChip>🌿 녹지 {formatWholePercent(greenRatio)}</DarkChip>
           <DarkChip>🛝 놀이터 {formatNumber(playgroundCount)}개</DarkChip>
           {noParkWithin500m ? <DarkChip>🔴 500m 내 공원 없음</DarkChip> : null}
         </div>
@@ -638,12 +669,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           value={formatNumber(props.nearestParkDistanceM)}
           unit="m"
           tone={parkTone}
-          headline={
-            parkTone === "positive" ? "공원이 가까운 편입니다." :
-            parkTone === "caution"  ? "공원 거리가 다소 멉니다." :
-            parkTone === "warning"  ? "공원까지의 거리가 평균보다 멉니다." :
-                                      "위험! 공원이 너무 멀어요."
-          }
+          headline={getParkHeadline(props.nearestParkDistanceM)}
           emphasisLine={upperPercentileLine(basisLabel, parkPercentile, "공원 거리가 먼 편") ?? undefined}
           comparisonVisual={
             <ComparisonBar
@@ -663,16 +689,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
         <MetricCard
           title="녹지 비율"
           icon="🌿"
-          value={formatDecimal(props.greenRatio, 1)}
+          value={formatWholeNumber(props.greenRatio)}
           unit="%"
           tone={greenTone}
-          headline={
-            props.greenRatio === 0 ? "녹지 비율이 0%입니다." :
-            greenTone === "positive" ? "녹지 비율이 양호합니다." :
-            greenTone === "caution"  ? "녹지 비율이 다소 낮습니다." :
-            greenTone === "warning"  ? "녹지 비율이 평균보다 낮습니다." :
-                                       "위험! 녹지가 부족한 편이에요."
-          }
+          headline={getGreenHeadline(greenTone, props.greenRatio)}
           emphasisLine={greenDisplayModel.emphasisLine}
           comparisonVisual={
             <ComparisonBar
@@ -681,7 +701,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
               percentileLabel={greenDisplayModel.percentileLabel}
               currentRatio={greenDisplayModel.currentRatio}
               avgRatio={greenDisplayModel.avgRatio}
-              currentLabel={`${formatDecimal(props.greenRatio, 1)}%`}
+              currentLabel={formatWholePercent(props.greenRatio)}
               avgLabel={greenDisplayModel.avgLabel ? `${greenDisplayModel.avgLabel}%` : "-"}
               avgTitle={comparisonBasis === "city" ? "비0 학교 평균" : "구 내 비0 학교 평균"}
               directionLabel={greenDisplayModel.directionLabel}
@@ -696,13 +716,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           value={formatNumber(props.playgroundCount)}
           unit="개"
           tone={playgroundTone}
-          headline={
-            props.playgroundCount === 0 ? "반경 내 놀이터가 0개입니다." :
-            playgroundTone === "positive" ? "도보권 놀이터가 충분합니다." :
-            playgroundTone === "caution"  ? "도보권 놀이터가 다소 부족합니다." :
-            playgroundTone === "warning"  ? "도보권 놀이터가 평균보다 부족합니다." :
-                                            "위험! 놀이터가 부족한 편이에요."
-          }
+          headline={getPlaygroundHeadline(playgroundTone, props.playgroundCount)}
           emphasisLine={playgroundDisplayModel.emphasisLine}
           comparisonVisual={
             <ComparisonBar
@@ -730,11 +744,11 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           headline={changePercent > 0 ? "주의! 학생 수가 증가 중이에요." : "주의! 학생 수가 감소 중이에요."}
           emphasisLine={`전체 평균 ${formatSignedPercent(props.studentTrendCityAvg)}인데 이 학교는 ${formatSignedPercent(changePercent)} ${changePercent >= 0 ? "증가" : "감소"} 중입니다`}
           comparisonLines={[
-            `전교생 ${formatNumber(currentStudentCount)}명으로, 학생 수가 많은 학교 기준 인천 전체 상위 ${formatDecimal(props.currentStudentCountCityPercentile ?? 0, 1)}%에 해당합니다.`,
-            `구 내에서는 학생 수가 많은 학교 기준 상위 ${formatDecimal(props.currentStudentCountDistrictPercentile ?? 0, 1)}% 수준입니다.`,
+            `전교생 ${formatNumber(currentStudentCount)}명으로, 학생 수가 많은 학교 기준 인천 전체 상위 ${formatWholePercent(props.currentStudentCountCityPercentile ?? 0)}에 해당합니다.`,
+            `구 내에서는 학생 수가 많은 학교 기준 상위 ${formatWholePercent(props.currentStudentCountDistrictPercentile ?? 0)} 수준입니다.`,
             changePercent > props.studentTrendDistrictAvg
-              ? `구 평균보다 ${formatDecimal(Math.abs(districtTrendDelta), 1)}%p 높은 추세를 보입니다.`
-              : `구 평균보다 ${formatDecimal(Math.abs(districtTrendDelta), 1)}%p 더 낮은 추세를 보입니다.`,
+              ? `구 평균보다 ${formatWholeNumber(Math.abs(districtTrendDelta))}%p 높은 추세를 보입니다.`
+              : `구 평균보다 ${formatWholeNumber(Math.abs(districtTrendDelta))}%p 더 낮은 추세를 보입니다.`,
           ]}
           footer={<StudentTrendMini data={props.studentTrend} />}
         />
@@ -779,15 +793,15 @@ function ProblemSection({
   } else if (hasNoWalkablePark && lowGreen) {
     decisionText =
       changePercent > 0
-        ? `학생 수는 증가 추세인데, 도보권 공원이 없고 녹지 비율도 ${formatDecimal(greenRatio, 1)}% 수준에 머물러 있습니다.`
-        : `도보권 공원이 없고 녹지 비율도 ${formatDecimal(greenRatio, 1)}% 수준에 머물러 있어 생활권 보완이 필요합니다.`;
+        ? `학생 수는 증가 추세인데, 도보권 공원이 없고 녹지 비율도 ${formatWholePercent(greenRatio)} 수준에 머물러 있습니다.`
+        : `도보권 공원이 없고 녹지 비율도 ${formatWholePercent(greenRatio)} 수준에 머물러 있어 생활권 보완이 필요합니다.`;
   } else if (hasNoWalkablePark) {
     decisionText =
       changePercent > 0
         ? `학생 수는 증가 추세지만, 가장 가까운 공원까지 ${formatNumber(nearestParkDistanceM)}m 떨어져 있어 공원 접근성 부담이 큽니다.`
         : `가장 가까운 공원까지 ${formatNumber(nearestParkDistanceM)}m 떨어져 있어 공원 접근성 보완이 필요한 학교입니다.`;
   } else if (lowGreen || noPlayground) {
-    const greenText = lowGreen ? "녹지 비율이 거의 없고" : `녹지 비율은 ${formatDecimal(greenRatio, 1)}% 수준이며`;
+    const greenText = lowGreen ? "녹지 비율이 거의 없고" : `녹지 비율은 ${formatWholePercent(greenRatio)} 수준이며`;
     const playgroundText = noPlayground ? "도보권 놀이터도 확인되지 않습니다." : `도보권 놀이터는 ${formatNumber(playgroundCount)}개 수준입니다.`;
     decisionText =
       changePercent > 0
@@ -902,21 +916,21 @@ function SimilarSchoolsSection({ schoolName, districtName, nearestParkDistanceM,
   const weaknesses: string[] = [];
 
   if (nearestParkDistanceM < avgSimilarPark) {
-    strengths.push(`유사학교 평균보다 최근접 공원 거리가 ${formatDecimal(avgSimilarPark - nearestParkDistanceM, 1)}m 짧습니다.`);
+    strengths.push(`유사학교 평균보다 최근접 공원 거리가 ${formatWholeNumber(avgSimilarPark - nearestParkDistanceM)}m 짧습니다.`);
   } else {
-    weaknesses.push(`유사학교 평균보다 최근접 공원 거리가 ${formatDecimal(nearestParkDistanceM - avgSimilarPark, 1)}m 더 깁니다.`);
+    weaknesses.push(`유사학교 평균보다 최근접 공원 거리가 ${formatWholeNumber(nearestParkDistanceM - avgSimilarPark)}m 더 깁니다.`);
   }
 
   if (greenRatio > avgSimilarGreen) {
-    strengths.push(`유사학교 평균보다 녹지 비율이 ${formatDecimal(greenRatio - avgSimilarGreen, 1)}%p 높습니다.`);
+    strengths.push(`유사학교 평균보다 녹지 비율이 ${formatWholeNumber(greenRatio - avgSimilarGreen)}%p 높습니다.`);
   } else {
-    weaknesses.push(`유사학교 평균보다 녹지 비율이 ${formatDecimal(avgSimilarGreen - greenRatio, 1)}%p 낮습니다.`);
+    weaknesses.push(`유사학교 평균보다 녹지 비율이 ${formatWholeNumber(avgSimilarGreen - greenRatio)}%p 낮습니다.`);
   }
 
   if (playgroundCount > avgSimilarPlayground) {
-    strengths.push(`유사학교 평균보다 도보권 놀이터가 ${formatDecimal(playgroundCount - avgSimilarPlayground, 1)}개 많습니다.`);
+    strengths.push(`유사학교 평균보다 도보권 놀이터가 ${formatWholeNumber(playgroundCount - avgSimilarPlayground)}개 많습니다.`);
   } else {
-    weaknesses.push(`유사학교 평균보다 도보권 놀이터가 ${formatDecimal(avgSimilarPlayground - playgroundCount, 1)}개 적습니다.`);
+    weaknesses.push(`유사학교 평균보다 도보권 놀이터가 ${formatWholeNumber(avgSimilarPlayground - playgroundCount)}개 적습니다.`);
   }
 
   const insights = [
@@ -947,9 +961,9 @@ function SimilarSchoolsSection({ schoolName, districtName, nearestParkDistanceM,
           <div className="mt-4 flex flex-wrap gap-2"><SectionChip>현재 학교</SectionChip><SectionChip>유사학교</SectionChip><SectionChip>인천시 최우수</SectionChip><SectionChip>구 최우수</SectionChip></div>
           <div className="mt-4 grid gap-2 sm:grid-cols-2"><div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">좋은 방향은 왼쪽 위입니다. 공원 거리는 500m 안쪽일수록, 녹지 비율은 5% 이상일수록 유리합니다.</div><div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">배경 사분면은 인천시 평균이 아니라 생활권 판단선 기준으로 나뉩니다.</div></div>
           {clippedCount > 0 ? <p className="mt-3 text-xs text-slate-500">가독성을 위해 최근접 공원 거리 축은 1,200m까지 표시했고, 이를 넘는 점 {clippedCount}개는 우측 경계에 맞춰 표시했습니다.</p> : null}
-          <div className="mt-5"><div className="relative overflow-visible rounded-2xl border border-slate-200 bg-white"><svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="h-[420px] w-full"><rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#ffffff" /><rect x={margin.left} y={margin.top} width={scaleX(parkThreshold) - margin.left} height={scaleY(greenThreshold) - margin.top} fill="#ecfdf5" /><rect x={scaleX(parkThreshold)} y={margin.top} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={scaleY(greenThreshold) - margin.top} fill="#fff7ed" /><rect x={margin.left} y={scaleY(greenThreshold)} width={scaleX(parkThreshold) - margin.left} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="#fefce8" /><rect x={scaleX(parkThreshold)} y={scaleY(greenThreshold)} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="#fef2f2" />{xTicks.map((tick) => <g key={`x-${tick}`}><line x1={scaleX(tick)} x2={scaleX(tick)} y1={margin.top} y2={margin.top + chartHeight} stroke="#e2e8f0" strokeDasharray="3 3" /><text x={scaleX(tick)} y={svgHeight - 18} textAnchor="middle" fontSize="11" fill="#64748b">{tick}</text></g>)}{yTicks.map((tick) => <g key={`y-${tick}`}><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(tick)} y2={scaleY(tick)} stroke="#e2e8f0" strokeDasharray="3 3" /><text x={margin.left - 12} y={scaleY(tick) + 4} textAnchor="end" fontSize="11" fill="#64748b">{tick}</text></g>)}<line x1={scaleX(parkThreshold)} x2={scaleX(parkThreshold)} y1={margin.top} y2={margin.top + chartHeight} stroke="#94a3b8" strokeDasharray="6 5" /><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(greenThreshold)} y2={scaleY(greenThreshold)} stroke="#94a3b8" strokeDasharray="6 5" /><text x={scaleX(parkThreshold) + 8} y={margin.top + chartHeight + 22} fontSize="11" fontWeight="700" fill="#64748b">500m 판단선</text><text x={margin.left + 8} y={scaleY(greenThreshold) - 10} fontSize="11" fontWeight="700" fill="#64748b">녹지 5% 판단선</text><text x={margin.left + 10} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#047857">생활환경 양호</text><text x={margin.left + chartWidth - 110} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#c2410c">공원 접근 불리</text><text x={margin.left + 10} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#a16207">녹지 부족</text><text x={margin.left + chartWidth - 76} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#b91c1c">이중 취약</text><text x={margin.left + chartWidth / 2} y={svgHeight - 2} textAnchor="middle" fontSize="12" fill="#475569">최근접 공원 거리 (m)</text><text transform={`translate(18 ${margin.top + chartHeight / 2}) rotate(-90)`} textAnchor="middle" fontSize="12" fill="#475569">녹지 비율 (%)</text>{positionedPoints.map((point) => <g key={point.id} onMouseEnter={() => setHoveredPointId(point.id)} onMouseLeave={() => setHoveredPointId((current) => current === point.id ? null : current)} style={{ cursor: "pointer" }}>{renderMarker(point)}{point.pointType !== "similar" && point.pointType !== "current" ? <g transform={`translate(${point.x + 12},${point.y - 26})`}><rect width={Math.max(92, point.label.length * 8)} height="24" rx="12" fill="#ffffff" stroke="#cbd5e1" /><text x="12" y="16" fontSize="11" fontWeight={700} fill="#0f172a">{point.label}</text></g> : null}</g>)}</svg>{hoveredPoint ? <div className="pointer-events-none absolute z-20 w-56 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl" style={{ left: `${Math.min(Math.max((hoveredPoint.x / svgWidth) * 100, 8), 92)}%`, top: `${Math.min(Math.max((hoveredPoint.y / svgHeight) * 100 - 14, 6), 88)}%`, transform: "translate(-50%, -100%)" }}><p className="text-sm font-bold text-slate-950">{hoveredPoint.pointType === "current" ? "현재 학교" : hoveredPoint.schoolName}</p><p className="text-xs text-slate-500">{hoveredPoint.pointType === "current" ? `${hoveredPoint.schoolName} · ${hoveredPoint.districtName}` : hoveredPoint.districtName}</p><div className="mt-2 space-y-1 text-xs text-slate-700"><p>최근접 공원 거리 {formatNumber(hoveredPoint.nearestParkDistanceM)}m</p><p>녹지 비율 {formatDecimal(hoveredPoint.greenRatio, 1)}%</p><p>놀이터 수 {formatNumber(hoveredPoint.playgroundCount)}개</p></div></div> : null}</div></div>
+          <div className="mt-5"><div className="relative overflow-visible rounded-2xl border border-slate-200 bg-white"><svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="h-[420px] w-full"><rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#ffffff" /><rect x={margin.left} y={margin.top} width={scaleX(parkThreshold) - margin.left} height={scaleY(greenThreshold) - margin.top} fill="#ecfdf5" /><rect x={scaleX(parkThreshold)} y={margin.top} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={scaleY(greenThreshold) - margin.top} fill="#fff7ed" /><rect x={margin.left} y={scaleY(greenThreshold)} width={scaleX(parkThreshold) - margin.left} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="#fefce8" /><rect x={scaleX(parkThreshold)} y={scaleY(greenThreshold)} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="#fef2f2" />{xTicks.map((tick) => <g key={`x-${tick}`}><line x1={scaleX(tick)} x2={scaleX(tick)} y1={margin.top} y2={margin.top + chartHeight} stroke="#e2e8f0" strokeDasharray="3 3" /><text x={scaleX(tick)} y={svgHeight - 18} textAnchor="middle" fontSize="11" fill="#64748b">{tick}</text></g>)}{yTicks.map((tick) => <g key={`y-${tick}`}><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(tick)} y2={scaleY(tick)} stroke="#e2e8f0" strokeDasharray="3 3" /><text x={margin.left - 12} y={scaleY(tick) + 4} textAnchor="end" fontSize="11" fill="#64748b">{tick}</text></g>)}<line x1={scaleX(parkThreshold)} x2={scaleX(parkThreshold)} y1={margin.top} y2={margin.top + chartHeight} stroke="#94a3b8" strokeDasharray="6 5" /><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(greenThreshold)} y2={scaleY(greenThreshold)} stroke="#94a3b8" strokeDasharray="6 5" /><text x={scaleX(parkThreshold) + 8} y={margin.top + chartHeight + 22} fontSize="11" fontWeight="700" fill="#64748b">500m 판단선</text><text x={margin.left + 8} y={scaleY(greenThreshold) - 10} fontSize="11" fontWeight="700" fill="#64748b">녹지 5% 판단선</text><text x={margin.left + 10} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#047857">생활환경 양호</text><text x={margin.left + chartWidth - 110} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#c2410c">공원 접근 불리</text><text x={margin.left + 10} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#a16207">녹지 부족</text><text x={margin.left + chartWidth - 76} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#b91c1c">이중 취약</text><text x={margin.left + chartWidth / 2} y={svgHeight - 2} textAnchor="middle" fontSize="12" fill="#475569">최근접 공원 거리 (m)</text><text transform={`translate(18 ${margin.top + chartHeight / 2}) rotate(-90)`} textAnchor="middle" fontSize="12" fill="#475569">녹지 비율 (%)</text>{positionedPoints.map((point) => <g key={point.id} onMouseEnter={() => setHoveredPointId(point.id)} onMouseLeave={() => setHoveredPointId((current) => current === point.id ? null : current)} style={{ cursor: "pointer" }}>{renderMarker(point)}{point.pointType !== "similar" && point.pointType !== "current" ? <g transform={`translate(${point.x + 12},${point.y - 26})`}><rect width={Math.max(92, point.label.length * 8)} height="24" rx="12" fill="#ffffff" stroke="#cbd5e1" /><text x="12" y="16" fontSize="11" fontWeight={700} fill="#0f172a">{point.label}</text></g> : null}</g>)}</svg>{hoveredPoint ? <div className="pointer-events-none absolute z-20 w-56 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl" style={{ left: `${Math.min(Math.max((hoveredPoint.x / svgWidth) * 100, 8), 92)}%`, top: `${Math.min(Math.max((hoveredPoint.y / svgHeight) * 100 - 14, 6), 88)}%`, transform: "translate(-50%, -100%)" }}><p className="text-sm font-bold text-slate-950">{hoveredPoint.pointType === "current" ? "현재 학교" : hoveredPoint.schoolName}</p><p className="text-xs text-slate-500">{hoveredPoint.pointType === "current" ? `${hoveredPoint.schoolName} · ${hoveredPoint.districtName}` : hoveredPoint.districtName}</p><div className="mt-2 space-y-1 text-xs text-slate-700"><p>최근접 공원 거리 {formatNumber(hoveredPoint.nearestParkDistanceM)}m</p><p>녹지 비율 {formatWholePercent(hoveredPoint.greenRatio)}</p><p>놀이터 수 {formatNumber(hoveredPoint.playgroundCount)}개</p></div></div> : null}</div></div>
         </Card>
-        <div className="grid gap-4"><Card className="p-5"><p className="text-sm font-medium text-slate-500">기준학교 정보</p><div className="mt-4 space-y-3"><div className="rounded-2xl border border-red-200 bg-red-50 p-4"><p className="text-sm font-semibold text-slate-900">현재 학교</p><p className="mt-1 text-xs text-slate-600">{schoolName} · 공원 {formatNumber(nearestParkDistanceM)}m · 녹지 {formatDecimal(greenRatio, 1)}% · 놀이터 {formatNumber(playgroundCount)}개</p></div>{benchmarkPoints.map((point) => <div key={point.id} className={cx("rounded-2xl border p-4", point.pointType === "cityBest" ? "border-yellow-200 bg-yellow-50" : point.pointType === "districtBest" ? "border-sky-200 bg-sky-50" : "border-slate-200 bg-slate-50")}><p className="text-sm font-semibold text-slate-900">{point.label}</p><p className="mt-1 text-xs text-slate-600">{point.schoolName} · 공원 {formatNumber(point.nearestParkDistanceM)}m · 녹지 {formatDecimal(point.greenRatio, 1)}% · 놀이터 {formatNumber(point.playgroundCount)}개</p></div>)}</div></Card><Card className="p-5"><p className="text-sm font-medium text-slate-500">해석</p><div className="mt-4 space-y-3">{insights.map((line) => <div key={line} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">{line}</div>)}</div></Card></div>
+        <div className="grid gap-4"><Card className="p-5"><p className="text-sm font-medium text-slate-500">기준학교 정보</p><div className="mt-4 space-y-3"><div className="rounded-2xl border border-red-200 bg-red-50 p-4"><p className="text-sm font-semibold text-slate-900">현재 학교</p><p className="mt-1 text-xs text-slate-600">{schoolName} · 공원 {formatNumber(nearestParkDistanceM)}m · 녹지 {formatWholePercent(greenRatio)} · 놀이터 {formatNumber(playgroundCount)}개</p></div>{benchmarkPoints.map((point) => <div key={point.id} className={cx("rounded-2xl border p-4", point.pointType === "cityBest" ? "border-yellow-200 bg-yellow-50" : point.pointType === "districtBest" ? "border-sky-200 bg-sky-50" : "border-slate-200 bg-slate-50")}><p className="text-sm font-semibold text-slate-900">{point.label}</p><p className="mt-1 text-xs text-slate-600">{point.schoolName} · 공원 {formatNumber(point.nearestParkDistanceM)}m · 녹지 {formatWholePercent(point.greenRatio)} · 놀이터 {formatNumber(point.playgroundCount)}개</p></div>)}</div></Card><Card className="p-5"><p className="text-sm font-medium text-slate-500">해석</p><div className="mt-4 space-y-3">{insights.map((line) => <div key={line} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">{line}</div>)}</div></Card></div>
       </div>
     </SectionShell>
   );
