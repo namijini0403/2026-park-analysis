@@ -26,6 +26,33 @@ export interface Candidate {
 
 type RawRow = Record<string, unknown>;
 
+type LegacySchoolSnapshot = {
+  school_id?: string | null;
+  school_name?: string | null;
+  gu?: string | null;
+  legacy_case_label?: string | null;
+  legacy_badge_text?: string | null;
+  legacy_status_message?: string | null;
+  legacy_nearest_park_name?: string | null;
+  legacy_nearest_park_distance_m?: number | null;
+  legacy_iso_park_count?: number | null;
+  legacy_buf_park_count?: number | null;
+  legacy_iso_playground_count?: number | null;
+  legacy_buf_playground_count?: number | null;
+  legacy_iso_green_ratio?: number | null;
+  legacy_access_ratio?: number | null;
+  legacy_gap_count?: number | null;
+  legacy_student_trend?: Array<{ year: string; value: number }>;
+  legacy_similar_schools?: Array<{
+    schoolName: string;
+    districtName: string;
+    nearestParkDistanceM: number;
+    greenRatio: number;
+    playgroundCount: number;
+  }>;
+  legacy_missing_fields?: string[];
+};
+
 function n(value: unknown, fallback = 0): number {
   const num = Number(value);
   return Number.isFinite(num) ? num : fallback;
@@ -107,6 +134,62 @@ function bestSchoolBlock(value: unknown) {
     greenRatio: n(obj.greenRatio),
     playgroundCount: n(obj.playgroundCount),
   };
+}
+
+export function applyLegacySchoolSnapshot(
+  base: SchoolDetailReportProps,
+  snapshotValue: unknown,
+): SchoolDetailReportProps {
+  if (!snapshotValue || typeof snapshotValue !== "object") return base;
+
+  const snapshot = snapshotValue as LegacySchoolSnapshot;
+  const patched: SchoolDetailReportProps = {
+    ...base,
+    ...(snapshot.legacy_nearest_park_name ? { nearestParkName: snapshot.legacy_nearest_park_name } : {}),
+    ...(snapshot.legacy_nearest_park_distance_m != null
+      ? { nearestParkDistanceM: n(snapshot.legacy_nearest_park_distance_m, base.nearestParkDistanceM) }
+      : {}),
+    ...(snapshot.legacy_iso_green_ratio != null
+      ? { greenRatio: n(snapshot.legacy_iso_green_ratio, base.greenRatio) }
+      : {}),
+    ...(snapshot.legacy_iso_playground_count != null
+      ? { playgroundCount: n(snapshot.legacy_iso_playground_count, base.playgroundCount) }
+      : {}),
+    ...(snapshot.legacy_buf_playground_count != null
+      ? { straightLinePlaygroundCount: n(snapshot.legacy_buf_playground_count) }
+      : {}),
+    ...(snapshot.legacy_access_ratio != null
+      ? { accessibilityRatio: n(snapshot.legacy_access_ratio) }
+      : {}),
+    ...(snapshot.legacy_gap_count != null
+      ? { parkShortageVsAvg: n(snapshot.legacy_gap_count) }
+      : {}),
+    ...(Array.isArray(snapshot.legacy_student_trend) && snapshot.legacy_student_trend.length
+      ? { studentTrend: snapshot.legacy_student_trend.map((item) => ({ year: String(item.year), value: n(item.value) })) }
+      : {}),
+    ...(Array.isArray(snapshot.legacy_similar_schools) && snapshot.legacy_similar_schools.length
+      ? {
+          similarSchools: snapshot.legacy_similar_schools.map((item) => ({
+            schoolName: s(item.schoolName),
+            districtName: s(item.districtName),
+            nearestParkDistanceM: n(item.nearestParkDistanceM),
+            greenRatio: n(item.greenRatio),
+            playgroundCount: n(item.playgroundCount),
+          })),
+        }
+      : {}),
+  };
+
+  if (Array.isArray(snapshot.legacy_missing_fields) && snapshot.legacy_missing_fields.length) {
+    // Keep this as a separate migration log without interrupting render.
+    console.warn("[legacy-school-snapshot] missing fields", {
+      school_id: snapshot.school_id,
+      school_name: snapshot.school_name,
+      missing_fields: snapshot.legacy_missing_fields,
+    });
+  }
+
+  return patched;
 }
 
 export function mapSchoolRowToReportProps(
@@ -193,6 +276,24 @@ export function mapSchoolRowToReportProps(
     ...(maybeNumber(row.greenRatioDistrictPercentile_lt) != null
       ? { greenRatioDistrictPercentile_lt: maybeNumber(row.greenRatioDistrictPercentile_lt)! }
       : {}),
+    ...(maybeNumber(row.greenRatioCityZeroShare) != null
+      ? { greenRatioCityZeroShare: maybeNumber(row.greenRatioCityZeroShare)! }
+      : {}),
+    ...(maybeNumber(row.greenRatioDistrictZeroShare) != null
+      ? { greenRatioDistrictZeroShare: maybeNumber(row.greenRatioDistrictZeroShare)! }
+      : {}),
+    ...(maybeNumber(row.greenRatioCityNonZeroPercentile) != null
+      ? { greenRatioCityNonZeroPercentile: maybeNumber(row.greenRatioCityNonZeroPercentile)! }
+      : {}),
+    ...(maybeNumber(row.greenRatioDistrictNonZeroPercentile) != null
+      ? { greenRatioDistrictNonZeroPercentile: maybeNumber(row.greenRatioDistrictNonZeroPercentile)! }
+      : {}),
+    ...(maybeNumber(row.greenRatioCityNonZeroAvg) != null
+      ? { greenRatioCityNonZeroAvg: maybeNumber(row.greenRatioCityNonZeroAvg)! }
+      : {}),
+    ...(maybeNumber(row.greenRatioDistrictNonZeroAvg) != null
+      ? { greenRatioDistrictNonZeroAvg: maybeNumber(row.greenRatioDistrictNonZeroAvg)! }
+      : {}),
     playgroundCount,
     ...(maybeNumber(row.buf_playground_count) != null
       ? { straightLinePlaygroundCount: maybeNumber(row.buf_playground_count)! }
@@ -211,6 +312,24 @@ export function mapSchoolRowToReportProps(
     ...(maybeNumber(row.playgroundCountDistrictPercentile_lt) != null
       ? { playgroundCountDistrictPercentile_lt: maybeNumber(row.playgroundCountDistrictPercentile_lt)! }
       : {}),
+    ...(maybeNumber(row.playgroundCountCityZeroShare) != null
+      ? { playgroundCountCityZeroShare: maybeNumber(row.playgroundCountCityZeroShare)! }
+      : {}),
+    ...(maybeNumber(row.playgroundCountDistrictZeroShare) != null
+      ? { playgroundCountDistrictZeroShare: maybeNumber(row.playgroundCountDistrictZeroShare)! }
+      : {}),
+    ...(maybeNumber(row.playgroundCountCityNonZeroPercentile) != null
+      ? { playgroundCountCityNonZeroPercentile: maybeNumber(row.playgroundCountCityNonZeroPercentile)! }
+      : {}),
+    ...(maybeNumber(row.playgroundCountDistrictNonZeroPercentile) != null
+      ? { playgroundCountDistrictNonZeroPercentile: maybeNumber(row.playgroundCountDistrictNonZeroPercentile)! }
+      : {}),
+    ...(maybeNumber(row.playgroundCountCityNonZeroAvg) != null
+      ? { playgroundCountCityNonZeroAvg: maybeNumber(row.playgroundCountCityNonZeroAvg)! }
+      : {}),
+    ...(maybeNumber(row.playgroundCountDistrictNonZeroAvg) != null
+      ? { playgroundCountDistrictNonZeroAvg: maybeNumber(row.playgroundCountDistrictNonZeroAvg)! }
+      : {}),
     noParkWithin500m: n(row.iso_park_count) === 0 || nearestParkDistanceM >= 500,
     ...(maybeNumber(row.access_ratio) != null ? { accessibilityRatio: maybeNumber(row.access_ratio)! } : {}),
     ...(maybeNumber(row.gap_count) != null ? { parkShortageVsAvg: maybeNumber(row.gap_count)! } : {}),
@@ -225,8 +344,8 @@ export function mapSchoolRowToReportProps(
     ...(maybeNumber(row.currentStudentCountDistrictPercentile) != null
       ? { currentStudentCountDistrictPercentile: maybeNumber(row.currentStudentCountDistrictPercentile)! }
       : {}),
-    potentialDemand2029: n(row.forecast_2029),
-    potentialDemand2031: n(row.forecast_2031),
+    potentialDemand2029: n(row.forecast_2029 ?? row.predicted_2029 ?? row.target_2029),
+    potentialDemand2031: n(row.forecast_2031 ?? row.predicted_2031 ?? row.target_2031),
     similarSchools: similarSchools.length ? similarSchools : undefined,
     ...(cityBestEnvironmentSchool ? { cityBestEnvironmentSchool } : {}),
     ...(districtBestEnvironmentSchool ? { districtBestEnvironmentSchool } : {}),
