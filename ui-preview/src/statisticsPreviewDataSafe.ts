@@ -400,14 +400,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천공항초등학교신도분교장",
+        "schoolName": "기준 충족 학교 없음",
         "districtName": "옹진군",
-        "casePolicyLabel": "별도 정책 적용",
-        "caseStatusLabel": "별도 묶음",
-        "potentialDemand2029": 2,
-        "potentialDemand2031": 1,
-        "nearestParkDistanceM": 6831.7,
-        "greenRatio": 0.0,
+        "casePolicyLabel": "기준 미충족",
+        "caseStatusLabel": "200m 이내 후보 없음",
+        "potentialDemand2029": 0,
+        "potentialDemand2031": 0,
+        "nearestParkDistanceM": 0,
+        "greenRatio": 0,
         "playgroundCount": 0
       }
     },
@@ -578,15 +578,15 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천청학초등학교",
+        "schoolName": "인천중앙초등학교",
         "districtName": "연수구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 393,
-        "potentialDemand2031": 383,
-        "nearestParkDistanceM": 131.3,
-        "greenRatio": 28.2,
-        "playgroundCount": 0
+        "potentialDemand2029": 221,
+        "potentialDemand2031": 215,
+        "nearestParkDistanceM": 156.0,
+        "greenRatio": 11.4,
+        "playgroundCount": 12
       }
     },
     {
@@ -845,15 +845,15 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천청호초등학교",
+        "schoolName": "인천경연초등학교",
         "districtName": "서구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 700,
-        "potentialDemand2031": 682,
-        "nearestParkDistanceM": 156.0,
-        "greenRatio": 23.4,
-        "playgroundCount": 0
+        "potentialDemand2029": 298,
+        "potentialDemand2031": 290,
+        "nearestParkDistanceM": 153.7,
+        "greenRatio": 4.1,
+        "playgroundCount": 1
       }
     },
     {
@@ -934,14 +934,14 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "갑룡초등학교",
+        "schoolName": "합일초등학교",
         "districtName": "강화군",
         "casePolicyLabel": "별도 정책 적용",
         "caseStatusLabel": "별도 묶음",
-        "potentialDemand2029": 3,
-        "potentialDemand2031": 3,
-        "nearestParkDistanceM": 285.0,
-        "greenRatio": 0.0,
+        "potentialDemand2029": 65,
+        "potentialDemand2031": 59,
+        "nearestParkDistanceM": 0.0,
+        "greenRatio": 12.7,
         "playgroundCount": 0
       }
     }

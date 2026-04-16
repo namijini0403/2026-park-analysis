@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 from pathlib import Path
@@ -10,7 +10,6 @@ BASE = Path(r"c:\2026_data_analysis_park")
 PRIORITY_PATH = BASE / "data_processed" / "school_priority_case_system_20260411.csv"
 FORECAST_PATH = BASE / "data_processed" / "beneficiary_forecast.csv"
 OUT_PATH = BASE / "ui-preview" / "src" / "statisticsPreviewDataSafe.ts"
-
 
 CASE_POLICY_LABELS = {
     1.0: "즉시 개선 대상",
@@ -26,16 +25,27 @@ def round1(value: float | int | None) -> float:
     return round(float(value), 1)
 
 
-def is_suspicious_green(row: pd.Series) -> bool:
-    green = float(pd.to_numeric(row["iso_green_ratio"], errors="coerce") or 0)
-    playground = float(pd.to_numeric(row["iso_playground_count"], errors="coerce") or 0)
-    park_count = float(pd.to_numeric(row["iso_park_count"], errors="coerce") or 0)
-    park_dist = float(pd.to_numeric(row["nearest_park_dist_m"], errors="coerce") or 0)
+def quartile_cutoffs(series: pd.Series) -> tuple[float, float, float]:
+    clean = pd.to_numeric(series, errors="coerce").dropna()
+    if clean.empty:
+        return (float("nan"), float("nan"), float("nan"))
     return (
-        (green >= 40 and playground == 0)
-        or (green >= 25 and park_dist > 350)
-        or (green >= 20 and playground == 0 and park_count <= 1)
+        float(clean.quantile(0.25)),
+        float(clean.quantile(0.50)),
+        float(clean.quantile(0.75)),
     )
+
+
+def assign_quartile(value: float, q1: float, q2: float, q3: float) -> str | None:
+    if pd.isna(value) or any(pd.isna([q1, q2, q3])):
+        return None
+    if value >= q3:
+        return "Q4"
+    if value >= q2:
+        return "Q3"
+    if value >= q1:
+        return "Q2"
+    return "Q1"
 
 
 def school_record(row: pd.Series, rank: int) -> dict:
@@ -53,68 +63,52 @@ def school_record(row: pd.Series, rank: int) -> dict:
     }
 
 
-def choose_best_school(df: pd.DataFrame) -> pd.Series:
-    eligible = df[pd.to_numeric(df["nearest_park_dist_m"], errors="coerce").notna()].copy()
-    eligible = eligible[pd.to_numeric(eligible["nearest_park_dist_m"], errors="coerce") > 0]
-    if eligible.empty:
-        eligible = df.copy()
+def build_empty_best_school(district_name: str) -> dict:
+    return {
+        "rank": 1,
+        "schoolName": "기준 충족 학교 없음",
+        "districtName": district_name,
+        "casePolicyLabel": "기준 미충족",
+        "caseStatusLabel": "200m 이내 후보 없음",
+        "potentialDemand2029": 0,
+        "potentialDemand2031": 0,
+        "nearestParkDistanceM": 0,
+        "greenRatio": 0,
+        "playgroundCount": 0,
+    }
 
-    eligible["nearest_park_dist_m"] = pd.to_numeric(eligible["nearest_park_dist_m"], errors="coerce").fillna(0)
-    eligible["iso_green_ratio"] = pd.to_numeric(eligible["iso_green_ratio"], errors="coerce").fillna(0)
-    eligible["iso_playground_count"] = pd.to_numeric(eligible["iso_playground_count"], errors="coerce").fillna(0)
-    eligible["iso_park_count"] = pd.to_numeric(eligible["iso_park_count"], errors="coerce").fillna(0)
 
-    eligible["_suspicious_green"] = eligible.apply(is_suspicious_green, axis=1)
-    clean_case4 = eligible[(eligible["case_type"] == 4.0) & (~eligible["_suspicious_green"])].copy()
-    clean_all = eligible[~eligible["_suspicious_green"]].copy()
-    scored = clean_case4 if not clean_case4.empty else clean_all if not clean_all.empty else eligible
+def choose_best_school(df: pd.DataFrame) -> pd.Series | None:
+    valid = df.copy()
+    valid["nearest_park_dist_m"] = pd.to_numeric(valid["nearest_park_dist_m"], errors="coerce")
+    valid["iso_green_ratio"] = pd.to_numeric(valid["iso_green_ratio"], errors="coerce")
+    valid["iso_playground_count"] = pd.to_numeric(valid["iso_playground_count"], errors="coerce").fillna(0)
 
-    max_dist = max(float(scored["nearest_park_dist_m"].max()), 1.0)
-    max_green = max(float(scored["iso_green_ratio"].max()), 1.0)
-    max_playground = max(float(scored["iso_playground_count"].max()), 1.0)
-    max_park_count = max(float(scored["iso_park_count"].max()), 1.0)
+    candidates = valid[
+        valid["nearest_park_dist_m"].notna()
+        & valid["iso_green_ratio"].notna()
+        & (valid["nearest_park_dist_m"] <= 200)
+    ].copy()
+    if candidates.empty:
+        return None
 
-    def rank_case(value: float | int | None) -> int:
-        if pd.isna(value):
-            return 4
-        num = float(value)
-        if num == 4.0:
-            return 0
-        if num == 3.0:
-            return 1
-        if num == 2.0:
-            return 2
-        if num == 1.0:
-            return 3
-        return 4
+    q1, q2, q3 = quartile_cutoffs(valid["iso_green_ratio"])
+    quartile_order = {"Q4": 0, "Q3": 1, "Q2": 2, "Q1": 3}
+    candidates["green_quartile"] = candidates["iso_green_ratio"].apply(lambda v: assign_quartile(v, q1, q2, q3))
+    candidates["quartile_order"] = candidates["green_quartile"].map(quartile_order).fillna(99)
+    candidates["playground_flag"] = (candidates["iso_playground_count"] >= 1).astype(int)
 
-    scored["_case_rank"] = scored["case_type"].apply(rank_case)
-    scored["_environment_score"] = (
-        (1 - (scored["nearest_park_dist_m"] / max_dist).clip(0, 1)) * 0.35
-        + (scored["iso_green_ratio"] / max_green).clip(0, 1) * 0.30
-        + (scored["iso_playground_count"] / max_playground).clip(0, 1) * 0.20
-        + (scored["iso_park_count"] / max_park_count).clip(0, 1) * 0.10
-        + scored["_case_rank"].map({0: 0.05, 1: 0.02}).fillna(0.0)
+    candidates = candidates.sort_values(
+        by=["quartile_order", "playground_flag", "iso_green_ratio", "nearest_park_dist_m"],
+        ascending=[True, False, False, True],
+        kind="mergesort",
     )
-
-    scored = scored.sort_values(
-        by=[
-            "_environment_score",
-            "_case_rank",
-            "nearest_park_dist_m",
-            "iso_green_ratio",
-            "iso_playground_count",
-            "iso_park_count",
-            "forecast_2029",
-        ],
-        ascending=[False, True, True, False, False, False, False],
-    )
-    return scored.iloc[0]
+    return candidates.iloc[0]
 
 
 def build_typescript(data: dict) -> str:
     payload = json.dumps(data, ensure_ascii=False, indent=2)
-    return f"""export type StatisticsSchoolItem = {{
+    return f'''export type StatisticsSchoolItem = {{
   rank: number;
   schoolName: string;
   districtName: string;
@@ -161,7 +155,7 @@ export type CityStatisticsData = {{
 }};
 
 export const cityStatisticsPreviewDataSafe: CityStatisticsData = {payload};
-"""
+'''
 
 
 def main() -> None:
@@ -173,8 +167,8 @@ def main() -> None:
         on="학교ID",
         how="left",
     )
-    merged["forecast_2029"] = merged["forecast_2029"].fillna(0)
-    merged["forecast_2031"] = merged["forecast_2031"].fillna(0)
+    merged["forecast_2029"] = pd.to_numeric(merged["forecast_2029"], errors="coerce").fillna(0)
+    merged["forecast_2031"] = pd.to_numeric(merged["forecast_2031"], errors="coerce").fillna(0)
     merged["casePolicyLabel"] = merged["case_type"].map(CASE_POLICY_LABELS).fillna("별도 정책 적용")
 
     district_rows: list[dict] = []
@@ -197,11 +191,11 @@ def main() -> None:
                 "priorityReviewCount": int(district_df["case_type"].isin([1.0, 2.0]).sum()),
                 "totalPotentialDemand2029": int(round(district_df["forecast_2029"].sum())),
                 "totalPotentialDemand2031": int(round(district_df["forecast_2031"].sum())),
-                "avgNearestParkDistanceM": round1(district_df["nearest_park_dist_m"].mean()),
-                "avgGreenRatio": round1(district_df["iso_green_ratio"].mean()),
-                "avgPlaygroundCount": round(float(district_df["iso_playground_count"].mean()), 2),
+                "avgNearestParkDistanceM": round1(pd.to_numeric(district_df["nearest_park_dist_m"], errors="coerce").mean()),
+                "avgGreenRatio": round1(pd.to_numeric(district_df["iso_green_ratio"], errors="coerce").mean()),
+                "avgPlaygroundCount": round(float(pd.to_numeric(district_df["iso_playground_count"], errors="coerce").fillna(0).mean()), 2),
                 "topPrioritySchools": [school_record(row, idx + 1) for idx, (_, row) in enumerate(top_df.iterrows())],
-                "bestSchool": school_record(best_row, 1),
+                "bestSchool": school_record(best_row, 1) if best_row is not None else build_empty_best_school(str(district_name)),
             }
         )
 
@@ -223,7 +217,7 @@ def main() -> None:
         },
         "districts": district_rows,
         "cityTopPrioritySchools": [school_record(row, idx + 1) for idx, (_, row) in enumerate(city_top_df.iterrows())],
-        "cityBestSchool": school_record(city_best_row, 1),
+        "cityBestSchool": school_record(city_best_row, 1) if city_best_row is not None else build_empty_best_school("인천광역시"),
     }
 
     OUT_PATH.write_text(build_typescript(data), encoding="utf-8")

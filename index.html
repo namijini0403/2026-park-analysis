@@ -1818,6 +1818,63 @@
       `;
     }
 
+    function buildLegacySchoolSnapshot(row = {}) {
+      const trend = Array.isArray(row.studentTrend)
+        ? row.studentTrend
+            .filter((item) => Number.isFinite(Number(item.year)) && Number.isFinite(Number(item.students)))
+            .sort((left, right) => Number(left.year) - Number(right.year))
+            .map((item) => ({
+              year: String(item.year),
+              value: Number(item.students)
+            }))
+        : [];
+
+      const similarSchools = [1, 2, 3, 4, 5]
+        .map((rank) => {
+          const schoolName = row[`similar_school_${rank}_name`];
+          if (!schoolName) return null;
+          return {
+            schoolName: String(schoolName),
+            districtName: String(row[`similar_school_${rank}_gu`] || ""),
+            nearestParkDistanceM: Number(row[`similar_school_${rank}_nearest_park_dist_m`]),
+            greenRatio: Number(row[`similar_school_${rank}_iso_green_ratio`]),
+            playgroundCount: Number(row[`similar_school_${rank}_iso_playground_count`]),
+            legacy_similarity_distance: Number(row[`similar_school_${rank}_distance`]),
+          };
+        })
+        .filter(Boolean);
+
+      const missing = [];
+      if (!getSchoolId(row)) missing.push("school_id");
+      if (!Number.isFinite(Number(row.nearest_park_dist_m))) missing.push("legacy_nearest_park_distance_m");
+      if (!Number.isFinite(Number(row.iso_green_ratio))) missing.push("legacy_iso_green_ratio");
+      if (!Number.isFinite(Number(row.iso_playground_count))) missing.push("legacy_iso_playground_count");
+
+      return {
+        school_id: getSchoolId(row) || null,
+        school_name: getSchoolName(row),
+        gu: detectGu(row) || "",
+        legacy_case_label: getCaseTypeLabel(row.case_type),
+        legacy_badge_text: (getSchoolBadge(row) || {}).text || "",
+        legacy_status_message: getDiagnosticMessage(row),
+        legacy_nearest_park_name: row.nearest_park_name || row.nearest_park_name_clean || null,
+        legacy_nearest_park_distance_m: Number.isFinite(Number(row.nearest_park_dist_m)) ? Number(row.nearest_park_dist_m) : null,
+        legacy_iso_park_count: Number.isFinite(Number(row.iso_park_count)) ? Number(row.iso_park_count) : null,
+        legacy_buf_park_count: Number.isFinite(Number(row.buf_park_count)) ? Number(row.buf_park_count) : null,
+        legacy_iso_playground_count: Number.isFinite(Number(row.iso_playground_count)) ? Number(row.iso_playground_count) : null,
+        legacy_buf_playground_count: Number.isFinite(Number(row.buf_playground_count)) ? Number(row.buf_playground_count) : null,
+        legacy_iso_green_ratio: Number.isFinite(Number(row.iso_green_ratio)) ? Number(row.iso_green_ratio) : null,
+        legacy_access_ratio: Number.isFinite(Number(row.access_ratio)) ? Number(row.access_ratio) : null,
+        legacy_gap_count: Number.isFinite(Number(row.gap_count)) ? Number(row.gap_count) : null,
+        legacy_student_trend: trend,
+        legacy_similar_schools: similarSchools,
+        legacy_common_points: row.common_points || row.common_traits || null,
+        legacy_relative_strengths: row.relative_strengths || null,
+        legacy_relative_weaknesses: row.relative_weaknesses || null,
+        legacy_missing_fields: missing,
+      };
+    }
+
     function getPopupHtml(row) {
       const schoolName = getSchoolName(row);
       const gu = detectGu(row) || "-";
@@ -3039,6 +3096,12 @@
       // 유사학교 공원 데이터 보강 + 시·구 최우수학교 보강
       const _enrichedRow = Object.assign({}, row);
       const _gu = detectGu(row) || "";
+      const _legacySnapshot = buildLegacySchoolSnapshot(row);
+      _enrichedRow._legacySnapshot = _legacySnapshot;
+      _enrichedRow._legacySnapshotLog = {
+        school_id: _legacySnapshot.school_id,
+        missing_fields: _legacySnapshot.legacy_missing_fields || [],
+      };
 
       // 유사학교 공원 데이터 보강
       for (let _i = 1; _i <= 5; _i++) {
@@ -3085,6 +3148,52 @@
         return Math.round((values.filter((num) => num < Number(value)).length / values.length) * 1000) / 10;
       };
 
+      const _buildZeroInflatedStats = (rows, key, value) => {
+        const values = rows
+          .map((item) => Number(item[key]))
+          .filter((num) => Number.isFinite(num));
+        if (!values.length || !Number.isFinite(Number(value))) {
+          return {
+            zeroShare: null,
+            nonZeroPercentile: null,
+            nonZeroAvg: null,
+            isZero: null,
+            nonZeroCount: 0,
+            totalCount: values.length
+          };
+        }
+
+        const zeroCount = values.filter((num) => num === 0).length;
+        const nonZeroValues = values.filter((num) => num > 0);
+        const numericValue = Number(value);
+        const isZero = numericValue === 0;
+
+        if (!nonZeroValues.length) {
+          return {
+            zeroShare: Math.round((zeroCount / values.length) * 1000) / 10,
+            nonZeroPercentile: null,
+            nonZeroAvg: null,
+            isZero,
+            nonZeroCount: 0,
+            totalCount: values.length
+          };
+        }
+
+        const nonZeroAvg = nonZeroValues.reduce((sum, num) => sum + num, 0) / nonZeroValues.length;
+        const nonZeroPercentile = isZero
+          ? null
+          : Math.round((nonZeroValues.filter((num) => num >= numericValue).length / nonZeroValues.length) * 1000) / 10;
+
+        return {
+          zeroShare: Math.round((zeroCount / values.length) * 1000) / 10,
+          nonZeroPercentile,
+          nonZeroAvg,
+          isZero,
+          nonZeroCount: nonZeroValues.length,
+          totalCount: values.length
+        };
+      };
+
       const _lastStudentCount = (school) => {
         const trend = Array.isArray(school.studentTrend) ? school.studentTrend : [];
         if (!trend.length) return Number(school.predicted_current) || null;
@@ -3122,6 +3231,14 @@
       _enrichedRow.greenRatioCityPercentile_lt = _shareLt(_allSchools, "iso_green_ratio", row.iso_green_ratio);
       _enrichedRow.playgroundCountCityPercentile = _shareLe(_allSchools, "iso_playground_count", row.iso_playground_count);
       _enrichedRow.playgroundCountCityPercentile_lt = _shareLt(_allSchools, "iso_playground_count", row.iso_playground_count);
+      const _cityGreenZeroStats = _buildZeroInflatedStats(_allSchools, "iso_green_ratio", row.iso_green_ratio);
+      const _cityPlaygroundZeroStats = _buildZeroInflatedStats(_allSchools, "iso_playground_count", row.iso_playground_count);
+      _enrichedRow.greenRatioCityZeroShare = _cityGreenZeroStats.zeroShare;
+      _enrichedRow.greenRatioCityNonZeroPercentile = _cityGreenZeroStats.nonZeroPercentile;
+      _enrichedRow.greenRatioCityNonZeroAvg = _cityGreenZeroStats.nonZeroAvg;
+      _enrichedRow.playgroundCountCityZeroShare = _cityPlaygroundZeroStats.zeroShare;
+      _enrichedRow.playgroundCountCityNonZeroPercentile = _cityPlaygroundZeroStats.nonZeroPercentile;
+      _enrichedRow.playgroundCountCityNonZeroAvg = _cityPlaygroundZeroStats.nonZeroAvg;
       const _cityStudentCounts = _allSchools.map((school) => _lastStudentCount(school)).filter((value) => Number.isFinite(value));
       const _currentStudentCount = _lastStudentCount(row);
       _enrichedRow.currentStudentCountCityPercentile = _cityStudentCounts.length && Number.isFinite(_currentStudentCount)
@@ -3141,42 +3258,49 @@
       };
 
       const _scoreBestEnvironmentSchool = (rows) => {
-        const valid = rows.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0);
-        if (!valid.length) return [];
-        const eligibleCase4 = valid.filter((school) => Number(school.case_type) === 4 && !_isSuspiciousGreenSchool(school));
-        const eligibleClean = valid.filter((school) => !_isSuspiciousGreenSchool(school));
-        const scoredTarget = eligibleCase4.length ? eligibleCase4 : (eligibleClean.length ? eligibleClean : valid);
-        const maxDist = Math.max(...scoredTarget.map((s) => Number(s.nearest_park_dist_m) || 0), 1);
-        const maxGreen = Math.max(...scoredTarget.map((s) => Number(s.iso_green_ratio) || 0), 1);
-        const maxPlayground = Math.max(...scoredTarget.map((s) => Number(s.iso_playground_count) || 0), 1);
-        const maxParkCount = Math.max(...scoredTarget.map((s) => Number(s.iso_park_count) || 0), 1);
-        const rankCase = (value) => {
-          const num = Number(value);
-          if (num === 4) return 0;
-          if (num === 3) return 1;
-          if (num === 2) return 2;
-          if (num === 1) return 3;
-          return 4;
+        const valid = rows.filter((school) => Number.isFinite(Number(school.nearest_park_dist_m)) && Number.isFinite(Number(school.iso_green_ratio)));
+        const candidates = valid.filter((school) => Number(school.nearest_park_dist_m) <= 200);
+        if (!candidates.length) return [];
+
+        const _quartileCutoffs = (values) => {
+          const sorted = values
+            .map((value) => Number(value))
+            .filter((value) => Number.isFinite(value))
+            .sort((a, b) => a - b);
+          if (!sorted.length) return { q1: null, q2: null, q3: null };
+          const _pick = (ratio) => {
+            const idx = (sorted.length - 1) * ratio;
+            const lo = Math.floor(idx);
+            const hi = Math.ceil(idx);
+            if (lo === hi) return sorted[lo];
+            const weight = idx - lo;
+            return sorted[lo] * (1 - weight) + sorted[hi] * weight;
+          };
+          return { q1: _pick(0.25), q2: _pick(0.5), q3: _pick(0.75) };
         };
-        return scoredTarget
-          .map((school) => {
-            const parkScore = 1 - Math.min((Number(school.nearest_park_dist_m) || 0) / maxDist, 1);
-            const greenScore = Math.min((Number(school.iso_green_ratio) || 0) / maxGreen, 1);
-            const playgroundScore = Math.min((Number(school.iso_playground_count) || 0) / maxPlayground, 1);
-            const parkCountScore = Math.min((Number(school.iso_park_count) || 0) / maxParkCount, 1);
-            const caseBonus = rankCase(school.case_type) === 0 ? 0.05 : rankCase(school.case_type) === 1 ? 0.02 : 0;
-            return {
-              school,
-              score: parkScore * 0.35 + greenScore * 0.3 + playgroundScore * 0.2 + parkCountScore * 0.1 + caseBonus,
-            };
-          })
+        const _assignQuartile = (value, cutoffs) => {
+          const num = Number(value);
+          if (!Number.isFinite(num) || cutoffs.q1 == null || cutoffs.q2 == null || cutoffs.q3 == null) return 0;
+          if (num >= cutoffs.q3) return 4;
+          if (num >= cutoffs.q2) return 3;
+          if (num >= cutoffs.q1) return 2;
+          return 1;
+        };
+
+        const greenCutoffs = _quartileCutoffs(valid.map((school) => school.iso_green_ratio));
+        return candidates
+          .map((school) => ({
+            school,
+            quartile: _assignQuartile(school.iso_green_ratio, greenCutoffs),
+            playgroundFlag: Number(school.iso_playground_count) >= 1 ? 1 : 0,
+            greenRatio: Number(school.iso_green_ratio) || 0,
+            parkDistance: Number(school.nearest_park_dist_m) || 0,
+          }))
           .sort((a, b) =>
-            b.score - a.score ||
-            rankCase(a.school.case_type) - rankCase(b.school.case_type) ||
-            Number(a.school.nearest_park_dist_m) - Number(b.school.nearest_park_dist_m) ||
-            Number(b.school.iso_green_ratio || 0) - Number(a.school.iso_green_ratio || 0) ||
-            Number(b.school.iso_playground_count || 0) - Number(a.school.iso_playground_count || 0) ||
-            Number(b.school.iso_park_count || 0) - Number(a.school.iso_park_count || 0)
+            b.quartile - a.quartile ||
+            b.playgroundFlag - a.playgroundFlag ||
+            b.greenRatio - a.greenRatio ||
+            a.parkDistance - b.parkDistance
           );
       };
 
@@ -3216,6 +3340,14 @@
         _enrichedRow.greenRatioDistrictPercentile_lt = _shareLt(_districtRows, "iso_green_ratio", row.iso_green_ratio);
         _enrichedRow.playgroundCountDistrictPercentile = _shareLe(_districtRows, "iso_playground_count", row.iso_playground_count);
         _enrichedRow.playgroundCountDistrictPercentile_lt = _shareLt(_districtRows, "iso_playground_count", row.iso_playground_count);
+        const _districtGreenZeroStats = _buildZeroInflatedStats(_districtRows, "iso_green_ratio", row.iso_green_ratio);
+        const _districtPlaygroundZeroStats = _buildZeroInflatedStats(_districtRows, "iso_playground_count", row.iso_playground_count);
+        _enrichedRow.greenRatioDistrictZeroShare = _districtGreenZeroStats.zeroShare;
+        _enrichedRow.greenRatioDistrictNonZeroPercentile = _districtGreenZeroStats.nonZeroPercentile;
+        _enrichedRow.greenRatioDistrictNonZeroAvg = _districtGreenZeroStats.nonZeroAvg;
+        _enrichedRow.playgroundCountDistrictZeroShare = _districtPlaygroundZeroStats.zeroShare;
+        _enrichedRow.playgroundCountDistrictNonZeroPercentile = _districtPlaygroundZeroStats.nonZeroPercentile;
+        _enrichedRow.playgroundCountDistrictNonZeroAvg = _districtPlaygroundZeroStats.nonZeroAvg;
         const _districtStudentCounts = _districtRows.map((school) => _lastStudentCount(school)).filter((value) => Number.isFinite(value));
         _enrichedRow.currentStudentCountDistrictPercentile = _districtStudentCounts.length && Number.isFinite(_currentStudentCount)
           ? Math.round((_districtStudentCounts.filter((value) => value >= _currentStudentCount).length / _districtStudentCounts.length) * 1000) / 10
@@ -3233,6 +3365,7 @@
       }
 
       localStorage.setItem("parkAnalysis_school", JSON.stringify(_enrichedRow));
+      localStorage.setItem("parkAnalysis_legacySnapshotLog", JSON.stringify(_enrichedRow._legacySnapshotLog));
       const _schoolName = getSchoolName(row);
       const _linkedCandidates = (state.datasets.candidateFeatures || [])
         .filter((p) => Array.isArray(p.linked_schools) && p.linked_schools.includes(_schoolName))
