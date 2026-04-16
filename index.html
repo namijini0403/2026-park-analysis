@@ -920,6 +920,7 @@
       isochrone: "./data_processed/isochrone_valhalla.geojson",
       buffer: "./data_processed/school_buffer_500m.geojson",
       redevelopment: "./data_processed/redevelopment_geocoded.csv",
+      largeApt: "./data_processed/large_apt_complexes_2025.csv",
       childcare: "./data_processed/childcare_michuhol.csv"
     };
 
@@ -1078,6 +1079,7 @@
         candidatePanelExamples: [],
         guSummary: [],
         parks: [],
+        largeApt: [],
         childcare: [],
         redevelopment: [],
         isochrone: null,
@@ -1738,6 +1740,35 @@
         distanceM: Math.round(Number(zone.__distance) || 0),
         type: zone["사업유형"] || "",
         area: Number(zone["면적"]) || null,
+      }));
+    }
+
+    function getNearbyLargeAptComplexes(row, radiusMeters = 500, minHouseholds = 500) {
+      const schoolLat = Number(row["위도"] ?? row["?꾨룄"]);
+      const schoolLng = Number(row["경도"] ?? row["寃쎈룄"]);
+      if (!Number.isFinite(schoolLat) || !Number.isFinite(schoolLng)) return [];
+
+      return state.datasets.largeApt
+        .map((complex) => {
+          const complexLat = Number(complex["위도"]);
+          const complexLng = Number(complex["경도"]);
+          const householdCount = Number(complex["세대수"]);
+          if (!Number.isFinite(complexLat) || !Number.isFinite(complexLng) || !Number.isFinite(householdCount)) return null;
+          if (householdCount < minHouseholds) return null;
+          const distance = distanceInMeters(schoolLat, schoolLng, complexLat, complexLng);
+          if (distance > radiusMeters) return null;
+          return { ...complex, __distance: distance };
+        })
+        .filter(Boolean)
+        .sort((left, right) => left.__distance - right.__distance);
+    }
+
+    function buildLargeApartmentComplexList(row, radiusMeters = 500, minHouseholds = 500) {
+      return getNearbyLargeAptComplexes(row, radiusMeters, minHouseholds).map((complex) => ({
+        name: complex["단지명"] || complex["단지명_norm"] || "대단지 아파트",
+        householdCount: Math.round(Number(complex["세대수"]) || 0),
+        distanceM: Math.round(Number(complex.__distance) || 0),
+        address: complex["도로명주소"] || "",
       }));
     }
 
@@ -2447,6 +2478,7 @@
         isochrone,
         buffer,
         redevelopment,
+        largeApt,
         childcare
       ] = await Promise.all([
         loadCSV(PATHS.schools),
@@ -2461,6 +2493,7 @@
         loadGeoJSON(PATHS.isochrone),
         loadGeoJSON(PATHS.buffer),
         loadCSV(PATHS.redevelopment),
+        loadCSV(PATHS.largeApt),
         loadCSV(PATHS.childcare)
       ]);
 
@@ -2484,6 +2517,7 @@
       state.datasets.isochrone = isochrone;
       state.datasets.buffer = buffer;
       state.datasets.redevelopment = redevelopment;
+      state.datasets.largeApt = largeApt;
       state.datasets.childcare = childcare;
       populateSchoolSearchOptions();
 
@@ -3377,6 +3411,7 @@
       }
 
       _enrichedRow._redevelopmentProjects = buildRedevelopmentProjectList(row, 500);
+      _enrichedRow._largeApartmentComplexes = buildLargeApartmentComplexList(row, 500, 500);
 
       localStorage.setItem("parkAnalysis_school", JSON.stringify(_enrichedRow));
       localStorage.setItem("parkAnalysis_legacySnapshotLog", JSON.stringify(_enrichedRow._legacySnapshotLog));

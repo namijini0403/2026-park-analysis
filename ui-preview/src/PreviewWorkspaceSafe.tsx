@@ -16,6 +16,13 @@ type RedevelopmentProject = {
   area?: number | null;
 };
 
+type LargeApartmentComplex = {
+  name: string;
+  householdCount: number;
+  distanceM: number;
+  address?: string;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function readSchoolFromStorage(): Record<string, any> | null {
   try {
@@ -51,6 +58,19 @@ function readRedevelopmentProjects(schoolRow: Record<string, any> | null): Redev
       area: item.area == null ? undefined : Number(item.area),
     }))
     .filter((item: RedevelopmentProject) => item.name !== "");
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function readLargeApartmentComplexes(schoolRow: Record<string, any> | null): LargeApartmentComplex[] {
+  if (!schoolRow || !Array.isArray(schoolRow._largeApartmentComplexes)) return [];
+  return schoolRow._largeApartmentComplexes
+    .map((item: Record<string, unknown>) => ({
+      name: String(item.name ?? ""),
+      householdCount: Number(item.householdCount ?? 0),
+      distanceM: Number(item.distanceM ?? 0),
+      address: item.address != null ? String(item.address) : undefined,
+    }))
+    .filter((item: LargeApartmentComplex) => item.name !== "" && Number.isFinite(item.householdCount));
 }
 
 export default function PreviewWorkspaceSafe() {
@@ -89,6 +109,7 @@ export default function PreviewWorkspaceSafe() {
   }, [schoolRow, rawCandidates, schoolLat, schoolLng]);
 
   const redevelopmentProjects = useMemo(() => readRedevelopmentProjects(schoolRow), [schoolRow]);
+  const largeApartmentComplexes = useMemo(() => readLargeApartmentComplexes(schoolRow), [schoolRow]);
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -133,6 +154,7 @@ export default function PreviewWorkspaceSafe() {
           casePolicyLabel={detailProps.casePolicyLabel}
           candidates={candidates}
           redevelopmentProjects={redevelopmentProjects}
+          largeApartmentComplexes={largeApartmentComplexes}
           onBack={() => setView("report")}
         />
       ) : view === "statistics" ? (

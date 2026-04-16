@@ -26,6 +26,14 @@ interface RedevelopmentProject {
   distanceM: number;
   type?: string;
   area?: number;
+  householdCount?: number | null;
+}
+
+interface LargeApartmentComplex {
+  name: string;
+  householdCount: number;
+  distanceM: number;
+  address?: string;
 }
 
 interface SimulationPageProps {
@@ -35,6 +43,7 @@ interface SimulationPageProps {
   casePolicyLabel: string;
   candidates: Candidate[];
   redevelopmentProjects?: RedevelopmentProject[];
+  largeApartmentComplexes?: LargeApartmentComplex[];
   onBack: () => void;
 }
 
@@ -122,6 +131,7 @@ export default function SimulationPage({
   casePolicyLabel,
   candidates,
   redevelopmentProjects = [],
+  largeApartmentComplexes = [],
   onBack,
 }: SimulationPageProps) {
   const [mode, setMode] = useState<FilterMode>("ai");
@@ -544,7 +554,7 @@ export default function SimulationPage({
         </div>
       )}
 
-      {redevelopmentProjects.length > 0 && (
+      {false && redevelopmentProjects.length > 0 && (
         <div
           style={{
             marginTop: 24,
@@ -609,6 +619,133 @@ export default function SimulationPage({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {(redevelopmentProjects.length > 0 || largeApartmentComplexes.length > 0) && (
+        <div
+          style={{
+            marginTop: 24,
+            padding: 20,
+            borderRadius: 16,
+            background: "#fff",
+            border: "1px solid #e5e7eb",
+          }}
+        >
+          <div style={{ fontSize: 12, fontWeight: 700, color: "#9a3412", marginBottom: 6 }}>
+            BEFORE YOU DECIDE
+          </div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+            시설 설치 전에 참고해야 할 요인
+          </div>
+          <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, marginBottom: 14 }}>
+            학교 반경 500m 안에서 확인된 재개발·정비사업과 500세대 이상 대단지 아파트입니다.
+            설치 위치를 정할 때 주변 생활권 구조와 미집계 녹지·놀이터 가능성을 함께 확인해 보세요.
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            {largeApartmentComplexes.length > 0 ? (
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+                  인근 500세대 이상 대단지 아파트
+                </div>
+                <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.7, marginBottom: 10 }}>
+                  대단지 내부 녹지나 놀이터가 공공 데이터에 모두 잡히지 않았을 수 있습니다.
+                  현장 확인 시 단지 내 개방 가능 공간도 함께 살펴보는 것이 좋습니다.
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {largeApartmentComplexes.map((complex, index) => (
+                    <div
+                      key={`${complex.name}-${index}`}
+                      style={{
+                        border: "1px solid #e5e7eb",
+                        borderRadius: 12,
+                        padding: "14px 16px",
+                        background: "#f8fafc",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 6, flexWrap: "wrap" }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{complex.name}</div>
+                        <div style={{ fontSize: 12, color: "#6b7280" }}>{complex.distanceM.toLocaleString()}m</div>
+                      </div>
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
+                        <span
+                          style={{
+                            padding: "3px 8px",
+                            borderRadius: 999,
+                            background: "#eff6ff",
+                            color: "#1d4ed8",
+                            fontWeight: 700,
+                          }}
+                        >
+                          {complex.householdCount.toLocaleString()}세대
+                        </span>
+                        {complex.address ? <span style={{ color: "#6b7280" }}>{complex.address}</span> : null}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {redevelopmentProjects.length > 0 ? (
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+                  인근 재개발·정비사업
+                </div>
+                <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.7, marginBottom: 10 }}>
+                  재개발 원천 데이터에는 세대수 정보가 없어 현재는 단계, 거리, 면적 중심으로 제공합니다.
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {redevelopmentProjects.map((project, index) => (
+                    <div
+                      key={`${project.name}-${index}`}
+                      style={{
+                        border: "1px solid #e5e7eb",
+                        borderRadius: 12,
+                        padding: "14px 16px",
+                        background: "#fafafa",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 6, flexWrap: "wrap" }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{project.name}</div>
+                        <div style={{ fontSize: 12, color: "#6b7280" }}>{project.distanceM.toLocaleString()}m</div>
+                      </div>
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
+                        <span
+                          style={{
+                            padding: "3px 8px",
+                            borderRadius: 999,
+                            background: "#fff7ed",
+                            color: "#c2410c",
+                            fontWeight: 700,
+                          }}
+                        >
+                          {project.stage || "단계 정보 없음"}
+                        </span>
+                        {project.type ? (
+                          <span
+                            style={{
+                              padding: "3px 8px",
+                              borderRadius: 999,
+                              background: "#eff6ff",
+                              color: "#1d4ed8",
+                              fontWeight: 600,
+                            }}
+                          >
+                            {project.type}
+                          </span>
+                        ) : null}
+                        {Number.isFinite(project.area) ? (
+                          <span style={{ color: "#6b7280" }}>면적 {Math.round(project.area ?? 0).toLocaleString()}㎡</span>
+                        ) : null}
+                        <span style={{ color: "#9ca3af" }}>세대수 정보 없음</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       )}
