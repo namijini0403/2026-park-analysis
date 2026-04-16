@@ -372,8 +372,8 @@ export function mapSchoolRowToReportProps(
     ...(maybeNumber(row.currentStudentCountDistrictPercentile) != null
       ? { currentStudentCountDistrictPercentile: maybeNumber(row.currentStudentCountDistrictPercentile)! }
       : {}),
-    potentialDemand2029: n(row.forecast_2029 ?? row.predicted_2029 ?? row.target_2029),
-    potentialDemand2031: n(row.forecast_2031 ?? row.predicted_2031 ?? row.target_2031),
+    potentialDemand2029: Math.round(n(row.forecast_2029 ?? row.predicted_2029 ?? row.target_2029)),
+    potentialDemand2031: Math.round(n(row.forecast_2031 ?? row.predicted_2031 ?? row.target_2031)),
     similarSchools: similarSchools.length ? similarSchools : undefined,
     ...(cityBestEnvironmentSchool ? { cityBestEnvironmentSchool } : {}),
     ...(districtBestEnvironmentSchool ? { districtBestEnvironmentSchool } : {}),
