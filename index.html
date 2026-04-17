@@ -723,6 +723,42 @@
       color: #b91c1c;
     }
 
+    .case-filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: 100%;
+      padding-top: 2px;
+      border-top: 1px solid rgba(110, 89, 51, 0.1);
+    }
+
+    .case-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(99, 78, 40, 0.14);
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    }
+
+    .case-filter-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .case-filter-btn.is-on {
+      background: #1f5136;
+      border-color: rgba(20, 83, 45, 0.4);
+      color: #ffffff;
+    }
+
     @media (max-width: 768px) {
       .panel {
         top: auto;
@@ -775,6 +811,11 @@
         font-size: 13px;
         min-width: 0;
       }
+
+      .case-filter-btn {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 0;
+      }
     }
   </style>
 </head>
@@ -797,6 +838,13 @@
       <button class="layer-toggle-btn" type="button" data-layer="redevelopment">🏗️ 재개발</button>
       <button class="layer-toggle-btn" type="button" data-layer="childcare">🏫 어린이집·유치원</button>
       <button class="layer-toggle-btn" type="button" data-layer="candidate">📍 후보지</button>
+      <div class="case-filter-group" aria-label="학교 마커 분류 필터">
+        <button class="case-filter-btn is-on" type="button" data-case-filter="all">전체 학교</button>
+        <button class="case-filter-btn" type="button" data-case-filter="case1">즉시 개선 대상</button>
+        <button class="case-filter-btn" type="button" data-case-filter="case2">우선 검토 대상</button>
+        <button class="case-filter-btn" type="button" data-case-filter="case3">수요 관리 필요</button>
+        <button class="case-filter-btn" type="button" data-case-filter="case4">접근 양호</button>
+      </div>
     </div>
 
     <aside class="panel" id="controlPanel">
@@ -1053,6 +1101,7 @@
       clusterer: null,
       currentPanelMode: null,
       selectedGu: "전체",
+      selectedCaseFilter: "all",
       selectedSchoolJoinKey: null,
       selectedSchoolId: null,
       selectedPanelData: null,
@@ -1121,7 +1170,8 @@
         childcare: document.getElementById("toggleChildcare"),
         candidate: document.getElementById("toggleCandidate") || false
       },
-      layerButtons: Array.from(document.querySelectorAll(".layer-toggle-btn"))
+      layerButtons: Array.from(document.querySelectorAll(".layer-toggle-btn[data-layer]")),
+      caseFilterButtons: Array.from(document.querySelectorAll(".case-filter-btn"))
     };
 
     function setStatus(message) {
@@ -1147,6 +1197,14 @@
       });
     }
 
+    function syncCaseFilterButtons() {
+      ui.caseFilterButtons.forEach((button) => {
+        const isOn = button.dataset.caseFilter === state.selectedCaseFilter;
+        button.classList.toggle("is-on", isOn);
+        button.setAttribute("aria-pressed", String(isOn));
+      });
+    }
+
     function setupLayerToggleBar() {
       ui.layerButtons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -1158,7 +1216,15 @@
           syncLayerToggleButtons();
         });
       });
+      ui.caseFilterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selectedCaseFilter = button.dataset.caseFilter || "all";
+          syncCaseFilterButtons();
+          renderSchoolMarkers();
+        });
+      });
       syncLayerToggleButtons();
+      syncCaseFilterButtons();
     }
 
     const FEASIBILITY_COLORS = {
@@ -2096,7 +2162,7 @@
       const clickLng = latLng.getLng();
 
       return state.datasets.schools
-        .filter(shouldShowByGu)
+        .filter(shouldShowSchoolMarker)
         .map((row) => {
           const schoolLat = Number(row["위도"]);
           const schoolLng = Number(row["경도"]);
@@ -2144,6 +2210,15 @@
       return detectGu(row) === state.selectedGu;
     }
 
+    function shouldShowByCaseFilter(row) {
+      if (state.selectedCaseFilter === "all") return true;
+      return normalizeCaseType(row.case_type) === state.selectedCaseFilter;
+    }
+
+    function shouldShowSchoolMarker(row) {
+      return shouldShowByGu(row) && shouldShowByCaseFilter(row);
+    }
+
     function bindSchoolPopup(marker, row) {
       kakao.maps.event.addListener(marker, "click", () => {
         state.suppressNextMapClick = true;
@@ -2165,7 +2240,7 @@
         state.clusterer.clear();
       }
 
-      const rows = state.datasets.schools.filter(shouldShowByGu);
+      const rows = state.datasets.schools.filter(shouldShowSchoolMarker);
       rows.forEach((row) => {
         const latLng = toLatLng(row, row.위도 !== undefined ? "위도" : "lat", row.경도 !== undefined ? "경도" : "lng");
         if (!latLng) return;
