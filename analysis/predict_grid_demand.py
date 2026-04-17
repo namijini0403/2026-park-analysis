@@ -12,7 +12,7 @@ with open(BASE + "output/model2_xgboost_2029_v3.pkl", "rb") as f:
 with open(BASE + "output/model2_xgboost_2031_v3.pkl", "rb") as f:
     model_2031 = pickle.load(f)
 
-grid = gpd.read_file(BASE + "data_processed/candidate_grid_final_v3.geojson")
+grid = gpd.read_file(BASE + "data_processed/candidate_grid_final_v4.geojson")
 
 def parse_schools(val):
     if isinstance(val, (list, np.ndarray)):
@@ -102,8 +102,8 @@ print(f"평균 2029: {grid['xgb_predicted_2029'].mean():.1f}")
 print(f"평균 2031: {grid['xgb_predicted_2031'].mean():.1f}")
 
 # 저장
-geojson_out = BASE + "data_processed/candidate_grid_xgb_v2.geojson"
-csv_out = BASE + "data_processed/candidate_grid_xgb_v2.csv"
+geojson_out = BASE + "data_processed/candidate_grid_xgb_v3.geojson"
+csv_out = BASE + "data_processed/candidate_grid_xgb_v3.csv"
 grid.to_file(geojson_out, driver="GeoJSON")
 grid[[c for c in grid.columns if c != "geometry"]].to_csv(
     csv_out, index=False, encoding="utf-8-sig"

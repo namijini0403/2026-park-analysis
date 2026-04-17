@@ -2233,7 +2233,7 @@
 
     async function loadCandidateLayer() {
       try {
-        const res = await fetch("./data_processed/candidate_grid_xgb_v2.geojson");
+        const res = await fetch("./data_processed/candidate_grid_xgb_v3.geojson");
         const geojson = await res.json();
 
         clearOverlayGroup("candidateMarkers");

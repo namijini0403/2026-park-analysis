@@ -83,6 +83,8 @@ export default function PreviewWorkspaceSafe() {
   // 학교 좌표
   const schoolLat = schoolRow ? Number(schoolRow["위도"] ?? schoolRow.lat ?? 37.46235) : 37.46235;
   const schoolLng = schoolRow ? Number(schoolRow["경도"] ?? schoolRow.lng ?? 126.6867275) : 126.6867275;
+  const caseType = schoolRow ? Number(schoolRow.case_type ?? schoolRow["case_type"] ?? 1) : 1;
+  const simulationDisabledForCase4 = caseType === 4;
 
   const detailProps = useMemo(() => {
     if (!schoolRow) {
@@ -147,16 +149,41 @@ export default function PreviewWorkspaceSafe() {
       </div>
 
       {view === "simulation" ? (
-        <SimulationPage
-          schoolName={detailProps.schoolName}
-          schoolLat={schoolLat}
-          schoolLng={schoolLng}
-          casePolicyLabel={detailProps.casePolicyLabel}
-          candidates={candidates}
-          redevelopmentProjects={redevelopmentProjects}
-          largeApartmentComplexes={largeApartmentComplexes}
-          onBack={() => setView("report")}
-        />
+        simulationDisabledForCase4 ? (
+          <div className="mx-auto max-w-[980px] px-4 py-10 lg:px-8">
+            <div className="rounded-[28px] border border-emerald-200 bg-white p-8 shadow-sm">
+              <div className="mb-3 inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                Simulation
+              </div>
+              <h1 className="text-3xl font-black text-slate-950">{detailProps.schoolName}</h1>
+              <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+                이 학교는 주변 야외활동 환경이 비교적 양호한 편이어서, 현재는 별도 후보지 시뮬레이션을 제공하지 않습니다.
+              </p>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+                추가 설치 후보지를 비교하는 대신, 현재 환경을 유지하고 안전하게 관리하는 방향으로 보는 것이 더 적절한 사례입니다.
+              </p>
+              <div className="mt-6">
+                <button
+                  onClick={() => setView("report")}
+                  className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                  상세 리포트로 돌아가기
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <SimulationPage
+            schoolName={detailProps.schoolName}
+            schoolLat={schoolLat}
+            schoolLng={schoolLng}
+            casePolicyLabel={detailProps.casePolicyLabel}
+            candidates={candidates}
+            redevelopmentProjects={redevelopmentProjects}
+            largeApartmentComplexes={largeApartmentComplexes}
+            onBack={() => setView("report")}
+          />
+        )
       ) : view === "statistics" ? (
         <StatisticsPageSafe data={cityStatisticsPreviewDataSafe} />
       ) : (
