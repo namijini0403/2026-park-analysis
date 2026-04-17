@@ -45,7 +45,7 @@ MANUAL_OVERRIDES = {
     "인천부평동초등학교": {"park": "꿈나무어린이공원", "dist": 409.0},
     "인천부곡초등학교": {"park": "마장공원", "dist": 420.0},
     "인천석천초등학교": {"park": "하늘공원", "dist": 180.0},
-    "인천영종초등학교금산분교장": {"park": "없음(산)", "dist": np.nan},
+    "인천영종초등학교금산분교장": {"park": "미단시티 2호", "dist": 1587.3},
     # 실측값 봉인: 계단 사용 373m / 계단 회피 613m → 공식값은 계단 사용 기준
     "인천연수초등학교": {"park": "두리공원", "dist": 373.0},
 }
@@ -272,12 +272,6 @@ def main() -> None:
     manual_series = school_priority["학교ID"].map(sealed)
     sealed_under_500 = manual_series.notna() & (pd.to_numeric(manual_series, errors="coerce") < 500)
     school_priority.loc[sealed_under_500 & (school_priority["iso_park_count"] < 1), "iso_park_count"] = 1
-
-    # Goldsan branch is a permanent no-park exception.
-    branch_mask = school_priority["학교명"] == "인천영종초등학교금산분교장"
-    school_priority.loc[branch_mask, ["nearest_park_dist_m", "iso_park_count", "buf_park_count"]] = [np.nan, 0, 0]
-    school_priority.loc[branch_mask, "access_ratio"] = 0.0
-    school_priority.loc[branch_mask, "iso_park_area"] = 0.0
 
     school_priority["buf_park_count"] = school_priority["buf_park_count"].fillna(0)
     school_priority["access_ratio"] = np.where(
