@@ -644,15 +644,15 @@ export default function SimulationPage({
             설치 위치를 정할 때 주변 생활권 구조와 미집계 녹지·놀이터 가능성을 함께 확인해 보세요.
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            {largeApartmentComplexes.length > 0 ? (
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-                  인근 500세대 이상 대단지 아파트
-                </div>
-                <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.7, marginBottom: 10 }}>
-                  대단지 내부 녹지나 놀이터가 공공 데이터에 모두 잡히지 않았을 수 있습니다.
-                  현장 확인 시 단지 내 개방 가능 공간도 함께 살펴보는 것이 좋습니다.
-                </div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+                인근 500세대 이상 대단지 아파트
+              </div>
+              <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.7, marginBottom: 10 }}>
+                대단지 내부 녹지나 놀이터가 공공 데이터에 모두 잡히지 않았을 수 있습니다.
+                현장 확인 시 단지 내 개방 가능 공간도 함께 살펴보는 것이 좋습니다.
+              </div>
+              {largeApartmentComplexes.length > 0 ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {largeApartmentComplexes.map((complex, index) => (
                     <div
@@ -685,17 +685,27 @@ export default function SimulationPage({
                     </div>
                   ))}
                 </div>
-              </div>
-            ) : null}
+              ) : (
+                <div
+                  style={{
+                    border: "1px dashed #d1d5db",
+                    borderRadius: 12,
+                    padding: "14px 16px",
+                    background: "#fafafa",
+                    fontSize: 13,
+                    color: "#6b7280",
+                  }}
+                >
+                  근처 500세대 이상 대단지 아파트는 확인되지 않았습니다.
+                </div>
+              )}
+            </div>
 
-            {redevelopmentProjects.length > 0 ? (
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-                  인근 재개발·정비사업
-                </div>
-                <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.7, marginBottom: 10 }}>
-                  재개발 원천 데이터에는 세대수 정보가 없어 현재는 단계, 거리, 면적 중심으로 제공합니다.
-                </div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+                인근 재개발·정비사업
+              </div>
+              {redevelopmentProjects.length > 0 ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {redevelopmentProjects.map((project, index) => (
                     <div
@@ -739,13 +749,25 @@ export default function SimulationPage({
                         {Number.isFinite(project.area) ? (
                           <span style={{ color: "#6b7280" }}>면적 {Math.round(project.area ?? 0).toLocaleString()}㎡</span>
                         ) : null}
-                        <span style={{ color: "#9ca3af" }}>세대수 정보 없음</span>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            ) : null}
+              ) : (
+                <div
+                  style={{
+                    border: "1px dashed #d1d5db",
+                    borderRadius: 12,
+                    padding: "14px 16px",
+                    background: "#fafafa",
+                    fontSize: 13,
+                    color: "#6b7280",
+                  }}
+                >
+                  근처 재개발·정비사업은 확인되지 않았습니다.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
