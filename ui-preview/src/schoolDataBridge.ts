@@ -390,6 +390,10 @@ export function mapCandidateFeatures(
   features: RawRow[],
   schoolLat: number,
   schoolLng: number,
+  schoolDemand?: {
+    predicted2029?: number;
+    predicted2031?: number;
+  },
 ): Candidate[] {
   const external: Candidate[] = features.map((feature) => ({
     grid_id: s(feature.grid_id, "CG_UNKNOWN"),
@@ -413,10 +417,10 @@ export function mapCandidateFeatures(
     cy: schoolLat,
     xgb_predicted_2029: external.length
       ? Math.round(external.reduce((sum, item) => sum + item.xgb_predicted_2029, 0) / external.length)
-      : 0,
+      : Math.round(n(schoolDemand?.predicted2029)),
     xgb_predicted_2031: external.length
       ? Math.round(external.reduce((sum, item) => sum + item.xgb_predicted_2031, 0) / external.length)
-      : 0,
+      : Math.round(n(schoolDemand?.predicted2031)),
     nearest_park_dist: 0,
     nearest_pg_dist: 0,
     nearest_school_dist: 0,
