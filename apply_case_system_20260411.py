@@ -15,7 +15,7 @@ OUTPUT = ROOT / "output"
 SCHOOL_PRIORITY_PATH = DATA / "school_priority.csv"
 SCHOOL_NEAREST_PATH = DATA / "school_nearest_park.csv"
 PARKS_PATH = DATA / "parks.csv"
-ISOCHRONE_PATH = DATA / "isochrone_valhalla.geojson"
+ISOCHRONE_PATH = DATA / "school_isochrone_500m.geojson"
 SEALED_PATH = OUTPUT / "sealed_nearest_park_dist.json"
 
 SNAPSHOT_PRIORITY_BEFORE = DATA / "school_priority_20260411_before_case_system.csv"
@@ -46,6 +46,8 @@ MANUAL_OVERRIDES = {
     "인천부곡초등학교": {"park": "마장공원", "dist": 420.0},
     "인천석천초등학교": {"park": "하늘공원", "dist": 180.0},
     "인천영종초등학교금산분교장": {"park": "없음(산)", "dist": np.nan},
+    # 실측값 봉인: 계단 사용 373m / 계단 회피 613m → 공식값은 계단 사용 기준
+    "인천연수초등학교": {"park": "두리공원", "dist": 373.0},
 }
 
 
@@ -66,12 +68,38 @@ def build_park_gdf(df: pd.DataFrame) -> gpd.GeoDataFrame:
 
 
 def summarize_points_within(
-    points: gpd.GeoDataFrame, polygons: gpd.GeoDataFrame, count_col: str, sum_col: str | None = None
+    points: gpd.GeoDataFrame,
+    polygons: gpd.GeoDataFrame,
+    count_col: str,
+    sum_col: str | None = None,
+    use_area_buffer: bool = False,
 ) -> pd.DataFrame:
+    """등시선 polygon 내 공원/놀이터 포인트 집계.
+
+    use_area_buffer=True 이면 공원면적 기반 원형 버퍼를 적용한 뒤 intersects로 판정.
+    대형 공원(수변공원·근린공원)의 centroid가 등시선 경계 밖에 있어도
+    공원 실제 면적이 걸치면 카운트되도록 한다.
+    """
+    CRS_METRIC = "EPSG:5179"
+    pts = points.copy()
+    poly = polygons.copy()
+    if use_area_buffer and "공원면적" in pts.columns:
+        # buffer 는 미터 단위 CRS에서 수행
+        pts_m = pts.to_crs(CRS_METRIC)
+        poly_m = poly.to_crs(CRS_METRIC)
+        radius = np.sqrt(pts_m["공원면적"].fillna(0) / np.pi).clip(lower=10)
+        pts_m = pts_m.copy()
+        pts_m["geometry"] = pts_m.geometry.buffer(radius)
+        pts = pts_m
+        poly = poly_m
+        predicate = "intersects"
+    else:
+        predicate = "within"
+
     joined = gpd.sjoin(
-        points,
-        polygons[["학교ID", "geometry"]],
-        predicate="within",
+        pts,
+        poly[["학교ID", "geometry"]],
+        predicate=predicate,
         how="left",
     )
     joined = joined[joined["학교ID"].notna()].copy()
@@ -100,10 +128,25 @@ def summarize_equivalent_circle_area_within(
     area_col: str,
     sum_col: str,
 ) -> pd.DataFrame:
+    """등시선과 공원 원형 버퍼의 교차 면적 합산.
+
+    공원 centroid 기준 원형 버퍼를 먼저 생성한 뒤 intersects로 후보를 필터링하여
+    centroid 가 등시선 경계 밖에 있는 대형 공원도 교차 면적을 반영한다.
+    """
+    CRS_METRIC = "EPSG:5179"
+    pts_m = points.to_crs(CRS_METRIC).copy()
+    poly_m = polygons_ll[[school_id_col, "geometry"]].to_crs(CRS_METRIC)
+
+    pts_m[area_col] = pd.to_numeric(pts_m[area_col], errors="coerce").fillna(0.0)
+    radius = np.sqrt(pts_m[area_col] / np.pi).clip(lower=10)
+    pts_m["_circle"] = pts_m.geometry.buffer(radius)
+
+    # 원형 버퍼 기준 intersects 로 후보 추출
+    pts_circles = pts_m.set_geometry("_circle")
     joined = gpd.sjoin(
-        points[[area_col, "geometry"]],
-        polygons_ll[[school_id_col, "geometry"]],
-        predicate="within",
+        pts_circles[[area_col, "_circle"]],
+        poly_m[[school_id_col, "geometry"]],
+        predicate="intersects",
         how="left",
     )
     joined = joined[joined[school_id_col].notna()].copy()
@@ -112,21 +155,18 @@ def summarize_equivalent_circle_area_within(
         result[sum_col] = 0.0
         return result
 
-    joined_metric = gpd.GeoDataFrame(joined, geometry="geometry", crs="EPSG:4326").to_crs("EPSG:5179")
-    polygons_metric = polygons_ll[[school_id_col, "geometry"]].to_crs("EPSG:5179")
-    polygon_map = dict(zip(polygons_metric[school_id_col], polygons_metric.geometry))
-
-    joined_metric[area_col] = pd.to_numeric(joined_metric[area_col], errors="coerce").fillna(0.0)
-    joined_metric[sum_col] = 0.0
-    for idx, row in joined_metric.iterrows():
+    polygon_map = dict(zip(poly_m[school_id_col], poly_m.geometry))
+    joined[sum_col] = 0.0
+    for idx, row in joined.iterrows():
         area = float(row[area_col])
         if area <= 0:
             continue
-        radius_m = np.sqrt(area / np.pi)
-        circle = row.geometry.buffer(radius_m)
-        joined_metric.at[idx, sum_col] = circle.intersection(polygon_map[row[school_id_col]]).area
+        circle = row["_circle"]
+        iso_poly = polygon_map.get(row[school_id_col])
+        if iso_poly is not None:
+            joined.at[idx, sum_col] = circle.intersection(iso_poly).area
 
-    agg = joined_metric.groupby(school_id_col)[sum_col].sum().reset_index()
+    agg = joined.groupby(school_id_col)[sum_col].sum().reset_index()
     result = polygons_ll[[school_id_col]].merge(agg, on=school_id_col, how="left")
     result[sum_col] = result[sum_col].fillna(0.0)
     return result
@@ -191,7 +231,7 @@ def main() -> None:
     playground_gdf = build_park_gdf(playgrounds)
     isochrone = isochrone.to_crs("EPSG:4326")
 
-    iso_public = summarize_points_within(public_gdf, isochrone, "iso_park_count_raw")
+    iso_public = summarize_points_within(public_gdf, isochrone, "iso_park_count_raw", use_area_buffer=True)
     iso_public_area = summarize_equivalent_circle_area_within(
         public_gdf,
         isochrone,
@@ -302,17 +342,14 @@ def main() -> None:
     case1 = school_priority.loc[school_priority["case_type"] == "1"].copy()
     if not case1.empty:
         case1["quartile_score"] = case1["child_pop_quartile"].map(quartile_score)
-        case1["student_slope_sort"] = case1["student_slope"].fillna(-10**9)
-        case1 = case1.sort_values(
-            by=[
-                "quartile_score",
-                "iso_green_ratio",
-                "iso_playground_count",
-                "nearest_park_dist_m",
-                "student_slope_sort",
-            ],
-            ascending=[False, True, True, False, False],
-        )
+        sort_by = ["quartile_score", "iso_green_ratio", "iso_playground_count", "nearest_park_dist_m"]
+        sort_asc = [False, True, True, False]
+        # student_slope 는 이후 단계에서 추가되므로 존재할 때만 사용
+        if "student_slope" in case1.columns:
+            case1["student_slope_sort"] = case1["student_slope"].fillna(-10**9)
+            sort_by.append("student_slope_sort")
+            sort_asc.append(False)
+        case1 = case1.sort_values(by=sort_by, ascending=sort_asc)
         case1["priority_rank"] = range(1, len(case1) + 1)
         school_priority.loc[case1.index, "priority_rank"] = case1["priority_rank"]
 
@@ -330,6 +367,9 @@ def main() -> None:
         "iso_park_count_raw",
         "iso_park_area_raw",
         "green_bucket",
+        "case_label",
+        "priority_rank",
+        "is_island_tag",
     ]:
         if extra_col not in ordered_cols:
             ordered_cols.append(extra_col)

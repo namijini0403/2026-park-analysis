@@ -26,7 +26,7 @@ import geopandas as gpd
 ROOT = Path(r"c:\2026_data_analysis_park")
 DATA = ROOT / "data_processed"
 
-GRAPHML_PATH = DATA / "incheon_walk_graph.graphml"
+GRAPHML_PATH = DATA / "incheon_walk_graph_v2.graphml"
 SCHOOLS_PATH = DATA / "schools.csv"
 PARKS_PATH = DATA / "parks.csv"
 NEAREST_OUT = DATA / "school_nearest_park.csv"

@@ -15,11 +15,13 @@ from typing import Iterable
 
 import numpy as np
 import pandas as pd
+from joblib import dump
 from lightgbm import LGBMClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import (
     accuracy_score,
+    confusion_matrix,
     f1_score,
     mean_squared_error,
     r2_score,
@@ -51,6 +53,7 @@ YEARLY_STUDENT_XLSX = RAW / "2025_연도별 학생수.xlsx"
 FORECAST_CSV = DATA / "beneficiary_forecast.csv"
 PRIORITY_ML_CSV = DATA / "priority_ml.csv"
 SHAP_PNG = DATA / "shap_summary.png"
+CASE_TYPE_MODEL_PKL = DATA / "lightgbm_case_type_best.pkl"
 
 SCHOOL_ID_COL_IDX = 0
 SCHOOL_NAME_COL_IDX = 1
@@ -413,6 +416,10 @@ def prepare_base_frame_v2() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     schools["cluster"] = build_cluster(schools)
     schools["redev_total"] = schools.iloc[:, REDEV_COL_IDXS].sum(axis=1)
     schools["priority_binary"] = (schools["priority_score"] >= 3).astype(int)
+    if "outlier_type" in schools.columns:
+        schools["outlier_type"] = schools["outlier_type"].fillna("normal").replace("", "normal")
+    else:
+        schools["outlier_type"] = "normal"
 
     child_share = (pop["child_pop_0_5"] + pop["child_pop_6_12"]).sum() / pop["total_pop"].replace(0, np.nan).sum()
     schools["estimated_total_pop_from_grid"] = np.where(
@@ -645,14 +652,21 @@ def train_lightgbm_priority_v2(schools: pd.DataFrame) -> tuple[pd.DataFrame, dic
     school_id_col = schools.columns[SCHOOL_ID_COL_IDX]
     school_name_col = schools.columns[SCHOOL_NAME_COL_IDX]
 
-    X = schools[CLASSIFICATION_FEATURES].copy()
-    y = schools["priority_binary"].to_numpy(dtype=int)
+    # Exclude schools without a valid case_type (e.g. separate-bundle islands)
+    schools = schools[schools["case_type"].notna()].copy()
 
-    # Final leakage-reduced classifier: do not reuse gap_count, cluster,
-    # iso_park_count, or access_ratio because they overlap with the rule-based
-    # priority_score construction path.
+    feature_cols = CLASSIFICATION_FEATURES.copy()
+    if "outlier_type" in schools.columns:
+        feature_cols.append("outlier_type")
+
+    X = schools[feature_cols].copy()
+    y = (schools["case_type"].to_numpy(dtype=int) - 1)
+
     numeric_features = ["redev_total"]
     categorical_features = ["child_pop_quartile"]
+    if "outlier_type" in feature_cols:
+        categorical_features.append("outlier_type")
+
     preprocessor = ColumnTransformer(
         transformers=[
             ("num", Pipeline(steps=[("imputer", SimpleImputer(strategy="median"))]), numeric_features),
@@ -683,76 +697,98 @@ def train_lightgbm_priority_v2(schools: pd.DataFrame) -> tuple[pd.DataFrame, dic
                     colsample_bytree=0.9,
                     random_state=42,
                     class_weight="balanced",
+                    objective="multiclass",
+                    num_class=4,
                     verbose=-1,
                 ),
             ),
         ]
     )
 
-    cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
-    oof_proba = np.zeros(len(X), dtype=float)
-    fold_aucs = []
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    oof_pred = np.full(len(X), -1, dtype=int)
+    oof_proba = np.zeros((len(X), 4), dtype=float)
+    fold_accuracies: list[float] = []
+    best_pipeline = None
+    best_accuracy = -1.0
 
-    for train_idx, test_idx in cv.split(X, y):
+    for fold_no, (train_idx, test_idx) in enumerate(cv.split(X, y), start=1):
         fold_pipeline = clone(pipeline)
         fold_pipeline.fit(X.iloc[train_idx], y[train_idx])
-        fold_proba = fold_pipeline.predict_proba(X.iloc[test_idx])[:, 1]
+        fold_proba = fold_pipeline.predict_proba(X.iloc[test_idx])
+        fold_pred = fold_pipeline.predict(X.iloc[test_idx]).astype(int)
         oof_proba[test_idx] = fold_proba
-        fold_aucs.append(roc_auc_score(y[test_idx], fold_proba))
+        oof_pred[test_idx] = fold_pred
+        fold_acc = float(accuracy_score(y[test_idx], fold_pred))
+        fold_accuracies.append(fold_acc)
+        print(f"Fold {fold_no} validation accuracy: {fold_acc:.4f}")
+        if fold_acc > best_accuracy:
+            best_accuracy = fold_acc
+            best_pipeline = fold_pipeline
 
-    oof_pred = (oof_proba >= 0.5).astype(int)
-    auc_overall = float(roc_auc_score(y, oof_proba))
     acc = float(accuracy_score(y, oof_pred))
-    f1 = float(f1_score(y, oof_pred))
+    conf = confusion_matrix(y, oof_pred, labels=[0, 1, 2, 3])
 
-    result = schools[
-        [
-            school_id_col,
-            school_name_col,
-            GU_COL,
-            "priority_score",
-            "child_pop_quartile",
-            "redev_total",
-        ]
-    ].copy()
-    result["rule_based_priority_3plus"] = y
-    result["ml_probability"] = oof_proba
-    result["ml_priority_3plus"] = oof_pred
-    result["mismatch_flag"] = (result["rule_based_priority_3plus"] != result["ml_priority_3plus"]).astype(int)
-    result["mismatch_type"] = np.select(
-        [
-            (result["rule_based_priority_3plus"] == 1) & (result["ml_priority_3plus"] == 0),
-            (result["rule_based_priority_3plus"] == 0) & (result["ml_priority_3plus"] == 1),
-        ],
-        ["rule_high_ml_low", "rule_low_ml_high"],
-        default="match",
+    if best_pipeline is not None:
+        dump(best_pipeline, CASE_TYPE_MODEL_PKL)
+
+    base_cols = [school_id_col, school_name_col, GU_COL, "case_type", "priority_score", "child_pop_quartile", "redev_total"]
+    if "outlier_type" in schools.columns:
+        base_cols.append("outlier_type")
+    result = schools[base_cols].copy()
+    result["rule_based_case_type"] = y + 1
+    result["ml_case_type"] = oof_pred + 1
+    result["ml_prob_case1"] = oof_proba[:, 0]
+    result["ml_prob_case2"] = oof_proba[:, 1]
+    result["ml_prob_case3"] = oof_proba[:, 2]
+    result["ml_prob_case4"] = oof_proba[:, 3]
+    result["mismatch_flag"] = (result["rule_based_case_type"] != result["ml_case_type"]).astype(int)
+    result["mismatch_type"] = np.where(
+        result["mismatch_flag"] == 1,
+        "rule_case_vs_ml_case",
+        "match",
     )
-    result = round_columns(result, ["ml_probability"], digits=4)
+    result = round_columns(
+        result,
+        ["ml_prob_case1", "ml_prob_case2", "ml_prob_case3", "ml_prob_case4"],
+        digits=4,
+    )
     result.to_csv(PRIORITY_ML_CSV, index=False, encoding="utf-8-sig")
 
     mismatches = result[result["mismatch_flag"] == 1].copy()
 
-    print("\n=== LightGBM Stratified 10-fold metrics ===")
-    print(f"Overall ROC AUC: {auc_overall:.3f}")
-    print(f"Fold ROC AUC mean ± std: {np.mean(fold_aucs):.3f} ± {np.std(fold_aucs, ddof=1):.3f}")
-    print(f"Accuracy: {acc:.3f}")
-    print(f"F1 score: {f1:.3f}")
+    print("\n=== LightGBM Stratified 5-fold metrics ===")
+    print(f"Mean accuracy: {np.mean(fold_accuracies):.4f}")
+    print(f"Overall OOF accuracy: {acc:.4f}")
     print(f"Mismatches: {len(mismatches)}")
+    print("\nConfusion matrix (rows=true case 1-4, cols=pred case 1-4):")
+    print(conf)
     if not mismatches.empty:
         print("\nMismatch cases with ml_probability:")
         print(
-            mismatches[[school_name_col, GU_COL, "priority_score", "ml_probability", "mismatch_type"]]
-            .sort_values(["mismatch_type", "ml_probability"], ascending=[True, False])
+            mismatches[
+                [
+                    school_name_col,
+                    GU_COL,
+                    "case_type",
+                    "ml_case_type",
+                    "ml_prob_case1",
+                    "ml_prob_case2",
+                    "ml_prob_case3",
+                    "ml_prob_case4",
+                ]
+            ]
+            .sort_values([GU_COL, school_name_col], ascending=[True, True])
             .to_string(index=False)
         )
 
     metrics = {
-        "roc_auc_overall": auc_overall,
-        "roc_auc_mean": float(np.mean(fold_aucs)),
-        "roc_auc_std": float(np.std(fold_aucs, ddof=1)),
         "accuracy": acc,
-        "f1": f1,
+        "accuracy_mean": float(np.mean(fold_accuracies)),
+        "accuracy_std": float(np.std(fold_accuracies, ddof=1)),
         "mismatch_count": int(len(mismatches)),
+        "confusion_matrix": conf.tolist(),
+        "best_fold_accuracy": float(best_accuracy),
     }
     return result, metrics, mismatches
 
@@ -816,9 +852,9 @@ def main() -> None:
     print("\n=== Priority ML preview ===")
     print(
         priority_df[
-            ["학교명", "gu", "priority_score", "ml_probability", "ml_priority_3plus", "mismatch_flag"]
+            ["학교명", "gu", "case_type", "ml_case_type", "ml_prob_case1", "ml_prob_case2", "ml_prob_case3", "ml_prob_case4", "mismatch_flag"]
         ]
-        .sort_values(["mismatch_flag", "ml_probability"], ascending=[False, False])
+        .sort_values(["mismatch_flag", "ml_prob_case2"], ascending=[False, False])
         .head(15)
         .to_string(index=False)
     )
