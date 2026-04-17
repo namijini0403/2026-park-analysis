@@ -6,7 +6,7 @@ import os
 
 BASE = "c:/2026_data_analysis_park/"
 
-grid = gpd.read_file(BASE + "data_processed/candidate_grid_raw_v2.geojson")
+grid = gpd.read_file(BASE + "data_processed/candidate_grid_raw_v3.geojson")
 forecast = pd.read_csv(BASE + "data_processed/beneficiary_forecast.csv")
 priority = pd.read_csv(BASE + "data_processed/school_priority_case_system_20260411.csv")
 
@@ -79,7 +79,7 @@ out_cols = ["grid_id","cx","cy","linked_schools","linked_school_count",
             "forecast_2029","forecast_2031","worst_case_type",
             "avg_green_ratio","avg_playground_count","avg_park_dist_m",
             "land_feasibility_level","priority_score","candidate_rank","geometry"]
-out_path = BASE + "data_processed/candidate_grid_final_v4.geojson"
+out_path = BASE + "data_processed/candidate_grid_final_v5.geojson"
 grid[out_cols].to_file(out_path, driver="GeoJSON")
 print(f"\n저장 완료: candidate_grid_final_v4.geojson")
 

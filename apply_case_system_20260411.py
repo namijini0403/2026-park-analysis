@@ -291,7 +291,15 @@ def main() -> None:
     school_priority["iso_green_ratio"] = school_priority["iso_green_ratio_raw"].clip(lower=0.0, upper=100.0)
 
     active_mask = school_priority["is_separate_bundle_tag"] == 0
-    candidate_mask = active_mask & school_priority["nearest_park_dist_m"].lt(500) & school_priority["iso_park_count"].ge(1)
+    hard_case1_mask = (
+        active_mask
+        & school_priority["nearest_park_dist_m"].ge(500)
+        & school_priority["iso_park_count"].eq(0)
+        & school_priority["iso_green_ratio"].eq(0)
+    )
+    candidate_mask = active_mask & ~hard_case1_mask & (
+        school_priority["iso_park_count"].ge(1) | school_priority["nearest_park_dist_m"].lt(500)
+    )
 
     candidate = school_priority.loc[candidate_mask, ["학교ID", "iso_green_ratio"]].copy()
     if not candidate.empty:
@@ -304,6 +312,17 @@ def main() -> None:
     else:
         school_priority["green_bucket"] = pd.NA
 
+    # 2026-04-18 rule update: use fixed green-ratio thresholds instead of tertiles.
+    school_priority["green_bucket"] = pd.NA
+    school_priority.loc[candidate_mask & school_priority["iso_green_ratio"].lt(1), "green_bucket"] = "low"
+    school_priority.loc[
+        candidate_mask
+        & school_priority["iso_green_ratio"].ge(1)
+        & school_priority["iso_green_ratio"].lt(5),
+        "green_bucket",
+    ] = "middle"
+    school_priority.loc[candidate_mask & school_priority["iso_green_ratio"].ge(5), "green_bucket"] = "high"
+
     school_priority["is_case_conflict_tag"] = (
         active_mask
         & (
@@ -313,11 +332,10 @@ def main() -> None:
     ).astype(int)
 
     school_priority["case_type"] = pd.NA
-    school_priority.loc[active_mask & school_priority["nearest_park_dist_m"].ge(500) & school_priority["iso_park_count"].eq(0), "case_type"] = "1"
+    school_priority.loc[hard_case1_mask, "case_type"] = "1"
     school_priority.loc[candidate_mask & school_priority["green_bucket"].eq("low"), "case_type"] = "2"
     school_priority.loc[candidate_mask & school_priority["green_bucket"].eq("middle"), "case_type"] = "3"
     school_priority.loc[candidate_mask & school_priority["green_bucket"].eq("high"), "case_type"] = "4"
-    school_priority.loc[school_priority["is_case_conflict_tag"] == 1, "case_type"] = "2"
 
     label_map = {
         "1": "공원 접근 불가",
