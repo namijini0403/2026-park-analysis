@@ -41,6 +41,7 @@ interface SimulationPageProps {
   schoolLat: number;
   schoolLng: number;
   casePolicyLabel: string;
+  caseType?: number;
   candidates: Candidate[];
   redevelopmentProjects?: RedevelopmentProject[];
   largeApartmentComplexes?: LargeApartmentComplex[];
@@ -129,6 +130,7 @@ export default function SimulationPage({
   schoolLat,
   schoolLng,
   casePolicyLabel,
+  caseType,
   candidates,
   redevelopmentProjects = [],
   largeApartmentComplexes = [],
@@ -355,6 +357,26 @@ export default function SimulationPage({
                   {filterLabels[f]}
                 </button>
               ))}
+            </div>
+          )}
+
+          {caseType === 4 && (
+            <div
+              style={{
+                marginBottom: 14,
+                padding: "14px 16px",
+                borderRadius: 14,
+                border: "1px solid #d1fae5",
+                background: "#ecfdf5",
+              }}
+            >
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#047857", marginBottom: 6 }}>
+                후보지 안내
+              </div>
+              <div style={{ fontSize: 13, lineHeight: 1.7, color: "#065f46" }}>
+                이 학교는 주변 야외활동 환경이 비교적 양호한 편이라, 현재는 별도 외부 후보지 시뮬레이션을 제공하지 않습니다.
+                대신 학교 내부 활용 가능 공간과 주변 참고 요인을 함께 확인해 보세요.
+              </div>
             </div>
           )}
 
