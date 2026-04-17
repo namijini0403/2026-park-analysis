@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -25,31 +25,39 @@ interface KakaoMapProps {
 }
 
 const KAKAO_KEY = import.meta.env.VITE_KAKAO_MAP_KEY as string;
+let kakaoLoaderPromise: Promise<void> | null = null;
 
 /** SDK 로드 + kakao.maps.load() 를 한 번에 처리 */
-function loadKakaoSDK(callback: () => void) {
-  // 이미 완전히 로드된 경우
+function loadKakaoSDK(): Promise<void> {
+  if (!KAKAO_KEY) {
+    return Promise.reject(new Error("Kakao map key is missing."));
+  }
   if (window.kakao?.maps?.Map) {
-    callback();
-    return;
+    return Promise.resolve();
   }
-  // SDK는 있지만 maps 초기화 전
-  if (window.kakao?.maps) {
-    window.kakao.maps.load(callback);
-    return;
+  if (kakaoLoaderPromise) {
+    return kakaoLoaderPromise;
   }
-  // 스크립트 아직 없음 → 동적으로 추가
-  const existing = document.querySelector('script[data-kakao-map]');
-  if (existing) {
-    existing.addEventListener("load", () => window.kakao.maps.load(callback));
-    return;
-  }
-  const script = document.createElement("script");
-  script.setAttribute("data-kakao-map", "true");
-  script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_KEY}&autoload=false`;
-  script.onload = () => window.kakao.maps.load(callback);
-  script.onerror = () => console.error("[KakaoMap] SDK 로드 실패. API 키·도메인 등록을 확인하세요.");
-  document.head.appendChild(script);
+  kakaoLoaderPromise = new Promise<void>((resolve, reject) => {
+    if (window.kakao?.maps) {
+      window.kakao.maps.load(() => resolve());
+      return;
+    }
+    const existing = document.querySelector('script[data-kakao-map]') as HTMLScriptElement | null;
+    if (existing) {
+      existing.addEventListener("load", () => window.kakao.maps.load(() => resolve()), { once: true });
+      existing.addEventListener("error", () => reject(new Error("Failed to load Kakao Maps SDK.")), { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.setAttribute("data-kakao-map", "true");
+    script.async = true;
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_KEY}&autoload=false`;
+    script.onload = () => window.kakao.maps.load(() => resolve());
+    script.onerror = () => reject(new Error("Failed to load Kakao Maps SDK."));
+    document.head.appendChild(script);
+  });
+  return kakaoLoaderPromise;
 }
 
 export default function KakaoMap({
@@ -59,6 +67,7 @@ export default function KakaoMap({
   onToggle,
   height = 310,
 }: KakaoMapProps) {
+  const [loadError, setLoadError] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const overlaysRef = useRef<any[]>([]);
@@ -70,31 +79,33 @@ export default function KakaoMap({
   useEffect(() => {
     let cancelled = false;
 
-    loadKakaoSDK(() => {
-      if (cancelled || !containerRef.current) return;
+    loadKakaoSDK()
+      .then(() => {
+        if (cancelled || !containerRef.current) return;
+        setLoadError(null);
 
-      // 기존 오버레이 제거
-      overlaysRef.current.forEach((o) => o.setMap(null));
-      overlaysRef.current = [];
-      markerEls.current.clear();
+        // 기존 오버레이 제거
+        overlaysRef.current.forEach((o) => o.setMap(null));
+        overlaysRef.current = [];
+        markerEls.current.clear();
 
-      // 지도 초기화 (최초 1회)
-      if (!mapRef.current) {
-        mapRef.current = new window.kakao.maps.Map(containerRef.current, {
-          center: new window.kakao.maps.LatLng(center.lat, center.lng),
-          level: 4,
-        });
-      } else {
-        mapRef.current.setCenter(new window.kakao.maps.LatLng(center.lat, center.lng));
-      }
+        // 지도 초기화 (최초 1회)
+        if (!mapRef.current) {
+          mapRef.current = new window.kakao.maps.Map(containerRef.current, {
+            center: new window.kakao.maps.LatLng(center.lat, center.lng),
+            level: 4,
+          });
+        } else {
+          mapRef.current.setCenter(new window.kakao.maps.LatLng(center.lat, center.lng));
+        }
 
-      const map = mapRef.current;
-      const newOverlays: any[] = [];
+        const map = mapRef.current;
+        const newOverlays: any[] = [];
 
-      markers.forEach((m) => {
-        const el = document.createElement("div");
+        markers.forEach((m) => {
+          const el = document.createElement("div");
 
-        if (m.isSchool) {
+          if (m.isSchool) {
           // 학교 마커: 회전 다이아몬드
           el.style.cssText = `
             width:32px; height:32px;
@@ -113,7 +124,7 @@ export default function KakaoMap({
           `;
           span.textContent = "학교";
           el.appendChild(span);
-        } else {
+          } else {
           // 후보지 마커: 원형 레이블
           const isSel = selected.has(m.id);
           el.style.cssText = `
@@ -135,18 +146,24 @@ export default function KakaoMap({
           markerEls.current.set(m.id, { el, color: m.color });
         }
 
-        const overlay = new window.kakao.maps.CustomOverlay({
-          position: new window.kakao.maps.LatLng(m.lat, m.lng),
-          content: el,
-          yAnchor: 0.5,
-          zIndex: m.isSchool ? 1 : 3,
+          const overlay = new window.kakao.maps.CustomOverlay({
+            position: new window.kakao.maps.LatLng(m.lat, m.lng),
+            content: el,
+            yAnchor: 0.5,
+            zIndex: m.isSchool ? 1 : 3,
+          });
+          overlay.setMap(map);
+          newOverlays.push(overlay);
         });
-        overlay.setMap(map);
-        newOverlays.push(overlay);
-      });
 
-      overlaysRef.current = newOverlays;
-    });
+        overlaysRef.current = newOverlays;
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          console.error("[KakaoMap]", error);
+          setLoadError("카카오맵을 불러오지 못했습니다. API 키와 도메인 등록 상태를 확인해 주세요.");
+        }
+      });
 
     return () => {
       cancelled = true;
@@ -172,7 +189,28 @@ export default function KakaoMap({
         border: "1px solid #dde3ec",
         overflow: "hidden",
         background: "#f0f0f0",
+        position: "relative",
       }}
-    />
+    >
+      {loadError ? (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+            textAlign: "center",
+            fontSize: 13,
+            lineHeight: 1.7,
+            color: "#6b7280",
+            background: "#f8fafc",
+          }}
+        >
+          {loadError}
+        </div>
+      ) : null}
+    </div>
   );
 }
