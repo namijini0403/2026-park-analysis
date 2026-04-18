@@ -1678,6 +1678,59 @@
       };
     }
 
+    function supplementCandidateFallbacks(baseCandidates = [], schoolRow = {}, minimumCount = 6) {
+      if (baseCandidates.length >= minimumCount) return baseCandidates;
+
+      const schoolLat = Number(schoolRow["위도"] ?? schoolRow.lat);
+      const schoolLng = Number(schoolRow["경도"] ?? schoolRow.lng);
+      if (!Number.isFinite(schoolLat) || !Number.isFinite(schoolLng)) return baseCandidates;
+
+      const schoolName = getSchoolName(schoolRow);
+      const schoolId = getSchoolId(schoolRow);
+      const schoolGu = detectGu(schoolRow) || "";
+      const existingIds = new Set(baseCandidates.map((candidate) => candidate.grid_id));
+      const allCandidates = state.datasets.candidateFeatures || [];
+
+      const supplemental = allCandidates
+        .filter((candidate) => candidate && candidate.grid_id && !existingIds.has(candidate.grid_id))
+        .map((candidate) => {
+          const lat = Number(candidate.cy);
+          const lng = Number(candidate.cx);
+          const straightDistance = Number.isFinite(lat) && Number.isFinite(lng)
+            ? distanceInMeters(schoolLat, schoolLng, lat, lng)
+            : Number.POSITIVE_INFINITY;
+          return {
+            candidate,
+            sameGu: (detectGu(candidate) || "") === schoolGu ? 1 : 0,
+            straightDistance,
+            candidateRank: Number(candidate.candidate_rank ?? Number.POSITIVE_INFINITY),
+          };
+        })
+        .filter((item) => Number.isFinite(item.straightDistance))
+        .sort((a, b) =>
+          b.sameGu - a.sameGu ||
+          a.straightDistance - b.straightDistance ||
+          a.candidateRank - b.candidateRank
+        )
+        .slice(0, Math.max(0, minimumCount - baseCandidates.length))
+        .map((item) => {
+          const merged = mergeCandidateBarrierMeta(item.candidate, schoolId, schoolName);
+          const roundedDistance = Math.round(item.straightDistance);
+          return {
+            ...merged,
+            nearest_school_dist: Number.isFinite(Number(merged.nearest_school_dist))
+              ? Number(merged.nearest_school_dist)
+              : roundedDistance,
+            fallback_candidate: true,
+            fallback_distance_basis: "straight_line_m",
+            barrier_note: merged.barrier_note ||
+              "학교 생활권에 직접 연결된 후보지가 적어, 인접 후보지를 직선거리 기준 보조 후보로 함께 표시합니다.",
+          };
+        });
+
+      return [...baseCandidates, ...supplemental];
+    }
+
     function mergeSchoolPriorityWithCoords(priorityRows, coordRows) {
       const coordMap = new Map(
         coordRows.map((row) => [getSchoolId(row), row])
@@ -3579,10 +3632,16 @@
       localStorage.setItem("parkAnalysis_legacySnapshotLog", JSON.stringify(_enrichedRow._legacySnapshotLog));
       const _schoolName = getSchoolName(row);
       const _schoolId = getSchoolId(row);
-      const _linkedCandidates = (state.datasets.candidateFeatures || [])
+      const _linkedCandidatesBase = (state.datasets.candidateFeatures || [])
         .filter((p) => Array.isArray(p.linked_schools) && p.linked_schools.includes(_schoolName))
         .map((p) => mergeCandidateBarrierMeta(p, _schoolId, _schoolName))
         .slice(0, 20);
+      const _normalizedCaseType = normalizeCaseType(row.case_type, row);
+      const _linkedCandidates = _normalizedCaseType === "case4"
+        ? []
+        : (_normalizedCaseType === "case1" || _normalizedCaseType === "case2" || _normalizedCaseType === "case3")
+          ? supplementCandidateFallbacks(_linkedCandidatesBase, row, 6).slice(0, 20)
+          : _linkedCandidatesBase;
       localStorage.setItem("parkAnalysis_candidates", JSON.stringify(_linkedCandidates));
 
       // 클릭과 동시에 상세 리포트 오버레이 자동 열기

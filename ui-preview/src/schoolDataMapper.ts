@@ -31,6 +31,8 @@ export interface Candidate {
   barrier_note?: string;
   route_length_m?: number;
   route_coords?: Array<[number, number]>;
+  fallback_candidate?: boolean;
+  fallback_distance_basis?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -302,6 +304,8 @@ export function mapCandidateFeatures(
             .map((item) => [n(item[0]), n(item[1])] as [number, number]),
         }
       : {}),
+    ...(p.fallback_candidate ? { fallback_candidate: true } : {}),
+    ...(s(p.fallback_distance_basis) ? { fallback_distance_basis: s(p.fallback_distance_basis) } : {}),
   }));
 
   // 교내 시설 후보 (학교 좌표에 고정)

@@ -25,6 +25,8 @@ interface Candidate {
   barrier_note?: string;
   route_length_m?: number;
   route_coords?: Array<[number, number]>;
+  fallback_candidate?: boolean;
+  fallback_distance_basis?: string;
 }
 
 interface RedevelopmentProject {
@@ -114,6 +116,13 @@ function getBarrierCountSummary(candidate: Candidate): string | null {
   if ((counts.tertiary ?? 0) > 0 && parts.length === 0) parts.push(`생활도로 ${counts.tertiary}회`);
 
   return parts.length ? parts.join(" / ") : "큰 도로 횡단 없음";
+}
+
+function getCandidateDistanceLabel(candidate: Candidate): string {
+  if (candidate.fallback_candidate && candidate.fallback_distance_basis === "straight_line_m") {
+    return "학교 직선거리(참고)";
+  }
+  return "학교 거리";
 }
 
 function matchesBarrierFilter(candidate: Candidate, filter: BarrierFilter): boolean {
@@ -621,13 +630,27 @@ export default function SimulationPage({
                       >
                         {getBarrierLabel(c)}
                       </span>
+                      {c.fallback_candidate ? (
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            borderRadius: 999,
+                            fontSize: 10,
+                            background: "#eff6ff",
+                            color: "#1d4ed8",
+                            fontWeight: 700,
+                          }}
+                        >
+                          생활권 외 보조 후보
+                        </span>
+                      ) : null}
                     </div>
                     <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
                       <span>
                         👤 2029 <b>{c.xgb_predicted_2029.toLocaleString()}명</b>
                       </span>
                       <span>
-                        🏫 <b>{c.nearest_school_dist.toLocaleString()}m</b>
+                        {getCandidateDistanceLabel(c)} <b>{c.nearest_school_dist.toLocaleString()}m</b>
                       </span>
                       <span>
                         🌳 <b>{c.nearest_park_dist}m</b>
