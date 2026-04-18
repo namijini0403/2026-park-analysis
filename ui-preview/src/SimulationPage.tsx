@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import KakaoMap, { CandidateMarker } from "./KakaoMap";
+import KakaoMap, { CandidateMarker, CandidateRouteLine } from "./KakaoMap";
 
 const LETTERS = "ABCDEFGHIJ".split("");
 
@@ -18,6 +18,12 @@ interface Candidate {
   linked_schools: string[];
   is_school_internal?: boolean;
   ai_score?: number;
+  barrier_counts?: Record<"motorway" | "trunk" | "primary" | "secondary" | "tertiary", number>;
+  barrier_severity?: "green" | "yellow" | "orange" | "red";
+  barrier_severity_label?: string;
+  barrier_color?: string;
+  barrier_note?: string;
+  route_coords?: Array<[number, number]>;
 }
 
 interface RedevelopmentProject {
@@ -50,6 +56,7 @@ interface SimulationPageProps {
 
 type FilterMode = "ai" | "manual";
 type ManualFilter = "demand" | "park" | "school" | "playground";
+type BarrierFilter = "green" | "yellow_or_less" | "orange_or_less" | "all";
 
 function rankBadgeStyle(i: number): { color: string; bg: string } {
   if (i === 0) return { color: "#c0392b", bg: "#fdecea" };
@@ -58,11 +65,64 @@ function rankBadgeStyle(i: number): { color: string; bg: string } {
   return { color: "#7f8c8d", bg: "#f4f4f4" };
 }
 
-const FEASIBILITY_COLOR: Record<string, string> = {
-  high: "#e74c3c",
-  medium: "#f39c12",
-  low: "#95a5a6",
+const BARRIER_COLOR: Record<NonNullable<Candidate["barrier_severity"]>, string> = {
+  green: "#2E8B57",
+  yellow: "#D4A017",
+  orange: "#E67E22",
+  red: "#C0392B",
 };
+
+function barrierRank(severity: Candidate["barrier_severity"]): number {
+  if (severity === "red") return 3;
+  if (severity === "orange") return 2;
+  if (severity === "yellow") return 1;
+  return 0;
+}
+
+function getBarrierSeverity(candidate: Candidate): NonNullable<Candidate["barrier_severity"]> {
+  if (candidate.is_school_internal) return "green";
+  return candidate.barrier_severity ?? "green";
+}
+
+function getBarrierColor(candidate: Candidate): string {
+  if (candidate.is_school_internal) return "#2980b9";
+  return candidate.barrier_color ?? BARRIER_COLOR[getBarrierSeverity(candidate)];
+}
+
+function getBarrierLabel(candidate: Candidate): string {
+  if (candidate.is_school_internal) return "학교 내부 설치";
+  return candidate.barrier_severity_label ?? "경로 정보 준비 중";
+}
+
+function getBarrierNote(candidate: Candidate): string {
+  if (candidate.is_school_internal) {
+    return candidate.barrier_note ?? "학교 내부 설치 후보지로, 공원까지 이동 경로 단절성보다 학교 안 설치 가능성을 우선 검토합니다.";
+  }
+  return candidate.barrier_note ?? "후보지까지의 도로 단절 정보는 현재 준비 중입니다.";
+}
+
+function getBarrierCountSummary(candidate: Candidate): string | null {
+  if (candidate.is_school_internal || !candidate.barrier_counts) return null;
+
+  const parts: string[] = [];
+  const counts = candidate.barrier_counts;
+  if ((counts.motorway ?? 0) > 0) parts.push(`고속도로 ${counts.motorway}회`);
+  if ((counts.trunk ?? 0) > 0) parts.push(`자동차 전용 간선도로 ${counts.trunk}회`);
+  if ((counts.primary ?? 0) > 0) parts.push(`도시 대로 ${counts.primary}회`);
+  if ((counts.secondary ?? 0) > 0) parts.push(`중간급 도로 ${counts.secondary}회`);
+  if ((counts.tertiary ?? 0) > 0 && parts.length === 0) parts.push(`생활도로 ${counts.tertiary}회`);
+
+  return parts.length ? parts.join(" / ") : "큰 도로 횡단 없음";
+}
+
+function matchesBarrierFilter(candidate: Candidate, filter: BarrierFilter): boolean {
+  if (candidate.is_school_internal) return true;
+  const rank = barrierRank(getBarrierSeverity(candidate));
+  if (filter === "green") return rank === 0;
+  if (filter === "yellow_or_less") return rank <= 1;
+  if (filter === "orange_or_less") return rank <= 2;
+  return true;
+}
 
 function minmax(arr: number[]): number[] {
   const mn = Math.min(...arr);
@@ -143,6 +203,7 @@ export default function SimulationPage({
     school: true,
     playground: false,
   });
+  const [barrierFilter, setBarrierFilter] = useState<BarrierFilter>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [ranked, setRanked] = useState<Candidate[]>([]);
 
@@ -158,7 +219,7 @@ export default function SimulationPage({
   // 선택 초기화: 모드 전환 또는 후보지 목록 자체가 바뀔 때만
   useEffect(() => {
     setSelected(new Set());
-  }, [mode, candidates]);
+  }, [mode, candidates, barrierFilter]);
 
   const toggleSelect = (id: string) => {
     setSelected((prev) => {
@@ -171,11 +232,12 @@ export default function SimulationPage({
 
   const internalCandidate = ranked.find((c) => c.is_school_internal);
   const externalRanked = ranked.filter((c) => !c.is_school_internal);
+  const visibleExternalRanked = externalRanked.filter((candidate) => matchesBarrierFilter(candidate, barrierFilter));
 
   // 카카오맵 마커 목록 (ranked 순서 바뀌면 레이블도 재생성)
   const mapMarkers = useMemo((): CandidateMarker[] => {
     const intCand = ranked.find((c) => c.is_school_internal);
-    const extRanked = ranked.filter((c) => !c.is_school_internal);
+    const extRanked = ranked.filter((c) => !c.is_school_internal).filter((candidate) => matchesBarrierFilter(candidate, barrierFilter));
 
     const result: CandidateMarker[] = [
       // 학교 마커
@@ -208,14 +270,26 @@ export default function SimulationPage({
         lat: c.cy,
         lng: c.cx,
         label: LETTERS[i] ?? String(i + 1),
-        color: FEASIBILITY_COLOR[c.land_feasibility_level],
+        color: getBarrierColor(c),
       });
     });
 
     return result;
-  }, [ranked, schoolLat, schoolLng]);
+  }, [barrierFilter, ranked, schoolLat, schoolLng]);
 
-  const selectedCandidates = ranked.filter((c) => selected.has(c.grid_id));
+  const routeLines = useMemo((): CandidateRouteLine[] => {
+    return ranked
+      .filter((candidate) => selected.has(candidate.grid_id) && !candidate.is_school_internal)
+      .filter((candidate) => matchesBarrierFilter(candidate, barrierFilter))
+      .filter((candidate) => Array.isArray(candidate.route_coords) && candidate.route_coords.length >= 2)
+      .map((candidate) => ({
+        id: candidate.grid_id,
+        path: candidate.route_coords as Array<[number, number]>,
+        color: getBarrierColor(candidate),
+      }));
+  }, [barrierFilter, ranked, selected]);
+
+  const selectedCandidates = ranked.filter((c) => selected.has(c.grid_id) && matchesBarrierFilter(c, barrierFilter));
   const totalDemand2029 = selectedCandidates.reduce((sum, c) => sum + c.xgb_predicted_2029, 0);
   const totalDemand2031 = selectedCandidates.reduce((sum, c) => sum + c.xgb_predicted_2031, 0);
 
@@ -224,6 +298,13 @@ export default function SimulationPage({
     park: "공원 공백 우선",
     school: "학교 접근성 우선",
     playground: "놀이터 공백 우선",
+  };
+
+  const barrierFilterLabels: Record<BarrierFilter, string> = {
+    green: "큰 도로 횡단 없음",
+    yellow_or_less: "중간급 도로까지 허용",
+    orange_or_less: "도시 대로까지 허용",
+    all: "모든 후보 보기",
   };
 
   return (
@@ -283,6 +364,7 @@ export default function SimulationPage({
           <KakaoMap
             center={{ lat: schoolLat, lng: schoolLng }}
             markers={mapMarkers}
+            routes={routeLines}
             selected={selected}
             onToggle={toggleSelect}
             height={310}
@@ -300,12 +382,13 @@ export default function SimulationPage({
           >
             <LegendItem color="#1a1a2e" shape="diamond" label="학교" />
             <LegendItem color="#2980b9" shape="circle" label="교내 설치" />
-            <LegendItem color="#e74c3c" shape="circle" label="즉시 설치" />
-            <LegendItem color="#f39c12" shape="circle" label="검토 필요" />
-            <LegendItem color="#95a5a6" shape="circle" label="수요 미달" />
+            <LegendItem color="#2E8B57" shape="circle" label="큰 도로 횡단 없음" />
+            <LegendItem color="#D4A017" shape="circle" label="중간급 도로 포함" />
+            <LegendItem color="#E67E22" shape="circle" label="도시 대로 포함" />
+            <LegendItem color="#C0392B" shape="circle" label="간선/고속도로 포함" />
           </div>
           <div style={{ marginTop: 8, fontSize: 11, color: "#bbb", lineHeight: 1.6 }}>
-            * 지도 마커 클릭으로도 선택/해제 가능
+            * 후보지 점 색은 학교에서 후보지까지 가는 최단 경로의 최고 위험 도로 등급을 뜻합니다. 선택하면 같은 색 경로가 함께 표시됩니다.
           </div>
         </div>
 
@@ -329,7 +412,29 @@ export default function SimulationPage({
                   fontSize: 13,
                 }}
               >
-                {m === "ai" ? "🤖 AI 추천" : "🔍 직접 탐색"}
+                {m === "ai" ? "AI 추천" : "직접 탐색"}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+            {(Object.keys(barrierFilterLabels) as BarrierFilter[]).map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setBarrierFilter(filter)}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: 20,
+                  border: "1.5px solid",
+                  borderColor: barrierFilter === filter ? "#111827" : "#d1d5db",
+                  background: barrierFilter === filter ? "#111827" : "#fff",
+                  color: barrierFilter === filter ? "#fff" : "#4b5563",
+                  cursor: "pointer",
+                  fontSize: 12,
+                  fontWeight: 600,
+                }}
+              >
+                {barrierFilterLabels[filter]}
               </button>
             ))}
           </div>
@@ -428,6 +533,9 @@ export default function SimulationPage({
                   <span>📍 학교 부지 내</span>
                   <span>🛝 놀이터·체육시설 신설</span>
                 </div>
+                <div style={{ marginTop: 8, fontSize: 12, color: "#4b5563", lineHeight: 1.6 }}>
+                  {getBarrierNote(internalCandidate)}
+                </div>
               </div>
               <span
                 style={{
@@ -447,9 +555,9 @@ export default function SimulationPage({
 
           {/* 외부 후보지 카드 */}
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {externalRanked.slice(0, 10).map((c, i) => {
+            {visibleExternalRanked.slice(0, 10).map((c, i) => {
               const label = LETTERS[i] ?? String(i + 1);
-              const fColor = FEASIBILITY_COLOR[c.land_feasibility_level];
+              const barrierColor = getBarrierColor(c);
               const isSel = selected.has(c.grid_id);
               return (
                 <div
@@ -467,22 +575,22 @@ export default function SimulationPage({
                     gap: 12,
                   }}
                 >
-                  <div
-                    style={{
-                      width: 38,
-                      height: 38,
-                      borderRadius: "50%",
-                      background: isSel ? fColor : "#fff",
-                      border: `2.5px solid ${fColor}`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 15,
-                      fontWeight: 800,
-                      color: isSel ? "#fff" : fColor,
-                      flexShrink: 0,
-                    }}
-                  >
+                    <div
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: "50%",
+                        background: isSel ? barrierColor : "#fff",
+                        border: `2.5px solid ${barrierColor}`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 15,
+                        fontWeight: 800,
+                        color: isSel ? "#fff" : barrierColor,
+                        flexShrink: 0,
+                      }}
+                    >
                     {label}
                   </div>
                   <div style={{ flex: 1 }}>
@@ -500,6 +608,18 @@ export default function SimulationPage({
                       >
                         추천 {i + 1}순위
                       </span>
+                      <span
+                        style={{
+                          padding: "2px 8px",
+                          borderRadius: 999,
+                          fontSize: 10,
+                          background: `${barrierColor}18`,
+                          color: barrierColor,
+                          fontWeight: 700,
+                        }}
+                      >
+                        {getBarrierLabel(c)}
+                      </span>
                     </div>
                     <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
                       <span>
@@ -515,11 +635,34 @@ export default function SimulationPage({
                         🛝 <b>{c.nearest_pg_dist}m</b>
                       </span>
                     </div>
+                    {getBarrierCountSummary(c) ? (
+                      <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, color: barrierColor }}>
+                        {getBarrierCountSummary(c)}
+                      </div>
+                    ) : null}
+                    <div style={{ marginTop: 8, fontSize: 12, color: "#4b5563", lineHeight: 1.6 }}>
+                      {getBarrierNote(c)}
+                    </div>
                   </div>
                   {i < 3 && !isSel && <div style={{ fontSize: 16 }}>⚡</div>}
                 </div>
               );
             })}
+            {visibleExternalRanked.length === 0 ? (
+              <div
+                style={{
+                  border: "1px dashed #d1d5db",
+                  borderRadius: 12,
+                  padding: "16px 18px",
+                  background: "#fafafa",
+                  fontSize: 13,
+                  color: "#6b7280",
+                  lineHeight: 1.7,
+                }}
+              >
+                현재 단절성 필터를 만족하는 외부 후보지가 없습니다. 필터를 완화해 다른 후보지를 확인해 보세요.
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -536,7 +679,7 @@ export default function SimulationPage({
           }}
         >
           <div style={{ fontSize: 13, color: "#aaa", marginBottom: 8 }}>
-            선택한 후보지 {selected.size}곳 합산
+            선택한 후보지 {selectedCandidates.length}곳 합산
           </div>
           <div style={{ display: "flex", gap: 40, marginBottom: 20, flexWrap: "wrap" }}>
             <div>

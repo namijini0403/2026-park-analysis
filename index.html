@@ -962,6 +962,7 @@
       nearestPark: "./data_processed/school_nearest_park.csv",
       beneficiaryForecast: "./data_processed/school_enrollment_forecast_20260418_model1.csv",
       similarSchools: "./data_processed/school_similar_schools_top5.csv",
+      candidateBarrierRoutes: "./data_processed/candidate_barrier_routes_by_school.json",
       candidatePanelExamples: "./data/examples/candidate_panel_examples.json",
       guSummary: "./data_processed/gu_summary.csv",
       parks: "./data_processed/parks.csv",
@@ -1133,7 +1134,8 @@
         redevelopment: [],
         isochrone: null,
         buffer: null,
-        candidateFeatures: []
+        candidateFeatures: [],
+        candidateBarrierRoutes: {}
       }
     };
 
@@ -1647,6 +1649,22 @@
         if (key) map.set(key, row);
       });
       return map;
+    }
+
+    function mergeCandidateBarrierMeta(candidate = {}, schoolId = "") {
+      const bySchool = state.datasets.candidateBarrierRoutes || {};
+      const schoolRoutes = bySchool[schoolId] || {};
+      const routeMeta = schoolRoutes[candidate.grid_id];
+      if (!routeMeta) return candidate;
+      return {
+        ...candidate,
+        barrier_counts: routeMeta.counts || null,
+        barrier_severity: routeMeta.severity || null,
+        barrier_severity_label: routeMeta.severity_label || null,
+        barrier_color: routeMeta.color || null,
+        barrier_note: routeMeta.note || null,
+        route_coords: Array.isArray(routeMeta.route_coords) ? routeMeta.route_coords : [],
+      };
     }
 
     function mergeSchoolPriorityWithCoords(priorityRows, coordRows) {
@@ -2572,6 +2590,7 @@
         nearestPark,
         beneficiaryForecast,
         similarSchools,
+        candidateBarrierRoutes,
         candidatePanelExamples,
         guSummary,
         parks,
@@ -2587,6 +2606,7 @@
         loadCSV(PATHS.nearestPark),
         loadCSV(PATHS.beneficiaryForecast),
         loadCSV(PATHS.similarSchools),
+        loadJSON(PATHS.candidateBarrierRoutes),
         loadCandidateExamples(),
         loadCSV(PATHS.guSummary),
         loadCSV(PATHS.parks),
@@ -2602,6 +2622,7 @@
       state.datasets.schoolCoords = schoolCoords;
       state.datasets.beneficiaryForecast = beneficiaryForecast;
       state.datasets.similarSchools = similarSchools;
+      state.datasets.candidateBarrierRoutes = candidateBarrierRoutes || {};
       state.datasets.candidatePanelExamples = Array.isArray(candidatePanelExamples)
         ? candidatePanelExamples
         : getFallbackCandidateExamples();
@@ -3538,8 +3559,10 @@
       localStorage.setItem("parkAnalysis_school", JSON.stringify(_enrichedRow));
       localStorage.setItem("parkAnalysis_legacySnapshotLog", JSON.stringify(_enrichedRow._legacySnapshotLog));
       const _schoolName = getSchoolName(row);
+      const _schoolId = getSchoolId(row);
       const _linkedCandidates = (state.datasets.candidateFeatures || [])
         .filter((p) => Array.isArray(p.linked_schools) && p.linked_schools.includes(_schoolName))
+        .map((p) => mergeCandidateBarrierMeta(p, _schoolId))
         .slice(0, 20);
       localStorage.setItem("parkAnalysis_candidates", JSON.stringify(_linkedCandidates));
 

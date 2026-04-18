@@ -23,6 +23,12 @@ export interface Candidate {
   linked_schools: string[];
   is_school_internal?: boolean;
   ai_score?: number;
+  barrier_counts?: Record<"motorway" | "trunk" | "primary" | "secondary" | "tertiary", number>;
+  barrier_severity?: "green" | "yellow" | "orange" | "red";
+  barrier_severity_label?: string;
+  barrier_color?: string;
+  barrier_note?: string;
+  route_coords?: Array<[number, number]>;
 }
 
 type RawRow = Record<string, unknown>;
@@ -478,6 +484,22 @@ export function mapCandidateFeatures(
       ? (s(feature.land_feasibility_level) as "high" | "medium" | "low")
       : "medium",
     linked_schools: arrayOfStrings(feature.linked_schools),
+    ...(feature.barrier_counts && typeof feature.barrier_counts === "object"
+      ? {
+          barrier_counts: feature.barrier_counts as Record<"motorway" | "trunk" | "primary" | "secondary" | "tertiary", number>,
+        }
+      : {}),
+    ...(s(feature.barrier_severity) ? { barrier_severity: s(feature.barrier_severity) as "green" | "yellow" | "orange" | "red" } : {}),
+    ...(s(feature.barrier_severity_label) ? { barrier_severity_label: s(feature.barrier_severity_label) } : {}),
+    ...(s(feature.barrier_color) ? { barrier_color: s(feature.barrier_color) } : {}),
+    ...(s(feature.barrier_note) ? { barrier_note: s(feature.barrier_note) } : {}),
+    ...(Array.isArray(feature.route_coords)
+      ? {
+          route_coords: (feature.route_coords as Array<[number, number]>)
+            .filter((item) => Array.isArray(item) && item.length === 2)
+            .map((item) => [n(item[0]), n(item[1])] as [number, number]),
+        }
+      : {}),
   }));
 
   const schoolInternal: Candidate = {
@@ -497,6 +519,11 @@ export function mapCandidateFeatures(
     land_feasibility_level: "high",
     linked_schools: [],
     is_school_internal: true,
+    barrier_counts: { motorway: 0, trunk: 0, primary: 0, secondary: 0, tertiary: 0 },
+    barrier_severity: "green",
+    barrier_severity_label: "학교 내부 설치",
+    barrier_color: "#2980b9",
+    barrier_note: "학교 내부 설치 후보지로, 공원까지 이동 경로 단절성 대신 학교 안 설치 가능성을 우선 검토합니다.",
   };
 
   return [schoolInternal, ...external];

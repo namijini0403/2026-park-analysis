@@ -16,9 +16,16 @@ export interface CandidateMarker {
   isInternal?: boolean;
 }
 
+export interface CandidateRouteLine {
+  id: string;
+  path: Array<[number, number]>;
+  color: string;
+}
+
 interface KakaoMapProps {
   center: { lat: number; lng: number };
   markers: CandidateMarker[];
+  routes?: CandidateRouteLine[];
   selected: Set<string>;
   onToggle: (id: string) => void;
   height?: number;
@@ -63,6 +70,7 @@ function loadKakaoSDK(): Promise<void> {
 export default function KakaoMap({
   center,
   markers,
+  routes = [],
   selected,
   onToggle,
   height = 310,
@@ -101,6 +109,20 @@ export default function KakaoMap({
 
         const map = mapRef.current;
         const newOverlays: any[] = [];
+
+        routes.forEach((route) => {
+          if (!Array.isArray(route.path) || route.path.length < 2) return;
+          const polyline = new window.kakao.maps.Polyline({
+            path: route.path.map(([lat, lng]) => new window.kakao.maps.LatLng(lat, lng)),
+            strokeWeight: 5,
+            strokeColor: route.color,
+            strokeOpacity: 0.9,
+            strokeStyle: "solid",
+            zIndex: 2,
+          });
+          polyline.setMap(map);
+          newOverlays.push(polyline);
+        });
 
         markers.forEach((m) => {
           const el = document.createElement("div");
@@ -168,7 +190,7 @@ export default function KakaoMap({
     return () => {
       cancelled = true;
     };
-  }, [markers]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [markers, routes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 선택 상태 변경 → 마커 DOM만 업데이트 (지도 재초기화 없음)
   useEffect(() => {
