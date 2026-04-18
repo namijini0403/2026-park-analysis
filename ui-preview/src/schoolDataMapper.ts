@@ -38,6 +38,32 @@ function s(v: unknown, fallback = ""): string {
   return v != null ? String(v) : fallback;
 }
 
+type ManualBarrierOverride = {
+  nearestParkName?: string;
+  note: string;
+};
+
+const MANUAL_BARRIER_OVERRIDES: Record<string, ManualBarrierOverride> = {
+  B000025206: { nearestParkName: "동춘1구역근린공원", note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
+  B000002963: { nearestParkName: "화도진공원", note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
+  B000003102: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 2번 지나야 합니다." },
+  B000003132: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번 지나야 합니다." },
+  B000002981: { nearestParkName: "다솔어린이공원", note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
+  B000025246: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번 지나야 합니다." },
+  B000002959: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번 지나야 합니다." },
+  B000025189: { note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
+  B000025236: { note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
+  B000003158: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번 지나야 합니다." },
+  B000026504: { note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
+  B000003048: { nearestParkName: "달빛공원", note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
+  B000003123: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번, 중간급 도로를 1번 지나야 합니다." },
+  B000003144: { nearestParkName: "석곶체육공원", note: "공원까지 가려면 중간급 도로를 2번 지나야 합니다." },
+  B000003077: { note: "공원까지 가려면 중간급 도로를 1번 지나야 합니다." },
+  B000002990: { note: "공원까지 가려면 중간급 도로를 1번 지나야 합니다." },
+  B000003145: { nearestParkName: "석곶체육공원", note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번, 중간급 도로를 1번 지나야 합니다." },
+  B000003029: { note: "공원까지 가려면 중간급 도로를 1번 지나야 합니다." },
+};
+
 function isSpecialPolicySchool(row: RawRow): boolean {
   const caseLabel = s(row.case_label).trim();
   const separateBundleTag = n(row.is_separate_bundle_tag);
@@ -67,6 +93,11 @@ function getCaseLabels(caseType: number): { policy: string; status: string } {
 function getCaseType(row: RawRow, fallback = 1): number {
   if (isSpecialPolicySchool(row)) return 99;
   return n(row.case_type, fallback);
+}
+
+function getManualBarrierOverride(row: RawRow): ManualBarrierOverride | undefined {
+  const schoolId = s(row["학교ID"] ?? row.school_id);
+  return MANUAL_BARRIER_OVERRIDES[schoolId];
 }
 
 function buildProblemTags(row: RawRow): string[] {
@@ -122,7 +153,8 @@ export function mapSchoolRowToReportProps(
   const { policy: casePolicyLabel, status: caseStatusLabel } = getCaseLabels(caseType);
 
   const nearestParkDistanceM = n(row.nearest_park_dist_m);
-  const nearestParkName = s(row.nearest_park_name ?? row.nearest_park_name_clean ?? "");
+  const manualBarrierOverride = getManualBarrierOverride(row);
+  const nearestParkName = s(manualBarrierOverride?.nearestParkName ?? row.nearest_park_name ?? row.nearest_park_name_clean ?? "");
 
   const greenRatio = n(row.iso_green_ratio);
   const playgroundCount = n(row.iso_playground_count);
@@ -194,6 +226,7 @@ export function mapSchoolRowToReportProps(
     caseStatusLabel,
     nearestParkDistanceM,
     ...(nearestParkName ? { nearestParkName } : {}),
+    ...(manualBarrierOverride?.note ? { nearestParkAccessNote: manualBarrierOverride.note } : {}),
     nearestParkDistanceCityAvg: CITY_AVG.nearestParkDist,
     nearestParkDistanceDistrictAvg: CITY_AVG.nearestParkDist, // 구별 평균 미확보 → 전체 평균 대체
     greenRatio,

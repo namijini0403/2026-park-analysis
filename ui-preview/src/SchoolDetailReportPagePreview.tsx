@@ -56,6 +56,7 @@ export type SchoolDetailReportProps = {
   statusSummary?: string;
   nearestParkDistanceM: number;
   nearestParkName?: string;
+  nearestParkAccessNote?: string;
   nearestParkDistanceCityAvg: number;
   nearestParkDistanceDistrictAvg: number;
   nearestParkDistanceCityPercentile?: number;
@@ -684,7 +685,18 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
               directionLabel="거리 짧을수록 유리"
             />
           }
-          footer={props.nearestParkName ? <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">가장 가까운 공원: {props.nearestParkName}</div> : null}
+          footer={
+            props.nearestParkName || props.nearestParkAccessNote ? (
+              <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                {props.nearestParkName ? <div>가장 가까운 공원: {props.nearestParkName}</div> : null}
+                {props.nearestParkAccessNote ? (
+                  <div className={cx("leading-6", props.nearestParkName ? "mt-2 border-t border-slate-200 pt-2" : "")}>
+                    {props.nearestParkAccessNote}
+                  </div>
+                ) : null}
+              </div>
+            ) : null
+          }
         />
         <MetricCard
           title="녹지 비율"
