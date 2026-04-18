@@ -344,13 +344,13 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
       <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm">
           <SectionTitle
-            eyebrow="City Top 10"
-            title="시 전체 우선 지원 학교 상위 10개"
-            description="시 단위에서 가장 먼저 검토해야 하는 학교를 한 장에 모아 보여주는 영역입니다."
+            eyebrow="City Case 1"
+            title={`시 전체 즉시 개선 대상 ${formatNumber(data.cityTopPrioritySchools.length)}개`}
+            description="현재 case1로 분류된 학교를 우선순위대로 모두 보여줍니다. 놀이터 수를 함께 보고 같은 case1 안에서도 후순위를 구분할 수 있습니다."
           />
           <div className="mt-5 space-y-3">
             {data.cityTopPrioritySchools.map((school) => (
-              <SchoolRow key={`city-${school.rank}-${school.schoolName}`} school={school} compact />
+              <SchoolRow key={`city-${school.rank}-${school.schoolName}`} school={school} />
             ))}
           </div>
         </div>

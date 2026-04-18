@@ -51,6 +51,38 @@ MANUAL_OVERRIDES = {
 }
 
 
+# 2026-04-18 manual audit fixes by school ID.
+# These values are meant to survive pipeline reruns.
+JUANNAM_GREEN_RATIO = 0.4263408185968763
+SONGWON_GREEN_RATIO = 20.733643281479043
+
+MANUAL_NEAREST_OVERRIDES_BY_ID = {
+    "B000003144": {"park": "석곶체육공원", "dist": 444.0},  # 석남초
+    "B000003145": {"park": "석곶체육공원", "dist": 435.0},  # 천마초
+    "B000026504": {"park": "송도랜드마크씨티9호근린공원", "dist": 59.0},  # 송담초
+    "B000003048": {"park": "학교 앞 수변공원(실측 반영)", "dist": 219.0},  # 명선초
+    "B000002990": {"park": "꿈나래 어린이공원", "dist": 50.0},  # 학익초
+}
+
+MANUAL_ENV_OVERRIDES_BY_ID = {
+    # case1 유지, but playgrounds exist inside nearby apartment complexes.
+    "B000003033": {"iso_playground_count": 11},  # 부마초
+    "B000003027": {"iso_playground_count": 7},   # 부원초
+    "B000025248": {"iso_playground_count": 6},   # 은송초
+    "B000003034": {"iso_playground_count": 9},   # 미산초
+    "B000025225": {"iso_playground_count": 6},   # 송빛초
+    # measured/manual green fixes
+    "B000003144": {"iso_park_count": 1, "iso_green_ratio_raw": JUANNAM_GREEN_RATIO},  # 석남초
+    "B000003145": {"iso_park_count": 1, "iso_green_ratio_raw": JUANNAM_GREEN_RATIO},  # 천마초
+    # 송담초 requested as 현송초 유사환경이지만 current automated 현송초 값이 0으로 과소추정되어,
+    # 동일 송도 수변환경인 송원초 수동값을 surrogate로 고정한다.
+    "B000026504": {"iso_park_count": 1, "iso_green_ratio_raw": SONGWON_GREEN_RATIO},  # 송담초
+    "B000003048": {"iso_park_count": 2, "iso_green_ratio_raw": SONGWON_GREEN_RATIO},  # 명선초
+    # 학익초는 현재 자동값 0이라 "두 배"가 성립하지 않아, 보수적으로 주안남초의 2배 수준으로 고정한다.
+    "B000002990": {"iso_park_count": 1, "iso_green_ratio_raw": JUANNAM_GREEN_RATIO * 2},  # 학익초
+}
+
+
 def ensure_snapshots() -> None:
     if not SNAPSHOT_PRIORITY_BEFORE.exists():
         SNAPSHOT_PRIORITY_BEFORE.write_bytes(SCHOOL_PRIORITY_PATH.read_bytes())
@@ -220,6 +252,16 @@ def main() -> None:
             if col in school_nearest.columns:
                 school_nearest.loc[mask_nearest, col] = np.nan
 
+    for school_id, override in MANUAL_NEAREST_OVERRIDES_BY_ID.items():
+        sealed[str(school_id)] = float(override["dist"])
+        school_priority.loc[school_priority["학교ID"] == school_id, "nearest_park_dist_m"] = override["dist"]
+        mask_nearest = school_nearest["학교ID"] == school_id
+        school_nearest.loc[mask_nearest, "nearest_park_name"] = override["park"]
+        school_nearest.loc[mask_nearest, "nearest_park_dist_m"] = override["dist"]
+        for col in ("nearest_park_lat", "nearest_park_lon"):
+            if col in school_nearest.columns:
+                school_nearest.loc[mask_nearest, col] = np.nan
+
     with open(SEALED_PATH, "w", encoding="utf-8") as f:
         json.dump(sealed, f, ensure_ascii=False, indent=2, sort_keys=True)
 
@@ -289,6 +331,27 @@ def main() -> None:
         0.0,
     )
     school_priority["iso_green_ratio"] = school_priority["iso_green_ratio_raw"].clip(lower=0.0, upper=100.0)
+
+    for school_id, override in MANUAL_ENV_OVERRIDES_BY_ID.items():
+        mask = school_priority["학교ID"] == school_id
+        if not mask.any():
+            continue
+        if "iso_playground_count" in override:
+            school_priority.loc[mask, "iso_playground_count"] = int(override["iso_playground_count"])
+        if "iso_park_count" in override:
+            park_count = int(override["iso_park_count"])
+            school_priority.loc[mask, "iso_park_count"] = park_count
+            school_priority.loc[mask, "iso_park_count_raw"] = np.maximum(
+                school_priority.loc[mask, "iso_park_count_raw"].fillna(0).astype(int),
+                park_count,
+            )
+        if "iso_green_ratio_raw" in override:
+            ratio_raw = float(override["iso_green_ratio_raw"])
+            area = school_priority.loc[mask, "isochrone_area_m2"].fillna(0.0) * (ratio_raw / 100.0)
+            school_priority.loc[mask, "iso_green_ratio_raw"] = ratio_raw
+            school_priority.loc[mask, "iso_green_ratio"] = np.clip(ratio_raw, 0.0, 100.0)
+            school_priority.loc[mask, "iso_park_area_raw"] = area
+            school_priority.loc[mask, "iso_park_area"] = area
 
     active_mask = school_priority["is_separate_bundle_tag"] == 0
     hard_case1_mask = (

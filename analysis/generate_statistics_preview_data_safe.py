@@ -199,10 +199,10 @@ def main() -> None:
             }
         )
 
-    city_top_df = merged.sort_values(
+    city_top_df = merged[merged["case_type"] == 1.0].sort_values(
         by=["priority_rank", "priority_score", "forecast_2029"],
         ascending=[True, False, False],
-    ).head(10)
+    )
     city_best_row = choose_best_school(merged)
 
     data = {
