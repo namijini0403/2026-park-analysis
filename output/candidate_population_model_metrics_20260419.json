@@ -1,0 +1,121 @@
+{
+  "model_version": "gu_prophet_grid_alloc_v1_20260419",
+  "candidate_count": 1635,
+  "prophet_backtest": {
+    "row_count": 50,
+    "years": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "mae": 1041.077477886322,
+    "rmse": 1792.23639732298,
+    "r2": 0.9934803736199015,
+    "mape_pct": 3.2540604178341805,
+    "by_year": [
+      {
+        "year": 2021,
+        "mae": 1107.00952446099,
+        "rmse": 1507.6584783000792,
+        "r2": 0.9952983617147033
+      },
+      {
+        "year": 2022,
+        "mae": 1620.0358646996513,
+        "rmse": 2738.310652211551,
+        "r2": 0.9848545293950516
+      },
+      {
+        "year": 2023,
+        "mae": 723.1438161402046,
+        "rmse": 996.2293413733718,
+        "r2": 0.9980566662994361
+      },
+      {
+        "year": 2024,
+        "mae": 1005.1349495331069,
+        "rmse": 1971.8134412719112,
+        "r2": 0.9919841332059031
+      },
+      {
+        "year": 2025,
+        "mae": 750.0632345976568,
+        "rmse": 1186.8681714693996,
+        "r2": 0.9970864238810535
+      }
+    ]
+  },
+  "spatial_consistency": {
+    "row_count": 591,
+    "mae": 0.0,
+    "rmse": 0.0,
+    "max_abs_error": 0.0,
+    "median_abs_error": 0.0,
+    "exact_match_ratio_pct": 100.0
+  },
+  "candidate_coverage": {
+    "candidate_count": 1635,
+    "candidate_child_sum_current": 146750.876,
+    "gu_child_sum_2025": 265004.0,
+    "coverage_ratio_pct": 55.376853179574645,
+    "by_gu": [
+      {
+        "gu": "계양구",
+        "candidate_child_current": 15547.345,
+        "actual_2025": 17382,
+        "coverage_ratio": 0.8945
+      },
+      {
+        "gu": "남동구",
+        "candidate_child_current": 19701.391,
+        "actual_2025": 36005,
+        "coverage_ratio": 0.5472
+      },
+      {
+        "gu": "동구",
+        "candidate_child_current": 2167.803,
+        "actual_2025": 3357,
+        "coverage_ratio": 0.6458
+      },
+      {
+        "gu": "미추홀구",
+        "candidate_child_current": 18423.755,
+        "actual_2025": 32268,
+        "coverage_ratio": 0.571
+      },
+      {
+        "gu": "부평구",
+        "candidate_child_current": 25749.435,
+        "actual_2025": 36723,
+        "coverage_ratio": 0.7012
+      },
+      {
+        "gu": "서구",
+        "candidate_child_current": 34565.313,
+        "actual_2025": 74390,
+        "coverage_ratio": 0.4646
+      },
+      {
+        "gu": "연수구",
+        "candidate_child_current": 26129.204,
+        "actual_2025": 47287,
+        "coverage_ratio": 0.5526
+      },
+      {
+        "gu": "중구",
+        "candidate_child_current": 4466.63,
+        "actual_2025": 17592,
+        "coverage_ratio": 0.2539
+      }
+    ]
+  },
+  "forecast_ranges": {
+    "forecast_2029_min": 0,
+    "forecast_2029_max": 655,
+    "forecast_2031_min": 0,
+    "forecast_2031_max": 644
+  },
+  "active_file_replace_succeeded": false
+}
