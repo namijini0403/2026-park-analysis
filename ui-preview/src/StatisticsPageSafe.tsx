@@ -85,8 +85,9 @@ function SchoolRow({ school, compact = false }: { school: StatisticsSchoolItem; 
           </span>
         </div>
         <p className="mt-1 text-sm text-slate-600">{school.caseStatusLabel}</p>
-        {!compact ? (
+{!compact ? (
           <div className="mt-3 flex flex-wrap gap-3 text-sm text-slate-600">
+            <span>학생수 {formatNumber(school.currentStudentCount)}명</span>
             <span>2029 {formatNumber(school.potentialDemand2029)}명</span>
             <span>2031 {formatNumber(school.potentialDemand2031)}명</span>
             <span>공원 {formatDecimal(school.nearestParkDistanceM, 1)}m</span>
@@ -126,6 +127,7 @@ function BestSchoolCard({ school, label }: { school: StatisticsSchoolItem; label
 export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
   const [selectedDistrictName, setSelectedDistrictName] = useState(data.districts[0]?.districtName ?? "");
   const [chartMode, setChartMode] = useState<"pressure" | "cases">("pressure");
+  const [cityCase1SortMode, setCityCase1SortMode] = useState<"playground" | "students">("playground");
 
   const selectedDistrict = useMemo(
     () => data.districts.find((district) => district.districtName === selectedDistrictName) ?? data.districts[0],
@@ -154,6 +156,14 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
         specialPolicyCount: district.specialPolicyCount,
       })),
     [data.districts]
+  );
+
+  const cityCase1Schools = useMemo(
+    () =>
+      cityCase1SortMode === "students"
+        ? data.cityTopPrioritySchoolsStudentFocused
+        : data.cityTopPrioritySchoolsPlaygroundFocused,
+    [cityCase1SortMode, data.cityTopPrioritySchoolsPlaygroundFocused, data.cityTopPrioritySchoolsStudentFocused]
   );
 
   return (
@@ -345,11 +355,33 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm">
           <SectionTitle
             eyebrow="City Case 1"
-            title={`시 전체 즉시 개선 대상 ${formatNumber(data.cityTopPrioritySchools.length)}개`}
-            description="현재 case1로 분류된 학교를 우선순위대로 모두 보여줍니다. 놀이터 수를 함께 보고 같은 case1 안에서도 후순위를 구분할 수 있습니다."
+            title={`시 전체 case1 우선순위 ${formatNumber(cityCase1Schools.length)}개교`}
+            description="같은 case1 안에서도 무엇을 먼저 볼지 선택할 수 있습니다. 놀이공간 부족을 우선할지, 현재 학생 규모를 우선할지 바로 비교해 볼 수 있습니다."
           />
+          <div className="mt-4 flex flex-wrap gap-2">
+            {[
+              { key: "playground", label: "놀이공간 부족 우선" },
+              { key: "students", label: "학생 규모 우선" },
+            ].map((item) => {
+              const active = cityCase1SortMode === item.key;
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => setCityCase1SortMode(item.key as "playground" | "students")}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                    active
+                      ? "bg-slate-950 text-white"
+                      : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
           <div className="mt-5 space-y-3">
-            {data.cityTopPrioritySchools.map((school) => (
+            {cityCase1Schools.map((school) => (
               <SchoolRow key={`city-${school.rank}-${school.schoolName}`} school={school} />
             ))}
           </div>

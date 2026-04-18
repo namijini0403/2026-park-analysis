@@ -9,6 +9,7 @@ export type StatisticsSchoolItem = {
   nearestParkDistanceM: number;
   greenRatio: number;
   playgroundCount: number;
+  currentStudentCount: number;
 };
 
 export type DistrictStatistics = {
@@ -38,9 +39,11 @@ export type CityStatisticsData = {
     priorityReviewCount: number;
     totalPotentialDemand2029: number;
     totalPotentialDemand2031: number;
-  };
+  }; 
   districts: DistrictStatistics[];
   cityTopPrioritySchools: StatisticsSchoolItem[];
+  cityTopPrioritySchoolsPlaygroundFocused: StatisticsSchoolItem[];
+  cityTopPrioritySchoolsStudentFocused: StatisticsSchoolItem[];
   cityBestSchool: StatisticsSchoolItem;
 };
 
@@ -80,7 +83,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 116,
           "nearestParkDistanceM": 579.7,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 286
         },
         {
           "rank": 2,
@@ -92,7 +96,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 29,
           "nearestParkDistanceM": 4482.3,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 33
         },
         {
           "rank": 3,
@@ -104,7 +109,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 259,
           "nearestParkDistanceM": 61.3,
           "greenRatio": 0.0,
-          "playgroundCount": 1
+          "playgroundCount": 1,
+          "currentStudentCount": 699
         },
         {
           "rank": 4,
@@ -116,7 +122,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 149,
           "nearestParkDistanceM": 121.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 312
         },
         {
           "rank": 5,
@@ -128,7 +135,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 29,
           "nearestParkDistanceM": 416.6,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 104
         }
       ],
       "bestSchool": {
@@ -141,7 +149,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 230,
         "nearestParkDistanceM": 55.7,
         "greenRatio": 95.9,
-        "playgroundCount": 1
+        "playgroundCount": 1,
+        "currentStudentCount": 1582
       }
     },
     {
@@ -169,7 +178,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 420,
           "nearestParkDistanceM": 728.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 488
         },
         {
           "rank": 2,
@@ -181,7 +191,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 446,
           "nearestParkDistanceM": 650.3,
           "greenRatio": 0.2,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 438
         },
         {
           "rank": 3,
@@ -193,7 +204,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 398,
           "nearestParkDistanceM": 182.0,
           "greenRatio": 0.2,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 347
         },
         {
           "rank": 4,
@@ -205,7 +217,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 235,
           "nearestParkDistanceM": 305.1,
           "greenRatio": 0.5,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 373
         },
         {
           "rank": 5,
@@ -217,7 +230,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 210,
           "nearestParkDistanceM": 43.4,
           "greenRatio": 0.5,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 244
         }
       ],
       "bestSchool": {
@@ -230,7 +244,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 132,
         "nearestParkDistanceM": 110.6,
         "greenRatio": 1.6,
-        "playgroundCount": 0
+        "playgroundCount": 0,
+        "currentStudentCount": 263
       }
     },
     {
@@ -258,7 +273,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 593,
           "nearestParkDistanceM": 947.1,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 902
         },
         {
           "rank": 2,
@@ -270,7 +286,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 755,
           "nearestParkDistanceM": 254.6,
           "greenRatio": 0.6,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 366
         },
         {
           "rank": 3,
@@ -282,7 +299,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 698,
           "nearestParkDistanceM": 60.5,
           "greenRatio": 0.4,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 426
         },
         {
           "rank": 4,
@@ -294,7 +312,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 677,
           "nearestParkDistanceM": 305.0,
           "greenRatio": 0.6,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 349
         },
         {
           "rank": 5,
@@ -306,7 +325,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 662,
           "nearestParkDistanceM": 73.2,
           "greenRatio": 0.4,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 941
         }
       ],
       "bestSchool": {
@@ -319,7 +339,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 419,
         "nearestParkDistanceM": 56.9,
         "greenRatio": 28.7,
-        "playgroundCount": 0
+        "playgroundCount": 0,
+        "currentStudentCount": 297
       }
     },
     {
@@ -347,7 +368,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 0,
           "nearestParkDistanceM": 2553.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 26
         },
         {
           "rank": 2,
@@ -359,7 +381,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 0,
           "nearestParkDistanceM": 2553.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 16
         },
         {
           "rank": 3,
@@ -371,7 +394,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 0,
           "nearestParkDistanceM": 13519.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 147
         },
         {
           "rank": 4,
@@ -383,7 +407,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 0,
           "nearestParkDistanceM": 12865.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 17
         },
         {
           "rank": 5,
@@ -395,7 +420,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 0,
           "nearestParkDistanceM": 2553.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 65
         }
       ],
       "bestSchool": {
@@ -408,7 +434,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 0,
         "nearestParkDistanceM": 0,
         "greenRatio": 0,
-        "playgroundCount": 0
+        "playgroundCount": 0,
+        "currentStudentCount": 0
       }
     },
     {
@@ -436,7 +463,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 510,
           "nearestParkDistanceM": 839.7,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 543
         },
         {
           "rank": 2,
@@ -448,7 +476,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 620,
           "nearestParkDistanceM": 752.2,
           "greenRatio": 0.0,
-          "playgroundCount": 7
+          "playgroundCount": 7,
+          "currentStudentCount": 602
         },
         {
           "rank": 3,
@@ -460,7 +489,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 604,
           "nearestParkDistanceM": 801.4,
           "greenRatio": 0.0,
-          "playgroundCount": 11
+          "playgroundCount": 11,
+          "currentStudentCount": 654
         },
         {
           "rank": 4,
@@ -472,7 +502,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 185,
           "nearestParkDistanceM": 1143.0,
           "greenRatio": 0.0,
-          "playgroundCount": 9
+          "playgroundCount": 9,
+          "currentStudentCount": 219
         },
         {
           "rank": 5,
@@ -484,7 +515,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 1042,
           "nearestParkDistanceM": 162.1,
           "greenRatio": 0.8,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 1016
         }
       ],
       "bestSchool": {
@@ -497,7 +529,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 73,
         "nearestParkDistanceM": 152.0,
         "greenRatio": 14.0,
-        "playgroundCount": 0
+        "playgroundCount": 0,
+        "currentStudentCount": 207
       }
     },
     {
@@ -525,7 +558,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 320,
           "nearestParkDistanceM": 1575.0,
           "greenRatio": 0.0,
-          "playgroundCount": 6
+          "playgroundCount": 6,
+          "currentStudentCount": 1502
         },
         {
           "rank": 2,
@@ -537,7 +571,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 62,
           "nearestParkDistanceM": 1276.8,
           "greenRatio": 0.0,
-          "playgroundCount": 6
+          "playgroundCount": 6,
+          "currentStudentCount": 762
         },
         {
           "rank": 3,
@@ -549,7 +584,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 739,
           "nearestParkDistanceM": 242.4,
           "greenRatio": 0.6,
-          "playgroundCount": 2
+          "playgroundCount": 2,
+          "currentStudentCount": 747
         },
         {
           "rank": 4,
@@ -561,7 +597,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 609,
           "nearestParkDistanceM": 270.5,
           "greenRatio": 0.7,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 1519
         },
         {
           "rank": 5,
@@ -573,7 +610,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 581,
           "nearestParkDistanceM": 204.8,
           "greenRatio": 0.9,
-          "playgroundCount": 2
+          "playgroundCount": 2,
+          "currentStudentCount": 701
         }
       ],
       "bestSchool": {
@@ -586,7 +624,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 108,
         "nearestParkDistanceM": 0.0,
         "greenRatio": 78.2,
-        "playgroundCount": 0
+        "playgroundCount": 0,
+        "currentStudentCount": 472
       }
     },
     {
@@ -614,7 +653,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 752,
           "nearestParkDistanceM": 215.9,
           "greenRatio": 0.7,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 771
         },
         {
           "rank": 2,
@@ -626,7 +666,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 702,
           "nearestParkDistanceM": 147.6,
           "greenRatio": 0.4,
-          "playgroundCount": 1
+          "playgroundCount": 1,
+          "currentStudentCount": 414
         },
         {
           "rank": 3,
@@ -638,7 +679,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 625,
           "nearestParkDistanceM": 473.0,
           "greenRatio": 0.1,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 395
         },
         {
           "rank": 4,
@@ -650,7 +692,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 376,
           "nearestParkDistanceM": 335.8,
           "greenRatio": 0.1,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 950
         },
         {
           "rank": 5,
@@ -662,7 +705,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 394,
           "nearestParkDistanceM": 563.4,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 607
         }
       ],
       "bestSchool": {
@@ -675,7 +719,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 346,
         "nearestParkDistanceM": 180.7,
         "greenRatio": 71.5,
-        "playgroundCount": 1
+        "playgroundCount": 1,
+        "currentStudentCount": 320
       }
     },
     {
@@ -703,7 +748,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 642,
           "nearestParkDistanceM": 425.8,
           "greenRatio": 0.1,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 688
         },
         {
           "rank": 2,
@@ -715,7 +761,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 564,
           "nearestParkDistanceM": 436.0,
           "greenRatio": 0.3,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 288
         },
         {
           "rank": 3,
@@ -727,7 +774,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 464,
           "nearestParkDistanceM": 432.5,
           "greenRatio": 0.9,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 342
         },
         {
           "rank": 4,
@@ -739,7 +787,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 464,
           "nearestParkDistanceM": 144.2,
           "greenRatio": 0.7,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 245
         },
         {
           "rank": 5,
@@ -751,7 +800,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 371,
           "nearestParkDistanceM": 691.3,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 454
         }
       ],
       "bestSchool": {
@@ -764,7 +814,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 180,
         "nearestParkDistanceM": 53.9,
         "greenRatio": 7.4,
-        "playgroundCount": 0
+        "playgroundCount": 0,
+        "currentStudentCount": 560
       }
     },
     {
@@ -792,7 +843,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 150,
           "nearestParkDistanceM": 608.2,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 298
         },
         {
           "rank": 2,
@@ -804,7 +856,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 56,
           "nearestParkDistanceM": 1323.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 209
         },
         {
           "rank": 3,
@@ -816,7 +869,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 56,
           "nearestParkDistanceM": 663.1,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 664
         },
         {
           "rank": 4,
@@ -828,7 +882,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 593,
           "nearestParkDistanceM": 446.5,
           "greenRatio": 0.0,
-          "playgroundCount": 1
+          "playgroundCount": 1,
+          "currentStudentCount": 1216
         },
         {
           "rank": 5,
@@ -840,7 +895,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 587,
           "nearestParkDistanceM": 602.1,
           "greenRatio": 0.2,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 249
         }
       ],
       "bestSchool": {
@@ -853,7 +909,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 136,
         "nearestParkDistanceM": 166.0,
         "greenRatio": 16.5,
-        "playgroundCount": 0
+        "playgroundCount": 0,
+        "currentStudentCount": 1154
       }
     },
     {
@@ -881,7 +938,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 124,
           "nearestParkDistanceM": 0.0,
           "greenRatio": 2.3,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 209
         },
         {
           "rank": 2,
@@ -893,7 +951,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 123,
           "nearestParkDistanceM": 0.0,
           "greenRatio": 13.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 131
         },
         {
           "rank": 3,
@@ -905,7 +964,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 45,
           "nearestParkDistanceM": 285.0,
           "greenRatio": 0.0,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 485
         },
         {
           "rank": 4,
@@ -917,7 +977,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 8,
           "nearestParkDistanceM": 327.3,
           "greenRatio": 18.9,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 41
         },
         {
           "rank": 5,
@@ -929,7 +990,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2031": 8,
           "nearestParkDistanceM": 327.3,
           "greenRatio": 18.9,
-          "playgroundCount": 0
+          "playgroundCount": 0,
+          "currentStudentCount": 7
         }
       ],
       "bestSchool": {
@@ -942,7 +1004,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2031": 123,
         "nearestParkDistanceM": 0.0,
         "greenRatio": 13.0,
-        "playgroundCount": 0
+        "playgroundCount": 0,
+        "currentStudentCount": 131
       }
     }
   ],
@@ -957,7 +1020,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 593,
       "nearestParkDistanceM": 947.1,
       "greenRatio": 0.0,
-      "playgroundCount": 0
+      "playgroundCount": 0,
+      "currentStudentCount": 902
     },
     {
       "rank": 2,
@@ -969,7 +1033,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 510,
       "nearestParkDistanceM": 839.7,
       "greenRatio": 0.0,
-      "playgroundCount": 0
+      "playgroundCount": 0,
+      "currentStudentCount": 543
     },
     {
       "rank": 3,
@@ -981,7 +1046,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 620,
       "nearestParkDistanceM": 752.2,
       "greenRatio": 0.0,
-      "playgroundCount": 7
+      "playgroundCount": 7,
+      "currentStudentCount": 602
     },
     {
       "rank": 4,
@@ -993,7 +1059,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 604,
       "nearestParkDistanceM": 801.4,
       "greenRatio": 0.0,
-      "playgroundCount": 11
+      "playgroundCount": 11,
+      "currentStudentCount": 654
     },
     {
       "rank": 5,
@@ -1005,7 +1072,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 420,
       "nearestParkDistanceM": 728.0,
       "greenRatio": 0.0,
-      "playgroundCount": 0
+      "playgroundCount": 0,
+      "currentStudentCount": 488
     },
     {
       "rank": 6,
@@ -1017,7 +1085,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 320,
       "nearestParkDistanceM": 1575.0,
       "greenRatio": 0.0,
-      "playgroundCount": 6
+      "playgroundCount": 6,
+      "currentStudentCount": 1502
     },
     {
       "rank": 7,
@@ -1029,7 +1098,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 150,
       "nearestParkDistanceM": 608.2,
       "greenRatio": 0.0,
-      "playgroundCount": 0
+      "playgroundCount": 0,
+      "currentStudentCount": 298
     },
     {
       "rank": 8,
@@ -1041,7 +1111,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 116,
       "nearestParkDistanceM": 579.7,
       "greenRatio": 0.0,
-      "playgroundCount": 0
+      "playgroundCount": 0,
+      "currentStudentCount": 286
     },
     {
       "rank": 9,
@@ -1053,7 +1124,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 185,
       "nearestParkDistanceM": 1143.0,
       "greenRatio": 0.0,
-      "playgroundCount": 9
+      "playgroundCount": 9,
+      "currentStudentCount": 219
     },
     {
       "rank": 10,
@@ -1065,7 +1137,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 29,
       "nearestParkDistanceM": 4482.3,
       "greenRatio": 0.0,
-      "playgroundCount": 0
+      "playgroundCount": 0,
+      "currentStudentCount": 33
     },
     {
       "rank": 11,
@@ -1077,7 +1150,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 56,
       "nearestParkDistanceM": 1323.0,
       "greenRatio": 0.0,
-      "playgroundCount": 0
+      "playgroundCount": 0,
+      "currentStudentCount": 209
     },
     {
       "rank": 12,
@@ -1089,7 +1163,8 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 56,
       "nearestParkDistanceM": 663.1,
       "greenRatio": 0.0,
-      "playgroundCount": 0
+      "playgroundCount": 0,
+      "currentStudentCount": 664
     },
     {
       "rank": 13,
@@ -1101,7 +1176,350 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "potentialDemand2031": 62,
       "nearestParkDistanceM": 1276.8,
       "greenRatio": 0.0,
-      "playgroundCount": 6
+      "playgroundCount": 6,
+      "currentStudentCount": 762
+    }
+  ],
+  "cityTopPrioritySchoolsPlaygroundFocused": [
+    {
+      "rank": 1,
+      "schoolName": "인천석암초등학교",
+      "districtName": "미추홀구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 562,
+      "potentialDemand2031": 593,
+      "nearestParkDistanceM": 947.1,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 902
+    },
+    {
+      "rank": 2,
+      "schoolName": "인천가정초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 57,
+      "potentialDemand2031": 56,
+      "nearestParkDistanceM": 663.1,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 664
+    },
+    {
+      "rank": 3,
+      "schoolName": "인천마장초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 524,
+      "potentialDemand2031": 510,
+      "nearestParkDistanceM": 839.7,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 543
+    },
+    {
+      "rank": 4,
+      "schoolName": "인천서림초등학교",
+      "districtName": "동구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 405,
+      "potentialDemand2031": 420,
+      "nearestParkDistanceM": 728.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 488
+    },
+    {
+      "rank": 5,
+      "schoolName": "인천봉화초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 154,
+      "potentialDemand2031": 150,
+      "nearestParkDistanceM": 608.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 298
+    },
+    {
+      "rank": 6,
+      "schoolName": "인천신선초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 120,
+      "potentialDemand2031": 116,
+      "nearestParkDistanceM": 579.7,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 286
+    },
+    {
+      "rank": 7,
+      "schoolName": "인천가석초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 57,
+      "potentialDemand2031": 56,
+      "nearestParkDistanceM": 1323.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 209
+    },
+    {
+      "rank": 8,
+      "schoolName": "인천용유초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 30,
+      "potentialDemand2031": 29,
+      "nearestParkDistanceM": 4482.3,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 33
+    },
+    {
+      "rank": 9,
+      "schoolName": "인천은송초등학교",
+      "districtName": "연수구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 329,
+      "potentialDemand2031": 320,
+      "nearestParkDistanceM": 1575.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 6,
+      "currentStudentCount": 1502
+    },
+    {
+      "rank": 10,
+      "schoolName": "인천송빛초등학교",
+      "districtName": "연수구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 64,
+      "potentialDemand2031": 62,
+      "nearestParkDistanceM": 1276.8,
+      "greenRatio": 0.0,
+      "playgroundCount": 6,
+      "currentStudentCount": 762
+    },
+    {
+      "rank": 11,
+      "schoolName": "인천부원초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 580,
+      "potentialDemand2031": 620,
+      "nearestParkDistanceM": 752.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 7,
+      "currentStudentCount": 602
+    },
+    {
+      "rank": 12,
+      "schoolName": "인천미산초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 190,
+      "potentialDemand2031": 185,
+      "nearestParkDistanceM": 1143.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 9,
+      "currentStudentCount": 219
+    },
+    {
+      "rank": 13,
+      "schoolName": "인천부마초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 565,
+      "potentialDemand2031": 604,
+      "nearestParkDistanceM": 801.4,
+      "greenRatio": 0.0,
+      "playgroundCount": 11,
+      "currentStudentCount": 654
+    }
+  ],
+  "cityTopPrioritySchoolsStudentFocused": [
+    {
+      "rank": 1,
+      "schoolName": "인천은송초등학교",
+      "districtName": "연수구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 329,
+      "potentialDemand2031": 320,
+      "nearestParkDistanceM": 1575.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 6,
+      "currentStudentCount": 1502
+    },
+    {
+      "rank": 2,
+      "schoolName": "인천석암초등학교",
+      "districtName": "미추홀구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 562,
+      "potentialDemand2031": 593,
+      "nearestParkDistanceM": 947.1,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 902
+    },
+    {
+      "rank": 3,
+      "schoolName": "인천송빛초등학교",
+      "districtName": "연수구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 64,
+      "potentialDemand2031": 62,
+      "nearestParkDistanceM": 1276.8,
+      "greenRatio": 0.0,
+      "playgroundCount": 6,
+      "currentStudentCount": 762
+    },
+    {
+      "rank": 4,
+      "schoolName": "인천가정초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 57,
+      "potentialDemand2031": 56,
+      "nearestParkDistanceM": 663.1,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 664
+    },
+    {
+      "rank": 5,
+      "schoolName": "인천부마초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 565,
+      "potentialDemand2031": 604,
+      "nearestParkDistanceM": 801.4,
+      "greenRatio": 0.0,
+      "playgroundCount": 11,
+      "currentStudentCount": 654
+    },
+    {
+      "rank": 6,
+      "schoolName": "인천부원초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 580,
+      "potentialDemand2031": 620,
+      "nearestParkDistanceM": 752.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 7,
+      "currentStudentCount": 602
+    },
+    {
+      "rank": 7,
+      "schoolName": "인천마장초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 524,
+      "potentialDemand2031": 510,
+      "nearestParkDistanceM": 839.7,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 543
+    },
+    {
+      "rank": 8,
+      "schoolName": "인천서림초등학교",
+      "districtName": "동구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 405,
+      "potentialDemand2031": 420,
+      "nearestParkDistanceM": 728.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 488
+    },
+    {
+      "rank": 9,
+      "schoolName": "인천봉화초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 154,
+      "potentialDemand2031": 150,
+      "nearestParkDistanceM": 608.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 298
+    },
+    {
+      "rank": 10,
+      "schoolName": "인천신선초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 120,
+      "potentialDemand2031": 116,
+      "nearestParkDistanceM": 579.7,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 286
+    },
+    {
+      "rank": 11,
+      "schoolName": "인천미산초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 190,
+      "potentialDemand2031": 185,
+      "nearestParkDistanceM": 1143.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 9,
+      "currentStudentCount": 219
+    },
+    {
+      "rank": 12,
+      "schoolName": "인천가석초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 57,
+      "potentialDemand2031": 56,
+      "nearestParkDistanceM": 1323.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 209
+    },
+    {
+      "rank": 13,
+      "schoolName": "인천용유초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 30,
+      "potentialDemand2031": 29,
+      "nearestParkDistanceM": 4482.3,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 33
     }
   ],
   "cityBestSchool": {
@@ -1114,6 +1532,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
     "potentialDemand2031": 230,
     "nearestParkDistanceM": 55.7,
     "greenRatio": 95.9,
-    "playgroundCount": 1
+    "playgroundCount": 1,
+    "currentStudentCount": 1582
   }
 };

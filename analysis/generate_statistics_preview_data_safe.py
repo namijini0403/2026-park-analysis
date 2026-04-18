@@ -9,6 +9,7 @@ import pandas as pd
 BASE = Path(r"c:\2026_data_analysis_park")
 PRIORITY_PATH = BASE / "data_processed" / "school_priority_case_system_20260411.csv"
 FORECAST_PATH = BASE / "data_processed" / "beneficiary_forecast.csv"
+STUDENT_TREND_PATH = BASE / "data_processed" / "student_trend.csv"
 OUT_PATH = BASE / "ui-preview" / "src" / "statisticsPreviewDataSafe.ts"
 
 CASE_POLICY_LABELS = {
@@ -60,6 +61,7 @@ def school_record(row: pd.Series, rank: int) -> dict:
         "nearestParkDistanceM": round1(row["nearest_park_dist_m"]),
         "greenRatio": round1(row["iso_green_ratio"]),
         "playgroundCount": int(round(float(row["iso_playground_count"]))),
+        "currentStudentCount": int(round(float(row["current_student_count"]))),
     }
 
 
@@ -75,6 +77,7 @@ def build_empty_best_school(district_name: str) -> dict:
         "nearestParkDistanceM": 0,
         "greenRatio": 0,
         "playgroundCount": 0,
+        "currentStudentCount": 0,
     }
 
 
@@ -119,6 +122,7 @@ def build_typescript(data: dict) -> str:
   nearestParkDistanceM: number;
   greenRatio: number;
   playgroundCount: number;
+  currentStudentCount: number;
 }};
 
 export type DistrictStatistics = {{
@@ -148,9 +152,11 @@ export type CityStatisticsData = {{
     priorityReviewCount: number;
     totalPotentialDemand2029: number;
     totalPotentialDemand2031: number;
-  }};
+  }}; 
   districts: DistrictStatistics[];
   cityTopPrioritySchools: StatisticsSchoolItem[];
+  cityTopPrioritySchoolsPlaygroundFocused: StatisticsSchoolItem[];
+  cityTopPrioritySchoolsStudentFocused: StatisticsSchoolItem[];
   cityBestSchool: StatisticsSchoolItem;
 }};
 
@@ -161,14 +167,29 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {payload};
 def main() -> None:
     priority = pd.read_csv(PRIORITY_PATH, encoding="utf-8-sig")
     forecast = pd.read_csv(FORECAST_PATH, encoding="utf-8-sig")
+    student_trend = pd.read_csv(STUDENT_TREND_PATH, encoding="utf-8-sig")
+
+    latest_students = (
+        student_trend.assign(
+            연도=pd.to_numeric(student_trend["연도"], errors="coerce"),
+            학생수=pd.to_numeric(student_trend["학생수"], errors="coerce"),
+        )
+        .dropna(subset=["연도"])
+        .sort_values(["학교ID", "연도"])
+        .groupby("학교ID", as_index=False)
+        .tail(1)[["학교ID", "학생수"]]
+        .rename(columns={"학생수": "current_student_count"})
+    )
 
     merged = priority.merge(
         forecast[["학교ID", "forecast_2029", "forecast_2031"]],
         on="학교ID",
         how="left",
     )
+    merged = merged.merge(latest_students, on="학교ID", how="left")
     merged["forecast_2029"] = pd.to_numeric(merged["forecast_2029"], errors="coerce").fillna(0)
     merged["forecast_2031"] = pd.to_numeric(merged["forecast_2031"], errors="coerce").fillna(0)
+    merged["current_student_count"] = pd.to_numeric(merged["current_student_count"], errors="coerce").fillna(0)
     merged["casePolicyLabel"] = merged["case_type"].map(CASE_POLICY_LABELS).fillna("별도 정책 적용")
 
     district_rows: list[dict] = []
@@ -199,9 +220,20 @@ def main() -> None:
             }
         )
 
-    city_top_df = merged[merged["case_type"] == 1.0].sort_values(
+    city_case1_df = merged[merged["case_type"] == 1.0].copy()
+    city_top_df = city_case1_df.sort_values(
         by=["priority_rank", "priority_score", "forecast_2029"],
         ascending=[True, False, False],
+    )
+    city_top_playground_df = city_case1_df.sort_values(
+        by=["iso_playground_count", "current_student_count", "nearest_park_dist_m", "priority_rank"],
+        ascending=[True, False, False, True],
+        kind="mergesort",
+    )
+    city_top_student_df = city_case1_df.sort_values(
+        by=["current_student_count", "iso_playground_count", "nearest_park_dist_m", "priority_rank"],
+        ascending=[False, True, False, True],
+        kind="mergesort",
     )
     city_best_row = choose_best_school(merged)
 
@@ -217,6 +249,12 @@ def main() -> None:
         },
         "districts": district_rows,
         "cityTopPrioritySchools": [school_record(row, idx + 1) for idx, (_, row) in enumerate(city_top_df.iterrows())],
+        "cityTopPrioritySchoolsPlaygroundFocused": [
+            school_record(row, idx + 1) for idx, (_, row) in enumerate(city_top_playground_df.iterrows())
+        ],
+        "cityTopPrioritySchoolsStudentFocused": [
+            school_record(row, idx + 1) for idx, (_, row) in enumerate(city_top_student_df.iterrows())
+        ],
         "cityBestSchool": school_record(city_best_row, 1) if city_best_row is not None else build_empty_best_school("인천광역시"),
     }
 
