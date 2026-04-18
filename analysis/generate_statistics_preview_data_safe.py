@@ -226,13 +226,13 @@ def main() -> None:
         ascending=[True, False, False],
     )
     city_top_playground_df = city_case1_df.sort_values(
-        by=["iso_playground_count", "current_student_count", "nearest_park_dist_m", "priority_rank"],
-        ascending=[True, False, False, True],
+        by=["iso_park_count", "iso_green_ratio", "iso_playground_count", "current_student_count", "priority_rank"],
+        ascending=[True, True, True, False, True],
         kind="mergesort",
     )
     city_top_student_df = city_case1_df.sort_values(
-        by=["current_student_count", "iso_playground_count", "nearest_park_dist_m", "priority_rank"],
-        ascending=[False, True, False, True],
+        by=["current_student_count", "iso_park_count", "iso_green_ratio", "iso_playground_count", "priority_rank"],
+        ascending=[False, True, True, True, True],
         kind="mergesort",
     )
     city_best_row = choose_best_school(merged)
