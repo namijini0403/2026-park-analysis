@@ -296,8 +296,8 @@
     }
 
     .school-detail-box.case-island {
-      background: #eef5ff;
-      border-color: rgba(30, 136, 229, 0.24);
+      background: #f3f4f6;
+      border-color: rgba(107, 114, 128, 0.28);
     }
 
     .detail-head {
@@ -356,7 +356,7 @@
 
     .detail-badge.island {
       color: #ffffff;
-      background: #1e88e5;
+      background: #6b7280;
     }
 
     .detail-badge-row {
@@ -412,8 +412,8 @@
     }
 
     .detail-message.case-island {
-      background: rgba(227, 242, 253, 0.95);
-      border-color: rgba(30, 136, 229, 0.28);
+      background: rgba(243, 244, 246, 0.96);
+      border-color: rgba(107, 114, 128, 0.28);
     }
 
     .detail-section {
@@ -1149,7 +1149,7 @@
       case2: { label: "우선검토대상", badge: "우선검토대상", color: "#FB8C00", className: "high" },
       case3: { label: "수요관리필요", badge: "수요관리필요", color: "#FDD835", className: "watch" },
       case4: { label: "현상유지", badge: "현상유지", color: "#43A047", className: "normal" },
-      island: { label: "🏝️ 별도정책필요", badge: "🏝️ 별도정책필요", color: "#1E88E5", className: "island" }
+      island: { label: "별도 정책 필요", badge: "별도 정책 필요", color: "#6B7280", className: "island" }
     };
 
     const ui = {
@@ -2703,7 +2703,7 @@
       const outlierType = getOutlierType(row);
       const borderColor = outlierType === "李⑹떆" ? "#6B46C1" : "";
       if (isSpecialPolicySchool(row)) {
-        return { color: "#6B46C1", symbol: "", borderColor };
+        return { color: "#6B7280", symbol: "", borderColor };
       }
       return { color: getCaseMeta(row).color, symbol: "", borderColor };
     }
@@ -2771,7 +2771,7 @@
           <span>현상유지</span>
         </div>
         <div class="legend-item">
-          <span class="swatch" style="background:#1E88E5;"></span>
+          <span class="swatch" style="background:#6B7280;"></span>
           <span>🏝️ 별도정책필요</span>
         </div>
       `;
