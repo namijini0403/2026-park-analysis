@@ -65,8 +65,11 @@ export default function App() {
         { grid_id: "CG_00541", cx: 126.6854, cy: 37.4598, xgb_predicted_2029: 388, xgb_predicted_2031: 395, nearest_park_dist: 520, nearest_pg_dist: 2200, nearest_school_dist: 220, nearest_apt_dist: 410, land_feasibility_level: "medium" as const, linked_schools: ["인천석암초등학교"] },
       ];
     }
-    return mapCandidateFeatures(rawCandidates, schoolLat, schoolLng);
-  }, [schoolRow, rawCandidates, schoolLat, schoolLng]);
+    return mapCandidateFeatures(rawCandidates, schoolLat, schoolLng, {
+      predicted2029: detailProps.potentialDemand2029,
+      predicted2031: detailProps.potentialDemand2031,
+    });
+  }, [schoolRow, rawCandidates, schoolLat, schoolLng, detailProps.potentialDemand2029, detailProps.potentialDemand2031]);
 
   return (
     <div className="min-h-screen bg-slate-100">

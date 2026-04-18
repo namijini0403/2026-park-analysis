@@ -1026,15 +1026,15 @@ function SimulationEntry({
       <Card className="p-6">
         <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
-            <p className="text-lg font-semibold text-slate-950">학교 기준 수혜 학생수 추정</p>
-            <p className="mt-1 text-sm text-slate-500">현재 학생 규모와 생활권 수요를 바탕으로 본 학교에서 예상되는 수혜 학생수 추정치입니다.</p>
+            <p className="text-lg font-semibold text-slate-950">학교 기준 예상 학생수</p>
+            <p className="mt-1 text-sm text-slate-500">학교 학생수 예측 모델을 바탕으로 산출한 예상 학생 규모입니다. 학교 내부 설치 검토 시 참고값으로 활용할 수 있습니다.</p>
             <div className="mt-4 flex flex-wrap gap-3">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2029년 수혜 학생수 추정</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2029년 예상 학생수</p>
                 <p className="mt-2 text-3xl font-bold text-slate-950">{formatNumber(potentialDemand2029)}명</p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2031년 수혜 학생수 추정</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2031년 예상 학생수</p>
                 <p className="mt-2 text-3xl font-bold text-slate-950">{formatNumber(potentialDemand2031)}명</p>
               </div>
             </div>

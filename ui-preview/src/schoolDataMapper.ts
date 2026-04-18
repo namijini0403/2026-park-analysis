@@ -24,6 +24,13 @@ export interface Candidate {
   linked_schools: string[];
   is_school_internal?: boolean;
   ai_score?: number;
+  barrier_counts?: Record<"motorway" | "trunk" | "primary" | "secondary" | "tertiary", number>;
+  barrier_severity?: "green" | "yellow" | "orange" | "red";
+  barrier_severity_label?: string;
+  barrier_color?: string;
+  barrier_note?: string;
+  route_length_m?: number;
+  route_coords?: Array<[number, number]>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -258,7 +265,11 @@ const FEASIBILITY_LEVELS = new Set(["high", "medium", "low"]);
 export function mapCandidateFeatures(
   features: RawRow[],
   schoolLat: number,
-  schoolLng: number
+  schoolLng: number,
+  schoolDemand?: {
+    predicted2029?: number;
+    predicted2031?: number;
+  }
 ): Candidate[] {
   const external: Candidate[] = features.map((p) => ({
     grid_id: s(p.grid_id, "CG_?"),
@@ -266,14 +277,31 @@ export function mapCandidateFeatures(
     cy: n(p.cy),
     xgb_predicted_2029: n(p.xgb_predicted_2029 ?? p.forecast_2029),
     xgb_predicted_2031: n(p.xgb_predicted_2031 ?? p.forecast_2031),
-    nearest_park_dist: n(p.avg_park_dist_m),
-    nearest_pg_dist: 0,
-    nearest_school_dist: 0,
-    nearest_apt_dist: 0,
+    nearest_park_dist: n(p.nearest_park_dist ?? p.avg_park_dist_m),
+    nearest_pg_dist: n(p.nearest_pg_dist ?? p.nearest_pg_dist_m ?? p.avg_pg_dist_m),
+    nearest_school_dist: n(p.route_length_m ?? p.nearest_school_dist),
+    nearest_apt_dist: n(p.nearest_apt_dist),
     land_feasibility_level: FEASIBILITY_LEVELS.has(s(p.land_feasibility_level))
       ? (s(p.land_feasibility_level) as "high" | "medium" | "low")
       : "medium",
     linked_schools: Array.isArray(p.linked_schools) ? p.linked_schools : [],
+    ...(p.barrier_counts && typeof p.barrier_counts === "object"
+      ? {
+          barrier_counts: p.barrier_counts as Record<"motorway" | "trunk" | "primary" | "secondary" | "tertiary", number>,
+        }
+      : {}),
+    ...(s(p.barrier_severity) ? { barrier_severity: s(p.barrier_severity) as "green" | "yellow" | "orange" | "red" } : {}),
+    ...(s(p.barrier_severity_label) ? { barrier_severity_label: s(p.barrier_severity_label) } : {}),
+    ...(s(p.barrier_color) ? { barrier_color: s(p.barrier_color) } : {}),
+    ...(s(p.barrier_note) ? { barrier_note: s(p.barrier_note) } : {}),
+    ...(Number.isFinite(Number(p.route_length_m)) ? { route_length_m: n(p.route_length_m) } : {}),
+    ...(Array.isArray(p.route_coords)
+      ? {
+          route_coords: (p.route_coords as Array<[number, number]>)
+            .filter((item) => Array.isArray(item) && item.length === 2)
+            .map((item) => [n(item[0]), n(item[1])] as [number, number]),
+        }
+      : {}),
   }));
 
   // 교내 시설 후보 (학교 좌표에 고정)
@@ -281,12 +309,8 @@ export function mapCandidateFeatures(
     grid_id: "SCHOOL_INT",
     cx: schoolLng,
     cy: schoolLat,
-    xgb_predicted_2029: external.length
-      ? Math.round(external.reduce((s, c) => s + c.xgb_predicted_2029, 0) / external.length)
-      : 0,
-    xgb_predicted_2031: external.length
-      ? Math.round(external.reduce((s, c) => s + c.xgb_predicted_2031, 0) / external.length)
-      : 0,
+    xgb_predicted_2029: Math.round(n(schoolDemand?.predicted2029)),
+    xgb_predicted_2031: Math.round(n(schoolDemand?.predicted2031)),
     nearest_park_dist: 0,
     nearest_pg_dist: 0,
     nearest_school_dist: 0,
@@ -294,6 +318,11 @@ export function mapCandidateFeatures(
     land_feasibility_level: "high",
     linked_schools: [],
     is_school_internal: true,
+    barrier_counts: { motorway: 0, trunk: 0, primary: 0, secondary: 0, tertiary: 0 },
+    barrier_severity: "green",
+    barrier_severity_label: "?숆탳 ?대? ?ㅼ튂",
+    barrier_color: "#2980b9",
+    barrier_note: "학교 안에 설치하는 경우에는 외부 유입 수요보다 해당 학교의 예상 학생 규모를 기준으로 활용 가능 인원을 보는 편이 더 적절합니다.",
   };
 
   return [schoolInternal, ...external];

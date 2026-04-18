@@ -23,6 +23,7 @@ interface Candidate {
   barrier_severity_label?: string;
   barrier_color?: string;
   barrier_note?: string;
+  route_length_m?: number;
   route_coords?: Array<[number, number]>;
 }
 
@@ -528,13 +529,13 @@ export default function SimulationPage({
                 </div>
                 <div style={{ display: "flex", gap: 14, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
                   <span>
-                    👤 2029 수혜 <b>{internalCandidate.xgb_predicted_2029.toLocaleString()}명</b>
+                    👤 2029 예상 학생수 <b>{internalCandidate.xgb_predicted_2029.toLocaleString()}명</b>
                   </span>
                   <span>📍 학교 부지 내</span>
                   <span>🛝 놀이터·체육시설 신설</span>
                 </div>
                 <div style={{ marginTop: 8, fontSize: 12, color: "#4b5563", lineHeight: 1.6 }}>
-                  {getBarrierNote(internalCandidate)}
+                  {getBarrierNote(internalCandidate)} 2029년 수치는 학교 학생수 예측 모델을 바탕으로 본 학교의 예상 학생 규모를 보여주는 참고값입니다.
                 </div>
               </div>
               <span
@@ -626,7 +627,7 @@ export default function SimulationPage({
                         👤 2029 <b>{c.xgb_predicted_2029.toLocaleString()}명</b>
                       </span>
                       <span>
-                        🏫 <b>{c.nearest_school_dist}m</b>
+                        🏫 <b>{c.nearest_school_dist.toLocaleString()}m</b>
                       </span>
                       <span>
                         🌳 <b>{c.nearest_park_dist}m</b>
