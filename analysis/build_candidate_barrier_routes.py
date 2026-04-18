@@ -13,7 +13,7 @@ import pandas as pd
 BASE = Path(__file__).resolve().parents[1]
 GRAPH_PATH = BASE / "data_processed" / "incheon_walk_graph_v2.graphml"
 SCHOOLS_PATH = BASE / "data_processed" / "schools.csv"
-CANDIDATES_PATH = BASE / "data_processed" / "candidate_grid_enriched.csv"
+CANDIDATES_PATH = BASE / "data_processed" / "candidate_grid_xgb_v4.geojson"
 OUTPUT_JSON_PATH = BASE / "data_processed" / "candidate_barrier_routes_by_school.json"
 OUTPUT_CSV_PATH = BASE / "output" / "candidate_barrier_routes_by_school.csv"
 
@@ -167,7 +167,7 @@ def route_coordinates(graph: nx.MultiDiGraph, route: list[int]) -> list[list[flo
 
 def main() -> None:
     schools_df = pd.read_csv(SCHOOLS_PATH)
-    candidates_df = pd.read_csv(CANDIDATES_PATH)
+    candidate_geojson = json.loads(CANDIDATES_PATH.read_text(encoding="utf-8"))
 
     schools_by_name = {
         str(row["학교명"]).strip(): {
@@ -183,15 +183,16 @@ def main() -> None:
     graph = ox.load_graphml(GRAPH_PATH)
 
     candidate_rows: list[dict[str, Any]] = []
-    for _, row in candidates_df.iterrows():
-        linked_schools = parse_linked_schools(row.get("linked_schools"))
+    for feature in candidate_geojson.get("features", []):
+        props = feature.get("properties", {})
+        linked_schools = parse_linked_schools(props.get("linked_schools"))
         if not linked_schools:
             continue
         candidate_rows.append(
             {
-                "grid_id": str(row["grid_id"]).strip(),
-                "lat": float(row["cy"]),
-                "lng": float(row["cx"]),
+                "grid_id": str(props["grid_id"]).strip(),
+                "lat": float(props["cy"]),
+                "lng": float(props["cx"]),
                 "linked_schools": linked_schools,
             }
         )
