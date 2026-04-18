@@ -1174,6 +1174,27 @@
       caseFilterButtons: Array.from(document.querySelectorAll(".case-filter-btn"))
     };
 
+    function refreshCaseFilterButtons() {
+      ui.caseFilterButtons = Array.from(document.querySelectorAll(".case-filter-btn"));
+    }
+
+    function ensureSpecialPolicyCaseFilterButton() {
+      const group = document.querySelector(".case-filter-group");
+      if (!group) return;
+      if (group.querySelector('[data-case-filter="island"]')) {
+        refreshCaseFilterButtons();
+        return;
+      }
+
+      const button = document.createElement("button");
+      button.className = "case-filter-btn";
+      button.type = "button";
+      button.dataset.caseFilter = "island";
+      button.textContent = "별도 정책 필요";
+      group.appendChild(button);
+      refreshCaseFilterButtons();
+    }
+
     function setStatus(message) {
       ui.statusBox.textContent = message;
     }
@@ -1206,6 +1227,7 @@
     }
 
     function setupLayerToggleBar() {
+      ensureSpecialPolicyCaseFilterButton();
       ui.layerButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const layer = button.dataset.layer;
@@ -1443,6 +1465,8 @@
     function handleSchoolSearchSelection() {
       const row = findSchoolBySearch(ui.schoolSearchInput?.value);
       if (!row) return;
+      state.selectedCaseFilter = "all";
+      syncCaseFilterButtons();
       if (ui.guFilter && detectGu(row)) {
         ui.guFilter.value = detectGu(row);
         state.selectedGu = ui.guFilter.value;
@@ -2212,7 +2236,7 @@
 
     function shouldShowByCaseFilter(row) {
       if (state.selectedCaseFilter === "all") return true;
-      return normalizeCaseType(row.case_type) === state.selectedCaseFilter;
+      return normalizeCaseType(row.case_type, row) === state.selectedCaseFilter;
     }
 
     function shouldShowSchoolMarker(row) {
@@ -2528,6 +2552,7 @@
       renderGuSummary();
       const selectedRow = state.datasets.schools.find((row) => getSchoolId(row) === state.selectedSchoolId);
       if (state.currentPanelMode === "school" && selectedRow && shouldShowByGu(selectedRow)) {
+        highlightIsochroneForSchool(selectedRow);
         setSchoolPanelSelection(selectedRow);
         renderDetailPanel(selectedRow);
       } else if (state.currentPanelMode === "candidate" && isCandidatePanelResponse(state.selectedCandidateData)) {
