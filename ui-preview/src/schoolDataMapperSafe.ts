@@ -1,11 +1,12 @@
 import type { SchoolDetailReportProps } from "./SchoolDetailReportPagePreview";
 import { CASE_LABELS } from "./SchoolDetailReportPagePreview";
 
+// 2026-04-18 갱신: OSMnx v2 + 공원원 합집합 교차 면적 수정 반영 (active schools, N=240)
 const CITY_AVG = {
-  nearestParkDist: 1176.827,
-  greenRatio: 7.845,
-  playgroundCount: 0.471,
-  studentTrendPct: -10.955,
+  nearestParkDist: 378.886,
+  greenRatio: 8.068,
+  playgroundCount: 0.383,
+  studentTrendPct: -8.470,
 };
 
 export interface Candidate {

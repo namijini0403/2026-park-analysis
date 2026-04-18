@@ -1,12 +1,12 @@
 import type { SchoolDetailReportProps } from "./SchoolDetailReportPagePreview";
 import { CASE_LABELS } from "./SchoolDetailReportPagePreview";
 
-// 도시 전체 평균 (previewData.ts와 동일한 상수 — 분석 결과에서 산출)
+// 도시 전체 평균 (분석 결과에서 산출 — 2026-04-18 OSMnx v2 + 공원원 합집합 수정 반영, active schools N=240)
 const CITY_AVG = {
-  nearestParkDist: 1176.827,
-  greenRatio: 7.845,
-  playgroundCount: 0.471,
-  studentTrendPct: -10.955,
+  nearestParkDist: 378.886,
+  greenRatio: 8.068,
+  playgroundCount: 0.383,
+  studentTrendPct: -8.470,
 };
 
 // Candidate interface (SimulationPage.tsx와 동일)
