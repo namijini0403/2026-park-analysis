@@ -6,6 +6,7 @@ from pathlib import Path
 import geopandas as gpd
 import numpy as np
 import pandas as pd
+from shapely.ops import unary_union
 
 
 ROOT = Path(__file__).resolve().parent
@@ -188,17 +189,28 @@ def summarize_equivalent_circle_area_within(
         return result
 
     polygon_map = dict(zip(poly_m[school_id_col], poly_m.geometry))
-    joined[sum_col] = 0.0
-    for idx, row in joined.iterrows():
-        area = float(row[area_col])
-        if area <= 0:
-            continue
-        circle = row["_circle"]
-        iso_poly = polygon_map.get(row[school_id_col])
-        if iso_poly is not None:
-            joined.at[idx, sum_col] = circle.intersection(iso_poly).area
 
-    agg = joined.groupby(school_id_col)[sum_col].sum().reset_index()
+    # 공원 원들을 school_id 별로 합집합(union) 후 isochrone과 교차.
+    # 개별 합산 방식은 대형 공원 원이 isochrone 안에서 겹칠 때 면적을 중복 계산하여
+    # iso_park_area > isochrone_area (green_ratio > 100%) 문제를 일으킨다.
+    agg_rows = []
+    for school_id, iso_poly in polygon_map.items():
+        school_circles_df = joined[joined[school_id_col] == school_id]
+        if school_circles_df.empty:
+            agg_rows.append({school_id_col: school_id, sum_col: 0.0})
+            continue
+        valid_circles = [
+            row["_circle"]
+            for _, row in school_circles_df.iterrows()
+            if float(row[area_col]) > 0
+        ]
+        if not valid_circles:
+            agg_rows.append({school_id_col: school_id, sum_col: 0.0})
+            continue
+        union_circle = unary_union(valid_circles)
+        inter_area = union_circle.intersection(iso_poly).area
+        agg_rows.append({school_id_col: school_id, sum_col: inter_area})
+    agg = pd.DataFrame(agg_rows)
     result = polygons_ll[[school_id_col]].merge(agg, on=school_id_col, how="left")
     result[sum_col] = result[sum_col].fillna(0.0)
     return result
