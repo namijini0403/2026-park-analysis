@@ -28,6 +28,7 @@ export interface Candidate {
   barrier_severity_label?: string;
   barrier_color?: string;
   barrier_note?: string;
+  route_length_m?: number;
   route_coords?: Array<[number, number]>;
 }
 
@@ -493,6 +494,7 @@ export function mapCandidateFeatures(
     ...(s(feature.barrier_severity_label) ? { barrier_severity_label: s(feature.barrier_severity_label) } : {}),
     ...(s(feature.barrier_color) ? { barrier_color: s(feature.barrier_color) } : {}),
     ...(s(feature.barrier_note) ? { barrier_note: s(feature.barrier_note) } : {}),
+    ...(maybeNumber(feature.route_length_m) != null ? { route_length_m: maybeNumber(feature.route_length_m)! } : {}),
     ...(Array.isArray(feature.route_coords)
       ? {
           route_coords: (feature.route_coords as Array<[number, number]>)

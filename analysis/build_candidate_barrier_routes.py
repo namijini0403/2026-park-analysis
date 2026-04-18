@@ -103,6 +103,20 @@ def count_barriers(graph: nx.MultiDiGraph, route: list[int]) -> dict[str, int]:
     return counts
 
 
+def route_length_m(graph: nx.MultiDiGraph, route: list[int]) -> float:
+    total = 0.0
+    for left, right in zip(route, route[1:]):
+        edge_data = graph.get_edge_data(left, right) or {}
+        lengths = [
+            float(attrs.get("length", 0))
+            for attrs in edge_data.values()
+            if attrs.get("length") is not None
+        ]
+        if lengths:
+            total += min(lengths)
+    return total
+
+
 def severity_from_counts(counts: dict[str, int]) -> str:
     if counts["motorway"] > 0 or counts["trunk"] > 0:
         return "red"
@@ -233,6 +247,7 @@ def main() -> None:
                 "color": severity_color(severity),
                 "note": build_note(counts, severity),
                 "counts": counts,
+                "route_length_m": round(route_length_m(graph, route), 1),
                 "route_coords": route_coordinates(graph, route),
             }
 
@@ -249,6 +264,7 @@ def main() -> None:
                     "primary": counts["primary"],
                     "secondary": counts["secondary"],
                     "tertiary": counts["tertiary"],
+                    "route_length_m": record["route_length_m"],
                     "route_point_count": len(record["route_coords"]),
                     "note": record["note"],
                 }
