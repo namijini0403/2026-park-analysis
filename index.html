@@ -1651,9 +1651,16 @@
       return map;
     }
 
-    function mergeCandidateBarrierMeta(candidate = {}, schoolId = "") {
+    function resolveSchoolIdForBarrierMeta(schoolId = "", schoolName = "") {
+      if (schoolId) return schoolId;
+      const matched = (state.datasets.schools || []).find((row) => getSchoolName(row) === schoolName);
+      return matched ? getSchoolId(matched) : "";
+    }
+
+    function mergeCandidateBarrierMeta(candidate = {}, schoolId = "", schoolName = "") {
       const bySchool = state.datasets.candidateBarrierRoutes || {};
-      const schoolRoutes = bySchool[schoolId] || {};
+      const resolvedSchoolId = resolveSchoolIdForBarrierMeta(schoolId, schoolName);
+      const schoolRoutes = bySchool[resolvedSchoolId] || {};
       const routeMeta = schoolRoutes[candidate.grid_id];
       if (!routeMeta) return candidate;
       return {
@@ -3562,7 +3569,7 @@
       const _schoolId = getSchoolId(row);
       const _linkedCandidates = (state.datasets.candidateFeatures || [])
         .filter((p) => Array.isArray(p.linked_schools) && p.linked_schools.includes(_schoolName))
-        .map((p) => mergeCandidateBarrierMeta(p, _schoolId))
+        .map((p) => mergeCandidateBarrierMeta(p, _schoolId, _schoolName))
         .slice(0, 20);
       localStorage.setItem("parkAnalysis_candidates", JSON.stringify(_linkedCandidates));
 
