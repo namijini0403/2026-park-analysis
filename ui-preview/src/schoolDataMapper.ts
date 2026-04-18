@@ -38,6 +38,13 @@ function s(v: unknown, fallback = ""): string {
   return v != null ? String(v) : fallback;
 }
 
+function getDisplayedDemand(
+  row: RawRow,
+  year: 2029 | 2031,
+): number {
+  return n(year === 2029 ? row.forecast_2029 ?? row.predicted_2029 ?? row.target_2029 : row.forecast_2031 ?? row.predicted_2031 ?? row.target_2031);
+}
+
 function getCaseLabels(caseType: number): { policy: string; status: string } {
   const key = caseType as keyof typeof CASE_LABELS;
   return CASE_LABELS[key] ?? CASE_LABELS[1];
@@ -118,12 +125,10 @@ export function mapSchoolRowToReportProps(
   }
   const currentStudentCount2025 = rawTrend.length
     ? rawTrend[rawTrend.length - 1].students
-    : n(row.predicted_current);
+    : n(row.current_students_2025 ?? row.current_student_count ?? row.predicted_current);
 
-  // forecast_2029/2031 는 beneficiary_forecast.csv의 절대 인원수(명)
-  // cohort_change는 비율(0.946 등)이므로 절대 fallback으로 사용 금지
-  const potentialDemand2029 = n(row.forecast_2029);
-  const potentialDemand2031 = n(row.forecast_2031);
+  const potentialDemand2029 = getDisplayedDemand(row, 2029);
+  const potentialDemand2031 = getDisplayedDemand(row, 2031);
 
   // 유사 학교 (similar_school_1_name ~ similar_school_5_name)
   // index.html renderSchoolDetail에서 similar_school_i_nearest_park_dist_m 등을 보강해 저장

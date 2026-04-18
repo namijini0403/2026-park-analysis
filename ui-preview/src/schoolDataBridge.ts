@@ -72,6 +72,17 @@ function arrayOfStrings(value: unknown): string[] {
   return Array.isArray(value) ? value.map((item) => String(item)) : [];
 }
 
+function getDisplayedDemand(
+  row: RawRow,
+  year: 2029 | 2031,
+): number {
+  return n(
+    year === 2029
+      ? row.forecast_2029 ?? row.predicted_2029 ?? row.target_2029
+      : row.forecast_2031 ?? row.predicted_2031 ?? row.target_2031,
+  );
+}
+
 function getCaseLabels(caseType: number): { policy: string; status: string } {
   const key = caseType as keyof typeof CASE_LABELS;
   return CASE_LABELS[key] ?? CASE_LABELS[1];
@@ -258,7 +269,9 @@ export function mapSchoolRowToReportProps(
 
   const currentStudentCount2025 = rawTrend.length
     ? rawTrend[rawTrend.length - 1].students
-    : n(row.predicted_current);
+    : n(row.current_students_2025 ?? row.current_student_count ?? row.predicted_current);
+  const potentialDemand2029 = getDisplayedDemand(row, 2029);
+  const potentialDemand2031 = getDisplayedDemand(row, 2031);
 
   const similarSchools = [1, 2, 3, 4, 5]
     .map((i) => ({
@@ -373,8 +386,8 @@ export function mapSchoolRowToReportProps(
     ...(maybeNumber(row.currentStudentCountDistrictPercentile) != null
       ? { currentStudentCountDistrictPercentile: maybeNumber(row.currentStudentCountDistrictPercentile)! }
       : {}),
-    potentialDemand2029: Math.round(n(row.forecast_2029 ?? row.predicted_2029 ?? row.target_2029)),
-    potentialDemand2031: Math.round(n(row.forecast_2031 ?? row.predicted_2031 ?? row.target_2031)),
+    potentialDemand2029: Math.round(potentialDemand2029),
+    potentialDemand2031: Math.round(potentialDemand2031),
     similarSchools: similarSchools.length ? similarSchools : undefined,
     ...(cityBestEnvironmentSchool ? { cityBestEnvironmentSchool } : {}),
     ...(districtBestEnvironmentSchool ? { districtBestEnvironmentSchool } : {}),

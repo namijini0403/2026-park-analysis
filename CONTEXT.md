@@ -1113,3 +1113,182 @@ data_processed/age_ratio_incheon.csv
 - `인천먼우금초등학교`
   - 현재 운영값은 `iso_green_ratio=100`, `iso_green_ratio_raw=109.46585896493029`이다.
   - 등시권 내부 복수 공원 면적 합산이 과대 포착된 가능성이 있어, 후속 수동 검수 대상으로 유지한다.
+
+## 2026-04-18 학교별 예측 인원 모델 분리 확정
+- 기존 기록은 유지하고, 동일 주제의 기록이 충돌할 경우 날짜가 더 최근인 기록을 우선 적용한다.
+- `생활권 잠재수요 예측`과 `학교별 예측 인원`은 목적이 다르므로 완전히 분리한다.
+- `생활권 잠재수요 예측`
+  - 용도: `250m 후보지 격자 시뮬레이션`
+  - 유지 파일: `beneficiary_forecast_v3.csv`, `candidate_grid_xgb_v4.geojson` 계열
+  - 해석: 생활권 내 아동수와 입지 여건 기반의 공간 수요 추정
+- `학교별 예측 인원`
+  - 용도: `전체 통계`, `학교 상세 리포트`, `학교 단위 수혜 학생수 표시`
+  - 선택 파일: `data_processed/school_enrollment_forecast_20260418_model1.csv`
+  - 해석: 해당 학교 학생수 시계열 기반의 `학교 단위 학생 규모 추정`
+
+### 버전 정보
+- 모델 버전: `school_enrollment_model1_walk_forward_recursive_20260418`
+- 선택 모델명: `weighted_trend_plus_lgbm_residual`
+- 앱 연결 경로:
+  - `index.html` -> `./data_processed/school_enrollment_forecast_20260418_model1.csv`
+  - `analysis/generate_statistics_preview_data_safe.py` -> 동일 파일 사용
+
+### 실험 목적
+- 문제 배경:
+  - 기존 `beneficiary_forecast_v3.csv`는 `iso_child_total` 중심의 생활권 수요 추정이라, 학교 현재 학생수와 괴리되는 사례가 있었다.
+  - 특히 `인천가정초등학교`, `인천가석초등학교`처럼 현재 학생수 대비 학교별 표시 예측이 과소하게 나오는 문제가 확인되었다.
+- 실험 목적:
+  - `학교별 예측 인원`을 생활권 수요 모델과 분리하고,
+  - `2029`, `2031` 학교 단위 학생 규모를 더 일관되게 설명할 수 있는 모델을 선택한다.
+
+### 입력 데이터
+- 공통 학습 데이터
+  - `data_processed/student_trend.csv`
+    - 학교별 `2020~2025` 학생수 시계열
+  - `data_processed/school_priority.csv`
+    - 학교 메타 및 구조 변수
+  - `data_processed/gu_cohort_change_prophet.csv`
+    - 구별 Prophet 기반 거시 학생수 변화 계수
+
+### 모델 입력 변수 구조
+- 시계열 파생 변수
+  - `history_count`
+  - `last_students`
+  - `prev_students`
+  - `prev2_students`
+  - `delta1`, `delta2`, `delta3`
+  - `pct1`, `pct2`
+  - `weighted_slope`
+  - `recent_mean3`, `recent_std3`
+  - `hist_mean`, `hist_std`
+  - `level_to_mean_ratio`
+  - `base_next_pred`
+- 구조 변수
+  - `gu`
+  - `iso_child_total`
+  - `redev_완료수`
+  - `redev_진행중수`
+  - `redev_예정수`
+  - `is_new_school`
+- 거시 보정 변수
+  - `cohort_factor_proxy`
+  - 구별 실제 연도 변화율 또는 Prophet 연간 환산 계수
+
+### 타깃 정의
+- 1단계 비교 실험 타깃
+  - `target_students`
+  - 정의: 특정 시점 이전 이력으로 다음 연도 실제 학생수를 맞히는 `1년 ahead` 타깃
+- 중기 검증 타깃
+  - 동일한 1년 모델을 재귀적으로 2회, 3회 적용해 실제 `2년 ahead`, `3년 ahead` 학생수를 맞히는 구조
+
+### 비교 모델 구조
+- 모델 1: `가중 선형추세 + LightGBM 잔차보정`
+  - 1차 기본값:
+    - 최근 학생수 흐름에 가중치를 둔 선형 추세로 `base_next_pred` 생성
+  - 2차 보정:
+    - `실제값 - base_next_pred` 잔차를 LightGBM으로 학습
+  - Prophet 계수 사용:
+    - 직접 타깃이 아니라 `base_next_pred`를 보정하는 `blend alpha` 방식
+  - 장점:
+    - 추세와 보정이 분리되어 해석이 쉽고, 재귀 예측에서 안정적
+- 모델 2: `ElasticNet 시계열 피처 + 구 Prophet 보정`
+  - 타깃 변환:
+    - `log((target_students + 1) / (last_students + 1))`
+  - 학습:
+    - 표준화 후 ElasticNet 회귀
+  - 예측:
+    - 성장률을 다시 학생수 절대값으로 역변환
+    - Prophet 계수 blend 적용
+  - 장점:
+    - 단기 적합이 좋고 계수 해석이 단순함
+  - 한계:
+    - 재귀 예측으로 갈수록 오차 누적이 더 빠름
+
+### 학습 방법
+- 백테스트 기본 단위
+  - 학교별 `1년 ahead` 예측 행 생성
+  - 최소 2개년 이력 이후부터 학습 샘플로 사용
+- 검증 방식 1: `walk-forward`
+  - 검증 연도: `2023`, `2024`, `2025`
+  - 규칙:
+    - 예: `2024` 검증 시 `2023`까지의 샘플만 학습에 사용
+  - 목적:
+    - 랜덤 분할이나 그룹 분할보다 시간 누수 가능성을 줄인 보수적 검증
+- 검증 방식 2: `walk-forward recursive`
+  - 같은 1년 모델을 `2년 ahead`, `3년 ahead`까지 반복 적용
+  - 목적:
+    - 실제 앱에서 `2029`, `2031`처럼 중기 예측을 표시할 때의 안정성 확인
+
+### 성능 비교 결과
+- 1년 ahead walk-forward
+  - 모델 1
+    - `R² = 0.9651`
+    - `MAE = 37.28`
+    - `RMSE = 72.59`
+  - 모델 2
+    - `R² = 0.9733`
+    - `MAE = 33.64`
+    - `RMSE = 63.44`
+- 2년 ahead recursive walk-forward
+  - 모델 1
+    - `R² = 0.9426`
+    - `MAE = 48.17`
+    - `RMSE = 91.64`
+  - 모델 2
+    - `R² = 0.9223`
+    - `MAE = 60.10`
+    - `RMSE = 106.66`
+- 3년 ahead recursive walk-forward
+  - 모델 1
+    - `R² = 0.9214`
+    - `MAE = 61.50`
+    - `RMSE = 105.61`
+  - 모델 2
+    - `R² = 0.8529`
+    - `MAE = 82.19`
+    - `RMSE = 144.52`
+- 중기 평균(2~3년)
+  - 모델 1
+    - `R² = 0.9320`
+    - `MAE = 54.84`
+    - `RMSE = 98.62`
+  - 모델 2
+    - `R² = 0.8876`
+    - `MAE = 71.14`
+    - `RMSE = 125.59`
+
+### 모델 선택 결론
+- `단기 적합`만 보면 모델 2가 약간 우세했다.
+- 그러나 앱 표시값은 `2029`, `2031`처럼 `중기 예측`이므로, 재귀 검증 결과가 더 중요하다.
+- 최종 선택:
+  - `모델 1 = 가중 선형추세 + LightGBM 잔차보정`
+- 선택 이유:
+  - `2년`, `3년 ahead` 재귀 예측에서 더 안정적
+  - 중기 평균 `R²`, `MAE`, `RMSE` 모두 모델 1이 우세
+  - 연구보고서 서술 시 `추세 + 잔차보정` 구조 설명이 용이
+
+### 예외 처리 규칙
+- `신설학교` 또는 `학생수 시계열이 전혀 없는 학교`는 모델 1 직접 학습 대상에서 제외될 수 있다.
+- 현재 운영 예외:
+  - `인천신검단초등학교(B000026471)`
+- 예외 처리 방식:
+  - 운영 파일에서는 누락을 허용하지 않고,
+  - `beneficiary_forecast_v3.csv`의 생활권 proxy 값을 임시 fallback으로 채운다.
+- 보고서 서술 원칙:
+  - 해당 학교는 `학교 시계열 직접 예측`이 아니라 `신설학교 proxy fallback`임을 명시한다.
+
+### 산출물 파일
+- 실험 스크립트
+  - `compare_school_enrollment_models.py`
+- 실험 결과
+  - `output/school_enrollment_model_comparison.json`
+  - `output/school_enrollment_model_comparison.md`
+- 후보 예측 결과
+  - `output/school_enrollment_forecast_candidates.csv`
+- 운영 반영 파일
+  - `data_processed/school_enrollment_forecast_20260418_model1.csv`
+
+### 보고서용 해석 문구 원칙
+- `학교별 예측 인원`은 생활권 잠재수요가 아니라 `학교 단위 학생 규모 추정`으로 표현한다.
+- `R² 0.9대`는 `1년 ahead` 내부 설명력으로 해석하고, 장기 일반화 성능으로 과장하지 않는다.
+- `2029`, `2031` 표시값은 `walk-forward recursive` 기준에서 더 안정적이었던 모델 1을 사용했다고 명시한다.

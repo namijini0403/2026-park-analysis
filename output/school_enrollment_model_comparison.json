@@ -1,0 +1,362 @@
+{
+  "backtest_rows": 1057,
+  "recursive_backtest_rows": 2369,
+  "schools": 268,
+  "model1": {
+    "name": "weighted_trend_plus_lgbm_residual",
+    "blend_alpha": 0.5,
+    "validation": "walk_forward",
+    "walk_forward_years": [
+      2023,
+      2024,
+      2025
+    ],
+    "overall": {
+      "r2": 0.9650573704449353,
+      "mae": 37.275426877748394,
+      "rmse": 72.58954029716477
+    },
+    "by_year": [
+      {
+        "target_year": 2023,
+        "r2": 0.9705663895253243,
+        "mae": 37.94846514543711,
+        "rmse": 65.21386600308634
+      },
+      {
+        "target_year": 2024,
+        "r2": 0.9452095568275443,
+        "mae": 39.740189731648854,
+        "rmse": 91.26548063222964
+      },
+      {
+        "target_year": 2025,
+        "r2": 0.9791419736170639,
+        "mae": 34.166064856079196,
+        "rmse": 56.860836056547825
+      }
+    ],
+    "top_features": [
+      {
+        "feature": "weighted_slope",
+        "importance": 134
+      },
+      {
+        "feature": "delta1",
+        "importance": 90
+      },
+      {
+        "feature": "base_next_pred",
+        "importance": 89
+      },
+      {
+        "feature": "pct1",
+        "importance": 77
+      },
+      {
+        "feature": "iso_child_total",
+        "importance": 62
+      },
+      {
+        "feature": "recent_std3",
+        "importance": 60
+      },
+      {
+        "feature": "hist_std",
+        "importance": 51
+      },
+      {
+        "feature": "pct2",
+        "importance": 50
+      },
+      {
+        "feature": "delta3",
+        "importance": 43
+      },
+      {
+        "feature": "last_students",
+        "importance": 40
+      }
+    ]
+  },
+  "model2": {
+    "name": "elasticnet_timeseries_plus_prophet",
+    "elastic_alpha": 0.05,
+    "elastic_l1_ratio": 0.5,
+    "blend_alpha": 0.35,
+    "validation": "walk_forward",
+    "walk_forward_years": [
+      2023,
+      2024,
+      2025
+    ],
+    "overall": {
+      "r2": 0.9733127240600428,
+      "mae": 33.641754968273,
+      "rmse": 63.437838521586905
+    },
+    "by_year": [
+      {
+        "target_year": 2023,
+        "r2": 0.9724951364290669,
+        "mae": 35.80863783041588,
+        "rmse": 63.04097556492012
+      },
+      {
+        "target_year": 2024,
+        "r2": 0.9615970543391892,
+        "mae": 39.33704283350753,
+        "rmse": 76.40757344194955
+      },
+      {
+        "target_year": 2025,
+        "r2": 0.9853324542311767,
+        "mae": 25.85442792439947,
+        "rmse": 47.682098536376095
+      }
+    ],
+    "top_features": [
+      {
+        "feature": "level_to_mean_ratio",
+        "coef": 0.011994231482300641,
+        "abs_coef": 0.011994231482300641
+      },
+      {
+        "feature": "delta1",
+        "coef": 0.003188414947094798,
+        "abs_coef": 0.003188414947094798
+      },
+      {
+        "feature": "history_count",
+        "coef": -0.0,
+        "abs_coef": 0.0
+      },
+      {
+        "feature": "prev_students",
+        "coef": 0.0,
+        "abs_coef": 0.0
+      },
+      {
+        "feature": "last_students",
+        "coef": 0.0,
+        "abs_coef": 0.0
+      },
+      {
+        "feature": "delta2",
+        "coef": 0.0,
+        "abs_coef": 0.0
+      },
+      {
+        "feature": "delta3",
+        "coef": 0.0,
+        "abs_coef": 0.0
+      },
+      {
+        "feature": "pct1",
+        "coef": 0.0,
+        "abs_coef": 0.0
+      },
+      {
+        "feature": "prev2_students",
+        "coef": 0.0,
+        "abs_coef": 0.0
+      },
+      {
+        "feature": "pct2",
+        "coef": 0.0,
+        "abs_coef": 0.0
+      }
+    ]
+  },
+  "recursive_walk_forward": {
+    "validation": "walk_forward_recursive",
+    "horizons": {
+      "1": {
+        "rows": 1057,
+        "walk_forward_years": [
+          2023,
+          2024,
+          2025
+        ],
+        "model1": {
+          "overall": {
+            "r2": 0.9695122534032068,
+            "mae": 36.723850735547664,
+            "rmse": 67.80456234283757
+          },
+          "by_year": [
+            {
+              "target_year": 2023,
+              "r2": 0.9705800634620332,
+              "mae": 37.84022568792867,
+              "rmse": 65.19871608003122
+            },
+            {
+              "target_year": 2024,
+              "r2": 0.9576112145036678,
+              "mae": 38.56636767751486,
+              "rmse": 80.27487267931255
+            },
+            {
+              "target_year": 2025,
+              "r2": 0.9799619249633271,
+              "mae": 33.79537128035415,
+              "rmse": 55.73200073121926
+            }
+          ]
+        },
+        "model2": {
+          "overall": {
+            "r2": 0.9733127240600428,
+            "mae": 33.641754968273,
+            "rmse": 63.437838521586905
+          },
+          "by_year": [
+            {
+              "target_year": 2023,
+              "r2": 0.9724951364290669,
+              "mae": 35.80863783041588,
+              "rmse": 63.04097556492012
+            },
+            {
+              "target_year": 2024,
+              "r2": 0.9615970543391892,
+              "mae": 39.33704283350753,
+              "rmse": 76.40757344194955
+            },
+            {
+              "target_year": 2025,
+              "r2": 0.9853324542311767,
+              "mae": 25.85442792439947,
+              "rmse": 47.682098536376095
+            }
+          ]
+        }
+      },
+      "2": {
+        "rows": 789,
+        "walk_forward_years": [
+          2023,
+          2024,
+          2025
+        ],
+        "model1": {
+          "overall": {
+            "r2": 0.9426199221277228,
+            "mae": 48.17273953386795,
+            "rmse": 91.63593550106566
+          },
+          "by_year": [
+            {
+              "target_year": 2023,
+              "r2": 0.947900971446242,
+              "mae": 48.64629290528586,
+              "rmse": 87.13495916851404
+            },
+            {
+              "target_year": 2024,
+              "r2": 0.9463533104345662,
+              "mae": 45.12114212950505,
+              "rmse": 87.93798743304045
+            },
+            {
+              "target_year": 2025,
+              "r2": 0.9335823917703938,
+              "mae": 50.740301156253544,
+              "rmse": 99.19513877537435
+            }
+          ]
+        },
+        "model2": {
+          "overall": {
+            "r2": 0.9222647449397299,
+            "mae": 60.098629323183964,
+            "rmse": 106.65820369746234
+          },
+          "by_year": [
+            {
+              "target_year": 2023,
+              "r2": 0.9236624316706378,
+              "mae": 60.039919105734725,
+              "rmse": 105.47433117796237
+            },
+            {
+              "target_year": 2024,
+              "r2": 0.9038141401509482,
+              "mae": 67.85370669869432,
+              "rmse": 117.74993445922291
+            },
+            {
+              "target_year": 2025,
+              "r2": 0.9382367318327594,
+              "mae": 52.45902601184792,
+              "rmse": 95.65637250473378
+            }
+          ]
+        }
+      },
+      "3": {
+        "rows": 523,
+        "walk_forward_years": [
+          2024,
+          2025
+        ],
+        "model1": {
+          "overall": {
+            "r2": 0.9214299983627519,
+            "mae": 61.49904860551401,
+            "rmse": 105.61397440127845
+          },
+          "by_year": [
+            {
+              "target_year": 2024,
+              "r2": 0.926346839688139,
+              "mae": 59.29187395341201,
+              "rmse": 102.93353145270446
+            },
+            {
+              "target_year": 2025,
+              "r2": 0.9162953481909254,
+              "mae": 63.66442070738681,
+              "rmse": 108.17912998805923
+            }
+          ]
+        },
+        "model2": {
+          "overall": {
+            "r2": 0.8528768828959147,
+            "mae": 82.18520599594277,
+            "rmse": 144.52183387688297
+          },
+          "by_year": [
+            {
+              "target_year": 2024,
+              "r2": 0.8464133585712016,
+              "mae": 87.38904464608885,
+              "rmse": 148.64075461075092
+            },
+            {
+              "target_year": 2025,
+              "r2": 0.8590804975205153,
+              "mae": 77.07992489598884,
+              "rmse": 140.363515830166
+            }
+          ]
+        }
+      }
+    },
+    "mid_term_average": {
+      "model1": {
+        "r2": 0.9320249602452373,
+        "mae": 54.83589406969098,
+        "rmse": 98.62495495117206
+      },
+      "model2": {
+        "r2": 0.8875708139178222,
+        "mae": 71.14191765956336,
+        "rmse": 125.59001878717265
+      }
+    }
+  },
+  "forecast_csv": "c:\\2026_data_analysis_park\\output\\school_enrollment_forecast_candidates.csv"
+}

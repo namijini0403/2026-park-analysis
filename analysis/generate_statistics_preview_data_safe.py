@@ -8,7 +8,7 @@ import pandas as pd
 
 BASE = Path(r"c:\2026_data_analysis_park")
 PRIORITY_PATH = BASE / "data_processed" / "school_priority_case_system_20260411.csv"
-FORECAST_PATH = BASE / "data_processed" / "beneficiary_forecast.csv"
+FORECAST_PATH = BASE / "data_processed" / "school_enrollment_forecast_20260418_model1.csv"
 STUDENT_TREND_PATH = BASE / "data_processed" / "student_trend.csv"
 OUT_PATH = BASE / "ui-preview" / "src" / "statisticsPreviewDataSafe.ts"
 
