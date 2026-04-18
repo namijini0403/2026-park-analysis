@@ -2666,7 +2666,22 @@
       });
     }
 
-    function normalizeCaseType(value) {
+    function isSpecialPolicySchool(row = {}) {
+      const caseLabel = String(row.case_label || "").trim();
+      const separateBundleTag = Number(row.is_separate_bundle_tag || 0);
+      const islandTag = Number(row.is_island_tag || 0);
+      const caseTypeRaw = String(row.case_type || "").trim().toLowerCase();
+      return (
+        caseLabel === "별도 묶음" ||
+        separateBundleTag === 1 ||
+        islandTag === 1 ||
+        caseTypeRaw === "99" ||
+        caseTypeRaw === "island"
+      );
+    }
+
+    function normalizeCaseType(value, row = null) {
+      if (row && isSpecialPolicySchool(row)) return "island";
       const raw = String(value || "").trim().toLowerCase();
       if (CASE_META[raw]) return raw;
       const numeric = Number(value);
@@ -2680,29 +2695,36 @@
     function getCaseMeta(rowOrType = {}) {
       const caseType = typeof rowOrType === "string"
         ? normalizeCaseType(rowOrType)
-        : normalizeCaseType(rowOrType.case_type);
+        : normalizeCaseType(rowOrType.case_type, rowOrType);
       return CASE_META[caseType] || CASE_META.case4;
     }
 
     function getMarkerStyle(row = {}) {
       const outlierType = getOutlierType(row);
       const borderColor = outlierType === "李⑹떆" ? "#6B46C1" : "";
+      if (isSpecialPolicySchool(row)) {
+        return { color: "#6B46C1", symbol: "", borderColor };
+      }
       return { color: getCaseMeta(row).color, symbol: "", borderColor };
     }
 
     function getCaseTypeLabel(row = {}) {
+      if (isSpecialPolicySchool(row)) return "별도 정책 필요";
       const csvLabel = String(row.case_label || "").trim();
       if (csvLabel && csvLabel !== "????") return csvLabel;
       return getCaseMeta(row).label;
     }
 
     function getSchoolBadge(row = {}) {
+      if (isSpecialPolicySchool(row)) {
+        return { text: "별도 정책 필요", className: "island" };
+      }
       const caseMeta = getCaseMeta(row);
       return { text: caseMeta.badge, className: caseMeta.className };
     }
 
     function getDiagnosticMessage(row = {}) {
-      const caseType = normalizeCaseType(row.case_type);
+      const caseType = normalizeCaseType(row.case_type, row);
       if (caseType === "case1") return "가까운 공원까지의 도보 거리가 길고 아동 수요도 높은 편입니다. 즉시 개선이 필요합니다.";
       if (caseType === "case2") return "공원 접근 거리가 다소 길거나 아동 수요 대비 보완이 필요합니다. 우선 검토 대상입니다.";
       if (caseType === "case3") return "가까운 공원은 있지만 놀이터 수가 적어 수요 관리가 필요합니다.";
@@ -2711,11 +2733,11 @@
     }
 
     function getCaseThemeClass(row = {}) {
-      return `case-${normalizeCaseType(row.case_type)}`;
+      return `case-${normalizeCaseType(row.case_type, row)}`;
     }
 
     function getMetricClass(row, metricType) {
-      const caseType = normalizeCaseType(row.case_type);
+      const caseType = normalizeCaseType(row.case_type, row);
       if (caseType === "case4") return "metric-item muted";
       if (caseType === "island") return "metric-item";
       if (caseType === "case1" && (metricType === "park" || metricType === "access")) return "metric-item danger";

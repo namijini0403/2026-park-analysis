@@ -73,6 +73,22 @@ function readLargeApartmentComplexes(schoolRow: Record<string, any> | null): Lar
     .filter((item: LargeApartmentComplex) => item.name !== "" && Number.isFinite(item.householdCount));
 }
 
+function getPreviewCaseType(schoolRow: Record<string, any> | null): number {
+  if (!schoolRow) return 1;
+  const caseLabel = String(schoolRow.case_label ?? "").trim();
+  const caseTypeRaw = String(schoolRow.case_type ?? schoolRow["case_type"] ?? "").trim().toLowerCase();
+  if (
+    caseLabel === "별도 묶음" ||
+    Number(schoolRow.is_separate_bundle_tag ?? 0) === 1 ||
+    Number(schoolRow.is_island_tag ?? 0) === 1 ||
+    caseTypeRaw === "99" ||
+    caseTypeRaw === "island"
+  ) {
+    return 99;
+  }
+  return Number(schoolRow.case_type ?? schoolRow["case_type"] ?? 1);
+}
+
 export default function PreviewWorkspaceSafe() {
   const [view, setView] = useState<ViewMode>("report");
 
@@ -83,7 +99,7 @@ export default function PreviewWorkspaceSafe() {
   // 학교 좌표
   const schoolLat = schoolRow ? Number(schoolRow["위도"] ?? schoolRow.lat ?? 37.46235) : 37.46235;
   const schoolLng = schoolRow ? Number(schoolRow["경도"] ?? schoolRow.lng ?? 126.6867275) : 126.6867275;
-  const caseType = schoolRow ? Number(schoolRow.case_type ?? schoolRow["case_type"] ?? 1) : 1;
+  const caseType = getPreviewCaseType(schoolRow);
 
   const detailProps = useMemo(() => {
     if (!schoolRow) {

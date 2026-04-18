@@ -38,6 +38,20 @@ function s(v: unknown, fallback = ""): string {
   return v != null ? String(v) : fallback;
 }
 
+function isSpecialPolicySchool(row: RawRow): boolean {
+  const caseLabel = s(row.case_label).trim();
+  const separateBundleTag = n(row.is_separate_bundle_tag);
+  const islandTag = n(row.is_island_tag);
+  const caseTypeRaw = s(row.case_type).trim().toLowerCase();
+  return (
+    caseLabel === "별도 묶음" ||
+    separateBundleTag === 1 ||
+    islandTag === 1 ||
+    caseTypeRaw === "99" ||
+    caseTypeRaw === "island"
+  );
+}
+
 function getDisplayedDemand(
   row: RawRow,
   year: 2029 | 2031,
@@ -48,6 +62,11 @@ function getDisplayedDemand(
 function getCaseLabels(caseType: number): { policy: string; status: string } {
   const key = caseType as keyof typeof CASE_LABELS;
   return CASE_LABELS[key] ?? CASE_LABELS[1];
+}
+
+function getCaseType(row: RawRow, fallback = 1): number {
+  if (isSpecialPolicySchool(row)) return 99;
+  return n(row.case_type, fallback);
 }
 
 function buildProblemTags(row: RawRow): string[] {
@@ -81,11 +100,13 @@ function buildProblemTags(row: RawRow): string[] {
 
 function buildContextTags(row: RawRow): string[] {
   const tags: string[] = [];
-  const caseType = n(row.case_type);
+  const caseType = getCaseType(row, 0);
   if (caseType === 1 || caseType === 3)
     tags.push("보행 동선에 대로 횡단 구간이 있을 수 있습니다");
   tags.push("학교 주변에서 바로 대체할 수 있는 공원 선택지가 제한적입니다");
   tags.push("주거 밀도 대비 아동 체류 공간이 부족합니다");
+  if (caseType === 99)
+    tags.unshift("도서·분교 등 별도 여건을 반영한 정책 검토가 필요한 학교입니다");
   return tags.slice(0, 3);
 }
 
@@ -97,7 +118,7 @@ export function mapSchoolRowToReportProps(
   const gu = s(row.gu ?? row["gu"]);
   const districtName = gu ? `인천광역시 ${gu}` : "인천광역시";
 
-  const caseType = n(row.case_type, 1);
+  const caseType = getCaseType(row, 1);
   const { policy: casePolicyLabel, status: caseStatusLabel } = getCaseLabels(caseType);
 
   const nearestParkDistanceM = n(row.nearest_park_dist_m);

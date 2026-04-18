@@ -45,7 +45,7 @@ export const CASE_LABELS = {
   2: { policy: "우선 검토 대상", status: "공원 접근 가능 · 녹지 부족" },
   3: { policy: "모니터링 대상", status: "공원 접근 가능 · 녹지 비율 양호" },
   4: { policy: "유지·관리 대상", status: "공원 접근 양호 · 녹지 충분" },
-  99: { policy: "별도 정책 적용", status: "별도 묶음" },
+  99: { policy: "별도 정책 필요", status: "도서·분교 등 별도 기준 검토" },
 } as const;
 
 export type SchoolDetailReportProps = {
