@@ -632,9 +632,6 @@ export default function SimulationPage({
                       <span>
                         🌳 <b>{c.nearest_park_dist}m</b>
                       </span>
-                      <span>
-                        🛝 <b>{c.nearest_pg_dist}m</b>
-                      </span>
                     </div>
                     {getBarrierCountSummary(c) ? (
                       <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, color: barrierColor }}>
