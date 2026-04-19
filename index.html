@@ -1644,6 +1644,25 @@
       return [getSchoolId(row), getSchoolName(row)].filter(Boolean);
     }
 
+    function parseLinkedSchools(value) {
+      if (Array.isArray(value)) {
+        return value.map((item) => String(item || "").trim()).filter(Boolean);
+      }
+      const text = String(value || "").trim();
+      if (!text) return [];
+      try {
+        const parsed = JSON.parse(text);
+        if (Array.isArray(parsed)) {
+          return parsed.map((item) => String(item || "").trim()).filter(Boolean);
+        }
+      } catch (error) {
+        // fall through to regex parsing for legacy string payloads
+      }
+      const npMatches = [...text.matchAll(/np\.str_\('([^']+)'\)/g)].map((match) => match[1].trim()).filter(Boolean);
+      if (npMatches.length) return npMatches;
+      return [...text.matchAll(/'([^']+)'/g)].map((match) => match[1].trim()).filter(Boolean);
+    }
+
     function createRowMap(rows, keySelector) {
       const map = new Map();
       rows.forEach((row) => {
@@ -2414,7 +2433,7 @@
 
     async function loadCandidateLayer() {
       try {
-        const res = await fetch("./data_processed/candidate_grid_population_alloc_v1.geojson");
+        const res = await fetch("./data_processed/candidate_grid_xgb_v4.geojson");
         const geojson = await res.json();
 
         clearOverlayGroup("candidateMarkers");
@@ -2450,7 +2469,11 @@
           state.overlays.candidateMarkers.push(circle);
         });
 
-        state.datasets.candidateFeatures = geojson.features.map((f) => f.properties || {});
+        state.datasets.candidateFeatures = geojson.features.map((f) => {
+          const properties = { ...(f.properties || {}) };
+          properties.linked_schools = parseLinkedSchools(properties.linked_schools);
+          return properties;
+        });
         console.log(`후보지 마커 ${state.overlays.candidateMarkers.length}개 로드 완료`);
       } catch (error) {
         console.error("후보지 레이어 로드 실패:", error);
@@ -3308,7 +3331,7 @@
     window.debugOpenInternalCandidateExample = debugOpenInternalCandidateExample;
     window.clearDetailPanelSelection = clearDetailPanelSelection;
 
-    function renderSchoolDetail(row = null) {
+    async function renderSchoolDetail(row = null) {
       if (!row) {
         ui.schoolDetailBox.className = "school-detail-box";
         ui.schoolDetailBox.innerHTML = "학교 마커를 클릭하면 상세 리포트가 열립니다.";
@@ -3628,6 +3651,10 @@
       _enrichedRow._redevelopmentProjects = buildRedevelopmentProjectList(row, 500);
       _enrichedRow._largeApartmentComplexes = buildLargeApartmentComplexList(row, 500, 500);
 
+      if (!(state.datasets.candidateFeatures || []).length) {
+        await loadCandidateLayer();
+      }
+
       localStorage.setItem("parkAnalysis_school", JSON.stringify(_enrichedRow));
       localStorage.setItem("parkAnalysis_legacySnapshotLog", JSON.stringify(_enrichedRow._legacySnapshotLog));
       const _schoolName = getSchoolName(row);
@@ -3688,7 +3715,7 @@
       refreshLegend();
       wireEvents();
       await loadData();
-      loadCandidateLayer();
+      await loadCandidateLayer();
     }
 
     init();
