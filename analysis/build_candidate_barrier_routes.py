@@ -95,12 +95,42 @@ def edge_bucket(graph: nx.MultiDiGraph, left: int, right: int) -> str | None:
     return best_bucket
 
 
+def edge_road_label(graph: nx.MultiDiGraph, left: int, right: int) -> str | None:
+    edge_data = graph.get_edge_data(left, right)
+    if not edge_data:
+        return None
+
+    labels: list[str] = []
+    for attrs in edge_data.values():
+        name = attrs.get("name")
+        osmid = attrs.get("osmid")
+        if isinstance(name, list):
+          labels.extend(str(item).strip() for item in name if str(item).strip())
+        elif name is not None and str(name).strip():
+            labels.append(str(name).strip())
+        elif isinstance(osmid, list):
+            labels.extend(f"osmid:{item}" for item in osmid if str(item).strip())
+        elif osmid is not None and str(osmid).strip():
+            labels.append(f"osmid:{osmid}")
+
+    if not labels:
+        return None
+    return " | ".join(sorted(set(labels)))
+
+
 def count_barriers(graph: nx.MultiDiGraph, route: list[int]) -> dict[str, int]:
     counts = {bucket: 0 for bucket in HIGHWAY_BUCKETS}
+    last_signature: tuple[str, str | None] | None = None
     for left, right in zip(route, route[1:]):
         bucket = edge_bucket(graph, left, right)
         if bucket in counts:
-            counts[bucket] += 1
+            road_label = edge_road_label(graph, left, right)
+            signature = (bucket, road_label)
+            if signature != last_signature:
+                counts[bucket] += 1
+                last_signature = signature
+        else:
+            last_signature = None
     return counts
 
 
