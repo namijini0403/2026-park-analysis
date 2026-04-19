@@ -9,6 +9,9 @@ from typing import Any
 import networkx as nx
 import osmnx as ox
 import pandas as pd
+from pyproj import Transformer
+from shapely.geometry import LineString, Point, Polygon
+from shapely.ops import transform as shapely_transform
 
 
 BASE = Path(__file__).resolve().parents[1]
@@ -19,8 +22,19 @@ CANDIDATES_PATH = BASE / "data_processed" / "candidate_grid_final.geojson"
 OUTPUT_JSON_PATH = BASE / "data_processed" / "candidate_barrier_routes_by_school.json"
 OUTPUT_CSV_PATH = BASE / "output" / "candidate_barrier_routes_by_school.csv"
 MIN_CANDIDATES_PER_CASE123_SCHOOL = 6
+ACCIDENT_DATA_FILENAME = (
+    "\uC804\uAD6D\uAD50\uD1B5\uC0AC\uACE0\uB2E4\uBC1C\uC9C0\uC5ED\uD45C\uC900\uB370\uC774\uD130.csv"
+)
+ACCIDENT_REGION_KEYWORD = "\uC778\uCC9C"
+ACCIDENT_COL_REGION = "\uC0AC\uACE0\uB2E4\uBC1C\uC9C0\uC5ED\uC2DC\uB3C4\uC2DC\uAD70\uAD6C"
+ACCIDENT_COL_TYPE = "\uC0AC\uACE0\uC720\uD615\uAD6C\uBD84"
+ACCIDENT_COL_NAME = "\uC0AC\uACE0\uC9C0\uC5ED\uC704\uCE58\uBA85"
+ACCIDENT_COL_LAT = "\uC704\uB3C4"
+ACCIDENT_COL_LNG = "\uACBD\uB3C4"
+ACCIDENT_COL_POLYGON = "\uC0AC\uACE0\uB2E4\uBC1C\uC9C0\uC5ED\uD3F4\uB9AC\uACE4\uC815\uBCF4"
 
 HIGHWAY_BUCKETS = ("motorway", "trunk", "primary", "secondary", "tertiary")
+TO_EPSG5179 = Transformer.from_crs("EPSG:4326", "EPSG:5179", always_xy=True)
 
 
 def normalize_highway(value: Any) -> str | None:
@@ -210,6 +224,81 @@ def route_coordinates(graph: nx.MultiDiGraph, route: list[int]) -> list[list[flo
     return coords
 
 
+def parse_accident_polygon(text: Any, lat: float, lng: float) -> Polygon:
+    raw = str(text or "").strip()
+    matches = re.findall(r"\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]", raw)
+    if len(matches) >= 4:
+        coords = [(float(x), float(y)) for x, y in matches]
+        polygon = Polygon(coords)
+        if not polygon.is_valid:
+            polygon = polygon.buffer(0)
+        if not polygon.is_empty:
+            return polygon
+
+    center = Point(*TO_EPSG5179.transform(lng, lat))
+    return center.buffer(50)
+
+
+def load_accident_hotspots() -> list[dict[str, Any]]:
+    accident_path = BASE / "data_raw" / ACCIDENT_DATA_FILENAME
+    if not accident_path.exists():
+        return []
+
+    df = pd.read_csv(accident_path, encoding="cp949")
+    mask = df[ACCIDENT_COL_REGION].astype(str).str.contains(ACCIDENT_REGION_KEYWORD, na=False)
+    hotspots: list[dict[str, Any]] = []
+    for _, row in df.loc[mask].iterrows():
+        lat = float(row[ACCIDENT_COL_LAT])
+        lng = float(row[ACCIDENT_COL_LNG])
+        hotspots.append(
+            {
+                "type": str(row[ACCIDENT_COL_TYPE]).strip(),
+                "name": str(row[ACCIDENT_COL_NAME]).strip(),
+                "region": str(row[ACCIDENT_COL_REGION]).strip(),
+                "geometry": parse_accident_polygon(row.get(ACCIDENT_COL_POLYGON), lat, lng),
+            }
+        )
+    return hotspots
+
+
+def route_linestring_5179(route_coords: list[list[float]]) -> LineString | None:
+    if len(route_coords) < 2:
+        return None
+
+    lon_lat = []
+    for point in route_coords:
+        if not isinstance(point, list) or len(point) != 2:
+            continue
+        lat, lng = point
+        lon_lat.append((float(lng), float(lat)))
+
+    if len(lon_lat) < 2:
+        return None
+    return shapely_transform(TO_EPSG5179.transform, LineString(lon_lat))
+
+
+def accident_route_meta(route_coords: list[list[float]], hotspots: list[dict[str, Any]]) -> dict[str, Any]:
+    route_line = route_linestring_5179(route_coords)
+    if route_line is None:
+        return {"accident_hotspot_flag": False, "accident_hotspot_text": None}
+
+    hits = [hotspot for hotspot in hotspots if route_line.intersects(hotspot["geometry"])]
+    if not hits:
+        return {"accident_hotspot_flag": False, "accident_hotspot_text": None}
+
+    type_counts = pd.Series([hit["type"] for hit in hits]).value_counts()
+    top_names = ", ".join(hit["name"] for hit in hits[:2])
+    extra_count = len(hits) - min(len(hits), 2)
+    count_summary = ", ".join(f"{label} {count}곳" for label, count in type_counts.items())
+    extra_suffix = f" 외 {extra_count}곳" if extra_count > 0 else ""
+    text = f"사고다발지역 {len(hits)}곳 경유: {count_summary} ({top_names}{extra_suffix})"
+    return {
+        "accident_hotspot_flag": True,
+        "accident_hotspot_text": text,
+        "accident_hotspot_hit_count": int(len(hits)),
+    }
+
+
 def distance_in_meters(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     radius_m = 6371000.0
     phi1 = math.radians(lat1)
@@ -332,6 +421,7 @@ def main() -> None:
         candidate_rows,
         school_to_direct_candidates,
     )
+    accident_hotspots = load_accident_hotspots()
 
     graph = ox.load_graphml(GRAPH_PATH)
     school_node_cache: dict[str, int] = {}
@@ -371,6 +461,8 @@ def main() -> None:
 
         counts = count_barriers(graph, route)
         severity = severity_from_counts(counts)
+        route_coords = route_coordinates(graph, route)
+        accident_meta = accident_route_meta(route_coords, accident_hotspots)
         record = {
             "severity": severity,
             "severity_label": severity_label(severity),
@@ -378,7 +470,8 @@ def main() -> None:
             "note": build_note(counts, severity),
             "counts": counts,
             "route_length_m": round(route_length_m(graph, route), 1),
-            "route_coords": route_coordinates(graph, route),
+            "route_coords": route_coords,
+            **accident_meta,
         }
 
         output.setdefault(school_id, {})[grid_id] = record
@@ -398,6 +491,8 @@ def main() -> None:
                 "route_length_m": record["route_length_m"],
                 "route_point_count": len(record["route_coords"]),
                 "note": record["note"],
+                "accident_hotspot_flag": record.get("accident_hotspot_flag", False),
+                "accident_hotspot_text": record.get("accident_hotspot_text"),
             }
         )
 
@@ -415,6 +510,9 @@ def main() -> None:
             severity: sum(1 for row in flat_rows if row["severity"] == severity)
             for severity in ("green", "yellow", "orange", "red")
         },
+        "accident_hotspot_routes": sum(
+            1 for row in flat_rows if bool(row.get("accident_hotspot_flag"))
+        ),
     }
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

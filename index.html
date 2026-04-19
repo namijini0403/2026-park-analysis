@@ -1691,6 +1691,8 @@
         barrier_severity_label: routeMeta.severity_label || null,
         barrier_color: routeMeta.color || null,
         barrier_note: routeMeta.note || null,
+        accident_hotspot_flag: Boolean(routeMeta.accident_hotspot_flag),
+        accident_hotspot_text: routeMeta.accident_hotspot_text || null,
         route_length_m: Number.isFinite(Number(routeMeta.route_length_m)) ? Number(routeMeta.route_length_m) : null,
         nearest_school_dist: Number.isFinite(Number(routeMeta.route_length_m)) ? Number(routeMeta.route_length_m) : candidate.nearest_school_dist,
         route_coords: Array.isArray(routeMeta.route_coords) ? routeMeta.route_coords : [],
