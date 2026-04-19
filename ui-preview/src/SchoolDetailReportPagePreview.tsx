@@ -29,6 +29,8 @@ type SimilarSchoolItem = {
   nearestParkDistanceM: number;
   greenRatio: number;
   playgroundCount: number;
+  rank?: number;
+  similarityDistance?: number;
 };
 
 type BenchmarkSchoolItem = SimilarSchoolItem;
@@ -105,6 +107,15 @@ export type SchoolDetailReportProps = {
   redevelopmentPlanYear?: string;
   redevelopmentType?: string;
   hasLargeApartmentComplexNearby?: boolean;
+  similarityK?: number;
+  similaritySelectionFeatures?: string;
+  similarityComparisonFeatures?: string;
+  similarityCommonPoints?: string;
+  similarityStrengthsText?: string;
+  similarityWeaknessesText?: string;
+  similarityPeerAvgNearestParkDistanceM?: number;
+  similarityPeerAvgGreenRatio?: number;
+  similarityPeerAvgPlaygroundCount?: number;
   similarSchools?: SimilarSchoolItem[];
   cityBestEnvironmentSchool?: BenchmarkSchoolItem;
   districtBestEnvironmentSchool?: BenchmarkSchoolItem;
@@ -133,6 +144,7 @@ type PositionPoint = {
   nearestParkDistanceM: number;
   greenRatio: number;
   playgroundCount: number;
+  rankLabel?: string;
   pointType: "current" | "similar" | "cityBest" | "districtBest" | "sharedBest";
 };
 
@@ -889,14 +901,61 @@ function ContextSection({
   );
 }
 
-function SimilarSchoolsSection({ schoolName, districtName, nearestParkDistanceM, greenRatio, playgroundCount, nearestParkDistanceCityAvg, greenRatioCityAvg, similarSchools, cityBestEnvironmentSchool, districtBestEnvironmentSchool }: Pick<SchoolDetailReportProps, "schoolName" | "districtName" | "nearestParkDistanceM" | "greenRatio" | "playgroundCount" | "nearestParkDistanceCityAvg" | "greenRatioCityAvg" | "similarSchools" | "cityBestEnvironmentSchool" | "districtBestEnvironmentSchool">) {
+function SimilarSchoolsSection({
+  schoolName,
+  districtName,
+  nearestParkDistanceM,
+  greenRatio,
+  playgroundCount,
+  similarSchools,
+  cityBestEnvironmentSchool,
+  districtBestEnvironmentSchool,
+  similarityK,
+  similaritySelectionFeatures,
+  similarityComparisonFeatures,
+  similarityCommonPoints,
+  similarityStrengthsText,
+  similarityWeaknessesText,
+  similarityPeerAvgNearestParkDistanceM,
+  similarityPeerAvgGreenRatio,
+  similarityPeerAvgPlaygroundCount,
+}: Pick<
+  SchoolDetailReportProps,
+  | "schoolName"
+  | "districtName"
+  | "nearestParkDistanceM"
+  | "greenRatio"
+  | "playgroundCount"
+  | "similarSchools"
+  | "cityBestEnvironmentSchool"
+  | "districtBestEnvironmentSchool"
+  | "similarityK"
+  | "similaritySelectionFeatures"
+  | "similarityComparisonFeatures"
+  | "similarityCommonPoints"
+  | "similarityStrengthsText"
+  | "similarityWeaknessesText"
+  | "similarityPeerAvgNearestParkDistanceM"
+  | "similarityPeerAvgGreenRatio"
+  | "similarityPeerAvgPlaygroundCount"
+>) {
   const [hoveredPointId, setHoveredPointId] = React.useState<string | null>(null);
   if (!similarSchools?.length) return null;
 
   const currentPoint: PositionPoint = { id: "current", label: "현재 학교", schoolName, districtName, nearestParkDistanceM, greenRatio, playgroundCount, pointType: "current" };
   const sharedBenchmark = cityBestEnvironmentSchool && districtBestEnvironmentSchool && cityBestEnvironmentSchool.schoolName === districtBestEnvironmentSchool.schoolName && cityBestEnvironmentSchool.districtName === districtBestEnvironmentSchool.districtName;
   const benchmarkPoints: PositionPoint[] = sharedBenchmark ? [{ id: "shared-best", label: "시·구 공통 기준학교", schoolName: cityBestEnvironmentSchool.schoolName, districtName: cityBestEnvironmentSchool.districtName, nearestParkDistanceM: cityBestEnvironmentSchool.nearestParkDistanceM, greenRatio: cityBestEnvironmentSchool.greenRatio, playgroundCount: cityBestEnvironmentSchool.playgroundCount, pointType: "sharedBest" }] : [ ...(cityBestEnvironmentSchool ? [{ id: "city-best", label: "인천시 최우수", schoolName: cityBestEnvironmentSchool.schoolName, districtName: cityBestEnvironmentSchool.districtName, nearestParkDistanceM: cityBestEnvironmentSchool.nearestParkDistanceM, greenRatio: cityBestEnvironmentSchool.greenRatio, playgroundCount: cityBestEnvironmentSchool.playgroundCount, pointType: "cityBest" as const }] : []), ...(districtBestEnvironmentSchool ? [{ id: "district-best", label: "구 최우수", schoolName: districtBestEnvironmentSchool.schoolName, districtName: districtBestEnvironmentSchool.districtName, nearestParkDistanceM: districtBestEnvironmentSchool.nearestParkDistanceM, greenRatio: districtBestEnvironmentSchool.greenRatio, playgroundCount: districtBestEnvironmentSchool.playgroundCount, pointType: "districtBest" as const }] : []) ];
-  const similarPoints: PositionPoint[] = similarSchools.map((school, index) => ({ id: `similar-${index}`, label: school.schoolName, schoolName: school.schoolName, districtName: school.districtName, nearestParkDistanceM: school.nearestParkDistanceM, greenRatio: school.greenRatio, playgroundCount: school.playgroundCount, pointType: "similar" }));
+  const similarPoints: PositionPoint[] = similarSchools.map((school, index) => ({
+    id: `similar-${index}`,
+    label: school.schoolName,
+    schoolName: school.schoolName,
+    districtName: school.districtName,
+    nearestParkDistanceM: school.nearestParkDistanceM,
+    greenRatio: school.greenRatio,
+    playgroundCount: school.playgroundCount,
+    rankLabel: `K${school.rank ?? index + 1}`,
+    pointType: "similar",
+  }));
   const plotPoints = [currentPoint, ...similarPoints, ...benchmarkPoints];
   const xDomainMin = 0;
   const xDomainMax = 1200;
@@ -921,35 +980,51 @@ function SimilarSchoolsSection({ schoolName, districtName, nearestParkDistanceM,
   };
   const positionedPoints = plotPoints.map((point) => ({ ...point, x: scaleX(point.nearestParkDistanceM), y: scaleY(point.greenRatio) }));
   const hoveredPoint = positionedPoints.find((point) => point.id === hoveredPointId) ?? null;
-  const avgSimilarPark = similarPoints.reduce((sum, point) => sum + point.nearestParkDistanceM, 0) / similarPoints.length;
-  const avgSimilarGreen = similarPoints.reduce((sum, point) => sum + point.greenRatio, 0) / similarPoints.length;
-  const avgSimilarPlayground = similarPoints.reduce((sum, point) => sum + point.playgroundCount, 0) / similarPoints.length;
-  const strengths: string[] = [];
-  const weaknesses: string[] = [];
-
-  if (nearestParkDistanceM < avgSimilarPark) {
-    strengths.push(`유사학교 평균보다 최근접 공원 거리가 ${formatWholeNumber(avgSimilarPark - nearestParkDistanceM)}m 짧습니다.`);
-  } else {
-    weaknesses.push(`유사학교 평균보다 최근접 공원 거리가 ${formatWholeNumber(nearestParkDistanceM - avgSimilarPark)}m 더 깁니다.`);
-  }
-
-  if (greenRatio > avgSimilarGreen) {
-    strengths.push(`유사학교 평균보다 녹지 비율이 ${formatWholeNumber(greenRatio - avgSimilarGreen)}%p 높습니다.`);
-  } else {
-    weaknesses.push(`유사학교 평균보다 녹지 비율이 ${formatWholeNumber(avgSimilarGreen - greenRatio)}%p 낮습니다.`);
-  }
-
-  if (playgroundCount > avgSimilarPlayground) {
-    strengths.push(`유사학교 평균보다 도보권 놀이터가 ${formatWholeNumber(playgroundCount - avgSimilarPlayground)}개 많습니다.`);
-  } else {
-    weaknesses.push(`유사학교 평균보다 도보권 놀이터가 ${formatWholeNumber(avgSimilarPlayground - playgroundCount)}개 적습니다.`);
-  }
-
-  const insights = [
-    strengths[0] ?? "유사학교와 비교했을 때 두드러진 상대 강점은 크지 않습니다.",
-    weaknesses[0] ?? "유사학교와 비교했을 때 두드러진 상대 약점은 크지 않습니다.",
-    weaknesses[1] ?? strengths[1] ?? "유사학교군과 비교한 추가 해석은 현재 값 범위에서 제한적입니다.",
+  const avgSimilarPark =
+    similarityPeerAvgNearestParkDistanceM ??
+    similarPoints.reduce((sum, point) => sum + point.nearestParkDistanceM, 0) / similarPoints.length;
+  const avgSimilarGreen =
+    similarityPeerAvgGreenRatio ??
+    similarPoints.reduce((sum, point) => sum + point.greenRatio, 0) / similarPoints.length;
+  const avgSimilarPlayground =
+    similarityPeerAvgPlaygroundCount ??
+    similarPoints.reduce((sum, point) => sum + point.playgroundCount, 0) / similarPoints.length;
+  const commonPointLines = similarityCommonPoints
+    ? similarityCommonPoints.split("|").map((item) => item.trim()).filter(Boolean)
+    : [];
+  const strengthLines = similarityStrengthsText
+    ? similarityStrengthsText.split("|").map((item) => item.trim()).filter(Boolean)
+    : [];
+  const weaknessLines = similarityWeaknessesText
+    ? similarityWeaknessesText.split("|").map((item) => item.trim()).filter(Boolean)
+    : [];
+  const fallbackStrength =
+    nearestParkDistanceM < avgSimilarPark
+      ? `KNN 비교군 평균보다 최근접 공원 거리가 ${formatWholeNumber(avgSimilarPark - nearestParkDistanceM)}m 더 가깝습니다.`
+      : greenRatio > avgSimilarGreen
+        ? `KNN 비교군 평균보다 녹지 비율이 ${formatDecimal(greenRatio - avgSimilarGreen, 1)}%p 더 높습니다.`
+        : playgroundCount > avgSimilarPlayground
+          ? `KNN 비교군 평균보다 도보권 놀이터가 ${formatWholeNumber(playgroundCount - avgSimilarPlayground)}개 더 많습니다.`
+          : "KNN 비교군 평균 대비 두드러진 상대 강점은 크지 않습니다.";
+  const fallbackWeakness =
+    nearestParkDistanceM > avgSimilarPark
+      ? `KNN 비교군 평균보다 최근접 공원 거리가 ${formatWholeNumber(nearestParkDistanceM - avgSimilarPark)}m 더 멉니다.`
+      : greenRatio < avgSimilarGreen
+        ? `KNN 비교군 평균보다 녹지 비율이 ${formatDecimal(avgSimilarGreen - greenRatio, 1)}%p 더 낮습니다.`
+        : playgroundCount < avgSimilarPlayground
+          ? `KNN 비교군 평균보다 도보권 놀이터가 ${formatWholeNumber(avgSimilarPlayground - playgroundCount)}개 더 적습니다.`
+          : "KNN 비교군 평균 대비 두드러진 상대 약점은 크지 않습니다.";
+  const comparisonMetricLines = [
+    `KNN 비교군 평균 공원 거리 ${formatWholeNumber(avgSimilarPark)}m`,
+    `KNN 비교군 평균 녹지 비율 ${formatDecimal(avgSimilarGreen, 1)}%`,
+    `KNN 비교군 평균 놀이터 ${formatDecimal(avgSimilarPlayground, 1)}개`,
   ];
+  const selectionFeatureList = similaritySelectionFeatures
+    ? similaritySelectionFeatures.split(",").map((item) => item.trim()).filter(Boolean)
+    : [];
+  const comparisonFeatureList = similarityComparisonFeatures
+    ? similarityComparisonFeatures.split(",").map((item) => item.trim()).filter(Boolean)
+    : [];
 
   function renderMarker(point: (typeof positionedPoints)[number]) {
     if (point.pointType === "current") return <g><circle cx={point.x} cy={point.y} r={16} fill="#ef4444" opacity={0.18} /><circle cx={point.x} cy={point.y} r={9} fill="#dc2626" stroke="#ffffff" strokeWidth={3} /></g>;
@@ -960,22 +1035,114 @@ function SimilarSchoolsSection({ schoolName, districtName, nearestParkDistanceM,
     }
     if (point.pointType === "districtBest") return <path d={`M ${point.x} ${point.y - 10} L ${point.x + 10} ${point.y} L ${point.x} ${point.y + 10} L ${point.x - 10} ${point.y} Z`} fill="#0ea5e9" stroke="#ffffff" strokeWidth={2.5} />;
     if (point.pointType === "sharedBest") return <g><circle cx={point.x} cy={point.y} r={12} fill="#111827" stroke="#ffffff" strokeWidth={2.5} /><text x={point.x} y={point.y + 4} textAnchor="middle" fontSize={10} fontWeight={700} fill="#f8fafc">시·구</text></g>;
-    return <circle cx={point.x} cy={point.y} r={6} fill="#64748b" stroke="#ffffff" strokeWidth={2} />;
+    return (
+      <g>
+        <circle cx={point.x} cy={point.y} r={11} fill="#475569" stroke="#ffffff" strokeWidth={2.5} />
+        <text x={point.x} y={point.y + 4} textAnchor="middle" fontSize={9} fontWeight={800} fill="#f8fafc">
+          {point.rankLabel ?? "K"}
+        </text>
+      </g>
+    );
   }
 
   const clippedCount = plotPoints.filter((point) => point.nearestParkDistanceM > xDomainMax).length;
 
   return (
-    <SectionShell kicker="Benchmark" title="AI 유사학교 비교 및 기준학교 포지션">
+    <SectionShell kicker="Benchmark" title="KNN 비교군 및 기준학교 포지션">
       <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <Card className="p-6">
-          <p className="text-sm text-slate-600">유사학교는 학생 수, 개발 맥락, 대단지 여부, 공간 지표 등을 포함한 다차원 KNN으로 선정했으며, 아래 그래프는 핵심 생활환경 축만 시각화한 것입니다.</p>
-          <div className="mt-4 flex flex-wrap gap-2"><SectionChip>현재 학교</SectionChip><SectionChip>유사학교</SectionChip><SectionChip>인천시 최우수</SectionChip><SectionChip>구 최우수</SectionChip></div>
+          <p className="text-sm text-slate-600">
+            현재 학교와 환경 맥락이 비슷한 학교를 KNN으로 묶고, 그 안에서 공원 거리와 녹지 비율이 어디에 놓이는지 비교했습니다.
+            {similarityK ? ` 이번 비교는 K=${similarityK} 기준입니다.` : ""}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2"><SectionChip>현재 학교</SectionChip><SectionChip>KNN 비교군</SectionChip><SectionChip>인천시 최우수</SectionChip><SectionChip>구 최우수</SectionChip></div>
+          {selectionFeatureList.length ? (
+            <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">KNN 선정 기준</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectionFeatureList.map((feature) => <SectionChip key={feature}>{feature}</SectionChip>)}
+              </div>
+            </div>
+          ) : null}
           <div className="mt-4 grid gap-2 sm:grid-cols-2"><div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">좋은 방향은 왼쪽 위입니다. 공원 거리는 500m 안쪽일수록, 녹지 비율은 5% 이상일수록 유리합니다.</div><div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">배경 사분면은 인천시 평균이 아니라 생활권 판단선 기준으로 나뉩니다.</div></div>
           {clippedCount > 0 ? <p className="mt-3 text-xs text-slate-500">가독성을 위해 최근접 공원 거리 축은 1,200m까지 표시했고, 이를 넘는 점 {clippedCount}개는 우측 경계에 맞춰 표시했습니다.</p> : null}
           <div className="mt-5"><div className="relative overflow-visible rounded-2xl border border-slate-200 bg-white"><svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="h-[420px] w-full"><rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#ffffff" /><rect x={margin.left} y={margin.top} width={scaleX(parkThreshold) - margin.left} height={scaleY(greenThreshold) - margin.top} fill="#ecfdf5" /><rect x={scaleX(parkThreshold)} y={margin.top} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={scaleY(greenThreshold) - margin.top} fill="#fff7ed" /><rect x={margin.left} y={scaleY(greenThreshold)} width={scaleX(parkThreshold) - margin.left} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="#fefce8" /><rect x={scaleX(parkThreshold)} y={scaleY(greenThreshold)} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="#fef2f2" />{xTicks.map((tick) => <g key={`x-${tick}`}><line x1={scaleX(tick)} x2={scaleX(tick)} y1={margin.top} y2={margin.top + chartHeight} stroke="#e2e8f0" strokeDasharray="3 3" /><text x={scaleX(tick)} y={svgHeight - 18} textAnchor="middle" fontSize="11" fill="#64748b">{tick}</text></g>)}{yTicks.map((tick) => <g key={`y-${tick}`}><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(tick)} y2={scaleY(tick)} stroke="#e2e8f0" strokeDasharray="3 3" /><text x={margin.left - 12} y={scaleY(tick) + 4} textAnchor="end" fontSize="11" fill="#64748b">{tick}</text></g>)}<line x1={scaleX(parkThreshold)} x2={scaleX(parkThreshold)} y1={margin.top} y2={margin.top + chartHeight} stroke="#94a3b8" strokeDasharray="6 5" /><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(greenThreshold)} y2={scaleY(greenThreshold)} stroke="#94a3b8" strokeDasharray="6 5" /><text x={scaleX(parkThreshold) + 8} y={margin.top + chartHeight + 22} fontSize="11" fontWeight="700" fill="#64748b">500m 판단선</text><text x={margin.left + 8} y={scaleY(greenThreshold) - 10} fontSize="11" fontWeight="700" fill="#64748b">녹지 5% 판단선</text><text x={margin.left + 10} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#047857">생활환경 양호</text><text x={margin.left + chartWidth - 110} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#c2410c">공원 접근 불리</text><text x={margin.left + 10} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#a16207">녹지 부족</text><text x={margin.left + chartWidth - 76} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#b91c1c">이중 취약</text><text x={margin.left + chartWidth / 2} y={svgHeight - 2} textAnchor="middle" fontSize="12" fill="#475569">최근접 공원 거리 (m)</text><text transform={`translate(18 ${margin.top + chartHeight / 2}) rotate(-90)`} textAnchor="middle" fontSize="12" fill="#475569">녹지 비율 (%)</text>{positionedPoints.map((point) => <g key={point.id} onMouseEnter={() => setHoveredPointId(point.id)} onMouseLeave={() => setHoveredPointId((current) => current === point.id ? null : current)} style={{ cursor: "pointer" }}>{renderMarker(point)}{point.pointType !== "similar" && point.pointType !== "current" ? <g transform={`translate(${point.x + 12},${point.y - 26})`}><rect width={Math.max(92, point.label.length * 8)} height="24" rx="12" fill="#ffffff" stroke="#cbd5e1" /><text x="12" y="16" fontSize="11" fontWeight={700} fill="#0f172a">{point.label}</text></g> : null}</g>)}</svg>{hoveredPoint ? <div className="pointer-events-none absolute z-20 w-56 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl" style={{ left: `${Math.min(Math.max((hoveredPoint.x / svgWidth) * 100, 8), 92)}%`, top: `${Math.min(Math.max((hoveredPoint.y / svgHeight) * 100 - 14, 6), 88)}%`, transform: "translate(-50%, -100%)" }}><p className="text-sm font-bold text-slate-950">{hoveredPoint.pointType === "current" ? "현재 학교" : hoveredPoint.schoolName}</p><p className="text-xs text-slate-500">{hoveredPoint.pointType === "current" ? `${hoveredPoint.schoolName} · ${hoveredPoint.districtName}` : hoveredPoint.districtName}</p><div className="mt-2 space-y-1 text-xs text-slate-700"><p>최근접 공원 거리 {formatNumber(hoveredPoint.nearestParkDistanceM)}m</p><p>녹지 비율 {formatWholePercent(hoveredPoint.greenRatio)}</p><p>놀이터 수 {formatNumber(hoveredPoint.playgroundCount)}개</p></div></div> : null}</div></div>
         </Card>
-        <div className="grid gap-4"><Card className="p-5"><p className="text-sm font-medium text-slate-500">기준학교 정보</p><div className="mt-4 space-y-3"><div className="rounded-2xl border border-red-200 bg-red-50 p-4"><p className="text-sm font-semibold text-slate-900">현재 학교</p><p className="mt-1 text-xs text-slate-600">{schoolName} · 공원 {formatNumber(nearestParkDistanceM)}m · 녹지 {formatWholePercent(greenRatio)} · 놀이터 {formatNumber(playgroundCount)}개</p></div>{benchmarkPoints.map((point) => <div key={point.id} className={cx("rounded-2xl border p-4", point.pointType === "cityBest" ? "border-yellow-200 bg-yellow-50" : point.pointType === "districtBest" ? "border-sky-200 bg-sky-50" : "border-slate-200 bg-slate-50")}><p className="text-sm font-semibold text-slate-900">{point.label}</p><p className="mt-1 text-xs text-slate-600">{point.schoolName} · 공원 {formatNumber(point.nearestParkDistanceM)}m · 녹지 {formatWholePercent(point.greenRatio)} · 놀이터 {formatNumber(point.playgroundCount)}개</p></div>)}</div></Card><Card className="p-5"><p className="text-sm font-medium text-slate-500">해석</p><div className="mt-4 space-y-3">{insights.map((line) => <div key={line} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">{line}</div>)}</div></Card></div>
+        <div className="grid gap-4">
+          <Card className="p-5">
+            <p className="text-sm font-medium text-slate-500">기준학교 정보</p>
+            <div className="mt-4 space-y-3">
+              <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
+                <p className="text-sm font-semibold text-slate-900">현재 학교</p>
+                <p className="mt-1 text-xs text-slate-600">{schoolName} · 공원 {formatNumber(nearestParkDistanceM)}m · 녹지 {formatDecimal(greenRatio, 1)}% · 놀이터 {formatNumber(playgroundCount)}개</p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-sm font-semibold text-slate-900">KNN 비교군 평균</p>
+                <p className="mt-1 text-xs text-slate-600">
+                  공원 {formatWholeNumber(avgSimilarPark)}m · 녹지 {formatDecimal(avgSimilarGreen, 1)}% · 놀이터 {formatDecimal(avgSimilarPlayground, 1)}개
+                </p>
+              </div>
+              {benchmarkPoints.map((point) => <div key={point.id} className={cx("rounded-2xl border p-4", point.pointType === "cityBest" ? "border-yellow-200 bg-yellow-50" : point.pointType === "districtBest" ? "border-sky-200 bg-sky-50" : "border-slate-200 bg-slate-50")}><p className="text-sm font-semibold text-slate-900">{point.label}</p><p className="mt-1 text-xs text-slate-600">{point.schoolName} · 공원 {formatNumber(point.nearestParkDistanceM)}m · 녹지 {formatDecimal(point.greenRatio, 1)}% · 놀이터 {formatNumber(point.playgroundCount)}개</p></div>)}
+            </div>
+          </Card>
+          <Card className="p-5">
+            <p className="text-sm font-medium text-slate-500">KNN 비교군 해석</p>
+            <div className="mt-4 space-y-3">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">공통 맥락</p>
+                <div className="mt-2 space-y-2 text-sm text-slate-700">
+                  {(commonPointLines.length ? commonPointLines : ["환경 맥락이 비슷한 학교들끼리 비교했습니다."]).map((line) => <p key={line}>{line}</p>)}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">상대 우위</p>
+                <div className="mt-2 space-y-2 text-sm text-emerald-900">
+                  {(strengthLines.length ? strengthLines : [fallbackStrength]).map((line) => <p key={line}>{line}</p>)}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-rose-700">상대 열위</p>
+                <div className="mt-2 space-y-2 text-sm text-rose-900">
+                  {(weaknessLines.length ? weaknessLines : [fallbackWeakness]).map((line) => <p key={line}>{line}</p>)}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">비교 기준값</p>
+                <div className="mt-2 space-y-1 text-sm text-slate-700">
+                  {comparisonMetricLines.map((line) => <p key={line}>{line}</p>)}
+                </div>
+                {comparisonFeatureList.length ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {comparisonFeatureList.map((feature) => <SectionChip key={feature}>{feature}</SectionChip>)}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </Card>
+          <Card className="p-5">
+            <p className="text-sm font-medium text-slate-500">KNN 비교군 목록</p>
+            <div className="mt-4 space-y-3">
+              {similarSchools.map((school, index) => (
+                <div key={`${school.schoolName}-${index}`} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">{`K${school.rank ?? index + 1}`} · {school.schoolName}</p>
+                      <p className="text-xs text-slate-500">{school.districtName}</p>
+                    </div>
+                    {school.similarityDistance != null ? (
+                      <span className="rounded-full bg-slate-200 px-2.5 py-1 text-[11px] font-semibold text-slate-700">
+                        거리 {formatDecimal(school.similarityDistance, 2)}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="mt-2 text-xs text-slate-600">
+                    공원 {formatWholeNumber(school.nearestParkDistanceM)}m · 녹지 {formatDecimal(school.greenRatio, 1)}% · 놀이터 {formatNumber(school.playgroundCount)}개
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
       </div>
     </SectionShell>
   );

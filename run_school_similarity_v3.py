@@ -11,265 +11,338 @@ ROOT = Path(r"c:\2026_data_analysis_park")
 DATA = ROOT / "data_processed"
 
 PRIORITY_CSV = DATA / "school_priority.csv"
-LARGE_APT_CSV = DATA / "has_large_apt_diff.csv"
+SCHOOLS_CSV = DATA / "schools.csv"
+TREND_CSV = DATA / "student_trend.csv"
+LARGE_APT_COMPLEXES_CSV = DATA / "large_apt_complexes_2025.csv"
 OUTPUT_CSV = DATA / "school_similar_schools_top5.csv"
 
-BASE_FEATURES = [
-    "nearest_park_dist_m",
-    "iso_park_count",
-    "buf_park_area",
-    "iso_playground_count",
+K_NEIGHBORS = 4
+MAX_OUTPUT_NEIGHBORS = 5
+EARTH_RADIUS_M = 6_371_000.0
+
+SELECTION_FEATURES = [
+    "current_students_2025",
+    "student_slope",
+    "recent_student_change_pct",
+    "trend_volatility",
     "iso_child_total",
-    "has_large_apt",
+    "large_apt_count_500m",
+    "large_apt_households_500m",
+    "redev_완료수",
+    "redev_진행중수",
+    "redev_예정수",
     "is_new_school",
-    "redev_none",
-    "redev_completed",
-    "redev_planned",
 ]
 
-FORBIDDEN_FEATURES = {
-    "case_type",
-    "case_label",
-    "priority_score",
-    "priority_rank",
-    "is_low_access_tag",
-    "is_case_conflict_tag",
-    "is_separate_bundle_tag",
+CONTEXT_FEATURES = [
+    "current_students_2025",
     "student_slope",
-}
-
-COMMON_FEATURES = [
-    "nearest_park_dist_m",
-    "iso_park_count",
-    "buf_park_area",
-    "iso_playground_count",
+    "recent_student_change_pct",
     "iso_child_total",
-    "has_large_apt",
+    "large_apt_count_500m",
     "redev_status_simple",
     "is_new_school",
 ]
 
-EVAL_FEATURES = COMMON_FEATURES.copy()
+COMPARISON_FEATURES = [
+    "nearest_park_dist_m",
+    "iso_green_ratio",
+    "iso_playground_count",
+]
 
 FEATURE_LABELS = {
-    "nearest_park_dist_m": "최인근 공원 거리",
-    "iso_park_count": "도보권 공원 수",
-    "buf_park_area": "직선권 공원 면적",
-    "iso_playground_count": "도보권 놀이터 수",
-    "iso_child_total": "도보권 아동 수",
-    "has_large_apt": "대단지 아파트 유무",
+    "current_students_2025": "현재 학생 수",
+    "student_slope": "학생 수 추세",
+    "recent_student_change_pct": "최근 학생 수 증감률",
+    "trend_volatility": "학생 수 변동폭",
+    "iso_child_total": "주변 아동 규모",
+    "large_apt_count_500m": "500m 내 대단지 개수",
+    "large_apt_households_500m": "500m 내 대단지 세대 수",
     "redev_status_simple": "재개발 상태",
     "is_new_school": "신설학교 여부",
+    "nearest_park_dist_m": "최근접 공원 거리",
+    "iso_green_ratio": "녹지 비율",
+    "iso_playground_count": "도보권 놀이터 수",
 }
+
+TREND_POSITIVE_THRESHOLD = 5.0
+TREND_NEGATIVE_THRESHOLD = -5.0
+RECENT_CHANGE_POSITIVE_THRESHOLD = 0.05
+RECENT_CHANGE_NEGATIVE_THRESHOLD = -0.05
 
 
 def build_redev_status_simple(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     has_progress = (df["redev_진행중수"] > 0) | (df["redev_예정수"] > 0)
-    has_done = df["redev_완료수"] > 0
+    has_completed = df["redev_완료수"] > 0
     df["redev_status_simple"] = np.select(
-        [has_progress, has_done],
+        [has_progress, has_completed],
         ["계획·진행", "완료"],
         default="없음",
     )
     df["redev_none"] = (df["redev_status_simple"] == "없음").astype(int)
-    df["redev_completed"] = (df["redev_status_simple"] == "완료").astype(int)
-    df["redev_planned"] = (df["redev_status_simple"] == "계획·진행").astype(int)
+    df["redev_completed_flag"] = (df["redev_status_simple"] == "완료").astype(int)
+    df["redev_planned_flag"] = (df["redev_status_simple"] == "계획·진행").astype(int)
     return df
+
+
+def load_trend_features() -> pd.DataFrame:
+    trend = pd.read_csv(TREND_CSV, encoding="utf-8-sig")
+    school_id_col, _, year_col, student_col = trend.columns[:4]
+    trend[year_col] = pd.to_numeric(trend[year_col], errors="coerce")
+    trend[student_col] = pd.to_numeric(trend[student_col], errors="coerce")
+    trend = trend.dropna(subset=[school_id_col, year_col, student_col]).sort_values([school_id_col, year_col])
+
+    rows: list[dict[str, float | str]] = []
+    for school_id, group in trend.groupby(school_id_col):
+        years = group[year_col].to_numpy(dtype=float)
+        students = group[student_col].to_numpy(dtype=float)
+        current_students = float(students[-1])
+        if len(group) >= 2:
+            slope = float(np.polyfit(years, students, 1)[0])
+            recent_base = float(students[-2])
+            recent_change_pct = float((students[-1] - students[-2]) / recent_base) if recent_base else 0.0
+        else:
+            slope = 0.0
+            recent_change_pct = 0.0
+        if len(group) >= 3:
+            trend_volatility = float(np.std(np.diff(students), ddof=0))
+        else:
+            trend_volatility = 0.0
+        rows.append(
+            {
+                "학교ID": school_id,
+                "current_students_2025": current_students,
+                "student_slope_calc": slope,
+                "recent_student_change_pct": recent_change_pct,
+                "trend_volatility": trend_volatility,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def haversine_distance_m(
+    lat1_deg: float,
+    lon1_deg: float,
+    lat2_rad: np.ndarray,
+    lon2_rad: np.ndarray,
+) -> np.ndarray:
+    lat1_rad = np.radians(lat1_deg)
+    lon1_rad = np.radians(lon1_deg)
+    dlat = lat2_rad - lat1_rad
+    dlon = lon2_rad - lon1_rad
+    a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1_rad) * np.cos(lat2_rad) * np.sin(dlon / 2.0) ** 2
+    c = 2.0 * np.arctan2(np.sqrt(a), np.sqrt(1.0 - a))
+    return EARTH_RADIUS_M * c
+
+
+def load_apt_features() -> pd.DataFrame:
+    schools = pd.read_csv(SCHOOLS_CSV, encoding="utf-8-sig")
+    apts = pd.read_csv(LARGE_APT_COMPLEXES_CSV, encoding="utf-8-sig")
+
+    school_id_col = schools.columns[0]
+    school_name_col = schools.columns[1]
+    school_lat_col = schools.columns[2]
+    school_lon_col = schools.columns[3]
+
+    apt_household_col = "세대수"
+    apt_lon_col = "경도"
+    apt_lat_col = "위도"
+
+    schools = schools[[school_id_col, school_name_col, school_lat_col, school_lon_col]].dropna()
+    apts = apts[[apt_lon_col, apt_lat_col, apt_household_col]].dropna()
+    apts[apt_household_col] = pd.to_numeric(apts[apt_household_col], errors="coerce").fillna(0)
+
+    apt_lat_rad = np.radians(apts[apt_lat_col].to_numpy(dtype=float))
+    apt_lon_rad = np.radians(apts[apt_lon_col].to_numpy(dtype=float))
+    apt_households = apts[apt_household_col].to_numpy(dtype=float)
+
+    rows: list[dict[str, int | str]] = []
+    for school in schools.itertuples(index=False):
+        school_id = getattr(school, school_id_col)
+        lat = float(getattr(school, school_lat_col))
+        lon = float(getattr(school, school_lon_col))
+        distances = haversine_distance_m(lat, lon, apt_lat_rad, apt_lon_rad)
+        within_500m = distances <= 500.0
+        rows.append(
+            {
+                "학교ID": school_id,
+                "large_apt_count_500m": int(within_500m.sum()),
+                "large_apt_households_500m": int(apt_households[within_500m].sum()),
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def load_frame() -> pd.DataFrame:
     df = pd.read_csv(PRIORITY_CSV, encoding="utf-8-sig")
-    apt = pd.read_csv(LARGE_APT_CSV, encoding="utf-8-sig")[["학교ID", "has_large_apt"]].copy()
-    apt["has_large_apt"] = apt["has_large_apt"].astype(bool)
+    trend_features = load_trend_features()
+    apt_features = load_apt_features()
 
-    df = df.merge(apt, on="학교ID", how="left")
-    df["has_large_apt"] = df["has_large_apt"].fillna(False).astype(int)
+    df = df.merge(trend_features, on="학교ID", how="left")
+    df = df.merge(apt_features, on="학교ID", how="left")
     df = build_redev_status_simple(df)
 
-    # 산간·도서 학교는 nearest_park_dist_m 이 NaN (공원 없음) → 유사도 계산용 sentinel 9999 사용
+    df["current_students_2025"] = df["current_students_2025"].fillna(0.0)
+    df["student_slope"] = df["student_slope"].fillna(df["student_slope_calc"]).fillna(0.0)
+    df["recent_student_change_pct"] = df["recent_student_change_pct"].fillna(0.0)
+    df["trend_volatility"] = df["trend_volatility"].fillna(0.0)
+    df["large_apt_count_500m"] = df["large_apt_count_500m"].fillna(0).astype(int)
+    df["large_apt_households_500m"] = df["large_apt_households_500m"].fillna(0).astype(int)
     df["nearest_park_dist_m"] = df["nearest_park_dist_m"].fillna(9999.0)
+    df["iso_green_ratio"] = df["iso_green_ratio"].fillna(0.0)
+    df["iso_playground_count"] = df["iso_playground_count"].fillna(0.0)
 
     required = [
         "학교ID",
         "학교명",
         "gu",
         "is_separate_bundle_tag",
-        *BASE_FEATURES,
+        *SELECTION_FEATURES,
+        *COMPARISON_FEATURES,
         "redev_status_simple",
     ]
-    missing = [col for col in required if col not in df.columns]
+    missing = [column for column in required if column not in df.columns]
     if missing:
         raise ValueError(f"필수 컬럼 누락: {missing}")
 
-    forbidden_used = sorted(set(BASE_FEATURES) & FORBIDDEN_FEATURES)
-    if forbidden_used:
-        raise ValueError(f"금지 변수 사용 감지: {forbidden_used}")
-
     null_counts = df[required].isna().sum()
-    null_counts = {k: int(v) for k, v in null_counts.items() if int(v) > 0}
+    null_counts = {key: int(value) for key, value in null_counts.items() if int(value) > 0}
     if null_counts:
         raise ValueError(f"유사학교 입력 결측 발견: {null_counts}")
+
     return df
 
 
-def knn_feature_columns() -> list[str]:
-    return BASE_FEATURES.copy()
+def describe_student_slope(value: float) -> str:
+    if value >= TREND_POSITIVE_THRESHOLD:
+        return "학생 수가 늘어나는 흐름"
+    if value <= TREND_NEGATIVE_THRESHOLD:
+        return "학생 수가 줄어드는 흐름"
+    return "학생 수가 대체로 안정적인 흐름"
 
 
-def similarity_feature_label_list() -> str:
-    return ", ".join(
-        [
-            "nearest_park_dist_m",
-            "iso_park_count",
-            "buf_park_area",
-            "iso_playground_count",
-            "iso_child_total",
-            "has_large_apt",
-            "redev_none",
-            "redev_completed",
-            "redev_planned",
-            "is_new_school",
-        ]
-    )
+def describe_recent_change_pct(value: float) -> str:
+    if value >= RECENT_CHANGE_POSITIVE_THRESHOLD:
+        return "최근 1년 학생 수 증가폭"
+    if value <= RECENT_CHANGE_NEGATIVE_THRESHOLD:
+        return "최근 1년 학생 수 감소폭"
+    return "최근 1년 학생 수 변동"
 
 
 def common_point_text(feature: str, row: pd.Series) -> str:
-    if feature == "has_large_apt":
-        return "유사학교 대비 대단지 아파트 유무가 비슷합니다"
-    if feature == "redev_status_simple":
-        return f"유사학교 대비 재개발 상태가 비슷합니다 ({row['redev_status_simple']})"
-    if feature == "is_new_school":
-        return "유사학교 대비 신설학교 여부가 비슷합니다"
-    return f"유사학교 대비 {FEATURE_LABELS[feature]}가 비슷합니다"
-
-
-def strength_text(feature: str, diff: float, row: pd.Series) -> str:
-    label = FEATURE_LABELS[feature]
-    if feature == "nearest_park_dist_m":
-        return f"유사학교 대비 {label}가 {abs(diff):.1f}m 더 짧습니다"
-    if feature == "has_large_apt":
-        return "유사학교 대비 대단지 아파트가 있는 생활권입니다"
-    if feature == "redev_status_simple":
-        return f"유사학교 대비 재개발 상태가 더 활발합니다 ({row['redev_status_simple']})"
-    if feature == "is_new_school":
-        return "유사학교 대비 신설학교에 해당합니다"
-    if feature in {"iso_park_count", "iso_playground_count"}:
-        if abs(diff) < 1:
-            return f"유사학교 대비 {label}가 소폭 더 많습니다"
-        return f"유사학교 대비 {label}가 {int(round(diff))}개 더 많습니다"
+    if feature == "current_students_2025":
+        return "유사학교와 현재 학생 규모가 비슷합니다"
+    if feature == "student_slope":
+        return f"유사학교와 {describe_student_slope(float(row[feature]))}이 비슷합니다"
+    if feature == "recent_student_change_pct":
+        return f"유사학교와 {describe_recent_change_pct(float(row[feature]))}이 비슷합니다"
     if feature == "iso_child_total":
-        return f"유사학교 대비 {label}가 {int(round(diff))}명 더 많습니다"
-    return f"유사학교 대비 {label}이 {diff:.1f} 더 큽니다"
-
-
-def weakness_text(feature: str, diff: float, row: pd.Series) -> str:
-    label = FEATURE_LABELS[feature]
-    if feature == "nearest_park_dist_m":
-        return f"유사학교 대비 {label}가 {abs(diff):.1f}m 더 깁니다"
-    if feature == "has_large_apt":
-        return "유사학교 대비 대단지 아파트가 없는 생활권입니다"
+        return "유사학교와 학교 주변 아동 규모가 비슷합니다"
+    if feature == "large_apt_count_500m":
+        return "유사학교와 500m 안 대단지 아파트 개수가 비슷합니다"
     if feature == "redev_status_simple":
-        return f"유사학교 대비 재개발 상태가 더 약합니다 ({row['redev_status_simple']})"
+        return f"유사학교와 재개발 상태가 비슷합니다 ({row['redev_status_simple']})"
     if feature == "is_new_school":
-        return "유사학교 대비 신설학교가 아닙니다"
-    if feature in {"iso_park_count", "iso_playground_count"}:
-        if abs(diff) < 1:
-            return f"유사학교 대비 {label}가 소폭 더 적습니다"
-        return f"유사학교 대비 {label}가 {abs(int(round(diff)))}개 더 적습니다"
-    if feature == "iso_child_total":
-        return f"유사학교 대비 {label}가 {abs(int(round(diff)))}명 더 적습니다"
-    return f"유사학교 대비 {label}이 {abs(diff):.1f} 더 작습니다"
+        return "유사학교와 신설학교 여부가 비슷합니다"
+    return f"유사학교와 {FEATURE_LABELS[feature]}이 비슷합니다"
+
+
+def comparison_text(feature: str, diff: float) -> str:
+    if feature == "nearest_park_dist_m":
+        direction = "더 가깝습니다" if diff < 0 else "더 멉니다"
+        return f"유사학교 평균보다 최근접 공원 거리가 {abs(diff):.1f}m {direction}"
+    if feature == "iso_green_ratio":
+        direction = "더 높습니다" if diff > 0 else "더 낮습니다"
+        return f"유사학교 평균보다 녹지 비율이 {abs(diff):.1f}%p {direction}"
+    if feature == "iso_playground_count":
+        rounded = abs(int(round(diff)))
+        if rounded == 0:
+            rounded = 1
+        direction = "더 많습니다" if diff > 0 else "더 적습니다"
+        return f"유사학교 평균보다 도보권 놀이터 수가 {rounded}개 {direction}"
+    return f"유사학교 평균보다 {FEATURE_LABELS[feature]} 차이가 있습니다"
 
 
 def build_common_points(row: pd.Series, peer_mean: pd.Series, peer_std: pd.Series) -> str:
     ranked: list[tuple[float, str]] = []
-    for feature in COMMON_FEATURES:
-        if feature in {"has_large_apt", "is_new_school"}:
-            score = 0.0 if int(row[feature]) == int(round(float(peer_mean[feature]))) else 1.0
-        elif feature == "redev_status_simple":
-            row_vec = np.array([row["redev_none"], row["redev_completed"], row["redev_planned"]], dtype=float)
-            peer_vec = np.array(
+    for feature in CONTEXT_FEATURES:
+        if feature == "redev_status_simple":
+            row_vector = np.array(
                 [
-                    float(peer_mean["redev_none"]),
-                    float(peer_mean["redev_completed"]),
-                    float(peer_mean["redev_planned"]),
+                    int(row["redev_none"]),
+                    int(row["redev_completed_flag"]),
+                    int(row["redev_planned_flag"]),
                 ],
                 dtype=float,
             )
-            score = float(np.abs(row_vec - peer_vec).sum())
+            peer_vector = np.array(
+                [
+                    float(peer_mean["redev_none"]),
+                    float(peer_mean["redev_completed_flag"]),
+                    float(peer_mean["redev_planned_flag"]),
+                ],
+                dtype=float,
+            )
+            score = float(np.abs(row_vector - peer_vector).sum())
+        elif feature == "is_new_school":
+            score = abs(int(row[feature]) - int(round(float(peer_mean[feature]))))
         else:
-            denom = float(peer_std.get(feature, 0.0))
             diff = abs(float(row[feature]) - float(peer_mean[feature]))
+            denom = float(peer_std.get(feature, 0.0))
             score = diff / denom if denom > 0 else diff
         ranked.append((score, common_point_text(feature, row)))
 
     ranked.sort(key=lambda item: item[0])
-    selected: list[str] = []
+    texts: list[str] = []
     for _, text in ranked:
-        if text not in selected:
-            selected.append(text)
-        if len(selected) == 3:
+        if text not in texts:
+            texts.append(text)
+        if len(texts) == 3:
             break
-    return " | ".join(selected)
+    return " | ".join(texts)
 
 
-def build_strengths_weaknesses(
-    row: pd.Series,
-    peer_mean: pd.Series,
-    peer_std: pd.Series,
-) -> tuple[str, str]:
+def build_strengths_weaknesses(row: pd.Series, peer_mean: pd.Series, peer_std: pd.Series) -> tuple[str, str]:
     strengths: list[tuple[float, str]] = []
     weaknesses: list[tuple[float, str]] = []
 
-    for feature in EVAL_FEATURES:
-        if feature in {"has_large_apt", "is_new_school"}:
-            diff = int(row[feature]) - int(round(float(peer_mean[feature])))
-            magnitude = abs(diff)
-        elif feature == "redev_status_simple":
-            row_score = 2 * int(row["redev_planned"]) + 1 * int(row["redev_completed"])
-            peer_score = 2 * float(peer_mean["redev_planned"]) + 1 * float(peer_mean["redev_completed"])
-            diff = row_score - peer_score
-            magnitude = abs(diff)
-        else:
-            diff = float(row[feature]) - float(peer_mean[feature])
-            denom = float(peer_std.get(feature, 0.0))
-            magnitude = abs(diff / denom) if denom > 0 else abs(diff)
-
+    for feature in COMPARISON_FEATURES:
+        diff = float(row[feature]) - float(peer_mean[feature])
+        denom = float(peer_std.get(feature, 0.0))
+        magnitude = abs(diff / denom) if denom > 0 else abs(diff)
         if magnitude == 0:
             continue
 
-        if feature == "nearest_park_dist_m":
-            if diff < 0:
-                strengths.append((magnitude, strength_text(feature, diff, row)))
-            else:
-                weaknesses.append((magnitude, weakness_text(feature, diff, row)))
+        better = diff < 0 if feature == "nearest_park_dist_m" else diff > 0
+        text = comparison_text(feature, diff)
+        if better:
+            strengths.append((magnitude, text))
         else:
-            if diff > 0:
-                strengths.append((magnitude, strength_text(feature, diff, row)))
-            else:
-                weaknesses.append((magnitude, weakness_text(feature, diff, row)))
+            weaknesses.append((magnitude, text))
 
     strengths.sort(key=lambda item: item[0], reverse=True)
     weaknesses.sort(key=lambda item: item[0], reverse=True)
 
-    strength_texts = [text for _, text in strengths[:2]]
-    weakness_texts = [text for _, text in weaknesses[:2]]
+    strength_text = " | ".join(text for _, text in strengths[:2]) or "유사학교 평균 대비 두드러진 상대 강점이 크지 않습니다"
+    weakness_text = " | ".join(text for _, text in weaknesses[:2]) or "유사학교 평균 대비 두드러진 상대 약점이 크지 않습니다"
+    return strength_text, weakness_text
 
-    if not strength_texts:
-        strength_texts = ["유사학교 대비 두드러진 상대 강점이 크지 않습니다"]
-    if not weakness_texts:
-        weakness_texts = ["유사학교 대비 두드러진 상대 약점이 크지 않습니다"]
 
-    return " | ".join(strength_texts), " | ".join(weakness_texts)
+def selection_feature_label_list() -> str:
+    return ", ".join(SELECTION_FEATURES)
+
+
+def comparison_feature_label_list() -> str:
+    return ", ".join(COMPARISON_FEATURES)
 
 
 def process_group(group: pd.DataFrame, bundle_label: str) -> list[dict[str, object]]:
     group = group.reset_index(drop=True).copy()
     scaler = StandardScaler()
-    scaled = scaler.fit_transform(group[knn_feature_columns()])
+    scaled = scaler.fit_transform(group[SELECTION_FEATURES])
 
-    neighbor_count = min(6, len(group))
+    neighbor_count = min(K_NEIGHBORS + 1, len(group))
     if neighbor_count < 2:
         raise ValueError(f"{bundle_label} 그룹 학교 수가 너무 적어 유사학교를 계산할 수 없습니다.")
 
@@ -279,33 +352,33 @@ def process_group(group: pd.DataFrame, bundle_label: str) -> list[dict[str, obje
 
     rows: list[dict[str, object]] = []
     for idx, school in group.iterrows():
-        neighbor_positions = [pos for pos in indices[idx].tolist() if pos != idx][:5]
+        neighbor_positions = [pos for pos in indices[idx].tolist() if pos != idx][:K_NEIGHBORS]
         neighbor_distances = [
-            dist for pos, dist in zip(indices[idx].tolist(), distances[idx].tolist()) if pos != idx
-        ][:5]
+            distance
+            for pos, distance in zip(indices[idx].tolist(), distances[idx].tolist())
+            if pos != idx
+        ][:K_NEIGHBORS]
         peers = group.iloc[neighbor_positions].copy()
 
         peer_mean = peers[
             [
-                "nearest_park_dist_m",
-                "iso_park_count",
-                "buf_park_area",
-                "iso_playground_count",
-                "iso_child_total",
-                "has_large_apt",
-                "is_new_school",
+                *SELECTION_FEATURES,
+                *COMPARISON_FEATURES,
                 "redev_none",
-                "redev_completed",
-                "redev_planned",
+                "redev_completed_flag",
+                "redev_planned_flag",
             ]
         ].mean()
         peer_std = peers[
             [
-                "nearest_park_dist_m",
-                "iso_park_count",
-                "buf_park_area",
-                "iso_playground_count",
+                "current_students_2025",
+                "student_slope",
+                "recent_student_change_pct",
                 "iso_child_total",
+                "large_apt_count_500m",
+                "nearest_park_dist_m",
+                "iso_green_ratio",
+                "iso_playground_count",
             ]
         ].std(ddof=0).replace(0, np.nan)
 
@@ -315,29 +388,47 @@ def process_group(group: pd.DataFrame, bundle_label: str) -> list[dict[str, obje
             "학교명": school["학교명"],
             "gu": school["gu"],
             "similarity_group": bundle_label,
-            "similarity_features": similarity_feature_label_list(),
-            "large_apt_flag": int(school["has_large_apt"]),
+            "knn_k": K_NEIGHBORS,
+            "similarity_features": selection_feature_label_list(),
+            "selection_features": selection_feature_label_list(),
+            "comparison_features": comparison_feature_label_list(),
             "redev_status_simple": school["redev_status_simple"],
+            "large_apt_flag": int(school["large_apt_count_500m"] > 0),
             "redev_none": int(school["redev_none"]),
-            "redev_completed": int(school["redev_completed"]),
-            "redev_planned": int(school["redev_planned"]),
+            "redev_completed": int(school["redev_completed_flag"]),
+            "redev_planned": int(school["redev_planned_flag"]),
+            "large_apt_count_500m": int(school["large_apt_count_500m"]),
+            "large_apt_households_500m": int(school["large_apt_households_500m"]),
+            "current_students_2025": int(round(float(school["current_students_2025"]))),
+            "student_slope": round(float(school["student_slope"]), 3),
+            "recent_student_change_pct": round(float(school["recent_student_change_pct"]), 4),
+            "trend_volatility": round(float(school["trend_volatility"]), 3),
             "common_points": build_common_points(school, peer_mean, peer_std.fillna(0)),
             "relative_strengths": strengths,
             "relative_weaknesses": weaknesses,
+            "peer_avg_nearest_park_dist_m": round(float(peer_mean["nearest_park_dist_m"]), 1),
+            "peer_avg_iso_green_ratio": round(float(peer_mean["iso_green_ratio"]), 2),
+            "peer_avg_iso_playground_count": round(float(peer_mean["iso_playground_count"]), 2),
         }
 
-        for rank in range(5):
+        for rank in range(MAX_OUTPUT_NEIGHBORS):
             if rank < len(neighbor_positions):
                 peer = peers.iloc[rank]
                 row[f"similar_school_{rank + 1}_id"] = peer["학교ID"]
                 row[f"similar_school_{rank + 1}_name"] = peer["학교명"]
                 row[f"similar_school_{rank + 1}_gu"] = peer["gu"]
                 row[f"similar_school_{rank + 1}_distance"] = round(float(neighbor_distances[rank]), 4)
+                row[f"similar_school_{rank + 1}_nearest_park_dist_m"] = round(float(peer["nearest_park_dist_m"]), 1)
+                row[f"similar_school_{rank + 1}_iso_green_ratio"] = round(float(peer["iso_green_ratio"]), 2)
+                row[f"similar_school_{rank + 1}_iso_playground_count"] = int(round(float(peer["iso_playground_count"])))
             else:
                 row[f"similar_school_{rank + 1}_id"] = ""
                 row[f"similar_school_{rank + 1}_name"] = ""
                 row[f"similar_school_{rank + 1}_gu"] = ""
                 row[f"similar_school_{rank + 1}_distance"] = np.nan
+                row[f"similar_school_{rank + 1}_nearest_park_dist_m"] = np.nan
+                row[f"similar_school_{rank + 1}_iso_green_ratio"] = np.nan
+                row[f"similar_school_{rank + 1}_iso_playground_count"] = np.nan
         rows.append(row)
     return rows
 
@@ -353,6 +444,7 @@ def main() -> None:
     result.to_csv(OUTPUT_CSV, index=False, encoding="utf-8-sig")
     print(f"saved: {OUTPUT_CSV}")
     print(f"rows: {len(result)}")
+    print(f"knn_k: {K_NEIGHBORS}")
 
 
 if __name__ == "__main__":

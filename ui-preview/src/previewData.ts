@@ -48,6 +48,20 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
   potentialDemand2029: 629,
   potentialDemand2031: 602,
   hasLargeApartmentComplexNearby: false,
+  similarityK: 4,
+  similaritySelectionFeatures:
+    "current_students_2025, student_slope, recent_student_change_pct, trend_volatility, iso_child_total, large_apt_count_500m, large_apt_households_500m, redev_완료수, redev_진행중수, redev_예정수, is_new_school",
+  similarityComparisonFeatures:
+    "nearest_park_dist_m, iso_green_ratio, iso_playground_count",
+  similarityCommonPoints:
+    "유사학교와 재개발 상태가 비슷합니다 (없음) | 유사학교와 신설학교 여부가 비슷합니다 | 유사학교와 학생 수가 줄어드는 흐름이 비슷합니다",
+  similarityStrengthsText:
+    "유사학교 평균보다 최근접 공원 거리가 193.9m 더 가깝습니다",
+  similarityWeaknessesText:
+    "유사학교 평균보다 녹지 비율이 5.0%p 더 낮습니다 | 유사학교 평균보다 도보권 놀이터 수가 1개 더 적습니다",
+  similarityPeerAvgNearestParkDistanceM: 243.9,
+  similarityPeerAvgGreenRatio: 5.86,
+  similarityPeerAvgPlaygroundCount: 0.75,
   similarSchools: [
     {
       schoolName: "인천부마초등학교",
@@ -55,6 +69,8 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
       nearestParkDistanceM: 801.4,
       greenRatio: 0,
       playgroundCount: 0,
+      rank: 1,
+      similarityDistance: 0.61,
     },
     {
       schoolName: "인천부원초등학교",
@@ -62,6 +78,8 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
       nearestParkDistanceM: 752.2,
       greenRatio: 0,
       playgroundCount: 0,
+      rank: 2,
+      similarityDistance: 0.74,
     },
     {
       schoolName: "인천용마초등학교",
@@ -69,6 +87,8 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
       nearestParkDistanceM: 408,
       greenRatio: 1.425490563160452,
       playgroundCount: 0,
+      rank: 3,
+      similarityDistance: 0.89,
     },
     {
       schoolName: "인천화전초등학교",
@@ -76,13 +96,8 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
       nearestParkDistanceM: 400,
       greenRatio: 0.05990862430115607,
       playgroundCount: 0,
-    },
-    {
-      schoolName: "인천만수북초등학교",
-      districtName: "남동구",
-      nearestParkDistanceM: 384,
-      greenRatio: 0,
-      playgroundCount: 0,
+      rank: 4,
+      similarityDistance: 0.97,
     },
   ],
   cityBestEnvironmentSchool: {

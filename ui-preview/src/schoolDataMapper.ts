@@ -205,6 +205,10 @@ export function mapSchoolRowToReportProps(
       nearestParkDistanceM: n(row[`similar_school_${i}_nearest_park_dist_m`]),
       greenRatio: n(row[`similar_school_${i}_iso_green_ratio`]),
       playgroundCount: n(row[`similar_school_${i}_iso_playground_count`]),
+      rank: i,
+      similarityDistance: Number.isFinite(Number(row[`similar_school_${i}_distance`]))
+        ? Number(row[`similar_school_${i}_distance`])
+        : undefined,
     }))
     .filter((sc) => sc.schoolName !== "");
 
@@ -257,6 +261,21 @@ export function mapSchoolRowToReportProps(
     potentialDemand2031,
     noParkWithin500m,
     accessibilityRatio,
+    ...(Number.isFinite(Number(row.knn_k)) ? { similarityK: n(row.knn_k) } : {}),
+    ...(s(row.selection_features || row.similarity_features) ? { similaritySelectionFeatures: s(row.selection_features || row.similarity_features) } : {}),
+    ...(s(row.comparison_features) ? { similarityComparisonFeatures: s(row.comparison_features) } : {}),
+    ...(s(row.common_points || row.common_traits) ? { similarityCommonPoints: s(row.common_points || row.common_traits) } : {}),
+    ...(s(row.relative_strengths) ? { similarityStrengthsText: s(row.relative_strengths) } : {}),
+    ...(s(row.relative_weaknesses) ? { similarityWeaknessesText: s(row.relative_weaknesses) } : {}),
+    ...(Number.isFinite(Number(row.peer_avg_nearest_park_dist_m))
+      ? { similarityPeerAvgNearestParkDistanceM: n(row.peer_avg_nearest_park_dist_m) }
+      : {}),
+    ...(Number.isFinite(Number(row.peer_avg_iso_green_ratio))
+      ? { similarityPeerAvgGreenRatio: n(row.peer_avg_iso_green_ratio) }
+      : {}),
+    ...(Number.isFinite(Number(row.peer_avg_iso_playground_count))
+      ? { similarityPeerAvgPlaygroundCount: n(row.peer_avg_iso_playground_count) }
+      : {}),
     similarSchools: similarSchools.length ? similarSchools : undefined,
     ...(cityBestEnvironmentSchool ? { cityBestEnvironmentSchool } : {}),
     ...(districtBestEnvironmentSchool ? { districtBestEnvironmentSchool } : {}),
