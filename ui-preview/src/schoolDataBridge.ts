@@ -475,11 +475,11 @@ export function mapCandidateFeatures(
     grid_id: s(feature.grid_id, "CG_UNKNOWN"),
     cx: n(feature.cx),
     cy: n(feature.cy),
-    xgb_predicted_2029: n(feature.xgb_predicted_2029 ?? feature.forecast_2029),
-    xgb_predicted_2031: n(feature.xgb_predicted_2031 ?? feature.forecast_2031),
+    xgb_predicted_2029: n(feature.pred_beneficiary_2029 ?? feature.xgb_predicted_2029 ?? feature.forecast_2029),
+    xgb_predicted_2031: n(feature.pred_beneficiary_2031 ?? feature.xgb_predicted_2031 ?? feature.forecast_2031),
     nearest_park_dist: n(feature.nearest_park_dist ?? feature.avg_park_dist_m),
     nearest_pg_dist: n(feature.nearest_pg_dist ?? feature.nearest_pg_dist_m ?? feature.avg_pg_dist_m),
-    nearest_school_dist: n(feature.nearest_school_dist),
+    nearest_school_dist: n(feature.route_length_m ?? feature.nearest_school_dist),
     nearest_apt_dist: n(feature.nearest_apt_dist),
     land_feasibility_level: FEASIBILITY_LEVELS.has(s(feature.land_feasibility_level))
       ? (s(feature.land_feasibility_level) as "high" | "medium" | "low")
@@ -508,12 +508,8 @@ export function mapCandidateFeatures(
     grid_id: "SCHOOL_INT",
     cx: schoolLng,
     cy: schoolLat,
-    xgb_predicted_2029: external.length
-      ? Math.round(external.reduce((sum, item) => sum + item.xgb_predicted_2029, 0) / external.length)
-      : Math.round(n(schoolDemand?.predicted2029)),
-    xgb_predicted_2031: external.length
-      ? Math.round(external.reduce((sum, item) => sum + item.xgb_predicted_2031, 0) / external.length)
-      : Math.round(n(schoolDemand?.predicted2031)),
+    xgb_predicted_2029: Math.round(n(schoolDemand?.predicted2029)),
+    xgb_predicted_2031: Math.round(n(schoolDemand?.predicted2031)),
     nearest_park_dist: 0,
     nearest_pg_dist: 0,
     nearest_school_dist: 0,
