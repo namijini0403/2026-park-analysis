@@ -1263,10 +1263,10 @@
         ? properties.linked_schools
         : [];
       const predicted2029 = Number(
-        properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
+        properties.pred_beneficiary_2029 ?? properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
       );
       const predicted2031 = Number(
-        properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
+        properties.pred_beneficiary_2031 ?? properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
       );
 
       return {
@@ -1326,10 +1326,10 @@
 
     function getCandidatePopupHtml(properties = {}) {
       const predicted2029 = Number(
-        properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
+        properties.pred_beneficiary_2029 ?? properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
       );
       const predicted2031 = Number(
-        properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
+        properties.pred_beneficiary_2031 ?? properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
       );
       const feasibility = properties.land_feasibility_level || "low";
       const feasibilityLabel =
@@ -2433,7 +2433,7 @@
 
     async function loadCandidateLayer() {
       try {
-        const res = await fetch("./data_processed/candidate_grid_xgb_v4.geojson");
+        const res = await fetch("./data_processed/candidate_grid_final.geojson");
         const geojson = await res.json();
 
         clearOverlayGroup("candidateMarkers");
