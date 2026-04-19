@@ -1293,7 +1293,7 @@
           nearest_park_dist_m: Number(properties.avg_park_dist_m ?? 0),
           has_large_apt: null,
           redev_status_simple: `연결 학교 ${linkedSchoolCount}개`,
-          land_feasibility_note: `우선순위 점수 ${Number(properties.priority_score_mixed ?? properties.priority_score || 0).toFixed(1)} · 후보지 순위 ${properties.candidate_rank_mixed || properties.candidate_rank || "-"}위`
+          land_feasibility_note: `우선순위 점수 ${Number((properties.priority_score_mixed ?? properties.priority_score) || 0).toFixed(1)} · 후보지 순위 ${properties.candidate_rank_mixed || properties.candidate_rank || "-"}위`
         },
         strategy_recommendation: {
           primary_recommendation: `${properties.land_feasibility_level || "low"} 우선도 후보지 검토`,
