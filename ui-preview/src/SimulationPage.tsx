@@ -90,6 +90,7 @@ type ScoredCandidate = Candidate & {
   benefit_score: number;
   school_distance_score: number;
   facility_gap_score: number;
+  ai_message?: string;
 };
 
 const DEFAULT_FILTERS: FilterState = {
@@ -106,6 +107,24 @@ const DEFAULT_WEIGHTS: WeightState = {
   schoolDistance: 30,
   parkDistance: 25,
 };
+
+const AI_DEFAULT_FILTERS: FilterState = {
+  excludePrimary: true,
+  excludeSecondary: false,
+  excludeTertiary: false,
+  excludeAccident: false,
+  excludeRedev: true,
+  excludeLargeApt: false,
+};
+
+const AI_DEFAULT_WEIGHTS: WeightState = {
+  benefit: 30,
+  schoolDistance: 60,
+  parkDistance: 10,
+};
+
+const AI_RECOMMENDATION_COUNT = 3;
+const AI_FALLBACK_MIN_CANDIDATES = 3;
 
 const BARRIER_COLOR: Record<NonNullable<Candidate["barrier_severity"]>, string> = {
   green: "#2E8B57",
@@ -276,29 +295,26 @@ function scoreCandidates(candidates: Candidate[], weights: WeightState): ScoredC
     .sort((left, right) => right.final_score - left.final_score);
 }
 
-function computeAiRecommendations(candidates: Candidate[]): ScoredCandidate[] {
+type AiRecommendationResult = {
+  recommendations: ScoredCandidate[];
+  fallbackApplied: boolean;
+  filterSummary: string;
+};
+
+function scoreWithNormalizedWeights(candidates: Candidate[], weights: WeightState): ScoredCandidate[] {
   if (candidates.length === 0) return [];
 
+  const normalizedWeights = normalizeWeights(weights);
   const demandScores = minmaxScore(candidates.map((candidate) => candidate.walkshed_potential_2029));
   const schoolDistanceScores = minmaxScore(candidates.map((candidate) => candidate.nearest_school_dist), true);
   const parkGapScores = minmaxScore(candidates.map((candidate) => candidate.nearest_park_dist));
 
-  const playgroundDistances = candidates.map((candidate) => candidate.nearest_pg_dist).sort((left, right) => left - right);
-  const playgroundCap =
-    playgroundDistances[Math.floor(playgroundDistances.length * 0.95)] ??
-    playgroundDistances[playgroundDistances.length - 1] ??
-    0;
-  const playgroundGapScores = minmaxScore(
-    candidates.map((candidate) => Math.min(candidate.nearest_pg_dist, playgroundCap)),
-  );
-
   return candidates
     .map((candidate, index) => {
       const finalScore =
-        demandScores[index] * 0.35 +
-        schoolDistanceScores[index] * 0.3 +
-        parkGapScores[index] * 0.25 +
-        playgroundGapScores[index] * 0.1;
+        schoolDistanceScores[index] * normalizedWeights.schoolDistance +
+        demandScores[index] * normalizedWeights.benefit +
+        parkGapScores[index] * normalizedWeights.parkDistance;
 
       return {
         ...candidate,
@@ -310,6 +326,50 @@ function computeAiRecommendations(candidates: Candidate[]): ScoredCandidate[] {
       };
     })
     .sort((left, right) => right.final_score - left.final_score);
+}
+
+function buildAiMessage(candidate: Candidate): string {
+  return getBarrierCountSummary(candidate);
+}
+
+function computeAiRecommendations(candidates: Candidate[]): AiRecommendationResult {
+  if (candidates.length === 0) {
+    return {
+      recommendations: [],
+      fallbackApplied: false,
+      filterSummary: "적용 가능한 외부 후보가 없습니다.",
+    };
+  }
+
+  const primaryAndRedevSafe = candidates.filter((candidate) => {
+    const counts = getBarrierCounts(candidate);
+    return counts.primary === 0 && !hasRedevelopmentRisk(candidate);
+  });
+
+  const primarySafeOnly = candidates.filter((candidate) => {
+    const counts = getBarrierCounts(candidate);
+    return counts.primary === 0;
+  });
+
+  const fallbackApplied =
+    primaryAndRedevSafe.length < AI_FALLBACK_MIN_CANDIDATES &&
+    primarySafeOnly.length > primaryAndRedevSafe.length;
+
+  const basePool = fallbackApplied ? primarySafeOnly : primaryAndRedevSafe;
+  const recommendations = scoreWithNormalizedWeights(basePool, AI_DEFAULT_WEIGHTS)
+    .map((candidate) => ({
+      ...candidate,
+      ai_message: buildAiMessage(candidate),
+    }))
+    .slice(0, AI_RECOMMENDATION_COUNT);
+
+  return {
+    recommendations,
+    fallbackApplied,
+    filterSummary: fallbackApplied
+      ? "기본 추천 후보가 적어 재개발 제외 조건을 완화하고, 도시 대로 미횡단 후보만 유지했습니다."
+      : "도시 대로 미횡단 + 재개발 영향권 제외 조건으로 기본 추천을 계산했습니다.",
+  };
 }
 
 function getCandidateDistanceLabel(candidate: Candidate): string {
@@ -370,12 +430,17 @@ export default function SimulationPage({
     [filteredCandidates, weights],
   );
   const aiRecommendations = useMemo(
-    () => computeAiRecommendations(filteredCandidates).slice(0, 3),
-    [filteredCandidates],
+    () => computeAiRecommendations(externalCandidates),
+    [externalCandidates],
   );
 
   const normalizedWeights = useMemo(() => normalizeWeights(weights), [weights]);
   const filterSummary = useMemo(() => buildFilterReasonSummary(filters), [filters]);
+
+  const applyAiDefaults = () => {
+    setFilters(AI_DEFAULT_FILTERS);
+    setWeights(AI_DEFAULT_WEIGHTS);
+  };
 
   useEffect(() => {
     setSelected((previous) => {
@@ -540,29 +605,46 @@ export default function SimulationPage({
               <div>
                 <div style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8", marginBottom: 4 }}>AI 추천</div>
                 <div style={{ fontSize: 16, fontWeight: 800, color: "#111827" }}>
-                  현재 제외 조건을 통과한 후보 중 AI가 참고용 우선순위를 먼저 제안합니다
+                  AI는 안전성과 접근성을 우선 고려한 기본 추천을 제공합니다
                 </div>
               </div>
-              <span
+              <button
+                type="button"
+                onClick={applyAiDefaults}
                 style={{
-                  padding: "5px 10px",
+                  padding: "8px 12px",
                   borderRadius: 999,
-                  background: "#dbeafe",
-                  color: "#1d4ed8",
+                  background: "#1d4ed8",
+                  color: "#ffffff",
                   fontSize: 12,
                   fontWeight: 800,
+                  border: "none",
+                  cursor: "pointer",
                 }}
               >
-                참고용 자동 추천
-              </span>
+                AI 추천 보기
+              </button>
             </div>
             <div style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-              잠재수혜학생수, 학교 접근성, 기존 공원과 놀이터 공백을 함께 본 기초 추천입니다.
-              최종 우선순위는 아래 필터와 슬라이더에서 직접 조정할 수 있습니다.
+              AI는 안전성과 접근성을 우선 고려한 기본 추천을 제공합니다.
+              이후 필터와 가중치를 조정하여 원하는 조건에 맞게 결과를 변경할 수 있습니다.
             </div>
-            {aiRecommendations.length > 0 ? (
+            <div
+              style={{
+                marginBottom: 12,
+                padding: "10px 12px",
+                borderRadius: 12,
+                background: "#eff6ff",
+                color: "#1e3a8a",
+                fontSize: 12,
+                lineHeight: 1.6,
+              }}
+            >
+              {aiRecommendations.filterSummary}
+            </div>
+            {aiRecommendations.recommendations.length > 0 ? (
               <div style={{ display: "grid", gap: 10 }}>
-                {aiRecommendations.map((candidate, index) => {
+                {aiRecommendations.recommendations.map((candidate, index) => {
                   const badge = rankBadgeStyle(index);
                   const barrierColor = getBarrierColor(candidate);
                   const fixedLabel = candidateLabelMap.get(candidate.grid_id) ?? "-";
@@ -608,6 +690,18 @@ export default function SimulationPage({
                           style={{
                             padding: "2px 8px",
                             borderRadius: 999,
+                            background: "#eef2ff",
+                            color: "#4338ca",
+                            fontSize: 11,
+                            fontWeight: 800,
+                          }}
+                        >
+                          점수 {candidate.final_score.toFixed(2)}
+                        </span>
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            borderRadius: 999,
                             background: `${barrierColor}18`,
                             color: barrierColor,
                             fontSize: 11,
@@ -636,6 +730,12 @@ export default function SimulationPage({
                         <div style={{ padding: "8px 10px", borderRadius: 10, background: "#f8fafc" }}>
                           기존 공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b>
                         </div>
+                        <div style={{ padding: "8px 10px", borderRadius: 10, background: "#f8fafc" }}>
+                          도시 대로 <b>{getBarrierCounts(candidate).primary}회</b> / 중간급 도로 <b>{getBarrierCounts(candidate).secondary}회</b>
+                        </div>
+                      </div>
+                      <div style={{ marginTop: 8, fontSize: 12, color: "#4b5563", lineHeight: 1.6 }}>
+                        {candidate.ai_message}
                       </div>
                     </div>
                   );
@@ -653,7 +753,7 @@ export default function SimulationPage({
                   lineHeight: 1.7,
                 }}
               >
-                현재 제외 조건을 통과한 외부 후보가 없어 AI 추천을 표시할 수 없습니다.
+                AI 기본 필터를 통과한 외부 후보가 없어 AI 추천을 표시할 수 없습니다.
               </div>
             )}
           </div>
