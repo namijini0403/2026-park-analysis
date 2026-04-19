@@ -1279,12 +1279,12 @@
           dong: properties.dong || ""
         },
         demand_summary: {
-          demand_label: properties.demand_label || "잠재수혜인원 예측",
+          demand_label: properties.demand_label || "후보지 인접 예상 아동수(250m 기준)",
           predicted_2029: predicted2029,
           predicted_2031: predicted2031,
           demand_note:
             properties.demand_note ||
-            "구별 Prophet 총량과 1km 아동인구·100m 총인구 비례배분을 결합한 잠재수혜인원입니다."
+            "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
         },
         accessibility_summary: {
           land_feasibility_level: properties.land_feasibility_level || "low",
@@ -1300,7 +1300,7 @@
           secondary_option: linkedSchoolCount > 1 ? "연결 학교 공동 수요 검토" : null
         },
         explanation: {
-          recommendation_reason_summary: `2029 잠재수혜인원 예측 ${Math.round(predicted2029).toLocaleString("ko-KR")}명, 2031 잠재수혜인원 예측 ${Math.round(predicted2031).toLocaleString("ko-KR")}명 기준 후보지입니다.`,
+          recommendation_reason_summary: `2029 후보지 인접 예상 아동수 ${Math.round(predicted2029).toLocaleString("ko-KR")}명, 2031 후보지 인접 예상 아동수 ${Math.round(predicted2031).toLocaleString("ko-KR")}명 기준 후보지입니다.`,
           explanation_tags: [
             `최악 case ${properties.worst_case_type || "-"}`,
             `평균 녹지 ${Number(properties.avg_green_ratio ?? 0).toFixed(1)}%`,
@@ -1342,8 +1342,8 @@
           <div style="font-weight:800; font-size:14px; margin-bottom:4px;">후보지 ${properties.grid_id || ""}</div>
           <div style="font-size:12px; color:#4b5563; margin-bottom:8px;">${feasibilityLabel} · 연결 학교 ${Number(properties.linked_school_count || 0)}개</div>
           <div style="font-size:12px; line-height:1.8; color:#111827; border-top:1px solid #e5e7eb; padding-top:8px;">
-            <div>📈 2029 예측 수혜인원: <strong>${Math.round(predicted2029).toLocaleString("ko-KR")}명</strong></div>
-            <div>📈 2031 예측 수혜인원: <strong>${Math.round(predicted2031).toLocaleString("ko-KR")}명</strong></div>
+            <div>📈 2029 인접 예상 아동수: <strong>${Math.round(predicted2029).toLocaleString("ko-KR")}명</strong></div>
+            <div>📈 2031 인접 예상 아동수: <strong>${Math.round(predicted2031).toLocaleString("ko-KR")}명</strong></div>
           </div>
         </div>
       `;
@@ -3003,19 +3003,19 @@
           demand_cards: panel?.ui_flags?.show_demand_cards === false ? [] : [
             {
               key: "predicted_2029",
-              label: "2029 잠재수혜인원 예측",
+              label: "2029 후보지 인접 예상 아동수",
               value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2029),
               note:
                 panel?.demand_summary?.demand_note ||
-                "구별 Prophet 총량과 1km 아동인구·100m 총인구 비례배분을 결합한 잠재수혜인원입니다."
+                "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
             },
             {
               key: "predicted_2031",
-              label: "2031 잠재수혜인원 예측",
+              label: "2031 후보지 인접 예상 아동수",
               value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2031),
               note:
                 panel?.demand_summary?.demand_note ||
-                "구별 Prophet 총량과 1km 아동인구·100m 총인구 비례배분을 결합한 잠재수혜인원입니다."
+                "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
             }
           ],
           accessibility_items: [
@@ -3086,19 +3086,19 @@
         demand_cards: panel?.ui_flags?.show_demand_cards === false ? [] : [
           {
             key: "predicted_2029",
-            label: "2029 잠재수혜인원 예측",
+            label: "2029 후보지 인접 예상 아동수",
             value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2029),
             note:
               panel?.demand_summary?.demand_note ||
-              "구별 Prophet 총량과 1km 아동인구·100m 총인구 비례배분을 결합한 잠재수혜인원입니다."
+              "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
           },
           {
             key: "predicted_2031",
-            label: "2031 잠재수혜인원 예측",
+            label: "2031 후보지 인접 예상 아동수",
             value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2031),
             note:
               panel?.demand_summary?.demand_note ||
-              "구별 Prophet 총량과 1km 아동인구·100m 총인구 비례배분을 결합한 잠재수혜인원입니다."
+              "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
           }
         ],
         accessibility_items: panel?.ui_flags?.show_accessibility_metrics === false ? [] : [
@@ -3253,7 +3253,7 @@
         </div>
         ${viewModel.demand_cards.length ? `
           <div class="detail-section">
-            <div class="detail-section-title">${viewModel.panel_kind === "external_grid" ? "잠재수혜인원 예측" : "잠재 수요 추정"}</div>
+            <div class="detail-section-title">${viewModel.panel_kind === "external_grid" ? "후보지 인접 예상 아동수" : "잠재 수요 추정"}</div>
             ${renderCandidateInfoCards(viewModel.demand_cards)}
           </div>
         ` : ""}

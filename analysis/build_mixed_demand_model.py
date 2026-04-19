@@ -19,7 +19,9 @@ from pathlib import Path
 
 import geopandas as gpd
 import lightgbm as lgb
+import networkx as nx
 import numpy as np
+import osmnx as ox
 import pandas as pd
 from scipy.stats import linregress
 from shapely.geometry import Point
@@ -56,6 +58,7 @@ OUT_250M = DATA / "grid_250m_pred.csv"
 OUT_CANDIDATE_GEOJSON = DATA / "candidate_grid_final.geojson"
 OUT_CANDIDATE_CSV = DATA / "candidate_grid_final.csv"
 OUT_LGBM_MODEL = DATA / "lgbm_spatial_distribution.pkl"
+GRAPH_PATH = DATA / "incheon_walk_graph_v2.graphml"
 
 CRS_PROJ = "EPSG:5179"
 INCHEON_BOUNDS = (740634, 1899394, 946455, 2010915)
@@ -699,10 +702,98 @@ def step_f_candidate_grid(
 
 
 # ──────────────────────────────────────────────
-# STEP G: 재개발 경고 레이어
+# STEP G: 후보지 중심 500m 보행권 잠재수요 집계
 # ──────────────────────────────────────────────
 
-def step_g_redev_warning(
+def step_g_candidate_walkshed_demand(
+    final_gdf: gpd.GeoDataFrame,
+    walk_radius_m: float = 500.0,
+) -> gpd.GeoDataFrame:
+    """
+    후보지별 250m 인접 예측값은 유지하고,
+    후보지 중심 보행 500m 안에 들어오는 후보 셀들의 예측값 합을
+    walkshed_beneficiary_2029/2031 으로 추가한다.
+    """
+    if not GRAPH_PATH.exists():
+        print(f"[Step G] 보행 그래프 없음: {GRAPH_PATH.name}, 500m 보행권 집계 생략")
+        out = final_gdf.copy()
+        out["walkshed_beneficiary_2029"] = out["pred_beneficiary_2029"].fillna(0.0)
+        out["walkshed_beneficiary_2031"] = out["pred_beneficiary_2031"].fillna(0.0)
+        return out
+
+    print(f"[Step G] 후보지 중심 {int(walk_radius_m)}m 보행권 잠재수요 집계 중...")
+    graph = ox.load_graphml(GRAPH_PATH)
+    if not isinstance(graph, nx.MultiDiGraph):
+        graph = nx.MultiDiGraph(graph)
+
+    out = final_gdf.copy()
+    out["cx"] = pd.to_numeric(out["cx"], errors="coerce")
+    out["cy"] = pd.to_numeric(out["cy"], errors="coerce")
+    out["pred_beneficiary_2029"] = pd.to_numeric(out["pred_beneficiary_2029"], errors="coerce").fillna(0.0)
+    out["pred_beneficiary_2031"] = pd.to_numeric(out["pred_beneficiary_2031"], errors="coerce").fillna(0.0)
+
+    valid_mask = out["cx"].notna() & out["cy"].notna()
+    if not valid_mask.any():
+        out["walkshed_beneficiary_2029"] = 0.0
+        out["walkshed_beneficiary_2031"] = 0.0
+        return out
+
+    valid = out.loc[valid_mask].copy()
+    node_ids = ox.distance.nearest_nodes(graph, X=valid["cx"].to_numpy(), Y=valid["cy"].to_numpy())
+    valid["nearest_walk_node"] = pd.Series(node_ids, index=valid.index, dtype="int64")
+
+    node_to_candidate_idx: dict[int, list[int]] = {}
+    for idx, node_id in zip(valid.index.tolist(), valid["nearest_walk_node"].tolist()):
+        node_to_candidate_idx.setdefault(int(node_id), []).append(idx)
+
+    node_demand_2029 = {
+        node_id: float(valid.loc[indexes, "pred_beneficiary_2029"].sum())
+        for node_id, indexes in node_to_candidate_idx.items()
+    }
+    node_demand_2031 = {
+        node_id: float(valid.loc[indexes, "pred_beneficiary_2031"].sum())
+        for node_id, indexes in node_to_candidate_idx.items()
+    }
+
+    unique_nodes = list(node_to_candidate_idx.keys())
+    walkshed_sum_2029: dict[int, float] = {}
+    walkshed_sum_2031: dict[int, float] = {}
+    total_nodes = len(unique_nodes)
+
+    for i, node_id in enumerate(unique_nodes, start=1):
+        reachable = nx.single_source_dijkstra_path_length(
+            graph,
+            int(node_id),
+            cutoff=walk_radius_m,
+            weight="length",
+        )
+        reachable_nodes = reachable.keys()
+        walkshed_sum_2029[node_id] = float(sum(node_demand_2029.get(int(target), 0.0) for target in reachable_nodes))
+        walkshed_sum_2031[node_id] = float(sum(node_demand_2031.get(int(target), 0.0) for target in reachable_nodes))
+        if i % 250 == 0 or i == total_nodes:
+            print(f"  - {i}/{total_nodes} 후보 노드 집계 완료")
+
+    valid["walkshed_beneficiary_2029"] = valid["nearest_walk_node"].map(walkshed_sum_2029).fillna(valid["pred_beneficiary_2029"])
+    valid["walkshed_beneficiary_2031"] = valid["nearest_walk_node"].map(walkshed_sum_2031).fillna(valid["pred_beneficiary_2031"])
+
+    out["walkshed_beneficiary_2029"] = 0.0
+    out["walkshed_beneficiary_2031"] = 0.0
+    out.loc[valid.index, "walkshed_beneficiary_2029"] = valid["walkshed_beneficiary_2029"]
+    out.loc[valid.index, "walkshed_beneficiary_2031"] = valid["walkshed_beneficiary_2031"]
+
+    print(
+        "[Step G] 500m 보행권 잠재수요 범위:",
+        f"2029 {out['walkshed_beneficiary_2029'].min():.1f} ~ {out['walkshed_beneficiary_2029'].max():.1f},",
+        f"2031 {out['walkshed_beneficiary_2031'].min():.1f} ~ {out['walkshed_beneficiary_2031'].max():.1f}",
+    )
+    return out
+
+
+# ──────────────────────────────────────────────
+# STEP H: 재개발 경고 레이어
+# ──────────────────────────────────────────────
+
+def step_h_redev_warning(
     final_gdf: gpd.GeoDataFrame,
     redev: pd.DataFrame,
 ) -> gpd.GeoDataFrame:
@@ -923,18 +1014,25 @@ def main() -> None:
     final_gdf = step_f_candidate_grid(candidates, distribution, alloc_v1)
 
     # STEP G
+    final_gdf = step_g_candidate_walkshed_demand(final_gdf)
+
+    # STEP H
     if not redev.empty:
-        final_gdf = step_g_redev_warning(final_gdf, redev)
+        final_gdf = step_h_redev_warning(final_gdf, redev)
     else:
         final_gdf["redev_flag"] = False
         final_gdf["redev_level"] = "none"
         final_gdf["redev_warning_text"] = ""
-        print("[Step G] 재개발 데이터 없음, 경고 레이어 스킵")
+        print("[Step H] 재개발 데이터 없음, 경고 레이어 스킵")
 
     # 최종 저장
     final_gdf_wgs = final_gdf.to_crs("EPSG:4326")
-    geojson_tmp = OUT_CANDIDATE_GEOJSON.with_suffix(".tmp.geojson")
-    csv_tmp = OUT_CANDIDATE_CSV.with_suffix(".tmp.csv")
+    geojson_tmp = OUT_CANDIDATE_GEOJSON.with_name(
+        f"{OUT_CANDIDATE_GEOJSON.stem}.{next(tempfile._get_candidate_names())}.tmp.geojson"
+    )
+    csv_tmp = OUT_CANDIDATE_CSV.with_name(
+        f"{OUT_CANDIDATE_CSV.stem}.{next(tempfile._get_candidate_names())}.tmp.csv"
+    )
     final_gdf_wgs.to_file(geojson_tmp, driver="GeoJSON")
     final_gdf_wgs.drop(columns="geometry").to_csv(
         csv_tmp, index=False, encoding="utf-8-sig"
@@ -946,6 +1044,8 @@ def main() -> None:
     print(f"  후보지: {len(final_gdf)}개")
     print(f"  예측 범위 (2029): {final_gdf['pred_beneficiary_2029'].min():.0f} ~ {final_gdf['pred_beneficiary_2029'].max():.0f}")
     print(f"  예측 범위 (2031): {final_gdf['pred_beneficiary_2031'].min():.0f} ~ {final_gdf['pred_beneficiary_2031'].max():.0f}")
+    print(f"  500m 보행권 범위 (2029): {final_gdf['walkshed_beneficiary_2029'].min():.0f} ~ {final_gdf['walkshed_beneficiary_2029'].max():.0f}")
+    print(f"  500m 보행권 범위 (2031): {final_gdf['walkshed_beneficiary_2031'].min():.0f} ~ {final_gdf['walkshed_beneficiary_2031'].max():.0f}")
     print(f"  산출물:")
     for p in [OUT_COHORT_RATIOS, OUT_1KM_COHORT, OUT_1KM_PROPHET,
               OUT_1KM_FINAL, OUT_250M, OUT_CANDIDATE_GEOJSON, OUT_CANDIDATE_CSV]:

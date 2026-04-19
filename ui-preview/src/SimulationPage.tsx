@@ -10,6 +10,10 @@ interface Candidate {
   cy: number;
   xgb_predicted_2029: number;
   xgb_predicted_2031: number;
+  resident_children_2029: number;
+  resident_children_2031: number;
+  walkshed_potential_2029: number;
+  walkshed_potential_2031: number;
   nearest_park_dist: number;
   nearest_pg_dist: number;
   nearest_school_dist: number;
@@ -148,13 +152,13 @@ function formatRoundedCount(value: number): string {
 function computeAiScores(candidates: Candidate[]): Candidate[] {
   if (candidates.length === 0) return [];
   const internal = candidates.filter((c) => c.is_school_internal);
-  const external = candidates.filter((c) => !c.is_school_internal && c.xgb_predicted_2029 >= 200);
+  const external = candidates.filter((c) => !c.is_school_internal && c.walkshed_potential_2029 >= 200);
   if (external.length === 0) return [...internal, ...candidates.filter((c) => !c.is_school_internal)];
 
   const sortedPg = [...external.map((c) => c.nearest_pg_dist)].sort((a, b) => a - b);
   const pgCap = sortedPg[Math.floor(external.length * 0.95)] ?? sortedPg[sortedPg.length - 1] ?? 0;
 
-  const sDemand = minmax(external.map((c) => c.xgb_predicted_2029));
+  const sDemand = minmax(external.map((c) => c.walkshed_potential_2029));
   const sPark = minmax(external.map((c) => c.nearest_park_dist));
   const sSchool = minmax(external.map((c) => c.nearest_school_dist)).map((v) => 1 - v);
   const sPg = minmax(external.map((c) => Math.min(c.nearest_pg_dist, pgCap)));
@@ -182,7 +186,7 @@ function computeManualScores(
   if (active.length === 0) return [...internal, ...external];
 
   const scoreMap: Record<ManualFilter, number[]> = {
-    demand: minmax(external.map((c) => c.xgb_predicted_2029)),
+    demand: minmax(external.map((c) => c.walkshed_potential_2029)),
     park: minmax(external.map((c) => c.nearest_park_dist)),
     school: minmax(external.map((c) => c.nearest_school_dist)).map((v) => 1 - v),
     playground: minmax(external.map((c) => c.nearest_pg_dist)),
@@ -304,11 +308,11 @@ export default function SimulationPage({
   }, [barrierFilter, ranked, selected]);
 
   const selectedCandidates = ranked.filter((c) => selected.has(c.grid_id) && matchesBarrierFilter(c, barrierFilter));
-  const totalDemand2029 = selectedCandidates.reduce((sum, c) => sum + c.xgb_predicted_2029, 0);
-  const totalDemand2031 = selectedCandidates.reduce((sum, c) => sum + c.xgb_predicted_2031, 0);
+  const totalDemand2029 = selectedCandidates.reduce((sum, c) => sum + c.walkshed_potential_2029, 0);
+  const totalDemand2031 = selectedCandidates.reduce((sum, c) => sum + c.walkshed_potential_2031, 0);
 
   const filterLabels: Record<ManualFilter, string> = {
-    demand: "수혜인원 많은 순",
+    demand: "잠재수요 높은 순",
     park: "공원 공백 우선",
     school: "학교 접근성 우선",
     playground: "놀이터 공백 우선",
@@ -654,10 +658,16 @@ export default function SimulationPage({
                     </div>
                     <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
                       <span>
-                        👤 2029 <b>{formatRoundedCount(c.xgb_predicted_2029)}명</b>
+                        👤 인접 2029 <b>{formatRoundedCount(c.resident_children_2029)}명</b>
                       </span>
                       <span>
-                        👤 2031 <b>{formatRoundedCount(c.xgb_predicted_2031)}명</b>
+                        👤 인접 2031 <b>{formatRoundedCount(c.resident_children_2031)}명</b>
+                      </span>
+                      <span>
+                        🚶 보행권 2029 <b>{formatRoundedCount(c.walkshed_potential_2029)}명</b>
+                      </span>
+                      <span>
+                        🚶 보행권 2031 <b>{formatRoundedCount(c.walkshed_potential_2031)}명</b>
                       </span>
                       <span>
                         {getCandidateDistanceLabel(c)} <b>{c.nearest_school_dist.toLocaleString()}m</b>
@@ -672,7 +682,7 @@ export default function SimulationPage({
                       </div>
                     ) : null}
                     <div style={{ marginTop: 8, fontSize: 12, color: "#4b5563", lineHeight: 1.6 }}>
-                      {getBarrierNote(c)}
+                      {getBarrierNote(c)} 후보지 인접 예상 아동수는 250m 기준 참고값이며, 보행권 수요는 후보지 중심 500m 보행권 안의 예상 아동 규모입니다.
                     </div>
                   </div>
                   {i < 3 && !isSel && <div style={{ fontSize: 16 }}>⚡</div>}
@@ -714,14 +724,14 @@ export default function SimulationPage({
           </div>
           <div style={{ display: "flex", gap: 40, marginBottom: 20, flexWrap: "wrap" }}>
             <div>
-              <div style={{ fontSize: 13, color: "#aaa" }}>2029 예상 수혜인원</div>
+              <div style={{ fontSize: 13, color: "#aaa" }}>2029 예상 잠재수요인원</div>
               <div style={{ fontSize: 36, fontWeight: 800 }}>
                 {formatRoundedCount(totalDemand2029)}
                 <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
               </div>
             </div>
             <div>
-              <div style={{ fontSize: 13, color: "#aaa" }}>2031 예상 수혜인원</div>
+              <div style={{ fontSize: 13, color: "#aaa" }}>2031 예상 잠재수요인원</div>
               <div style={{ fontSize: 36, fontWeight: 800 }}>
                 {formatRoundedCount(totalDemand2031)}
                 <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>

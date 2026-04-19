@@ -15,6 +15,10 @@ export interface Candidate {
   cy: number;
   xgb_predicted_2029: number;
   xgb_predicted_2031: number;
+  resident_children_2029: number;
+  resident_children_2031: number;
+  walkshed_potential_2029: number;
+  walkshed_potential_2031: number;
   nearest_park_dist: number;
   nearest_pg_dist: number;
   nearest_school_dist: number;
@@ -472,6 +476,10 @@ export function mapCandidateFeatures(
   },
 ): Candidate[] {
   const external: Candidate[] = features.map((feature) => ({
+    resident_children_2029: n(feature.pred_beneficiary_2029 ?? feature.xgb_predicted_2029 ?? feature.forecast_2029),
+    resident_children_2031: n(feature.pred_beneficiary_2031 ?? feature.xgb_predicted_2031 ?? feature.forecast_2031),
+    walkshed_potential_2029: n(feature.walkshed_beneficiary_2029 ?? feature.pred_beneficiary_2029 ?? feature.xgb_predicted_2029 ?? feature.forecast_2029),
+    walkshed_potential_2031: n(feature.walkshed_beneficiary_2031 ?? feature.pred_beneficiary_2031 ?? feature.xgb_predicted_2031 ?? feature.forecast_2031),
     grid_id: s(feature.grid_id, "CG_UNKNOWN"),
     cx: n(feature.cx),
     cy: n(feature.cy),
@@ -510,6 +518,10 @@ export function mapCandidateFeatures(
     cy: schoolLat,
     xgb_predicted_2029: Math.round(n(schoolDemand?.predicted2029)),
     xgb_predicted_2031: Math.round(n(schoolDemand?.predicted2031)),
+    resident_children_2029: Math.round(n(schoolDemand?.predicted2029)),
+    resident_children_2031: Math.round(n(schoolDemand?.predicted2031)),
+    walkshed_potential_2029: Math.round(n(schoolDemand?.predicted2029)),
+    walkshed_potential_2031: Math.round(n(schoolDemand?.predicted2031)),
     nearest_park_dist: 0,
     nearest_pg_dist: 0,
     nearest_school_dist: 0,
