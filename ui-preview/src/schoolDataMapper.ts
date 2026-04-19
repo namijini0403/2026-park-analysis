@@ -37,6 +37,12 @@ export interface Candidate {
   route_coords?: Array<[number, number]>;
   fallback_candidate?: boolean;
   fallback_distance_basis?: string;
+  has_large_apt?: boolean;
+  redev_flag?: boolean;
+  redev_level?: string;
+  redev_warning_text?: string;
+  accident_hotspot_flag?: boolean;
+  accident_hotspot_text?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,6 +51,11 @@ type RawRow = Record<string, any>;
 function n(v: unknown, fallback = 0): number {
   const num = Number(v);
   return Number.isFinite(num) ? num : fallback;
+}
+
+function maybeNumber(v: unknown): number | null {
+  const num = Number(v);
+  return Number.isFinite(num) ? num : null;
 }
 
 function s(v: unknown, fallback = ""): string {
@@ -308,8 +319,8 @@ export function mapCandidateFeatures(
     xgb_predicted_2031: n(p.pred_beneficiary_2031 ?? p.xgb_predicted_2031 ?? p.forecast_2031),
     nearest_park_dist: n(p.nearest_park_dist ?? p.avg_park_dist_m),
     nearest_pg_dist: n(p.nearest_pg_dist ?? p.nearest_pg_dist_m ?? p.avg_pg_dist_m),
-    nearest_school_dist: n(p.route_length_m ?? p.nearest_school_dist),
-    nearest_apt_dist: n(p.nearest_apt_dist),
+    nearest_school_dist: maybeNumber(p.route_length_m ?? p.nearest_school_dist) ?? 9999,
+    nearest_apt_dist: maybeNumber(p.nearest_apt_dist) ?? 9999,
     land_feasibility_level: FEASIBILITY_LEVELS.has(s(p.land_feasibility_level))
       ? (s(p.land_feasibility_level) as "high" | "medium" | "low")
       : "medium",
@@ -333,6 +344,18 @@ export function mapCandidateFeatures(
       : {}),
     ...(p.fallback_candidate ? { fallback_candidate: true } : {}),
     ...(s(p.fallback_distance_basis) ? { fallback_distance_basis: s(p.fallback_distance_basis) } : {}),
+    ...(p.has_large_apt != null ? { has_large_apt: Boolean(p.has_large_apt) } : {}),
+    ...(p.redev_flag != null ? { redev_flag: Boolean(p.redev_flag) } : {}),
+    ...(s(p.redev_level) ? { redev_level: s(p.redev_level) } : {}),
+    ...(s(p.redev_warning_text) ? { redev_warning_text: s(p.redev_warning_text) } : {}),
+    ...(p.accident_hotspot_flag != null
+      ? { accident_hotspot_flag: Boolean(p.accident_hotspot_flag) }
+      : p.accident_buffer_flag != null
+        ? { accident_hotspot_flag: Boolean(p.accident_buffer_flag) }
+        : p.passes_accident_hotspot != null
+          ? { accident_hotspot_flag: Boolean(p.passes_accident_hotspot) }
+          : {}),
+    ...(s(p.accident_hotspot_text ?? p.accident_buffer_text) ? { accident_hotspot_text: s(p.accident_hotspot_text ?? p.accident_buffer_text) } : {}),
   }));
 
   // 교내 시설 후보 (학교 좌표에 고정)

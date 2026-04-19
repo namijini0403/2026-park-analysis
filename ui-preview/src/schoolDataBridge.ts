@@ -34,6 +34,12 @@ export interface Candidate {
   barrier_note?: string;
   route_length_m?: number;
   route_coords?: Array<[number, number]>;
+  has_large_apt?: boolean;
+  redev_flag?: boolean;
+  redev_level?: string;
+  redev_warning_text?: string;
+  accident_hotspot_flag?: boolean;
+  accident_hotspot_text?: string;
 }
 
 type RawRow = Record<string, unknown>;
@@ -454,6 +460,21 @@ export function mapSchoolRowToReportProps(
       : {}),
     potentialDemand2029: Math.round(potentialDemand2029),
     potentialDemand2031: Math.round(potentialDemand2031),
+    ...(maybeNumber(row.knn_k) != null ? { similarityK: maybeNumber(row.knn_k)! } : {}),
+    ...(s(row.selection_features || row.similarity_features) ? { similaritySelectionFeatures: s(row.selection_features || row.similarity_features) } : {}),
+    ...(s(row.comparison_features) ? { similarityComparisonFeatures: s(row.comparison_features) } : {}),
+    ...(s(row.common_points || row.common_traits) ? { similarityCommonPoints: s(row.common_points || row.common_traits) } : {}),
+    ...(s(row.relative_strengths) ? { similarityStrengthsText: s(row.relative_strengths) } : {}),
+    ...(s(row.relative_weaknesses) ? { similarityWeaknessesText: s(row.relative_weaknesses) } : {}),
+    ...(maybeNumber(row.peer_avg_nearest_park_dist_m) != null
+      ? { similarityPeerAvgNearestParkDistanceM: maybeNumber(row.peer_avg_nearest_park_dist_m)! }
+      : {}),
+    ...(maybeNumber(row.peer_avg_iso_green_ratio) != null
+      ? { similarityPeerAvgGreenRatio: maybeNumber(row.peer_avg_iso_green_ratio)! }
+      : {}),
+    ...(maybeNumber(row.peer_avg_iso_playground_count) != null
+      ? { similarityPeerAvgPlaygroundCount: maybeNumber(row.peer_avg_iso_playground_count)! }
+      : {}),
     similarSchools: similarSchools.length ? similarSchools : undefined,
     ...(cityBestEnvironmentSchool ? { cityBestEnvironmentSchool } : {}),
     ...(districtBestEnvironmentSchool ? { districtBestEnvironmentSchool } : {}),
@@ -487,8 +508,8 @@ export function mapCandidateFeatures(
     xgb_predicted_2031: n(feature.pred_beneficiary_2031 ?? feature.xgb_predicted_2031 ?? feature.forecast_2031),
     nearest_park_dist: n(feature.nearest_park_dist ?? feature.avg_park_dist_m),
     nearest_pg_dist: n(feature.nearest_pg_dist ?? feature.nearest_pg_dist_m ?? feature.avg_pg_dist_m),
-    nearest_school_dist: n(feature.route_length_m ?? feature.nearest_school_dist),
-    nearest_apt_dist: n(feature.nearest_apt_dist),
+    nearest_school_dist: maybeNumber(feature.route_length_m ?? feature.nearest_school_dist) ?? 9999,
+    nearest_apt_dist: maybeNumber(feature.nearest_apt_dist) ?? 9999,
     land_feasibility_level: FEASIBILITY_LEVELS.has(s(feature.land_feasibility_level))
       ? (s(feature.land_feasibility_level) as "high" | "medium" | "low")
       : "medium",
@@ -509,6 +530,20 @@ export function mapCandidateFeatures(
             .filter((item) => Array.isArray(item) && item.length === 2)
             .map((item) => [n(item[0]), n(item[1])] as [number, number]),
         }
+      : {}),
+    ...(feature.has_large_apt != null ? { has_large_apt: Boolean(feature.has_large_apt) } : {}),
+    ...(feature.redev_flag != null ? { redev_flag: Boolean(feature.redev_flag) } : {}),
+    ...(s(feature.redev_level) ? { redev_level: s(feature.redev_level) } : {}),
+    ...(s(feature.redev_warning_text) ? { redev_warning_text: s(feature.redev_warning_text) } : {}),
+    ...(feature.accident_hotspot_flag != null
+      ? { accident_hotspot_flag: Boolean(feature.accident_hotspot_flag) }
+      : feature.accident_buffer_flag != null
+        ? { accident_hotspot_flag: Boolean(feature.accident_buffer_flag) }
+        : feature.passes_accident_hotspot != null
+          ? { accident_hotspot_flag: Boolean(feature.passes_accident_hotspot) }
+          : {}),
+    ...(s(feature.accident_hotspot_text ?? feature.accident_buffer_text)
+      ? { accident_hotspot_text: s(feature.accident_hotspot_text ?? feature.accident_buffer_text) }
       : {}),
   }));
 

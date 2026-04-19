@@ -3,6 +3,9 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recha
 import KakaoMap, { CandidateMarker, CandidateRouteLine } from "./KakaoMap";
 
 const LETTERS = "ABCDEFGHIJ".split("");
+const BARRIER_KEYS = ["motorway", "trunk", "primary", "secondary", "tertiary"] as const;
+
+type BarrierKey = (typeof BARRIER_KEYS)[number];
 
 interface Candidate {
   grid_id: string;
@@ -22,7 +25,7 @@ interface Candidate {
   linked_schools: string[];
   is_school_internal?: boolean;
   ai_score?: number;
-  barrier_counts?: Record<"motorway" | "trunk" | "primary" | "secondary" | "tertiary", number>;
+  barrier_counts?: Record<BarrierKey, number>;
   barrier_severity?: "green" | "yellow" | "orange" | "red";
   barrier_severity_label?: string;
   barrier_color?: string;
@@ -31,6 +34,12 @@ interface Candidate {
   route_coords?: Array<[number, number]>;
   fallback_candidate?: boolean;
   fallback_distance_basis?: string;
+  has_large_apt?: boolean;
+  redev_flag?: boolean;
+  redev_level?: string;
+  redev_warning_text?: string;
+  accident_hotspot_flag?: boolean;
+  accident_hotspot_text?: string;
 }
 
 interface RedevelopmentProject {
@@ -61,16 +70,42 @@ interface SimulationPageProps {
   onBack: () => void;
 }
 
-type FilterMode = "ai" | "manual";
-type ManualFilter = "demand" | "park" | "school" | "playground";
-type BarrierFilter = "green" | "yellow_or_less" | "orange_or_less" | "all";
+type FilterState = {
+  excludePrimary: boolean;
+  excludeSecondary: boolean;
+  excludeTertiary: boolean;
+  excludeAccident: boolean;
+  excludeRedev: boolean;
+  excludeLargeApt: boolean;
+};
 
-function rankBadgeStyle(i: number): { color: string; bg: string } {
-  if (i === 0) return { color: "#c0392b", bg: "#fdecea" };
-  if (i === 1) return { color: "#d35400", bg: "#fef0e6" };
-  if (i === 2) return { color: "#b7770d", bg: "#fef9e3" };
-  return { color: "#7f8c8d", bg: "#f4f4f4" };
-}
+type WeightState = {
+  benefit: number;
+  schoolDistance: number;
+  parkDistance: number;
+};
+
+type ScoredCandidate = Candidate & {
+  final_score: number;
+  benefit_score: number;
+  school_distance_score: number;
+  facility_gap_score: number;
+};
+
+const DEFAULT_FILTERS: FilterState = {
+  excludePrimary: false,
+  excludeSecondary: false,
+  excludeTertiary: false,
+  excludeAccident: false,
+  excludeRedev: false,
+  excludeLargeApt: false,
+};
+
+const DEFAULT_WEIGHTS: WeightState = {
+  benefit: 45,
+  schoolDistance: 30,
+  parkDistance: 25,
+};
 
 const BARRIER_COLOR: Record<NonNullable<Candidate["barrier_severity"]>, string> = {
   green: "#2E8B57",
@@ -79,11 +114,72 @@ const BARRIER_COLOR: Record<NonNullable<Candidate["barrier_severity"]>, string> 
   red: "#C0392B",
 };
 
-function barrierRank(severity: Candidate["barrier_severity"]): number {
-  if (severity === "red") return 3;
-  if (severity === "orange") return 2;
-  if (severity === "yellow") return 1;
-  return 0;
+const FILTER_COPY: Array<{ key: keyof FilterState; title: string; description: string }> = [
+  { key: "excludePrimary", title: "도시 대로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 도시 대로 횡단이 1회 이상 있으면 제외합니다." },
+  { key: "excludeSecondary", title: "중간급 도로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 중간급 도로 횡단이 1회 이상 있으면 제외합니다." },
+  { key: "excludeTertiary", title: "일반 도로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 일반 도로 횡단이 1회 이상 있으면 제외합니다." },
+  { key: "excludeAccident", title: "사고다발지역 경유 후보 제외", description: "사고다발지역 buffer 경유 정보가 있으면 해당 후보를 제외합니다." },
+  { key: "excludeRedev", title: "재개발 영향권 후보 제외", description: "재개발 영향권에 포함된 후보지를 제외합니다." },
+  { key: "excludeLargeApt", title: "500세대 이상 대단지 인근 후보 제외", description: "대단지 인근 후보지를 제외합니다." },
+];
+
+const WEIGHT_COPY: Array<{ key: keyof WeightState; title: string; description: string }> = [
+  { key: "benefit", title: "잠재수혜학생수", description: "보행권 잠재수요가 높을수록 가점을 줍니다." },
+  { key: "schoolDistance", title: "학교에서의 거리", description: "학교와 가까울수록 가점을 줍니다." },
+  { key: "parkDistance", title: "기존 공원과의 거리", description: "기존 공원과 멀수록 가점을 줍니다." },
+];
+
+function rankBadgeStyle(index: number): { color: string; bg: string } {
+  if (index === 0) return { color: "#c0392b", bg: "#fdecea" };
+  if (index === 1) return { color: "#d35400", bg: "#fef0e6" };
+  if (index === 2) return { color: "#b7770d", bg: "#fef9e3" };
+  return { color: "#6b7280", bg: "#f3f4f6" };
+}
+
+function normalizeWeights(weights: WeightState): WeightState {
+  const total = weights.benefit + weights.schoolDistance + weights.parkDistance;
+  if (total <= 0) {
+    return { benefit: 1 / 3, schoolDistance: 1 / 3, parkDistance: 1 / 3 };
+  }
+  return {
+    benefit: weights.benefit / total,
+    schoolDistance: weights.schoolDistance / total,
+    parkDistance: weights.parkDistance / total,
+  };
+}
+
+function minmaxScore(values: number[], reverse = false): number[] {
+  if (values.length === 0) return [];
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  if (max === min) return values.map(() => 1);
+  return values.map((value) => {
+    const normalized = (value - min) / (max - min);
+    return reverse ? 1 - normalized : normalized;
+  });
+}
+
+function formatCount(value: number): string {
+  return Math.round(value).toLocaleString("ko-KR");
+}
+
+function formatDistance(value: number): string {
+  if (!Number.isFinite(value) || value >= 9999) return "정보 없음";
+  return `${Math.round(value).toLocaleString("ko-KR")}m`;
+}
+
+function formatPercent(value: number): string {
+  return `${Math.round(value * 100)}%`;
+}
+
+function getBarrierCounts(candidate: Candidate): Record<BarrierKey, number> {
+  return {
+    motorway: candidate.barrier_counts?.motorway ?? 0,
+    trunk: candidate.barrier_counts?.trunk ?? 0,
+    primary: candidate.barrier_counts?.primary ?? 0,
+    secondary: candidate.barrier_counts?.secondary ?? 0,
+    tertiary: candidate.barrier_counts?.tertiary ?? 0,
+  };
 }
 
 function getBarrierSeverity(candidate: Candidate): NonNullable<Candidate["barrier_severity"]> {
@@ -103,104 +199,93 @@ function getBarrierLabel(candidate: Candidate): string {
 
 function getBarrierNote(candidate: Candidate): string {
   if (candidate.is_school_internal) {
-    return candidate.barrier_note ?? "학교 내부 설치 후보지로, 공원까지 이동 경로 단절성보다 학교 안 설치 가능성을 우선 검토합니다.";
+    return "학교 안에 설치하는 대안입니다. 별도 도로 횡단 없이 바로 이용할 수 있는 옵션으로 해석합니다.";
   }
-  return candidate.barrier_note ?? "후보지까지의 도로 단절 정보는 현재 준비 중입니다.";
+  return candidate.barrier_note ?? "경로 정보가 아직 연결되지 않은 후보지입니다.";
 }
 
-function getBarrierCountSummary(candidate: Candidate): string | null {
-  if (candidate.is_school_internal || !candidate.barrier_counts) return null;
-
+function getBarrierCountSummary(candidate: Candidate): string {
+  if (candidate.is_school_internal) return "학교 내부 설치 후보";
+  const counts = getBarrierCounts(candidate);
   const parts: string[] = [];
-  const counts = candidate.barrier_counts;
-  if ((counts.motorway ?? 0) > 0) parts.push(`고속도로 ${counts.motorway}회`);
-  if ((counts.trunk ?? 0) > 0) parts.push(`자동차 전용 간선도로 ${counts.trunk}회`);
-  if ((counts.primary ?? 0) > 0) parts.push(`도시 대로 ${counts.primary}회`);
-  if ((counts.secondary ?? 0) > 0) parts.push(`중간급 도로 ${counts.secondary}회`);
-  if ((counts.tertiary ?? 0) > 0 && parts.length === 0) parts.push("생활도로 있음");
+  if (counts.motorway > 0) parts.push(`고속도로 ${counts.motorway}회 횡단`);
+  if (counts.trunk > 0) parts.push(`자동차 전용 간선 ${counts.trunk}회 횡단`);
+  if (counts.primary > 0) parts.push(`도시 대로 ${counts.primary}회 횡단`);
+  if (counts.secondary > 0) parts.push(`중간급 도로 ${counts.secondary}회 횡단`);
+  if (counts.tertiary > 0) parts.push(`일반 도로 ${counts.tertiary}회 횡단`);
+  return parts.length ? parts.join(" / ") : "큰 도로 횡단 없음";
+}
 
-  return parts.length ? parts.join(" / ") : null;
+function hasLargeAptNearby(candidate: Candidate): boolean {
+  if (candidate.has_large_apt != null) return Boolean(candidate.has_large_apt);
+  return Number.isFinite(candidate.nearest_apt_dist) && candidate.nearest_apt_dist <= 500;
+}
+
+function hasAccidentHotspot(candidate: Candidate): boolean {
+  return Boolean(candidate.accident_hotspot_flag);
+}
+
+function hasRedevelopmentRisk(candidate: Candidate): boolean {
+  if (candidate.redev_flag != null) return Boolean(candidate.redev_flag);
+  return Boolean(candidate.redev_level && candidate.redev_level !== "none");
+}
+
+function passesFilters(candidate: Candidate, filters: FilterState): boolean {
+  if (candidate.is_school_internal) return true;
+
+  const counts = getBarrierCounts(candidate);
+  if (filters.excludePrimary && counts.primary > 0) return false;
+  if (filters.excludeSecondary && counts.secondary > 0) return false;
+  if (filters.excludeTertiary && counts.tertiary > 0) return false;
+  if (filters.excludeAccident && hasAccidentHotspot(candidate)) return false;
+  if (filters.excludeRedev && hasRedevelopmentRisk(candidate)) return false;
+  if (filters.excludeLargeApt && hasLargeAptNearby(candidate)) return false;
+  return true;
+}
+
+function scoreCandidates(candidates: Candidate[], weights: WeightState): ScoredCandidate[] {
+  if (candidates.length === 0) return [];
+
+  const normalizedWeights = normalizeWeights(weights);
+  const benefitScores = minmaxScore(candidates.map((candidate) => candidate.walkshed_potential_2029));
+  const schoolDistanceScores = minmaxScore(candidates.map((candidate) => candidate.nearest_school_dist), true);
+  const facilityGapScores = minmaxScore(candidates.map((candidate) => candidate.nearest_park_dist));
+
+  return candidates
+    .map((candidate, index) => {
+      const finalScore =
+        benefitScores[index] * normalizedWeights.benefit +
+        schoolDistanceScores[index] * normalizedWeights.schoolDistance +
+        facilityGapScores[index] * normalizedWeights.parkDistance;
+
+      return {
+        ...candidate,
+        benefit_score: benefitScores[index],
+        school_distance_score: schoolDistanceScores[index],
+        facility_gap_score: facilityGapScores[index],
+        final_score: finalScore,
+        ai_score: finalScore,
+      };
+    })
+    .sort((left, right) => right.final_score - left.final_score);
 }
 
 function getCandidateDistanceLabel(candidate: Candidate): string {
   if (candidate.fallback_candidate && candidate.fallback_distance_basis === "straight_line_m") {
     return "학교 직선거리(참고)";
   }
-  return "학교 거리";
+  return "학교 경로거리";
 }
 
-function matchesBarrierFilter(candidate: Candidate, filter: BarrierFilter): boolean {
-  if (candidate.is_school_internal) return true;
-  const rank = barrierRank(getBarrierSeverity(candidate));
-  if (filter === "green") return rank === 0;
-  if (filter === "yellow_or_less") return rank <= 1;
-  if (filter === "orange_or_less") return rank <= 2;
-  return true;
-}
-
-function minmax(arr: number[]): number[] {
-  const mn = Math.min(...arr);
-  const mx = Math.max(...arr);
-  if (mx === mn) return arr.map(() => 0.5);
-  return arr.map((v) => (v - mn) / (mx - mn));
-}
-
-function formatRoundedCount(value: number): string {
-  return Math.round(value).toLocaleString("ko-KR");
-}
-
-function computeAiScores(candidates: Candidate[]): Candidate[] {
-  if (candidates.length === 0) return [];
-  const internal = candidates.filter((c) => c.is_school_internal);
-  const external = candidates.filter((c) => !c.is_school_internal && c.walkshed_potential_2029 >= 200);
-  if (external.length === 0) return [...internal, ...candidates.filter((c) => !c.is_school_internal)];
-
-  const sortedPg = [...external.map((c) => c.nearest_pg_dist)].sort((a, b) => a - b);
-  const pgCap = sortedPg[Math.floor(external.length * 0.95)] ?? sortedPg[sortedPg.length - 1] ?? 0;
-
-  const sDemand = minmax(external.map((c) => c.walkshed_potential_2029));
-  const sPark = minmax(external.map((c) => c.nearest_park_dist));
-  const sSchool = minmax(external.map((c) => c.nearest_school_dist)).map((v) => 1 - v);
-  const sPg = minmax(external.map((c) => Math.min(c.nearest_pg_dist, pgCap)));
-
-  const scored = external
-    .map((c, i) => ({
-      ...c,
-      ai_score: sDemand[i] * 0.3 + sPark[i] * 0.3 + sSchool[i] * 0.3 + sPg[i] * 0.1,
-    }))
-    .sort((a, b) => (b.ai_score ?? 0) - (a.ai_score ?? 0));
-
-  return [...internal, ...scored];
-}
-
-function computeManualScores(
-  candidates: Candidate[],
-  filters: Record<ManualFilter, boolean>
-): Candidate[] {
-  const internal = candidates.filter((c) => c.is_school_internal);
-  const external = candidates.filter((c) => !c.is_school_internal);
-
-  const active = Object.entries(filters)
-    .filter(([, v]) => v)
-    .map(([k]) => k as ManualFilter);
-  if (active.length === 0) return [...internal, ...external];
-
-  const scoreMap: Record<ManualFilter, number[]> = {
-    demand: minmax(external.map((c) => c.walkshed_potential_2029)),
-    park: minmax(external.map((c) => c.nearest_park_dist)),
-    school: minmax(external.map((c) => c.nearest_school_dist)).map((v) => 1 - v),
-    playground: minmax(external.map((c) => c.nearest_pg_dist)),
-  };
-
-  const weight = 1 / active.length;
-  const scored = [...external]
-    .map((c, i) => ({
-      ...c,
-      ai_score: active.reduce((sum, f) => sum + scoreMap[f][i] * weight, 0),
-    }))
-    .sort((a, b) => (b.ai_score ?? 0) - (a.ai_score ?? 0));
-
-  return [...internal, ...scored];
+function buildFilterReasonSummary(filters: FilterState): string[] {
+  const summaries: string[] = [];
+  if (filters.excludePrimary) summaries.push("도시 대로 횡단 후보 제외");
+  if (filters.excludeSecondary) summaries.push("중간급 도로 횡단 후보 제외");
+  if (filters.excludeTertiary) summaries.push("일반 도로 횡단 후보 제외");
+  if (filters.excludeAccident) summaries.push("사고다발지역 경유 후보 제외");
+  if (filters.excludeRedev) summaries.push("재개발 영향권 후보 제외");
+  if (filters.excludeLargeApt) summaries.push("500세대 이상 대단지 인근 후보 제외");
+  return summaries;
 }
 
 export default function SimulationPage({
@@ -214,51 +299,58 @@ export default function SimulationPage({
   largeApartmentComplexes = [],
   onBack,
 }: SimulationPageProps) {
-  const [mode, setMode] = useState<FilterMode>("ai");
-  const [manualFilters, setManualFilters] = useState<Record<ManualFilter, boolean>>({
-    demand: true,
-    park: true,
-    school: true,
-    playground: false,
-  });
-  const [barrierFilter, setBarrierFilter] = useState<BarrierFilter>("all");
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+  const [weights, setWeights] = useState<WeightState>(DEFAULT_WEIGHTS);
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [ranked, setRanked] = useState<Candidate[]>([]);
 
-  // 순위 재계산: 모드·필터·후보지 바뀔 때마다
-  useEffect(() => {
-    if (mode === "ai") {
-      setRanked(computeAiScores(candidates));
-    } else {
-      setRanked(computeManualScores(candidates, manualFilters));
-    }
-  }, [mode, manualFilters, candidates]);
+  const internalCandidate = useMemo(
+    () => candidates.find((candidate) => candidate.is_school_internal),
+    [candidates],
+  );
 
-  // 선택 초기화: 모드 전환 또는 후보지 목록 자체가 바뀔 때만
+  const externalCandidates = useMemo(
+    () => candidates.filter((candidate) => !candidate.is_school_internal),
+    [candidates],
+  );
+
+  const filteredCandidates = useMemo(
+    () => externalCandidates.filter((candidate) => passesFilters(candidate, filters)),
+    [externalCandidates, filters],
+  );
+
+  const rankedCandidates = useMemo(
+    () => scoreCandidates(filteredCandidates, weights),
+    [filteredCandidates, weights],
+  );
+
+  const normalizedWeights = useMemo(() => normalizeWeights(weights), [weights]);
+  const filterSummary = useMemo(() => buildFilterReasonSummary(filters), [filters]);
+
   useEffect(() => {
-    setSelected(new Set());
-  }, [mode, candidates, barrierFilter]);
+    setSelected((previous) => {
+      const allowed = new Set<string>();
+      if (internalCandidate) allowed.add(internalCandidate.grid_id);
+      rankedCandidates.forEach((candidate) => allowed.add(candidate.grid_id));
+
+      const next = new Set<string>();
+      previous.forEach((id) => {
+        if (allowed.has(id)) next.add(id);
+      });
+      return next;
+    });
+  }, [internalCandidate, rankedCandidates]);
 
   const toggleSelect = (id: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
+    setSelected((previous) => {
+      const next = new Set(previous);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
   };
 
-  const internalCandidate = ranked.find((c) => c.is_school_internal);
-  const externalRanked = ranked.filter((c) => !c.is_school_internal);
-  const visibleExternalRanked = externalRanked.filter((candidate) => matchesBarrierFilter(candidate, barrierFilter));
-
-  // 카카오맵 마커 목록 (ranked 순서 바뀌면 레이블도 재생성)
   const mapMarkers = useMemo((): CandidateMarker[] => {
-    const intCand = ranked.find((c) => c.is_school_internal);
-    const extRanked = ranked.filter((c) => !c.is_school_internal).filter((candidate) => matchesBarrierFilter(candidate, barrierFilter));
-
-    const result: CandidateMarker[] = [
-      // 학교 마커
+    const markers: CandidateMarker[] = [
       {
         id: "SCHOOL",
         lat: schoolLat,
@@ -269,10 +361,9 @@ export default function SimulationPage({
       },
     ];
 
-    // 교내 설치 마커 (학교에서 약 30m 북쪽 오프셋 → 겹치지 않게)
-    if (intCand) {
-      result.push({
-        id: intCand.grid_id,
+    if (internalCandidate) {
+      markers.push({
+        id: internalCandidate.grid_id,
         lat: schoolLat + 0.00027,
         lng: schoolLng - 0.00035,
         label: "교내",
@@ -281,702 +372,669 @@ export default function SimulationPage({
       });
     }
 
-    // 외부 후보지 A, B, C...
-    extRanked.slice(0, 10).forEach((c, i) => {
-      result.push({
-        id: c.grid_id,
-        lat: c.cy,
-        lng: c.cx,
-        label: LETTERS[i] ?? String(i + 1),
-        color: getBarrierColor(c),
+    rankedCandidates.slice(0, 10).forEach((candidate, index) => {
+      markers.push({
+        id: candidate.grid_id,
+        lat: candidate.cy,
+        lng: candidate.cx,
+        label: LETTERS[index] ?? String(index + 1),
+        color: getBarrierColor(candidate),
       });
     });
 
-    return result;
-  }, [barrierFilter, ranked, schoolLat, schoolLng]);
+    return markers;
+  }, [internalCandidate, rankedCandidates, schoolLat, schoolLng]);
 
   const routeLines = useMemo((): CandidateRouteLine[] => {
-    return ranked
-      .filter((candidate) => selected.has(candidate.grid_id) && !candidate.is_school_internal)
-      .filter((candidate) => matchesBarrierFilter(candidate, barrierFilter))
+    return rankedCandidates
+      .filter((candidate) => selected.has(candidate.grid_id))
       .filter((candidate) => Array.isArray(candidate.route_coords) && candidate.route_coords.length >= 2)
       .map((candidate) => ({
         id: candidate.grid_id,
         path: candidate.route_coords as Array<[number, number]>,
         color: getBarrierColor(candidate),
       }));
-  }, [barrierFilter, ranked, selected]);
+  }, [rankedCandidates, selected]);
 
-  const selectedCandidates = ranked.filter((c) => selected.has(c.grid_id) && matchesBarrierFilter(c, barrierFilter));
-  const totalDemand2029 = selectedCandidates.reduce((sum, c) => sum + c.walkshed_potential_2029, 0);
-  const totalDemand2031 = selectedCandidates.reduce((sum, c) => sum + c.walkshed_potential_2031, 0);
+  const selectedCandidates = useMemo(() => {
+    const byId = new Map<string, Candidate>();
+    if (internalCandidate) byId.set(internalCandidate.grid_id, internalCandidate);
+    rankedCandidates.forEach((candidate) => byId.set(candidate.grid_id, candidate));
+    return Array.from(selected).map((id) => byId.get(id)).filter(Boolean) as Candidate[];
+  }, [internalCandidate, rankedCandidates, selected]);
 
-  const filterLabels: Record<ManualFilter, string> = {
-    demand: "잠재수요 높은 순",
-    park: "공원 공백 우선",
-    school: "학교 접근성 우선",
-    playground: "놀이터 공백 우선",
-  };
-
-  const barrierFilterLabels: Record<BarrierFilter, string> = {
-    green: "큰 도로 횡단 없음",
-    yellow_or_less: "중간급 도로까지 허용",
-    orange_or_less: "도시 대로까지 허용",
-    all: "모든 후보 보기",
-  };
+  const totalDemand2029 = selectedCandidates.reduce((sum, candidate) => sum + candidate.walkshed_potential_2029, 0);
+  const totalDemand2031 = selectedCandidates.reduce((sum, candidate) => sum + candidate.walkshed_potential_2031, 0);
 
   return (
     <div
       style={{
         fontFamily: "Pretendard, sans-serif",
-        maxWidth: 1050,
+        maxWidth: 1180,
         margin: "0 auto",
-        padding: "24px 32px",
+        padding: "24px 28px 40px",
       }}
     >
-      {/* 뒤로 가기 */}
       <button
         onClick={onBack}
         style={{
           marginBottom: 16,
-          padding: "6px 14px",
-          borderRadius: 6,
-          border: "1px solid #ddd",
+          padding: "7px 14px",
+          borderRadius: 8,
+          border: "1px solid #d1d5db",
           cursor: "pointer",
           background: "#fff",
+          color: "#374151",
+          fontWeight: 600,
         }}
       >
-        ← 리포트로 돌아가기
+        리포트로 돌아가기
       </button>
 
-      {/* 헤더 */}
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 12, color: "#888", marginBottom: 4 }}>SIMULATION</div>
-        <h1 style={{ fontSize: 26, fontWeight: 800, margin: 0 }}>{schoolName}</h1>
-        <div style={{ marginTop: 6, fontSize: 12, color: "#999" }}>
-          기준 좌표 {schoolLat.toFixed(5)}, {schoolLng.toFixed(5)}
+        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1, color: "#9ca3af", marginBottom: 6 }}>
+          HUMAN-IN-THE-LOOP SIMULATION
         </div>
-        <span
-          style={{
-            display: "inline-block",
-            marginTop: 6,
-            padding: "3px 10px",
-            borderRadius: 20,
-            background: "#e74c3c",
-            color: "#fff",
-            fontSize: 12,
-          }}
-        >
-          {casePolicyLabel}
-        </span>
-      </div>
-
-      {/* 지도 + 목록 2컬럼 */}
-      <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
-
-        {/* ── 카카오 지도 ─────────────────────────── */}
-        <div style={{ flexShrink: 0, width: 380 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 8 }}>
-            후보지 위치 지도
-          </div>
-          <KakaoMap
-            center={{ lat: schoolLat, lng: schoolLng }}
-            markers={mapMarkers}
-            routes={routeLines}
-            selected={selected}
-            onToggle={toggleSelect}
-            height={310}
-          />
-          {/* 범례 */}
-          <div
+        <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, color: "#111827" }}>{schoolName}</h1>
+        <div style={{ marginTop: 8, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <span
             style={{
-              display: "flex",
-              gap: 12,
-              marginTop: 10,
-              flexWrap: "wrap",
-              fontSize: 11,
-              color: "#666",
+              display: "inline-flex",
+              padding: "4px 10px",
+              borderRadius: 999,
+              background: "#111827",
+              color: "#fff",
+              fontSize: 12,
+              fontWeight: 700,
             }}
           >
-            <LegendItem color="#1a1a2e" shape="diamond" label="학교" />
-            <LegendItem color="#2980b9" shape="circle" label="교내 설치" />
-            <LegendItem color="#2E8B57" shape="circle" label="큰 도로 횡단 없음" />
-            <LegendItem color="#D4A017" shape="circle" label="중간급 도로 포함" />
-            <LegendItem color="#E67E22" shape="circle" label="도시 대로 포함" />
-            <LegendItem color="#C0392B" shape="circle" label="간선/고속도로 포함" />
-          </div>
-          <div style={{ marginTop: 8, fontSize: 11, color: "#bbb", lineHeight: 1.6 }}>
-            * 후보지 점 색은 학교에서 후보지까지 가는 최단 경로의 최고 위험 도로 등급을 뜻합니다. 선택하면 같은 색 경로가 함께 표시됩니다.
-          </div>
+            {casePolicyLabel}
+          </span>
+          <span style={{ fontSize: 12, color: "#6b7280" }}>
+            기준 좌표 {schoolLat.toFixed(5)}, {schoolLng.toFixed(5)}
+          </span>
         </div>
+      </div>
 
-        {/* ── 후보지 목록 ────────────────────────── */}
-        <div style={{ flex: 1, minWidth: 300 }}>
+      <div
+        style={{
+          marginBottom: 22,
+          padding: "18px 20px",
+          borderRadius: 18,
+          background: "linear-gradient(135deg, #fff7ed 0%, #ffffff 100%)",
+          border: "1px solid #fed7aa",
+        }}
+      >
+        <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+          회피 조건은 필터로, 우선순위는 슬라이더로 나눠서 봅니다
+        </div>
+        <div style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.75 }}>
+          회피하고 싶은 조건은 필터로 제외하고, 중요하게 보고 싶은 기준은 슬라이더로 조절하세요.
+          AI가 자동으로 결정을 내리는 것이 아니라, 사용자의 판단 기준을 반영해 우선순위를 계산합니다.
+        </div>
+      </div>
 
-          {/* 모드 토글 */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
-            {(["ai", "manual"] as FilterMode[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                style={{
-                  padding: "7px 16px",
-                  borderRadius: 20,
-                  border: "none",
-                  cursor: "pointer",
-                  background: mode === m ? "#1a1a2e" : "#f0f0f0",
-                  color: mode === m ? "#fff" : "#333",
-                  fontWeight: 600,
-                  fontSize: 13,
-                }}
-              >
-                {m === "ai" ? "AI 추천" : "직접 탐색"}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
-            {(Object.keys(barrierFilterLabels) as BarrierFilter[]).map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setBarrierFilter(filter)}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 20,
-                  border: "1.5px solid",
-                  borderColor: barrierFilter === filter ? "#111827" : "#d1d5db",
-                  background: barrierFilter === filter ? "#111827" : "#fff",
-                  color: barrierFilter === filter ? "#fff" : "#4b5563",
-                  cursor: "pointer",
-                  fontSize: 12,
-                  fontWeight: 600,
-                }}
-              >
-                {barrierFilterLabels[filter]}
-              </button>
-            ))}
-          </div>
-
-          {mode === "manual" && (
-            <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
-              {(Object.keys(manualFilters) as ManualFilter[]).map((f) => (
-                <button
-                  key={f}
-                  onClick={() =>
-                    setManualFilters((prev) => ({ ...prev, [f]: !prev[f] }))
-                  }
-                  style={{
-                    padding: "5px 12px",
-                    borderRadius: 20,
-                    border: "2px solid",
-                    borderColor: manualFilters[f] ? "#1a1a2e" : "#ddd",
-                    background: manualFilters[f] ? "#1a1a2e" : "#fff",
-                    color: manualFilters[f] ? "#fff" : "#555",
-                    cursor: "pointer",
-                    fontSize: 12,
-                    fontWeight: 500,
-                  }}
-                >
-                  {filterLabels[f]}
-                </button>
-              ))}
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 420px) minmax(0, 1fr)", gap: 22, alignItems: "start" }}>
+        <div>
+          <div
+            style={{
+              padding: 18,
+              borderRadius: 18,
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              marginBottom: 18,
+            }}
+          >
+            <div style={{ fontSize: 13, fontWeight: 800, color: "#6b7280", marginBottom: 8 }}>후보지 경로 지도</div>
+            <KakaoMap
+              center={{ lat: schoolLat, lng: schoolLng }}
+              markers={mapMarkers}
+              routes={routeLines}
+              selected={selected}
+              onToggle={toggleSelect}
+              height={340}
+            />
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 12 }}>
+              <LegendItem color="#1a1a2e" shape="diamond" label="학교" />
+              <LegendItem color="#2980b9" shape="circle" label="교내 설치" />
+              <LegendItem color="#2E8B57" shape="circle" label="큰 도로 횡단 없음" />
+              <LegendItem color="#D4A017" shape="circle" label="중간급 도로 포함" />
+              <LegendItem color="#E67E22" shape="circle" label="도시 대로 포함" />
+              <LegendItem color="#C0392B" shape="circle" label="trunk·motorway 포함" />
             </div>
-          )}
+            <div style={{ marginTop: 10, fontSize: 12, color: "#6b7280", lineHeight: 1.7 }}>
+              후보지 색은 학교에서 후보지까지의 최단 경로에서 나타나는 최고 횡단 부담 등급을 뜻합니다.
+              후보지를 선택하면 같은 색 계열의 경로가 함께 강조됩니다.
+            </div>
+          </div>
 
-          {caseType === 4 && (
+          {selected.size > 0 ? (
             <div
               style={{
-                marginBottom: 14,
-                padding: "14px 16px",
-                borderRadius: 14,
-                border: "1px solid #d1fae5",
-                background: "#ecfdf5",
+                padding: 20,
+                borderRadius: 18,
+                background: "#111827",
+                color: "#fff",
               }}
             >
-              <div style={{ fontSize: 12, fontWeight: 800, color: "#047857", marginBottom: 6 }}>
-                후보지 안내
+              <div style={{ fontSize: 13, color: "#cbd5e1", marginBottom: 8 }}>
+                선택한 후보지 {selectedCandidates.length}곳 요약
               </div>
-              <div style={{ fontSize: 13, lineHeight: 1.7, color: "#065f46" }}>
-                이 학교는 주변 야외활동 환경이 비교적 양호한 편이라, 현재는 별도 외부 후보지 시뮬레이션을 제공하지 않습니다.
-                대신 학교 내부 활용 가능 공간과 주변 참고 요인을 함께 확인해 보세요.
+              <div style={{ display: "flex", gap: 32, flexWrap: "wrap", marginBottom: 18 }}>
+                <div>
+                  <div style={{ fontSize: 12, color: "#94a3b8" }}>2029 잠재수혜학생수</div>
+                  <div style={{ fontSize: 34, fontWeight: 800 }}>
+                    {formatCount(totalDemand2029)}
+                    <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 12, color: "#94a3b8" }}>2031 잠재수혜학생수</div>
+                  <div style={{ fontSize: 34, fontWeight: 800 }}>
+                    {formatCount(totalDemand2031)}
+                    <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
+                  </div>
+                </div>
               </div>
+              <ResponsiveContainer width="100%" height={88}>
+                <BarChart
+                  data={[
+                    { name: "2029", value: totalDemand2029 },
+                    { name: "2031", value: totalDemand2031 },
+                  ]}
+                  layout="vertical"
+                >
+                  <XAxis type="number" hide />
+                  <YAxis type="category" dataKey="name" width={40} tick={{ fill: "#cbd5e1", fontSize: 12 }} />
+                  <Tooltip formatter={(value: number) => [`${formatCount(value)}명`, "잠재수혜학생수"]} />
+                  <Bar dataKey="value" fill="#4ecdc4" radius={4} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
-          )}
+          ) : null}
+        </div>
 
-          {/* 교내 시설 설치 카드 */}
-          {internalCandidate && (
+        <div>
+          <div
+            style={{
+              padding: 18,
+              borderRadius: 18,
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              marginBottom: 16,
+            }}
+          >
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 12 }}>제외 조건 설정</div>
+            <div style={{ display: "grid", gap: 10 }}>
+              {FILTER_COPY.map((item) => (
+                <label
+                  key={item.key}
+                  style={{
+                    display: "flex",
+                    gap: 12,
+                    alignItems: "flex-start",
+                    padding: "12px 14px",
+                    borderRadius: 14,
+                    border: "1px solid #e5e7eb",
+                    background: filters[item.key] ? "#fff7ed" : "#f9fafb",
+                    cursor: "pointer",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={filters[item.key]}
+                    onChange={() =>
+                      setFilters((previous) => ({
+                        ...previous,
+                        [item.key]: !previous[item.key],
+                      }))
+                    }
+                    style={{ marginTop: 2 }}
+                  />
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 4 }}>{item.title}</div>
+                    <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6 }}>{item.description}</div>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div
+            style={{
+              padding: 18,
+              borderRadius: 18,
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              marginBottom: 16,
+            }}
+          >
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 12 }}>우선순위 기준 설정</div>
+            <div style={{ display: "grid", gap: 16 }}>
+              {WEIGHT_COPY.map((item) => (
+                <div key={item.key} style={{ padding: "12px 14px", borderRadius: 14, background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginBottom: 6, alignItems: "center" }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{item.title}</div>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: "#ea580c" }}>
+                      {formatPercent(normalizedWeights[item.key])}
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, marginBottom: 10 }}>{item.description}</div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={weights[item.key]}
+                    onChange={(event) =>
+                      setWeights((previous) => ({
+                        ...previous,
+                        [item.key]: Number(event.target.value),
+                      }))
+                    }
+                    style={{ width: "100%" }}
+                  />
+                  <div style={{ marginTop: 6, fontSize: 12, color: "#6b7280" }}>
+                    원본 레버 값 {weights[item.key]}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div
+            style={{
+              padding: 18,
+              borderRadius: 18,
+              background: "#fff",
+              border: "1px solid #e5e7eb",
+              marginBottom: 16,
+            }}
+          >
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 10 }}>계산 결과</div>
+            <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginBottom: 12 }}>
+              <MetricPill label="전체 후보" value={`${externalCandidates.length}곳`} tone="#1f2937" background="#f3f4f6" />
+              <MetricPill label="필터 후 남은 후보" value={`${rankedCandidates.length}곳`} tone="#065f46" background="#ecfdf5" />
+              <MetricPill label="제외된 후보" value={`${externalCandidates.length - rankedCandidates.length}곳`} tone="#9a3412" background="#fff7ed" />
+            </div>
+            <div style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.7 }}>
+              필터를 먼저 적용한 뒤, 남은 후보에 대해서만 잠재수혜학생수, 학교 거리, 기존 공원과의 거리를 정규화해 종합점수를 계산합니다.
+              도로 횡단, 사고다발지역, 재개발, 대단지 조건은 점수에 넣지 않고 필터에서만 반영합니다.
+            </div>
+            {filterSummary.length ? (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
+                {filterSummary.map((item) => (
+                  <span
+                    key={item}
+                    style={{
+                      padding: "5px 10px",
+                      borderRadius: 999,
+                      background: "#fff7ed",
+                      color: "#c2410c",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            {caseType === 4 ? (
+              <div
+                style={{
+                  marginTop: 14,
+                  padding: "12px 14px",
+                  borderRadius: 14,
+                  background: "#eff6ff",
+                  color: "#1e3a8a",
+                  fontSize: 13,
+                  lineHeight: 1.7,
+                }}
+              >
+                현재 학교는 절대 취약형(case 4)으로 분류되어 있어, 교내 설치안과 외부 후보지를 함께 비교해 보는 것이 좋습니다.
+              </div>
+            ) : null}
+          </div>
+
+          {internalCandidate ? (
             <div
               onClick={() => toggleSelect(internalCandidate.grid_id)}
               style={{
-                padding: "13px 16px",
-                borderRadius: 12,
+                padding: "14px 16px",
+                borderRadius: 16,
                 border: "2px solid",
-                borderColor: selected.has(internalCandidate.grid_id) ? "#2980b9" : "#b8d4ea",
-                background: selected.has(internalCandidate.grid_id) ? "#dbeeff" : "#f0f7ff",
+                borderColor: selected.has(internalCandidate.grid_id) ? "#2980b9" : "#bfdbfe",
+                background: selected.has(internalCandidate.grid_id) ? "#eff6ff" : "#f8fbff",
                 cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                marginBottom: 10,
+                marginBottom: 12,
               }}
             >
-              <div
-                style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: "50%",
-                  background: selected.has(internalCandidate.grid_id) ? "#2980b9" : "#fff",
-                  border: "2.5px solid #2980b9",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 10,
-                  fontWeight: 800,
-                  color: selected.has(internalCandidate.grid_id) ? "#fff" : "#2980b9",
-                  flexShrink: 0,
-                  textAlign: "center",
-                  lineHeight: 1.2,
-                }}
-              >
-                교내
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700, fontSize: 13, color: "#1a5276", marginBottom: 4 }}>
-                  학교 내부 시설 설치
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 10 }}>
+                <div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: "#111827" }}>교내 설치 대안</div>
+                  <div style={{ fontSize: 12, color: "#6b7280", marginTop: 4 }}>{getBarrierNote(internalCandidate)}</div>
                 </div>
-                <div style={{ display: "flex", gap: 14, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
-                  <span>
-                    👤 2029 예상 학생수 <b>{formatRoundedCount(internalCandidate.xgb_predicted_2029)}명</b>
-                  </span>
-                  <span>
-                    👤 2031 예상 학생수 <b>{formatRoundedCount(internalCandidate.xgb_predicted_2031)}명</b>
-                  </span>
-                  <span>📍 학교 부지 내</span>
-                  <span>🛝 놀이터·체육시설 신설</span>
-                </div>
-                <div style={{ marginTop: 8, fontSize: 12, color: "#4b5563", lineHeight: 1.6 }}>
-                  {getBarrierNote(internalCandidate)} 2029년 수치는 학교 학생수 예측 모델을 바탕으로 본 학교의 예상 학생 규모를 보여주는 참고값입니다.
-                </div>
-              </div>
-              <span
-                style={{
-                  padding: "2px 9px",
-                  borderRadius: 10,
-                  fontSize: 11,
-                  background: "#2980b922",
-                  color: "#2980b9",
-                  fontWeight: 600,
-                  flexShrink: 0,
-                }}
-              >
-                교내 설치
-              </span>
-            </div>
-          )}
-
-          {/* 외부 후보지 카드 */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {visibleExternalRanked.slice(0, 10).map((c, i) => {
-              const label = LETTERS[i] ?? String(i + 1);
-              const barrierColor = getBarrierColor(c);
-              const isSel = selected.has(c.grid_id);
-              return (
-                <div
-                  key={c.grid_id}
-                  onClick={() => toggleSelect(c.grid_id)}
+                <span
                   style={{
-                    padding: "12px 16px",
-                    borderRadius: 10,
-                    border: "2px solid",
-                    borderColor: isSel ? "#1a1a2e" : "#eee",
-                    background: isSel ? "#f0f4ff" : "#fff",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
+                    padding: "4px 10px",
+                    borderRadius: 999,
+                    background: "#dbeafe",
+                    color: "#1d4ed8",
+                    fontSize: 12,
+                    fontWeight: 800,
                   }}
                 >
+                  학교 내부
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 13, color: "#374151" }}>
+                <span>2029 기준 {formatCount(internalCandidate.walkshed_potential_2029)}명</span>
+                <span>2031 기준 {formatCount(internalCandidate.walkshed_potential_2031)}명</span>
+              </div>
+            </div>
+          ) : null}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {rankedCandidates.slice(0, 10).map((candidate, index) => {
+              const label = LETTERS[index] ?? String(index + 1);
+              const barrierColor = getBarrierColor(candidate);
+              const isSelected = selected.has(candidate.grid_id);
+              const style = rankBadgeStyle(index);
+              const chips: string[] = [];
+              if (hasRedevelopmentRisk(candidate)) chips.push("재개발 영향권");
+              if (hasLargeAptNearby(candidate)) chips.push("500세대 이상 대단지 인근");
+              if (hasAccidentHotspot(candidate)) chips.push("사고다발지역 경유");
+
+              return (
+                <div
+                  key={candidate.grid_id}
+                  onClick={() => toggleSelect(candidate.grid_id)}
+                  style={{
+                    padding: "14px 16px",
+                    borderRadius: 16,
+                    border: "2px solid",
+                    borderColor: isSelected ? "#111827" : "#e5e7eb",
+                    background: isSelected ? "#f8fafc" : "#fff",
+                    cursor: "pointer",
+                  }}
+                >
+                  <div style={{ display: "flex", gap: 14 }}>
                     <div
                       style={{
-                        width: 38,
-                        height: 38,
+                        width: 40,
+                        height: 40,
                         borderRadius: "50%",
-                        background: isSel ? barrierColor : "#fff",
                         border: `2.5px solid ${barrierColor}`,
+                        background: isSelected ? barrierColor : "#fff",
+                        color: isSelected ? "#fff" : barrierColor,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        fontSize: 15,
                         fontWeight: 800,
-                        color: isSel ? "#fff" : barrierColor,
                         flexShrink: 0,
                       }}
                     >
-                    {label}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 4 }}>
-                      <span style={{ fontSize: 11, color: "#aaa" }}>{c.grid_id}</span>
-                      <span
-                        style={{
-                          padding: "1px 7px",
-                          borderRadius: 10,
-                          fontSize: 10,
-                          background: rankBadgeStyle(i).bg,
-                          color: rankBadgeStyle(i).color,
-                          fontWeight: 700,
-                        }}
-                      >
-                        추천 {i + 1}순위
-                      </span>
-                      <span
-                        style={{
-                          padding: "2px 8px",
-                          borderRadius: 999,
-                          fontSize: 10,
-                          background: `${barrierColor}18`,
-                          color: barrierColor,
-                          fontWeight: 700,
-                        }}
-                      >
-                        {getBarrierLabel(c)}
-                      </span>
-                      {c.fallback_candidate ? (
+                      {label}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 6 }}>
+                        <span style={{ fontSize: 11, color: "#9ca3af" }}>{candidate.grid_id}</span>
                         <span
                           style={{
                             padding: "2px 8px",
                             borderRadius: 999,
-                            fontSize: 10,
-                            background: "#eff6ff",
-                            color: "#1d4ed8",
-                            fontWeight: 700,
+                            background: style.bg,
+                            color: style.color,
+                            fontSize: 11,
+                            fontWeight: 800,
                           }}
                         >
-                          생활권 외 보조 후보
+                          우선순위 {index + 1}
                         </span>
-                      ) : null}
-                    </div>
-                    <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
-                      <span>
-                        👤 인접 2029 <b>{formatRoundedCount(c.resident_children_2029)}명</b>
-                      </span>
-                      <span>
-                        👤 인접 2031 <b>{formatRoundedCount(c.resident_children_2031)}명</b>
-                      </span>
-                      <span>
-                        🚶 보행권 2029 <b>{formatRoundedCount(c.walkshed_potential_2029)}명</b>
-                      </span>
-                      <span>
-                        🚶 보행권 2031 <b>{formatRoundedCount(c.walkshed_potential_2031)}명</b>
-                      </span>
-                      <span>
-                        {getCandidateDistanceLabel(c)} <b>{c.nearest_school_dist.toLocaleString()}m</b>
-                      </span>
-                      <span>
-                        🌳 <b>{c.nearest_park_dist}m</b>
-                      </span>
-                    </div>
-                    {getBarrierCountSummary(c) ? (
-                      <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, color: barrierColor }}>
-                        {getBarrierCountSummary(c)}
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            borderRadius: 999,
+                            background: `${barrierColor}18`,
+                            color: barrierColor,
+                            fontSize: 11,
+                            fontWeight: 800,
+                          }}
+                        >
+                          {getBarrierLabel(candidate)}
+                        </span>
+                        {candidate.fallback_candidate ? (
+                          <span
+                            style={{
+                              padding: "2px 8px",
+                              borderRadius: 999,
+                              background: "#eff6ff",
+                              color: "#1d4ed8",
+                              fontSize: 11,
+                              fontWeight: 800,
+                            }}
+                          >
+                            생활권 보조 후보
+                          </span>
+                        ) : null}
                       </div>
-                    ) : null}
-                    <div style={{ marginTop: 8, fontSize: 12, color: "#4b5563", lineHeight: 1.6 }}>
-                      {getBarrierNote(c)} 후보지 인접 예상 아동수는 250m 기준 참고값이며, 보행권 수요는 후보지 중심 500m 보행권 안의 예상 아동 규모입니다.
+
+                      <div style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 13, color: "#374151" }}>
+                        <span>잠재수혜 2029 <b>{formatCount(candidate.walkshed_potential_2029)}명</b></span>
+                        <span>{getCandidateDistanceLabel(candidate)} <b>{formatDistance(candidate.nearest_school_dist)}</b></span>
+                        <span>기존 공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b></span>
+                      </div>
+
+                      <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, color: barrierColor }}>
+                        {getBarrierCountSummary(candidate)}
+                      </div>
+
+                      {chips.length ? (
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+                          {chips.map((chip) => (
+                            <span
+                              key={chip}
+                              style={{
+                                padding: "3px 8px",
+                                borderRadius: 999,
+                                background: "#fff7ed",
+                                color: "#9a3412",
+                                fontSize: 11,
+                                fontWeight: 700,
+                              }}
+                            >
+                              {chip}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
+
+                      <div
+                        style={{
+                          marginTop: 10,
+                          padding: "10px 12px",
+                          borderRadius: 12,
+                          background: "#f9fafb",
+                          fontSize: 12,
+                          color: "#4b5563",
+                          lineHeight: 1.7,
+                        }}
+                      >
+                        <div style={{ marginBottom: 4, fontWeight: 800, color: "#111827" }}>
+                          종합점수 {candidate.final_score.toFixed(3)}
+                        </div>
+                        <div>
+                          잠재수혜학생수 {candidate.benefit_score.toFixed(2)} × {formatPercent(normalizedWeights.benefit)} /
+                          학교 거리 {candidate.school_distance_score.toFixed(2)} × {formatPercent(normalizedWeights.schoolDistance)} /
+                          공원 거리 {candidate.facility_gap_score.toFixed(2)} × {formatPercent(normalizedWeights.parkDistance)}
+                        </div>
+                        <div style={{ marginTop: 4 }}>{getBarrierNote(candidate)}</div>
+                        {candidate.accident_hotspot_text ? <div style={{ marginTop: 4 }}>{candidate.accident_hotspot_text}</div> : null}
+                        {candidate.redev_warning_text ? <div style={{ marginTop: 4 }}>{candidate.redev_warning_text}</div> : null}
+                      </div>
                     </div>
                   </div>
-                  {i < 3 && !isSel && <div style={{ fontSize: 16 }}>⚡</div>}
                 </div>
               );
             })}
-            {visibleExternalRanked.length === 0 ? (
+
+            {rankedCandidates.length === 0 ? (
               <div
                 style={{
                   border: "1px dashed #d1d5db",
-                  borderRadius: 12,
-                  padding: "16px 18px",
+                  borderRadius: 16,
+                  padding: "18px 20px",
                   background: "#fafafa",
                   fontSize: 13,
                   color: "#6b7280",
                   lineHeight: 1.7,
                 }}
               >
-                현재 단절성 필터를 만족하는 외부 후보지가 없습니다. 필터를 완화해 다른 후보지를 확인해 보세요.
+                현재 제외 조건을 모두 만족하는 후보지가 없습니다. 필터를 일부 완화하면 다시 비교할 수 있습니다.
               </div>
             ) : null}
           </div>
-        </div>
-      </div>
 
-      {/* 합산 요약 */}
-      {selected.size > 0 && (
-        <div
-          style={{
-            padding: 24,
-            borderRadius: 16,
-            background: "#1a1a2e",
-            color: "#fff",
-            marginTop: 24,
-          }}
-        >
-          <div style={{ fontSize: 13, color: "#aaa", marginBottom: 8 }}>
-            선택한 후보지 {selectedCandidates.length}곳 합산
-          </div>
-          <div style={{ display: "flex", gap: 40, marginBottom: 20, flexWrap: "wrap" }}>
-            <div>
-              <div style={{ fontSize: 13, color: "#aaa" }}>2029 예상 잠재수요인원</div>
-              <div style={{ fontSize: 36, fontWeight: 800 }}>
-                {formatRoundedCount(totalDemand2029)}
-                <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: 13, color: "#aaa" }}>2031 예상 잠재수요인원</div>
-              <div style={{ fontSize: 36, fontWeight: 800 }}>
-                {formatRoundedCount(totalDemand2031)}
-                <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
-              </div>
-            </div>
-          </div>
-          <ResponsiveContainer width="100%" height={80}>
-            <BarChart
-              data={[
-                { name: "2029", value: totalDemand2029 },
-                { name: "2031", value: totalDemand2031 },
-              ]}
-              layout="vertical"
+          {(redevelopmentProjects.length > 0 || largeApartmentComplexes.length > 0) && (
+            <div
+              style={{
+                marginTop: 18,
+                padding: 18,
+                borderRadius: 18,
+                background: "#fff",
+                border: "1px solid #e5e7eb",
+              }}
             >
-              <XAxis type="number" hide />
-              <YAxis
-                type="category"
-                dataKey="name"
-                width={40}
-                tick={{ fill: "#aaa", fontSize: 12 }}
-              />
-              <Tooltip formatter={(v: number) => [`${formatRoundedCount(v)}명`]} />
-              <Bar dataKey="value" fill="#4ecdc4" radius={4} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      )}
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#9a3412", marginBottom: 6 }}>참고할 주변 맥락</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: "#111827", marginBottom: 10 }}>
+                후보지 판단 전에 같이 봐야 할 생활권 변화 요인
+              </div>
+              <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, marginBottom: 14 }}>
+                아래 정보는 점수에는 직접 반영하지 않지만, 회피 여부를 판단할 때 함께 참고할 수 있는 배경 정보입니다.
+              </div>
 
-      {false && redevelopmentProjects.length > 0 && (
-        <div
-          style={{
-            marginTop: 24,
-            padding: 20,
-            borderRadius: 16,
-            background: "#fff",
-            border: "1px solid #e5e7eb",
-          }}
-        >
-          <div style={{ fontSize: 12, fontWeight: 700, color: "#9a3412", marginBottom: 6 }}>
-            BEFORE YOU DECIDE
-          </div>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-            시설 설치 판단 전에 함께 볼 변화 요인
-          </div>
-          <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, marginBottom: 14 }}>
-            학교 반경 500m 안에서 확인된 재개발·정비사업입니다. 설치 위치를 정할 때 향후 보행 동선과 생활권 수요 변화 가능성을 함께 보세요.
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {redevelopmentProjects.map((project, index) => (
-              <div
-                key={`${project.name}-${index}`}
-                style={{
-                  border: "1px solid #e5e7eb",
-                  borderRadius: 12,
-                  padding: "14px 16px",
-                  background: "#fafafa",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 6, flexWrap: "wrap" }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{project.name}</div>
-                  <div style={{ fontSize: 12, color: "#6b7280" }}>{project.distanceM.toLocaleString()}m</div>
-                </div>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
-                  <span
-                    style={{
-                      padding: "3px 8px",
-                      borderRadius: 999,
-                      background: "#fff7ed",
-                      color: "#c2410c",
-                      fontWeight: 700,
-                    }}
-                  >
-                    {project.stage || "단계 정보 없음"}
-                  </span>
-                  {project.type ? (
-                    <span
-                      style={{
-                        padding: "3px 8px",
-                        borderRadius: 999,
-                        background: "#eff6ff",
-                        color: "#1d4ed8",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {project.type}
-                    </span>
-                  ) : null}
-                  {Number.isFinite(project.area) ? (
-                    <span style={{ color: "#6b7280" }}>면적 {Math.round(project.area ?? 0).toLocaleString()}㎡</span>
-                  ) : null}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {(redevelopmentProjects.length > 0 || largeApartmentComplexes.length > 0) && (
-        <div
-          style={{
-            marginTop: 24,
-            padding: 20,
-            borderRadius: 16,
-            background: "#fff",
-            border: "1px solid #e5e7eb",
-          }}
-        >
-          <div style={{ fontSize: 12, fontWeight: 700, color: "#9a3412", marginBottom: 6 }}>
-            BEFORE YOU DECIDE
-          </div>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-            시설 설치 전에 참고해야 할 요인
-          </div>
-          <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, marginBottom: 14 }}>
-            학교 반경 500m 안에서 확인된 재개발·정비사업과 500세대 이상 대단지 아파트입니다.
-            설치 위치를 정할 때 주변 생활권 구조와 미집계 녹지·놀이터 가능성을 함께 확인해 보세요.
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-                인근 500세대 이상 대단지 아파트
-              </div>
-              <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.7, marginBottom: 10 }}>
-                대단지 내부 녹지나 놀이터가 공공 데이터에 모두 잡히지 않았을 수 있습니다.
-                현장 확인 시 단지 내 개방 가능 공간도 함께 살펴보는 것이 좋습니다.
-              </div>
               {largeApartmentComplexes.length > 0 ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {largeApartmentComplexes.map((complex, index) => (
-                    <div
-                      key={`${complex.name}-${index}`}
-                      style={{
-                        border: "1px solid #e5e7eb",
-                        borderRadius: 12,
-                        padding: "14px 16px",
-                        background: "#f8fafc",
-                      }}
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 6, flexWrap: "wrap" }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{complex.name}</div>
-                        <div style={{ fontSize: 12, color: "#6b7280" }}>{complex.distanceM.toLocaleString()}m</div>
-                      </div>
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
-                        <span
-                          style={{
-                            padding: "3px 8px",
-                            borderRadius: 999,
-                            background: "#eff6ff",
-                            color: "#1d4ed8",
-                            fontWeight: 700,
-                          }}
-                        >
-                          {complex.householdCount.toLocaleString()}세대
-                        </span>
-                        {complex.address ? <span style={{ color: "#6b7280" }}>{complex.address}</span> : null}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div
-                  style={{
-                    border: "1px dashed #d1d5db",
-                    borderRadius: 12,
-                    padding: "14px 16px",
-                    background: "#fafafa",
-                    fontSize: 13,
-                    color: "#6b7280",
-                  }}
-                >
-                  근처 500세대 이상 대단지 아파트는 확인되지 않았습니다.
-                </div>
-              )}
-            </div>
-
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-                인근 재개발·정비사업
-              </div>
-              {redevelopmentProjects.length > 0 ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {redevelopmentProjects.map((project, index) => (
-                    <div
-                      key={`${project.name}-${index}`}
-                      style={{
-                        border: "1px solid #e5e7eb",
-                        borderRadius: 12,
-                        padding: "14px 16px",
-                        background: "#fafafa",
-                      }}
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 6, flexWrap: "wrap" }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{project.name}</div>
-                        <div style={{ fontSize: 12, color: "#6b7280" }}>{project.distanceM.toLocaleString()}m</div>
-                      </div>
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
-                        <span
-                          style={{
-                            padding: "3px 8px",
-                            borderRadius: 999,
-                            background: "#fff7ed",
-                            color: "#c2410c",
-                            fontWeight: 700,
-                          }}
-                        >
-                          {project.stage || "단계 정보 없음"}
-                        </span>
-                        {project.type ? (
+                <div style={{ marginBottom: redevelopmentProjects.length > 0 ? 16 : 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+                    인근 500세대 이상 대단지
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {largeApartmentComplexes.map((complex, index) => (
+                      <div
+                        key={`${complex.name}-${index}`}
+                        style={{
+                          border: "1px solid #e5e7eb",
+                          borderRadius: 12,
+                          padding: "12px 14px",
+                          background: "#f8fafc",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 6 }}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{complex.name}</div>
+                          <div style={{ fontSize: 12, color: "#6b7280" }}>{complex.distanceM.toLocaleString()}m</div>
+                        </div>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
                           <span
                             style={{
                               padding: "3px 8px",
                               borderRadius: 999,
                               background: "#eff6ff",
                               color: "#1d4ed8",
-                              fontWeight: 600,
+                              fontWeight: 700,
                             }}
                           >
-                            {project.type}
+                            {complex.householdCount.toLocaleString()}세대
                           </span>
-                        ) : null}
-                        {Number.isFinite(project.area) ? (
-                          <span style={{ color: "#6b7280" }}>면적 {Math.round(project.area ?? 0).toLocaleString()}㎡</span>
-                        ) : null}
+                          {complex.address ? <span style={{ color: "#6b7280" }}>{complex.address}</span> : null}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <div
-                  style={{
-                    border: "1px dashed #d1d5db",
-                    borderRadius: 12,
-                    padding: "14px 16px",
-                    background: "#fafafa",
-                    fontSize: 13,
-                    color: "#6b7280",
-                  }}
-                >
-                  근처 재개발·정비사업은 확인되지 않았습니다.
+              ) : null}
+
+              {redevelopmentProjects.length > 0 ? (
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
+                    인근 재개발 정비사업
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {redevelopmentProjects.map((project, index) => (
+                      <div
+                        key={`${project.name}-${index}`}
+                        style={{
+                          border: "1px solid #e5e7eb",
+                          borderRadius: 12,
+                          padding: "12px 14px",
+                          background: "#fafafa",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 6 }}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{project.name}</div>
+                          <div style={{ fontSize: 12, color: "#6b7280" }}>{project.distanceM.toLocaleString()}m</div>
+                        </div>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
+                          <span
+                            style={{
+                              padding: "3px 8px",
+                              borderRadius: 999,
+                              background: "#fff7ed",
+                              color: "#c2410c",
+                              fontWeight: 700,
+                            }}
+                          >
+                            {project.stage || "단계 정보 없음"}
+                          </span>
+                          {project.type ? (
+                            <span
+                              style={{
+                                padding: "3px 8px",
+                                borderRadius: 999,
+                                background: "#eff6ff",
+                                color: "#1d4ed8",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {project.type}
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              )}
+              ) : null}
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
+    </div>
+  );
+}
+
+function MetricPill({
+  label,
+  value,
+  tone,
+  background,
+}: {
+  label: string;
+  value: string;
+  tone: string;
+  background: string;
+}) {
+  return (
+    <div
+      style={{
+        padding: "10px 12px",
+        borderRadius: 14,
+        background,
+        minWidth: 132,
+      }}
+    >
+      <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 16, fontWeight: 800, color: tone }}>{value}</div>
     </div>
   );
 }
@@ -991,7 +1049,7 @@ function LegendItem({
   label: string;
 }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#666" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#6b7280" }}>
       {shape === "diamond" ? (
         <svg width={12} height={12}>
           <rect x={1} y={1} width={10} height={10} rx={1} fill={color} transform="rotate(45 6 6)" />
