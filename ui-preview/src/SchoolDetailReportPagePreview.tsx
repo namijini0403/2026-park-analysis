@@ -641,10 +641,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
   const displayedGreenPercentile = greenDisplayModel.nonZeroPercentile;
   const displayedPlaygroundPercentile = playgroundDisplayModel.nonZeroPercentile;
   const greenTone = displayedGreenPercentile != null
-    ? greenToneFromPercentile(100 - displayedGreenPercentile)
+    ? greenToneFromPercentile(displayedGreenPercentile)
     : greenToneFromValue(props.greenRatio, greenAvg);
   const playgroundTone = displayedPlaygroundPercentile != null
-    ? playgroundToneFromPercentile(100 - displayedPlaygroundPercentile)
+    ? playgroundToneFromPercentile(displayedPlaygroundPercentile)
     : playgroundToneFromValue(props.playgroundCount, playgroundAvg);
 
   return (
