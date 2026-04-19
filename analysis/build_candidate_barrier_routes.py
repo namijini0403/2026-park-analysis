@@ -15,7 +15,7 @@ BASE = Path(__file__).resolve().parents[1]
 GRAPH_PATH = BASE / "data_processed" / "incheon_walk_graph_v2.graphml"
 SCHOOLS_PATH = BASE / "data_processed" / "schools.csv"
 SCHOOL_PRIORITY_PATH = BASE / "data_processed" / "school_priority.csv"
-CANDIDATES_PATH = BASE / "data_processed" / "candidate_grid_xgb_v4.geojson"
+CANDIDATES_PATH = BASE / "data_processed" / "candidate_grid_final.geojson"
 OUTPUT_JSON_PATH = BASE / "data_processed" / "candidate_barrier_routes_by_school.json"
 OUTPUT_CSV_PATH = BASE / "output" / "candidate_barrier_routes_by_school.csv"
 MIN_CANDIDATES_PER_CASE123_SCHOOL = 6
@@ -238,7 +238,9 @@ def load_candidate_rows() -> tuple[list[dict[str, Any]], dict[str, list[str]]]:
                 "lat": float(props["cy"]),
                 "lng": float(props["cx"]),
                 "linked_schools": linked_schools,
-                "candidate_rank": float(props.get("candidate_rank", 999999)),
+                "candidate_rank": float(
+                    props.get("candidate_rank_mixed", props.get("candidate_rank", 999999))
+                ),
             }
         )
         for school_name in linked_schools:

@@ -655,19 +655,31 @@ def step_f_candidate_grid(
         "pred_2031_250m": "pred_beneficiary_2031",
     })
 
-    # alloc_v1에서 gu, candidate_child_current, priority 정보 가져오기
-    v1_cols = ["grid_id", "gu", "candidate_child_current",
-               "priority_score", "candidate_rank",
-               "nearest_park_dist", "nearest_pg_dist",
-               "worst_case_type", "avg_park_dist_m",
-               "avg_playground_count", "land_feasibility_level",
-               "linked_schools", "linked_school_count"]
-    v1_avail = [c for c in v1_cols if c in alloc_v1.columns]
+    meta_cols = [
+        "grid_id", "gu", "candidate_child_current",
+        "priority_score", "candidate_rank",
+        "nearest_park_dist", "nearest_pg_dist",
+        "worst_case_type", "avg_park_dist_m",
+        "avg_playground_count", "land_feasibility_level",
+        "linked_schools", "linked_school_count",
+    ]
+    candidate_meta_cols = [c for c in meta_cols if c in candidates.columns]
+    candidate_meta = candidates[candidate_meta_cols].copy()
+
+    v1_avail = [c for c in meta_cols if c in alloc_v1.columns]
     v1_sub = alloc_v1[v1_avail].copy()
 
     final_gdf = candidates[["grid_id", "cx", "cy", "geometry"]].copy()
     final_gdf = final_gdf.merge(pred, on="grid_id", how="left")
-    final_gdf = final_gdf.merge(v1_sub, on="grid_id", how="left")
+    final_gdf = final_gdf.merge(candidate_meta, on="grid_id", how="left")
+    final_gdf = final_gdf.merge(v1_sub, on="grid_id", how="left", suffixes=("", "_alloc"))
+
+    for col in meta_cols:
+        alloc_col = f"{col}_alloc"
+        if col == "grid_id" or alloc_col not in final_gdf.columns:
+            continue
+        final_gdf[col] = final_gdf[col].where(final_gdf[col].notna(), final_gdf[alloc_col])
+        final_gdf.drop(columns=[alloc_col], inplace=True)
 
     # 수요 기반 우선순위 재산출
     case_mult = np.where(final_gdf.get("worst_case_type", pd.Series(0)) == 1.0, 1.5, 1.0)
@@ -921,10 +933,14 @@ def main() -> None:
 
     # 최종 저장
     final_gdf_wgs = final_gdf.to_crs("EPSG:4326")
-    final_gdf_wgs.to_file(OUT_CANDIDATE_GEOJSON, driver="GeoJSON")
+    geojson_tmp = OUT_CANDIDATE_GEOJSON.with_suffix(".tmp.geojson")
+    csv_tmp = OUT_CANDIDATE_CSV.with_suffix(".tmp.csv")
+    final_gdf_wgs.to_file(geojson_tmp, driver="GeoJSON")
     final_gdf_wgs.drop(columns="geometry").to_csv(
-        OUT_CANDIDATE_CSV, index=False, encoding="utf-8-sig"
+        csv_tmp, index=False, encoding="utf-8-sig"
     )
+    geojson_tmp.replace(OUT_CANDIDATE_GEOJSON)
+    csv_tmp.replace(OUT_CANDIDATE_CSV)
 
     print(f"\n=== 파이프라인 완료 ===")
     print(f"  후보지: {len(final_gdf)}개")

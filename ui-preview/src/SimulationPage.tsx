@@ -540,6 +540,9 @@ export default function SimulationPage({
                   <span>
                     👤 2029 예상 학생수 <b>{internalCandidate.xgb_predicted_2029.toLocaleString()}명</b>
                   </span>
+                  <span>
+                    👤 2031 예상 학생수 <b>{internalCandidate.xgb_predicted_2031.toLocaleString()}명</b>
+                  </span>
                   <span>📍 학교 부지 내</span>
                   <span>🛝 놀이터·체육시설 신설</span>
                 </div>
@@ -648,6 +651,9 @@ export default function SimulationPage({
                     <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
                       <span>
                         👤 2029 <b>{c.xgb_predicted_2029.toLocaleString()}명</b>
+                      </span>
+                      <span>
+                        👤 2031 <b>{c.xgb_predicted_2031.toLocaleString()}명</b>
                       </span>
                       <span>
                         {getCandidateDistanceLabel(c)} <b>{c.nearest_school_dist.toLocaleString()}m</b>
