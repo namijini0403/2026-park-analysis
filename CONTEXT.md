@@ -1063,6 +1063,73 @@ data_processed/age_ratio_incheon.csv
 - 수요 최소 컷: `xgb_predicted_2029 >= 200명`
 - 놀이터 거리 이상치: 상위 `5%` 캡핑
 
+## 2026-04-20 시뮬레이션 AI 추천 기본 시나리오 메모
+- 기존 기록은 유지하고, 동일 주제의 기록이 충돌할 경우 날짜가 더 최근인 기록을 우선 적용한다.
+- 아래 규칙은 `시뮬레이션 > AI 추천`에만 적용한다.
+- 사용자 가중치 조정 영역과 수동 탐색 정렬 로직은 유지하고, AI 추천 기본 시나리오만 별도로 계산한다.
+- AI 추천은 `보수적 기본 시나리오`이며, 사용자가 이후 필터와 가중치를 수정하는 것을 전제로 한다.
+
+### AI 기본 필터
+- 1차 필터:
+  - `primary_cross_count == 0`
+  - `is_redevelopment_area == False`
+- fallback:
+  - 1차 필터 통과 후보가 너무 적으면 `primary_cross_count == 0`만 유지한다.
+  - 이때 `재개발 제외`만 완화한다.
+- 기본 AI 추천에서는 아래 항목을 필터로 쓰지 않는다.
+  - `secondary_cross_count`
+  - `tertiary_cross_count`
+  - `is_large_complex`
+  - `accident_hotspot_flag`
+
+### AI 기본 가중치
+- `school_distance_weight = 0.6`
+- `expected_students_weight = 0.3`
+- `facility_distance_weight = 0.1`
+
+### AI 점수 계산
+- 정규화:
+  - `school_distance`는 가까울수록 높은 점수로 변환
+  - `expected_students`는 많을수록 높은 점수
+  - `facility_distance`는 멀수록 높은 점수
+- 계산식:
+
+```python
+score = (
+    0.6 * school_distance_score +
+    0.3 * expected_students_score +
+    0.1 * facility_distance_score
+)
+```
+
+- 점수에 직접 넣지 않는 항목:
+  - 도로 crossing
+  - 사고다발지역
+  - 재개발
+  - 대단지
+- 위 항목들은 점수 요소가 아니라 필터 또는 참고 정보로만 사용한다.
+
+### AI 추천 출력 규칙
+- 추천 결과는 `score` 기준 내림차순으로 정렬한다.
+- 상위 `3개` 후보를 기본 노출한다.
+- 각 후보 카드에는 최소한 아래 정보를 함께 노출한다.
+  - `rank`
+  - `score`
+  - `school_distance`
+  - `expected_students`
+  - `facility_distance`
+  - `primary_cross`
+  - `secondary_cross`
+  - 경로 메시지 예: `도시 대로 횡단 없음 / 중간급 도로 1회 횡단`
+
+### AI 추천 버튼 동작
+- `AI 추천 보기` 버튼 클릭 시 아래 값을 자동 세팅한다.
+  - 필터: `primary 제외 on`, `재개발 제외 on`, 나머지 off
+  - 슬라이더: `학교 거리 60 / 잠재수혜학생수 30 / 기존 공원 거리 10`
+- 이후 사용자는 필터와 슬라이더를 자유롭게 다시 조정할 수 있다.
+- AI는 필터를 강제로 고정하지 않는다.
+- AI는 후보를 별도 숨김 상태로 강제 삭제하지 않는다. 제거는 항상 필터를 통해서만 일어난다.
+
 ## 2026-04-17 최신 UI 구조 확정 메모
 - 기존 기록은 유지하고, 동일 주제의 기록이 충돌할 경우 날짜가 더 최근인 기록을 우선 적용한다.
 - 메인 앱은 `index.html`이며, 학교 마커 클릭 시 우측 패널과 함께 iframe 기반 상세 리포트/시뮬레이션 오버레이를 연다.
@@ -1468,3 +1535,230 @@ data_processed/age_ratio_incheon.csv
 ### 보고서용 문장
 - `후보지 잠재수혜인원은 구 단위 시계열 예측으로 총량을 추정한 뒤, 1km 아동인구와 100m 총인구 분포를 결합하여 후보지 250m 격자에 비례 배분하는 방식으로 산출하였다.`
 - `이를 통해 학교 기반 지표와 분리된 지역 인구 기반 잠재수요를 제시하고, 같은 학교에 연결된 후보지라도 실제 생활권 인구 분포 차이를 반영할 수 있도록 하였다.`
+
+---
+
+## 수혜인구 예측 모델 — 혼합모델 최종 고정 버전 (2026-04-19 확정)
+
+> **신규 내용 우선 적용 원칙**
+> 이 섹션 이후에 추가된 내용은 이전 섹션의 동일 주제 내용보다 항상 우선 적용한다.
+> 같은 주제에 대해 상충하는 명세가 존재할 경우, 날짜가 최신인 섹션을 따른다.
+> 이 원칙은 context.md 전체에 적용된다.
+
+### 0. 목표
+
+인천 272개 초등학교 주변 250m 격자별로 **2029년, 2031년의 6~12세 잠재수혜인구**를 추정한다.
+
+이 모델은 정확한 인구 예측이 아니라 **후보지 간 상대적 수요 비교 및 정책 의사결정 보조**를 목적으로 한다.
+
+### 1. 전체 구조 (고정)
+
+```
+구별 시계열 → cohort ratio → 1km 예측(cohort)
+→ Prophet 총량 분배 → 혼합 → 1km 최종
+→ 250m 분배(base + ML correction)
+→ candidate grid 반영
+→ 재개발 경고 레이어
+```
+
+### 2. 입력 데이터
+
+- `incheon_gu_child_timeseries.csv`
+- `population_grid_1k.csv`
+- `population_grid.csv`
+- `gu_cohort_change_prophet.csv`
+- `candidate_grid_enriched_v2.geojson`
+- `large_apt_complexes_2025.csv`
+- `school_redevelopment_info.csv`
+
+### 3. Step A — 구별 cohort 유지계수 추정
+
+#### 정의
+
+```
+r3_g(t) = Pop(6~12, g, t+3) / Pop(3~9, g, t)
+r5_g(t) = Pop(6~12, g, t+5) / Pop(1~7, g, t)
+```
+
+#### 처리
+
+- 연도 슬라이딩으로 ratio 시계열 생성
+- 구별로 다음 지표 계산: 평균, 표준편차, CV, 최근 변화량, 선형추세
+
+#### 대표계수 선택 규칙 (고정)
+
+| 조건 | 방법 |
+|------|------|
+| CV < 0.10 | 최근 5년 가중평균 |
+| CV ≥ 0.10 AND 추세 존재 | 선형회귀 외삽 |
+| 그 외 | Prophet 보조 사용 |
+
+#### 출력
+
+`data_processed/gu_cohort_ratios.csv`
+
+### 4. Step B — 1km cohort 기반 예측
+
+#### 계산
+
+각 1km 격자에 대해:
+- `n_3_9 = total_pop × ratio_3_9`
+- `n_1_7 = total_pop × ratio_1_7`
+
+#### 미래값
+
+- `pred_2029_1km_cohort = r3_g × n_3_9`
+- `pred_2031_1km_cohort = r5_g × n_1_7`
+
+#### 출력
+
+`data_processed/grid_1km_cohort_pred.csv`
+
+### 5. Step C — Prophet 총량 분배
+
+#### 핵심 개념
+
+Prophet은 **구 단위 총량 앵커**로만 사용한다. 1km에 직접 쓰지 않고 분배 후 사용.
+
+#### 분배 방식 (고정)
+
+cohort 비율 기반 share 계산:
+
+```
+share_1km = pred_1km_cohort / Σ(pred_1km_cohort in gu)
+```
+
+Prophet 분배:
+
+```
+pred_1km_prophet_alloc = share_1km × pred_gu_prophet
+```
+
+#### 출력
+
+`data_processed/grid_1km_prophet_alloc.csv`
+
+### 6. Step D — 혼합모델 (고정)
+
+#### 목적
+
+- cohort: 구조적 예측
+- Prophet: 총량 안정화
+
+#### 혼합식 (가중치 고정, 임의 변경 금지)
+
+```
+pred_2029_final = 0.8 × pred_2029_cohort + 0.2 × pred_2029_prophet
+pred_2031_final = 0.7 × pred_2031_cohort + 0.3 × pred_2031_prophet
+```
+
+#### 출력
+
+`data_processed/grid_1km_final_pred.csv`
+
+컬럼: `pred_2029_1km`, `pred_2031_1km`
+
+### 7. Step E — 250m 분배 (base + ML correction)
+
+#### 핵심 원칙
+
+이 단계는 **"예측"이 아니라 공간 분배 보정**이다.
+
+#### E-1. base share
+
+```
+w_i_base = pop_250m_i / Σ(pop_250m in 1km)
+```
+
+#### E-2. ML correction
+
+**모델 역할**: base share 보정 (아동 수 직접 예측 금지)
+
+**입력 피처**:
+- `pop_250m`
+- `child_ratio_1km`
+- `nearest_park_dist`
+- `nearest_school_dist`
+- `nearest_pg_dist`
+- `nearest_apt_dist`
+- `large_apt_count_500m`
+- 좌표 (x, y)
+- `gu`
+
+❌ **재개발 변수 제외** (재개발은 경고 레이어로만 처리)
+
+**모델**: LightGBMRegressor (얕은 트리, overfit 방지)
+
+**보정 구조**:
+
+```
+w_hat_i ∝ w_i_base × exp(f(X_i))
+```
+
+정규화: `Σ(w_hat_i) = 1` (within 1km)
+
+#### 최종 분배
+
+```
+pred_2029_250m = w_hat × pred_2029_1km
+pred_2031_250m = w_hat × pred_2031_1km
+```
+
+#### 출력
+
+`data_processed/grid_250m_pred.csv`
+
+SHAP: 공간 분배 보정 기여 변수 해석용 ("아동 결정요인" 표현 금지)
+
+### 8. Step F — candidate grid 반영
+
+추가 필드:
+- `pred_beneficiary_2029`
+- `pred_beneficiary_2031`
+
+출력: `data_processed/candidate_grid_final.geojson`
+
+### 9. Step G — 재개발 경고 레이어
+
+- **모델에는 미포함** — 경고 레이어로만 처리
+- 생성 필드: `redev_flag`, `redev_level`, `redev_warning_text`
+- 우선순위: `planned > ongoing > completed > none`
+
+### 10. 검증 로직 (필수)
+
+1. 1km 내 `w_hat` 합 = 1
+2. 250m 합 = 1km 합
+3. NaN / inf / 음수 제거
+4. Prophet vs cohort 괴리 로그 출력 (참고용)
+
+### 11. 산출물
+
+| 파일 | 설명 |
+|------|------|
+| `gu_cohort_ratios.csv` | 구별 cohort 유지계수 |
+| `grid_1km_cohort_pred.csv` | 1km cohort 예측 |
+| `grid_1km_prophet_alloc.csv` | Prophet 분배 결과 |
+| `grid_1km_final_pred.csv` | 1km 혼합모델 최종 |
+| `grid_250m_pred.csv` | 250m 분배 결과 |
+| `candidate_grid_final.geojson` | 후보지 반영 최종 |
+| `lgbm_spatial_distribution.pkl` | LightGBM 분배 보정 모델 |
+| `shap_spatial_summary.png` | SHAP 요약 시각화 |
+
+### 12. 한계 (보고서·코드 명시 필수)
+
+- 미시 인구 정확예측 모델 아님
+- 1km 연령구조 안정성 가정
+- 250m 분배는 proxy 기반 보정
+- 2031 예측 불확실성 더 큼
+- 재개발은 경고 레이어 (모델 변수 아님)
+
+### 13. 핵심 요약
+
+cohort 기반으로 1km 미래 초등학령 인구를 계산하고,
+Prophet 구 총량을 cohort 비율로 1km에 분배한 뒤,
+고정 가중치로 혼합한다.
+
+그 결과를 250m로 분배할 때는 총인구 기반 비율을 base로 두고,
+LightGBM을 사용해 공간 특성에 따른 분배 보정만 수행한다.
+
+재개발은 모델 변수로 쓰지 않고 경고 레이어로만 처리한다.
