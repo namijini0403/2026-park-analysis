@@ -1100,11 +1100,6 @@ function SimilarSchoolsSection({
                 <div className="mt-2 space-y-1 text-sm text-slate-700">
                   {comparisonMetricLines.map((line) => <p key={line}>{line}</p>)}
                 </div>
-                {comparisonFeatureList.length ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {comparisonFeatureList.map((feature) => <SectionChip key={feature}>{feature}</SectionChip>)}
-                  </div>
-                ) : null}
               </div>
             </div>
           </Card>
