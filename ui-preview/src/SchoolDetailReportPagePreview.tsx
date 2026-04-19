@@ -179,21 +179,6 @@ function clampPercent(value: number) {
   return Math.max(0, Math.min(100, value));
 }
 
-function percentileLine(scopeLabel: string, percentile: number | undefined, emphasis: string) {
-  if (percentile == null) return null;
-  return `${scopeLabel} ${emphasis} ${formatWholePercent(percentile)}에 해당합니다.`;
-}
-
-function upperPercentileLine(scopeLabel: string, percentile: number | undefined, emphasis: string) {
-  if (percentile == null) return null;
-  return `${scopeLabel} ${emphasis} 상위 ${formatWholePercent(percentile)}에 해당합니다.`;
-}
-
-function lowerPercentileLine(scopeLabel: string, percentile: number | undefined, emphasis: string) {
-  if (percentile == null) return null;
-  return `${scopeLabel} ${emphasis} 하위 ${formatWholePercent(percentile)}에 해당합니다.`;
-}
-
 function getDisplayPercentile(value: number, percentileLe?: number, percentileLt?: number) {
   if (percentileLe == null) return undefined;
   if (percentileLt == null) return Math.round(percentileLe * 10) / 10;
@@ -215,8 +200,98 @@ type ZeroInflatedDisplayModel = {
   directionLabel: string;
 };
 
-function getZeroGroupStats(zeroShare?: number) {
-  return zeroShare != null ? formatWholePercent(zeroShare) : undefined;
+function getRelativeLevelText(tone: StatusTone, kind: "park" | "green" | "playground" | "demand") {
+  if (kind === "park") {
+    if (tone === "positive") return "비교적 좋은 편입니다.";
+    if (tone === "caution") return "보통 수준입니다.";
+    if (tone === "warning") return "다소 불리한 편입니다.";
+    return "가장 불리한 그룹에 가깝습니다.";
+  }
+  if (kind === "demand") {
+    if (tone === "positive") return "비교적 큰 편입니다.";
+    if (tone === "caution") return "보통 수준입니다.";
+    if (tone === "warning") return "다소 작은 편입니다.";
+    return "작은 편에 가깝습니다.";
+  }
+  if (tone === "positive") return "비교적 좋은 편입니다.";
+  if (tone === "caution") return "보통 수준입니다.";
+  if (tone === "warning") return "다소 부족한 편입니다.";
+  return "가장 부족한 그룹에 가깝습니다.";
+}
+
+function getParkHeadline(distanceM: number) {
+  if (distanceM <= 150) return "가까운 공원을 바로 이용할 수 있는 학교입니다.";
+  if (distanceM <= 300) return "가까운 공원이 있는 편입니다.";
+  if (distanceM <= 500) return "공원 접근성은 보통 수준입니다.";
+  if (distanceM <= 800) return "가까운 공원이 다소 부족한 학교입니다.";
+  return "가까운 공원 접근성이 불리한 학교입니다.";
+}
+
+function getParkDetail(distanceM: number) {
+  if (distanceM <= 150) return "학교 주변에서 공원 접근성이 매우 좋은 편입니다.";
+  if (distanceM <= 300) return "일상적으로 이용 가능한 공원이 비교적 가까이에 있습니다.";
+  if (distanceM <= 500) return "가까운 공원이 없는 것은 아니지만, 바로 인접한 수준은 아닙니다.";
+  if (distanceM <= 800) return "공원은 접근 가능하지만, 일상적으로 바로 이용하기에는 거리가 있는 편입니다.";
+  return "가까운 생활권 안에서 바로 이용할 수 있는 공원이 부족합니다.";
+}
+
+function getGreenHeadline(tone: StatusTone, value: number) {
+  if (value === 0) return "보행권 안 녹지 환경이 매우 부족한 학교입니다.";
+  if (tone === "positive") return "보행권 안 녹지 환경이 매우 좋은 학교입니다.";
+  if (tone === "caution") return "녹지 환경은 보통 수준입니다.";
+  if (tone === "warning") return "녹지 환경이 부족한 편입니다.";
+  return "보행권 안 녹지 환경이 매우 부족한 학교입니다.";
+}
+
+function getGreenDetail(tone: StatusTone, value: number) {
+  if (value === 0) return "학교 주변 보행권 안에 체감 가능한 녹지 공간이 거의 없습니다.";
+  if (tone === "positive") return "학교 주변에서 머물며 이용할 수 있는 녹지 공간이 충분합니다.";
+  if (tone === "caution") return "체류형 녹지 공간이 아주 풍부하지는 않지만 기본 수준은 갖추고 있습니다.";
+  if (tone === "warning") return "학교 주변에서 머물며 이용할 수 있는 녹지 공간이 넉넉하지 않습니다.";
+  return "학교 주변 보행권 안에 체감 가능한 녹지 공간이 거의 없습니다.";
+}
+
+function getPlaygroundHeadline(tone: StatusTone, count: number) {
+  if (count === 0) return "놀이터 접근성이 불리한 학교입니다.";
+  if (tone === "positive") return "가까운 놀이터 이용 환경이 매우 좋은 학교입니다.";
+  if (tone === "caution") return "놀이터 접근성은 보통 수준입니다.";
+  if (tone === "warning") return "가까운 놀이터가 다소 부족한 학교입니다.";
+  return "놀이터 접근성이 불리한 학교입니다.";
+}
+
+function getPlaygroundDetail(tone: StatusTone, count: number) {
+  if (count === 0) return "생활권 안에서 바로 이용할 수 있는 놀이터가 부족합니다.";
+  if (tone === "positive") return "아이들이 걸어서 이용할 수 있는 놀이터가 충분한 편입니다.";
+  if (tone === "caution") return "기본적인 이용은 가능하지만 매우 풍부한 수준은 아닙니다.";
+  if (tone === "warning") return "이용 가능한 놀이터는 있으나 선택지가 넉넉하지 않습니다.";
+  return "생활권 안에서 바로 이용할 수 있는 놀이터가 부족합니다.";
+}
+
+function getStudentDemandTone(currentStudentCount: number, percentile?: number): StatusTone {
+  if (percentile != null) {
+    if (percentile <= 20) return "positive";
+    if (percentile <= 50) return "caution";
+    if (percentile <= 75) return "warning";
+    return "danger";
+  }
+  if (currentStudentCount >= 700) return "positive";
+  if (currentStudentCount >= 400) return "caution";
+  if (currentStudentCount >= 200) return "warning";
+  return "danger";
+}
+
+function getStudentHeadline(tone: StatusTone) {
+  if (tone === "positive") return "주변 학생 수요가 매우 큰 학교입니다.";
+  if (tone === "caution") return "주변 학생 수요는 보통 수준입니다.";
+  if (tone === "warning") return "주변 학생 수요가 다소 적은 편입니다.";
+  return "주변 학생 수요가 작은 학교입니다.";
+}
+
+function getStudentDetail(tone: StatusTone) {
+  if (tone === "positive") return "시설 설치 시 수혜 규모가 크게 나타날 가능성이 있습니다.";
+  if (tone === "caution") return "시설 설치 시 평균적인 수혜 규모가 예상됩니다.";
+  if (tone === "warning") return "설치 효과는 제한적일 수 있습니다.";
+  return "시설 설치 시 직접적인 수혜 규모는 크지 않을 수 있습니다.";
 }
 
 function buildZeroInflatedDisplayModel({
@@ -240,7 +315,6 @@ function buildZeroInflatedDisplayModel({
   directionLabel: string;
   scaleMax: number;
 }): ZeroInflatedDisplayModel {
-  const zeroShareText = getZeroGroupStats(zeroShare);
   if (!Number.isFinite(value)) {
     return {
       isZero: false,
@@ -256,11 +330,9 @@ function buildZeroInflatedDisplayModel({
       isZero: true,
       zeroShare,
       comparisonDisabled: true,
-      percentileLabel: "0인 학교 그룹",
+      percentileLabel: "현재 값 해석",
       directionLabel,
-      emphasisLine: zeroShareText
-        ? `${zeroMessage} ${basisLabel} 전체 학교의 ${zeroShareText}는 같은 0값 그룹입니다.`
-        : zeroMessage,
+      emphasisLine: `${zeroMessage} ${basisLabel} 기준으로도 매우 부족한 편입니다.`,
     };
   }
 
@@ -272,39 +344,16 @@ function buildZeroInflatedDisplayModel({
     nonZeroPercentile,
     nonZeroAvg,
     comparisonDisabled: false,
-    percentileLabel: nonZeroMessage,
+    percentileLabel: "현재 값 해석",
     directionLabel,
     avgLabel: nonZeroAvg != null ? `${formatWholeNumber(nonZeroAvg)}` : undefined,
     currentRatio: clamp(value),
     avgRatio: nonZeroAvg != null ? clamp(nonZeroAvg) : undefined,
     emphasisLine:
       nonZeroPercentile != null
-        ? `${basisLabel} ${zeroShareText ? `전체 학교의 ${zeroShareText}는 0값 그룹이며, ` : ""}${nonZeroMessage} 상위 ${formatWholePercent(nonZeroPercentile)}입니다.`
-        : `${basisLabel} ${zeroShareText ? `전체 학교의 ${zeroShareText}는 0값 그룹입니다.` : "비교 가능한 비0 학교가 부족합니다."}`,
+        ? `${basisLabel} 기준으로 현재 수준을 비교해 볼 수 있습니다.`
+        : `${basisLabel} 기준 비교 가능한 학교 수가 충분하지 않습니다.`,
   };
-}
-
-function getParkHeadline(distanceM: number) {
-  if (distanceM <= 200) return "도보로 접근하기 편리한 거리입니다.";
-  if (distanceM <= 300) return "도보로 접근하기 무난한 거리입니다.";
-  if (distanceM <= 500) return "도보 접근은 가능하지만 바로 인접하진 않습니다.";
-  return "도보로 이용하기에는 거리가 멀어 접근성이 낮습니다.";
-}
-
-function getGreenHeadline(tone: StatusTone, value: number) {
-  if (value === 0) return "생활권 안에 확인된 녹지가 없습니다.";
-  if (tone === "positive") return "비교적 녹지가 잘 조성된 편입니다.";
-  if (tone === "caution") return "녹지가 적지는 않지만 여유 있는 수준은 아닙니다.";
-  if (tone === "warning") return "녹지가 다소 부족한 편입니다.";
-  return "녹지가 부족해 보행권 체류환경이 아쉽습니다.";
-}
-
-function getPlaygroundHeadline(tone: StatusTone, count: number) {
-  if (count === 0) return "도보권 안에 확인된 놀이터가 없습니다.";
-  if (tone === "positive") return "도보권 놀이터가 비교적 잘 갖춰진 편입니다.";
-  if (tone === "caution") return "도보권 놀이터는 있는 편이지만 여유롭진 않습니다.";
-  if (tone === "warning") return "도보권 놀이터가 다소 부족한 편입니다.";
-  return "도보권 놀이터가 부족해 놀이 접근성이 낮습니다.";
 }
 
 function getToneMeta(tone: StatusTone) {
@@ -605,9 +654,8 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
   const last = props.studentTrend[props.studentTrend.length - 1]?.value ?? 0;
   const changePercent = props.studentTrendChangePct ?? (first ? ((last - first) / first) * 100 : 0);
   const trendTone = trendToneFromChange(changePercent);
-  const cityTrendDelta = changePercent - props.studentTrendCityAvg;
-  const districtTrendDelta = changePercent - props.studentTrendDistrictAvg;
   const currentStudentCount = props.currentStudentCount2025 ?? last;
+  const studentDemandTone = getStudentDemandTone(currentStudentCount, comparisonBasis === "city" ? props.currentStudentCountCityPercentile : props.currentStudentCountDistrictPercentile);
   const parkScaleMax = Math.max(1200, props.nearestParkDistanceM, parkAvg, props.nearestParkDistanceDistrictAvg, props.nearestParkDistanceCityAvg);
   const greenScaleMax = Math.max(12, props.greenRatio, greenAvg, greenNonZeroAvg ?? 0);
   const playgroundScaleMax = Math.max(3, props.playgroundCount + 1, playgroundAvg * 3, (playgroundNonZeroAvg ?? 0) * 3);
@@ -622,8 +670,8 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
     nonZeroPercentile: greenNonZeroPercentile,
     nonZeroAvg: greenNonZeroAvg,
     basisLabel,
-    zeroMessage: "이 학교는 녹지비율 0% 학교입니다.",
-    nonZeroMessage: "녹지가 있는 학교들 중",
+    zeroMessage: "보행권 안에 체감 가능한 녹지 공간이 거의 없습니다.",
+    nonZeroMessage: "현재 수준",
     directionLabel: "녹지 많을수록 유리",
     scaleMax: greenScaleMax,
   });
@@ -633,8 +681,8 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
     nonZeroPercentile: playgroundNonZeroPercentile,
     nonZeroAvg: playgroundNonZeroAvg,
     basisLabel,
-    zeroMessage: "이 학교는 반경 내 놀이터가 0개입니다.",
-    nonZeroMessage: "놀이터가 있는 학교들 중",
+    zeroMessage: "생활권 안에서 바로 이용할 수 있는 놀이터가 부족합니다.",
+    nonZeroMessage: "현재 수준",
     directionLabel: "놀이터 많을수록 유리",
     scaleMax: playgroundScaleMax,
   });
@@ -683,7 +731,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           unit="m"
           tone={parkTone}
           headline={getParkHeadline(props.nearestParkDistanceM)}
-          emphasisLine={upperPercentileLine(basisLabel, parkPercentile, "공원 거리가 먼 편") ?? undefined}
+          emphasisLine={getParkDetail(props.nearestParkDistanceM)}
+          comparisonLines={[
+            `${basisLabel.replace(" 기준", "")}에서도 공원 접근성은 ${getRelativeLevelText(parkTone, "park")}`,
+          ]}
           comparisonVisual={
             <ComparisonBar
               label={`${basisLabel} 해석`}
@@ -717,7 +768,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           unit="%"
           tone={greenTone}
           headline={getGreenHeadline(greenTone, props.greenRatio)}
-          emphasisLine={greenDisplayModel.emphasisLine}
+          emphasisLine={getGreenDetail(greenTone, props.greenRatio)}
+          comparisonLines={[
+            `${basisLabel.replace(" 기준", "")}에서도 녹지 환경은 ${getRelativeLevelText(greenTone, "green")}`,
+          ]}
           comparisonVisual={
             <ComparisonBar
               label={`${basisLabel} 해석`}
@@ -727,10 +781,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
               avgRatio={greenDisplayModel.avgRatio}
               currentLabel={formatWholePercent(props.greenRatio)}
               avgLabel={greenDisplayModel.avgLabel ? `${greenDisplayModel.avgLabel}%` : "-"}
-              avgTitle={comparisonBasis === "city" ? "비0 학교 평균" : "구 내 비0 학교 평균"}
+              avgTitle={comparisonBasis === "city" ? "녹지가 있는 학교 평균" : "구 내 녹지가 있는 학교 평균"}
               directionLabel={greenDisplayModel.directionLabel}
               disabled={greenDisplayModel.comparisonDisabled}
-              disabledMessage="0이 아닌 학교들 내부 분포는 회색 처리했습니다."
+              disabledMessage="현재 값 기준으로만 비교선을 표시했습니다."
             />
           }
         />
@@ -741,7 +795,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           unit="개"
           tone={playgroundTone}
           headline={getPlaygroundHeadline(playgroundTone, props.playgroundCount)}
-          emphasisLine={playgroundDisplayModel.emphasisLine}
+          emphasisLine={getPlaygroundDetail(playgroundTone, props.playgroundCount)}
+          comparisonLines={[
+            `${basisLabel.replace(" 기준", "")}에서도 놀이터 접근성은 ${getRelativeLevelText(playgroundTone, "playground")}`,
+          ]}
           comparisonVisual={
             <ComparisonBar
               label={`${basisLabel} 해석`}
@@ -751,10 +808,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
               avgRatio={playgroundDisplayModel.avgRatio}
               currentLabel={`${formatNumber(props.playgroundCount)}개`}
               avgLabel={playgroundDisplayModel.avgLabel ? `${playgroundDisplayModel.avgLabel}개` : "-"}
-              avgTitle={comparisonBasis === "city" ? "비0 학교 평균" : "구 내 비0 학교 평균"}
+              avgTitle={comparisonBasis === "city" ? "놀이터가 있는 학교 평균" : "구 내 놀이터가 있는 학교 평균"}
               directionLabel={playgroundDisplayModel.directionLabel}
               disabled={playgroundDisplayModel.comparisonDisabled}
-              disabledMessage="0이 아닌 학교들 내부 분포는 회색 처리했습니다."
+              disabledMessage="현재 값 기준으로만 비교선을 표시했습니다."
             />
           }
           footer={props.straightLinePlaygroundCount != null ? <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">500m 직선거리 반경 안에는 놀이터가 {formatNumber(props.straightLinePlaygroundCount)}개 있지만, 실제 도보 이동 500m 이내 놀이터는 {formatNumber(props.playgroundCount)}개입니다.</div> : null}
@@ -765,14 +822,13 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           value={formatSignedPercent(changePercent)}
           unit="6년 변화"
           tone={trendTone}
-          headline={changePercent > 0 ? "주의! 학생 수가 증가 중이에요." : "주의! 학생 수가 감소 중이에요."}
-          emphasisLine={`전체 평균 ${formatSignedPercent(props.studentTrendCityAvg)}인데 이 학교는 ${formatSignedPercent(changePercent)} ${changePercent >= 0 ? "증가" : "감소"} 중입니다`}
+          headline={getStudentHeadline(studentDemandTone)}
+          emphasisLine={getStudentDetail(studentDemandTone)}
           comparisonLines={[
-            `전교생 ${formatNumber(currentStudentCount)}명으로, 학생 수가 많은 학교 기준 인천 전체 상위 ${formatWholePercent(props.currentStudentCountCityPercentile ?? 0)}에 해당합니다.`,
-            `구 내에서는 학생 수가 많은 학교 기준 상위 ${formatWholePercent(props.currentStudentCountDistrictPercentile ?? 0)} 수준입니다.`,
+            `현재 학생 규모는 ${formatNumber(currentStudentCount)}명으로, ${basisLabel.replace(" 기준", "")}에서는 ${getRelativeLevelText(studentDemandTone, "demand")}`,
             changePercent > props.studentTrendDistrictAvg
-              ? `구 평균보다 ${formatWholeNumber(Math.abs(districtTrendDelta))}%p 높은 추세를 보입니다.`
-              : `구 평균보다 ${formatWholeNumber(Math.abs(districtTrendDelta))}%p 더 낮은 추세를 보입니다.`,
+              ? "최근 학생 수 흐름은 평균보다 조금 더 유지되는 편입니다."
+              : "최근 학생 수 흐름은 평균보다 조금 더 감소하는 편입니다.",
           ]}
           footer={<StudentTrendMini data={props.studentTrend} />}
         />
@@ -797,9 +853,10 @@ function ProblemSection({
   nearestParkDistanceM,
   greenRatio,
   playgroundCount,
+  potentialDemand2029,
 }: Pick<
   SchoolDetailReportProps,
-  "problemTags" | "studentTrend" | "studentTrendChangePct" | "noParkWithin500m" | "nearestParkDistanceM" | "greenRatio" | "playgroundCount"
+  "problemTags" | "studentTrend" | "studentTrendChangePct" | "noParkWithin500m" | "nearestParkDistanceM" | "greenRatio" | "playgroundCount" | "potentialDemand2029"
 >) {
   const first = studentTrend[0]?.value ?? 0;
   const last = studentTrend[studentTrend.length - 1]?.value ?? 0;
@@ -807,35 +864,35 @@ function ProblemSection({
   const hasNoWalkablePark = noParkWithin500m ?? nearestParkDistanceM >= 500;
   const lowGreen = greenRatio <= 0;
   const noPlayground = playgroundCount <= 0;
+  const highDemand = potentialDemand2029 >= 400;
+  const mediumDemand = potentialDemand2029 >= 220;
 
   let decisionText = "";
   if (hasNoWalkablePark && lowGreen && noPlayground) {
     decisionText =
-      changePercent > 0
-        ? "학생 수가 늘고 있는 학교인데도 도보권 공원이 없고, 생활권 안 녹지와 놀이터도 확인되지 않아 우선 개선 검토가 필요한 상태입니다."
-        : "도보권 공원이 없고, 생활권 안 녹지와 놀이터도 함께 부족해 생활환경 보완이 시급한 상태입니다.";
+      highDemand
+        ? "공원 접근성과 녹지 환경이 모두 불리한 학교입니다. 가까운 공원이 부족하고, 학교 주변에서 체감할 수 있는 녹지 공간과 놀이터도 적어 개선 시 수혜 효과가 크게 나타날 가능성이 있습니다."
+        : "공원 접근성과 녹지 환경이 모두 불리한 학교입니다. 가까운 공원이 부족하고, 학교 주변에서 체감할 수 있는 녹지 공간과 놀이터도 적습니다.";
   } else if (hasNoWalkablePark && lowGreen) {
     decisionText =
-      changePercent > 0
-        ? `학생 수는 증가 추세인데, 도보권 공원이 없고 녹지 비율도 ${formatWholePercent(greenRatio)} 수준에 머물러 있습니다.`
-        : `도보권 공원이 없고 녹지 비율도 ${formatWholePercent(greenRatio)} 수준에 머물러 있어 생활권 보완이 필요합니다.`;
+      highDemand
+        ? "시설 접근성은 불리하지만, 주변 학생 수요는 큰 학교입니다. 가까운 공원과 체감 가능한 녹지 공간이 부족해 개선 필요성이 높은 편입니다."
+        : "가까운 공원 접근성은 불리하고, 녹지 환경도 매우 약한 학교입니다. 생활권 안에서 바로 이용할 수 있는 야외공간 보완이 필요합니다.";
   } else if (hasNoWalkablePark) {
     decisionText =
-      changePercent > 0
-        ? `학생 수는 증가 추세지만, 가장 가까운 공원까지 ${formatNumber(nearestParkDistanceM)}m 떨어져 있어 공원 접근성 부담이 큽니다.`
-        : `가장 가까운 공원까지 ${formatNumber(nearestParkDistanceM)}m 떨어져 있어 공원 접근성 보완이 필요한 학교입니다.`;
+      mediumDemand
+        ? "녹지 환경은 일부 갖추고 있으나, 가까운 공원 접근성은 다소 불리한 학교입니다. 바로 이용 가능한 공원이 부족해 접근성 개선의 우선순위가 있습니다."
+        : "공원 접근성은 다소 불리한 학교입니다. 머무를 수 있는 환경은 일부 있지만 바로 이용 가능한 공원은 부족한 편입니다.";
   } else if (lowGreen || noPlayground) {
-    const greenText = lowGreen ? "녹지 비율이 거의 없고" : `녹지 비율은 ${formatWholePercent(greenRatio)} 수준이며`;
-    const playgroundText = noPlayground ? "도보권 놀이터도 확인되지 않습니다." : `도보권 놀이터는 ${formatNumber(playgroundCount)}개 수준입니다.`;
     decisionText =
-      changePercent > 0
-        ? `공원 접근은 가능하지만 ${greenText} ${playgroundText} 학생 수 증가를 고려하면 생활권 보완이 필요합니다.`
-        : `공원 접근은 가능하지만 ${greenText} ${playgroundText} 생활권 질 개선이 필요한 상태입니다.`;
+      highDemand
+        ? "가까운 시설은 있지만, 주변 녹지나 놀이환경은 부족한 학교입니다. 접근성 자체는 나쁘지 않지만 체류형 야외환경의 질은 약한 편입니다."
+        : "가까운 시설은 있지만, 주변 녹지나 놀이터 선택지는 넉넉하지 않은 학교입니다. 생활권 환경의 질을 보완할 필요가 있습니다.";
   } else {
     decisionText =
-      changePercent > 0
-        ? "공원 접근과 생활권 지표는 확보되어 있지만, 학생 수 증가를 감안하면 지속적인 모니터링이 필요한 학교입니다."
-        : "공원 접근과 생활권 지표는 비교적 안정적이며, 현재로서는 모니터링 중심으로 관리할 수 있는 학교입니다.";
+      highDemand
+        ? "가까운 시설과 녹지 환경이 모두 비교적 양호한 학교입니다. 공원 접근성과 주변 환경이 전반적으로 안정적이며 수요 규모도 큰 편입니다."
+        : "가까운 시설과 녹지 환경이 모두 비교적 양호한 학교입니다. 공원 접근성과 주변 환경이 전반적으로 안정적인 편입니다.";
   }
   return (
     <SectionShell kicker="Decision" title="핵심 판단">
