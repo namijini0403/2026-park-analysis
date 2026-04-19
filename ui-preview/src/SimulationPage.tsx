@@ -117,6 +117,7 @@ function getBarrierCountSummary(candidate: Candidate): string | null {
   if ((counts.trunk ?? 0) > 0) parts.push(`자동차 전용 간선도로 ${counts.trunk}회`);
   if ((counts.primary ?? 0) > 0) parts.push(`도시 대로 ${counts.primary}회`);
   if ((counts.secondary ?? 0) > 0) parts.push(`중간급 도로 ${counts.secondary}회`);
+  if ((counts.tertiary ?? 0) > 0 && parts.length === 0) parts.push("생활도로 있음");
 
   return parts.length ? parts.join(" / ") : null;
 }
