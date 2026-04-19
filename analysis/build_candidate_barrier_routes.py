@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 from pathlib import Path
 from typing import Any
@@ -13,17 +14,13 @@ import pandas as pd
 BASE = Path(__file__).resolve().parents[1]
 GRAPH_PATH = BASE / "data_processed" / "incheon_walk_graph_v2.graphml"
 SCHOOLS_PATH = BASE / "data_processed" / "schools.csv"
+SCHOOL_PRIORITY_PATH = BASE / "data_processed" / "school_priority.csv"
 CANDIDATES_PATH = BASE / "data_processed" / "candidate_grid_xgb_v4.geojson"
 OUTPUT_JSON_PATH = BASE / "data_processed" / "candidate_barrier_routes_by_school.json"
 OUTPUT_CSV_PATH = BASE / "output" / "candidate_barrier_routes_by_school.csv"
+MIN_CANDIDATES_PER_CASE123_SCHOOL = 6
 
 HIGHWAY_BUCKETS = ("motorway", "trunk", "primary", "secondary", "tertiary")
-SEVERITY_ORDER = {
-    "green": 0,
-    "yellow": 1,
-    "orange": 2,
-    "red": 3,
-}
 
 
 def normalize_highway(value: Any) -> str | None:
@@ -34,7 +31,7 @@ def normalize_highway(value: Any) -> str | None:
         normalized = [item for item in normalized if item]
         if not normalized:
             return None
-        return max(normalized, key=lambda item: bucket_rank(item))
+        return max(normalized, key=bucket_rank)
 
     text = str(value).strip().lower()
     if not text:
@@ -74,6 +71,10 @@ def parse_linked_schools(value: Any) -> list[str]:
             return [str(item).strip() for item in parsed if str(item).strip()]
     except json.JSONDecodeError:
         pass
+
+    matches = re.findall(r"np\.str_\('([^']+)'\)", text)
+    if matches:
+        return [name.strip() for name in matches if name.strip()]
 
     return [name.strip() for name in re.findall(r"'([^']+)'", text) if name.strip()]
 
@@ -132,7 +133,7 @@ def severity_label(severity: str) -> str:
         "green": "큰 도로 횡단 없음",
         "yellow": "중간급 도로 횡단",
         "orange": "도시 대로 횡단",
-        "red": "자동차 전용 간선/고속도로 포함",
+        "red": "자동차 전용 간선/고속화도로 포함",
     }
     return labels[severity]
 
@@ -154,10 +155,10 @@ def build_note(counts: dict[str, int], severity: str) -> str:
     if severity == "red":
         parts = []
         if counts["motorway"] > 0:
-            parts.append(f"고속도로 수준 {counts['motorway']}회")
+            parts.append(f"고속화도로 계열 {counts['motorway']}회")
         if counts["trunk"] > 0:
-            parts.append(f"자동차 전용 간선도로 수준 {counts['trunk']}회")
-        return "이 후보지까지 가는 경로에는 " + ", ".join(parts) + "가 포함되어 보행 부담이 매우 큽니다."
+            parts.append(f"자동차 전용 간선도로 {counts['trunk']}회")
+        return "후보지까지 가는 경로에는 " + ", ".join(parts) + "가 포함되어 보행 부담이 매우 큽니다."
 
     parts = []
     if counts["primary"] > 0:
@@ -168,7 +169,7 @@ def build_note(counts: dict[str, int], severity: str) -> str:
     if not parts:
         return "큰 도로 횡단이 없어 생활도로 중심으로 이동할 수 있습니다."
 
-    return "이 후보지까지 가려면 " + ", ".join(parts) + "를 지나야 합니다."
+    return "후보지까지 가려면 " + ", ".join(parts) + "를 지나야 합니다."
 
 
 def route_coordinates(graph: nx.MultiDiGraph, route: list[int]) -> list[list[float]]:
@@ -179,96 +180,194 @@ def route_coordinates(graph: nx.MultiDiGraph, route: list[int]) -> list[list[flo
     return coords
 
 
-def main() -> None:
-    schools_df = pd.read_csv(SCHOOLS_PATH)
-    candidate_geojson = json.loads(CANDIDATES_PATH.read_text(encoding="utf-8"))
+def distance_in_meters(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    radius_m = 6371000.0
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_phi = math.radians(lat2 - lat1)
+    delta_lambda = math.radians(lng2 - lng1)
+    a = (
+        math.sin(delta_phi / 2) ** 2
+        + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) ** 2
+    )
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return radius_m * c
 
-    schools_by_name = {
-        str(row["학교명"]).strip(): {
-            "school_id": str(row["학교ID"]).strip(),
-            "school_name": str(row["학교명"]).strip(),
-            "lat": float(row["위도"]),
-            "lng": float(row["경도"]),
-        }
-        for _, row in schools_df.iterrows()
-        if pd.notna(row["학교ID"]) and pd.notna(row["위도"]) and pd.notna(row["경도"])
+
+def load_school_lookup() -> dict[str, dict[str, Any]]:
+    schools_df = pd.read_csv(SCHOOLS_PATH, encoding="utf-8-sig")
+    school_priority_df = pd.read_csv(SCHOOL_PRIORITY_PATH, encoding="utf-8-sig")
+
+    school_id_col = schools_df.columns[0]
+    school_name_col = schools_df.columns[1]
+    school_lat_col = schools_df.columns[2]
+    school_lng_col = schools_df.columns[3]
+    priority_id_col = school_priority_df.columns[0]
+
+    school_case_type = {
+        str(row[priority_id_col]).strip(): int(float(row["case_type"]))
+        for _, row in school_priority_df.iterrows()
+        if pd.notna(row.get("case_type")) and str(row[priority_id_col]).strip()
     }
 
-    graph = ox.load_graphml(GRAPH_PATH)
+    return {
+        str(row[school_name_col]).strip(): {
+            "school_id": str(row[school_id_col]).strip(),
+            "school_name": str(row[school_name_col]).strip(),
+            "lat": float(row[school_lat_col]),
+            "lng": float(row[school_lng_col]),
+            "case_type": school_case_type.get(str(row[school_id_col]).strip()),
+        }
+        for _, row in schools_df.iterrows()
+        if pd.notna(row[school_id_col]) and pd.notna(row[school_lat_col]) and pd.notna(row[school_lng_col])
+    }
 
+
+def load_candidate_rows() -> tuple[list[dict[str, Any]], dict[str, list[str]]]:
+    candidate_geojson = json.loads(CANDIDATES_PATH.read_text(encoding="utf-8"))
     candidate_rows: list[dict[str, Any]] = []
+    school_to_direct_candidates: dict[str, list[str]] = {}
+
     for feature in candidate_geojson.get("features", []):
         props = feature.get("properties", {})
+        grid_id = str(props["grid_id"]).strip()
         linked_schools = parse_linked_schools(props.get("linked_schools"))
-        if not linked_schools:
-            continue
         candidate_rows.append(
             {
-                "grid_id": str(props["grid_id"]).strip(),
+                "grid_id": grid_id,
                 "lat": float(props["cy"]),
                 "lng": float(props["cx"]),
                 "linked_schools": linked_schools,
+                "candidate_rank": float(props.get("candidate_rank", 999999)),
             }
         )
+        for school_name in linked_schools:
+            school_to_direct_candidates.setdefault(school_name, []).append(grid_id)
 
+    return candidate_rows, school_to_direct_candidates
+
+
+def build_supplemental_candidate_map(
+    schools_by_name: dict[str, dict[str, Any]],
+    candidate_rows: list[dict[str, Any]],
+    school_to_direct_candidates: dict[str, list[str]],
+) -> dict[str, list[str]]:
+    school_to_supplemental_candidates: dict[str, list[str]] = {}
+
+    for school_name, school_info in schools_by_name.items():
+        case_type = school_info.get("case_type")
+        if case_type not in {1, 2, 3}:
+            continue
+
+        direct_ids = school_to_direct_candidates.get(school_name, [])
+        if len(direct_ids) >= MIN_CANDIDATES_PER_CASE123_SCHOOL:
+            continue
+
+        existing_ids = set(direct_ids)
+        ranked_candidates: list[tuple[float, float, str]] = []
+        for candidate in candidate_rows:
+            grid_id = candidate["grid_id"]
+            if grid_id in existing_ids:
+                continue
+            ranked_candidates.append(
+                (
+                    distance_in_meters(
+                        school_info["lat"],
+                        school_info["lng"],
+                        candidate["lat"],
+                        candidate["lng"],
+                    ),
+                    candidate["candidate_rank"],
+                    grid_id,
+                )
+            )
+
+        ranked_candidates.sort(key=lambda item: (item[0], item[1], item[2]))
+        needed = max(0, MIN_CANDIDATES_PER_CASE123_SCHOOL - len(direct_ids))
+        school_to_supplemental_candidates[school_name] = [
+            grid_id for _, _, grid_id in ranked_candidates[:needed]
+        ]
+
+    return school_to_supplemental_candidates
+
+
+def main() -> None:
+    schools_by_name = load_school_lookup()
+    candidate_rows, school_to_direct_candidates = load_candidate_rows()
+    candidate_by_id = {candidate["grid_id"]: candidate for candidate in candidate_rows}
+    school_to_supplemental_candidates = build_supplemental_candidate_map(
+        schools_by_name,
+        candidate_rows,
+        school_to_direct_candidates,
+    )
+
+    graph = ox.load_graphml(GRAPH_PATH)
     school_node_cache: dict[str, int] = {}
     candidate_node_cache: dict[str, int] = {}
     output: dict[str, dict[str, Any]] = {}
     flat_rows: list[dict[str, Any]] = []
 
-    for candidate in candidate_rows:
-        grid_id = candidate["grid_id"]
+    school_candidate_pairs: list[tuple[str, str, bool]] = []
+    for school_name, direct_ids in school_to_direct_candidates.items():
+        for grid_id in direct_ids:
+            school_candidate_pairs.append((school_name, grid_id, False))
+    for school_name, supplemental_ids in school_to_supplemental_candidates.items():
+        for grid_id in supplemental_ids:
+            school_candidate_pairs.append((school_name, grid_id, True))
+
+    for school_name, grid_id, is_supplemental in school_candidate_pairs:
+        school_info = schools_by_name.get(school_name)
+        candidate = candidate_by_id.get(grid_id)
+        if not school_info or not candidate:
+            continue
+
         candidate_node = candidate_node_cache.get(grid_id)
         if candidate_node is None:
             candidate_node = ox.distance.nearest_nodes(graph, candidate["lng"], candidate["lat"])
             candidate_node_cache[grid_id] = int(candidate_node)
 
-        for school_name in candidate["linked_schools"]:
-            school_info = schools_by_name.get(school_name)
-            if not school_info:
-                continue
+        school_id = school_info["school_id"]
+        school_node = school_node_cache.get(school_id)
+        if school_node is None:
+            school_node = ox.distance.nearest_nodes(graph, school_info["lng"], school_info["lat"])
+            school_node_cache[school_id] = int(school_node)
 
-            school_id = school_info["school_id"]
-            school_node = school_node_cache.get(school_id)
-            if school_node is None:
-                school_node = ox.distance.nearest_nodes(graph, school_info["lng"], school_info["lat"])
-                school_node_cache[school_id] = int(school_node)
+        try:
+            route = nx.shortest_path(graph, school_node, candidate_node, weight="length")
+        except (nx.NetworkXNoPath, nx.NodeNotFound):
+            continue
 
-            try:
-                route = nx.shortest_path(graph, school_node, candidate_node, weight="length")
-            except (nx.NetworkXNoPath, nx.NodeNotFound):
-                continue
+        counts = count_barriers(graph, route)
+        severity = severity_from_counts(counts)
+        record = {
+            "severity": severity,
+            "severity_label": severity_label(severity),
+            "color": severity_color(severity),
+            "note": build_note(counts, severity),
+            "counts": counts,
+            "route_length_m": round(route_length_m(graph, route), 1),
+            "route_coords": route_coordinates(graph, route),
+        }
 
-            counts = count_barriers(graph, route)
-            severity = severity_from_counts(counts)
-            record = {
+        output.setdefault(school_id, {})[grid_id] = record
+        flat_rows.append(
+            {
+                "school_id": school_id,
+                "school_name": school_name,
+                "grid_id": grid_id,
+                "is_supplemental": is_supplemental,
                 "severity": severity,
-                "severity_label": severity_label(severity),
-                "color": severity_color(severity),
-                "note": build_note(counts, severity),
-                "counts": counts,
-                "route_length_m": round(route_length_m(graph, route), 1),
-                "route_coords": route_coordinates(graph, route),
+                "severity_label": record["severity_label"],
+                "motorway": counts["motorway"],
+                "trunk": counts["trunk"],
+                "primary": counts["primary"],
+                "secondary": counts["secondary"],
+                "tertiary": counts["tertiary"],
+                "route_length_m": record["route_length_m"],
+                "route_point_count": len(record["route_coords"]),
+                "note": record["note"],
             }
-
-            output.setdefault(school_id, {})[grid_id] = record
-            flat_rows.append(
-                {
-                    "school_id": school_id,
-                    "school_name": school_name,
-                    "grid_id": grid_id,
-                    "severity": severity,
-                    "severity_label": record["severity_label"],
-                    "motorway": counts["motorway"],
-                    "trunk": counts["trunk"],
-                    "primary": counts["primary"],
-                    "secondary": counts["secondary"],
-                    "tertiary": counts["tertiary"],
-                    "route_length_m": record["route_length_m"],
-                    "route_point_count": len(record["route_coords"]),
-                    "note": record["note"],
-                }
-            )
+        )
 
     OUTPUT_JSON_PATH.write_text(
         json.dumps(output, ensure_ascii=False, separators=(",", ":")),
@@ -279,6 +378,7 @@ def main() -> None:
     summary = {
         "schools": len(output),
         "routes": len(flat_rows),
+        "supplemental_routes": sum(1 for row in flat_rows if row["is_supplemental"]),
         "severity_counts": {
             severity: sum(1 for row in flat_rows if row["severity"] == severity)
             for severity in ("green", "yellow", "orange", "red")
