@@ -286,7 +286,17 @@ def accident_route_meta(route_coords: list[list[float]], hotspots: list[dict[str
     if not hits:
         return {"accident_hotspot_flag": False, "accident_hotspot_text": None}
 
-    type_counts = pd.Series([hit["type"] for hit in hits]).value_counts()
+    def summarize_accident_type(raw_type: str) -> str:
+        normalized = str(raw_type).strip()
+        if normalized == "보행어린이":
+            return "보행어린이"
+        if normalized == "스쿨존어린이":
+            return "스쿨존어린이"
+        if normalized == "자전거":
+            return "자전거"
+        return "보행사고다발지역"
+
+    type_counts = pd.Series([summarize_accident_type(hit["type"]) for hit in hits]).value_counts()
     top_names = ", ".join(hit["name"] for hit in hits[:2])
     extra_count = len(hits) - min(len(hits), 2)
     count_summary = ", ".join(f"{label} {count}곳" for label, count in type_counts.items())
