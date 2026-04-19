@@ -1,5 +1,4 @@
 ﻿import { useEffect, useMemo, useState } from "react";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import KakaoMap, { CandidateMarker, CandidateRouteLine } from "./KakaoMap";
 
 const LETTERS = "ABCDEFGHIJ".split("");
@@ -85,6 +84,10 @@ type WeightState = {
   parkDistance: number;
 };
 
+type SimulationMode = "ai" | "manual";
+
+type WeightToggleState = Record<keyof WeightState, boolean>;
+
 type ScoredCandidate = Candidate & {
   final_score: number;
   benefit_score: number;
@@ -147,6 +150,12 @@ const WEIGHT_COPY: Array<{ key: keyof WeightState; title: string; description: s
   { key: "schoolDistance", title: "학교에서의 거리", description: "학교와 가까울수록 가점을 줍니다." },
   { key: "parkDistance", title: "기존 공원과의 거리", description: "기존 공원과 멀수록 가점을 줍니다." },
 ];
+
+const DEFAULT_WEIGHT_TOGGLES: WeightToggleState = {
+  benefit: true,
+  schoolDistance: true,
+  parkDistance: true,
+};
 
 function rankBadgeStyle(index: number): { color: string; bg: string } {
   if (index === 0) return { color: "#c0392b", bg: "#fdecea" };
@@ -390,6 +399,42 @@ function buildFilterReasonSummary(filters: FilterState): string[] {
   return summaries;
 }
 
+function applyWeightToggles(weights: WeightState, toggles: WeightToggleState): WeightState {
+  return {
+    benefit: toggles.benefit ? weights.benefit : 0,
+    schoolDistance: toggles.schoolDistance ? weights.schoolDistance : 0,
+    parkDistance: toggles.parkDistance ? weights.parkDistance : 0,
+  };
+}
+
+function buildCandidateSummary(candidate: Partial<Pick<ScoredCandidate, "benefit_score" | "school_distance_score" | "facility_gap_score">>): string {
+  const reasons: string[] = [];
+  const schoolScore = candidate.school_distance_score ?? 0;
+  const benefitScore = candidate.benefit_score ?? 0;
+  const facilityScore = candidate.facility_gap_score ?? 0;
+  if (schoolScore >= 0.7) reasons.push("생활권 중심 접근 가능");
+  if (benefitScore >= 0.7) reasons.push("수요 규모 우수");
+  if (facilityScore >= 0.7) reasons.push("기존 공원 공백 큼");
+  if (reasons.length === 0 && schoolScore >= 0.45) reasons.push("접근성 안정적");
+  if (reasons.length === 0 && benefitScore >= 0.45) reasons.push("수요 대비 무난");
+  if (reasons.length === 0) reasons.push("복합 조건 균형");
+  return reasons.slice(0, 2).join(", ");
+}
+
+function buildCandidateReasons(candidate: Partial<Pick<ScoredCandidate, "benefit_score" | "school_distance_score" | "facility_gap_score">>): string[] {
+  const reasons: string[] = [];
+  const schoolScore = candidate.school_distance_score ?? 0;
+  const benefitScore = candidate.benefit_score ?? 0;
+  const facilityScore = candidate.facility_gap_score ?? 0;
+  if (benefitScore >= 0.65) reasons.push("수요가 충분함");
+  if (schoolScore >= 0.65) reasons.push("접근성이 안정적임");
+  if (facilityScore >= 0.65) reasons.push("기존 공원 부족 지역에 가까움");
+  if (benefitScore < 0.4) reasons.push("수요 규모는 상대적으로 제한적임");
+  if (schoolScore < 0.4) reasons.push("학교와의 거리는 다소 있는 편임");
+  if (facilityScore < 0.4) reasons.push("기존 공원과의 차별성은 크지 않음");
+  return reasons.slice(0, 3);
+}
+
 export default function SimulationPage({
   schoolName,
   schoolLat,
@@ -401,9 +446,12 @@ export default function SimulationPage({
   largeApartmentComplexes = [],
   onBack,
 }: SimulationPageProps) {
+  const [mode, setMode] = useState<SimulationMode>("manual");
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [weights, setWeights] = useState<WeightState>(DEFAULT_WEIGHTS);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [weightToggles, setWeightToggles] = useState<WeightToggleState>(DEFAULT_WEIGHT_TOGGLES);
+  const [weightsExpanded, setWeightsExpanded] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const internalCandidate = useMemo(
     () => candidates.find((candidate) => candidate.is_school_internal),
@@ -425,44 +473,47 @@ export default function SimulationPage({
     );
   }, [externalCandidates]);
 
+  const effectiveWeights = useMemo(
+    () => applyWeightToggles(weights, weightToggles),
+    [weights, weightToggles],
+  );
   const rankedCandidates = useMemo(
-    () => scoreCandidates(filteredCandidates, weights),
-    [filteredCandidates, weights],
+    () => scoreCandidates(filteredCandidates, effectiveWeights),
+    [filteredCandidates, effectiveWeights],
   );
   const aiRecommendations = useMemo(
     () => computeAiRecommendations(externalCandidates),
     [externalCandidates],
   );
 
-  const normalizedWeights = useMemo(() => normalizeWeights(weights), [weights]);
+  const normalizedWeights = useMemo(() => normalizeWeights(effectiveWeights), [effectiveWeights]);
   const filterSummary = useMemo(() => buildFilterReasonSummary(filters), [filters]);
 
   const applyAiDefaults = () => {
     setFilters(AI_DEFAULT_FILTERS);
     setWeights(AI_DEFAULT_WEIGHTS);
+    setWeightToggles(DEFAULT_WEIGHT_TOGGLES);
+    setMode("ai");
   };
 
-  useEffect(() => {
-    setSelected((previous) => {
-      const allowed = new Set<string>();
-      if (internalCandidate) allowed.add(internalCandidate.grid_id);
-      rankedCandidates.forEach((candidate) => allowed.add(candidate.grid_id));
+  const displayedCandidates = useMemo(
+    () => (mode === "ai" ? aiRecommendations.recommendations : rankedCandidates).slice(0, 4),
+    [aiRecommendations.recommendations, mode, rankedCandidates],
+  );
 
-      const next = new Set<string>();
-      previous.forEach((id) => {
-        if (allowed.has(id)) next.add(id);
-      });
-      return next;
+  useEffect(() => {
+    const allowedIds = new Set<string>();
+    displayedCandidates.forEach((candidate) => allowedIds.add(candidate.grid_id));
+    if (internalCandidate) allowedIds.add(internalCandidate.grid_id);
+
+    setSelectedId((previous) => {
+      if (previous && allowedIds.has(previous)) return previous;
+      return displayedCandidates[0]?.grid_id ?? internalCandidate?.grid_id ?? null;
     });
-  }, [internalCandidate, rankedCandidates]);
+  }, [displayedCandidates, internalCandidate]);
 
   const toggleSelect = (id: string) => {
-    setSelected((previous) => {
-      const next = new Set(previous);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+    setSelectedId((previous) => (previous === id ? null : id));
   };
 
   const mapMarkers = useMemo((): CandidateMarker[] => {
@@ -488,7 +539,7 @@ export default function SimulationPage({
       });
     }
 
-    rankedCandidates.slice(0, 10).forEach((candidate, index) => {
+    displayedCandidates.forEach((candidate, index) => {
       markers.push({
         id: candidate.grid_id,
         lat: candidate.cy,
@@ -499,28 +550,26 @@ export default function SimulationPage({
     });
 
     return markers;
-  }, [candidateLabelMap, internalCandidate, rankedCandidates, schoolLat, schoolLng]);
+  }, [candidateLabelMap, displayedCandidates, internalCandidate, schoolLat, schoolLng]);
 
   const routeLines = useMemo((): CandidateRouteLine[] => {
-    return rankedCandidates
-      .filter((candidate) => selected.has(candidate.grid_id))
+    return displayedCandidates
+      .filter((candidate) => candidate.grid_id === selectedId)
       .filter((candidate) => Array.isArray(candidate.route_coords) && candidate.route_coords.length >= 2)
       .map((candidate) => ({
         id: candidate.grid_id,
         path: candidate.route_coords as Array<[number, number]>,
         color: getBarrierColor(candidate),
       }));
-  }, [rankedCandidates, selected]);
+  }, [displayedCandidates, selectedId]);
 
-  const selectedCandidates = useMemo(() => {
+  const selectedCandidate = useMemo(() => {
     const byId = new Map<string, Candidate>();
     if (internalCandidate) byId.set(internalCandidate.grid_id, internalCandidate);
     rankedCandidates.forEach((candidate) => byId.set(candidate.grid_id, candidate));
-    return Array.from(selected).map((id) => byId.get(id)).filter(Boolean) as Candidate[];
-  }, [internalCandidate, rankedCandidates, selected]);
-
-  const totalDemand2029 = selectedCandidates.reduce((sum, candidate) => sum + candidate.walkshed_potential_2029, 0);
-  const totalDemand2031 = selectedCandidates.reduce((sum, candidate) => sum + candidate.walkshed_potential_2031, 0);
+    aiRecommendations.recommendations.forEach((candidate) => byId.set(candidate.grid_id, candidate));
+    return selectedId ? byId.get(selectedId) ?? null : null;
+  }, [aiRecommendations.recommendations, internalCandidate, rankedCandidates, selectedId]);
 
   return (
     <div
@@ -582,270 +631,114 @@ export default function SimulationPage({
         }}
       >
         <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-          회피 조건은 필터로, 우선순위는 슬라이더로 나눠서 봅니다
+          공공시설 입지 선정을 위한 의사결정 인터페이스
         </div>
         <div style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.75 }}>
-          회피하고 싶은 조건은 필터로 제외하고, 중요하게 보고 싶은 기준은 슬라이더로 조절하세요.
-          AI가 자동으로 결정을 내리는 것이 아니라, 사용자의 판단 기준을 반영해 우선순위를 계산합니다.
+          정보를 많이 보여주는 것이 아니라, 30초 안에 비교 후보를 좁혀 선택할 수 있도록 설계한 화면입니다.
+          지도에서 위치를 먼저 보고, 참고 맥락과 추천 결과를 비교한 뒤 필요한 경우만 상세 정보를 펼쳐 확인합니다.
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 420px) minmax(0, 1fr)", gap: 22, alignItems: "start" }}>
-        <div>
-          <div
-            style={{
-              padding: 18,
-              borderRadius: 18,
-              background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
-              border: "1px solid #bfdbfe",
-              marginBottom: 16,
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 10, flexWrap: "wrap" }}>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8", marginBottom: 4 }}>AI 추천</div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: "#111827" }}>
-                  AI는 안전성과 접근성을 우선 고려한 기본 추천을 제공합니다
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={applyAiDefaults}
-                style={{
-                  padding: "8px 12px",
-                  borderRadius: 999,
-                  background: "#1d4ed8",
-                  color: "#ffffff",
-                  fontSize: 12,
-                  fontWeight: 800,
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                AI 추천 보기
-              </button>
-            </div>
-            <div style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-              AI는 안전성과 접근성을 우선 고려한 기본 추천을 제공합니다.
-              이후 필터와 가중치를 조정하여 원하는 조건에 맞게 결과를 변경할 수 있습니다.
-            </div>
-            <div
-              style={{
-                marginBottom: 12,
-                padding: "10px 12px",
-                borderRadius: 12,
-                background: "#eff6ff",
-                color: "#1e3a8a",
-                fontSize: 12,
-                lineHeight: 1.6,
-              }}
-            >
-              {aiRecommendations.filterSummary}
-            </div>
-            {aiRecommendations.recommendations.length > 0 ? (
-              <div style={{ display: "grid", gap: 10 }}>
-                {aiRecommendations.recommendations.map((candidate, index) => {
-                  const badge = rankBadgeStyle(index);
-                  const barrierColor = getBarrierColor(candidate);
-                  const fixedLabel = candidateLabelMap.get(candidate.grid_id) ?? "-";
-                  return (
-                    <div
-                      key={`ai-${candidate.grid_id}`}
-                      onClick={() => toggleSelect(candidate.grid_id)}
-                      style={{
-                        borderRadius: 14,
-                        border: "1px solid #dbeafe",
-                        background: "#ffffff",
-                        padding: "12px 14px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 6 }}>
-                        <span
-                          style={{
-                            padding: "2px 8px",
-                            borderRadius: 999,
-                            background: badge.bg,
-                            color: badge.color,
-                            fontSize: 11,
-                            fontWeight: 800,
-                          }}
-                        >
-                          AI 추천 {index + 1}
-                        </span>
-                        <span
-                          style={{
-                            padding: "2px 8px",
-                            borderRadius: 999,
-                            background: "#e5e7eb",
-                            color: "#111827",
-                            fontSize: 11,
-                            fontWeight: 800,
-                          }}
-                        >
-                          위치 {fixedLabel}
-                        </span>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>{candidate.grid_id}</span>
-                        <span
-                          style={{
-                            padding: "2px 8px",
-                            borderRadius: 999,
-                            background: "#eef2ff",
-                            color: "#4338ca",
-                            fontSize: 11,
-                            fontWeight: 800,
-                          }}
-                        >
-                          점수 {candidate.final_score.toFixed(2)}
-                        </span>
-                        <span
-                          style={{
-                            padding: "2px 8px",
-                            borderRadius: 999,
-                            background: `${barrierColor}18`,
-                            color: barrierColor,
-                            fontSize: 11,
-                            fontWeight: 800,
-                          }}
-                        >
-                          {getBarrierLabel(candidate)}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-                          gap: 8,
-                          fontSize: 12,
-                          color: "#374151",
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        <div style={{ padding: "8px 10px", borderRadius: 10, background: "#f8fafc" }}>
-                          2029 잠재수요 <b>{formatCount(candidate.walkshed_potential_2029)}명</b>
-                        </div>
-                        <div style={{ padding: "8px 10px", borderRadius: 10, background: "#f8fafc" }}>
-                          학교 거리 <b>{formatDistance(candidate.nearest_school_dist)}</b>
-                        </div>
-                        <div style={{ padding: "8px 10px", borderRadius: 10, background: "#f8fafc" }}>
-                          기존 공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b>
-                        </div>
-                        <div style={{ padding: "8px 10px", borderRadius: 10, background: "#f8fafc" }}>
-                          도시 대로 <b>{getBarrierCounts(candidate).primary}회</b> / 중간급 도로 <b>{getBarrierCounts(candidate).secondary}회</b>
-                        </div>
-                      </div>
-                      <div style={{ marginTop: 8, fontSize: 12, color: "#4b5563", lineHeight: 1.6 }}>
-                        {candidate.ai_message}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div
-                style={{
-                  border: "1px dashed #bfdbfe",
-                  borderRadius: 14,
-                  padding: "14px 16px",
-                  background: "#f8fbff",
-                  fontSize: 13,
-                  color: "#4b5563",
-                  lineHeight: 1.7,
-                }}
-              >
-                AI 기본 필터를 통과한 외부 후보가 없어 AI 추천을 표시할 수 없습니다.
-              </div>
-            )}
-          </div>
-
-          <div
-            style={{
-              padding: 18,
-              borderRadius: 18,
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              marginBottom: 18,
-            }}
-          >
-            <div style={{ fontSize: 13, fontWeight: 800, color: "#6b7280", marginBottom: 8 }}>후보지 경로 지도</div>
-            <KakaoMap
-              center={{ lat: schoolLat, lng: schoolLng }}
-              markers={mapMarkers}
-              routes={routeLines}
-              selected={selected}
-              onToggle={toggleSelect}
-              height={340}
-            />
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 12 }}>
-              <LegendItem color="#1a1a2e" shape="diamond" label="학교" />
-              <LegendItem color="#2980b9" shape="circle" label="교내 설치" />
-              <LegendItem color="#2E8B57" shape="circle" label="큰 도로 횡단 없음" />
-              <LegendItem color="#D4A017" shape="circle" label="중간급 도로 포함" />
-              <LegendItem color="#E67E22" shape="circle" label="도시 대로 포함" />
-              <LegendItem color="#C0392B" shape="circle" label="trunk·motorway 포함" />
-            </div>
-            <div style={{ marginTop: 10, fontSize: 12, color: "#6b7280", lineHeight: 1.7 }}>
-              후보지 색은 학교에서 후보지까지의 최단 경로에서 나타나는 최고 횡단 부담 등급을 뜻합니다.
-              후보지를 선택하면 같은 색 계열의 경로가 함께 강조됩니다.
-            </div>
-          </div>
-
-          {selected.size > 0 ? (
-            <div
-              style={{
-                padding: 20,
-                borderRadius: 18,
-                background: "#111827",
-                color: "#fff",
-              }}
-            >
-              <div style={{ fontSize: 13, color: "#cbd5e1", marginBottom: 8 }}>
-                선택한 후보지 {selectedCandidates.length}곳 요약
-              </div>
-              <div style={{ display: "flex", gap: 32, flexWrap: "wrap", marginBottom: 18 }}>
-                <div>
-                  <div style={{ fontSize: 12, color: "#94a3b8" }}>2029 잠재수혜학생수</div>
-                  <div style={{ fontSize: 34, fontWeight: 800 }}>
-                    {formatCount(totalDemand2029)}
-                    <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 12, color: "#94a3b8" }}>2031 잠재수혜학생수</div>
-                  <div style={{ fontSize: 34, fontWeight: 800 }}>
-                    {formatCount(totalDemand2031)}
-                    <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
-                  </div>
-                </div>
-              </div>
-              <ResponsiveContainer width="100%" height={88}>
-                <BarChart
-                  data={[
-                    { name: "2029", value: totalDemand2029 },
-                    { name: "2031", value: totalDemand2031 },
-                  ]}
-                  layout="vertical"
-                >
-                  <XAxis type="number" hide />
-                  <YAxis type="category" dataKey="name" width={40} tick={{ fill: "#cbd5e1", fontSize: 12 }} />
-                  <Tooltip formatter={(value: number) => [`${formatCount(value)}명`, "잠재수혜학생수"]} />
-                  <Bar dataKey="value" fill="#4ecdc4" radius={4} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          ) : null}
+      <div
+        style={{
+          padding: 18,
+          borderRadius: 22,
+          background: "#fff",
+          border: "1px solid #e5e7eb",
+          marginBottom: 18,
+        }}
+      >
+        <div style={{ fontSize: 13, fontWeight: 800, color: "#6b7280", marginBottom: 8 }}>후보지 경로 지도</div>
+        <KakaoMap
+          center={{ lat: schoolLat, lng: schoolLng }}
+          markers={mapMarkers}
+          routes={routeLines}
+          selected={new Set(selectedId ? [selectedId] : [])}
+          onToggle={toggleSelect}
+          height={Math.max(420, Math.round((typeof window !== "undefined" ? window.innerHeight : 1000) * 0.42))}
+        />
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 12 }}>
+          <LegendItem color="#1a1a2e" shape="diamond" label="학교" />
+          <LegendItem color="#2980b9" shape="circle" label="교내 설치" />
+          <LegendItem color="#2E8B57" shape="circle" label="큰 도로 횡단 없음" />
+          <LegendItem color="#D4A017" shape="circle" label="중간급 도로 포함" />
+          <LegendItem color="#E67E22" shape="circle" label="도시 대로 포함" />
+          <LegendItem color="#C0392B" shape="circle" label="trunk·motorway 포함" />
         </div>
+      </div>
 
-        <div>
-          <div
-            style={{
-              padding: 18,
-              borderRadius: 18,
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              marginBottom: 16,
-            }}
-          >
+      {(redevelopmentProjects.length > 0 || largeApartmentComplexes.length > 0) && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 12,
+            marginBottom: 18,
+          }}
+        >
+          {largeApartmentComplexes.slice(0, 2).map((complex, index) => (
+            <div key={`${complex.name}-${index}`} style={{ padding: 16, borderRadius: 18, background: "#fff", border: "1px solid #e5e7eb" }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#1d4ed8", marginBottom: 6 }}>대단지 아파트</div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: "#111827", marginBottom: 8 }}>{complex.name}</div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
+                <span style={{ padding: "3px 8px", borderRadius: 999, background: "#eff6ff", color: "#1d4ed8", fontWeight: 700 }}>
+                  {complex.householdCount.toLocaleString()}세대
+                </span>
+                <span style={{ color: "#6b7280" }}>{complex.distanceM.toLocaleString()}m</span>
+              </div>
+            </div>
+          ))}
+          {redevelopmentProjects.slice(0, 2).map((project, index) => (
+            <div key={`${project.name}-${index}`} style={{ padding: 16, borderRadius: 18, background: "#fff", border: "1px solid #e5e7eb" }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#c2410c", marginBottom: 6 }}>재개발 정비사업</div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: "#111827", marginBottom: 8 }}>{project.name}</div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
+                <span style={{ padding: "3px 8px", borderRadius: 999, background: "#fff7ed", color: "#c2410c", fontWeight: 700 }}>
+                  {project.stage || "단계 정보 없음"}
+                </span>
+                <span style={{ color: "#6b7280" }}>{project.distanceM.toLocaleString()}m</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 18 }}>
+        <button
+          type="button"
+          onClick={applyAiDefaults}
+          style={{
+            padding: "10px 14px",
+            borderRadius: 999,
+            border: "none",
+            cursor: "pointer",
+            background: mode === "ai" ? "#1d4ed8" : "#dbeafe",
+            color: mode === "ai" ? "#fff" : "#1d4ed8",
+            fontWeight: 800,
+          }}
+        >
+          AI 추천 모드
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode("manual")}
+          style={{
+            padding: "10px 14px",
+            borderRadius: 999,
+            border: "1px solid #d1d5db",
+            cursor: "pointer",
+            background: mode === "manual" ? "#111827" : "#fff",
+            color: mode === "manual" ? "#fff" : "#374151",
+            fontWeight: 800,
+          }}
+        >
+          직접 설정 모드
+        </button>
+      </div>
+
+      {mode === "manual" ? (
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(260px, 1fr) minmax(260px, 1fr)", gap: 16, marginBottom: 18 }}>
+          <div style={{ padding: 18, borderRadius: 18, background: "#fff", border: "1px solid #e5e7eb" }}>
             <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 12 }}>제외 조건 설정</div>
             <div style={{ display: "grid", gap: 10 }}>
               {FILTER_COPY.map((item) => (
@@ -853,10 +746,10 @@ export default function SimulationPage({
                   key={item.key}
                   style={{
                     display: "flex",
-                    gap: 12,
-                    alignItems: "flex-start",
-                    padding: "12px 14px",
-                    borderRadius: 14,
+                    gap: 10,
+                    alignItems: "center",
+                    padding: "10px 12px",
+                    borderRadius: 12,
                     border: "1px solid #e5e7eb",
                     background: filters[item.key] ? "#fff7ed" : "#f9fafb",
                     cursor: "pointer",
@@ -865,467 +758,215 @@ export default function SimulationPage({
                   <input
                     type="checkbox"
                     checked={filters[item.key]}
-                    onChange={() =>
-                      setFilters((previous) => ({
-                        ...previous,
-                        [item.key]: !previous[item.key],
-                      }))
-                    }
-                    style={{ marginTop: 2 }}
+                    onChange={() => setFilters((previous) => ({ ...previous, [item.key]: !previous[item.key] }))}
                   />
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 4 }}>{item.title}</div>
-                    <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6 }}>{item.description}</div>
-                  </div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#111827" }}>{item.title}</div>
                 </label>
               ))}
             </div>
           </div>
 
-          <div
-            style={{
-              padding: 18,
-              borderRadius: 18,
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              marginBottom: 16,
-            }}
-          >
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 12 }}>우선순위 기준 설정</div>
-            <div style={{ display: "grid", gap: 16 }}>
+          <div style={{ padding: 18, borderRadius: 18, background: "#fff", border: "1px solid #e5e7eb" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 12 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: "#111827" }}>우선순위 기준 설정</div>
+              <button
+                type="button"
+                onClick={() => setWeightsExpanded((previous) => !previous)}
+                style={{ border: "none", background: "#f3f4f6", color: "#374151", borderRadius: 999, padding: "7px 12px", fontWeight: 700, cursor: "pointer" }}
+              >
+                {weightsExpanded ? "접기" : "펼치기"}
+              </button>
+            </div>
+            <div style={{ display: "grid", gap: 10 }}>
               {WEIGHT_COPY.map((item) => (
-                <div key={item.key} style={{ padding: "12px 14px", borderRadius: 14, background: "#f9fafb", border: "1px solid #e5e7eb" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginBottom: 6, alignItems: "center" }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{item.title}</div>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: "#ea580c" }}>
-                      {formatPercent(normalizedWeights[item.key])}
+                <div key={item.key} style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #e5e7eb", background: "#f9fafb" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+                    <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#111827" }} title={item.description}>
+                      <input
+                        type="checkbox"
+                        checked={weightToggles[item.key]}
+                        onChange={() => setWeightToggles((previous) => ({ ...previous, [item.key]: !previous[item.key] }))}
+                      />
+                      {item.title}
+                    </label>
+                    <div style={{ fontSize: 12, fontWeight: 800, color: "#ea580c" }}>{formatPercent(normalizedWeights[item.key])}</div>
+                  </div>
+                  {weightsExpanded && weightToggles[item.key] ? (
+                    <div style={{ marginTop: 10 }}>
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={weights[item.key]}
+                        onChange={(event) => setWeights((previous) => ({ ...previous, [item.key]: Number(event.target.value) }))}
+                        style={{ width: "100%" }}
+                      />
                     </div>
-                  </div>
-                  <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, marginBottom: 10 }}>{item.description}</div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={weights[item.key]}
-                    onChange={(event) =>
-                      setWeights((previous) => ({
-                        ...previous,
-                        [item.key]: Number(event.target.value),
-                      }))
-                    }
-                    style={{ width: "100%" }}
-                  />
-                  <div style={{ marginTop: 6, fontSize: 12, color: "#6b7280" }}>
-                    원본 레버 값 {weights[item.key]}
-                  </div>
+                  ) : null}
                 </div>
               ))}
             </div>
           </div>
+        </div>
+      ) : (
+        <div style={{ marginBottom: 18, padding: "14px 16px", borderRadius: 18, background: "#eff6ff", color: "#1e3a8a", fontSize: 13, lineHeight: 1.7 }}>
+          AI는 안전성과 접근성을 우선 고려한 기본 추천을 제공합니다. 이후 필터와 가중치를 조정하여 원하는 조건에 맞게 결과를 변경할 수 있습니다.
+          <div style={{ marginTop: 6 }}>{aiRecommendations.filterSummary}</div>
+        </div>
+      )}
 
-          <div
-            style={{
-              padding: 18,
-              borderRadius: 18,
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              marginBottom: 16,
-            }}
-          >
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 10 }}>계산 결과</div>
-            <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginBottom: 12 }}>
-              <MetricPill label="전체 후보" value={`${externalCandidates.length}곳`} tone="#1f2937" background="#f3f4f6" />
-              <MetricPill label="필터 후 남은 후보" value={`${rankedCandidates.length}곳`} tone="#065f46" background="#ecfdf5" />
-              <MetricPill label="제외된 후보" value={`${externalCandidates.length - rankedCandidates.length}곳`} tone="#9a3412" background="#fff7ed" />
-            </div>
-            <div style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.7 }}>
-              필터를 먼저 적용한 뒤, 남은 후보에 대해서만 잠재수혜학생수, 학교 거리, 기존 공원과의 거리를 정규화해 종합점수를 계산합니다.
-              도로 횡단, 사고다발지역, 재개발, 대단지 조건은 점수에 넣지 않고 필터에서만 반영합니다.
-            </div>
-            {filterSummary.length ? (
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
-                {filterSummary.map((item) => (
-                  <span
-                    key={item}
-                    style={{
-                      padding: "5px 10px",
-                      borderRadius: 999,
-                      background: "#fff7ed",
-                      color: "#c2410c",
-                      fontSize: 12,
-                      fontWeight: 700,
-                    }}
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            ) : null}
-            {caseType === 4 ? (
+      <div style={{ padding: 18, borderRadius: 18, background: "#fff", border: "1px solid #e5e7eb", marginBottom: 18 }}>
+        <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginBottom: 12 }}>
+          <MetricPill label="전체 후보" value={`${externalCandidates.length}곳`} tone="#1f2937" background="#f3f4f6" />
+          <MetricPill label="현재 비교 후보" value={`${displayedCandidates.length}곳`} tone="#065f46" background="#ecfdf5" />
+          <MetricPill label="남은 후보" value={`${mode === "ai" ? aiRecommendations.recommendations.length : rankedCandidates.length}곳`} tone="#9a3412" background="#fff7ed" />
+        </div>
+        {filterSummary.length && mode === "manual" ? (
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {filterSummary.map((item) => (
+              <span key={item} style={{ padding: "5px 10px", borderRadius: 999, background: "#fff7ed", color: "#c2410c", fontSize: 12, fontWeight: 700 }}>
+                {item}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </div>
+
+      {displayedCandidates.length > 0 ? (
+        <>
+          <div style={{ marginBottom: 12, fontSize: 13, fontWeight: 800, color: "#6b7280" }}>TOP 1 추천 후보</div>
+          {(() => {
+            const topCandidate = displayedCandidates[0];
+            const barrierColor = getBarrierColor(topCandidate);
+            const label = candidateLabelMap.get(topCandidate.grid_id) ?? "A";
+            const reasons = buildCandidateReasons(topCandidate);
+            return (
               <div
+                onClick={() => toggleSelect(topCandidate.grid_id)}
                 style={{
-                  marginTop: 14,
-                  padding: "12px 14px",
-                  borderRadius: 14,
-                  background: "#eff6ff",
-                  color: "#1e3a8a",
-                  fontSize: 13,
-                  lineHeight: 1.7,
+                  marginBottom: 18,
+                  padding: 22,
+                  borderRadius: 22,
+                  border: `2px solid ${selectedId === topCandidate.grid_id ? barrierColor : "#dbeafe"}`,
+                  background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
+                  cursor: "pointer",
                 }}
               >
-                현재 학교는 절대 취약형(case 4)으로 분류되어 있어, 교내 설치안과 외부 후보지를 함께 비교해 보는 것이 좋습니다.
-              </div>
-            ) : null}
-          </div>
-
-          {internalCandidate ? (
-            <div
-              onClick={() => toggleSelect(internalCandidate.grid_id)}
-              style={{
-                padding: "14px 16px",
-                borderRadius: 16,
-                border: "2px solid",
-                borderColor: selected.has(internalCandidate.grid_id) ? "#2980b9" : "#bfdbfe",
-                background: selected.has(internalCandidate.grid_id) ? "#eff6ff" : "#f8fbff",
-                cursor: "pointer",
-                marginBottom: 12,
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 10 }}>
-                <div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: "#111827" }}>교내 설치 대안</div>
-                  <div style={{ fontSize: 12, color: "#6b7280", marginTop: 4 }}>{getBarrierNote(internalCandidate)}</div>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                    <span style={{ padding: "4px 10px", borderRadius: 999, background: "#1d4ed8", color: "#fff", fontSize: 12, fontWeight: 800 }}>
+                      {mode === "ai" ? "추천" : "1순위"}
+                    </span>
+                    <span style={{ padding: "4px 10px", borderRadius: 999, background: "#e5e7eb", color: "#111827", fontSize: 12, fontWeight: 800 }}>
+                      위치 {label}
+                    </span>
+                    <span style={{ fontSize: 15, fontWeight: 800, color: "#111827" }}>{topCandidate.grid_id}</span>
+                  </div>
+                  <span style={{ padding: "4px 10px", borderRadius: 999, background: `${barrierColor}18`, color: barrierColor, fontSize: 12, fontWeight: 800 }}>
+                    {getBarrierLabel(topCandidate)}
+                  </span>
                 </div>
-                <span
-                  style={{
-                    padding: "4px 10px",
-                    borderRadius: 999,
-                    background: "#dbeafe",
-                    color: "#1d4ed8",
-                    fontSize: 12,
-                    fontWeight: 800,
-                  }}
-                >
-                  학교 내부
-                </span>
+                <div style={{ fontSize: 24, fontWeight: 900, color: "#111827", marginBottom: 8 }}>{buildCandidateSummary(topCandidate)}</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 10 }}>
+                  <div style={{ padding: "10px 12px", borderRadius: 14, background: "#fff" }}>잠재수요 <b>{formatCount(topCandidate.walkshed_potential_2029)}명</b></div>
+                  <div style={{ padding: "10px 12px", borderRadius: 14, background: "#fff" }}>{getCandidateDistanceLabel(topCandidate)} <b>{formatDistance(topCandidate.nearest_school_dist)}</b></div>
+                  <div style={{ padding: "10px 12px", borderRadius: 14, background: "#fff" }}>기존 공원 거리 <b>{formatDistance(topCandidate.nearest_park_dist)}</b></div>
+                </div>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {reasons.map((reason) => (
+                    <span key={reason} style={{ padding: "4px 10px", borderRadius: 999, background: "#ffffff", color: "#334155", fontSize: 12, fontWeight: 700 }}>
+                      {reason}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 13, color: "#374151" }}>
-                <span>2029 기준 {formatCount(internalCandidate.walkshed_potential_2029)}명</span>
-                <span>2031 기준 {formatCount(internalCandidate.walkshed_potential_2031)}명</span>
-              </div>
-            </div>
-          ) : null}
+            );
+          })()}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {rankedCandidates.slice(0, 10).map((candidate, index) => {
-              const label = candidateLabelMap.get(candidate.grid_id) ?? getStableCandidateLabel(index);
+          <div style={{ marginBottom: 12, fontSize: 13, fontWeight: 800, color: "#6b7280" }}>비교 후보</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12, marginBottom: 18 }}>
+            {displayedCandidates.slice(1, 4).map((candidate, index) => {
               const barrierColor = getBarrierColor(candidate);
-              const isSelected = selected.has(candidate.grid_id);
-              const style = rankBadgeStyle(index);
-              const chips: string[] = [];
-              if (hasRedevelopmentRisk(candidate)) chips.push("재개발 영향권");
-              if (hasLargeAptNearby(candidate)) chips.push("500세대 이상 대단지 인근");
-              if (hasAccidentHotspot(candidate)) chips.push("사고다발지역 경유");
-
+              const label = candidateLabelMap.get(candidate.grid_id) ?? getStableCandidateLabel(index + 1);
               return (
                 <div
                   key={candidate.grid_id}
                   onClick={() => toggleSelect(candidate.grid_id)}
                   style={{
-                    padding: "14px 16px",
-                    borderRadius: 16,
-                    border: "2px solid",
-                    borderColor: isSelected ? "#111827" : "#e5e7eb",
-                    background: isSelected ? "#f8fafc" : "#fff",
+                    padding: 16,
+                    borderRadius: 18,
+                    border: `2px solid ${selectedId === candidate.grid_id ? barrierColor : "#e5e7eb"}`,
+                    background: "#fff",
                     cursor: "pointer",
                   }}
                 >
-                  <div style={{ display: "flex", gap: 14 }}>
-                    <div
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "50%",
-                        border: `2.5px solid ${barrierColor}`,
-                        background: isSelected ? barrierColor : "#fff",
-                        color: isSelected ? "#fff" : barrierColor,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontWeight: 800,
-                        flexShrink: 0,
-                      }}
-                    >
-                      {label}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
-                        <span style={{ fontSize: 11, color: "#9ca3af" }}>{candidate.grid_id}</span>
-                        <span
-                          style={{
-                            padding: "2px 8px",
-                            borderRadius: 999,
-                            background: "#e5e7eb",
-                            color: "#111827",
-                            fontSize: 11,
-                            fontWeight: 800,
-                          }}
-                        >
-                          위치 {label}
-                        </span>
-                        <span
-                          style={{
-                            padding: "2px 8px",
-                            borderRadius: 999,
-                            background: style.bg,
-                            color: style.color,
-                            fontSize: 11,
-                            fontWeight: 800,
-                          }}
-                        >
-                          현재 순위 {index + 1}
-                        </span>
-                        <span
-                          style={{
-                            padding: "2px 8px",
-                            borderRadius: 999,
-                            background: `${barrierColor}18`,
-                            color: barrierColor,
-                            fontSize: 11,
-                            fontWeight: 800,
-                          }}
-                        >
-                          {getBarrierLabel(candidate)}
-                        </span>
-                        {candidate.fallback_candidate ? (
-                          <span
-                            style={{
-                              padding: "2px 8px",
-                              borderRadius: 999,
-                              background: "#eff6ff",
-                              color: "#1d4ed8",
-                              fontSize: 11,
-                              fontWeight: 800,
-                            }}
-                          >
-                            생활권 외 보조 후보
-                          </span>
-                        ) : null}
-                      </div>
-
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-                          gap: 8,
-                          fontSize: 12,
-                          color: "#374151",
-                        }}
-                      >
-                        <div style={{ padding: "9px 10px", borderRadius: 12, background: "#f8fafc" }}>
-                          인근 거주 2029 <b>{formatCount(candidate.resident_children_2029)}명</b>
-                        </div>
-                        <div style={{ padding: "9px 10px", borderRadius: 12, background: "#f8fafc" }}>
-                          인근 거주 2031 <b>{formatCount(candidate.resident_children_2031)}명</b>
-                        </div>
-                        <div style={{ padding: "9px 10px", borderRadius: 12, background: "#f8fafc" }}>
-                          잠재수요 2029 <b>{formatCount(candidate.walkshed_potential_2029)}명</b>
-                        </div>
-                        <div style={{ padding: "9px 10px", borderRadius: 12, background: "#f8fafc" }}>
-                          잠재수요 2031 <b>{formatCount(candidate.walkshed_potential_2031)}명</b>
-                        </div>
-                        <div style={{ padding: "9px 10px", borderRadius: 12, background: "#f8fafc" }}>
-                          {getCandidateDistanceLabel(candidate)} <b>{formatDistance(candidate.nearest_school_dist)}</b>
-                        </div>
-                        <div style={{ padding: "9px 10px", borderRadius: 12, background: "#f8fafc" }}>
-                          기존 공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, color: barrierColor }}>
-                        {getBarrierCountSummary(candidate)}
-                      </div>
-
-                      {chips.length ? (
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
-                          {chips.map((chip) => (
-                            <span
-                              key={chip}
-                              style={{
-                                padding: "3px 8px",
-                                borderRadius: 999,
-                                background: "#fff7ed",
-                                color: "#9a3412",
-                                fontSize: 11,
-                                fontWeight: 700,
-                              }}
-                            >
-                              {chip}
-                            </span>
-                          ))}
-                        </div>
-                      ) : null}
-
-                      <div
-                        style={{
-                          marginTop: 10,
-                          padding: "10px 12px",
-                          borderRadius: 12,
-                          background: isSelected ? "#eef2ff" : "#f9fafb",
-                          fontSize: 12,
-                          color: "#4b5563",
-                          lineHeight: 1.7,
-                        }}
-                      >
-                        <div style={{ marginBottom: 4, fontWeight: 800, color: "#111827" }}>
-                          종합점수 {candidate.final_score.toFixed(3)}
-                        </div>
-                        <div>
-                          잠재수요 {candidate.benefit_score.toFixed(2)} × {formatPercent(normalizedWeights.benefit)} /
-                          학교 거리 {candidate.school_distance_score.toFixed(2)} × {formatPercent(normalizedWeights.schoolDistance)} /
-                          기존 공원 거리 {candidate.facility_gap_score.toFixed(2)} × {formatPercent(normalizedWeights.parkDistance)}
-                        </div>
-                        <div style={{ marginTop: 4 }}>{getBarrierNote(candidate)}</div>
-                        {candidate.accident_hotspot_text ? <div style={{ marginTop: 4 }}>{candidate.accident_hotspot_text}</div> : null}
-                        {candidate.redev_warning_text ? <div style={{ marginTop: 4 }}>{candidate.redev_warning_text}</div> : null}
-                      </div>
-                    </div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
+                    <span style={{ padding: "3px 8px", borderRadius: 999, background: "#f3f4f6", color: "#111827", fontSize: 11, fontWeight: 800 }}>순위 {index + 2}</span>
+                    <span style={{ padding: "3px 8px", borderRadius: 999, background: "#e5e7eb", color: "#111827", fontSize: 11, fontWeight: 800 }}>위치 {label}</span>
+                  </div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: "#111827", marginBottom: 8 }}>{buildCandidateSummary(candidate)}</div>
+                  <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#374151" }}>
+                    <div>잠재수요 <b>{formatCount(candidate.walkshed_potential_2029)}명</b></div>
+                    <div>학교 거리 <b>{formatDistance(candidate.nearest_school_dist)}</b></div>
+                    <div>공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b></div>
                   </div>
                 </div>
               );
             })}
-
-            {rankedCandidates.length === 0 ? (
-              <div
-                style={{
-                  border: "1px dashed #d1d5db",
-                  borderRadius: 16,
-                  padding: "18px 20px",
-                  background: "#fafafa",
-                  fontSize: 13,
-                  color: "#6b7280",
-                  lineHeight: 1.7,
-                }}
-              >
-                현재 제외 조건을 모두 만족하는 후보지가 없습니다. 필터를 일부 완화하면 다시 비교할 수 있습니다.
-              </div>
-            ) : null}
           </div>
-
-          {(redevelopmentProjects.length > 0 || largeApartmentComplexes.length > 0) && (
-            <div
-              style={{
-                marginTop: 18,
-                padding: 18,
-                borderRadius: 18,
-                background: "#fff",
-                border: "1px solid #e5e7eb",
-              }}
-            >
-              <div style={{ fontSize: 13, fontWeight: 800, color: "#9a3412", marginBottom: 6 }}>참고할 주변 맥락</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: "#111827", marginBottom: 10 }}>
-                후보지 판단 전에 같이 봐야 할 생활권 변화 요인
-              </div>
-              <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, marginBottom: 14 }}>
-                아래 정보는 점수에는 직접 반영하지 않지만, 회피 여부를 판단할 때 함께 참고할 수 있는 배경 정보입니다.
-              </div>
-
-              {largeApartmentComplexes.length > 0 ? (
-                <div style={{ marginBottom: redevelopmentProjects.length > 0 ? 16 : 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-                    인근 500세대 이상 대단지
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    {largeApartmentComplexes.map((complex, index) => (
-                      <div
-                        key={`${complex.name}-${index}`}
-                        style={{
-                          border: "1px solid #e5e7eb",
-                          borderRadius: 12,
-                          padding: "12px 14px",
-                          background: "#f8fafc",
-                        }}
-                      >
-                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 6 }}>
-                          <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{complex.name}</div>
-                          <div style={{ fontSize: 12, color: "#6b7280" }}>{complex.distanceM.toLocaleString()}m</div>
-                        </div>
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
-                          <span
-                            style={{
-                              padding: "3px 8px",
-                              borderRadius: 999,
-                              background: "#eff6ff",
-                              color: "#1d4ed8",
-                              fontWeight: 700,
-                            }}
-                          >
-                            {complex.householdCount.toLocaleString()}세대
-                          </span>
-                          {complex.address ? <span style={{ color: "#6b7280" }}>{complex.address}</span> : null}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {redevelopmentProjects.length > 0 ? (
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 8 }}>
-                    인근 재개발 정비사업
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    {redevelopmentProjects.map((project, index) => (
-                      <div
-                        key={`${project.name}-${index}`}
-                        style={{
-                          border: "1px solid #e5e7eb",
-                          borderRadius: 12,
-                          padding: "12px 14px",
-                          background: "#fafafa",
-                        }}
-                      >
-                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 6 }}>
-                          <div style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>{project.name}</div>
-                          <div style={{ fontSize: 12, color: "#6b7280" }}>{project.distanceM.toLocaleString()}m</div>
-                        </div>
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
-                          <span
-                            style={{
-                              padding: "3px 8px",
-                              borderRadius: 999,
-                              background: "#fff7ed",
-                              color: "#c2410c",
-                              fontWeight: 700,
-                            }}
-                          >
-                            {project.stage || "단계 정보 없음"}
-                          </span>
-                          {project.type ? (
-                            <span
-                              style={{
-                                padding: "3px 8px",
-                                borderRadius: 999,
-                                background: "#eff6ff",
-                                color: "#1d4ed8",
-                                fontWeight: 700,
-                              }}
-                            >
-                              {project.type}
-                            </span>
-                          ) : null}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          )}
+        </>
+      ) : (
+        <div style={{ border: "1px dashed #d1d5db", borderRadius: 16, padding: "18px 20px", background: "#fafafa", fontSize: 13, color: "#6b7280", lineHeight: 1.7, marginBottom: 18 }}>
+          현재 조건에서 비교 가능한 후보가 없습니다. 직접 설정 모드에서 필터를 일부 완화하면 다시 비교할 수 있습니다.
         </div>
-      </div>
+      )}
+
+      {selectedCandidate ? (
+        <div style={{ padding: 18, borderRadius: 18, background: "#fff", border: "1px solid #e5e7eb" }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: "#6b7280", marginBottom: 8 }}>상세 정보</div>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
+            <div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: "#111827" }}>
+                위치 {candidateLabelMap.get(selectedCandidate.grid_id) ?? "-"} · {selectedCandidate.grid_id}
+              </div>
+              <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>{buildCandidateSummary(selectedCandidate as ScoredCandidate)}</div>
+            </div>
+            <span style={{ padding: "4px 10px", borderRadius: 999, background: `${getBarrierColor(selectedCandidate)}18`, color: getBarrierColor(selectedCandidate), fontSize: 12, fontWeight: 800 }}>
+              {getBarrierLabel(selectedCandidate)}
+            </span>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 12 }}>
+            <div style={{ padding: "10px 12px", borderRadius: 12, background: "#f8fafc" }}>인근 거주 2029 <b>{formatCount(selectedCandidate.resident_children_2029)}명</b></div>
+            <div style={{ padding: "10px 12px", borderRadius: 12, background: "#f8fafc" }}>인근 거주 2031 <b>{formatCount(selectedCandidate.resident_children_2031)}명</b></div>
+            <div style={{ padding: "10px 12px", borderRadius: 12, background: "#f8fafc" }}>잠재수요 2029 <b>{formatCount(selectedCandidate.walkshed_potential_2029)}명</b></div>
+            <div style={{ padding: "10px 12px", borderRadius: 12, background: "#f8fafc" }}>잠재수요 2031 <b>{formatCount(selectedCandidate.walkshed_potential_2031)}명</b></div>
+            <div style={{ padding: "10px 12px", borderRadius: 12, background: "#f8fafc" }}>{getCandidateDistanceLabel(selectedCandidate)} <b>{formatDistance(selectedCandidate.nearest_school_dist)}</b></div>
+            <div style={{ padding: "10px 12px", borderRadius: 12, background: "#f8fafc" }}>기존 공원 거리 <b>{formatDistance(selectedCandidate.nearest_park_dist)}</b></div>
+          </div>
+          <div style={{ marginBottom: 12, fontSize: 13, fontWeight: 700, color: getBarrierColor(selectedCandidate) }}>{getBarrierCountSummary(selectedCandidate)}</div>
+          {"final_score" in selectedCandidate ? (
+            <div style={{ marginBottom: 12, padding: "12px 14px", borderRadius: 12, background: "#f8fafc" }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", marginBottom: 6 }}>이 후보가 높은 이유</div>
+              <div style={{ display: "grid", gap: 6, fontSize: 13, color: "#4b5563" }}>
+                {buildCandidateReasons(selectedCandidate as ScoredCandidate).map((reason, index) => (
+                  <div key={reason}>{index + 1}. {reason}</div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+          <div style={{ display: "grid", gap: 8, fontSize: 13, color: "#4b5563", lineHeight: 1.7 }}>
+            <div>{getBarrierNote(selectedCandidate)}</div>
+            {selectedCandidate.accident_hotspot_text ? <div>{selectedCandidate.accident_hotspot_text}</div> : null}
+            {selectedCandidate.redev_warning_text ? <div>{selectedCandidate.redev_warning_text}</div> : null}
+          </div>
+          {internalCandidate ? (
+            <div style={{ marginTop: 14, padding: "12px 14px", borderRadius: 14, background: "#eff6ff", color: "#1e3a8a", fontSize: 13, lineHeight: 1.7 }}>
+              교내 설치 대안도 유지됩니다. 필요하면 지도에서 `교내` 마커를 선택해 수혜 규모를 함께 비교할 수 있습니다.
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }
