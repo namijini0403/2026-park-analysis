@@ -1300,7 +1300,7 @@
           secondary_option: linkedSchoolCount > 1 ? "연결 학교 공동 수요 검토" : null
         },
         explanation: {
-          recommendation_reason_summary: `2029 잠재수혜인원 예측 ${predicted2029.toLocaleString("ko-KR")}명, 2031 잠재수혜인원 예측 ${predicted2031.toLocaleString("ko-KR")}명 기준 후보지입니다.`,
+          recommendation_reason_summary: `2029 잠재수혜인원 예측 ${Math.round(predicted2029).toLocaleString("ko-KR")}명, 2031 잠재수혜인원 예측 ${Math.round(predicted2031).toLocaleString("ko-KR")}명 기준 후보지입니다.`,
           explanation_tags: [
             `최악 case ${properties.worst_case_type || "-"}`,
             `평균 녹지 ${Number(properties.avg_green_ratio ?? 0).toFixed(1)}%`,
@@ -2960,14 +2960,14 @@
     function formatCandidateValue(value, suffix = "") {
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) return suffix ? `정보 없음` : "정보 없음";
-      const rounded = Math.abs(numeric % 1) > 0 ? numeric.toFixed(1) : Math.round(numeric).toLocaleString("ko-KR");
+      const rounded = Math.round(numeric).toLocaleString("ko-KR");
       return `${rounded}${suffix}`;
     }
 
     function formatCandidatePotentialDemand(value) {
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) return "추정값 없음";
-      return Math.abs(numeric % 1) > 0 ? numeric.toFixed(1) : Math.round(numeric).toLocaleString("ko-KR");
+      return Math.round(numeric).toLocaleString("ko-KR");
     }
 
     function getCandidateSecondaryOptionDisplayValue(secondaryOption) {

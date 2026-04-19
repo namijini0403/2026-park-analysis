@@ -141,6 +141,10 @@ function minmax(arr: number[]): number[] {
   return arr.map((v) => (v - mn) / (mx - mn));
 }
 
+function formatRoundedCount(value: number): string {
+  return Math.round(value).toLocaleString("ko-KR");
+}
+
 function computeAiScores(candidates: Candidate[]): Candidate[] {
   if (candidates.length === 0) return [];
   const internal = candidates.filter((c) => c.is_school_internal);
@@ -538,10 +542,10 @@ export default function SimulationPage({
                 </div>
                 <div style={{ display: "flex", gap: 14, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
                   <span>
-                    👤 2029 예상 학생수 <b>{internalCandidate.xgb_predicted_2029.toLocaleString()}명</b>
+                    👤 2029 예상 학생수 <b>{formatRoundedCount(internalCandidate.xgb_predicted_2029)}명</b>
                   </span>
                   <span>
-                    👤 2031 예상 학생수 <b>{internalCandidate.xgb_predicted_2031.toLocaleString()}명</b>
+                    👤 2031 예상 학생수 <b>{formatRoundedCount(internalCandidate.xgb_predicted_2031)}명</b>
                   </span>
                   <span>📍 학교 부지 내</span>
                   <span>🛝 놀이터·체육시설 신설</span>
@@ -650,10 +654,10 @@ export default function SimulationPage({
                     </div>
                     <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#555", flexWrap: "wrap" }}>
                       <span>
-                        👤 2029 <b>{c.xgb_predicted_2029.toLocaleString()}명</b>
+                        👤 2029 <b>{formatRoundedCount(c.xgb_predicted_2029)}명</b>
                       </span>
                       <span>
-                        👤 2031 <b>{c.xgb_predicted_2031.toLocaleString()}명</b>
+                        👤 2031 <b>{formatRoundedCount(c.xgb_predicted_2031)}명</b>
                       </span>
                       <span>
                         {getCandidateDistanceLabel(c)} <b>{c.nearest_school_dist.toLocaleString()}m</b>
@@ -712,14 +716,14 @@ export default function SimulationPage({
             <div>
               <div style={{ fontSize: 13, color: "#aaa" }}>2029 예상 수혜인원</div>
               <div style={{ fontSize: 36, fontWeight: 800 }}>
-                {totalDemand2029.toLocaleString()}
+                {formatRoundedCount(totalDemand2029)}
                 <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
               </div>
             </div>
             <div>
               <div style={{ fontSize: 13, color: "#aaa" }}>2031 예상 수혜인원</div>
               <div style={{ fontSize: 36, fontWeight: 800 }}>
-                {totalDemand2031.toLocaleString()}
+                {formatRoundedCount(totalDemand2031)}
                 <span style={{ fontSize: 16, marginLeft: 4 }}>명</span>
               </div>
             </div>
@@ -739,7 +743,7 @@ export default function SimulationPage({
                 width={40}
                 tick={{ fill: "#aaa", fontSize: 12 }}
               />
-              <Tooltip formatter={(v: number) => [`${v.toLocaleString()}명`]} />
+              <Tooltip formatter={(v: number) => [`${formatRoundedCount(v)}명`]} />
               <Bar dataKey="value" fill="#4ecdc4" radius={4} />
             </BarChart>
           </ResponsiveContainer>
