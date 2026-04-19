@@ -230,22 +230,112 @@ def describe_recent_change_pct(value: float) -> str:
     return "최근 1년 학생 수 변동"
 
 
-def common_point_text(feature: str, row: pd.Series) -> str:
+def format_signed_number(value: float, digits: int = 1) -> str:
+    return f"{value:+.{digits}f}"
+
+
+def format_signed_percent(value: float, digits: int = 1) -> str:
+    return f"{value * 100:+.{digits}f}%"
+
+
+def format_range_text(min_value: float, max_value: float, digits: int = 0, suffix: str = "") -> str:
+    if digits == 0:
+        left = f"{int(round(min_value)):,}"
+        right = f"{int(round(max_value)):,}"
+    else:
+        left = f"{min_value:.{digits}f}"
+        right = f"{max_value:.{digits}f}"
+    return f"{left}~{right}{suffix}"
+
+
+def current_students_common_text(row: pd.Series, peers: pd.DataFrame, peer_mean: pd.Series) -> str:
+    current = float(row["current_students_2025"])
+    peer_min = float(peers["current_students_2025"].min())
+    peer_max = float(peers["current_students_2025"].max())
+    peer_avg = float(peer_mean["current_students_2025"])
+    return (
+        f"현재 학생수는 {int(round(current)):,}명으로, "
+        f"KNN 비교군 {format_range_text(peer_min, peer_max, 0, '명')} 범위에 가깝습니다"
+        f" (평균 {int(round(peer_avg)):,}명)."
+    )
+
+
+def student_slope_common_text(row: pd.Series, peer_mean: pd.Series) -> str:
+    slope = float(row["student_slope"])
+    peer_avg = float(peer_mean["student_slope"])
+    flow_text = describe_student_slope(slope)
+    return (
+        f"학생수 추세는 연간 {format_signed_number(slope, 1)}명 수준으로, "
+        f"KNN 비교군 평균 {format_signed_number(peer_avg, 1)}명과 비슷한 {flow_text}입니다."
+    )
+
+
+def recent_change_common_text(row: pd.Series, peers: pd.DataFrame, peer_mean: pd.Series) -> str:
+    current = float(row["recent_student_change_pct"])
+    peer_min = float(peers["recent_student_change_pct"].min())
+    peer_max = float(peers["recent_student_change_pct"].max())
+    peer_avg = float(peer_mean["recent_student_change_pct"])
+    return (
+        f"최근 1년 학생수 증감률은 {format_signed_percent(current, 1)}로, "
+        f"KNN 비교군 {format_range_text(peer_min * 100, peer_max * 100, 1, '%')} 범위와 유사합니다"
+        f" (평균 {format_signed_percent(peer_avg, 1)})."
+    )
+
+
+def child_total_common_text(row: pd.Series, peers: pd.DataFrame, peer_mean: pd.Series) -> str:
+    current = float(row["iso_child_total"])
+    peer_min = float(peers["iso_child_total"].min())
+    peer_max = float(peers["iso_child_total"].max())
+    peer_avg = float(peer_mean["iso_child_total"])
+    return (
+        f"학교 주변 아동 규모는 {int(round(current)):,}명으로, "
+        f"KNN 비교군 {format_range_text(peer_min, peer_max, 0, '명')} 범위와 비슷합니다"
+        f" (평균 {int(round(peer_avg)):,}명)."
+    )
+
+
+def large_apt_common_text(row: pd.Series, peers: pd.DataFrame) -> str:
+    current_count = int(round(float(row["large_apt_count_500m"])))
+    peer_min = float(peers["large_apt_count_500m"].min())
+    peer_max = float(peers["large_apt_count_500m"].max())
+    household_avg = float(peers["large_apt_households_500m"].mean())
+    return (
+        f"500m 안 대단지 아파트는 {current_count}개로, "
+        f"KNN 비교군도 {format_range_text(peer_min, peer_max, 0, '개')} 범위에 몰려 있습니다"
+        f" (세대수 평균 {int(round(household_avg)):,}세대)."
+    )
+
+
+def redev_common_text(row: pd.Series, peers: pd.DataFrame) -> str:
+    same_status_share = float((peers["redev_status_simple"] == row["redev_status_simple"]).mean()) * 100
+    return (
+        f"재개발 상태는 '{row['redev_status_simple']}'이며, "
+        f"KNN 비교군의 {same_status_share:.0f}%도 같은 단계입니다."
+    )
+
+
+def new_school_common_text(row: pd.Series, peers: pd.DataFrame) -> str:
+    same_flag_share = float((peers["is_new_school"] == row["is_new_school"]).mean()) * 100
+    status = "신설학교" if int(row["is_new_school"]) == 1 else "기존학교"
+    return f"학교 유형은 {status}이며, KNN 비교군의 {same_flag_share:.0f}%도 같은 유형입니다."
+
+
+def common_point_text(feature: str, row: pd.Series, peers: pd.DataFrame, peer_mean: pd.Series) -> str:
     if feature == "current_students_2025":
-        return "유사학교와 현재 학생 규모가 비슷합니다"
+        return current_students_common_text(row, peers, peer_mean)
     if feature == "student_slope":
-        return f"유사학교와 {describe_student_slope(float(row[feature]))}이 비슷합니다"
+        return student_slope_common_text(row, peer_mean)
     if feature == "recent_student_change_pct":
-        return f"유사학교와 {describe_recent_change_pct(float(row[feature]))}이 비슷합니다"
+        return recent_change_common_text(row, peers, peer_mean)
     if feature == "iso_child_total":
-        return "유사학교와 학교 주변 아동 규모가 비슷합니다"
+        return child_total_common_text(row, peers, peer_mean)
     if feature == "large_apt_count_500m":
-        return "유사학교와 500m 안 대단지 아파트 개수가 비슷합니다"
+        return large_apt_common_text(row, peers)
     if feature == "redev_status_simple":
-        return f"유사학교와 재개발 상태가 비슷합니다 ({row['redev_status_simple']})"
+        return redev_common_text(row, peers)
     if feature == "is_new_school":
-        return "유사학교와 신설학교 여부가 비슷합니다"
-    return f"유사학교와 {FEATURE_LABELS[feature]}이 비슷합니다"
+        return new_school_common_text(row, peers)
+    return f"KNN 비교군과 {FEATURE_LABELS[feature]}이 비슷합니다."
 
 
 def comparison_text(feature: str, diff: float) -> str:
@@ -264,8 +354,9 @@ def comparison_text(feature: str, diff: float) -> str:
     return f"유사학교 평균보다 {FEATURE_LABELS[feature]} 차이가 있습니다"
 
 
-def build_common_points(row: pd.Series, peer_mean: pd.Series, peer_std: pd.Series) -> str:
-    ranked: list[tuple[float, str]] = []
+def build_common_points(row: pd.Series, peers: pd.DataFrame, peer_mean: pd.Series, peer_std: pd.Series) -> str:
+    numeric_ranked: list[tuple[float, str]] = []
+    categorical_ranked: list[tuple[float, str]] = []
     for feature in CONTEXT_FEATURES:
         if feature == "redev_status_simple":
             row_vector = np.array(
@@ -283,19 +374,25 @@ def build_common_points(row: pd.Series, peer_mean: pd.Series, peer_std: pd.Serie
                     float(peer_mean["redev_planned_flag"]),
                 ],
                 dtype=float,
-            )
+              )
             score = float(np.abs(row_vector - peer_vector).sum())
+            categorical_ranked.append((score, common_point_text(feature, row, peers, peer_mean)))
         elif feature == "is_new_school":
             score = abs(int(row[feature]) - int(round(float(peer_mean[feature]))))
+            categorical_ranked.append((score, common_point_text(feature, row, peers, peer_mean)))
         else:
             diff = abs(float(row[feature]) - float(peer_mean[feature]))
             denom = float(peer_std.get(feature, 0.0))
             score = diff / denom if denom > 0 else diff
-        ranked.append((score, common_point_text(feature, row)))
+            numeric_ranked.append((score, common_point_text(feature, row, peers, peer_mean)))
 
-    ranked.sort(key=lambda item: item[0])
+    numeric_ranked.sort(key=lambda item: item[0])
+    categorical_ranked.sort(key=lambda item: item[0])
     texts: list[str] = []
-    for _, text in ranked:
+    for _, text in numeric_ranked[:2]:
+        if text not in texts:
+            texts.append(text)
+    for _, text in categorical_ranked[:1]:
         if text not in texts:
             texts.append(text)
         if len(texts) == 3:
@@ -403,7 +500,7 @@ def process_group(group: pd.DataFrame, bundle_label: str) -> list[dict[str, obje
             "student_slope": round(float(school["student_slope"]), 3),
             "recent_student_change_pct": round(float(school["recent_student_change_pct"]), 4),
             "trend_volatility": round(float(school["trend_volatility"]), 3),
-            "common_points": build_common_points(school, peer_mean, peer_std.fillna(0)),
+            "common_points": build_common_points(school, peers, peer_mean, peer_std.fillna(0)),
             "relative_strengths": strengths,
             "relative_weaknesses": weaknesses,
             "peer_avg_nearest_park_dist_m": round(float(peer_mean["nearest_park_dist_m"]), 1),
