@@ -145,6 +145,23 @@ function getCaseLabels(caseType: number): { policy: string; status: string } {
   return CASE_LABELS[key] ?? CASE_LABELS[1];
 }
 
+function buildCaseStatusLabel(row: RawRow, cityAvgGreenRatio = CITY_AVG.greenRatio): string {
+  if (isSpecialPolicySchool(row)) return CASE_LABELS[99].status;
+
+  const nearestParkDistanceM = n(row.nearest_park_dist_m, 9999);
+  const greenRatio = n(row.iso_green_ratio);
+  const playgroundCount = n(row.iso_playground_count);
+  const hasParkWithin500m = n(row.iso_park_count) > 0 && nearestParkDistanceM < 500;
+  const strongGreenThreshold = Math.max(4, cityAvgGreenRatio * 0.7);
+
+  if (!hasParkWithin500m) return "공원 접근 불가";
+  if (greenRatio === 0) return "공원 접근 가능 · 녹지 없음";
+  if (greenRatio < 3) return "공원 접근 가능 · 녹지 부족";
+  if (playgroundCount === 0) return "공원 접근 가능 · 놀이환경 부족";
+  if (nearestParkDistanceM <= 300 && greenRatio >= strongGreenThreshold) return "공원 접근 양호";
+  return "공원 접근 가능 · 생활환경 보완 필요";
+}
+
 function getCaseType(row: RawRow, fallback = 1): number {
   if (isSpecialPolicySchool(row)) return 99;
   return n(row.case_type, fallback);
@@ -310,7 +327,7 @@ export function mapSchoolRowToReportProps(
   const districtName = gu ? `인천광역시 ${gu}` : "인천광역시";
 
   const caseType = getCaseType(row, 1);
-  const { policy: casePolicyLabel, status: caseStatusLabel } = getCaseLabels(caseType);
+  const { policy: casePolicyLabel } = getCaseLabels(caseType);
 
   const nearestParkDistanceM = n(row.nearest_park_dist_m);
   const manualBarrierOverride = getManualBarrierOverride(row);
@@ -320,6 +337,7 @@ export function mapSchoolRowToReportProps(
 
   const cityAvg = avgBlock(row, "_cityAvg");
   const districtAvg = avgBlock(row, "_districtAvg");
+  const caseStatusLabel = buildCaseStatusLabel(row, cityAvg?.greenRatio ?? CITY_AVG.greenRatio);
 
   const rawTrend = Array.isArray(row.studentTrend)
     ? (row.studentTrend as Array<{ year: number; students: number }>)
