@@ -23,6 +23,15 @@ type LargeApartmentComplex = {
   address?: string;
 };
 
+function readInitialView(): ViewMode {
+  if (typeof window === "undefined") return "report";
+  const view = new URLSearchParams(window.location.search).get("view");
+  if (view === "simulation" || view === "statistics" || view === "report") {
+    return view;
+  }
+  return "report";
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function readSchoolFromStorage(): Record<string, any> | null {
   try {
@@ -90,7 +99,7 @@ function getPreviewCaseType(schoolRow: Record<string, any> | null): number {
 }
 
 export default function PreviewWorkspaceSafe() {
-  const [view, setView] = useState<ViewMode>("report");
+  const [view, setView] = useState<ViewMode>(() => readInitialView());
 
   // localStorage에서 학교 데이터 읽기 (없으면 석암초 fallback)
   const schoolRow = useMemo(() => readSchoolFromStorage(), []);

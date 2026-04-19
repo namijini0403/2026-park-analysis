@@ -66,6 +66,7 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
       overflow: hidden;
+      display: none;
     }
 
     .panel-header {
@@ -108,7 +109,7 @@
       top: 18px;
       left: 18px;
       z-index: 26;
-      width: min(320px, calc(100vw - var(--sidebar-width) - 54px));
+      width: min(320px, calc(100vw - 188px));
       padding: 10px 12px;
       border-radius: 18px;
       background: rgba(255, 251, 243, 0.94);
@@ -647,7 +648,7 @@
     .layer-toggle-bar {
       position: absolute;
       left: 18px;
-      right: calc(var(--sidebar-width) + var(--sidebar-gap) + 18px);
+      right: 18px;
       bottom: 18px;
       z-index: 25;
       display: flex;
@@ -661,7 +662,51 @@
       border: 1px solid rgba(110, 89, 51, 0.14);
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
-      max-width: calc(100vw - var(--sidebar-width) - var(--sidebar-gap) - 36px);
+      max-width: calc(100vw - 36px);
+    }
+
+    .top-action-stack {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 28;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+      width: min(160px, calc(100vw - 36px));
+    }
+
+    .top-action-button {
+      min-height: 44px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(99, 78, 40, 0.16);
+      background: rgba(255, 251, 243, 0.96);
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .top-action-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(20, 83, 45, 0.28);
+      background: #fffdfa;
+    }
+
+    .top-action-button.primary {
+      background: #1f5136;
+      color: #ffffff;
+      border-color: rgba(31, 81, 54, 0.42);
+    }
+
+    .top-action-button.secondary {
+      background: rgba(255, 251, 243, 0.96);
     }
 
     .layer-toggle-btn {
@@ -803,7 +848,20 @@
       .map-search-box {
         top: 12px;
         left: 12px;
-        width: calc(100vw - 24px);
+        width: calc(100vw - 138px);
+      }
+
+      .top-action-stack {
+        top: 12px;
+        right: 12px;
+        width: 114px;
+        gap: 8px;
+      }
+
+      .top-action-button {
+        min-height: 40px;
+        padding: 9px 10px;
+        font-size: 13px;
       }
 
       .layer-toggle-btn {
@@ -827,6 +885,11 @@
       <label class="map-search-label" for="schoolSearchInput">학교 검색</label>
       <input class="map-search-input" id="schoolSearchInput" type="search" list="schoolSearchList" placeholder="학교명을 입력하세요" autocomplete="off" />
       <datalist id="schoolSearchList"></datalist>
+    </div>
+
+    <div class="top-action-stack" aria-label="상단 바로가기">
+      <button class="top-action-button primary" id="statisticsShortcutButton" type="button">전체 통계</button>
+      <button class="top-action-button secondary" id="guideShortcutButton" type="button">사용설명서</button>
     </div>
 
     <button class="floating-button" id="panelToggleButton" type="button">필터 열기</button>
@@ -1163,6 +1226,8 @@
       schoolSearchList: document.getElementById("schoolSearchList"),
       panel: document.getElementById("controlPanel"),
       panelToggleButton: document.getElementById("panelToggleButton"),
+      statisticsShortcutButton: document.getElementById("statisticsShortcutButton"),
+      guideShortcutButton: document.getElementById("guideShortcutButton"),
       layerToggleBar: document.getElementById("layerToggleBar"),
       toggles: {
         isochrone: document.getElementById("toggleIsochrone"),
@@ -2779,9 +2844,17 @@
         }
       });
 
-      ui.panelToggleButton.addEventListener("click", () => {
+      ui.panelToggleButton?.addEventListener("click", () => {
         ui.panel.classList.toggle("open");
         ui.panelToggleButton.textContent = ui.panel.classList.contains("open") ? "필터 닫기" : "필터 열기";
+      });
+
+      ui.statisticsShortcutButton?.addEventListener("click", () => {
+        openPreviewOverlay("statistics");
+      });
+
+      ui.guideShortcutButton?.addEventListener("click", () => {
+        window.alert("사용설명서는 곧 추가될 예정입니다.");
       });
 
       kakao.maps.event.addListener(state.map, "zoom_changed", () => {
@@ -3723,10 +3796,18 @@
     init();
 
     /* ── 시뮬레이션 오버레이 ──────────────────────────── */
-    function openSimulationOverlay() {
+    function openPreviewOverlay(initialView = "report") {
       document.getElementById("simulationOverlay").style.display = "flex";
       const frame = document.getElementById("simulationFrame");
-      frame.src = "ui-preview/dist/index.html?t=" + Date.now();
+      frame.src = "ui-preview/dist/index.html?view=" + encodeURIComponent(initialView) + "&t=" + Date.now();
+    }
+
+    function openSimulationOverlay() {
+      openPreviewOverlay("report");
+    }
+
+    function openStatisticsOverlay() {
+      openPreviewOverlay("statistics");
     }
     function closeSimulationOverlay() {
       document.getElementById("simulationOverlay").style.display = "none";

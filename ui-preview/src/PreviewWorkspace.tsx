@@ -7,8 +7,17 @@ import { cityStatisticsPreviewData } from "./statisticsPreviewData";
 
 type ViewMode = "report" | "simulation" | "statistics";
 
+function readInitialView(): ViewMode {
+  if (typeof window === "undefined") return "report";
+  const view = new URLSearchParams(window.location.search).get("view");
+  if (view === "simulation" || view === "statistics" || view === "report") {
+    return view;
+  }
+  return "report";
+}
+
 export default function PreviewWorkspace() {
-  const [view, setView] = useState<ViewMode>("report");
+  const [view, setView] = useState<ViewMode>(() => readInitialView());
 
   const mockCandidates = useMemo(
     () => [
