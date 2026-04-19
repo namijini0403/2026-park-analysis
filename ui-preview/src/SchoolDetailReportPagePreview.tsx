@@ -989,9 +989,6 @@ function SimilarSchoolsSection({
   const avgSimilarPlayground =
     similarityPeerAvgPlaygroundCount ??
     similarPoints.reduce((sum, point) => sum + point.playgroundCount, 0) / similarPoints.length;
-  const commonPointLines = similarityCommonPoints
-    ? similarityCommonPoints.split("|").map((item) => item.trim()).filter(Boolean)
-    : [];
   const strengthLines = similarityStrengthsText
     ? similarityStrengthsText.split("|").map((item) => item.trim()).filter(Boolean)
     : [];
@@ -1077,12 +1074,6 @@ function SimilarSchoolsSection({
           <Card className="p-5">
             <p className="text-sm font-medium text-slate-500">KNN 비교군 해석</p>
             <div className="mt-4 space-y-3">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">공통 맥락</p>
-                <div className="mt-2 space-y-2 text-sm text-slate-700">
-                  {(commonPointLines.length ? commonPointLines : ["환경 맥락이 비슷한 학교들끼리 비교했습니다."]).map((line) => <p key={line}>{line}</p>)}
-                </div>
-              </div>
               <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">상대 우위</p>
                 <div className="mt-2 space-y-2 text-sm text-emerald-900">

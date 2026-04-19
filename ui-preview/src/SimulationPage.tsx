@@ -270,6 +270,42 @@ function scoreCandidates(candidates: Candidate[], weights: WeightState): ScoredC
     .sort((left, right) => right.final_score - left.final_score);
 }
 
+function computeAiRecommendations(candidates: Candidate[]): ScoredCandidate[] {
+  if (candidates.length === 0) return [];
+
+  const demandScores = minmaxScore(candidates.map((candidate) => candidate.walkshed_potential_2029));
+  const schoolDistanceScores = minmaxScore(candidates.map((candidate) => candidate.nearest_school_dist), true);
+  const parkGapScores = minmaxScore(candidates.map((candidate) => candidate.nearest_park_dist));
+
+  const playgroundDistances = candidates.map((candidate) => candidate.nearest_pg_dist).sort((left, right) => left - right);
+  const playgroundCap =
+    playgroundDistances[Math.floor(playgroundDistances.length * 0.95)] ??
+    playgroundDistances[playgroundDistances.length - 1] ??
+    0;
+  const playgroundGapScores = minmaxScore(
+    candidates.map((candidate) => Math.min(candidate.nearest_pg_dist, playgroundCap)),
+  );
+
+  return candidates
+    .map((candidate, index) => {
+      const finalScore =
+        demandScores[index] * 0.35 +
+        schoolDistanceScores[index] * 0.3 +
+        parkGapScores[index] * 0.25 +
+        playgroundGapScores[index] * 0.1;
+
+      return {
+        ...candidate,
+        benefit_score: demandScores[index],
+        school_distance_score: schoolDistanceScores[index],
+        facility_gap_score: parkGapScores[index],
+        final_score: finalScore,
+        ai_score: finalScore,
+      };
+    })
+    .sort((left, right) => right.final_score - left.final_score);
+}
+
 function getCandidateDistanceLabel(candidate: Candidate): string {
   if (candidate.fallback_candidate && candidate.fallback_distance_basis === "straight_line_m") {
     return "학교 직선거리(참고)";
@@ -321,6 +357,10 @@ export default function SimulationPage({
   const rankedCandidates = useMemo(
     () => scoreCandidates(filteredCandidates, weights),
     [filteredCandidates, weights],
+  );
+  const aiRecommendations = useMemo(
+    () => computeAiRecommendations(filteredCandidates).slice(0, 3),
+    [filteredCandidates],
   );
 
   const normalizedWeights = useMemo(() => normalizeWeights(weights), [weights]);
@@ -476,6 +516,109 @@ export default function SimulationPage({
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 420px) minmax(0, 1fr)", gap: 22, alignItems: "start" }}>
         <div>
+          <div
+            style={{
+              padding: 18,
+              borderRadius: 18,
+              background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
+              border: "1px solid #bfdbfe",
+              marginBottom: 16,
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 10, flexWrap: "wrap" }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8", marginBottom: 4 }}>AI 추천</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: "#111827" }}>
+                  현재 제외 조건을 통과한 후보 중 AI가 참고용 우선순위를 먼저 제안합니다
+                </div>
+              </div>
+              <span
+                style={{
+                  padding: "5px 10px",
+                  borderRadius: 999,
+                  background: "#dbeafe",
+                  color: "#1d4ed8",
+                  fontSize: 12,
+                  fontWeight: 800,
+                }}
+              >
+                참고용 자동 추천
+              </span>
+            </div>
+            <div style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
+              잠재수혜학생수, 학교 접근성, 기존 공원과 놀이터 공백을 함께 본 기초 추천입니다.
+              최종 우선순위는 아래 필터와 슬라이더에서 직접 조정할 수 있습니다.
+            </div>
+            {aiRecommendations.length > 0 ? (
+              <div style={{ display: "grid", gap: 10 }}>
+                {aiRecommendations.map((candidate, index) => {
+                  const badge = rankBadgeStyle(index);
+                  const barrierColor = getBarrierColor(candidate);
+                  return (
+                    <div
+                      key={`ai-${candidate.grid_id}`}
+                      onClick={() => toggleSelect(candidate.grid_id)}
+                      style={{
+                        borderRadius: 14,
+                        border: "1px solid #dbeafe",
+                        background: "#ffffff",
+                        padding: "12px 14px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 6 }}>
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            borderRadius: 999,
+                            background: badge.bg,
+                            color: badge.color,
+                            fontSize: 11,
+                            fontWeight: 800,
+                          }}
+                        >
+                          AI 추천 {index + 1}
+                        </span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>{candidate.grid_id}</span>
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            borderRadius: 999,
+                            background: `${barrierColor}18`,
+                            color: barrierColor,
+                            fontSize: 11,
+                            fontWeight: 800,
+                          }}
+                        >
+                          {getBarrierLabel(candidate)}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.7 }}>
+                        잠재수혜학생수 <b>{formatCount(candidate.walkshed_potential_2029)}명</b> ·
+                        학교 거리 <b>{formatDistance(candidate.nearest_school_dist)}</b> ·
+                        기존 공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div
+                style={{
+                  border: "1px dashed #bfdbfe",
+                  borderRadius: 14,
+                  padding: "14px 16px",
+                  background: "#f8fbff",
+                  fontSize: 13,
+                  color: "#4b5563",
+                  lineHeight: 1.7,
+                }}
+              >
+                현재 제외 조건을 통과한 외부 후보가 없어 AI 추천을 표시할 수 없습니다.
+              </div>
+            )}
+          </div>
+
           <div
             style={{
               padding: 18,
