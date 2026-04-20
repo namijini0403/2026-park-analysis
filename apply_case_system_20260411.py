@@ -6,6 +6,7 @@ from pathlib import Path
 import geopandas as gpd
 import numpy as np
 import pandas as pd
+from shapely.geometry import Point
 from shapely.ops import unary_union
 
 
@@ -19,6 +20,13 @@ PARKS_PATH = DATA / "parks.csv"
 ISOCHRONE_PATH = DATA / "school_isochrone_500m.geojson"
 SEALED_PATH = OUTPUT / "sealed_nearest_park_dist.json"
 DIST_GREEN_MISMATCH_PATH = OUTPUT / "dist_green_mismatch.csv"
+RAW_SCHOOL_PATH = ROOT / "data_raw/전국초중등학교위치표준데이터.csv"
+
+# Valhalla 스냅 오프셋 흡수용 학교 좌표 버퍼 반경 (m).
+# 대부분 10~80m 오프셋이지만, 인접 공원(~200m)까지 포함하려면 250m 필요.
+SCHOOL_ISO_BUFFER_M = 250
+# 이 거리 이상 떨어진 학교는 도서/원격지로 판단 → 버퍼 보정 생략.
+ISLAND_THRESHOLD_M = 500
 
 SNAPSHOT_PRIORITY_BEFORE = DATA / "school_priority_20260411_before_case_system.csv"
 SNAPSHOT_NEAREST_BEFORE = DATA / "school_nearest_park_20260411_before_case_system.csv"
@@ -100,6 +108,65 @@ def build_park_gdf(df: pd.DataFrame) -> gpd.GeoDataFrame:
         crs="EPSG:4326",
     )
     return gdf
+
+
+def patch_isochrones_with_school_coord(
+    isochrone_wgs: gpd.GeoDataFrame,
+) -> gpd.GeoDataFrame:
+    """등시선이 학교 실제 좌표를 포함하지 않는 경우 보정.
+
+    Valhalla 라우팅 엔진이 학교 좌표를 가장 가까운 도로 노드로 스냅하면서
+    등시선 시작점이 실제 학교 위치와 어긋나는 문제를 해결한다.
+    (272개 학교 중 196개가 자기 등시선 밖에 있음이 확인됨)
+
+    보정 방식: 학교 좌표 기준 SCHOOL_ISO_BUFFER_M 원형 버퍼를 등시선에 union.
+    단, ISLAND_THRESHOLD_M 이상 벗어난 학교(도서·원격지)는 스킵.
+    """
+    CRS = "EPSG:5179"
+    try:
+        schools_raw = pd.read_csv(
+            RAW_SCHOOL_PATH,
+            encoding="cp949",
+            usecols=["학교ID", "위도", "경도"],
+        )
+    except Exception:
+        print("  [isochrone patch] 학교 원본 데이터 로드 실패 → 스킵")
+        return isochrone_wgs
+
+    coord_map: dict[str, tuple[float, float]] = {}
+    for _, row in schools_raw.iterrows():
+        try:
+            coord_map[str(row["학교ID"])] = (float(row["경도"]), float(row["위도"]))
+        except (ValueError, TypeError):
+            pass
+
+    iso_m = isochrone_wgs.to_crs(CRS).copy()
+    patched = 0
+    skipped_island = 0
+
+    for i, row in iso_m.iterrows():
+        sid = str(row["학교ID"])
+        if sid not in coord_map:
+            continue
+        lon, lat = coord_map[sid]
+        school_pt = Point(
+            *gpd.GeoSeries([Point(lon, lat)], crs="EPSG:4326").to_crs(CRS).iloc[0].coords[0]
+        )
+        iso_poly = row.geometry
+        if iso_poly is None or iso_poly.is_empty:
+            continue
+        if iso_poly.contains(school_pt):
+            continue
+        dist = school_pt.distance(iso_poly.boundary)
+        if dist >= ISLAND_THRESHOLD_M:
+            skipped_island += 1
+            continue
+        school_buf = school_pt.buffer(SCHOOL_ISO_BUFFER_M)
+        iso_m.at[i, "geometry"] = iso_poly.union(school_buf)
+        patched += 1
+
+    print(f"  [isochrone patch] 보정: {patched}개, 도서지역 스킵: {skipped_island}개")
+    return iso_m.to_crs("EPSG:4326")
 
 
 def summarize_points_within(
@@ -315,6 +382,9 @@ def main() -> None:
     playground_gdf = build_park_gdf(playgrounds)
     isochrone = isochrone.to_crs("EPSG:4326")
 
+    # 학교 좌표가 자기 등시선 밖에 있는 경우 보정 (Valhalla 스냅 오프셋 흡수)
+    isochrone = patch_isochrones_with_school_coord(isochrone)
+
     iso_public = summarize_points_within(public_gdf, isochrone, "iso_park_count_raw", use_area_buffer=True)
     iso_public_area = summarize_equivalent_circle_area_within(
         public_gdf,
@@ -351,6 +421,43 @@ def main() -> None:
 
     school_priority["iso_park_count"] = school_priority["iso_park_count_raw"]
     school_priority["iso_park_area"] = school_priority["iso_park_area_raw"]
+
+    # Fallback: iso_park_area=0 인데 accessible park이 문서화된 경우 보정.
+    # 등시선 오프셋으로 인해 카운트는 됐으나 교차 면적이 0으로 잡힌 경우를 복구.
+    park_area_by_name = (
+        public_parks.drop_duplicates("공원명")
+        .set_index("공원명")["공원면적"]
+    )
+    snp_area = school_nearest[["학교ID", "nearest_park_name"]].copy()
+    snp_area["nearest_park_area"] = snp_area["nearest_park_name"].map(park_area_by_name)
+
+    area_zero_mask = (
+        (school_priority["iso_park_area"] == 0.0)
+        & (school_priority["nearest_park_dist_m"] < 500)
+        & (school_priority["is_separate_bundle_tag"] == 0)
+    )
+    fallback_needed = school_priority.loc[area_zero_mask, ["학교ID", "isochrone_area_m2"]].merge(
+        snp_area, on="학교ID", how="left"
+    )
+    for _, fb_row in fallback_needed.iterrows():
+        park_area = fb_row.get("nearest_park_area", 0.0)
+        if pd.isna(park_area) or park_area <= 0:
+            continue
+        sid = fb_row["학교ID"]
+        iso_area = fb_row["isochrone_area_m2"]
+        safe_area = min(float(park_area), float(iso_area)) if iso_area > 0 else float(park_area)
+        mask = school_priority["학교ID"] == sid
+        school_priority.loc[mask, "iso_park_area"] = safe_area
+        school_priority.loc[mask, "iso_park_area_raw"] = safe_area
+        if school_priority.loc[mask, "iso_park_count"].iloc[0] < 1:
+            school_priority.loc[mask, "iso_park_count"] = 1
+            school_priority.loc[mask, "iso_park_count_raw"] = 1
+
+    n_fb = area_zero_mask.sum()
+    n_recovered = (
+        school_priority.loc[area_zero_mask.index[area_zero_mask], "iso_park_area"] > 0
+    ).sum()
+    print(f"  [fallback] 면적 0 케이스: {n_fb}개 → {n_recovered}개 복구")
 
     # Manual nearest values under 500m confirm at least one accessible park.
     manual_series = school_priority["학교ID"].map(sealed)
