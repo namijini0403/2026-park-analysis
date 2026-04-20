@@ -4,6 +4,12 @@
 로그:        data_processed/school_exclusion_log.csv
 
 단독 실행 또는 build_mixed_demand_model.py Step I에서 임포트해 호출됨.
+
+배제 전략:
+  A. OSM 폴리곤 직접 사용 (기관 매칭 없이 모든 OSM 학교 폴리곤을 배제 영역으로)
+     - amenity=school → +10m 버퍼
+     - amenity=university/college → +15m 버퍼
+  B. OSM 미커버 기관은 기관 데이터의 point 좌표 + 반경으로 fallback
 """
 
 from __future__ import annotations
@@ -31,8 +37,8 @@ DEFAULT_OUTPUT = BASE / "data_processed/candidate_grid_final.geojson"
 LOG_PATH = BASE / "data_processed/school_exclusion_log.csv"
 OSM_CACHE = BASE / "data_processed/osm_school_polygons_incheon.geojson"
 PROJ = "EPSG:5179"
-SEARCH_POLY_M = 200
-SEARCH_POINT_M = 150
+SEARCH_POLY_M = 300   # polygon 탐색 반경
+SEARCH_POINT_M = 150  # point fallback 탐색 반경
 
 
 def _load_config() -> dict[str, Any]:
@@ -55,8 +61,7 @@ def _is_large_university(name: str, large_list: list[str]) -> bool:
 
 
 def _load_school_data() -> gpd.GeoDataFrame:
-    cfg = _load_config()
-
+    """기관 point 데이터 (point-radius fallback용)"""
     kem = pd.read_csv(
         BASE / "data_raw/전국초중등학교위치표준데이터.csv",
         encoding="cp949",
@@ -81,7 +86,6 @@ def _load_school_data() -> gpd.GeoDataFrame:
         ],
         ignore_index=True,
     ).dropna(subset=["위도", "경도"])
-
     all_df["lat"] = all_df["위도"].astype(float)
     all_df["lon"] = all_df["경도"].astype(float)
 
@@ -90,11 +94,12 @@ def _load_school_data() -> gpd.GeoDataFrame:
         geometry=gpd.points_from_xy(all_df["lon"], all_df["lat"]),
         crs="EPSG:4326",
     )
-    print(f"  초중등(인천): {len(kem_inc)}개 / 대학(인천): {len(uni_inc)}개 → 통합: {len(gdf)}개")
+    print(f"  기관 데이터(인천): {len(gdf)}개 (초중등 {len(kem_inc)} + 대학 {len(uni_inc)})")
     return gdf
 
 
 def _load_osm_polygons() -> gpd.GeoDataFrame:
+    """OSM 학교 폴리곤 (직접 배제 영역으로 사용)"""
     if OSM_CACHE.exists():
         poly = gpd.read_file(OSM_CACHE)
         print(f"  OSM 캐시 로드: {len(poly)}개 폴리곤")
@@ -109,42 +114,14 @@ def _load_osm_polygons() -> gpd.GeoDataFrame:
         print(f"  OSM 수집 완료: {len(poly)}개 폴리곤 (캐시 저장)")
         return poly
     except Exception as exc:
-        print(f"  OSM 수집 실패 ({exc}) → 폴리곤 없이 진행")
+        print(f"  OSM 수집 실패 ({exc}) → point fallback만 사용")
         return gpd.GeoDataFrame(columns=["name", "amenity", "geometry"], crs="EPSG:4326")
-
-
-def _match_polygons(
-    schools_proj: gpd.GeoDataFrame,
-    osm_proj: gpd.GeoDataFrame,
-) -> gpd.GeoDataFrame:
-    schools_proj = schools_proj.copy()
-    schools_proj["geometry_polygon"] = None
-
-    if len(osm_proj) == 0:
-        print("  폴리곤 없음 → point fallback만 사용")
-        return schools_proj
-
-    joined = gpd.sjoin(schools_proj, osm_proj[["geometry"]], how="left", predicate="within")
-
-    for i in schools_proj.index:
-        rows = joined.loc[[i]] if i in joined.index else pd.DataFrame()
-        if rows.empty:
-            continue
-        idx_right = rows["index_right"].dropna()
-        if idx_right.empty:
-            continue
-        poly_geom = osm_proj.loc[int(idx_right.iloc[0]), "geometry"]
-        schools_proj.at[i, "geometry_polygon"] = poly_geom
-
-    n = schools_proj["geometry_polygon"].notna().sum()
-    print(f"  폴리곤 매칭: {n}/{len(schools_proj)}개 기관에 폴리곤 연결")
-    return schools_proj
 
 
 def _judge_candidate(
     cand_pt: Point,
-    poly_schools: gpd.GeoDataFrame,
-    schools_proj: gpd.GeoDataFrame,
+    osm_proj: gpd.GeoDataFrame,         # 모든 OSM 폴리곤
+    schools_proj: gpd.GeoDataFrame,      # 기관 point (fallback)
     tree: KDTree,
     cfg: dict[str, Any],
 ) -> tuple[bool, str | None, str | None, str | None, float | None, bool, str | None]:
@@ -157,27 +134,33 @@ def _judge_candidate(
     large_radius = cfg["large_university_radius_m"]
     poly_buf_cfg = cfg["polygon_buffer_m"]
 
-    # A. 폴리곤 우선
-    if len(poly_schools) > 0:
-        nearby = list(poly_schools.sindex.query(
+    # ── A. OSM 폴리곤 직접 판정 ─────────────────────────────────────────────
+    if len(osm_proj) > 0:
+        nearby = list(osm_proj.sindex.query(
             cand_pt.buffer(SEARCH_POLY_M), predicate="intersects"
         ))
         for pi in nearby:
-            inst = poly_schools.iloc[pi]
-            poly = inst["poly_geom"]
+            row = osm_proj.iloc[pi]
+            poly = row.geometry
+            amenity = str(row.get("amenity", "school"))
+            inst_name = str(row.get("name", "")) or amenity
+
             buf_m = (
                 poly_buf_cfg["초등학교"]
-                if inst["inst_type"] in ("초등학교", "중학교", "고등학교")
+                if amenity == "school"
                 else poly_buf_cfg["university"]
             )
             poly_buf = poly.buffer(buf_m)
+
             if cand_pt.within(poly) or cand_pt.intersects(poly):
-                return (True, "inside_polygon", inst["inst_name"], inst["inst_type"], 0.0, True, None)
+                inst_type = "학교" if amenity == "school" else "대학/전문대"
+                return (True, "inside_polygon", inst_name, inst_type, 0.0, True, None)
             if cand_pt.within(poly_buf) or cand_pt.intersects(poly_buf):
                 dist = cand_pt.distance(poly.exterior)
-                return (True, "inside_polygon_buffer", inst["inst_name"], inst["inst_type"], dist, True, None)
+                inst_type = "학교" if amenity == "school" else "대학/전문대"
+                return (True, "inside_polygon_buffer", inst_name, inst_type, round(dist, 1), True, None)
 
-    # B. Point fallback
+    # ── B. Point fallback (OSM 미커버 기관) ─────────────────────────────────
     cx, cy = cand_pt.x, cand_pt.y
     nearby_idxs = tree.query_ball_point([cx, cy], r=SEARCH_POINT_M)
     for pi in nearby_idxs:
@@ -220,7 +203,7 @@ def apply_school_exclusion(
         배제 완료된 GeoDataFrame
     """
     in_path = Path(input_path) if input_path else DEFAULT_INPUT
-    out_path = Path(output_path) if output_path else (in_path if not input_path else Path(output_path or in_path))
+    out_path = Path(output_path) if output_path else in_path
 
     def log(msg: str) -> None:
         if verbose:
@@ -229,22 +212,17 @@ def apply_school_exclusion(
     cfg = _load_config()
 
     log("\n[Step I] 학교부지 배제 시작")
-    log("  학교 데이터 로드...")
+    log("  기관 데이터 로드...")
     schools_gdf = _load_school_data()
 
     log("  OSM 폴리곤 로드...")
     osm_poly = _load_osm_polygons()
 
-    log("  투영좌표 변환 및 폴리곤 매칭...")
+    log("  투영좌표 변환...")
     schools_proj = schools_gdf.to_crs(PROJ)
-    osm_proj = osm_poly.to_crs(PROJ) if len(osm_poly) > 0 else osm_poly
-    schools_proj = _match_polygons(schools_proj, osm_proj)
-
-    # polygon GeoDataFrame 분리
-    poly_schools = schools_proj[schools_proj["geometry_polygon"].notna()].copy()
-    poly_schools["poly_geom"] = poly_schools["geometry_polygon"]
-    poly_schools = poly_schools.set_geometry("poly_geom")
-    poly_schools.crs = PROJ
+    osm_proj = osm_poly.to_crs(PROJ) if len(osm_poly) > 0 else gpd.GeoDataFrame(
+        columns=["name", "amenity", "geometry"], crs=PROJ
+    )
 
     # KDTree (point fallback)
     coords = np.array([(g.x, g.y) for g in schools_proj.geometry])
@@ -266,7 +244,7 @@ def apply_school_exclusion(
         cand_pt = Point(cx, cy)
 
         excl, reason, iname, itype, dist, poly_used, rule = _judge_candidate(
-            cand_pt, poly_schools, schools_proj, tree, cfg
+            cand_pt, osm_proj, schools_proj, tree, cfg
         )
         excluded_flags.append(excl)
         log_rows.append({
@@ -285,12 +263,10 @@ def apply_school_exclusion(
 
     log(f"\n  배제: {n_excl}개 / 전체 {n_before}개 → 잔여 {n_before - n_excl}개")
 
-    # 로그 저장
     log_df = pd.DataFrame(log_rows)
     log_df.to_csv(LOG_PATH, index=False, encoding="utf-8-sig")
     log(f"  로그: {LOG_PATH.name}")
 
-    # 배제된 후보지 제거 후 저장
     grid_clean = grid[~grid["excluded_by_school"]].drop(columns=["excluded_by_school"]).copy()
     grid_clean.to_file(out_path, driver="GeoJSON")
     log(f"  저장: {out_path.name} ({len(grid_clean)}개)")
@@ -298,7 +274,8 @@ def apply_school_exclusion(
     if verbose and n_excl > 0:
         excl_df = log_df[log_df["excluded_by_school"]]
         log(f"\n  사유별: {dict(excl_df['exclude_reason'].value_counts())}")
-        log(f"  기관유형별: {dict(excl_df['matched_inst_type'].value_counts())}")
+        by_type = excl_df["matched_inst_type"].value_counts()
+        log(f"  기관유형별:\n{by_type.to_string()}")
 
     log("[Step I] 완료\n")
     return grid_clean
