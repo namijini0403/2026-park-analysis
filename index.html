@@ -1015,8 +1015,9 @@
     로컬 서버 실행 시 ?key=발급키 쿼리스트링으로 주입 가능
   -->
   <script>
+    const DEFAULT_KAKAO_MAP_KEY = "429ad574cd834de9ebdaee46f4478138";
     const urlKey = new URLSearchParams(window.location.search).get("key");
-    window.KAKAO_MAP_KEY = urlKey || "YOUR_KEY_HERE";
+    window.KAKAO_MAP_KEY = urlKey || DEFAULT_KAKAO_MAP_KEY;
 
     const PATHS = {
       schools: "./data_processed/school_priority.csv",
@@ -1569,24 +1570,90 @@
       openSchoolPanel(row);
     }
 
-    function loadCSV(path) {
-      return new Promise((resolve) => {
-        Papa.parse(path, {
-          download: true,
-          header: true,
-          skipEmptyLines: true,
-          complete: (results) => {
-            if (results.errors && results.errors.length) {
-              console.error(`[loadCSV] ${path}`, results.errors);
-            }
-            resolve(results.data || []);
-          },
-          error: (error) => {
-            console.error(`[loadCSV] ${path}`, error);
-            resolve([]);
+    function parseCSVText(text) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i += 1) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === "\"") {
+          if (inQuotes && next === "\"") {
+            field += "\"";
+            i += 1;
+          } else {
+            inQuotes = !inQuotes;
           }
+          continue;
+        }
+
+        if (char === "," && !inQuotes) {
+          row.push(field);
+          field = "";
+          continue;
+        }
+
+        if ((char === "\n" || char === "\r") && !inQuotes) {
+          if (char === "\r" && next === "\n") i += 1;
+          row.push(field);
+          if (row.some((value) => String(value).trim() !== "")) rows.push(row);
+          row = [];
+          field = "";
+          continue;
+        }
+
+        field += char;
+      }
+
+      row.push(field);
+      if (row.some((value) => String(value).trim() !== "")) rows.push(row);
+      if (!rows.length) return [];
+
+      const headers = rows[0].map((header) => String(header || "").trim());
+      return rows.slice(1).map((values) => {
+        const record = {};
+        headers.forEach((header, index) => {
+          if (header) record[header] = values[index] ?? "";
         });
+        return record;
       });
+    }
+
+    async function loadCSV(path) {
+      if (window.Papa && typeof window.Papa.parse === "function") {
+        return new Promise((resolve) => {
+          Papa.parse(path, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: (results) => {
+              if (results.errors && results.errors.length) {
+                console.error(`[loadCSV] ${path}`, results.errors);
+              }
+              resolve(results.data || []);
+            },
+            error: (error) => {
+              console.error(`[loadCSV] ${path}`, error);
+              resolve([]);
+            }
+          });
+        });
+      }
+
+      try {
+        console.warn("[loadCSV] PapaParse unavailable; using fetch fallback.", path);
+        const response = await fetch(path);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return parseCSVText(await response.text());
+      } catch (error) {
+        console.error(`[loadCSV:fallback] ${path}`, error);
+        return [];
+      }
     }
 
     async function loadGeoJSON(path) {
