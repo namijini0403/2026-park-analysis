@@ -899,7 +899,7 @@
       <button class="layer-toggle-btn" type="button" data-layer="buffer">⭕ 직선거리 500m</button>
       <button class="layer-toggle-btn" type="button" data-layer="parks">🌳 공원·놀이터</button>
       <button class="layer-toggle-btn" type="button" data-layer="redevelopment">🏗️ 재개발</button>
-      <button class="layer-toggle-btn" type="button" data-layer="childcare">🏫 어린이집·유치원</button>
+      <button class="layer-toggle-btn" type="button" data-layer="childcare">🏫 유치원</button>
       <button class="layer-toggle-btn" type="button" data-layer="candidate">📍 후보지</button>
       <div class="case-filter-group" aria-label="학교 마커 분류 필터">
         <button class="case-filter-btn is-on" type="button" data-case-filter="all">전체 학교</button>
@@ -967,7 +967,7 @@
               </div>
               <div class="toggle-row">
                 <input type="checkbox" id="toggleChildcare" />
-                <label for="toggleChildcare">어린이집·유치원</label>
+                <label for="toggleChildcare">유치원</label>
               </div>
               <div class="toggle-row">
                 <input type="checkbox" id="toggleCandidate" />
@@ -1323,10 +1323,9 @@
     };
 
     function buildCandidatePanelPayload(properties = {}) {
-      const linkedSchoolCount = Number(properties.linked_school_count || 0);
-      const linkedSchoolNames = Array.isArray(properties.linked_schools)
-        ? properties.linked_schools
-        : [];
+      const linkedSchoolItems = getCandidateLinkedSchoolItems(properties);
+      const linkedSchoolCount = Number(properties.linked_school_count || linkedSchoolItems.length || 0);
+      const linkedSchoolNames = linkedSchoolItems.map((item) => item.school_name);
       const predicted2029 = Number(
         properties.pred_beneficiary_2029 ?? properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
       );
@@ -1344,12 +1343,12 @@
           dong: properties.dong || ""
         },
         demand_summary: {
-          demand_label: properties.demand_label || "후보지 인접 예상 아동수(250m 기준)",
+          demand_label: properties.demand_label || "후보지 잠재수요인원(250m 생활권 기준)",
           predicted_2029: predicted2029,
           predicted_2031: predicted2031,
           demand_note:
             properties.demand_note ||
-            "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
+            "인접 예상 아동수 기반 혼합모델로 배분한 후보지 250m 생활권 잠재수요인원입니다."
         },
         accessibility_summary: {
           land_feasibility_level: properties.land_feasibility_level || "low",
@@ -1365,7 +1364,7 @@
           secondary_option: linkedSchoolCount > 1 ? "연결 학교 공동 수요 검토" : null
         },
         explanation: {
-          recommendation_reason_summary: `2029 후보지 인접 예상 아동수 ${Math.round(predicted2029).toLocaleString("ko-KR")}명, 2031 후보지 인접 예상 아동수 ${Math.round(predicted2031).toLocaleString("ko-KR")}명 기준 후보지입니다.`,
+          recommendation_reason_summary: `2029 잠재수요인원 ${Math.round(predicted2029).toLocaleString("ko-KR")}명, 2031 잠재수요인원 ${Math.round(predicted2031).toLocaleString("ko-KR")}명 기준 후보지입니다.`,
           explanation_tags: [
             `최악 case ${properties.worst_case_type || "-"}`,
             `평균 녹지 ${Number(properties.avg_green_ratio ?? 0).toFixed(1)}%`,
@@ -1376,11 +1375,7 @@
           linked_school_count: linkedSchoolCount,
           linked_school_names: linkedSchoolNames,
           linked_school_ids: [],
-          schools: linkedSchoolNames.map((schoolName) => ({
-            school_id: schoolName,
-            school_name: schoolName,
-            case_label: properties.worst_case_type ? `CASE ${properties.worst_case_type}` : null
-          }))
+          schools: linkedSchoolItems
         },
         ui_flags: {
           show_land_feasibility_badge: true,
@@ -1407,9 +1402,51 @@
           <div style="font-weight:800; font-size:14px; margin-bottom:4px;">후보지 ${properties.grid_id || ""}</div>
           <div style="font-size:12px; color:#4b5563; margin-bottom:8px;">${feasibilityLabel} · 연결 학교 ${Number(properties.linked_school_count || 0)}개</div>
           <div style="font-size:12px; line-height:1.8; color:#111827; border-top:1px solid #e5e7eb; padding-top:8px;">
-            <div>📈 2029 인접 예상 아동수: <strong>${Math.round(predicted2029).toLocaleString("ko-KR")}명</strong></div>
-            <div>📈 2031 인접 예상 아동수: <strong>${Math.round(predicted2031).toLocaleString("ko-KR")}명</strong></div>
+            <div>2029 잠재수요인원: <strong>${Math.round(predicted2029).toLocaleString("ko-KR")}명</strong></div>
+            <div>2031 잠재수요인원: <strong>${Math.round(predicted2031).toLocaleString("ko-KR")}명</strong></div>
           </div>
+        </div>
+      `;
+    }
+
+    function getCandidatePopupHtmlV2(properties = {}) {
+      const predicted2029 = Number(
+        properties.pred_beneficiary_2029 ?? properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
+      );
+      const predicted2031 = Number(
+        properties.pred_beneficiary_2031 ?? properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
+      );
+      const feasibility = properties.land_feasibility_level || "low";
+      const feasibilityLabel =
+        feasibility === "high" ? "즉시 검토" :
+        feasibility === "medium" ? "중점 검토" :
+        "우선순위 검토";
+      const linkedSchoolItems = getCandidateLinkedSchoolItems(properties);
+      const linkedSchoolMarkup = linkedSchoolItems.length
+        ? `
+          <div style="margin-top:8px; padding-top:8px; border-top:1px solid #e5e7eb;">
+            <div style="font-size:12px; font-weight:700; color:#111827; margin-bottom:4px;">인근 학교 학생수</div>
+            <div style="font-size:12px; line-height:1.6; color:#374151;">
+              ${linkedSchoolItems.map((item) => {
+                const studentText = Number.isFinite(item.current_students)
+                  ? `${Math.round(item.current_students).toLocaleString("ko-KR")}명`
+                  : "정보 없음";
+                return `<div>${item.school_name}: ${studentText}</div>`;
+              }).join("")}
+            </div>
+          </div>
+        `
+        : "";
+
+      return `
+        <div style="padding:12px 16px; min-width:260px; max-width:300px; font-family:Pretendard,'Noto Sans KR',sans-serif; word-break:keep-all;">
+          <div style="font-weight:800; font-size:14px; margin-bottom:4px;">후보지 ${properties.grid_id || ""}</div>
+          <div style="font-size:12px; color:#4b5563; margin-bottom:8px;">${feasibilityLabel} · 연결 학교 ${Number(properties.linked_school_count || linkedSchoolItems.length || 0)}개</div>
+          <div style="font-size:12px; line-height:1.8; color:#111827; border-top:1px solid #e5e7eb; padding-top:8px;">
+            <div>2029 잠재수요인원 <strong>${Math.round(predicted2029).toLocaleString("ko-KR")}명</strong></div>
+            <div>2031 잠재수요인원 <strong>${Math.round(predicted2031).toLocaleString("ko-KR")}명</strong></div>
+          </div>
+          ${linkedSchoolMarkup}
         </div>
       `;
     }
@@ -1707,6 +1744,37 @@
 
     function getSchoolJoinKeys(row = {}) {
       return [getSchoolId(row), getSchoolName(row)].filter(Boolean);
+    }
+
+    function getSchoolCurrentStudents(row = {}) {
+      const candidateKeys = ["current_students_2025", "current_students", "student_count"];
+      for (const key of candidateKeys) {
+        const numeric = Number(row[key]);
+        if (Number.isFinite(numeric)) return numeric;
+      }
+      return null;
+    }
+
+    function findSchoolRowByName(schoolName = "") {
+      const target = String(schoolName || "").trim();
+      if (!target) return null;
+      return state.datasets.schools.find((row) => getSchoolName(row) === target) || null;
+    }
+
+    function getCandidateLinkedSchoolItems(properties = {}) {
+      const linkedSchoolNames = Array.isArray(properties.linked_schools)
+        ? properties.linked_schools
+        : [];
+
+      return linkedSchoolNames.map((schoolName) => {
+        const matchedSchool = findSchoolRowByName(schoolName);
+        return {
+          school_id: matchedSchool ? getSchoolId(matchedSchool) : schoolName,
+          school_name: schoolName,
+          current_students: matchedSchool ? getSchoolCurrentStudents(matchedSchool) : null,
+          case_label: properties.worst_case_type ? `CASE ${properties.worst_case_type}` : null
+        };
+      });
     }
 
     function parseLinkedSchools(value) {
@@ -2525,7 +2593,7 @@
 
           kakao.maps.event.addListener(circle, "click", () => {
             state.suppressNextMapClick = true;
-            state.infoWindow.setContent(getCandidatePopupHtml(p));
+            state.infoWindow.setContent(getCandidatePopupHtmlV2(p));
             state.infoWindow.setPosition(pos);
             state.infoWindow.open(state.map);
             openCandidatePanel(buildCandidatePanelPayload(p));
@@ -2700,7 +2768,7 @@
         latKey: "위도",
         lngKey: "경도",
         titleKey: "기관명",
-        fallbackTitle: "어린이집·유치원",
+        fallbackTitle: "유치원",
         color: "#2F855A",
         visible: ui.toggles.childcare.checked
       });
@@ -2810,7 +2878,7 @@
           `구 요약: ${guSummary.length}건`,
           `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
           `공원·놀이터: ${parks.length}건`,
-          `어린이집·유치원: ${childcare.length}건`,
+          `유치원: ${childcare.length}건`,
           `재개발: ${redevelopment.length}건`,
           `도보 등시선: ${isochrone?.features?.length || 0}건`,
           `직선 버퍼: ${buffer?.features?.length || 0}건`
@@ -3078,19 +3146,19 @@
           demand_cards: panel?.ui_flags?.show_demand_cards === false ? [] : [
             {
               key: "predicted_2029",
-              label: "2029 후보지 인접 예상 아동수",
+              label: "2029 잠재수요인원",
               value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2029),
               note:
                 panel?.demand_summary?.demand_note ||
-                "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
+                "인접 예상 아동수 기반 혼합모델로 배분한 후보지 250m 생활권 잠재수요인원입니다."
             },
             {
               key: "predicted_2031",
-              label: "2031 후보지 인접 예상 아동수",
+              label: "2031 잠재수요인원",
               value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2031),
               note:
                 panel?.demand_summary?.demand_note ||
-                "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
+                "인접 예상 아동수 기반 혼합모델로 배분한 후보지 250m 생활권 잠재수요인원입니다."
             }
           ],
           accessibility_items: [
@@ -3123,7 +3191,8 @@
               school_id: school.school_id,
               school_name: school.school_name,
               display_name: school.school_name || school.school_id,
-              case_label: school.case_label || null
+              case_label: school.case_label || null,
+              current_students: Number.isFinite(Number(school.current_students)) ? Number(school.current_students) : null
             })),
             empty_message: Number(linkedSchools.linked_school_count || 0) > 0 ? null : "연결 학교 정보 없음"
           },
@@ -3161,19 +3230,19 @@
         demand_cards: panel?.ui_flags?.show_demand_cards === false ? [] : [
           {
             key: "predicted_2029",
-            label: "2029 후보지 인접 예상 아동수",
+            label: "2029 잠재수요인원",
             value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2029),
             note:
               panel?.demand_summary?.demand_note ||
-              "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
+              "인접 예상 아동수 기반 혼합모델로 배분한 후보지 250m 생활권 잠재수요인원입니다."
           },
           {
             key: "predicted_2031",
-            label: "2031 후보지 인접 예상 아동수",
+            label: "2031 잠재수요인원",
             value: formatCandidatePotentialDemand(panel?.demand_summary?.predicted_2031),
             note:
               panel?.demand_summary?.demand_note ||
-              "혼합모델로 배분한 후보지 인접 250m 생활권의 예상 아동 규모를 뜻하는 참고값입니다."
+              "인접 예상 아동수 기반 혼합모델로 배분한 후보지 250m 생활권 잠재수요인원입니다."
           }
         ],
         accessibility_items: panel?.ui_flags?.show_accessibility_metrics === false ? [] : [
@@ -3207,7 +3276,8 @@
             school_id: school.school_id,
             school_name: school.school_name,
             display_name: school.school_name || school.school_id,
-            case_label: school.case_label || null
+            case_label: school.case_label || null,
+            current_students: Number.isFinite(Number(school.current_students)) ? Number(school.current_students) : null
           })),
           empty_message: Number(linkedSchools.linked_school_count || 0) > 0 ? null : "연결 학교 정보 없음"
         },
@@ -3302,6 +3372,28 @@
       `;
     }
 
+    function renderCandidateLinkedSchoolSectionV2(linkedSchoolSection) {
+      if (!linkedSchoolSection) return "";
+      if (!linkedSchoolSection.items.length) {
+        return `<div class="metric-item muted">${linkedSchoolSection.empty_message || "연결 학교 정보 없음"}</div>`;
+      }
+
+      return `
+        <div class="metric-list">
+          <div class="metric-item">${linkedSchoolSection.count_label}</div>
+          <ul style="margin:6px 0 0 18px; padding:0; line-height:1.7;">
+            ${linkedSchoolSection.items.map((item) => {
+              const currentStudentsText = Number.isFinite(item.current_students)
+                ? ` · 학생수 ${Math.round(item.current_students).toLocaleString("ko-KR")}명`
+                : "";
+              const caseLabelText = item.case_label ? ` · ${item.case_label}` : "";
+              return `<li>${item.display_name}${currentStudentsText}${caseLabelText}</li>`;
+            }).join("")}
+          </ul>
+        </div>
+      `;
+    }
+
     function renderCandidatePanel(rawCandidateResponse = null) {
       if (!rawCandidateResponse) {
         ui.schoolDetailBox.className = "school-detail-box";
@@ -3328,7 +3420,7 @@
         </div>
         ${viewModel.demand_cards.length ? `
           <div class="detail-section">
-            <div class="detail-section-title">${viewModel.panel_kind === "external_grid" ? "후보지 인접 예상 아동수" : "잠재 수요 추정"}</div>
+            <div class="detail-section-title">${viewModel.panel_kind === "external_grid" ? "후보지 잠재수요인원" : "잠재 수요 추정"}</div>
             ${renderCandidateInfoCards(viewModel.demand_cards)}
           </div>
         ` : ""}
@@ -3349,7 +3441,7 @@
         ${(viewModel.linked_school_section.items.length || viewModel.linked_school_section.empty_message) ? `
           <div class="detail-section">
             <div class="detail-section-title">${viewModel.linked_school_section.title}</div>
-            ${renderCandidateLinkedSchoolSection(viewModel.linked_school_section)}
+            ${renderCandidateLinkedSchoolSectionV2(viewModel.linked_school_section)}
           </div>
         ` : ""}
       `;
