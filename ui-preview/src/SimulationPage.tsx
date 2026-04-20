@@ -113,21 +113,20 @@ const DEFAULT_WEIGHTS: WeightState = {
 
 const AI_DEFAULT_FILTERS: FilterState = {
   excludePrimary: true,
-  excludeSecondary: false,
+  excludeSecondary: true,
   excludeTertiary: false,
   excludeAccident: false,
-  excludeRedev: true,
+  excludeRedev: false,
   excludeLargeApt: false,
 };
 
 const AI_DEFAULT_WEIGHTS: WeightState = {
-  benefit: 30,
-  schoolDistance: 60,
+  benefit: 20,
+  schoolDistance: 70,
   parkDistance: 10,
 };
 
 const AI_RECOMMENDATION_COUNT = 3;
-const AI_FALLBACK_MIN_CANDIDATES = 3;
 
 const BARRIER_COLOR: Record<NonNullable<Candidate["barrier_severity"]>, string> = {
   green: "#2E8B57",
@@ -350,9 +349,9 @@ function computeAiRecommendations(candidates: Candidate[]): AiRecommendationResu
     };
   }
 
-  const primaryAndRedevSafe = candidates.filter((candidate) => {
+  const primaryAndSecondarySafe = candidates.filter((candidate) => {
     const counts = getBarrierCounts(candidate);
-    return counts.primary === 0 && !hasRedevelopmentRisk(candidate);
+    return counts.primary === 0 && counts.secondary === 0;
   });
 
   const primarySafeOnly = candidates.filter((candidate) => {
@@ -361,10 +360,10 @@ function computeAiRecommendations(candidates: Candidate[]): AiRecommendationResu
   });
 
   const fallbackApplied =
-    primaryAndRedevSafe.length < AI_FALLBACK_MIN_CANDIDATES &&
-    primarySafeOnly.length > primaryAndRedevSafe.length;
+    primaryAndSecondarySafe.length === 0 &&
+    primarySafeOnly.length > 0;
 
-  const basePool = fallbackApplied ? primarySafeOnly : primaryAndRedevSafe;
+  const basePool = fallbackApplied ? primarySafeOnly : primaryAndSecondarySafe;
   const recommendations = scoreWithNormalizedWeights(basePool, AI_DEFAULT_WEIGHTS)
     .map((candidate) => ({
       ...candidate,
@@ -376,8 +375,8 @@ function computeAiRecommendations(candidates: Candidate[]): AiRecommendationResu
     recommendations,
     fallbackApplied,
     filterSummary: fallbackApplied
-      ? "기본 추천 후보가 적어 재개발 제외 조건을 완화하고, 도시 대로 미횡단 후보만 유지했습니다."
-      : "도시 대로 미횡단 + 재개발 영향권 제외 조건으로 기본 추천을 계산했습니다.",
+      ? "도시 대로 미횡단 후보는 유지하고, 중간급 도로 미횡단 후보가 없어 중간급 도로 조건만 완화했습니다."
+      : "도시 대로 미횡단 + 중간급 도로 미횡단 조건으로 기본 추천을 계산했습니다.",
   };
 }
 

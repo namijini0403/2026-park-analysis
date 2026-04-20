@@ -1072,19 +1072,19 @@ data_processed/age_ratio_incheon.csv
 ### AI 기본 필터
 - 1차 필터:
   - `primary_cross_count == 0`
-  - `is_redevelopment_area == False`
+  - `secondary_cross_count == 0`
 - fallback:
-  - 1차 필터 통과 후보가 너무 적으면 `primary_cross_count == 0`만 유지한다.
-  - 이때 `재개발 제외`만 완화한다.
+  - 1차 필터 통과 후보가 없으면 `primary_cross_count == 0`만 유지한다.
+  - 이때 `중간급 도로 제외`만 완화한다.
 - 기본 AI 추천에서는 아래 항목을 필터로 쓰지 않는다.
-  - `secondary_cross_count`
   - `tertiary_cross_count`
+  - `is_redevelopment_area`
   - `is_large_complex`
   - `accident_hotspot_flag`
 
 ### AI 기본 가중치
-- `school_distance_weight = 0.6`
-- `expected_students_weight = 0.3`
+- `school_distance_weight = 0.7`
+- `expected_students_weight = 0.2`
 - `facility_distance_weight = 0.1`
 
 ### AI 점수 계산
@@ -1096,8 +1096,8 @@ data_processed/age_ratio_incheon.csv
 
 ```python
 score = (
-    0.6 * school_distance_score +
-    0.3 * expected_students_score +
+    0.7 * school_distance_score +
+    0.2 * expected_students_score +
     0.1 * facility_distance_score
 )
 ```
@@ -1124,8 +1124,8 @@ score = (
 
 ### AI 추천 버튼 동작
 - `AI 추천 보기` 버튼 클릭 시 아래 값을 자동 세팅한다.
-  - 필터: `primary 제외 on`, `재개발 제외 on`, 나머지 off
-  - 슬라이더: `학교 거리 60 / 잠재수혜학생수 30 / 기존 공원 거리 10`
+  - 필터: `primary 제외 on`, `secondary 제외 on`, 나머지 off
+  - 슬라이더: `학교 거리 70 / 잠재수혜학생수 20 / 기존 공원 거리 10`
 - 이후 사용자는 필터와 슬라이더를 자유롭게 다시 조정할 수 있다.
 - AI는 필터를 강제로 고정하지 않는다.
 - AI는 후보를 별도 숨김 상태로 강제 삭제하지 않는다. 제거는 항상 필터를 통해서만 일어난다.
