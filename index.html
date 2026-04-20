@@ -1326,12 +1326,8 @@
       const linkedSchoolItems = getCandidateLinkedSchoolItems(properties);
       const linkedSchoolCount = Number(properties.linked_school_count || linkedSchoolItems.length || 0);
       const linkedSchoolNames = linkedSchoolItems.map((item) => item.school_name);
-      const predicted2029 = Number(
-        properties.pred_beneficiary_2029 ?? properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
-      );
-      const predicted2031 = Number(
-        properties.pred_beneficiary_2031 ?? properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
-      );
+      const predicted2029 = getCandidatePotentialDemand(properties, 2029);
+      const predicted2031 = getCandidatePotentialDemand(properties, 2031);
 
       return {
         candidate_meta: {
@@ -1385,12 +1381,8 @@
     }
 
     function getCandidatePopupHtml(properties = {}) {
-      const predicted2029 = Number(
-        properties.pred_beneficiary_2029 ?? properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
-      );
-      const predicted2031 = Number(
-        properties.pred_beneficiary_2031 ?? properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
-      );
+      const predicted2029 = getCandidatePotentialDemand(properties, 2029);
+      const predicted2031 = getCandidatePotentialDemand(properties, 2031);
       const feasibility = properties.land_feasibility_level || "low";
       const feasibilityLabel =
         feasibility === "high" ? "즉시 검토" :
@@ -1410,12 +1402,8 @@
     }
 
     function getCandidatePopupHtmlV2(properties = {}) {
-      const predicted2029 = Number(
-        properties.pred_beneficiary_2029 ?? properties.xgb_predicted_2029 ?? properties.forecast_2029 ?? 0
-      );
-      const predicted2031 = Number(
-        properties.pred_beneficiary_2031 ?? properties.xgb_predicted_2031 ?? properties.forecast_2031 ?? 0
-      );
+      const predicted2029 = getCandidatePotentialDemand(properties, 2029);
+      const predicted2031 = getCandidatePotentialDemand(properties, 2031);
       const feasibility = properties.land_feasibility_level || "low";
       const feasibilityLabel =
         feasibility === "high" ? "즉시 검토" :
@@ -1775,6 +1763,19 @@
           case_label: properties.worst_case_type ? `CASE ${properties.worst_case_type}` : null
         };
       });
+    }
+
+    function getCandidatePotentialDemand(properties = {}, year) {
+      const suffix = String(year);
+      const value = properties[`walkshed_beneficiary_${suffix}`]
+        ?? properties[`walkshed_potential_${suffix}`]
+        ?? properties[`potential_demand_${suffix}`]
+        ?? properties[`pred_beneficiary_${suffix}`]
+        ?? properties[`xgb_predicted_${suffix}`]
+        ?? properties[`forecast_${suffix}`]
+        ?? 0;
+      const numeric = Number(value);
+      return Number.isFinite(numeric) ? numeric : 0;
     }
 
     function parseLinkedSchools(value) {
