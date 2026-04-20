@@ -1040,8 +1040,20 @@ def main() -> None:
     geojson_tmp.replace(OUT_CANDIDATE_GEOJSON)
     csv_tmp.replace(OUT_CANDIDATE_CSV)
 
+    # Step I: 학교·대학 부지 후보지 배제
+    from exclude_school_sites import apply_school_exclusion
+    final_gdf_wgs = apply_school_exclusion(
+        input_path=OUT_CANDIDATE_GEOJSON,
+        output_path=OUT_CANDIDATE_GEOJSON,
+        verbose=True,
+    )
+    # CSV도 배제 결과로 동기화
+    final_gdf_wgs.drop(columns="geometry").to_csv(
+        OUT_CANDIDATE_CSV, index=False, encoding="utf-8-sig"
+    )
+
     print(f"\n=== 파이프라인 완료 ===")
-    print(f"  후보지: {len(final_gdf)}개")
+    print(f"  후보지 (배제 후): {len(final_gdf_wgs)}개")
     print(f"  예측 범위 (2029): {final_gdf['pred_beneficiary_2029'].min():.0f} ~ {final_gdf['pred_beneficiary_2029'].max():.0f}")
     print(f"  예측 범위 (2031): {final_gdf['pred_beneficiary_2031'].min():.0f} ~ {final_gdf['pred_beneficiary_2031'].max():.0f}")
     print(f"  500m 보행권 범위 (2029): {final_gdf['walkshed_beneficiary_2029'].min():.0f} ~ {final_gdf['walkshed_beneficiary_2029'].max():.0f}")
