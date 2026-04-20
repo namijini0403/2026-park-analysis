@@ -18,6 +18,7 @@ SCHOOL_NEAREST_PATH = DATA / "school_nearest_park.csv"
 PARKS_PATH = DATA / "parks.csv"
 ISOCHRONE_PATH = DATA / "school_isochrone_500m.geojson"
 SEALED_PATH = OUTPUT / "sealed_nearest_park_dist.json"
+DIST_GREEN_MISMATCH_PATH = OUTPUT / "dist_green_mismatch.csv"
 
 SNAPSHOT_PRIORITY_BEFORE = DATA / "school_priority_20260411_before_case_system.csv"
 SNAPSHOT_NEAREST_BEFORE = DATA / "school_nearest_park_20260411_before_case_system.csv"
@@ -58,6 +59,7 @@ JUANNAM_GREEN_RATIO = 0.4263408185968763
 SONGWON_GREEN_RATIO = 20.733643281479043
 
 MANUAL_NEAREST_OVERRIDES_BY_ID = {
+    "B000025206": {"park": "동춘1구역근린공원", "dist": 50.0},  # 새봄초
     "B000003144": {"park": "석곶체육공원", "dist": 444.0},  # 석남초
     "B000003145": {"park": "석곶체육공원", "dist": 435.0},  # 천마초
     "B000026504": {"park": "송도랜드마크씨티9호근린공원", "dist": 59.0},  # 송담초
@@ -221,6 +223,34 @@ def quartile_score(value: str) -> int:
     return mapping.get(value, 0)
 
 
+def load_dist_green_mismatch_overrides(school_priority: pd.DataFrame) -> dict[str, dict[str, float | int]]:
+    if not DIST_GREEN_MISMATCH_PATH.exists():
+        return {}
+
+    mismatch_df = pd.read_csv(DIST_GREEN_MISMATCH_PATH)
+    if mismatch_df.empty or "학교명" not in mismatch_df.columns:
+        return {}
+
+    id_by_name = dict(zip(school_priority["학교명"], school_priority["학교ID"]))
+    overrides: dict[str, dict[str, float | int]] = {}
+    for _, row in mismatch_df.iterrows():
+        school_name = str(row.get("학교명", "")).strip()
+        school_id = id_by_name.get(school_name)
+        if not school_id:
+            continue
+
+        override: dict[str, float | int] = {}
+        ratio_raw = pd.to_numeric(row.get("iso_green_ratio"), errors="coerce")
+        park_count = pd.to_numeric(row.get("iso_park_count"), errors="coerce")
+        if pd.notna(ratio_raw):
+            override["iso_green_ratio_raw"] = float(ratio_raw)
+        if pd.notna(park_count):
+            override["iso_park_count"] = int(park_count)
+        if override:
+            overrides[str(school_id)] = override
+    return overrides
+
+
 def main() -> None:
     ensure_snapshots()
 
@@ -344,7 +374,13 @@ def main() -> None:
     )
     school_priority["iso_green_ratio"] = school_priority["iso_green_ratio_raw"].clip(lower=0.0, upper=100.0)
 
+    env_overrides_by_id = load_dist_green_mismatch_overrides(school_priority)
     for school_id, override in MANUAL_ENV_OVERRIDES_BY_ID.items():
+        merged_override = dict(env_overrides_by_id.get(school_id, {}))
+        merged_override.update(override)
+        env_overrides_by_id[school_id] = merged_override
+
+    for school_id, override in env_overrides_by_id.items():
         mask = school_priority["학교ID"] == school_id
         if not mask.any():
             continue
