@@ -23,6 +23,18 @@
 - 현재 정상 운영 기준에서는 `app/dist`와 `data/processed`를 사용하지 않는다.
 - `app/` 및 `data/processed/`는 이후 작업 중 생긴 미추적 산출물이 남아 있을 수 있으나, 현재 GitHub Pages 운영 앱의 기준 경로가 아니다.
 
+### 2026-04-26 최신 case 분포 기준
+- 운영 기준 파일: `data_processed/school_priority.csv`
+- 최신 case1 산출 기준은 10개교가 맞다. 예전 11개 또는 13개 집계는 이전 산출물/경로 혼선에서 나온 값으로 보지 않는다.
+- 현재 분포:
+  - case1: 10개교
+  - case2: 51개교
+  - case3: 93개교
+  - case4: 88개교
+  - 별도 묶음: 30개교
+- 본류 case1~4 합계는 242개교, 전체 학교는 272개교이다.
+- case1 조건은 `nearest_park_dist_m >= 500`, `iso_park_count == 0`, `iso_green_ratio == 0`을 기본으로 하며, 중구 금산분교장과 계양구 상야분교장처럼 도시부 분교장 보정 override가 반영된 최신 산출물을 따른다.
+
 ### 2026-04-26 사고 방지 규칙
 - `index.html`의 데이터 경로를 `data_processed/`에서 `data/processed/`로 바꾸지 말 것.
 - iframe 경로를 `ui-preview/dist/`에서 `app/dist/`로 바꾸지 말 것.
