@@ -9,6 +9,7 @@
 - 메인 진입점: `index.html`
 - 데이터 경로: `data_processed/`
 - 상세 리포트/시뮬레이션 iframe: `ui-preview/dist/index.html`
+- 자세한 경로 기준: `OPERATING_PATHS.md`
 
 ## 로컬 실행
 

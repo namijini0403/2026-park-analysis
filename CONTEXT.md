@@ -19,6 +19,7 @@
 - 메인 앱 진입점은 루트 `index.html`이다.
 - 운영 데이터 경로는 `./data_processed/...`이다.
 - 상세 리포트/시뮬레이션 iframe 경로는 `ui-preview/dist/index.html`이다.
+- 경로 기준 파일은 루트 `OPERATING_PATHS.md`이다.
 - 현재 정상 운영 기준에서는 `app/dist`와 `data/processed`를 사용하지 않는다.
 - `app/` 및 `data/processed/`는 이후 작업 중 생긴 미추적 산출물이 남아 있을 수 있으나, 현재 GitHub Pages 운영 앱의 기준 경로가 아니다.
 
