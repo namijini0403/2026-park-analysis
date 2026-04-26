@@ -2,6 +2,42 @@
 
 ---
 
+## 2026-04-26 운영 기준 복구 메모 (최우선)
+
+> 이 섹션은 앱 구조와 배포 기준에 대해 기존 기록보다 우선한다.
+
+### 현재 정상 배포 기준
+- 정상 작동 확인 기준 커밋: `b4ee21798ac7856a509cd0ad01338dcf8210a8e0`
+- 커밋 메시지: `Make shared map URL more robust`
+- GitHub Pages 운영 주소:
+  - `https://namijini0403.github.io/2026-park-analysis/`
+  - 캐시 회피 확인용: `https://namijini0403.github.io/2026-park-analysis/?v=b4ee21798ac7856a509cd0ad01338dcf8210a8e0`
+- 2026-04-26에 `origin/main`을 `b4ee217`로 `force-with-lease` 복구했다.
+- 복구 전 상태는 로컬 브랜치 `rescue-before-b4ee-restore`, `rescue-before-rollback`에 남아 있다.
+
+### 현재 앱 구조 (변경 주의)
+- 메인 앱 진입점은 루트 `index.html`이다.
+- 운영 데이터 경로는 `./data_processed/...`이다.
+- 상세 리포트/시뮬레이션 iframe 경로는 `ui-preview/dist/index.html`이다.
+- 현재 정상 운영 기준에서는 `app/dist`와 `data/processed`를 사용하지 않는다.
+- `app/` 및 `data/processed/`는 이후 작업 중 생긴 미추적 산출물이 남아 있을 수 있으나, 현재 GitHub Pages 운영 앱의 기준 경로가 아니다.
+
+### 2026-04-26 사고 방지 규칙
+- `index.html`의 데이터 경로를 `data_processed/`에서 `data/processed/`로 바꾸지 말 것.
+- iframe 경로를 `ui-preview/dist/`에서 `app/dist/`로 바꾸지 말 것.
+- GitHub Pages 정상 여부는 로컬 `localhost`가 아니라 공개 URL에서 최종 확인할 것.
+- 공개 URL 검증 시 최소 확인 항목:
+  - Kakao 지도 표시
+  - 학교 마커 표시
+  - 상태 데이터 `학교 우선순위: 272건`, `지도 표시 학교: 272건`
+  - 학교 클릭 시 상세 리포트/시뮬레이션 오버레이
+  - `data_processed/school_priority.csv` HTTP 200
+  - `ui-preview/dist/index.html` HTTP 200
+- 새 수정사항을 push하기 전에는 반드시 `git diff -- index.html`에서 경로 변경이 의도된 것인지 확인한다.
+- `76559a7`, `76cf204`, `df6ad59` 이후 변경은 앱 경로 전환 과정에서 공개 앱 장애를 유발했으므로, 재적용하지 말고 필요한 수정만 `b4ee217` 기준에서 최소 단위로 다시 구현한다.
+
+---
+
 ## 🔒 봉인된 실측값 (변경 금지 — 사용자가 직접 현장 확인한 값)
 
 > 이 섹션의 값은 사용자가 네이버지도 기준으로 직접 실측한 거리입니다.
