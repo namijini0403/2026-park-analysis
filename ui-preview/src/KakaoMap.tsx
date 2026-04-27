@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 declare global {
   interface Window {
     kakao: any;
+    KAKAO_MAP_KEY?: string;
   }
 }
 
@@ -31,12 +32,25 @@ interface KakaoMapProps {
   height?: number;
 }
 
-const KAKAO_KEY = import.meta.env.VITE_KAKAO_MAP_KEY as string;
+const DEFAULT_KAKAO_MAP_KEY = "429ad574cd834de9ebdaee46f4478138";
+const ENV_KAKAO_KEY = import.meta.env.VITE_KAKAO_MAP_KEY as string | undefined;
 let kakaoLoaderPromise: Promise<void> | null = null;
+
+function getKakaoMapKey(): string {
+  const parentKey = (() => {
+    try {
+      return window.parent?.KAKAO_MAP_KEY;
+    } catch {
+      return "";
+    }
+  })();
+  return ENV_KAKAO_KEY || window.KAKAO_MAP_KEY || parentKey || DEFAULT_KAKAO_MAP_KEY;
+}
 
 /** SDK 로드 + kakao.maps.load() 를 한 번에 처리 */
 function loadKakaoSDK(): Promise<void> {
-  if (!KAKAO_KEY) {
+  const kakaoKey = getKakaoMapKey();
+  if (!kakaoKey) {
     return Promise.reject(new Error("Kakao map key is missing."));
   }
   if (window.kakao?.maps?.Map) {
@@ -59,7 +73,7 @@ function loadKakaoSDK(): Promise<void> {
     const script = document.createElement("script");
     script.setAttribute("data-kakao-map", "true");
     script.async = true;
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_KEY}&autoload=false`;
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`;
     script.onload = () => window.kakao.maps.load(() => resolve());
     script.onerror = () => reject(new Error("Failed to load Kakao Maps SDK."));
     document.head.appendChild(script);
