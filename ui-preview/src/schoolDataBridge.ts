@@ -34,6 +34,12 @@ export interface Candidate {
   barrier_note?: string;
   route_length_m?: number;
   route_coords?: Array<[number, number]>;
+  fallback_candidate?: boolean;
+  fallback_distance_basis?: string;
+  candidate_display_tier?: string;
+  candidate_display_label?: string;
+  fallback_distance_limit_m?: number;
+  fallback_explanation?: string;
   has_large_apt?: boolean;
   redev_flag?: boolean;
   redev_level?: string;
@@ -549,6 +555,12 @@ export function mapCandidateFeatures(
             .map((item) => [n(item[0]), n(item[1])] as [number, number]),
         }
       : {}),
+    ...(feature.fallback_candidate ? { fallback_candidate: true } : {}),
+    ...(s(feature.fallback_distance_basis) ? { fallback_distance_basis: s(feature.fallback_distance_basis) } : {}),
+    ...(s(feature.candidate_display_tier) ? { candidate_display_tier: s(feature.candidate_display_tier) } : {}),
+    ...(s(feature.candidate_display_label) ? { candidate_display_label: s(feature.candidate_display_label) } : {}),
+    ...(maybeNumber(feature.fallback_distance_limit_m) != null ? { fallback_distance_limit_m: maybeNumber(feature.fallback_distance_limit_m)! } : {}),
+    ...(s(feature.fallback_explanation) ? { fallback_explanation: s(feature.fallback_explanation) } : {}),
     ...(feature.has_large_apt != null ? { has_large_apt: Boolean(feature.has_large_apt) } : {}),
     ...(feature.redev_flag != null ? { redev_flag: Boolean(feature.redev_flag) } : {}),
     ...(s(feature.redev_level) ? { redev_level: s(feature.redev_level) } : {}),

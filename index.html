@@ -2425,7 +2425,12 @@
       };
     }
 
-    function supplementCandidateFallbacks(baseCandidates = [], schoolRow = {}, minimumCount = 6) {
+    const SUPPLEMENTAL_CANDIDATE_MINIMUM_COUNT = 6;
+    const SUPPLEMENTAL_CANDIDATE_MAX_STRAIGHT_DISTANCE_M = 600;
+    const SUPPLEMENTAL_CANDIDATE_NOTE =
+      "보조 후보지입니다. 해당 학교의 도보 500m 직접 후보지가 부족할 때만 직선거리 600m 이내 후보지를 참고로 표시합니다. 기본 추천 후보가 아니므로 현장 검토가 필요합니다.";
+
+    function supplementCandidateFallbacks(baseCandidates = [], schoolRow = {}, minimumCount = SUPPLEMENTAL_CANDIDATE_MINIMUM_COUNT) {
       if (baseCandidates.length >= minimumCount) return baseCandidates;
 
       const schoolLat = Number(schoolRow["위도"] ?? schoolRow.lat);
@@ -2453,7 +2458,10 @@
             candidateRank: Number(candidate.candidate_rank_mixed ?? candidate.candidate_rank ?? Number.POSITIVE_INFINITY),
           };
         })
-        .filter((item) => Number.isFinite(item.straightDistance))
+        .filter((item) =>
+          Number.isFinite(item.straightDistance) &&
+          item.straightDistance <= SUPPLEMENTAL_CANDIDATE_MAX_STRAIGHT_DISTANCE_M
+        )
         .sort((a, b) =>
           b.sameGu - a.sameGu ||
           a.straightDistance - b.straightDistance ||
@@ -2463,16 +2471,22 @@
         .map((item) => {
           const merged = mergeCandidateBarrierMeta(item.candidate, schoolId, schoolName);
           const roundedDistance = Math.round(item.straightDistance);
-          return {
+          const supplementalCandidate = {
             ...merged,
             nearest_school_dist: Number.isFinite(Number(merged.nearest_school_dist))
               ? Number(merged.nearest_school_dist)
               : roundedDistance,
             fallback_candidate: true,
             fallback_distance_basis: "straight_line_m",
+            candidate_display_tier: "secondary",
+            candidate_display_label: "보조 후보지",
+            fallback_distance_limit_m: SUPPLEMENTAL_CANDIDATE_MAX_STRAIGHT_DISTANCE_M,
+            fallback_explanation: SUPPLEMENTAL_CANDIDATE_NOTE,
             barrier_note: merged.barrier_note ||
               "학교 생활권에 직접 연결된 후보지가 적어, 인접 후보지를 직선거리 기준 보조 후보로 함께 표시합니다.",
           };
+          supplementalCandidate.barrier_note = merged.barrier_note || SUPPLEMENTAL_CANDIDATE_NOTE;
+          return supplementalCandidate;
         });
 
       return [...baseCandidates, ...supplemental];

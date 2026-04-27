@@ -33,6 +33,10 @@ interface Candidate {
   route_coords?: Array<[number, number]>;
   fallback_candidate?: boolean;
   fallback_distance_basis?: string;
+  candidate_display_tier?: string;
+  candidate_display_label?: string;
+  fallback_distance_limit_m?: number;
+  fallback_explanation?: string;
   has_large_apt?: boolean;
   redev_flag?: boolean;
   redev_level?: string;
@@ -387,6 +391,17 @@ function getCandidateDistanceLabel(candidate: Candidate): string {
   return "학교 경로거리";
 }
 
+function getCandidateTierLabel(candidate: Candidate): string {
+  if (candidate.fallback_candidate) return candidate.candidate_display_label ?? "보조 후보지";
+  return "기본 후보지";
+}
+
+function getCandidateTierStyle(candidate: Candidate) {
+  return candidate.fallback_candidate
+    ? { background: "#fff7ed", color: "#9a3412", border: "1px solid #fed7aa" }
+    : { background: "#ecfdf5", color: "#166534", border: "1px solid #bbf7d0" };
+}
+
 function buildFilterReasonSummary(filters: FilterState): string[] {
   const summaries: string[] = [];
   if (filters.excludePrimary) summaries.push("도시 대로 횡단 후보 제외");
@@ -461,6 +476,13 @@ export default function SimulationPage({
     () => candidates.filter((candidate) => !candidate.is_school_internal),
     [candidates],
   );
+
+  const primaryCandidateCount = useMemo(
+    () => externalCandidates.filter((candidate) => !candidate.fallback_candidate).length,
+    [externalCandidates],
+  );
+
+  const supplementalCandidateCount = externalCandidates.length - primaryCandidateCount;
 
   const filteredCandidates = useMemo(
     () => externalCandidates.filter((candidate) => passesFilters(candidate, filters)),
@@ -818,6 +840,8 @@ export default function SimulationPage({
       <div style={{ padding: 18, borderRadius: 18, background: "#fff", border: "1px solid #e5e7eb", marginBottom: 18 }}>
         <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginBottom: 12 }}>
           <MetricPill label="전체 후보" value={`${externalCandidates.length}곳`} tone="#1f2937" background="#f3f4f6" />
+          <MetricPill label="기본 후보" value={`${primaryCandidateCount}곳`} tone="#166534" background="#ecfdf5" />
+          <MetricPill label="보조 후보" value={`${supplementalCandidateCount}곳`} tone="#9a3412" background="#fff7ed" />
           <MetricPill label="현재 비교 후보" value={`${displayedCandidates.length}곳`} tone="#065f46" background="#ecfdf5" />
           <MetricPill label="남은 후보" value={`${mode === "ai" ? aiRecommendations.recommendations.length : rankedCandidates.length}곳`} tone="#9a3412" background="#fff7ed" />
         </div>
@@ -859,6 +883,9 @@ export default function SimulationPage({
                     </span>
                     <span style={{ padding: "4px 10px", borderRadius: 999, background: "#e5e7eb", color: "#111827", fontSize: 12, fontWeight: 800 }}>
                       위치 {label}
+                    </span>
+                    <span style={{ padding: "4px 10px", borderRadius: 999, fontSize: 12, fontWeight: 800, ...getCandidateTierStyle(topCandidate) }}>
+                      {getCandidateTierLabel(topCandidate)}
                     </span>
                     <span style={{ fontSize: 15, fontWeight: 800, color: "#111827" }}>{topCandidate.grid_id}</span>
                   </div>
@@ -903,11 +930,14 @@ export default function SimulationPage({
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
                     <span style={{ padding: "3px 8px", borderRadius: 999, background: "#f3f4f6", color: "#111827", fontSize: 11, fontWeight: 800 }}>순위 {index + 2}</span>
                     <span style={{ padding: "3px 8px", borderRadius: 999, background: "#e5e7eb", color: "#111827", fontSize: 11, fontWeight: 800 }}>위치 {label}</span>
+                    <span style={{ padding: "3px 8px", borderRadius: 999, fontSize: 11, fontWeight: 800, ...getCandidateTierStyle(candidate) }}>
+                      {getCandidateTierLabel(candidate)}
+                    </span>
                   </div>
                   <div style={{ fontSize: 16, fontWeight: 800, color: "#111827", marginBottom: 8 }}>{buildCandidateSummary(candidate)}</div>
                   <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#374151" }}>
                     <div>잠재수요 <b>{formatCount(candidate.walkshed_potential_2029)}명</b></div>
-                    <div>학교 거리 <b>{formatDistance(candidate.nearest_school_dist)}</b></div>
+                    <div>{getCandidateDistanceLabel(candidate)} <b>{formatDistance(candidate.nearest_school_dist)}</b></div>
                     <div>공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b></div>
                   </div>
                 </div>
@@ -931,10 +961,20 @@ export default function SimulationPage({
               </div>
               <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>{buildCandidateSummary(selectedCandidate as ScoredCandidate)}</div>
             </div>
-            <span style={{ padding: "4px 10px", borderRadius: 999, background: `${getBarrierColor(selectedCandidate)}18`, color: getBarrierColor(selectedCandidate), fontSize: 12, fontWeight: 800 }}>
-              {getBarrierLabel(selectedCandidate)}
-            </span>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+              <span style={{ padding: "4px 10px", borderRadius: 999, fontSize: 12, fontWeight: 800, ...getCandidateTierStyle(selectedCandidate) }}>
+                {getCandidateTierLabel(selectedCandidate)}
+              </span>
+              <span style={{ padding: "4px 10px", borderRadius: 999, background: `${getBarrierColor(selectedCandidate)}18`, color: getBarrierColor(selectedCandidate), fontSize: 12, fontWeight: 800 }}>
+                {getBarrierLabel(selectedCandidate)}
+              </span>
+            </div>
           </div>
+          {selectedCandidate.fallback_candidate ? (
+            <div style={{ marginBottom: 12, padding: "12px 14px", borderRadius: 12, background: "#fff7ed", border: "1px solid #fed7aa", color: "#9a3412", fontSize: 13, fontWeight: 700, lineHeight: 1.6 }}>
+              {selectedCandidate.fallback_explanation ?? "보조 후보지입니다. 도보 500m 직접 후보지가 부족할 때만 참고로 표시하며, 기본 추천 후보로 해석하지 않습니다."}
+            </div>
+          ) : null}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 12 }}>
             <div style={{ padding: "10px 12px", borderRadius: 12, background: "#f8fafc" }}>인근 거주 2029 <b>{formatCount(selectedCandidate.resident_children_2029)}명</b></div>
             <div style={{ padding: "10px 12px", borderRadius: 12, background: "#f8fafc" }}>인근 거주 2031 <b>{formatCount(selectedCandidate.resident_children_2031)}명</b></div>

@@ -37,6 +37,10 @@ export interface Candidate {
   route_coords?: Array<[number, number]>;
   fallback_candidate?: boolean;
   fallback_distance_basis?: string;
+  candidate_display_tier?: string;
+  candidate_display_label?: string;
+  fallback_distance_limit_m?: number;
+  fallback_explanation?: string;
   has_large_apt?: boolean;
   redev_flag?: boolean;
   redev_level?: string;
@@ -362,6 +366,10 @@ export function mapCandidateFeatures(
       : {}),
     ...(p.fallback_candidate ? { fallback_candidate: true } : {}),
     ...(s(p.fallback_distance_basis) ? { fallback_distance_basis: s(p.fallback_distance_basis) } : {}),
+    ...(s(p.candidate_display_tier) ? { candidate_display_tier: s(p.candidate_display_tier) } : {}),
+    ...(s(p.candidate_display_label) ? { candidate_display_label: s(p.candidate_display_label) } : {}),
+    ...(Number.isFinite(Number(p.fallback_distance_limit_m)) ? { fallback_distance_limit_m: n(p.fallback_distance_limit_m) } : {}),
+    ...(s(p.fallback_explanation) ? { fallback_explanation: s(p.fallback_explanation) } : {}),
     ...(p.has_large_apt != null ? { has_large_apt: Boolean(p.has_large_apt) } : {}),
     ...(p.redev_flag != null ? { redev_flag: Boolean(p.redev_flag) } : {}),
     ...(s(p.redev_level) ? { redev_level: s(p.redev_level) } : {}),
