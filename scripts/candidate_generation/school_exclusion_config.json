@@ -1,0 +1,30 @@
+{
+  "school_radius_m": {
+    "초등학교": 50,
+    "중학교": 50,
+    "고등학교": 50,
+    "대학교_default": 70
+  },
+  "large_university_radius_m": 80,
+  "large_university_names": [
+    "인하대학교",
+    "인천대학교",
+    "경인교육대학교",
+    "연세대학교 국제캠퍼스",
+    "인천가톨릭대학교"
+  ],
+  "polygon_buffer_m": {
+    "초등학교": 10,
+    "중학교": 10,
+    "고등학교": 10,
+    "university": 15
+  },
+  "university_inst_types": [
+    "대학교", "전문대학", "교육대학", "산업대학", "기술대학",
+    "기타대학", "각종학교(대학)", "기타전문대학", "기능대학",
+    "전문대학원", "특수대학원", "일반대학원"
+  ],
+  "osm_tags": {
+    "amenity": ["school", "college", "university"]
+  }
+}
