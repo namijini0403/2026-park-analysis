@@ -804,6 +804,324 @@
       color: #ffffff;
     }
 
+    .guide-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10020;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(31, 41, 55, 0.58);
+    }
+
+    .guide-overlay.is-open {
+      display: flex;
+    }
+
+    .guide-dialog {
+      position: relative;
+      width: min(1120px, 100%);
+      max-height: min(92vh, 920px);
+      overflow: hidden;
+      border-radius: 22px;
+      background: #fffbf3;
+      border: 1px solid rgba(110, 89, 51, 0.18);
+      box-shadow: 0 30px 80px rgba(31, 41, 55, 0.34);
+    }
+
+    .guide-scroll {
+      max-height: min(92vh, 920px);
+      overflow: auto;
+      padding: 24px;
+    }
+
+    .guide-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 2;
+      min-width: 42px;
+      min-height: 42px;
+      border: 1px solid rgba(99, 78, 40, 0.14);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.94);
+      color: #374151;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .guide-hero {
+      display: grid;
+      gap: 18px;
+      padding: 28px;
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(217, 234, 211, 0.92), rgba(255, 246, 224, 0.95));
+      border: 1px solid rgba(20, 83, 45, 0.12);
+    }
+
+    .guide-hero h2 {
+      margin: 0;
+      padding-right: 48px;
+      color: #173f2b;
+      font-size: clamp(25px, 3vw, 38px);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .guide-hero p {
+      max-width: 780px;
+      margin: 0;
+      color: #4b5563;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .guide-badges,
+    .guide-chip-grid,
+    .guide-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .guide-badge,
+    .guide-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(20, 83, 45, 0.13);
+      color: #24533c;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .guide-section-block {
+      margin-top: 22px;
+    }
+
+    .guide-section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .guide-section-head h3 {
+      margin: 0;
+      color: #2d3b2f;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .guide-section-head p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .guide-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .guide-principles {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .guide-pop-card {
+      position: relative;
+      min-height: 132px;
+      padding: 16px;
+      border: 1px solid rgba(99, 78, 40, 0.13);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 12px 28px rgba(61, 42, 20, 0.08);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .guide-flow .guide-pop-card:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 28px;
+      right: -13px;
+      width: 14px;
+      height: 2px;
+      background: rgba(31, 81, 54, 0.28);
+    }
+
+    .guide-pop-card:focus {
+      outline: 3px solid rgba(20, 83, 45, 0.16);
+      outline-offset: 2px;
+    }
+
+    .guide-pop-card h4 {
+      margin: 0 0 8px;
+      color: #173f2b;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .guide-pop-card p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .guide-step-number {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      background: #1f5136;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .guide-detail-popover {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: calc(100% - 8px);
+      z-index: 5;
+      display: none;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(20, 83, 45, 0.15);
+      background: #ffffff;
+      color: #374151;
+      box-shadow: 0 18px 44px rgba(31, 41, 55, 0.2);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .guide-pop-card:hover .guide-detail-popover,
+    .guide-pop-card:focus .guide-detail-popover,
+    .guide-pop-card.is-active .guide-detail-popover {
+      display: block;
+    }
+
+    .guide-principle-card {
+      min-height: 92px;
+      padding: 14px;
+      border-radius: 14px;
+    }
+
+    .guide-principle-card .guide-detail-popover {
+      top: calc(100% - 4px);
+    }
+
+    .guide-faq {
+      display: grid;
+      gap: 10px;
+    }
+
+    .guide-faq-item {
+      border: 1px solid rgba(99, 78, 40, 0.13);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.86);
+      overflow: hidden;
+    }
+
+    .guide-faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 52px;
+      padding: 14px 16px;
+      border: 0;
+      background: transparent;
+      color: #173f2b;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .guide-faq-question::after {
+      content: "+";
+      flex: 0 0 auto;
+      color: #1f5136;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .guide-faq-question[aria-expanded="true"]::after {
+      content: "-";
+    }
+
+    .guide-faq-answer {
+      display: none;
+      padding: 0 16px 16px;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .guide-faq-question[aria-expanded="true"] + .guide-faq-answer {
+      display: block;
+    }
+
+    .guide-cta-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      border-radius: 18px;
+      background: #f6efe0;
+      border: 1px solid rgba(99, 78, 40, 0.13);
+    }
+
+    .guide-cta-panel p {
+      margin: 0;
+      color: #5b5142;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .guide-cta-button {
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(20, 83, 45, 0.22);
+      background: #ffffff;
+      color: #1f5136;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .guide-cta-button.primary {
+      background: #1f5136;
+      color: #ffffff;
+    }
+
     @media (max-width: 768px) {
       .panel {
         top: auto;
@@ -873,6 +1191,71 @@
       .case-filter-btn {
         flex: 1 1 calc(50% - 8px);
         min-width: 0;
+      }
+
+      .guide-overlay {
+        padding: 10px;
+        align-items: flex-end;
+      }
+
+      .guide-dialog {
+        width: 100%;
+        max-height: 94vh;
+        border-radius: 24px 24px 0 0;
+      }
+
+      .guide-scroll {
+        max-height: 94vh;
+        padding: 16px;
+      }
+
+      .guide-hero {
+        padding: 22px 18px;
+      }
+
+      .guide-hero h2 {
+        padding-right: 44px;
+        font-size: 25px;
+      }
+
+      .guide-flow,
+      .guide-grid,
+      .guide-principles {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-pop-card {
+        min-height: auto;
+      }
+
+      .guide-detail-popover {
+        position: static;
+        margin-top: 12px;
+        box-shadow: none;
+      }
+
+      .guide-flow .guide-pop-card:not(:last-child)::after {
+        top: auto;
+        right: auto;
+        left: 29px;
+        bottom: -13px;
+        width: 2px;
+        height: 14px;
+      }
+
+      .guide-section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .guide-cta-panel {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .guide-cta-row {
+        display: grid;
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -1216,6 +1599,102 @@
       case3: { label: "수요관리필요", badge: "수요관리필요", color: "#FDD835", className: "watch" },
       case4: { label: "현상유지", badge: "현상유지", color: "#43A047", className: "normal" },
       island: { label: "별도 정책 필요", badge: "별도 정책 필요", color: "#6B7280", className: "island" }
+    };
+
+    const GUIDE_CONTENT = {
+      hero: {
+        title: "사용 설명서 · 시스템 소개",
+        subtitle:
+          "초등학교 주변 녹지 접근성을 실제 도보생활권 기준으로 진단하고, 현재 환경 격차와 미래 수요를 반영해 설명가능한 후보지 추천을 지원하는 시스템입니다.",
+        badges: ["도보생활권 분석", "학교별 환경 진단", "미래 수요 반영", "설명가능한 AI 추천"]
+      },
+      flowSteps: [
+        {
+          title: "공공데이터 수집",
+          summary: "학교·공원·인구·도로환경 데이터를 통합합니다.",
+          detail:
+            "학교 위치, 공원·놀이터 정보, 인구 및 연령 구조, 재개발 정보, 도로·단절요인 등 공공데이터와 공간데이터를 통합하여 분석 기반을 구성합니다."
+        },
+        {
+          title: "도보생활권 분석",
+          summary: "직선거리가 아닌 실제 보행 가능 범위를 계산합니다.",
+          detail:
+            "OSMnx 기반 도로망 분석을 통해 학교 중심 500m 도보생활권을 산출합니다. 같은 500m라도 도로 구조와 단절요인에 따라 실제 도달 가능 범위는 달라질 수 있습니다."
+        },
+        {
+          title: "학교별 환경 진단",
+          summary: "접근성·녹지·놀이터 환경을 학교 단위로 진단합니다.",
+          detail:
+            "최근접 공원 거리, 도보권 내 공원 수, 녹지비율, 놀이터 정보 등을 바탕으로 학교별 환경을 진단합니다. Case 분류와 유사학교 비교를 통해 상대적 위치도 함께 확인할 수 있습니다."
+        },
+        {
+          title: "미래 수요 반영",
+          summary: "현재뿐 아니라 2029·2031 잠재 수요도 함께 봅니다.",
+          detail:
+            "지역별 인구 변화와 아동 수 추이를 반영하여 후보지 주변의 잠재 수혜학생수를 예측합니다. 단순 현재 부족만이 아니라 향후 수요까지 고려한 지원 판단을 돕습니다."
+        },
+        {
+          title: "후보지 추천",
+          summary: "AI 추천과 사용자 조정을 함께 제공합니다.",
+          detail:
+            "기본 추천 로직을 제공하되, 사용자가 필터와 우선순위를 직접 조정하여 다양한 정책 시나리오를 비교할 수 있습니다. 이 시스템은 자동 결정기가 아니라 설명가능한 의사결정 지원 도구입니다."
+        }
+      ],
+      features: [
+        {
+          title: "학교별 진단 리포트",
+          summary: "학교 주변 환경을 한눈에 확인",
+          detail: "최근접 공원 거리, 녹지비율, 놀이터 환경, 학생 수 추이 등 핵심 지표를 종합적으로 보여줍니다."
+        },
+        {
+          title: "실제 도보생활권",
+          summary: "반경이 아닌 실제 도달 가능성",
+          detail: "학생의 실제 보행 이동을 고려해 도보 접근 범위를 시각화합니다. 직선거리 기반 판단의 한계를 보완합니다."
+        },
+        {
+          title: "유사학교 비교",
+          summary: "비슷한 환경의 학교와 비교",
+          detail: "KNN 기반으로 환경이 유사한 학교를 찾아 현재 학교의 상대적 특징과 격차를 이해할 수 있도록 돕습니다."
+        },
+        {
+          title: "미래 수요 예측",
+          summary: "향후 수혜 가능 아동까지 반영",
+          detail: "2029년, 2031년 기준 잠재 수혜학생수를 예측해 현재뿐 아니라 미래까지 고려한 후보지 검토가 가능합니다."
+        },
+        {
+          title: "AI 추천 + 직접 조정",
+          summary: "추천 결과를 직접 바꿔볼 수 있음",
+          detail:
+            "기본 추천을 확인한 뒤, 거리·수요·단절요인·기존 시설 등을 고려해 사용자가 필터와 우선순위를 조정할 수 있습니다."
+        }
+      ],
+      principles: [
+        { title: "반경이 아니라 도달 가능성", detail: "단순 원형 반경 대신 실제 도보 네트워크를 반영하여 접근성을 재정의했습니다." },
+        { title: "현재와 미래를 함께 고려", detail: "현재 환경 부족만 보는 것이 아니라 향후 수혜 가능 인구까지 함께 살펴 정책 활용성을 높였습니다." },
+        { title: "설명가능한 추천", detail: "점수 하나로 결론을 숨기지 않고, 추천 기준과 조정 가능한 요소를 드러내는 구조를 지향합니다." },
+        { title: "Human-in-the-loop", detail: "AI 추천을 제공하되, 최종 해석과 조정은 사용자가 직접 수행하는 구조입니다." },
+        { title: "학교 중심 정책지원", detail: "도시 차원의 분석이 아니라 초등학교 생활권을 중심으로 환경 격차를 해석하고 지원 판단을 돕도록 설계했습니다." }
+      ],
+      faq: [
+        {
+          question: "AI 추천은 최종 결론인가요?",
+          answer: "아닙니다. AI 추천은 기본 시나리오이며, 사용자는 필터와 우선순위를 바꿔 다른 판단 기준을 적용할 수 있습니다."
+        },
+        {
+          question: "왜 점수 하나로 순위를 정하지 않나요?",
+          answer:
+            "정책 판단에는 거리, 수요, 기존 시설, 단절요인 등 여러 기준이 함께 작동합니다. 이 시스템은 기준을 숨긴 단일 점수보다, 판단 과정을 더 투명하게 보여주는 방식을 지향합니다."
+        },
+        {
+          question: "이 시스템은 무엇을 도와주나요?",
+          answer: "정답을 자동으로 결정하는 것이 아니라, 학교별 환경 진단과 후보지 비교를 통해 의사결정 근거를 더 명확하게 해주는 역할을 합니다."
+        }
+      ],
+      ctas: [
+        { label: "학교별 진단 보기", action: "school-report", primary: true },
+        { label: "시뮬레이션 시작하기", action: "simulation" },
+        { label: "AI 추천 보기", action: "ai-recommendation" }
+      ]
     };
 
     const ui = {
@@ -2958,6 +3437,191 @@
       }
     }
 
+    function escapeGuideText(value = "") {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function guidePopCardHtml(item, index, options = {}) {
+      const number = String(index + 1).padStart(2, "0");
+      const className = options.className || "";
+      const prefix = options.numbered ? `<span class="guide-step-number">${number}</span>` : "";
+      const summary = item.summary ? `<p>${escapeGuideText(item.summary)}</p>` : "";
+      return `
+        <button class="guide-pop-card ${className}" type="button" aria-label="${escapeGuideText(item.title)} 상세 설명 보기">
+          ${prefix}
+          <h4>${escapeGuideText(item.title)}</h4>
+          ${summary}
+          <span class="guide-detail-popover" role="tooltip">${escapeGuideText(item.detail)}</span>
+        </button>
+      `;
+    }
+
+    function renderGuideOverlay() {
+      const existing = document.getElementById("guideOverlay");
+      if (existing) return existing;
+
+      const overlay = document.createElement("div");
+      overlay.id = "guideOverlay";
+      overlay.className = "guide-overlay";
+      overlay.innerHTML = `
+        <div class="guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+          <button class="guide-close" type="button" data-guide-close aria-label="사용 설명서 닫기">×</button>
+          <div class="guide-scroll">
+            <section class="guide-hero">
+              <div>
+                <h2 id="guideTitle">${escapeGuideText(GUIDE_CONTENT.hero.title)}</h2>
+                <p>${escapeGuideText(GUIDE_CONTENT.hero.subtitle)}</p>
+              </div>
+              <div class="guide-badges">
+                ${GUIDE_CONTENT.hero.badges.map((badge) => `<span class="guide-badge">${escapeGuideText(badge)}</span>`).join("")}
+              </div>
+            </section>
+
+            <section class="guide-section-block">
+              <div class="guide-section-head">
+                <h3>시스템 작동 구조</h3>
+                <p>단계 제목에 마우스를 올리거나 탭하면 분석 기준을 확인할 수 있습니다.</p>
+              </div>
+              <div class="guide-flow">
+                ${GUIDE_CONTENT.flowSteps.map((item, index) => guidePopCardHtml(item, index, { numbered: true })).join("")}
+              </div>
+            </section>
+
+            <section class="guide-section-block">
+              <div class="guide-section-head">
+                <h3>주요 기능</h3>
+                <p>핵심 기능만 먼저 보고, 필요할 때 세부 설명을 열어보세요.</p>
+              </div>
+              <div class="guide-grid">
+                ${GUIDE_CONTENT.features.map((item, index) => guidePopCardHtml(item, index)).join("")}
+              </div>
+            </section>
+
+            <section class="guide-section-block">
+              <div class="guide-section-head">
+                <h3>특장점 / 설계 원칙</h3>
+                <p>추천 결과를 해석할 때 함께 봐야 할 기준입니다.</p>
+              </div>
+              <div class="guide-principles">
+                ${GUIDE_CONTENT.principles.map((item, index) => guidePopCardHtml(item, index, { className: "guide-principle-card" })).join("")}
+              </div>
+            </section>
+
+            <section class="guide-section-block">
+              <div class="guide-section-head">
+                <h3>결과 해석 가이드</h3>
+                <p>FAQ는 필요한 질문만 펼쳐서 볼 수 있습니다.</p>
+              </div>
+              <div class="guide-faq">
+                ${GUIDE_CONTENT.faq
+                  .map(
+                    (item, index) => `
+                      <article class="guide-faq-item">
+                        <button class="guide-faq-question" type="button" aria-expanded="${index === 0 ? "true" : "false"}">
+                          ${escapeGuideText(item.question)}
+                        </button>
+                        <div class="guide-faq-answer">${escapeGuideText(item.answer)}</div>
+                      </article>
+                    `
+                  )
+                  .join("")}
+              </div>
+            </section>
+
+            <section class="guide-section-block guide-cta-panel">
+              <p>지도에서 학교를 선택하거나, 상세 화면으로 이동해 진단과 시뮬레이션을 이어서 확인할 수 있습니다.</p>
+              <div class="guide-cta-row">
+                ${GUIDE_CONTENT.ctas
+                  .map(
+                    (cta) => `
+                      <button class="guide-cta-button ${cta.primary ? "primary" : ""}" type="button" data-guide-action="${escapeGuideText(cta.action)}">
+                        ${escapeGuideText(cta.label)}
+                      </button>
+                    `
+                  )
+                  .join("")}
+              </div>
+            </section>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+      overlay.addEventListener("click", handleGuideOverlayClick);
+      overlay.addEventListener("keydown", handleGuideOverlayKeydown);
+      return overlay;
+    }
+
+    function openGuideOverlay() {
+      const overlay = renderGuideOverlay();
+      overlay.classList.add("is-open");
+      overlay.querySelector("[data-guide-close]")?.focus();
+    }
+
+    function closeGuideOverlay() {
+      document.getElementById("guideOverlay")?.classList.remove("is-open");
+    }
+
+    function closeGuidePopCards(exceptCard = null) {
+      document.querySelectorAll("#guideOverlay .guide-pop-card.is-active").forEach((card) => {
+        if (card !== exceptCard) card.classList.remove("is-active");
+      });
+    }
+
+    function handleGuideOverlayClick(event) {
+      const overlay = document.getElementById("guideOverlay");
+      if (!overlay) return;
+      const closeButton = event.target.closest("[data-guide-close]");
+      if (closeButton || event.target === overlay) {
+        closeGuideOverlay();
+        return;
+      }
+
+      const faqButton = event.target.closest(".guide-faq-question");
+      if (faqButton) {
+        const isExpanded = faqButton.getAttribute("aria-expanded") === "true";
+        faqButton.setAttribute("aria-expanded", String(!isExpanded));
+        return;
+      }
+
+      const popCard = event.target.closest(".guide-pop-card");
+      if (popCard) {
+        const isActive = popCard.classList.contains("is-active");
+        closeGuidePopCards(popCard);
+        popCard.classList.toggle("is-active", !isActive);
+        return;
+      }
+
+      const ctaButton = event.target.closest("[data-guide-action]");
+      if (ctaButton) {
+        handleGuideCta(ctaButton.dataset.guideAction);
+        return;
+      }
+
+      closeGuidePopCards();
+    }
+
+    function handleGuideOverlayKeydown(event) {
+      if (event.key === "Escape") {
+        closeGuideOverlay();
+      }
+    }
+
+    function handleGuideCta(action) {
+      closeGuideOverlay();
+      const guideCtaHandlers = {
+        "school-report": () => openPreviewOverlay("report"),
+        simulation: () => openPreviewOverlay("simulation"),
+        "ai-recommendation": () => openPreviewOverlay("recommendation")
+      };
+      (guideCtaHandlers[action] || guideCtaHandlers["school-report"])();
+    }
+
     function wireEvents() {
       ui.guFilter.addEventListener("change", (event) => {
         state.selectedGu = event.target.value;
@@ -2990,7 +3654,7 @@
       });
 
       ui.guideShortcutButton?.addEventListener("click", () => {
-        window.alert("사용설명서는 곧 추가될 예정입니다.");
+        openGuideOverlay();
       });
 
       kakao.maps.event.addListener(state.map, "zoom_changed", () => {
