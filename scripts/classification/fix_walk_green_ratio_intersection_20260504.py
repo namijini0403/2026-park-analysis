@@ -295,6 +295,9 @@ def main() -> None:
     # encode sealed field measurements.
     priority["buf_park_count"] = priority["radius_500m_park_count_intersection"].fillna(0).astype(int)
     priority["buf_park_area"] = priority["radius_500m_park_area_intersection"].fillna(0.0)
+    priority["isochrone_area_m2"] = priority["walk_500m_zone_area_m2"].fillna(
+        priority["isochrone_area_m2"]
+    )
 
     auto_mask = ~priority["green_fix_protected"]
     priority.loc[auto_mask, "iso_park_count"] = (
@@ -329,6 +332,20 @@ def main() -> None:
             priority.loc[mask, "iso_park_count_raw"] = priority.loc[mask, "iso_park_count"]
         if "iso_park_area_raw" in priority.columns:
             priority.loc[mask, "iso_park_area_raw"] = priority.loc[mask, "iso_park_area"]
+
+    protected_non_manual = priority["green_fix_protected"] & ~priority["green_fix_manual_ratio"]
+    protected_ratio = pd.to_numeric(
+        priority.loc[protected_non_manual, "iso_green_ratio_raw"], errors="coerce"
+    ).fillna(0.0)
+    priority.loc[protected_non_manual, "iso_park_area"] = (
+        priority.loc[protected_non_manual, "isochrone_area_m2"].fillna(0.0)
+        * protected_ratio
+        / 100.0
+    )
+    if "iso_park_area_raw" in priority.columns:
+        priority.loc[protected_non_manual, "iso_park_area_raw"] = priority.loc[
+            protected_non_manual, "iso_park_area"
+        ]
 
     priority["iso_green_ratio"] = pd.to_numeric(
         priority["iso_green_ratio_raw"], errors="coerce"

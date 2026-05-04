@@ -4325,6 +4325,11 @@
       const caseLabel = getCaseTypeLabel(row);
       const badge = getSchoolBadge(row);
       const mirageBadge = getMirageBadge(row);
+      const aptAdjustedGreen = Number(row.corrected_green_ratio);
+      const aptAddedArea = Number(row.apt_blocked_m2);
+      const aptScenarioText = Number.isFinite(aptAdjustedGreen) && aptAddedArea > 0
+        ? ` &nbsp;·&nbsp; 🏘 단지보정 ${formatDecimal(aptAdjustedGreen, 1)}%`
+        : "";
 
       // 우측 패널: 미니멀 요약 카드만 표시
       ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
@@ -4343,7 +4348,7 @@
         <div style="font-size:12px; color:var(--muted); line-height:1.7; margin-bottom:20px;">
           🌳 최근접 공원 ${formatDistanceMeters(row.nearest_park_dist_m)}m &nbsp;·&nbsp;
           🛝 도보 놀이터 ${formatCount(row.iso_playground_count)}개 &nbsp;·&nbsp;
-          🌿 녹지 ${formatDecimal(row.iso_green_ratio, 1)}%
+          🌿 녹지 ${formatDecimal(row.iso_green_ratio, 1)}%${aptScenarioText}
         </div>
         <button
           onclick="openSimulationOverlay()"
