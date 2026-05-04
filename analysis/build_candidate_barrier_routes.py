@@ -16,6 +16,8 @@ from shapely.ops import transform as shapely_transform
 
 BASE = Path(__file__).resolve().parents[1]
 GRAPH_PATH = BASE / "data_processed" / "incheon_walk_graph_v2.graphml"
+if not GRAPH_PATH.exists():
+    GRAPH_PATH = BASE / "data" / "processed" / "incheon_walk_graph_v2.graphml"
 SCHOOLS_PATH = BASE / "data_processed" / "schools.csv"
 SCHOOL_PRIORITY_PATH = BASE / "data_processed" / "school_priority.csv"
 CANDIDATES_PATH = BASE / "data_processed" / "candidate_grid_final.geojson"

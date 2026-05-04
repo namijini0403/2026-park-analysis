@@ -15,8 +15,9 @@ from shapely.geometry import Point
 
 
 BASE_DIR = Path(__file__).resolve().parents[2]
-DATA_DIR = BASE_DIR / "data/processed"
-OUTPUT_DIR = BASE_DIR / "output" / "chapter6_visuals"
+DATA_DIR = BASE_DIR / "data_processed"
+REPORT_DIR = BASE_DIR / "outputs" / "reports"
+OUTPUT_DIR = BASE_DIR / "outputs" / "maps" / "chapter6_visuals"
 CRS_METRIC = "EPSG:5179"
 
 BLUE = "#3B82F6"
@@ -65,7 +66,7 @@ def save_fig(fig: plt.Figure, path: Path) -> None:
 
 
 def load_core() -> pd.DataFrame:
-    path = OUTPUT_DIR.parent / "buffer_500m_vs_walk_500m_green_ratio_20260423.csv"
+    path = REPORT_DIR / "buffer_500m_vs_walk_500m_green_ratio_20260423.csv"
     df = pd.read_csv(path)
     return df[df["is_core_case"].astype(str).str.lower().eq("true")].copy()
 
@@ -297,8 +298,8 @@ def highway_is_major(value: object) -> bool:
 
 
 def fig_extreme_map(core: pd.DataFrame) -> None:
-    target_name = "인천장도초등학교"
-    row = core.loc[core["학교명"].eq(target_name)].iloc[0]
+    row = core.sort_values("buffer_to_walk_loss_pp", ascending=False).iloc[0]
+    target_name = row["학교명"]
     school_id = row["학교ID"]
 
     schools = pd.read_csv(DATA_DIR / "schools.csv")
@@ -308,7 +309,7 @@ def fig_extreme_map(core: pd.DataFrame) -> None:
     ).to_crs(CRS_METRIC).iloc[0]
 
     buffer_gdf = gpd.read_file(DATA_DIR / "school_buffer_500m.geojson").to_crs(CRS_METRIC)
-    iso_gdf = gpd.read_file(DATA_DIR / "isochrone_corrected.geojson").to_crs(CRS_METRIC)
+    iso_gdf = gpd.read_file(DATA_DIR / "school_isochrone_500m.geojson").to_crs(CRS_METRIC)
     target_buffer = buffer_gdf[buffer_gdf["학교ID"].eq(school_id)]
     target_iso = iso_gdf[iso_gdf["학교ID"].eq(school_id)]
 
@@ -371,7 +372,7 @@ def fig_extreme_map(core: pd.DataFrame) -> None:
     ax.text(
         0.5,
         -0.04,
-        "인천장도초등학교 — 반경 안의 녹지가 실제 도보로는 도달하기 어렵다",
+        f"{target_name} — 반경 안의 녹지가 실제 도보로는 줄어드는 사례",
         transform=ax.transAxes,
         ha="center",
         va="top",
