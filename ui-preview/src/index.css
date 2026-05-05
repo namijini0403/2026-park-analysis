@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  color: #0f172a;
-  background-color: #f1f5f9;
+  color: #F8FAFC;
+  background-color: #07111F;
   font-family:
     "Pretendard Variable",
     Pretendard,
@@ -14,7 +14,7 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  line-height: 1.5;
+  line-height: 1.55;
   font-weight: 400;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -23,8 +23,124 @@
 
 body {
   margin: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.026) 1px, transparent 1px),
+    linear-gradient(180deg, #07111F 0%, #081421 48%, #0E1B2A 100%);
+  background-size: 44px 44px, 44px 44px, auto;
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #F8FAFC;
 }
 
 * {
   box-sizing: border-box;
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300;
+  }
+  .eyebrow-navy {
+    @apply text-[11px] font-semibold uppercase tracking-[0.28em] text-navy-300;
+  }
+
+  /* Quiet glass-card surface shared by the cover, guide, reports, and simulation. */
+  .panel {
+    @apply relative rounded-2xl border border-white/10 bg-card-grad shadow-card;
+  }
+  .panel-soft {
+    @apply rounded-2xl border border-white/10 bg-forest-950/60 backdrop-blur-sm;
+  }
+  .panel-inset {
+    @apply rounded-xl border border-white/10 bg-forest-950/45;
+  }
+  .panel-light {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-soft;
+  }
+
+  /* Accent stripe for tonal cards — replaces full colored backgrounds */
+  .accent-stripe {
+    @apply relative overflow-hidden;
+  }
+  .accent-stripe::before {
+    content: "";
+    @apply absolute inset-y-0 left-0 w-[3px] rounded-full;
+  }
+  .accent-stripe-rose::before { background: linear-gradient(180deg, #F87171 0%, rgba(248,113,113,0.3) 100%); }
+  .accent-stripe-amber::before { background: linear-gradient(180deg, #FBBF24 0%, rgba(251,191,36,0.3) 100%); }
+  .accent-stripe-yellow::before { background: linear-gradient(180deg, #FDE68A 0%, rgba(253,230,138,0.3) 100%); }
+  .accent-stripe-forest::before { background: linear-gradient(180deg, #3FB081 0%, rgba(63,176,129,0.3) 100%); }
+  .accent-stripe-sky::before { background: linear-gradient(180deg, #60A5FA 0%, rgba(96,165,250,0.3) 100%); }
+
+  .stat-card {
+    @apply rounded-xl border border-white/10 bg-forest-950/60 px-4 py-3;
+  }
+  .stat-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-forest-300;
+  }
+  .stat-value {
+    @apply text-xl font-bold text-white;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold;
+  }
+  .chip-forest {
+    @apply chip border-forest-500/50 bg-forest-500/10 text-forest-200;
+  }
+  .chip-navy {
+    @apply chip border-navy-400/40 bg-navy-800/60 text-navy-300;
+  }
+  .chip-amber {
+    @apply chip border-signal-warn/45 bg-signal-warn/10 text-signal-warnSoft;
+  }
+  .chip-alert {
+    @apply chip border-signal-alert/45 bg-signal-alert/10 text-signal-alertSoft;
+  }
+  .chip-info {
+    @apply chip border-signal-info/45 bg-signal-info/10 text-signal-infoSoft;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-forest-grad px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 active:brightness-95;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-forest-500 bg-transparent px-4 py-2 text-sm font-semibold text-forest-200 transition hover:bg-forest-500/10;
+  }
+
+  .section-title {
+    @apply text-base font-bold tracking-tight text-white;
+  }
+  .section-sub {
+    @apply text-sm leading-relaxed text-slate-300;
+  }
+
+  .accent-forest {
+    @apply border-l-2 border-forest-400;
+  }
+  .accent-navy {
+    @apply border-l-2 border-navy-400;
+  }
+}
+
+/* Recharts tweaks for dark theme */
+.recharts-cartesian-axis-tick text {
+  fill: #94A3B8;
+  font-size: 11px;
+}
+.recharts-cartesian-grid line {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+.recharts-default-tooltip {
+  background-color: rgba(8, 20, 33, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #E5E7EB !important;
+  border-radius: 8px !important;
+}
+.recharts-tooltip-label {
+  color: #E5E7EB !important;
 }

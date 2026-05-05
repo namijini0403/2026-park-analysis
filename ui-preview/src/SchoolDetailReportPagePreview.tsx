@@ -372,13 +372,37 @@ function buildZeroInflatedDisplayModel({
 function getToneMeta(tone: StatusTone) {
   switch (tone) {
     case "danger":
-      return { badge: "위험", accent: "text-red-700", soft: "bg-red-50", border: "border-red-200" };
+      return {
+        badge: "위험",
+        accent: "text-rose-300",
+        soft: "bg-navy-950/35",
+        border: "border-white/10",
+        stripe: "accent-stripe accent-stripe-rose pl-5",
+      };
     case "warning":
-      return { badge: "경고", accent: "text-orange-700", soft: "bg-orange-50", border: "border-orange-200" };
+      return {
+        badge: "경고",
+        accent: "text-amber-300",
+        soft: "bg-navy-950/35",
+        border: "border-white/10",
+        stripe: "accent-stripe accent-stripe-amber pl-5",
+      };
     case "caution":
-      return { badge: "주의", accent: "text-yellow-700", soft: "bg-yellow-50", border: "border-yellow-200" };
+      return {
+        badge: "주의",
+        accent: "text-yellow-200",
+        soft: "bg-navy-950/35",
+        border: "border-white/10",
+        stripe: "accent-stripe accent-stripe-yellow pl-5",
+      };
     default:
-      return { badge: "양호", accent: "text-green-700", soft: "bg-green-50", border: "border-green-200" };
+      return {
+        badge: "양호",
+        accent: "text-forest-300",
+        soft: "bg-navy-950/35",
+        border: "border-white/10",
+        stripe: "accent-stripe accent-stripe-forest pl-5",
+      };
   }
 }
 
@@ -460,24 +484,31 @@ function trendToneFromChange(changePercent: number): StatusTone {
 }
 
 function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cx("rounded-3xl border border-slate-200 bg-white shadow-sm", className)} {...props} />;
+  return <div className={cx("relative rounded-2xl border border-white/10 bg-card-grad shadow-card", className)} {...props} />;
 }
 
 function Badge({ tone, children }: { tone: StatusTone; children: React.ReactNode }) {
   const meta = getToneMeta(tone);
-  return <span className={cx("inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold", meta.soft, meta.border, meta.accent)}>{children}</span>;
+  const ringMap: Record<StatusTone, string> = {
+    danger: "border-rose-400/50 bg-rose-500/15 text-rose-200",
+    warning: "border-amber-400/50 bg-amber-500/15 text-amber-200",
+    caution: "border-yellow-400/45 bg-yellow-400/12 text-yellow-100",
+    positive: "border-forest-400/55 bg-forest-500/15 text-forest-200",
+  };
+  void meta;
+  return <span className={cx("inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wide", ringMap[tone])}>{children}</span>;
 }
 
 function Button({ className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={cx("inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800", className)} {...props} />;
+  return <button className={cx("inline-flex items-center justify-center rounded-2xl bg-forest-grad px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:brightness-110", className)} {...props} />;
 }
 
 function SectionShell({ kicker, title, children }: { kicker: string; title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-4">
       <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">{kicker}</p>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-950">{title}</h2>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">{kicker}</p>
+        <h2 className="text-2xl font-bold tracking-tight text-white">{title}</h2>
       </div>
       {children}
     </section>
@@ -485,12 +516,12 @@ function SectionShell({ kicker, title, children }: { kicker: string; title: stri
 }
 
 function SectionChip({ children }: { children: React.ReactNode }) {
-  return <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700">{children}</span>;
+  return <span className="inline-flex items-center rounded-full border border-white/15 bg-navy-950/35 px-3 py-1.5 text-sm font-medium text-slate-200">{children}</span>;
 }
 
 function DarkChip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700">
+    <span className="inline-flex items-center rounded-full border border-white/15 bg-navy-950/35 px-3 py-1.5 text-sm font-medium text-slate-200">
       {children}
     </span>
   );
@@ -502,22 +533,22 @@ function MetricCard({ title, icon, value, unit, tone, headline, emphasisLine, co
     <Card className="p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-medium text-slate-500">{icon} {title}</p>
+          <p className="text-sm font-medium text-slate-400">{icon} {title}</p>
           <div className="mt-3 flex items-end gap-2">
-            <p className="text-4xl font-bold tracking-tight text-slate-950">{value}</p>
-            <p className="pb-1 text-sm font-medium text-slate-500">{unit}</p>
+            <p className="text-4xl font-bold tracking-tight text-white">{value}</p>
+            <p className="pb-1 text-sm font-medium text-slate-400">{unit}</p>
           </div>
         </div>
         <Badge tone={tone}>{meta.badge}</Badge>
       </div>
-      <div className={cx("mt-4 rounded-2xl border p-4", meta.soft, meta.border)}>
-        <p className={cx("text-sm font-semibold", meta.accent)}>{headline}</p>
+      <div className={cx("mt-4 rounded-2xl border p-4", meta.soft, meta.border, meta.stripe)}>
+        <p className={cx("text-sm font-semibold tracking-tight", meta.accent)}>{headline}</p>
         {emphasisLine ? (
-          <p className="mt-2 text-base font-bold tracking-tight text-slate-950">{emphasisLine}</p>
+          <p className="mt-2 text-base font-bold tracking-tight text-white">{emphasisLine}</p>
         ) : null}
         {comparisonVisual ? comparisonVisual : null}
         {comparisonLines?.length ? (
-          <div className="mt-2 space-y-1 text-sm text-slate-700">
+          <div className="mt-2 space-y-1 text-sm text-slate-200">
             {comparisonLines.map((line) => <p key={line}>{line}</p>)}
           </div>
         ) : null}
@@ -556,47 +587,47 @@ function ComparisonBar({
 
   return (
     <div className="mt-3 space-y-3">
-      <div className="rounded-2xl bg-white/80 px-3 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{label}</p>
+      <div className="rounded-2xl bg-navy-950/35 px-3 py-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{label}</p>
         <div className="mt-2 flex items-end justify-between gap-3">
-          <p className="text-2xl font-black tracking-tight text-slate-950">
+          <p className="text-2xl font-black tracking-tight text-white">
             {percentile == null ? "-" : formatWholePercent(percentile)}
           </p>
-          <p className="text-xs font-medium text-slate-500">
+          <p className="text-xs font-medium text-slate-400">
             {percentile == null ? "비교 분포 계산 중" : percentileLabel}
           </p>
         </div>
       </div>
 
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+        <div className="flex items-center justify-between text-[11px] font-medium text-slate-400">
           <span>불리</span>
           <span>{directionLabel}</span>
           <span>유리</span>
         </div>
-        <div className={cx("relative h-3 rounded-full ring-1 ring-slate-200", disabled ? "bg-slate-100" : "bg-white/90")}>
+        <div className={cx("relative h-3 rounded-full ring-1 ring-white/15", disabled ? "bg-navy-950/35" : "bg-navy-950/35")}>
           <div
             className={cx(
               "absolute inset-y-0 left-0 rounded-full",
-              disabled ? "bg-slate-300" : "bg-gradient-to-r from-red-200 via-yellow-200 to-green-200",
+              disabled ? "bg-white/15" : "bg-gradient-to-r from-rose-500/60 via-amber-400/60 to-forest-400/70",
             )}
             style={{ width: "100%" }}
           />
           {!disabled && avgRatio != null ? (
-            <div className="absolute top-1/2 h-5 w-[2px] -translate-y-1/2 bg-slate-500" style={{ left: marker(avgRatio) }} />
+            <div className="absolute top-1/2 h-5 w-[2px] -translate-y-1/2 bg-white/60" style={{ left: marker(avgRatio) }} />
           ) : null}
           {!disabled && currentRatio != null ? (
-            <div className="absolute top-1/2 h-6 w-6 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-white bg-slate-950 shadow-sm" style={{ left: marker(currentRatio) }} />
+            <div className="absolute top-1/2 h-6 w-6 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-navy-950 bg-forest-400 shadow-glow" style={{ left: marker(currentRatio) }} />
           ) : null}
         </div>
-        {disabled && disabledMessage ? <p className="text-[11px] text-slate-500">{disabledMessage}</p> : null}
-        <div className="grid gap-2 text-xs text-slate-700">
-          <div className="flex items-center justify-between rounded-xl bg-white/70 px-3 py-2">
-            <span className="font-semibold text-slate-500">현재</span>
-            <span className="font-semibold text-slate-950">{currentLabel}</span>
+        {disabled && disabledMessage ? <p className="text-[11px] text-slate-400">{disabledMessage}</p> : null}
+        <div className="grid gap-2 text-xs text-slate-200">
+          <div className="flex items-center justify-between rounded-xl bg-navy-950/35 px-3 py-2">
+            <span className="font-semibold text-slate-400">현재</span>
+            <span className="font-semibold text-white">{currentLabel}</span>
           </div>
-          <div className="flex items-center justify-between rounded-xl bg-white/60 px-3 py-2">
-            <span className="font-semibold text-slate-500">{avgTitle}</span>
+          <div className="flex items-center justify-between rounded-xl bg-navy-950/35 px-3 py-2">
+            <span className="font-semibold text-slate-400">{avgTitle}</span>
             <span>{avgLabel}</span>
           </div>
         </div>
@@ -610,12 +641,12 @@ function StudentTrendMini({ data }: { data: StudentTrendPoint[] }) {
     <div className="h-36 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 12, right: 10, left: -24, bottom: 0 }}>
-          <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="year" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "#64748b" }} />
-          <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "#64748b" }} width={40} />
-          <Tooltip contentStyle={{ borderRadius: 16, borderColor: "#e2e8f0" }} formatter={(value: number) => [`${formatNumber(value)}명`, "학생 수"]} />
-          <Line type="monotone" dataKey="value" stroke="#0f172a" strokeWidth={2.5} dot={{ r: 3, fill: "#0f172a" }} activeDot={{ r: 5 }}>
-            <LabelList dataKey="value" position="top" formatter={(value: number) => formatNumber(value)} style={{ fill: "#64748b", fontSize: 10 }} />
+          <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="year" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "#94A3B8" }} />
+          <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "#94A3B8" }} width={40} />
+          <Tooltip contentStyle={{ borderRadius: 12, backgroundColor: "rgba(10,22,51,0.95)", borderColor: "rgba(255,255,255,0.1)", color: "#E5E7EB" }} formatter={(value: number) => [`${formatNumber(value)}명`, "학생 수"]} />
+          <Line type="monotone" dataKey="value" stroke="#3FB081" strokeWidth={2.5} dot={{ r: 3, fill: "#3FB081" }} activeDot={{ r: 5 }}>
+            <LabelList dataKey="value" position="top" formatter={(value: number) => formatNumber(value)} style={{ fill: "#94A3B8", fontSize: 10 }} />
           </Line>
         </LineChart>
       </ResponsiveContainer>
@@ -626,15 +657,20 @@ function StudentTrendMini({ data }: { data: StudentTrendPoint[] }) {
 function SchoolHeader({ schoolName, districtName, casePolicyLabel, caseStatusLabel, statusSummary, noParkWithin500m, nearestParkDistanceM, greenRatio, playgroundCount }: Pick<SchoolDetailReportProps, "schoolName" | "districtName" | "casePolicyLabel" | "caseStatusLabel" | "statusSummary" | "noParkWithin500m" | "nearestParkDistanceM" | "greenRatio" | "playgroundCount">) {
   return (
     <Card className="overflow-hidden">
-      <div className="space-y-5 p-7">
-        <div className="flex flex-wrap gap-2">
-          <span className="case-policy-label rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-bold tracking-[0.08em] text-red-700">{casePolicyLabel}</span>
-          <span className="case-status-label rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-500">{caseStatusLabel}</span>
+      <div className="relative space-y-5 p-7">
+        {/* Decorative top-left forest accent corner */}
+        <div className="pointer-events-none absolute -top-px left-7 right-7 h-px bg-gradient-to-r from-transparent via-forest-400/50 to-transparent" />
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-400/45 bg-rose-500/12 px-3 py-1 text-[11px] font-bold tracking-[0.16em] text-rose-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-rose-300" />
+            {casePolicyLabel}
+          </span>
+          <span className="rounded-full border border-white/10 bg-navy-950/35 px-3 py-1 text-[11px] font-semibold tracking-wide text-slate-300">{caseStatusLabel}</span>
         </div>
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-slate-950 lg:text-5xl">{schoolName}</h1>
-          <p className="mt-2 text-base font-semibold text-slate-600">{districtName}</p>
-          {statusSummary ? <p className="mt-4 max-w-3xl text-base leading-7 font-medium text-slate-700">{statusSummary}</p> : null}
+          <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">{schoolName}</h1>
+          <p className="mt-2 text-base font-semibold text-slate-300">{districtName}</p>
+          {statusSummary ? <p className="mt-4 max-w-3xl text-base leading-7 font-medium text-slate-200">{statusSummary}</p> : null}
         </div>
         <div className="flex flex-wrap gap-2">
           <DarkChip>🌳 최근접 공원 {formatNumber(nearestParkDistanceM)}m</DarkChip>
@@ -717,8 +753,8 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           className={cx(
             "rounded-full px-4 py-2 text-sm font-semibold transition",
             comparisonBasis === "city"
-              ? "bg-slate-950 text-white"
-              : "border border-slate-200 bg-white text-slate-600",
+              ? "bg-forest-grad text-white shadow-glow"
+              : "border border-white/15 bg-navy-950/35 text-slate-200 hover:bg-white/10",
           )}
         >
           인천시 기준
@@ -729,8 +765,8 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           className={cx(
             "rounded-full px-4 py-2 text-sm font-semibold transition",
             comparisonBasis === "district"
-              ? "bg-slate-950 text-white"
-              : "border border-slate-200 bg-white text-slate-600",
+              ? "bg-forest-grad text-white shadow-glow"
+              : "border border-white/15 bg-navy-950/35 text-slate-200 hover:bg-white/10",
           )}
         >
           구 기준
@@ -763,10 +799,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           }
           footer={
             props.nearestParkName || props.nearestParkAccessNote ? (
-              <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">
+              <div className="rounded-2xl bg-navy-950/35 px-4 py-3 text-sm text-slate-200">
                 {props.nearestParkName ? <div>가장 가까운 공원: {props.nearestParkName}</div> : null}
                 {props.nearestParkAccessNote ? (
-                  <div className={cx("leading-6", props.nearestParkName ? "mt-2 border-t border-slate-200 pt-2" : "")}>
+                  <div className={cx("leading-6", props.nearestParkName ? "mt-2 border-t border-white/10 pt-2" : "")}>
                     {props.nearestParkAccessNote}
                   </div>
                 ) : null}
@@ -827,7 +863,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
               disabledMessage="현재 값 기준으로만 비교선을 표시했습니다."
             />
           }
-          footer={props.straightLinePlaygroundCount != null ? <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">500m 직선거리 반경 안에는 놀이터가 {formatNumber(props.straightLinePlaygroundCount)}개 있지만, 실제 도보 이동 500m 이내 놀이터는 {formatNumber(props.playgroundCount)}개입니다.</div> : null}
+          footer={props.straightLinePlaygroundCount != null ? <div className="rounded-2xl bg-navy-950/35 px-4 py-3 text-sm text-slate-200">500m 직선거리 반경 안에는 놀이터가 {formatNumber(props.straightLinePlaygroundCount)}개 있지만, 실제 도보 이동 500m 이내 놀이터는 {formatNumber(props.playgroundCount)}개입니다.</div> : null}
         />
         <MetricCard
           title="학생 수 추세"
@@ -848,10 +884,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
       </div>
       <Card className="p-5">
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p className="text-sm font-medium text-slate-500">500m 내 공원</p><p className="mt-2 text-2xl font-bold text-slate-950">{props.noParkWithin500m ? "없음" : "있음"}</p></div>
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p className="text-sm font-medium text-slate-500">접근성 비율</p><p className="mt-2 text-2xl font-bold text-slate-950">{props.accessibilityRatio != null ? `${formatDecimal(props.accessibilityRatio, 1)}%` : "-"}</p></div>
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p className="text-sm font-medium text-slate-500">평균 대비 공원 부족</p><p className="mt-2 text-2xl font-bold text-slate-950">{props.parkShortageVsAvg != null ? `${formatDecimal(props.parkShortageVsAvg, 1)}개` : "-"}</p></div>
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p className="text-sm font-medium text-slate-500">직선 반경 놀이터</p><p className="mt-2 text-2xl font-bold text-slate-950">{props.straightLinePlaygroundCount != null ? `${formatNumber(props.straightLinePlaygroundCount)}개` : "-"}</p></div>
+          <div className="rounded-2xl border border-white/10 bg-navy-950/35 p-4"><p className="text-sm font-medium text-slate-400">500m 내 공원</p><p className="mt-2 text-2xl font-bold text-white">{props.noParkWithin500m ? "없음" : "있음"}</p></div>
+          <div className="rounded-2xl border border-white/10 bg-navy-950/35 p-4"><p className="text-sm font-medium text-slate-400">접근성 비율</p><p className="mt-2 text-2xl font-bold text-white">{props.accessibilityRatio != null ? `${formatDecimal(props.accessibilityRatio, 1)}%` : "-"}</p></div>
+          <div className="rounded-2xl border border-white/10 bg-navy-950/35 p-4"><p className="text-sm font-medium text-slate-400">평균 대비 공원 부족</p><p className="mt-2 text-2xl font-bold text-white">{props.parkShortageVsAvg != null ? `${formatDecimal(props.parkShortageVsAvg, 1)}개` : "-"}</p></div>
+          <div className="rounded-2xl border border-white/10 bg-navy-950/35 p-4"><p className="text-sm font-medium text-slate-400">직선 반경 놀이터</p><p className="mt-2 text-2xl font-bold text-white">{props.straightLinePlaygroundCount != null ? `${formatNumber(props.straightLinePlaygroundCount)}개` : "-"}</p></div>
         </div>
       </Card>
     </SectionShell>
@@ -910,8 +946,8 @@ function ProblemSection({
   return (
     <SectionShell kicker="Decision" title="핵심 판단">
       <Card className="p-5">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">Decision Signal</p>
-        <p className="mt-2 text-base font-semibold text-slate-950">{decisionText}</p>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Decision Signal</p>
+        <p className="mt-2 text-base font-semibold text-white">{decisionText}</p>
       </Card>
     </SectionShell>
   );
@@ -930,23 +966,23 @@ function ContextSection({
     <SectionShell kicker="Context" title="지역 맥락">
       <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
         <Card className="p-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">생활권 해석</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">생활권 해석</p>
           <div className="mt-4 space-y-3">
-            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-4">
-              <p className="text-sm font-semibold text-red-700">
+            <div className="accent-stripe accent-stripe-rose rounded-2xl border border-white/10 bg-navy-950/35 px-5 py-4">
+              <p className="text-sm font-semibold text-rose-200">
                 {noParkWithin500m
                   ? "학교에서 도보 이동으로 바로 접근할 수 있는 공원이 없습니다."
                   : "도보권 공원 접근은 가능하지만 평균 대비 불리한 편입니다."}
               </p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-sm font-medium text-slate-800">
+            <div className="rounded-2xl border border-white/10 bg-navy-950/35 px-5 py-4">
+              <p className="text-sm font-medium text-slate-100">
                 가장 가까운 공원도 약 {formatNumber(nearestParkDistanceM)}m 떨어져 있어, 일상적 이용에 거리 부담이 있습니다.
               </p>
             </div>
             {hasLargeApartmentComplexNearby ? (
-              <div className="rounded-2xl border border-yellow-200 bg-yellow-50 px-4 py-4">
-                <p className="text-sm font-medium text-yellow-800">
+              <div className="accent-stripe accent-stripe-amber rounded-2xl border border-white/10 bg-navy-950/35 px-5 py-4">
+                <p className="text-sm font-medium text-amber-200">
                   근처 500세대 이상 대단지 아파트가 있어, 미집계 녹지·놀이터가 일부 존재할 가능성이 있습니다.
                 </p>
               </div>
@@ -954,7 +990,7 @@ function ContextSection({
           </div>
         </Card>
         <Card className="p-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">주변 조건</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">주변 조건</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {contextTags.map((tag) => (
               <SectionChip key={tag}>
@@ -1114,73 +1150,88 @@ function SimilarSchoolsSection({
     <SectionShell kicker="Benchmark" title="KNN 비교군 및 기준학교 포지션">
       <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <Card className="p-6">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-300">
             현재 학교와 환경 맥락이 비슷한 학교를 KNN으로 묶고, 그 안에서 공원 거리와 녹지 비율이 어디에 놓이는지 비교했습니다.
             {similarityK ? ` 이번 비교는 K=${similarityK} 기준입니다.` : ""}
           </p>
           <div className="mt-4 flex flex-wrap gap-2"><SectionChip>현재 학교</SectionChip><SectionChip>KNN 비교군</SectionChip><SectionChip>인천시 최우수</SectionChip><SectionChip>구 최우수</SectionChip></div>
-          <p className="mt-4 text-xs leading-6 text-slate-500">{similarityMethodText}</p>
-          <div className="mt-4 grid gap-2 sm:grid-cols-2"><div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">좋은 방향은 왼쪽 위입니다. 공원 거리는 500m 안쪽일수록, 녹지 비율은 5% 이상일수록 유리합니다.</div><div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">배경 사분면은 인천시 평균이 아니라 생활권 판단선 기준으로 나뉩니다.</div></div>
-          {clippedCount > 0 ? <p className="mt-3 text-xs text-slate-500">가독성을 위해 최근접 공원 거리 축은 1,200m까지 표시했고, 이를 넘는 점 {clippedCount}개는 우측 경계에 맞춰 표시했습니다.</p> : null}
-          <div className="mt-5"><div className="relative overflow-visible rounded-2xl border border-slate-200 bg-white"><svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="h-[420px] w-full"><rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#ffffff" /><rect x={margin.left} y={margin.top} width={scaleX(parkThreshold) - margin.left} height={scaleY(greenThreshold) - margin.top} fill="#ecfdf5" /><rect x={scaleX(parkThreshold)} y={margin.top} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={scaleY(greenThreshold) - margin.top} fill="#fff7ed" /><rect x={margin.left} y={scaleY(greenThreshold)} width={scaleX(parkThreshold) - margin.left} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="#fefce8" /><rect x={scaleX(parkThreshold)} y={scaleY(greenThreshold)} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="#fef2f2" />{xTicks.map((tick) => <g key={`x-${tick}`}><line x1={scaleX(tick)} x2={scaleX(tick)} y1={margin.top} y2={margin.top + chartHeight} stroke="#e2e8f0" strokeDasharray="3 3" /><text x={scaleX(tick)} y={svgHeight - 18} textAnchor="middle" fontSize="11" fill="#64748b">{tick}</text></g>)}{yTicks.map((tick) => <g key={`y-${tick}`}><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(tick)} y2={scaleY(tick)} stroke="#e2e8f0" strokeDasharray="3 3" /><text x={margin.left - 12} y={scaleY(tick) + 4} textAnchor="end" fontSize="11" fill="#64748b">{tick}</text></g>)}<line x1={scaleX(parkThreshold)} x2={scaleX(parkThreshold)} y1={margin.top} y2={margin.top + chartHeight} stroke="#94a3b8" strokeDasharray="6 5" /><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(greenThreshold)} y2={scaleY(greenThreshold)} stroke="#94a3b8" strokeDasharray="6 5" /><text x={scaleX(parkThreshold) + 8} y={margin.top + chartHeight + 22} fontSize="11" fontWeight="700" fill="#64748b">500m 판단선</text><text x={margin.left + 8} y={scaleY(greenThreshold) - 10} fontSize="11" fontWeight="700" fill="#64748b">녹지 5% 판단선</text><text x={margin.left + 10} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#047857">생활환경 양호</text><text x={margin.left + chartWidth - 110} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#c2410c">공원 접근 불리</text><text x={margin.left + 10} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#a16207">녹지 부족</text><text x={margin.left + chartWidth - 76} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#b91c1c">이중 취약</text><text x={margin.left + chartWidth / 2} y={svgHeight - 2} textAnchor="middle" fontSize="12" fill="#475569">최근접 공원 거리 (m)</text><text transform={`translate(18 ${margin.top + chartHeight / 2}) rotate(-90)`} textAnchor="middle" fontSize="12" fill="#475569">녹지 비율 (%)</text>{positionedPoints.map((point) => <g key={point.id} onMouseEnter={() => setHoveredPointId(point.id)} onMouseLeave={() => setHoveredPointId((current) => current === point.id ? null : current)} style={{ cursor: "pointer" }}>{renderMarker(point)}{point.pointType !== "similar" && point.pointType !== "current" ? <g transform={`translate(${point.x + 12},${point.y - 26})`}><rect width={Math.max(92, point.label.length * 8)} height="24" rx="12" fill="#ffffff" stroke="#cbd5e1" /><text x="12" y="16" fontSize="11" fontWeight={700} fill="#0f172a">{point.label}</text></g> : null}</g>)}</svg>{hoveredPoint ? <div className="pointer-events-none absolute z-20 w-56 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl" style={{ left: `${Math.min(Math.max((hoveredPoint.x / svgWidth) * 100, 8), 92)}%`, top: `${Math.min(Math.max((hoveredPoint.y / svgHeight) * 100 - 14, 6), 88)}%`, transform: "translate(-50%, -100%)" }}><p className="text-sm font-bold text-slate-950">{hoveredPoint.pointType === "current" ? "현재 학교" : hoveredPoint.schoolName}</p><p className="text-xs text-slate-500">{hoveredPoint.pointType === "current" ? `${hoveredPoint.schoolName} · ${hoveredPoint.districtName}` : hoveredPoint.districtName}</p><div className="mt-2 space-y-1 text-xs text-slate-700"><p>최근접 공원 거리 {formatNumber(hoveredPoint.nearestParkDistanceM)}m</p><p>녹지 비율 {formatGreenPercent(hoveredPoint.greenRatio)}</p><p>놀이터 수 {formatNumber(hoveredPoint.playgroundCount)}개</p></div></div> : null}</div></div>
+          <p className="mt-4 text-xs leading-6 text-slate-400">{similarityMethodText}</p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2"><div className="accent-stripe accent-stripe-forest rounded-2xl border border-white/10 bg-navy-950/35 px-5 py-3 text-sm font-medium text-forest-200">좋은 방향은 왼쪽 위입니다. 공원 거리는 500m 안쪽일수록, 녹지 비율은 5% 이상일수록 유리합니다.</div><div className="rounded-2xl border border-white/10 bg-navy-950/35 px-5 py-3 text-sm font-medium text-slate-200">배경 사분면은 인천시 평균이 아니라 생활권 판단선 기준으로 나뉩니다.</div></div>
+          {clippedCount > 0 ? <p className="mt-3 text-xs text-slate-400">가독성을 위해 최근접 공원 거리 축은 1,200m까지 표시했고, 이를 넘는 점 {clippedCount}개는 우측 경계에 맞춰 표시했습니다.</p> : null}
+          <div className="mt-5"><div className="relative overflow-visible rounded-2xl border border-white/10 bg-navy-950/45"><svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="h-[420px] w-full"><rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#07111F" /><rect x={margin.left} y={margin.top} width={scaleX(parkThreshold) - margin.left} height={scaleY(greenThreshold) - margin.top} fill="rgba(16, 185, 129, 0.10)" /><rect x={scaleX(parkThreshold)} y={margin.top} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={scaleY(greenThreshold) - margin.top} fill="rgba(251, 191, 36, 0.08)" /><rect x={margin.left} y={scaleY(greenThreshold)} width={scaleX(parkThreshold) - margin.left} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="rgba(251, 191, 36, 0.07)" /><rect x={scaleX(parkThreshold)} y={scaleY(greenThreshold)} width={scaleX(xDomainMax) - scaleX(parkThreshold)} height={margin.top + chartHeight - scaleY(greenThreshold)} fill="rgba(248, 113, 113, 0.10)" />{xTicks.map((tick) => <g key={`x-${tick}`}><line x1={scaleX(tick)} x2={scaleX(tick)} y1={margin.top} y2={margin.top + chartHeight} stroke="rgba(148, 163, 184, 0.18)" strokeDasharray="3 3" /><text x={scaleX(tick)} y={svgHeight - 18} textAnchor="middle" fontSize="11" fill="#94A3B8">{tick}</text></g>)}{yTicks.map((tick) => <g key={`y-${tick}`}><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(tick)} y2={scaleY(tick)} stroke="rgba(148, 163, 184, 0.18)" strokeDasharray="3 3" /><text x={margin.left - 12} y={scaleY(tick) + 4} textAnchor="end" fontSize="11" fill="#94A3B8">{tick}</text></g>)}<line x1={scaleX(parkThreshold)} x2={scaleX(parkThreshold)} y1={margin.top} y2={margin.top + chartHeight} stroke="rgba(255,255,255,0.35)" strokeDasharray="6 5" /><line x1={margin.left} x2={margin.left + chartWidth} y1={scaleY(greenThreshold)} y2={scaleY(greenThreshold)} stroke="rgba(255,255,255,0.35)" strokeDasharray="6 5" /><text x={scaleX(parkThreshold) + 8} y={margin.top + chartHeight + 22} fontSize="11" fontWeight="700" fill="#CBD5E1">500m 판단선</text><text x={margin.left + 8} y={scaleY(greenThreshold) - 10} fontSize="11" fontWeight="700" fill="#CBD5E1">녹지 5% 판단선</text><text x={margin.left + 10} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#6EE7B7">생활환경 양호</text><text x={margin.left + chartWidth - 110} y={margin.top + 18} fontSize="12" fontWeight="700" fill="#FBE6A9">공원 접근 불리</text><text x={margin.left + 10} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#FCD34D">녹지 부족</text><text x={margin.left + chartWidth - 76} y={margin.top + chartHeight - 12} fontSize="12" fontWeight="700" fill="#FCA5A5">이중 취약</text><text x={margin.left + chartWidth / 2} y={svgHeight - 2} textAnchor="middle" fontSize="12" fill="#94A3B8">최근접 공원 거리 (m)</text><text transform={`translate(18 ${margin.top + chartHeight / 2}) rotate(-90)`} textAnchor="middle" fontSize="12" fill="#94A3B8">녹지 비율 (%)</text>{positionedPoints.map((point) => <g key={point.id} onMouseEnter={() => setHoveredPointId(point.id)} onMouseLeave={() => setHoveredPointId((current) => current === point.id ? null : current)} style={{ cursor: "pointer" }}>{renderMarker(point)}{point.pointType !== "similar" && point.pointType !== "current" ? <g transform={`translate(${point.x + 12},${point.y - 26})`}><rect width={Math.max(92, point.label.length * 8)} height="24" rx="12" fill="rgba(8, 20, 33, 0.96)" stroke="rgba(255,255,255,0.18)" /><text x="12" y="16" fontSize="11" fontWeight={700} fill="#FFFFFF">{point.label}</text></g> : null}</g>)}</svg>{hoveredPoint ? <div className="pointer-events-none absolute z-20 w-56 rounded-2xl border border-white/10 bg-navy-900 p-3 shadow-xl" style={{ left: `${Math.min(Math.max((hoveredPoint.x / svgWidth) * 100, 8), 92)}%`, top: `${Math.min(Math.max((hoveredPoint.y / svgHeight) * 100 - 14, 6), 88)}%`, transform: "translate(-50%, -100%)" }}><p className="text-sm font-bold text-white">{hoveredPoint.pointType === "current" ? "현재 학교" : hoveredPoint.schoolName}</p><p className="text-xs text-slate-400">{hoveredPoint.pointType === "current" ? `${hoveredPoint.schoolName} · ${hoveredPoint.districtName}` : hoveredPoint.districtName}</p><div className="mt-2 space-y-1 text-xs text-slate-200"><p>최근접 공원 거리 {formatNumber(hoveredPoint.nearestParkDistanceM)}m</p><p>녹지 비율 {formatGreenPercent(hoveredPoint.greenRatio)}</p><p>놀이터 수 {formatNumber(hoveredPoint.playgroundCount)}개</p></div></div> : null}</div></div>
         </Card>
         <div className="grid gap-4">
           <Card className="p-5">
-            <p className="text-sm font-medium text-slate-500">기준학교 정보</p>
+            <p className="text-sm font-medium text-slate-400">기준학교 정보</p>
             <div className="mt-4 space-y-3">
-              <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
-                <p className="text-sm font-semibold text-slate-900">현재 학교</p>
-                <p className="mt-1 text-xs text-slate-600">{schoolName} · 공원 {formatNumber(nearestParkDistanceM)}m · 녹지 {formatGreenPercent(greenRatio)} · 놀이터 {formatNumber(playgroundCount)}개</p>
+              <div className="accent-stripe accent-stripe-rose rounded-2xl border border-white/10 bg-navy-950/35 p-4 pl-5">
+                <p className="text-sm font-semibold text-white">현재 학교</p>
+                <p className="mt-1 text-xs text-slate-300">{schoolName} · 공원 {formatNumber(nearestParkDistanceM)}m · 녹지 {formatGreenPercent(greenRatio)} · 놀이터 {formatNumber(playgroundCount)}개</p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-sm font-semibold text-slate-900">KNN 비교군 평균</p>
-                <p className="mt-1 text-xs text-slate-600">
+              <div className="rounded-2xl border border-white/10 bg-navy-950/35 p-4">
+                <p className="text-sm font-semibold text-white">KNN 비교군 평균</p>
+                <p className="mt-1 text-xs text-slate-300">
                   공원 {formatWholeNumber(avgSimilarPark)}m · 녹지 {formatDecimal(avgSimilarGreen, 1)}% · 놀이터 {formatDecimal(avgSimilarPlayground, 1)}개
                 </p>
               </div>
-              {benchmarkPoints.map((point) => <div key={point.id} className={cx("rounded-2xl border p-4", point.pointType === "cityBest" ? "border-yellow-200 bg-yellow-50" : point.pointType === "districtBest" ? "border-sky-200 bg-sky-50" : "border-slate-200 bg-slate-50")}><p className="text-sm font-semibold text-slate-900">{point.label}</p><p className="mt-1 text-xs text-slate-600">{point.schoolName} · 공원 {formatNumber(point.nearestParkDistanceM)}m · 녹지 {formatGreenPercent(point.greenRatio)} · 놀이터 {formatNumber(point.playgroundCount)}개</p></div>)}
+              {benchmarkPoints.map((point) => (
+                <div
+                  key={point.id}
+                  className={cx(
+                    "rounded-2xl border border-white/10 bg-navy-950/35 p-4 pl-5 accent-stripe",
+                    point.pointType === "cityBest"
+                      ? "accent-stripe-yellow"
+                      : point.pointType === "districtBest"
+                      ? "accent-stripe-sky"
+                      : "accent-stripe-forest",
+                  )}
+                >
+                  <p className="text-sm font-semibold text-white">{point.label}</p>
+                  <p className="mt-1 text-xs text-slate-300">{point.schoolName} · 공원 {formatNumber(point.nearestParkDistanceM)}m · 녹지 {formatGreenPercent(point.greenRatio)} · 놀이터 {formatNumber(point.playgroundCount)}개</p>
+                </div>
+              ))}
             </div>
           </Card>
           <Card className="p-5">
-            <p className="text-sm font-medium text-slate-500">KNN 비교군 해석</p>
+            <p className="text-sm font-medium text-slate-400">KNN 비교군 해석</p>
             <div className="mt-4 space-y-3">
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">상대 우위</p>
-                <div className="mt-2 space-y-2 text-sm text-emerald-900">
+              <div className="accent-stripe accent-stripe-forest rounded-2xl border border-white/10 bg-navy-950/35 px-5 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-forest-300">상대 우위</p>
+                <div className="mt-2 space-y-2 text-sm text-forest-100">
                   {(strengthLines.length ? strengthLines : [fallbackStrength]).map((line) => <p key={line}>{line}</p>)}
                 </div>
               </div>
-              <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-rose-700">상대 열위</p>
-                <div className="mt-2 space-y-2 text-sm text-rose-900">
+              <div className="accent-stripe accent-stripe-rose rounded-2xl border border-white/10 bg-navy-950/35 px-5 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-rose-300">상대 열위</p>
+                <div className="mt-2 space-y-2 text-sm text-rose-100">
                   {(weaknessLines.length ? weaknessLines : [fallbackWeakness]).map((line) => <p key={line}>{line}</p>)}
                 </div>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">비교 기준값</p>
-                <div className="mt-2 space-y-1 text-sm text-slate-700">
+              <div className="rounded-2xl border border-white/10 bg-navy-950/35 px-4 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">비교 기준값</p>
+                <div className="mt-2 space-y-1 text-sm text-slate-200">
                   {comparisonMetricLines.map((line) => <p key={line}>{line}</p>)}
                 </div>
               </div>
             </div>
           </Card>
           <Card className="p-5">
-            <p className="text-sm font-medium text-slate-500">KNN 비교군 목록</p>
+            <p className="text-sm font-medium text-slate-400">KNN 비교군 목록</p>
             <div className="mt-4 space-y-3">
               {similarSchools.map((school, index) => (
-                <div key={`${school.schoolName}-${index}`} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div key={`${school.schoolName}-${index}`} className="rounded-2xl border border-white/10 bg-navy-950/35 px-4 py-3">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">{`K${school.rank ?? index + 1}`} · {school.schoolName}</p>
-                      <p className="text-xs text-slate-500">{school.districtName}</p>
+                      <p className="text-sm font-semibold text-white">{`K${school.rank ?? index + 1}`} · {school.schoolName}</p>
+                      <p className="text-xs text-slate-400">{school.districtName}</p>
                     </div>
                     {school.similarityDistance != null ? (
-                      <span className="rounded-full bg-slate-200 px-2.5 py-1 text-[11px] font-semibold text-slate-700">
+                      <span className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold text-slate-200">
                         거리 {formatDecimal(school.similarityDistance, 2)}
                       </span>
                     ) : null}
                   </div>
-                  <p className="mt-2 text-xs text-slate-600">
+                  <p className="mt-2 text-xs text-slate-300">
                     공원 {formatWholeNumber(school.nearestParkDistanceM)}m · 녹지 {formatGreenPercent(school.greenRatio)} · 놀이터 {formatNumber(school.playgroundCount)}개
                   </p>
                 </div>
@@ -1200,8 +1251,8 @@ function RedevelopmentNotice({ redevelopmentPlanYear, redevelopmentType, redevel
       <Card className="p-5">
         <div className="space-y-4">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Change Risk</p>
-            <p className="mt-2 text-base font-semibold text-slate-950">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Change Risk</p>
+            <p className="mt-2 text-base font-semibold text-white">
               이 지역은 {redevelopmentPlanYear}년에 {redevelopmentType}이 예정되어 있어, 향후 생활환경과 아동 인구 흐름이 변동할 수 있습니다.
             </p>
           </div>
@@ -1210,14 +1261,14 @@ function RedevelopmentNotice({ redevelopmentPlanYear, redevelopmentType, redevel
               {redevelopmentProjects.map((project) => (
                 <div
                   key={`${project.name}-${project.distanceM}`}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                  className="accent-stripe accent-stripe-amber rounded-2xl border border-white/10 bg-navy-950/35 p-4 pl-5"
                 >
-                  <p className="text-sm font-semibold text-slate-950">{project.name}</p>
-                  <p className="mt-1 text-xs text-slate-500">{formatNumber(project.distanceM)}m</p>
-                  <p className="mt-2 inline-flex rounded-full bg-yellow-100 px-2.5 py-1 text-xs font-semibold text-yellow-800">
+                  <p className="text-sm font-semibold text-white">{project.name}</p>
+                  <p className="mt-1 text-xs text-slate-400">{formatNumber(project.distanceM)}m</p>
+                  <p className="mt-2 inline-flex rounded-full border border-amber-400/40 bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-amber-200">
                     {project.stage}
                   </p>
-                  <p className="mt-2 text-xs text-slate-600">{project.location}</p>
+                  <p className="mt-2 text-xs text-slate-300">{project.location}</p>
                 </div>
               ))}
             </div>
@@ -1238,16 +1289,16 @@ function SimulationEntry({
       <Card className="p-6">
         <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
-            <p className="text-lg font-semibold text-slate-950">학교 기준 예상 학생수</p>
-            <p className="mt-1 text-sm text-slate-500">학교 학생수 예측 모델을 바탕으로 산출한 예상 학생 규모입니다. 학교 내부 설치 검토 시 참고값으로 활용할 수 있습니다.</p>
+            <p className="text-lg font-semibold text-white">학교 기준 예상 학생수</p>
+            <p className="mt-1 text-sm text-slate-400">학교 학생수 예측 모델을 바탕으로 산출한 예상 학생 규모입니다. 학교 내부 설치 검토 시 참고값으로 활용할 수 있습니다.</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2029년 예상 학생수</p>
-                <p className="mt-2 text-3xl font-bold text-slate-950">{formatNumber(potentialDemand2029)}명</p>
+              <div className="rounded-2xl border border-white/10 bg-navy-950/35 px-4 py-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">2029년 예상 학생수</p>
+                <p className="mt-2 text-3xl font-bold text-white">{formatNumber(potentialDemand2029)}명</p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">2031년 예상 학생수</p>
-                <p className="mt-2 text-3xl font-bold text-slate-950">{formatNumber(potentialDemand2031)}명</p>
+              <div className="rounded-2xl border border-white/10 bg-navy-950/35 px-4 py-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">2031년 예상 학생수</p>
+                <p className="mt-2 text-3xl font-bold text-white">{formatNumber(potentialDemand2031)}명</p>
               </div>
             </div>
           </div>

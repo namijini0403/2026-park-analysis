@@ -2,11 +2,12 @@ import { useMemo, useState } from "react";
 import SchoolDetailReportPage from "./SchoolDetailReportPagePreview";
 import SimulationPage from "./SimulationPage";
 import StatisticsPageSafe from "./StatisticsPageSafe";
+import LandingPage from "./LandingPage";
 import { previewSchoolDetailReport } from "./previewData";
 import { cityStatisticsPreviewDataSafe } from "./statisticsPreviewDataSafe";
 import { applyLegacySchoolSnapshot, mapSchoolRowToReportProps, mapCandidateFeatures } from "./schoolDataBridge";
 
-type ViewMode = "report" | "simulation" | "statistics";
+type ViewMode = "landing" | "report" | "simulation" | "statistics";
 
 type RedevelopmentProject = {
   name: string;
@@ -24,12 +25,18 @@ type LargeApartmentComplex = {
 };
 
 function readInitialView(): ViewMode {
-  if (typeof window === "undefined") return "report";
+  if (typeof window === "undefined") return "landing";
   const view = new URLSearchParams(window.location.search).get("view");
-  if (view === "simulation" || view === "statistics" || view === "report") {
-    return view;
+  if (view === "simulation" || view === "statistics" || view === "report" || view === "landing") {
+    return view as ViewMode;
   }
-  return "report";
+  // localStorage에 학교 데이터가 있으면 바로 리포트, 없으면 랜딩
+  try {
+    if (localStorage.getItem("parkAnalysis_school")) return "report";
+  } catch {
+    // ignore
+  }
+  return "landing";
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,6 +107,7 @@ function getPreviewCaseType(schoolRow: Record<string, any> | null): number {
 
 export default function PreviewWorkspaceSafe() {
   const [view, setView] = useState<ViewMode>(() => readInitialView());
+  const logoSrc = `${import.meta.env.BASE_URL}logo.png`;
 
   // localStorage에서 학교 데이터 읽기 (없으면 석암초 fallback)
   const schoolRow = useMemo(() => readSchoolFromStorage(), []);
@@ -140,15 +148,33 @@ export default function PreviewWorkspaceSafe() {
   const redevelopmentProjects = useMemo(() => readRedevelopmentProjects(schoolRow), [schoolRow]);
   const largeApartmentComplexes = useMemo(() => readLargeApartmentComplexes(schoolRow), [schoolRow]);
 
+  if (view === "landing") {
+    return <LandingPage onEnter={(target) => setView(target)} />;
+  }
+
   return (
-    <div className="min-h-screen bg-slate-100">
-      <div className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div className="min-h-screen">
+      <div className="sticky top-0 z-20 border-b border-white/10 bg-navy-950/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1380px] flex-wrap items-center justify-between gap-3 px-4 py-3 lg:px-8">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-              {schoolRow ? detailProps.schoolName : "UI Preview"}
-            </p>
-            <p className="text-sm font-semibold text-slate-900">학교 상세 리포트 · 시뮬레이션</p>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setView("landing")}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/95 p-1.5 shadow-soft transition hover:scale-105"
+              aria-label="홈으로"
+            >
+              <img src={logoSrc} alt="ParkLens" className="h-full w-full object-contain" />
+            </button>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-forest-300">
+                ParkLens · Incheon
+              </p>
+              <p className="text-sm font-bold text-white">
+                {schoolRow ? detailProps.schoolName : "UI Preview"}
+                <span className="ml-2 text-[11px] font-medium text-slate-400">
+                  · 학교 상세 · 시뮬레이션 · 통계
+                </span>
+              </p>
+            </div>
           </div>
           <div className="flex flex-wrap gap-2">
             {[
@@ -163,8 +189,8 @@ export default function PreviewWorkspaceSafe() {
                   onClick={() => setView(item.key as ViewMode)}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                     active
-                      ? "bg-slate-950 text-white"
-                      : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                      ? "bg-forest-grad text-white shadow-glow"
+                      : "border border-white/15 bg-white/5 text-slate-200 hover:bg-white/10"
                   }`}
                 >
                   {item.label}

@@ -145,7 +145,7 @@ export default function KakaoMap({
           // 학교 마커: 회전 다이아몬드
           el.style.cssText = `
             width:32px; height:32px;
-            background:#1a1a2e;
+            background:#064E3B;
             border-radius:4px;
             transform:rotate(45deg);
             display:flex; align-items:center; justify-content:center;
@@ -222,9 +222,9 @@ export default function KakaoMap({
         width: "100%",
         height,
         borderRadius: 12,
-        border: "1px solid #dde3ec",
+        border: "1px solid rgba(255,255,255,0.10)",
         overflow: "hidden",
-        background: "#f0f0f0",
+        background: "#07111F",
         position: "relative",
       }}
     >
@@ -240,8 +240,8 @@ export default function KakaoMap({
             textAlign: "center",
             fontSize: 13,
             lineHeight: 1.7,
-            color: "#6b7280",
-            background: "#f8fafc",
+            color: "#CBD5E1",
+            background: "linear-gradient(135deg, rgba(14,27,42,0.96), rgba(7,17,31,0.98))",
           }}
         >
           {loadError}
@@ -250,3 +250,4 @@ export default function KakaoMap({
     </div>
   );
 }
+
