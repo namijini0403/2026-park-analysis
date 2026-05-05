@@ -1143,7 +1143,7 @@ function SimilarSchoolsSection({
   if (!similarSchools?.length) return null;
 
   return (
-    <SectionShell kicker="Benchmark" title="유사학교 비교">
+    <SectionShell kicker="Benchmark" title="KNN 유사학교 비교">
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <Card className="p-6">
           <div className="flex items-center justify-between gap-3">
