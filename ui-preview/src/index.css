@@ -4,7 +4,7 @@
 
 :root {
   color: #F8FAFC;
-  background-color: #07111F;
+  background-color: #050B14;
   font-family:
     "Pretendard Variable",
     Pretendard,
@@ -26,7 +26,7 @@ body {
   background:
     linear-gradient(rgba(255,255,255,0.026) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,0.026) 1px, transparent 1px),
-    linear-gradient(180deg, #07111F 0%, #081421 48%, #0E1B2A 100%);
+    linear-gradient(180deg, #050B14 0%, #081421 52%, #101B2D 100%);
   background-size: 44px 44px, 44px 44px, auto;
   background-attachment: fixed;
   min-height: 100vh;
@@ -50,10 +50,10 @@ body {
     @apply relative rounded-2xl border border-white/10 bg-card-grad shadow-card;
   }
   .panel-soft {
-    @apply rounded-2xl border border-white/10 bg-forest-950/60 backdrop-blur-sm;
+    @apply rounded-2xl border border-white/10 bg-navy-850/95;
   }
   .panel-inset {
-    @apply rounded-xl border border-white/10 bg-forest-950/45;
+    @apply rounded-xl border border-white/10 bg-navy-900/95;
   }
   .panel-light {
     @apply rounded-2xl border border-slate-200 bg-white shadow-soft;
@@ -74,7 +74,7 @@ body {
   .accent-stripe-sky::before { background: linear-gradient(180deg, #60A5FA 0%, rgba(96,165,250,0.3) 100%); }
 
   .stat-card {
-    @apply rounded-xl border border-white/10 bg-forest-950/60 px-4 py-3;
+    @apply rounded-xl border border-white/10 bg-navy-850/95 px-4 py-3;
   }
   .stat-label {
     @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-forest-300;
@@ -120,10 +120,12 @@ body {
   }
 
   .accent-forest {
-    @apply border-l-2 border-forest-400;
+    border-left-width: 2px;
+    border-left-color: #10B981;
   }
   .accent-navy {
-    @apply border-l-2 border-navy-400;
+    border-left-width: 2px;
+    border-left-color: #6D8799;
   }
 }
 

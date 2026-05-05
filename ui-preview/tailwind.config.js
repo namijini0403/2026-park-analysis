@@ -6,23 +6,23 @@ export default {
       colors: {
         // Deep navy - shared with the guide modal and cover screen.
         navy: {
-          950: "#07111F",
+          950: "#050B14",
           900: "#081421",
-          850: "#0E1B2A",
-          800: "#122437",
-          750: "#183047",
-          700: "#203B54",
-          600: "#2B4D68",
-          500: "#3B6381",
-          400: "#5E829C",
-          300: "#9FB7C8",
+          850: "#101B2D",
+          800: "#152238",
+          750: "#1B2B44",
+          700: "#233650",
+          600: "#304760",
+          500: "#466177",
+          400: "#6D8799",
+          300: "#A8BBC9",
         },
         // Deep forest / emerald - restrained policy-dashboard accent.
         forest: {
           950: "#02140C",
           900: "#042016",
           850: "#063323",
-          800: "#064E3B",
+          800: "#047857",
           700: "#047857",
           600: "#059669",
           500: "#10B981",
@@ -39,9 +39,9 @@ export default {
         },
         // Subtle status colors that work on dark
         signal: {
-          warn: "#E0A93B",
+          warn: "#F59E0B",
           warnSoft: "#FBE6A9",
-          alert: "#D26A52",
+          alert: "#F43F5E",
           alertSoft: "#F4C7BC",
           info: "#5DA8D4",
           infoSoft: "#BFDFEE",
@@ -64,13 +64,13 @@ export default {
       },
       backgroundImage: {
         "navy-grad":
-          "linear-gradient(180deg, #07111F 0%, #081421 48%, #0E1B2A 100%)",
+          "linear-gradient(180deg, #050B14 0%, #081421 52%, #101B2D 100%)",
         "card-grad":
-          "linear-gradient(165deg, rgba(6,48,35,0.88) 0%, rgba(4,32,22,0.95) 54%, rgba(7,17,31,0.98) 100%)",
+          "linear-gradient(165deg, rgba(21,34,56,0.96) 0%, rgba(16,27,45,0.98) 55%, rgba(8,20,33,0.98) 100%)",
         "card-grad-hover":
-          "linear-gradient(165deg, rgba(6,78,59,0.78) 0%, rgba(6,48,35,0.95) 52%, rgba(7,17,31,0.98) 100%)",
+          "linear-gradient(165deg, rgba(27,43,68,0.98) 0%, rgba(21,34,56,0.98) 55%, rgba(8,20,33,0.98) 100%)",
         "forest-grad":
-          "linear-gradient(135deg, #064E3B 0%, #047857 55%, #10B981 100%)",
+          "linear-gradient(135deg, #047857 0%, #059669 55%, #10B981 100%)",
       },
     },
   },

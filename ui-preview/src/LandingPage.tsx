@@ -23,7 +23,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <p className="text-base font-bold text-white">ParkLens · 인천 초등 야외활동 환경 분석</p>
             </div>
           </div>
-          <span className="hidden rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-slate-200 lg:inline-flex">
+          <span className="hidden rounded-full border border-white/15 bg-navy-850/95 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-slate-200 lg:inline-flex">
             v2026.05 · 발표 데모
           </span>
         </div>
@@ -68,7 +68,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
 
           {/* Logo emblem */}
           <div className="relative mx-auto w-full max-w-md">
-            <div className="absolute inset-0 -z-10 rounded-[40px] bg-card-grad blur-xl opacity-60" />
+            <div className="absolute inset-x-10 inset-y-6 -z-10 rounded-[32px] bg-navy-800/40 opacity-70" />
             <div className="relative rounded-[36px] border border-white/10 bg-card-grad p-8 shadow-card">
               <div className="absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-forest-400/60 to-transparent" />
               <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-full bg-white/95 p-6 shadow-soft sm:h-64 sm:w-64">

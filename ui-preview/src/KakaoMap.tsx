@@ -224,7 +224,7 @@ export default function KakaoMap({
         borderRadius: 12,
         border: "1px solid rgba(255,255,255,0.10)",
         overflow: "hidden",
-        background: "#07111F",
+        background: "#050B14",
         position: "relative",
       }}
     >
@@ -241,7 +241,7 @@ export default function KakaoMap({
             fontSize: 13,
             lineHeight: 1.7,
             color: "#CBD5E1",
-            background: "linear-gradient(135deg, rgba(14,27,42,0.96), rgba(7,17,31,0.98))",
+            background: "linear-gradient(135deg, rgba(16,27,45,0.98), rgba(8,20,33,0.98))",
           }}
         >
           {loadError}
@@ -250,4 +250,3 @@ export default function KakaoMap({
     </div>
   );
 }
-

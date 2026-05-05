@@ -154,7 +154,7 @@ export default function PreviewWorkspaceSafe() {
 
   return (
     <div className="min-h-screen">
-      <div className="sticky top-0 z-20 border-b border-white/10 bg-navy-950/85 backdrop-blur-md">
+      <div className="sticky top-0 z-20 border-b border-white/10 bg-navy-950/95">
         <div className="mx-auto flex max-w-[1380px] flex-wrap items-center justify-between gap-3 px-4 py-3 lg:px-8">
           <div className="flex items-center gap-3">
             <button
@@ -190,7 +190,7 @@ export default function PreviewWorkspaceSafe() {
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                     active
                       ? "bg-forest-grad text-white shadow-glow"
-                      : "border border-white/15 bg-white/5 text-slate-200 hover:bg-white/10"
+                      : "border border-white/15 bg-navy-850/95 text-slate-200 hover:bg-white/10"
                   }`}
                 >
                   {item.label}

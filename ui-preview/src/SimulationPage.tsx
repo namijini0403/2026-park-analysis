@@ -140,12 +140,13 @@ const BARRIER_COLOR: Record<NonNullable<Candidate["barrier_severity"]>, string> 
 };
 
 const SIM_COLORS = {
-  bg: "#07111F",
-  panel: "rgba(4, 32, 22, 0.88)",
-  elevated: "rgba(6, 48, 35, 0.80)",
-  inset: "rgba(2, 20, 12, 0.54)",
-  border: "rgba(167, 243, 208, 0.12)",
-  borderStrong: "rgba(16, 185, 129, 0.42)",
+  bg: "#050B14",
+  page: "#081421",
+  panel: "rgba(16, 27, 45, 0.96)",
+  elevated: "rgba(21, 34, 56, 0.96)",
+  inset: "rgba(8, 20, 33, 0.96)",
+  border: "rgba(255, 255, 255, 0.10)",
+  borderStrong: "rgba(16, 185, 129, 0.34)",
   text: "#F8FAFC",
   secondary: "#CBD5E1",
   muted: "#94A3B8",
@@ -159,7 +160,7 @@ const SIM_COLORS = {
 } as const;
 
 const SIM_PANEL: CSSProperties = {
-  background: "linear-gradient(165deg, rgba(6,48,35,0.88) 0%, rgba(4,32,22,0.95) 54%, rgba(7,17,31,0.98) 100%)",
+  background: "linear-gradient(165deg, rgba(21,34,56,0.96) 0%, rgba(16,27,45,0.98) 55%, rgba(8,20,33,0.98) 100%)",
   border: `1px solid ${SIM_COLORS.border}`,
   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 26px 64px -44px rgba(0,0,0,0.95)",
 };
@@ -175,8 +176,9 @@ const SIM_INSET: CSSProperties = {
 };
 
 const SIM_ACCENT_PANEL: CSSProperties = {
-  background: "linear-gradient(135deg, rgba(6,78,59,0.28) 0%, rgba(4,32,22,0.86) 58%, rgba(7,17,31,0.94) 100%)",
-  border: `1px solid ${SIM_COLORS.borderStrong}`,
+  background: SIM_COLORS.elevated,
+  border: `1px solid ${SIM_COLORS.border}`,
+  boxShadow: "inset 3px 0 0 rgba(16, 185, 129, 0.72)",
 };
 
 const FILTER_COPY: Array<{ key: keyof FilterState; title: string; description: string }> = [
@@ -910,7 +912,7 @@ export default function SimulationPage({
                   padding: 22,
                   borderRadius: 22,
                   border: `2px solid ${selectedId === topCandidate.grid_id ? barrierColor : SIM_COLORS.borderStrong}`,
-                  background: "linear-gradient(165deg, rgba(6,48,35,0.92) 0%, rgba(4,32,22,0.96) 60%, rgba(7,17,31,0.98) 100%)",
+                  background: "linear-gradient(165deg, rgba(21,34,56,0.97) 0%, rgba(16,27,45,0.98) 60%, rgba(8,20,33,0.98) 100%)",
                   cursor: "pointer",
                 }}
               >
@@ -1104,8 +1106,6 @@ function LegendItem({
     </div>
   );
 }
-
-
 
 
 
