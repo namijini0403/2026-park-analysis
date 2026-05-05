@@ -846,6 +846,182 @@
       color: #ffffff;
     }
 
+    .app-cover {
+      position: fixed;
+      inset: 0;
+      z-index: 10015;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      color: #f8fafc;
+      background:
+        linear-gradient(135deg, rgba(7, 17, 31, 0.98) 0%, rgba(8, 20, 33, 0.98) 45%, rgba(6, 78, 59, 0.96) 100%),
+        #07111f;
+    }
+
+    .app-cover.is-hidden {
+      display: none;
+    }
+
+    .app-cover::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.86), rgba(0, 0, 0, 0.24));
+    }
+
+    .app-cover-shell {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.58fr);
+      gap: 44px;
+      align-items: center;
+      width: min(1120px, 100%);
+      min-height: min(680px, calc(100vh - 56px));
+      padding: clamp(28px, 5vw, 56px);
+      border-radius: 24px;
+      background: rgba(14, 27, 42, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 30px 90px rgba(2, 6, 23, 0.48);
+      overflow: hidden;
+    }
+
+    .app-cover-main {
+      max-width: 690px;
+    }
+
+    .app-cover-kicker {
+      margin: 0 0 14px;
+      color: #a7f3d0;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .app-cover-title {
+      margin: 0;
+      color: #f8fafc;
+      font-size: clamp(38px, 5vw, 68px);
+      line-height: 1.08;
+      letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .app-cover-statement {
+      max-width: 640px;
+      margin: 24px 0 0;
+      color: #d1fae5;
+      font-size: clamp(19px, 2vw, 27px);
+      font-weight: 900;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+
+    .app-cover-copy {
+      max-width: 650px;
+      margin: 18px 0 0;
+      color: #cbd5e1;
+      font-size: 16px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+
+    .app-cover-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      max-width: 620px;
+      margin-top: 26px;
+    }
+
+    .app-cover-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(248, 250, 252, 0.08);
+      border: 1px solid rgba(167, 243, 208, 0.2);
+      color: #d1fae5;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .app-cover-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .app-cover-button {
+      min-height: 46px;
+      padding: 12px 17px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: transparent;
+      color: #f8fafc;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .app-cover-button:hover,
+    .app-cover-button:focus {
+      transform: translateY(-1px);
+      border-color: rgba(16, 185, 129, 0.55);
+      outline: none;
+    }
+
+    .app-cover-button.primary {
+      background: #10b981;
+      border-color: rgba(167, 243, 208, 0.7);
+      color: #052e24;
+      box-shadow: 0 18px 34px rgba(16, 185, 129, 0.24);
+    }
+
+    .app-cover-button.ghost {
+      border-color: transparent;
+      color: #a7f3d0;
+    }
+
+    .app-cover-visual {
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+      padding: 24px;
+      border-radius: 20px;
+      background: rgba(7, 17, 31, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .app-cover-logo {
+      width: min(280px, 100%);
+      aspect-ratio: 1;
+      object-fit: contain;
+      filter: drop-shadow(0 28px 38px rgba(2, 6, 23, 0.34));
+    }
+
+    .app-cover-caption {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.55;
+      text-align: center;
+      word-break: keep-all;
+    }
+
     .guide-overlay {
       display: none;
       position: fixed;
@@ -1469,6 +1645,51 @@
         grid-template-columns: 1fr;
       }
 
+      .app-cover {
+        align-items: stretch;
+        padding: 10px;
+      }
+
+      .app-cover-shell {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        min-height: calc(100vh - 20px);
+        max-height: calc(100vh - 20px);
+        padding: 24px 18px;
+        border-radius: 24px;
+        overflow: auto;
+      }
+
+      .app-cover-title {
+        font-size: 36px;
+      }
+
+      .app-cover-statement {
+        font-size: 20px;
+      }
+
+      .app-cover-copy {
+        font-size: 14px;
+      }
+
+      .app-cover-tags {
+        max-width: none;
+      }
+
+      .app-cover-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .app-cover-visual {
+        order: -1;
+        padding: 16px;
+      }
+
+      .app-cover-logo {
+        width: min(190px, 70vw);
+      }
+
       .guide-overlay {
         padding: 10px;
         align-items: flex-end;
@@ -1570,6 +1791,35 @@
 <body>
   <div class="app-shell">
     <div id="map"></div>
+
+    <section class="app-cover" id="appCover" role="dialog" aria-modal="true" aria-labelledby="appCoverTitle">
+      <div class="app-cover-shell">
+        <div class="app-cover-main">
+          <p class="app-cover-kicker">Incheon Outdoor Equity</p>
+          <h1 class="app-cover-title" id="appCoverTitle">초등학교 야외활동 환경 격차 지도</h1>
+          <p class="app-cover-statement">반경이 아니라,<br>실제 도달 가능성으로 판단합니다.</p>
+          <p class="app-cover-copy">
+            학교 주변 환경을 실제 도보생활권으로 계산하고, 현재 환경 격차와 2029·2031년 잠재 수요를 연결해
+            정책 지원 후보지를 비교합니다.
+          </p>
+          <div class="app-cover-tags" aria-label="핵심 분석 기준">
+            <span class="app-cover-tag">실제 도보생활권</span>
+            <span class="app-cover-tag">학교별 환경 진단</span>
+            <span class="app-cover-tag">미래 수요 반영</span>
+            <span class="app-cover-tag">설명 가능한 추천</span>
+          </div>
+          <div class="app-cover-actions">
+            <button class="app-cover-button primary" type="button" data-cover-action="start">지도에서 시작하기</button>
+            <button class="app-cover-button" type="button" data-cover-action="guide">정책 흐름 보기</button>
+            <button class="app-cover-button ghost" type="button" data-cover-action="report">학교 진단 보기</button>
+          </div>
+        </div>
+        <div class="app-cover-visual" aria-label="앱 로고">
+          <img class="app-cover-logo" src="./로고.png" alt="인천 초등학교 야외활동 환경 격차 지도 로고" />
+          <p class="app-cover-caption">도보 접근성, 환경 격차, 미래 수요를 하나의 판단 흐름으로 연결합니다.</p>
+        </div>
+      </div>
+    </section>
 
     <div class="map-search-box" aria-label="학교 검색">
       <label class="map-search-label" for="schoolSearchInput">학교 검색</label>
@@ -4041,6 +4291,36 @@
       };
       (guideCtaHandlers[action] || guideCtaHandlers["school-report"])();
     }
+
+    function closeAppCover() {
+      const cover = document.getElementById("appCover");
+      if (!cover) return;
+      cover.classList.add("is-hidden");
+      cover.setAttribute("aria-hidden", "true");
+    }
+
+    function handleCoverAction(action) {
+      closeAppCover();
+      if (action === "guide") {
+        openGuideOverlay();
+        return;
+      }
+      if (action === "report") {
+        openPreviewOverlay("report");
+      }
+    }
+
+    document.getElementById("appCover")?.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-cover-action]");
+      if (!button) return;
+      handleCoverAction(button.dataset.coverAction);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !document.getElementById("appCover")?.classList.contains("is-hidden")) {
+        closeAppCover();
+      }
+    });
 
     ui.guideShortcutButton?.addEventListener("click", openGuideOverlay);
 
