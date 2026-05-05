@@ -921,9 +921,9 @@
 
     .guide-hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
-      gap: 24px;
-      align-items: end;
+      grid-template-columns: minmax(0, 0.95fr) minmax(390px, 0.72fr);
+      gap: 30px;
+      align-items: center;
       padding: 30px;
       border-radius: 16px;
       background: rgba(14, 27, 42, 0.78);
@@ -966,7 +966,13 @@
     }
 
     .guide-badges {
-      justify-content: flex-end;
+      justify-content: flex-start;
+    }
+
+    .guide-hero-aside {
+      width: 100%;
+      max-width: 450px;
+      justify-self: end;
     }
 
     .guide-badge {
@@ -980,6 +986,7 @@
       color: #d1fae5;
       font-size: 12px;
       font-weight: 800;
+      white-space: nowrap;
     }
 
     .guide-system-note {
@@ -1509,6 +1516,11 @@
 
       .guide-badges {
         justify-content: flex-start;
+      }
+
+      .guide-hero-aside {
+        max-width: none;
+        justify-self: stretch;
       }
 
       .guide-flow-stage {
@@ -3867,7 +3879,7 @@
                 <h2 id="guideTitle">${guideTextHtml(GUIDE_CONTENT.hero.title)}</h2>
                 <p>${guideTextHtml(GUIDE_CONTENT.hero.subtitle)}</p>
               </div>
-              <div>
+              <div class="guide-hero-aside">
                 <div class="guide-badges">
                   ${GUIDE_CONTENT.hero.badges.map((badge) => `<span class="guide-badge">${escapeGuideText(badge)}</span>`).join("")}
                 </div>
