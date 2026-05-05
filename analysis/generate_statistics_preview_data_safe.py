@@ -219,9 +219,10 @@ def main() -> None:
     district_rows: list[dict] = []
     for district_name, district_df in merged.groupby("gu", sort=False):
         district_df = district_df.copy()
-        top_df = district_df.sort_values(
-            by=["priority_rank", "priority_score", "forecast_2029"],
-            ascending=[True, False, False],
+        priority_df = district_df[district_df["case_type"].isin([1.0, 2.0])].copy()
+        top_df = priority_df.sort_values(
+            by=["case_type", "priority_rank", "forecast_2029"],
+            ascending=[True, True, False],
         ).head(5)
         best_row = choose_best_school(district_df)
         district_rows.append(

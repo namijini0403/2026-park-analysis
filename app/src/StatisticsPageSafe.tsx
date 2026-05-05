@@ -26,6 +26,7 @@ const CASE_COLORS: Record<string, string> = {
   "유지·관리 대상": "#16a34a",
   "별도 정책 적용": "#64748b",
 };
+const SUPPORT_PRIORITY_LABELS = new Set(["즉시 개선 대상", "우선 검토 대상"]);
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat("ko-KR").format(value);
@@ -36,6 +37,14 @@ function formatDecimal(value: number, digits = 1) {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   }).format(value);
+}
+
+function isSupportPrioritySchool(school: StatisticsSchoolItem) {
+  return SUPPORT_PRIORITY_LABELS.has(school.casePolicyLabel);
+}
+
+function rerankSchools(schools: StatisticsSchoolItem[]) {
+  return schools.map((school, index) => ({ ...school, rank: index + 1 }));
 }
 
 function SectionTitle({
@@ -165,6 +174,11 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
         ? data.cityTopPrioritySchoolsStudentFocused
         : data.cityTopPrioritySchoolsPlaygroundFocused,
     [cityCase1SortMode, data.cityTopPrioritySchoolsPlaygroundFocused, data.cityTopPrioritySchoolsStudentFocused]
+  );
+
+  const selectedTopPrioritySchools = useMemo(
+    () => rerankSchools((selectedDistrict?.topPrioritySchools ?? []).filter(isSupportPrioritySchool)),
+    [selectedDistrict]
   );
 
   return (
@@ -334,7 +348,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Top 5</p>
                   <h3 className="mt-1 text-2xl font-black tracking-tight text-slate-950">
-                    {selectedDistrict.districtName} 우선 지원 학교 상위 5개
+                    {selectedDistrict.districtName} 우선 지원 대상 최대 5개
                   </h3>
                 </div>
                 <div className="rounded-2xl bg-white px-4 py-3 text-right shadow-sm">
@@ -343,9 +357,13 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
                 </div>
               </div>
               <div className="mt-4 space-y-3">
-                {selectedDistrict.topPrioritySchools.map((school) => (
+                {selectedTopPrioritySchools.length ? selectedTopPrioritySchools.map((school) => (
                   <SchoolRow key={`${selectedDistrict.districtName}-${school.rank}-${school.schoolName}`} school={school} />
-                ))}
+                )) : (
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-6 text-slate-600">
+                    이 구에는 현재 기준의 즉시 개선 대상 또는 우선 검토 대상 학교가 없습니다.
+                  </div>
+                )}
               </div>
             </div>
           </div>
