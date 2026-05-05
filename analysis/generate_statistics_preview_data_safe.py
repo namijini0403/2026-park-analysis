@@ -6,11 +6,15 @@ from pathlib import Path
 import pandas as pd
 
 
-BASE = Path(r"c:\2026_data_analysis_park")
-PRIORITY_PATH = BASE / "data_processed" / "school_priority_case_system_20260411.csv"
+BASE = Path(__file__).resolve().parents[1]
+PRIORITY_PATH = BASE / "data_processed" / "school_priority.csv"
 FORECAST_PATH = BASE / "data_processed" / "school_enrollment_forecast_20260418_model1.csv"
 STUDENT_TREND_PATH = BASE / "data_processed" / "student_trend.csv"
-OUT_PATH = BASE / "ui-preview" / "src" / "statisticsPreviewDataSafe.ts"
+APARTMENT_ADJUSTMENT_PATH = BASE / "data_processed" / "school_walk_500m_apartment_adjustment_20260504.csv"
+OUT_PATHS = [
+    BASE / "ui-preview" / "src" / "statisticsPreviewDataSafe.ts",
+    BASE / "app" / "src" / "statisticsPreviewDataSafe.ts",
+]
 
 CASE_POLICY_LABELS = {
     1.0: "즉시 개선 대상",
@@ -24,6 +28,12 @@ def round1(value: float | int | None) -> float:
     if value is None or pd.isna(value):
         return 0.0
     return round(float(value), 1)
+
+
+def numeric_series(df: pd.DataFrame, column: str) -> pd.Series:
+    if column not in df.columns:
+        return pd.Series(0, index=df.index, dtype=float)
+    return pd.to_numeric(df[column], errors="coerce").fillna(0)
 
 
 def quartile_cutoffs(series: pd.Series) -> tuple[float, float, float]:
@@ -148,8 +158,15 @@ export type CityStatisticsData = {{
   summary: {{
     schoolCount: number;
     districtCount: number;
+    case1Count: number;
+    case2Count: number;
+    case3Count: number;
+    case4Count: number;
+    separateBundleCount: number;
     urgentSupportCount: number;
     priorityReviewCount: number;
+    apartmentPermeabilitySchoolCount: number;
+    apartmentAdjustmentCandidateCount: number;
     totalPotentialDemand2029: number;
     totalPotentialDemand2031: number;
   }}; 
@@ -168,6 +185,13 @@ def main() -> None:
     priority = pd.read_csv(PRIORITY_PATH, encoding="utf-8-sig")
     forecast = pd.read_csv(FORECAST_PATH, encoding="utf-8-sig")
     student_trend = pd.read_csv(STUDENT_TREND_PATH, encoding="utf-8-sig")
+    if APARTMENT_ADJUSTMENT_PATH.exists():
+        apartment_adjustment = pd.read_csv(APARTMENT_ADJUSTMENT_PATH, encoding="utf-8-sig")
+        priority = priority.merge(
+            apartment_adjustment[["학교ID", "apt_permeability_flag", "apt_adjustment_candidate"]],
+            on="학교ID",
+            how="left",
+        )
 
     latest_students = (
         student_trend.assign(
@@ -208,8 +232,8 @@ def main() -> None:
                 "case2Count": int((district_df["case_type"] == 2.0).sum()),
                 "case3Count": int((district_df["case_type"] == 3.0).sum()),
                 "case4Count": int((district_df["case_type"] == 4.0).sum()),
-                "specialPolicyCount": int(district_df["case_type"].isna().sum()),
-                "priorityReviewCount": int(district_df["case_type"].isin([1.0, 2.0]).sum()),
+                "specialPolicyCount": int(numeric_series(district_df, "is_separate_bundle_tag").eq(1).sum()),
+                "priorityReviewCount": int((district_df["case_type"] == 2.0).sum()),
                 "totalPotentialDemand2029": int(round(district_df["forecast_2029"].sum())),
                 "totalPotentialDemand2031": int(round(district_df["forecast_2031"].sum())),
                 "avgNearestParkDistanceM": round1(pd.to_numeric(district_df["nearest_park_dist_m"], errors="coerce").mean()),
@@ -242,8 +266,15 @@ def main() -> None:
         "summary": {
             "schoolCount": int(len(merged)),
             "districtCount": int(merged["gu"].nunique()),
+            "case1Count": int((merged["case_type"] == 1.0).sum()),
+            "case2Count": int((merged["case_type"] == 2.0).sum()),
+            "case3Count": int((merged["case_type"] == 3.0).sum()),
+            "case4Count": int((merged["case_type"] == 4.0).sum()),
+            "separateBundleCount": int(numeric_series(merged, "is_separate_bundle_tag").eq(1).sum()),
             "urgentSupportCount": int((merged["case_type"] == 1.0).sum()),
             "priorityReviewCount": int((merged["case_type"] == 2.0).sum()),
+            "apartmentPermeabilitySchoolCount": int(numeric_series(merged, "apt_permeability_flag").eq(1).sum()),
+            "apartmentAdjustmentCandidateCount": int(numeric_series(merged, "apt_adjustment_candidate").eq(1).sum()),
             "totalPotentialDemand2029": int(round(merged["forecast_2029"].sum())),
             "totalPotentialDemand2031": int(round(merged["forecast_2031"].sum())),
         },
@@ -258,8 +289,10 @@ def main() -> None:
         "cityBestSchool": school_record(city_best_row, 1) if city_best_row is not None else build_empty_best_school("인천광역시"),
     }
 
-    OUT_PATH.write_text(build_typescript(data), encoding="utf-8")
-    print(f"generated: {OUT_PATH}")
+    rendered = build_typescript(data)
+    for out_path in OUT_PATHS:
+        out_path.write_text(rendered, encoding="utf-8")
+        print(f"generated: {out_path}")
     print("city best:", data["cityBestSchool"]["schoolName"], data["cityBestSchool"]["greenRatio"])
 
 

@@ -166,6 +166,17 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
     [cityCase1SortMode, data.cityTopPrioritySchoolsPlaygroundFocused, data.cityTopPrioritySchoolsStudentFocused]
   );
 
+  const cityCaseSummary = useMemo(
+    () => [
+      { label: "case1", value: data.summary.case1Count, color: "#dc2626" },
+      { label: "case2", value: data.summary.case2Count, color: "#f97316" },
+      { label: "case3", value: data.summary.case3Count, color: "#eab308" },
+      { label: "case4", value: data.summary.case4Count, color: "#16a34a" },
+      { label: "별도 묶음", value: data.summary.separateBundleCount, color: "#64748b" },
+    ],
+    [data.summary]
+  );
+
   return (
     <div className="mx-auto flex max-w-[1380px] flex-col gap-8 px-4 py-8 lg:px-8">
       <section className="space-y-5 rounded-[32px] border border-slate-200 bg-white p-7 shadow-sm">
@@ -177,10 +188,21 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <SummaryCard title="전체 학교" value={`${formatNumber(data.summary.schoolCount)}개교`} helper={`${formatNumber(data.summary.districtCount)}개 구·군`} />
-          <SummaryCard title="즉시 개선 대상" value={`${formatNumber(data.summary.urgentSupportCount)}개교`} helper="공원 접근 불가 중심" />
+          <SummaryCard title="전체 학교" value={`${formatNumber(data.summary.schoolCount)}개교`} helper={`${formatNumber(data.summary.districtCount)}개 구·군 · 별도 ${formatNumber(data.summary.separateBundleCount)}개`} />
+          <SummaryCard title="즉시 개선 대상" value={`${formatNumber(data.summary.case1Count)}개교`} helper={`case2 ${formatNumber(data.summary.case2Count)} · case3 ${formatNumber(data.summary.case3Count)} · case4 ${formatNumber(data.summary.case4Count)}`} />
           <SummaryCard title="우선 검토 대상" value={`${formatNumber(data.summary.priorityReviewCount)}개교`} helper="공원 접근 가능 · 녹지 부족 포함" />
-          <SummaryCard title="2029 잠재 수요" value={`${formatNumber(data.summary.totalPotentialDemand2029)}명`} helper={`2031 ${formatNumber(data.summary.totalPotentialDemand2031)}명`} />
+          <SummaryCard title="2029 잠재 수요" value={`${formatNumber(data.summary.totalPotentialDemand2029)}명`} helper={`단지보정 후보 ${formatNumber(data.summary.apartmentAdjustmentCandidateCount)}개교`} />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-5">
+          {cityCaseSummary.map((item) => (
+            <div key={item.label} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500">{item.label}</p>
+              </div>
+              <p className="mt-2 text-2xl font-black tracking-tight text-slate-950">{formatNumber(item.value)}개교</p>
+            </div>
+          ))}
         </div>
       </section>
 

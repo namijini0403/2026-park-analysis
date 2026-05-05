@@ -35,8 +35,15 @@ export type CityStatisticsData = {
   summary: {
     schoolCount: number;
     districtCount: number;
+    case1Count: number;
+    case2Count: number;
+    case3Count: number;
+    case4Count: number;
+    separateBundleCount: number;
     urgentSupportCount: number;
     priorityReviewCount: number;
+    apartmentPermeabilitySchoolCount: number;
+    apartmentAdjustmentCandidateCount: number;
     totalPotentialDemand2029: number;
     totalPotentialDemand2031: number;
   }; 
@@ -52,8 +59,15 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
   "summary": {
     "schoolCount": 272,
     "districtCount": 10,
-    "urgentSupportCount": 10,
-    "priorityReviewCount": 51,
+    "case1Count": 17,
+    "case2Count": 68,
+    "case3Count": 77,
+    "case4Count": 80,
+    "separateBundleCount": 30,
+    "urgentSupportCount": 17,
+    "priorityReviewCount": 68,
+    "apartmentPermeabilitySchoolCount": 206,
+    "apartmentAdjustmentCandidateCount": 194,
     "totalPotentialDemand2029": 120035,
     "totalPotentialDemand2031": 108184
   },
@@ -61,16 +75,16 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
     {
       "districtName": "중구",
       "schoolCount": 16,
-      "case1Count": 3,
-      "case2Count": 3,
-      "case3Count": 2,
-      "case4Count": 8,
+      "case1Count": 6,
+      "case2Count": 0,
+      "case3Count": 1,
+      "case4Count": 9,
       "specialPolicyCount": 0,
-      "priorityReviewCount": 6,
+      "priorityReviewCount": 0,
       "totalPotentialDemand2029": 9632,
       "totalPotentialDemand2031": 9629,
       "avgNearestParkDistanceM": 1259.4,
-      "avgGreenRatio": 10.2,
+      "avgGreenRatio": 12.9,
       "avgPlaygroundCount": 1.81,
       "topPrioritySchools": [
         {
@@ -88,6 +102,19 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         },
         {
           "rank": 2,
+          "schoolName": "인천운남초등학교",
+          "districtName": "중구",
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 408,
+          "potentialDemand2031": 448,
+          "nearestParkDistanceM": 186.0,
+          "greenRatio": 5.1,
+          "playgroundCount": 0,
+          "currentStudentCount": 458
+        },
+        {
+          "rank": 3,
           "schoolName": "인천영종초등학교금산분교장",
           "districtName": "중구",
           "casePolicyLabel": "즉시 개선 대상",
@@ -100,7 +127,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "currentStudentCount": 47
         },
         {
-          "rank": 3,
+          "rank": 4,
           "schoolName": "인천신선초등학교",
           "districtName": "중구",
           "casePolicyLabel": "즉시 개선 대상",
@@ -113,30 +140,17 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "currentStudentCount": 286
         },
         {
-          "rank": 4,
+          "rank": 5,
           "schoolName": "인천연안초등학교",
           "districtName": "중구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
+          "casePolicyLabel": "즉시 개선 대상",
+          "caseStatusLabel": "공원 접근 불가",
           "potentialDemand2029": 42,
           "potentialDemand2031": 18,
           "nearestParkDistanceM": 620.0,
-          "greenRatio": 0.1,
+          "greenRatio": 0.0,
           "playgroundCount": 0,
           "currentStudentCount": 104
-        },
-        {
-          "rank": 5,
-          "schoolName": "인천신흥초등학교",
-          "districtName": "중구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 263,
-          "potentialDemand2031": 230,
-          "nearestParkDistanceM": 722.2,
-          "greenRatio": 0.1,
-          "playgroundCount": 1,
-          "currentStudentCount": 312
         }
       ],
       "bestSchool": {
@@ -148,7 +162,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2029": 1567,
         "potentialDemand2031": 1549,
         "nearestParkDistanceM": 55.7,
-        "greenRatio": 72.1,
+        "greenRatio": 95.9,
         "playgroundCount": 4,
         "currentStudentCount": 1582
       }
@@ -161,15 +175,28 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "case3Count": 2,
       "case4Count": 1,
       "specialPolicyCount": 0,
-      "priorityReviewCount": 5,
+      "priorityReviewCount": 4,
       "totalPotentialDemand2029": 2200,
       "totalPotentialDemand2031": 1903,
       "avgNearestParkDistanceM": 286.3,
-      "avgGreenRatio": 1.8,
+      "avgGreenRatio": 1.5,
       "avgPlaygroundCount": 0.25,
       "topPrioritySchools": [
         {
           "rank": 1,
+          "schoolName": "인천서흥초등학교",
+          "districtName": "동구",
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 162,
+          "potentialDemand2031": 118,
+          "nearestParkDistanceM": 208.0,
+          "greenRatio": 5.2,
+          "playgroundCount": 0,
+          "currentStudentCount": 329
+        },
+        {
+          "rank": 2,
           "schoolName": "인천서림초등학교",
           "districtName": "동구",
           "casePolicyLabel": "즉시 개선 대상",
@@ -182,7 +209,20 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "currentStudentCount": 488
         },
         {
-          "rank": 2,
+          "rank": 3,
+          "schoolName": "인천송림초등학교",
+          "districtName": "동구",
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 454,
+          "potentialDemand2031": 387,
+          "nearestParkDistanceM": 281.0,
+          "greenRatio": 1.9,
+          "playgroundCount": 2,
+          "currentStudentCount": 434
+        },
+        {
+          "rank": 4,
           "schoolName": "인천동명초등학교",
           "districtName": "동구",
           "casePolicyLabel": "우선 검토 대상",
@@ -190,12 +230,12 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 408,
           "potentialDemand2031": 403,
           "nearestParkDistanceM": 432.0,
-          "greenRatio": 0.8,
+          "greenRatio": 0.2,
           "playgroundCount": 0,
           "currentStudentCount": 438
         },
         {
-          "rank": 3,
+          "rank": 5,
           "schoolName": "인천송현초등학교",
           "districtName": "동구",
           "casePolicyLabel": "우선 검토 대상",
@@ -206,32 +246,6 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "greenRatio": 0.2,
           "playgroundCount": 0,
           "currentStudentCount": 347
-        },
-        {
-          "rank": 4,
-          "schoolName": "영화초등학교",
-          "districtName": "동구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 376,
-          "potentialDemand2031": 412,
-          "nearestParkDistanceM": 305.1,
-          "greenRatio": 0.3,
-          "playgroundCount": 0,
-          "currentStudentCount": 373
-        },
-        {
-          "rank": 5,
-          "schoolName": "인천창영초등학교",
-          "districtName": "동구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 243,
-          "potentialDemand2031": 236,
-          "nearestParkDistanceM": 43.4,
-          "greenRatio": 0.3,
-          "playgroundCount": 0,
-          "currentStudentCount": 244
         }
       ],
       "bestSchool": {
@@ -252,15 +266,15 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "districtName": "미추홀구",
       "schoolCount": 23,
       "case1Count": 1,
-      "case2Count": 6,
-      "case3Count": 9,
-      "case4Count": 7,
+      "case2Count": 10,
+      "case3Count": 7,
+      "case4Count": 5,
       "specialPolicyCount": 0,
-      "priorityReviewCount": 7,
+      "priorityReviewCount": 10,
       "totalPotentialDemand2029": 13649,
       "totalPotentialDemand2031": 12861,
-      "avgNearestParkDistanceM": 233.1,
-      "avgGreenRatio": 7.6,
+      "avgNearestParkDistanceM": 234.1,
+      "avgGreenRatio": 6.9,
       "avgPlaygroundCount": 0.17,
       "topPrioritySchools": [
         {
@@ -285,48 +299,48 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 309,
           "potentialDemand2031": 287,
           "nearestParkDistanceM": 279.4,
-          "greenRatio": 0.4,
+          "greenRatio": 0.0,
           "playgroundCount": 0,
           "currentStudentCount": 362
         },
         {
           "rank": 3,
-          "schoolName": "인천주안남초등학교",
+          "schoolName": "인천서화초등학교",
           "districtName": "미추홀구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 303,
-          "potentialDemand2031": 247,
-          "nearestParkDistanceM": 60.5,
-          "greenRatio": 0.3,
-          "playgroundCount": 0,
-          "currentStudentCount": 426
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 1467,
+          "potentialDemand2031": 1509,
+          "nearestParkDistanceM": 249.1,
+          "greenRatio": 5.9,
+          "playgroundCount": 2,
+          "currentStudentCount": 1341
         },
         {
           "rank": 4,
-          "schoolName": "인천대화초등학교",
+          "schoolName": "인천인주초등학교",
           "districtName": "미추홀구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 253,
-          "potentialDemand2031": 223,
-          "nearestParkDistanceM": 254.6,
-          "greenRatio": 0.5,
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 251,
+          "potentialDemand2031": 168,
+          "nearestParkDistanceM": 222.5,
+          "greenRatio": 1.6,
           "playgroundCount": 0,
-          "currentStudentCount": 366
+          "currentStudentCount": 418
         },
         {
           "rank": 5,
-          "schoolName": "인천경원초등학교",
+          "schoolName": "인천관교초등학교",
           "districtName": "미추홀구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 645,
-          "potentialDemand2031": 504,
-          "nearestParkDistanceM": 73.2,
-          "greenRatio": 0.5,
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 283,
+          "potentialDemand2031": 222,
+          "nearestParkDistanceM": 201.4,
+          "greenRatio": 1.7,
           "playgroundCount": 0,
-          "currentStudentCount": 941
+          "currentStudentCount": 431
         }
       ],
       "bestSchool": {
@@ -338,7 +352,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2029": 243,
         "potentialDemand2031": 287,
         "nearestParkDistanceM": 56.9,
-        "greenRatio": 22.2,
+        "greenRatio": 28.7,
         "playgroundCount": 0,
         "currentStudentCount": 297
       }
@@ -357,7 +371,73 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "avgNearestParkDistanceM": 16553.3,
       "avgGreenRatio": 0.0,
       "avgPlaygroundCount": 0.0,
-      "topPrioritySchools": [],
+      "topPrioritySchools": [
+        {
+          "rank": 1,
+          "schoolName": "영흥초등학교",
+          "districtName": "옹진군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 54,
+          "potentialDemand2031": 24,
+          "nearestParkDistanceM": 19637.4,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 147
+        },
+        {
+          "rank": 2,
+          "schoolName": "북포초등학교",
+          "districtName": "옹진군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 21,
+          "potentialDemand2031": 9,
+          "nearestParkDistanceM": 16479.1,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 65
+        },
+        {
+          "rank": 3,
+          "schoolName": "백령초등학교",
+          "districtName": "옹진군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 10,
+          "potentialDemand2031": 4,
+          "nearestParkDistanceM": 16479.1,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 41
+        },
+        {
+          "rank": 4,
+          "schoolName": "연평초등학교",
+          "districtName": "옹진군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 5,
+          "potentialDemand2031": 2,
+          "nearestParkDistanceM": 16479.1,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 26
+        },
+        {
+          "rank": 5,
+          "schoolName": "대청초등학교",
+          "districtName": "옹진군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 3,
+          "potentialDemand2031": 1,
+          "nearestParkDistanceM": 16479.1,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 16
+        }
+      ],
       "bestSchool": {
         "rank": 1,
         "schoolName": "기준 충족 학교 없음",
@@ -375,115 +455,128 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
     {
       "districtName": "부평구",
       "schoolCount": 42,
-      "case1Count": 2,
-      "case2Count": 9,
-      "case3Count": 20,
+      "case1Count": 4,
+      "case2Count": 13,
+      "case3Count": 14,
       "case4Count": 11,
       "specialPolicyCount": 0,
-      "priorityReviewCount": 11,
+      "priorityReviewCount": 13,
       "totalPotentialDemand2029": 17097,
       "totalPotentialDemand2031": 15607,
-      "avgNearestParkDistanceM": 314.1,
-      "avgGreenRatio": 4.6,
+      "avgNearestParkDistanceM": 313.4,
+      "avgGreenRatio": 5.3,
       "avgPlaygroundCount": 0.64,
       "topPrioritySchools": [
         {
           "rank": 1,
-          "schoolName": "인천마장초등학교",
+          "schoolName": "인천금마초등학교",
           "districtName": "부평구",
-          "casePolicyLabel": "즉시 개선 대상",
-          "caseStatusLabel": "공원 접근 불가",
-          "potentialDemand2029": 393,
-          "potentialDemand2031": 335,
-          "nearestParkDistanceM": 839.7,
+          "casePolicyLabel": "우선 검토 대상",
+          "caseStatusLabel": "접근 가능하나 녹지 부족",
+          "potentialDemand2029": 173,
+          "potentialDemand2031": 129,
+          "nearestParkDistanceM": 477.0,
           "greenRatio": 0.0,
           "playgroundCount": 0,
-          "currentStudentCount": 543
+          "currentStudentCount": 273
         },
         {
           "rank": 2,
-          "schoolName": "인천부마초등학교",
+          "schoolName": "인천동암초등학교",
           "districtName": "부평구",
-          "casePolicyLabel": "즉시 개선 대상",
-          "caseStatusLabel": "공원 접근 불가",
-          "potentialDemand2029": 520,
-          "potentialDemand2031": 461,
-          "nearestParkDistanceM": 801.4,
-          "greenRatio": 0.0,
-          "playgroundCount": 11,
-          "currentStudentCount": 654
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 209,
+          "potentialDemand2031": 191,
+          "nearestParkDistanceM": 152.1,
+          "greenRatio": 1.1,
+          "playgroundCount": 0,
+          "currentStudentCount": 295
         },
         {
           "rank": 3,
-          "schoolName": "한일초등학교",
+          "schoolName": "인천청천초등학교",
           "districtName": "부평구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 339,
-          "potentialDemand2031": 345,
-          "nearestParkDistanceM": 67.0,
-          "greenRatio": 0.8,
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 1107,
+          "potentialDemand2031": 1267,
+          "nearestParkDistanceM": 113.7,
+          "greenRatio": 5.1,
           "playgroundCount": 0,
-          "currentStudentCount": 317
+          "currentStudentCount": 1019
         },
         {
           "rank": 4,
-          "schoolName": "인천산곡초등학교",
+          "schoolName": "인천용마초등학교",
           "districtName": "부평구",
           "casePolicyLabel": "우선 검토 대상",
           "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 504,
-          "potentialDemand2031": 504,
-          "nearestParkDistanceM": 200.0,
-          "greenRatio": 0.3,
+          "potentialDemand2029": 456,
+          "potentialDemand2031": 422,
+          "nearestParkDistanceM": 408.0,
+          "greenRatio": 0.0,
           "playgroundCount": 0,
-          "currentStudentCount": 427
+          "currentStudentCount": 495
         },
         {
           "rank": 5,
-          "schoolName": "인천부평동초등학교",
+          "schoolName": "인천굴포초등학교",
           "districtName": "부평구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 741,
-          "potentialDemand2031": 675,
-          "nearestParkDistanceM": 409.0,
-          "greenRatio": 0.5,
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 543,
+          "potentialDemand2031": 444,
+          "nearestParkDistanceM": 342.5,
+          "greenRatio": 5.2,
           "playgroundCount": 0,
-          "currentStudentCount": 831
+          "currentStudentCount": 749
         }
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천후정초등학교",
+        "schoolName": "인천진산초등학교",
         "districtName": "부평구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 154,
-        "potentialDemand2031": 87,
-        "nearestParkDistanceM": 65.9,
-        "greenRatio": 9.2,
+        "potentialDemand2029": 72,
+        "potentialDemand2031": 32,
+        "nearestParkDistanceM": 152.0,
+        "greenRatio": 14.0,
         "playgroundCount": 0,
-        "currentStudentCount": 297
+        "currentStudentCount": 207
       }
     },
     {
       "districtName": "연수구",
       "schoolCount": 34,
-      "case1Count": 1,
-      "case2Count": 6,
-      "case3Count": 8,
-      "case4Count": 19,
+      "case1Count": 2,
+      "case2Count": 8,
+      "case3Count": 6,
+      "case4Count": 18,
       "specialPolicyCount": 0,
-      "priorityReviewCount": 7,
+      "priorityReviewCount": 8,
       "totalPotentialDemand2029": 22651,
       "totalPotentialDemand2031": 21173,
-      "avgNearestParkDistanceM": 228.8,
-      "avgGreenRatio": 19.2,
+      "avgNearestParkDistanceM": 232.1,
+      "avgGreenRatio": 19.0,
       "avgPlaygroundCount": 1.06,
       "topPrioritySchools": [
         {
           "rank": 1,
+          "schoolName": "인천연수초등학교",
+          "districtName": "연수구",
+          "casePolicyLabel": "우선 검토 대상",
+          "caseStatusLabel": "접근 가능하나 녹지 부족",
+          "potentialDemand2029": 183,
+          "potentialDemand2031": 137,
+          "nearestParkDistanceM": 373.0,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 271
+        },
+        {
+          "rank": 2,
           "schoolName": "인천은송초등학교",
           "districtName": "연수구",
           "casePolicyLabel": "즉시 개선 대상",
@@ -496,128 +589,76 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "currentStudentCount": 1502
         },
         {
-          "rank": 2,
-          "schoolName": "인천송도초등학교",
-          "districtName": "연수구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 192,
-          "potentialDemand2031": 136,
-          "nearestParkDistanceM": 224.0,
-          "greenRatio": 0.6,
-          "playgroundCount": 0,
-          "currentStudentCount": 285
-        },
-        {
           "rank": 3,
-          "schoolName": "인천연송초등학교",
+          "schoolName": "인천송빛초등학교",
           "districtName": "연수구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 1119,
-          "potentialDemand2031": 1223,
-          "nearestParkDistanceM": 219.8,
-          "greenRatio": 0.9,
-          "playgroundCount": 0,
-          "currentStudentCount": 1116
+          "casePolicyLabel": "즉시 개선 대상",
+          "caseStatusLabel": "공원 접근 불가",
+          "potentialDemand2029": 654,
+          "potentialDemand2031": 584,
+          "nearestParkDistanceM": 716.0,
+          "greenRatio": 0.0,
+          "playgroundCount": 6,
+          "currentStudentCount": 762
         },
         {
           "rank": 4,
-          "schoolName": "인천옥련초등학교",
+          "schoolName": "인천현송초등학교",
           "districtName": "연수구",
           "casePolicyLabel": "우선 검토 대상",
           "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 576,
-          "potentialDemand2031": 502,
-          "nearestParkDistanceM": 242.4,
-          "greenRatio": 0.7,
-          "playgroundCount": 2,
-          "currentStudentCount": 747
+          "potentialDemand2029": 1050,
+          "potentialDemand2031": 1113,
+          "nearestParkDistanceM": 122.0,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 801
         },
         {
           "rank": 5,
-          "schoolName": "인천예송초등학교",
+          "schoolName": "인천미송초등학교",
           "districtName": "연수구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 1351,
-          "potentialDemand2031": 1364,
-          "nearestParkDistanceM": 0.0,
-          "greenRatio": 0.7,
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 1558,
+          "potentialDemand2031": 1555,
+          "nearestParkDistanceM": 489.0,
+          "greenRatio": 6.7,
           "playgroundCount": 0,
-          "currentStudentCount": 1185
+          "currentStudentCount": 1554
         }
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천신송초등학교",
+        "schoolName": "인천박문초등학교",
         "districtName": "연수구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 299,
-        "potentialDemand2031": 216,
+        "potentialDemand2029": 484,
+        "potentialDemand2031": 478,
         "nearestParkDistanceM": 0.0,
-        "greenRatio": 85.2,
-        "playgroundCount": 0,
-        "currentStudentCount": 472
+        "greenRatio": 65.5,
+        "playgroundCount": 8,
+        "currentStudentCount": 493
       }
     },
     {
       "districtName": "남동구",
       "schoolCount": 39,
       "case1Count": 0,
-      "case2Count": 7,
-      "case3Count": 18,
+      "case2Count": 9,
+      "case3Count": 16,
       "case4Count": 14,
       "specialPolicyCount": 0,
-      "priorityReviewCount": 7,
+      "priorityReviewCount": 9,
       "totalPotentialDemand2029": 14134,
       "totalPotentialDemand2031": 10535,
       "avgNearestParkDistanceM": 219.9,
-      "avgGreenRatio": 8.4,
+      "avgGreenRatio": 8.5,
       "avgPlaygroundCount": 0.64,
       "topPrioritySchools": [
         {
           "rank": 1,
-          "schoolName": "인천정각초등학교",
-          "districtName": "남동구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 546,
-          "potentialDemand2031": 321,
-          "nearestParkDistanceM": 335.8,
-          "greenRatio": 0.2,
-          "playgroundCount": 0,
-          "currentStudentCount": 950
-        },
-        {
-          "rank": 2,
-          "schoolName": "인천간석초등학교",
-          "districtName": "남동구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 417,
-          "potentialDemand2031": 371,
-          "nearestParkDistanceM": 185.4,
-          "greenRatio": 0.6,
-          "playgroundCount": 0,
-          "currentStudentCount": 510
-        },
-        {
-          "rank": 3,
-          "schoolName": "인천동부초등학교",
-          "districtName": "남동구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 304,
-          "potentialDemand2031": 245,
-          "nearestParkDistanceM": 147.6,
-          "greenRatio": 0.2,
-          "playgroundCount": 1,
-          "currentStudentCount": 414
-        },
-        {
-          "rank": 4,
           "schoolName": "인천상아초등학교",
           "districtName": "남동구",
           "casePolicyLabel": "우선 검토 대상",
@@ -625,36 +666,75 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 371,
           "potentialDemand2031": 240,
           "nearestParkDistanceM": 434.0,
-          "greenRatio": 0.5,
+          "greenRatio": 0.0,
           "playgroundCount": 0,
           "currentStudentCount": 630
         },
         {
-          "rank": 5,
-          "schoolName": "인천석천초등학교",
+          "rank": 2,
+          "schoolName": "인천간석초등학교",
+          "districtName": "남동구",
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 417,
+          "potentialDemand2031": 371,
+          "nearestParkDistanceM": 185.4,
+          "greenRatio": 1.1,
+          "playgroundCount": 0,
+          "currentStudentCount": 510
+        },
+        {
+          "rank": 3,
+          "schoolName": "인천만수북초등학교",
           "districtName": "남동구",
           "casePolicyLabel": "우선 검토 대상",
           "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 768,
-          "potentialDemand2031": 639,
-          "nearestParkDistanceM": 180.0,
-          "greenRatio": 0.5,
+          "potentialDemand2029": 296,
+          "potentialDemand2031": 161,
+          "nearestParkDistanceM": 384.0,
+          "greenRatio": 0.0,
           "playgroundCount": 0,
-          "currentStudentCount": 982
+          "currentStudentCount": 607
+        },
+        {
+          "rank": 4,
+          "schoolName": "인천담방초등학교",
+          "districtName": "남동구",
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 189,
+          "potentialDemand2031": 110,
+          "nearestParkDistanceM": 21.6,
+          "greenRatio": 5.2,
+          "playgroundCount": 0,
+          "currentStudentCount": 369
+        },
+        {
+          "rank": 5,
+          "schoolName": "인천구월초등학교",
+          "districtName": "남동구",
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 158,
+          "potentialDemand2031": 133,
+          "nearestParkDistanceM": 277.8,
+          "greenRatio": 5.2,
+          "playgroundCount": 0,
+          "currentStudentCount": 299
         }
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천장아초등학교",
+        "schoolName": "인천송천초등학교",
         "districtName": "남동구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 748,
-        "potentialDemand2031": 643,
-        "nearestParkDistanceM": 0.0,
-        "greenRatio": 76.8,
-        "playgroundCount": 0,
-        "currentStudentCount": 896
+        "potentialDemand2029": 178,
+        "potentialDemand2031": 149,
+        "nearestParkDistanceM": 180.7,
+        "greenRatio": 71.5,
+        "playgroundCount": 1,
+        "currentStudentCount": 320
       }
     },
     {
@@ -662,109 +742,109 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "schoolCount": 27,
       "case1Count": 0,
       "case2Count": 8,
-      "case3Count": 13,
-      "case4Count": 6,
+      "case3Count": 14,
+      "case4Count": 5,
       "specialPolicyCount": 0,
       "priorityReviewCount": 8,
       "totalPotentialDemand2029": 6315,
       "totalPotentialDemand2031": 4958,
       "avgNearestParkDistanceM": 266.6,
-      "avgGreenRatio": 3.1,
+      "avgGreenRatio": 2.8,
       "avgPlaygroundCount": 0.0,
       "topPrioritySchools": [
         {
           "rank": 1,
-          "schoolName": "인천명현초등학교",
+          "schoolName": "인천계양초등학교상야분교장",
           "districtName": "계양구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 169,
-          "potentialDemand2031": 130,
-          "nearestParkDistanceM": 343.0,
-          "greenRatio": 0.8,
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 2,
+          "potentialDemand2031": 1,
+          "nearestParkDistanceM": 342.8,
+          "greenRatio": 1.0,
           "playgroundCount": 0,
-          "currentStudentCount": 223
+          "currentStudentCount": 6
         },
         {
           "rank": 2,
-          "schoolName": "인천화전초등학교",
+          "schoolName": "인천작동초등학교",
           "districtName": "계양구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 441,
-          "potentialDemand2031": 325,
-          "nearestParkDistanceM": 400.0,
-          "greenRatio": 0.1,
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 275,
+          "potentialDemand2031": 229,
+          "nearestParkDistanceM": 437.0,
+          "greenRatio": 1.2,
           "playgroundCount": 0,
-          "currentStudentCount": 688
+          "currentStudentCount": 400
         },
         {
           "rank": 3,
-          "schoolName": "인천안남초등학교",
+          "schoolName": "인천소양초등학교",
           "districtName": "계양구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 169,
-          "potentialDemand2031": 132,
-          "nearestParkDistanceM": 496.0,
-          "greenRatio": 0.3,
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 229,
+          "potentialDemand2031": 157,
+          "nearestParkDistanceM": 244.0,
+          "greenRatio": 1.3,
           "playgroundCount": 0,
-          "currentStudentCount": 288
+          "currentStudentCount": 346
         },
         {
           "rank": 4,
-          "schoolName": "인천해서초등학교",
+          "schoolName": "인천효성서초등학교",
           "districtName": "계양구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 31,
-          "potentialDemand2031": 15,
-          "nearestParkDistanceM": 268.2,
-          "greenRatio": 0.5,
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 186,
+          "potentialDemand2031": 111,
+          "nearestParkDistanceM": 478.0,
+          "greenRatio": 5.4,
           "playgroundCount": 0,
-          "currentStudentCount": 141
+          "currentStudentCount": 341
         },
         {
           "rank": 5,
-          "schoolName": "인천부평초등학교",
+          "schoolName": "인천안산초등학교",
           "districtName": "계양구",
           "casePolicyLabel": "우선 검토 대상",
           "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 152,
-          "potentialDemand2031": 124,
-          "nearestParkDistanceM": 144.2,
-          "greenRatio": 0.6,
+          "potentialDemand2029": 161,
+          "potentialDemand2031": 149,
+          "nearestParkDistanceM": 300.0,
+          "greenRatio": 0.0,
           "playgroundCount": 0,
-          "currentStudentCount": 245
+          "currentStudentCount": 265
         }
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천서운초등학교",
+        "schoolName": "경인교육대학교부설초등학교",
         "districtName": "계양구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 513,
-        "potentialDemand2031": 507,
-        "nearestParkDistanceM": 60.0,
-        "greenRatio": 7.6,
+        "potentialDemand2029": 453,
+        "potentialDemand2031": 411,
+        "nearestParkDistanceM": 53.9,
+        "greenRatio": 7.4,
         "playgroundCount": 0,
-        "currentStudentCount": 510
+        "currentStudentCount": 560
       }
     },
     {
       "districtName": "서구",
       "schoolCount": 53,
-      "case1Count": 2,
-      "case2Count": 8,
-      "case3Count": 21,
-      "case4Count": 22,
+      "case1Count": 3,
+      "case2Count": 16,
+      "case3Count": 17,
+      "case4Count": 17,
       "specialPolicyCount": 0,
-      "priorityReviewCount": 10,
+      "priorityReviewCount": 16,
       "totalPotentialDemand2029": 33021,
       "totalPotentialDemand2031": 30490,
-      "avgNearestParkDistanceM": 245.3,
-      "avgGreenRatio": 7.6,
+      "avgNearestParkDistanceM": 235.0,
+      "avgGreenRatio": 6.8,
       "avgPlaygroundCount": 0.08,
       "topPrioritySchools": [
         {
@@ -782,6 +862,32 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         },
         {
           "rank": 2,
+          "schoolName": "인천가정초등학교",
+          "districtName": "서구",
+          "casePolicyLabel": "즉시 개선 대상",
+          "caseStatusLabel": "공원 접근 불가",
+          "potentialDemand2029": 548,
+          "potentialDemand2031": 491,
+          "nearestParkDistanceM": 663.1,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 664
+        },
+        {
+          "rank": 3,
+          "schoolName": "인천완정초등학교",
+          "districtName": "서구",
+          "casePolicyLabel": "유지·관리 대상",
+          "caseStatusLabel": "접근 양호",
+          "potentialDemand2029": 288,
+          "potentialDemand2031": 222,
+          "nearestParkDistanceM": 453.0,
+          "greenRatio": 5.5,
+          "playgroundCount": 0,
+          "currentStudentCount": 434
+        },
+        {
+          "rank": 4,
           "schoolName": "인천봉화초등학교",
           "districtName": "서구",
           "casePolicyLabel": "즉시 개선 대상",
@@ -794,43 +900,17 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "currentStudentCount": 298
         },
         {
-          "rank": 3,
-          "schoolName": "인천가현초등학교",
-          "districtName": "서구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 2154,
-          "potentialDemand2031": 2183,
-          "nearestParkDistanceM": 240.0,
-          "greenRatio": 0.0,
-          "playgroundCount": 1,
-          "currentStudentCount": 2044
-        },
-        {
-          "rank": 4,
-          "schoolName": "인천봉수초등학교",
-          "districtName": "서구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 1714,
-          "potentialDemand2031": 1797,
-          "nearestParkDistanceM": 65.0,
-          "greenRatio": 0.0,
-          "playgroundCount": 1,
-          "currentStudentCount": 1216
-        },
-        {
           "rank": 5,
-          "schoolName": "인천검단초등학교",
+          "schoolName": "인천불로초등학교",
           "districtName": "서구",
-          "casePolicyLabel": "우선 검토 대상",
-          "caseStatusLabel": "접근 가능하나 녹지 부족",
-          "potentialDemand2029": 539,
-          "potentialDemand2031": 470,
-          "nearestParkDistanceM": 90.0,
-          "greenRatio": 0.1,
+          "casePolicyLabel": "모니터링 대상",
+          "caseStatusLabel": "접근 가능, 중간 수준",
+          "potentialDemand2029": 508,
+          "potentialDemand2031": 444,
+          "nearestParkDistanceM": 65.0,
+          "greenRatio": 1.4,
           "playgroundCount": 0,
-          "currentStudentCount": 680
+          "currentStudentCount": 658
         }
       ],
       "bestSchool": {
@@ -842,7 +922,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2029": 663,
         "potentialDemand2031": 584,
         "nearestParkDistanceM": 140.0,
-        "greenRatio": 82.0,
+        "greenRatio": 80.5,
         "playgroundCount": 0,
         "currentStudentCount": 829
       }
@@ -859,9 +939,75 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 1235,
       "totalPotentialDemand2031": 985,
       "avgNearestParkDistanceM": 3705.3,
-      "avgGreenRatio": 3.0,
+      "avgGreenRatio": 2.7,
       "avgPlaygroundCount": 0.0,
-      "topPrioritySchools": [],
+      "topPrioritySchools": [
+        {
+          "rank": 1,
+          "schoolName": "갑룡초등학교",
+          "districtName": "강화군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 409,
+          "potentialDemand2031": 357,
+          "nearestParkDistanceM": 285.0,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 485
+        },
+        {
+          "rank": 2,
+          "schoolName": "선원초등학교",
+          "districtName": "강화군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 176,
+          "potentialDemand2031": 152,
+          "nearestParkDistanceM": 3971.9,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 233
+        },
+        {
+          "rank": 3,
+          "schoolName": "강화초등학교",
+          "districtName": "강화군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 114,
+          "potentialDemand2031": 67,
+          "nearestParkDistanceM": 0.0,
+          "greenRatio": 2.3,
+          "playgroundCount": 0,
+          "currentStudentCount": 209
+        },
+        {
+          "rank": 4,
+          "schoolName": "합일초등학교",
+          "districtName": "강화군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 106,
+          "potentialDemand2031": 95,
+          "nearestParkDistanceM": 0.0,
+          "greenRatio": 13.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 131
+        },
+        {
+          "rank": 5,
+          "schoolName": "대월초등학교",
+          "districtName": "강화군",
+          "casePolicyLabel": "별도 정책 적용",
+          "caseStatusLabel": "별도 묶음",
+          "potentialDemand2029": 91,
+          "potentialDemand2031": 81,
+          "nearestParkDistanceM": 4687.0,
+          "greenRatio": 0.0,
+          "playgroundCount": 0,
+          "currentStudentCount": 107
+        }
+      ],
       "bestSchool": {
         "rank": 1,
         "schoolName": "합일초등학교",
@@ -971,6 +1117,32 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
     },
     {
       "rank": 8,
+      "schoolName": "인천가정초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 548,
+      "potentialDemand2031": 491,
+      "nearestParkDistanceM": 663.1,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 664
+    },
+    {
+      "rank": 9,
+      "schoolName": "인천연안초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 42,
+      "potentialDemand2031": 18,
+      "nearestParkDistanceM": 620.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 104
+    },
+    {
+      "rank": 10,
       "schoolName": "인천봉화초등학교",
       "districtName": "서구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -983,7 +1155,33 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 298
     },
     {
-      "rank": 9,
+      "rank": 11,
+      "schoolName": "인천신흥초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 263,
+      "potentialDemand2031": 230,
+      "nearestParkDistanceM": 722.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 1,
+      "currentStudentCount": 312
+    },
+    {
+      "rank": 12,
+      "schoolName": "인천신광초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 673,
+      "potentialDemand2031": 663,
+      "nearestParkDistanceM": 533.7,
+      "greenRatio": 0.0,
+      "playgroundCount": 1,
+      "currentStudentCount": 699
+    },
+    {
+      "rank": 13,
       "schoolName": "인천은송초등학교",
       "districtName": "연수구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -996,7 +1194,46 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 1502
     },
     {
-      "rank": 10,
+      "rank": 14,
+      "schoolName": "인천송빛초등학교",
+      "districtName": "연수구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 654,
+      "potentialDemand2031": 584,
+      "nearestParkDistanceM": 716.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 6,
+      "currentStudentCount": 762
+    },
+    {
+      "rank": 15,
+      "schoolName": "인천부원초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 447,
+      "potentialDemand2031": 368,
+      "nearestParkDistanceM": 752.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 7,
+      "currentStudentCount": 602
+    },
+    {
+      "rank": 16,
+      "schoolName": "인천미산초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 142,
+      "potentialDemand2031": 102,
+      "nearestParkDistanceM": 1143.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 9,
+      "currentStudentCount": 219
+    },
+    {
+      "rank": 17,
       "schoolName": "인천부마초등학교",
       "districtName": "부평구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1025,6 +1262,19 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
     },
     {
       "rank": 2,
+      "schoolName": "인천가정초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 548,
+      "potentialDemand2031": 491,
+      "nearestParkDistanceM": 663.1,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 664
+    },
+    {
+      "rank": 3,
       "schoolName": "인천마장초등학교",
       "districtName": "부평구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1037,7 +1287,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 543
     },
     {
-      "rank": 3,
+      "rank": 4,
       "schoolName": "인천서림초등학교",
       "districtName": "동구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1050,7 +1300,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 488
     },
     {
-      "rank": 4,
+      "rank": 5,
       "schoolName": "인천봉화초등학교",
       "districtName": "서구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1063,7 +1313,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 298
     },
     {
-      "rank": 5,
+      "rank": 6,
       "schoolName": "인천신선초등학교",
       "districtName": "중구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1076,7 +1326,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 286
     },
     {
-      "rank": 6,
+      "rank": 7,
       "schoolName": "인천가석초등학교",
       "districtName": "서구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1089,7 +1339,20 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 209
     },
     {
-      "rank": 7,
+      "rank": 8,
+      "schoolName": "인천연안초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 42,
+      "potentialDemand2031": 18,
+      "nearestParkDistanceM": 620.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 104
+    },
+    {
+      "rank": 9,
       "schoolName": "인천영종초등학교금산분교장",
       "districtName": "중구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1102,7 +1365,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 47
     },
     {
-      "rank": 8,
+      "rank": 10,
       "schoolName": "인천용유초등학교",
       "districtName": "중구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1115,7 +1378,33 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 33
     },
     {
-      "rank": 9,
+      "rank": 11,
+      "schoolName": "인천신광초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 673,
+      "potentialDemand2031": 663,
+      "nearestParkDistanceM": 533.7,
+      "greenRatio": 0.0,
+      "playgroundCount": 1,
+      "currentStudentCount": 699
+    },
+    {
+      "rank": 12,
+      "schoolName": "인천신흥초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 263,
+      "potentialDemand2031": 230,
+      "nearestParkDistanceM": 722.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 1,
+      "currentStudentCount": 312
+    },
+    {
+      "rank": 13,
       "schoolName": "인천은송초등학교",
       "districtName": "연수구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1128,7 +1417,46 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 1502
     },
     {
-      "rank": 10,
+      "rank": 14,
+      "schoolName": "인천송빛초등학교",
+      "districtName": "연수구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 654,
+      "potentialDemand2031": 584,
+      "nearestParkDistanceM": 716.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 6,
+      "currentStudentCount": 762
+    },
+    {
+      "rank": 15,
+      "schoolName": "인천부원초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 447,
+      "potentialDemand2031": 368,
+      "nearestParkDistanceM": 752.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 7,
+      "currentStudentCount": 602
+    },
+    {
+      "rank": 16,
+      "schoolName": "인천미산초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 142,
+      "potentialDemand2031": 102,
+      "nearestParkDistanceM": 1143.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 9,
+      "currentStudentCount": 219
+    },
+    {
+      "rank": 17,
       "schoolName": "인천부마초등학교",
       "districtName": "부평구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1170,6 +1498,45 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
     },
     {
       "rank": 3,
+      "schoolName": "인천송빛초등학교",
+      "districtName": "연수구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 654,
+      "potentialDemand2031": 584,
+      "nearestParkDistanceM": 716.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 6,
+      "currentStudentCount": 762
+    },
+    {
+      "rank": 4,
+      "schoolName": "인천신광초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 673,
+      "potentialDemand2031": 663,
+      "nearestParkDistanceM": 533.7,
+      "greenRatio": 0.0,
+      "playgroundCount": 1,
+      "currentStudentCount": 699
+    },
+    {
+      "rank": 5,
+      "schoolName": "인천가정초등학교",
+      "districtName": "서구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 548,
+      "potentialDemand2031": 491,
+      "nearestParkDistanceM": 663.1,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 664
+    },
+    {
+      "rank": 6,
       "schoolName": "인천부마초등학교",
       "districtName": "부평구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1182,7 +1549,20 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 654
     },
     {
-      "rank": 4,
+      "rank": 7,
+      "schoolName": "인천부원초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 447,
+      "potentialDemand2031": 368,
+      "nearestParkDistanceM": 752.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 7,
+      "currentStudentCount": 602
+    },
+    {
+      "rank": 8,
       "schoolName": "인천마장초등학교",
       "districtName": "부평구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1195,7 +1575,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 543
     },
     {
-      "rank": 5,
+      "rank": 9,
       "schoolName": "인천서림초등학교",
       "districtName": "동구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1208,7 +1588,20 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 488
     },
     {
-      "rank": 6,
+      "rank": 10,
+      "schoolName": "인천신흥초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 263,
+      "potentialDemand2031": 230,
+      "nearestParkDistanceM": 722.2,
+      "greenRatio": 0.0,
+      "playgroundCount": 1,
+      "currentStudentCount": 312
+    },
+    {
+      "rank": 11,
       "schoolName": "인천봉화초등학교",
       "districtName": "서구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1221,7 +1614,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 298
     },
     {
-      "rank": 7,
+      "rank": 12,
       "schoolName": "인천신선초등학교",
       "districtName": "중구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1234,7 +1627,20 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 286
     },
     {
-      "rank": 8,
+      "rank": 13,
+      "schoolName": "인천미산초등학교",
+      "districtName": "부평구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 142,
+      "potentialDemand2031": 102,
+      "nearestParkDistanceM": 1143.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 9,
+      "currentStudentCount": 219
+    },
+    {
+      "rank": 14,
       "schoolName": "인천가석초등학교",
       "districtName": "서구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1247,7 +1653,20 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 209
     },
     {
-      "rank": 9,
+      "rank": 15,
+      "schoolName": "인천연안초등학교",
+      "districtName": "중구",
+      "casePolicyLabel": "즉시 개선 대상",
+      "caseStatusLabel": "공원 접근 불가",
+      "potentialDemand2029": 42,
+      "potentialDemand2031": 18,
+      "nearestParkDistanceM": 620.0,
+      "greenRatio": 0.0,
+      "playgroundCount": 0,
+      "currentStudentCount": 104
+    },
+    {
+      "rank": 16,
       "schoolName": "인천영종초등학교금산분교장",
       "districtName": "중구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1260,7 +1679,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "currentStudentCount": 47
     },
     {
-      "rank": 10,
+      "rank": 17,
       "schoolName": "인천용유초등학교",
       "districtName": "중구",
       "casePolicyLabel": "즉시 개선 대상",
@@ -1275,15 +1694,15 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
   ],
   "cityBestSchool": {
     "rank": 1,
-    "schoolName": "인천신송초등학교",
-    "districtName": "연수구",
+    "schoolName": "인천중산초등학교",
+    "districtName": "중구",
     "casePolicyLabel": "유지·관리 대상",
     "caseStatusLabel": "접근 양호",
-    "potentialDemand2029": 299,
-    "potentialDemand2031": 216,
-    "nearestParkDistanceM": 0.0,
-    "greenRatio": 85.2,
-    "playgroundCount": 0,
-    "currentStudentCount": 472
+    "potentialDemand2029": 1567,
+    "potentialDemand2031": 1549,
+    "nearestParkDistanceM": 55.7,
+    "greenRatio": 95.9,
+    "playgroundCount": 4,
+    "currentStudentCount": 1582
   }
 };
