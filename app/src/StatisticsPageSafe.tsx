@@ -137,6 +137,7 @@ function BestSchoolCard({ school, label }: { school: StatisticsSchoolItem; label
 export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
   const [selectedDistrictName, setSelectedDistrictName] = useState(data.districts[0]?.districtName ?? "");
   const [chartMode, setChartMode] = useState<"pressure" | "cases">("pressure");
+  const [districtPrioritySortMode, setDistrictPrioritySortMode] = useState<"playground" | "students">("playground");
   const [cityCase1SortMode, setCityCase1SortMode] = useState<"playground" | "students">("playground");
 
   const selectedDistrict = useMemo(
@@ -177,8 +178,14 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
   );
 
   const selectedTopPrioritySchools = useMemo(
-    () => rerankSchools((selectedDistrict?.topPrioritySchools ?? []).filter(isSupportPrioritySchool)),
-    [selectedDistrict]
+    () => {
+      const focusedSchools =
+        districtPrioritySortMode === "students"
+          ? selectedDistrict?.topPrioritySchoolsStudentFocused
+          : selectedDistrict?.topPrioritySchoolsPlaygroundFocused;
+      return rerankSchools((focusedSchools ?? selectedDistrict?.topPrioritySchools ?? []).filter(isSupportPrioritySchool));
+    },
+    [districtPrioritySortMode, selectedDistrict]
   );
 
   return (
@@ -350,6 +357,28 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
                   <h3 className="mt-1 text-2xl font-black tracking-tight text-slate-950">
                     {selectedDistrict.districtName} 우선 지원 대상 최대 5개
                   </h3>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {[
+                      { key: "playground", label: "놀이공간 부족 우선" },
+                      { key: "students", label: "학생수 우선" },
+                    ].map((item) => {
+                      const active = districtPrioritySortMode === item.key;
+                      return (
+                        <button
+                          key={item.key}
+                          type="button"
+                          onClick={() => setDistrictPrioritySortMode(item.key as "playground" | "students")}
+                          className={`rounded-full px-3.5 py-2 text-xs font-semibold transition ${
+                            active
+                              ? "bg-slate-950 text-white"
+                              : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="rounded-2xl bg-white px-4 py-3 text-right shadow-sm">
                   <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">구 총 잠재 수요</p>
@@ -380,7 +409,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
           <div className="mt-4 flex flex-wrap gap-2">
             {[
               { key: "playground", label: "놀이공간 부족 우선" },
-              { key: "students", label: "학생 규모 우선" },
+              { key: "students", label: "학생수 우선" },
             ].map((item) => {
               const active = cityCase1SortMode === item.key;
               return (

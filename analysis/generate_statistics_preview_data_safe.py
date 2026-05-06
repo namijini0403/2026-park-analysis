@@ -134,6 +134,40 @@ def choose_best_school(df: pd.DataFrame) -> pd.Series | None:
     return candidates.iloc[0]
 
 
+def build_priority_school_lists(priority_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    if priority_df.empty:
+        return priority_df.copy(), priority_df.copy(), priority_df.copy()
+
+    base = priority_df.copy()
+    for column, fallback in [
+        ("case_type", 99),
+        ("priority_rank", 9999),
+        ("forecast_2029", 0),
+        ("current_student_count", 0),
+        ("iso_park_count", 9999),
+        ("iso_playground_count", 9999),
+        (STATISTICS_GREEN_RATIO_COLUMN, 9999),
+    ]:
+        base[column] = pd.to_numeric(base[column], errors="coerce").fillna(fallback)
+
+    default_df = base.sort_values(
+        by=["case_type", "priority_rank", "forecast_2029"],
+        ascending=[True, True, False],
+        kind="mergesort",
+    ).head(5)
+    playground_focused_df = base.sort_values(
+        by=["iso_park_count", STATISTICS_GREEN_RATIO_COLUMN, "iso_playground_count", "case_type", "current_student_count", "priority_rank"],
+        ascending=[True, True, True, True, False, True],
+        kind="mergesort",
+    ).head(5)
+    student_focused_df = base.sort_values(
+        by=["current_student_count", "case_type", "iso_park_count", STATISTICS_GREEN_RATIO_COLUMN, "iso_playground_count", "priority_rank"],
+        ascending=[False, True, True, True, True, True],
+        kind="mergesort",
+    ).head(5)
+    return default_df, playground_focused_df, student_focused_df
+
+
 def build_typescript(data: dict) -> str:
     payload = json.dumps(data, ensure_ascii=False, indent=2)
     return f'''export type StatisticsSchoolItem = {{
@@ -165,6 +199,8 @@ export type DistrictStatistics = {{
   avgGreenRatio: number;
   avgPlaygroundCount: number;
   topPrioritySchools: StatisticsSchoolItem[];
+  topPrioritySchoolsPlaygroundFocused: StatisticsSchoolItem[];
+  topPrioritySchoolsStudentFocused: StatisticsSchoolItem[];
   bestSchool: StatisticsSchoolItem;
 }};
 
@@ -184,7 +220,7 @@ export type CityStatisticsData = {{
     apartmentAdjustmentCandidateCount: number;
     totalPotentialDemand2029: number;
     totalPotentialDemand2031: number;
-  }}; 
+  }};
   districts: DistrictStatistics[];
   cityTopPrioritySchools: StatisticsSchoolItem[];
   cityTopPrioritySchoolsPlaygroundFocused: StatisticsSchoolItem[];
@@ -236,10 +272,7 @@ def main() -> None:
     for district_name, district_df in merged.groupby("gu", sort=False):
         district_df = district_df.copy()
         priority_df = district_df[district_df["case_type"].isin([1.0, 2.0])].copy()
-        top_df = priority_df.sort_values(
-            by=["case_type", "priority_rank", "forecast_2029"],
-            ascending=[True, True, False],
-        ).head(5)
+        top_df, top_playground_df, top_student_df = build_priority_school_lists(priority_df)
         best_row = choose_best_school(district_df)
         district_rows.append(
             {
@@ -257,6 +290,12 @@ def main() -> None:
                 "avgGreenRatio": round1(pd.to_numeric(district_df[STATISTICS_GREEN_RATIO_COLUMN], errors="coerce").mean()),
                 "avgPlaygroundCount": round(float(pd.to_numeric(district_df["iso_playground_count"], errors="coerce").fillna(0).mean()), 2),
                 "topPrioritySchools": [school_record(row, idx + 1) for idx, (_, row) in enumerate(top_df.iterrows())],
+                "topPrioritySchoolsPlaygroundFocused": [
+                    school_record(row, idx + 1) for idx, (_, row) in enumerate(top_playground_df.iterrows())
+                ],
+                "topPrioritySchoolsStudentFocused": [
+                    school_record(row, idx + 1) for idx, (_, row) in enumerate(top_student_df.iterrows())
+                ],
                 "bestSchool": school_record(best_row, 1) if best_row is not None else build_empty_best_school(str(district_name)),
             }
         )
