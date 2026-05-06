@@ -868,12 +868,6 @@
       color: #FDE68A;
     }
 
-    .layer-toggle-btn.is-on[data-layer="childcare"] {
-      background: rgba(168, 85, 247, 0.14);
-      border-color: rgba(168, 85, 247, 0.34);
-      color: #DDD6FE;
-    }
-
     .layer-toggle-btn.is-on[data-layer="candidate"] {
       background: rgba(231, 76, 60, 0.14);
       border-color: rgba(231, 76, 60, 0.34);
@@ -1955,7 +1949,6 @@
       <button class="layer-toggle-btn" type="button" data-layer="buffer">⭕ 직선거리 500m</button>
       <button class="layer-toggle-btn" type="button" data-layer="parks">🌳 공원·놀이터</button>
       <button class="layer-toggle-btn" type="button" data-layer="redevelopment">🏗️ 재개발</button>
-      <button class="layer-toggle-btn" type="button" data-layer="childcare">🏫 유치원</button>
       <button class="layer-toggle-btn" type="button" data-layer="candidate">📍 후보지</button>
       <div class="case-filter-group" aria-label="학교 마커 분류 필터">
         <button class="case-filter-btn is-on" type="button" data-case-filter="all">전체 학교</button>
@@ -2030,10 +2023,6 @@
                 <label for="toggleRedevelopment">재개발 구역</label>
               </div>
               <div class="toggle-row">
-                <input type="checkbox" id="toggleChildcare" />
-                <label for="toggleChildcare">유치원</label>
-              </div>
-              <div class="toggle-row">
                 <input type="checkbox" id="toggleCandidate" />
                 <label for="toggleCandidate">후보지</label>
               </div>
@@ -2097,8 +2086,7 @@
       isochrone: "./data_processed/isochrone_valhalla.geojson",
       buffer: "./data_processed/school_buffer_500m.geojson",
       redevelopment: "./data_processed/redevelopment_geocoded.csv",
-      largeApt: "./data_processed/large_apt_complexes_2025.csv",
-      childcare: "./data_processed/childcare_michuhol.csv"
+      largeApt: "./data_processed/large_apt_complexes_2025.csv"
     };
 
     const INCHEON_CENTER = { lat: 37.4563, lng: 126.7052 };
@@ -2243,7 +2231,6 @@
         schoolMarkers: [],
         candidateMarkers: [],
         parkMarkers: [],
-        childcareMarkers: [],
         redevelopmentMarkers: [],
         isochronePolygons: [],
         bufferPolygons: []
@@ -2259,7 +2246,6 @@
         guSummary: [],
         parks: [],
         largeApt: [],
-        childcare: [],
         redevelopment: [],
         isochrone: null,
         buffer: null,
@@ -2406,7 +2392,6 @@
         buffer: document.getElementById("toggleBuffer"),
         parks: document.getElementById("toggleParks"),
         redevelopment: document.getElementById("toggleRedevelopment"),
-        childcare: document.getElementById("toggleChildcare"),
         candidate: document.getElementById("toggleCandidate") || false
       },
       layerButtons: Array.from(document.querySelectorAll(".layer-toggle-btn[data-layer]")),
@@ -4154,7 +4139,6 @@
         marker.setMap(ui.toggles.candidate && ui.toggles.candidate.checked ? state.map : null);
       });
       state.overlays.parkMarkers.forEach((marker) => marker.setMap(ui.toggles.parks.checked ? state.map : null));
-      state.overlays.childcareMarkers.forEach((marker) => marker.setMap(ui.toggles.childcare.checked ? state.map : null));
       state.overlays.redevelopmentMarkers.forEach((marker) => marker.setMap(ui.toggles.redevelopment.checked ? state.map : null));
       state.overlays.isochronePolygons.forEach((polygon) => polygon.setMap(ui.toggles.isochrone.checked ? state.map : null));
       state.overlays.bufferPolygons.forEach((polygon) => polygon.setMap(ui.toggles.buffer.checked ? state.map : null));
@@ -4171,14 +4155,6 @@
         fallbackTitle: "공원",
         color: "#2B6CB0",
         visible: ui.toggles.parks.checked
-      });
-      renderPointMarkers("childcareMarkers", state.datasets.childcare, {
-        latKey: "위도",
-        lngKey: "경도",
-        titleKey: "기관명",
-        fallbackTitle: "유치원",
-        color: "#2F855A",
-        visible: ui.toggles.childcare.checked
       });
       renderRedevelopmentLayer();
       renderGeoJsonLayer("isochronePolygons", state.datasets.isochrone, {
@@ -4227,8 +4203,7 @@
         isochrone,
         buffer,
         redevelopment,
-        largeApt,
-        childcare
+        largeApt
       ] = await Promise.all([
         loadCSV(PATHS.schools),
         loadCSV(PATHS.schoolCoords),
@@ -4243,8 +4218,7 @@
         loadGeoJSON(PATHS.isochrone),
         loadGeoJSON(PATHS.buffer),
         loadCSV(PATHS.redevelopment),
-        loadCSV(PATHS.largeApt),
-        loadCSV(PATHS.childcare)
+        loadCSV(PATHS.largeApt)
       ]);
 
       state.datasets.studentTrend = studentTrend;
@@ -4269,7 +4243,6 @@
       state.datasets.buffer = buffer;
       state.datasets.redevelopment = redevelopment;
       state.datasets.largeApt = largeApt;
-      state.datasets.childcare = childcare;
       populateSchoolSearchOptions();
 
       rerenderAll();
@@ -4286,7 +4259,6 @@
           `구 요약: ${guSummary.length}건`,
           `지도 표시 학교: ${state.datasets.schools.filter((row) => Number.isFinite(Number(row["위도"])) && Number.isFinite(Number(row["경도"]))).length}건`,
           `공원·놀이터: ${parks.length}건`,
-          `유치원: ${childcare.length}건`,
           `재개발: ${redevelopment.length}건`,
           `도보 등시선: ${isochrone?.features?.length || 0}건`,
           `직선 버퍼: ${buffer?.features?.length || 0}건`

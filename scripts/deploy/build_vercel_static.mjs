@@ -22,7 +22,6 @@ const requiredDataFiles = [
   "school_buffer_500m.geojson",
   "redevelopment_geocoded.csv",
   "large_apt_complexes_2025.csv",
-  "childcare_michuhol.csv",
   "candidate_grid_final.geojson"
 ];
 

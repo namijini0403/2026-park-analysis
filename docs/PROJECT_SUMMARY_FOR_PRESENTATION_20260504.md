@@ -146,7 +146,7 @@
 
 ```text
 index.html (Kakao Map)
-  - 학교 마커, 공원 마커, 직선 500m, 도보 500m, 재개발, 대단지 아파트, 유치원, 후보지 격자
+  - 학교 마커, 공원 마커, 직선 500m, 도보 500m, 재개발, 대단지 아파트, 후보지 격자
   - 좌측 검색·필터, 우측 학교 상세 패널, 하단 토글바
   - iframe: ui-preview/dist/index.html
       - SchoolDetailReportPagePreview.tsx
