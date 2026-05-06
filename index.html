@@ -735,24 +735,25 @@
       left: 18px;
       right: auto;
       bottom: 18px;
-      z-index: 25;
+      z-index: 60;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       align-items: stretch;
       justify-content: flex-start;
-      width: min(900px, calc(100vw - var(--sidebar-width) - 74px));
-      padding: 12px 14px;
+      width: min(980px, calc(100vw - var(--sidebar-width) - 38px));
+      padding: 12px 15px;
       border-radius: 18px;
       background: rgba(8, 20, 33, 0.96);
       border: 1px solid var(--panel-border);
       box-shadow: 0 22px 70px rgba(0, 0, 0, 0.30);
-      max-width: calc(100vw - var(--sidebar-width) - 74px);
+      max-width: calc(100vw - var(--sidebar-width) - 38px);
+      pointer-events: auto;
     }
 
     .layer-toggle-bar::before {
       content: "지도 레이어";
-      flex: 0 0 96px;
+      flex: 0 0 76px;
       align-self: center;
       color: var(--accent);
       font-size: 11px;
@@ -809,9 +810,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      flex: 0 1 auto;
+      flex: 1 0 98px;
       gap: 8px;
       min-height: 42px;
+      min-width: 98px;
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid var(--panel-border);
@@ -820,8 +822,21 @@
       font: inherit;
       font-size: 14px;
       font-weight: 700;
+      white-space: nowrap;
       cursor: pointer;
       transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, color 0.18s ease;
+    }
+
+    .layer-toggle-btn[data-layer="isochrone"] {
+      flex-basis: 180px;
+    }
+
+    .layer-toggle-btn[data-layer="buffer"] {
+      flex-basis: 150px;
+    }
+
+    .layer-toggle-btn[data-layer="parks"] {
+      flex-basis: 130px;
     }
 
     .layer-toggle-btn:hover {
@@ -1731,6 +1746,10 @@
         min-width: 0;
       }
 
+      .layer-toggle-btn[data-layer] {
+        flex-basis: calc(50% - 8px);
+      }
+
       .case-filter-btn {
         flex: 1 1 calc(50% - 8px);
         min-width: 0;
@@ -2462,16 +2481,23 @@
     function setupLayerToggleBar() {
       ensureSpecialPolicyCaseFilterButton();
       refreshAccessFilterButtons();
-      ui.layerButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const layer = button.dataset.layer;
-          const input = ui.toggles[layer];
-          if (!input) return;
-          input.checked = !input.checked;
-          updateOverlayVisibility();
-          syncLayerToggleButtons();
-        });
+
+      ui.layerToggleBar?.addEventListener("pointerdown", (event) => {
+        event.stopPropagation();
       });
+      ui.layerToggleBar?.addEventListener("click", (event) => {
+        const button = event.target.closest(".layer-toggle-btn[data-layer]");
+        if (!button || !ui.layerToggleBar.contains(button)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const layer = button.dataset.layer;
+        const input = ui.toggles[layer];
+        if (!input) return;
+        input.checked = !input.checked;
+        updateOverlayVisibility();
+        syncLayerToggleButtons();
+      });
+
       ui.caseFilterButtons.forEach((button) => {
         button.addEventListener("click", () => {
           state.selectedCaseFilter = button.dataset.caseFilter || "all";
@@ -2735,6 +2761,7 @@
     function handleSchoolSearchSelection() {
       const row = findSchoolBySearch(ui.schoolSearchInput?.value);
       if (!row) return;
+      ui.schoolSearchInput?.blur();
       state.selectedCaseFilter = "all";
       state.selectedAccessFilter = "all";
       syncCaseFilterButtons();
@@ -2745,6 +2772,10 @@
         rerenderAll();
       }
       openSchoolPanel(row);
+      requestAnimationFrame(() => {
+        updateOverlayVisibility();
+        syncLayerToggleButtons();
+      });
     }
 
     function parseCSVText(text) {
