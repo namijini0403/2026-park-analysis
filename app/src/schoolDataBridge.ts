@@ -80,6 +80,23 @@ function s(value: unknown, fallback = ""): string {
   return value != null ? String(value) : fallback;
 }
 
+function getDisplayGreenRatio(row: RawRow): number {
+  return (
+    maybeNumber(row.display_green_ratio) ??
+    maybeNumber(row.corrected_green_ratio) ??
+    maybeNumber(row.iso_green_ratio) ??
+    0
+  );
+}
+
+function getSimilarSchoolGreenRatio(row: RawRow, index: number): number {
+  return (
+    maybeNumber(row[`similar_school_${index}_display_green_ratio`]) ??
+    maybeNumber(row[`similar_school_${index}_corrected_green_ratio`]) ??
+    maybeNumber(row[`similar_school_${index}_iso_green_ratio`]) ??
+    0
+  );
+}
 
 function isSpecialPolicySchool(row: RawRow): boolean {
   const caseLabel = s(row.case_label).trim();
@@ -119,12 +136,12 @@ function buildCaseStatusLabel(row: RawRow, cityAvgGreenRatio = CITY_AVG.greenRat
   if (isSpecialPolicySchool(row)) return CASE_LABELS[99].status;
 
   const nearestParkDistanceM = n(row.nearest_park_dist_m, 9999);
-  const greenRatio = n(row.iso_green_ratio);
+  const greenRatio = getDisplayGreenRatio(row);
   const playgroundCount = n(row.iso_playground_count);
   const hasParkWithin500m = n(row.iso_park_count) > 0 && nearestParkDistanceM < 500;
   const strongGreenThreshold = Math.max(4, cityAvgGreenRatio * 0.7);
 
-  if (!hasParkWithin500m) return "공원 접근 불가";
+  if (!hasParkWithin500m) return "공원 접근 결핍";
   if (greenRatio === 0) return "공원 접근 가능 · 녹지 없음";
   if (greenRatio < 3) return "공원 접근 가능 · 녹지 부족";
   if (playgroundCount === 0) return "공원 접근 가능 · 놀이환경 부족";
@@ -149,7 +166,7 @@ function getManualBarrierOverride(row: RawRow): ManualBarrierOverride | undefine
 function buildProblemTags(row: RawRow): string[] {
   const tags: string[] = [];
   const dist = n(row.nearest_park_dist_m, 9999);
-  const green = n(row.iso_green_ratio);
+  const green = getDisplayGreenRatio(row);
   const playground = n(row.iso_playground_count);
   const demand2029 = n(row.forecast_2029);
 
@@ -171,7 +188,7 @@ function buildContextTags(row: RawRow): string[] {
   const caseType = getCaseType(row, 0);
 
   if (caseType === 1 || caseType === 3) {
-    tags.push("보행 동선에 단절 구간이 있을 가능성이 있습니다");
+    tags.push("보행 동선에 경로 부담 요인이 있을 가능성이 있습니다");
   }
   tags.push("학교 주변에 바로 접근 가능한 녹지나 놀이터가 부족합니다");
   tags.push("주거 밀도 대비 아동 체류 공간이 부족한 편입니다");
@@ -302,7 +319,7 @@ export function mapSchoolRowToReportProps(
   const nearestParkDistanceM = n(row.nearest_park_dist_m);
   const manualBarrierOverride = getManualBarrierOverride(row);
   const nearestParkName = s(manualBarrierOverride?.nearestParkName ?? row.nearest_park_name ?? row.nearest_park_name_clean ?? "");
-  const greenRatio = n(row.iso_green_ratio);
+  const greenRatio = getDisplayGreenRatio(row);
   const playgroundCount = n(row.iso_playground_count);
 
   const cityAvg = avgBlock(row, "_cityAvg");
@@ -337,7 +354,7 @@ export function mapSchoolRowToReportProps(
       schoolName: s(row[`similar_school_${i}_name`]),
       districtName: s(row[`similar_school_${i}_gu`] ?? row[`similar_school_${i}_districtName`] ?? ""),
       nearestParkDistanceM: n(row[`similar_school_${i}_nearest_park_dist_m`]),
-      greenRatio: n(row[`similar_school_${i}_iso_green_ratio`]),
+      greenRatio: getSimilarSchoolGreenRatio(row, i),
       playgroundCount: n(row[`similar_school_${i}_iso_playground_count`]),
     }))
     .filter(isFiniteSimilarSchool)

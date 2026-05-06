@@ -84,7 +84,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 9632,
       "totalPotentialDemand2031": 9629,
       "avgNearestParkDistanceM": 1259.4,
-      "avgGreenRatio": 12.9,
+      "avgGreenRatio": 7.2,
       "avgPlaygroundCount": 1.81,
       "topPrioritySchools": [
         {
@@ -155,16 +155,16 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천중산초등학교",
+        "schoolName": "인천하늘초등학교",
         "districtName": "중구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 1567,
-        "potentialDemand2031": 1549,
-        "nearestParkDistanceM": 55.7,
-        "greenRatio": 95.9,
+        "potentialDemand2029": 1430,
+        "potentialDemand2031": 1567,
+        "nearestParkDistanceM": 124.0,
+        "greenRatio": 34.3,
         "playgroundCount": 4,
-        "currentStudentCount": 1582
+        "currentStudentCount": 1305
       }
     },
     {
@@ -179,7 +179,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 2200,
       "totalPotentialDemand2031": 1903,
       "avgNearestParkDistanceM": 286.3,
-      "avgGreenRatio": 1.5,
+      "avgGreenRatio": 1.4,
       "avgPlaygroundCount": 0.25,
       "topPrioritySchools": [
         {
@@ -204,7 +204,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 408,
           "potentialDemand2031": 403,
           "nearestParkDistanceM": 432.0,
-          "greenRatio": 0.2,
+          "greenRatio": 1.7,
           "playgroundCount": 0,
           "currentStudentCount": 438
         },
@@ -230,7 +230,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 376,
           "potentialDemand2031": 412,
           "nearestParkDistanceM": 305.1,
-          "greenRatio": 0.5,
+          "greenRatio": 0.3,
           "playgroundCount": 0,
           "currentStudentCount": 373
         },
@@ -243,7 +243,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 243,
           "potentialDemand2031": 236,
           "nearestParkDistanceM": 43.4,
-          "greenRatio": 0.5,
+          "greenRatio": 0.3,
           "playgroundCount": 0,
           "currentStudentCount": 244
         }
@@ -257,7 +257,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2029": 103,
         "potentialDemand2031": 43,
         "nearestParkDistanceM": 110.6,
-        "greenRatio": 3.1,
+        "greenRatio": 4.4,
         "playgroundCount": 0,
         "currentStudentCount": 263
       }
@@ -274,7 +274,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 13649,
       "totalPotentialDemand2031": 12861,
       "avgNearestParkDistanceM": 234.1,
-      "avgGreenRatio": 6.9,
+      "avgGreenRatio": 3.5,
       "avgPlaygroundCount": 0.17,
       "topPrioritySchools": [
         {
@@ -299,7 +299,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 309,
           "potentialDemand2031": 287,
           "nearestParkDistanceM": 279.4,
-          "greenRatio": 0.0,
+          "greenRatio": 0.4,
           "playgroundCount": 0,
           "currentStudentCount": 362
         },
@@ -325,7 +325,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 1119,
           "potentialDemand2031": 1100,
           "nearestParkDistanceM": 0.0,
-          "greenRatio": 0.0,
+          "greenRatio": 5.7,
           "playgroundCount": 0,
           "currentStudentCount": 1192
         },
@@ -345,16 +345,16 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천백학초등학교",
+        "schoolName": "인천연학초등학교",
         "districtName": "미추홀구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 243,
-        "potentialDemand2031": 287,
-        "nearestParkDistanceM": 56.9,
-        "greenRatio": 28.7,
+        "potentialDemand2029": 438,
+        "potentialDemand2031": 442,
+        "nearestParkDistanceM": 121.4,
+        "greenRatio": 12.8,
         "playgroundCount": 0,
-        "currentStudentCount": 297
+        "currentStudentCount": 371
       }
     },
     {
@@ -398,7 +398,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 17097,
       "totalPotentialDemand2031": 15607,
       "avgNearestParkDistanceM": 313.4,
-      "avgGreenRatio": 5.3,
+      "avgGreenRatio": 3.8,
       "avgPlaygroundCount": 0.64,
       "topPrioritySchools": [
         {
@@ -469,16 +469,16 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천진산초등학교",
+        "schoolName": "인천후정초등학교",
         "districtName": "부평구",
-        "casePolicyLabel": "유지·관리 대상",
-        "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 72,
-        "potentialDemand2031": 32,
-        "nearestParkDistanceM": 152.0,
-        "greenRatio": 14.0,
+        "casePolicyLabel": "모니터링 대상",
+        "caseStatusLabel": "접근 가능, 중간 수준",
+        "potentialDemand2029": 154,
+        "potentialDemand2031": 87,
+        "nearestParkDistanceM": 65.9,
+        "greenRatio": 10.0,
         "playgroundCount": 0,
-        "currentStudentCount": 207
+        "currentStudentCount": 297
       }
     },
     {
@@ -493,7 +493,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 22651,
       "totalPotentialDemand2031": 21173,
       "avgNearestParkDistanceM": 232.1,
-      "avgGreenRatio": 19.0,
+      "avgGreenRatio": 8.6,
       "avgPlaygroundCount": 1.06,
       "topPrioritySchools": [
         {
@@ -531,7 +531,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 183,
           "potentialDemand2031": 137,
           "nearestParkDistanceM": 373.0,
-          "greenRatio": 0.0,
+          "greenRatio": 0.2,
           "playgroundCount": 0,
           "currentStudentCount": 271
         },
@@ -557,23 +557,23 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 192,
           "potentialDemand2031": 136,
           "nearestParkDistanceM": 224.0,
-          "greenRatio": 0.3,
+          "greenRatio": 0.5,
           "playgroundCount": 0,
           "currentStudentCount": 285
         }
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천박문초등학교",
+        "schoolName": "인천신송초등학교",
         "districtName": "연수구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 484,
-        "potentialDemand2031": 478,
+        "potentialDemand2029": 299,
+        "potentialDemand2031": 216,
         "nearestParkDistanceM": 0.0,
-        "greenRatio": 65.5,
-        "playgroundCount": 8,
-        "currentStudentCount": 493
+        "greenRatio": 54.3,
+        "playgroundCount": 0,
+        "currentStudentCount": 472
       }
     },
     {
@@ -588,7 +588,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 14134,
       "totalPotentialDemand2031": 10535,
       "avgNearestParkDistanceM": 219.9,
-      "avgGreenRatio": 8.5,
+      "avgGreenRatio": 4.4,
       "avgPlaygroundCount": 0.64,
       "topPrioritySchools": [
         {
@@ -600,7 +600,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 371,
           "potentialDemand2031": 240,
           "nearestParkDistanceM": 434.0,
-          "greenRatio": 0.0,
+          "greenRatio": 0.6,
           "playgroundCount": 0,
           "currentStudentCount": 630
         },
@@ -626,7 +626,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 768,
           "potentialDemand2031": 639,
           "nearestParkDistanceM": 180.0,
-          "greenRatio": 0.0,
+          "greenRatio": 0.4,
           "playgroundCount": 0,
           "currentStudentCount": 982
         },
@@ -639,7 +639,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 170,
           "potentialDemand2031": 133,
           "nearestParkDistanceM": 249.0,
-          "greenRatio": 0.0,
+          "greenRatio": 3.3,
           "playgroundCount": 1,
           "currentStudentCount": 242
         },
@@ -652,23 +652,23 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 546,
           "potentialDemand2031": 321,
           "nearestParkDistanceM": 335.8,
-          "greenRatio": 0.1,
+          "greenRatio": 0.2,
           "playgroundCount": 0,
           "currentStudentCount": 950
         }
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천송천초등학교",
+        "schoolName": "인천장아초등학교",
         "districtName": "남동구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 178,
-        "potentialDemand2031": 149,
-        "nearestParkDistanceM": 180.7,
-        "greenRatio": 71.5,
-        "playgroundCount": 1,
-        "currentStudentCount": 320
+        "potentialDemand2029": 748,
+        "potentialDemand2031": 643,
+        "nearestParkDistanceM": 0.0,
+        "greenRatio": 17.2,
+        "playgroundCount": 0,
+        "currentStudentCount": 896
       }
     },
     {
@@ -683,7 +683,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 6315,
       "totalPotentialDemand2031": 4958,
       "avgNearestParkDistanceM": 266.6,
-      "avgGreenRatio": 2.8,
+      "avgGreenRatio": 2.3,
       "avgPlaygroundCount": 0.0,
       "topPrioritySchools": [
         {
@@ -734,7 +734,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 169,
           "potentialDemand2031": 132,
           "nearestParkDistanceM": 496.0,
-          "greenRatio": 0.3,
+          "greenRatio": 0.5,
           "playgroundCount": 0,
           "currentStudentCount": 288
         },
@@ -747,23 +747,23 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
           "potentialDemand2029": 31,
           "potentialDemand2031": 15,
           "nearestParkDistanceM": 268.2,
-          "greenRatio": 0.6,
+          "greenRatio": 0.5,
           "playgroundCount": 0,
           "currentStudentCount": 141
         }
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "경인교육대학교부설초등학교",
+        "schoolName": "인천서운초등학교",
         "districtName": "계양구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 453,
-        "potentialDemand2031": 411,
-        "nearestParkDistanceM": 53.9,
-        "greenRatio": 7.4,
+        "potentialDemand2029": 513,
+        "potentialDemand2031": 507,
+        "nearestParkDistanceM": 60.0,
+        "greenRatio": 7.2,
         "playgroundCount": 0,
-        "currentStudentCount": 560
+        "currentStudentCount": 510
       }
     },
     {
@@ -778,7 +778,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 33021,
       "totalPotentialDemand2031": 30490,
       "avgNearestParkDistanceM": 235.0,
-      "avgGreenRatio": 6.8,
+      "avgGreenRatio": 4.1,
       "avgPlaygroundCount": 0.08,
       "topPrioritySchools": [
         {
@@ -849,16 +849,16 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       ],
       "bestSchool": {
         "rank": 1,
-        "schoolName": "인천청일초등학교",
+        "schoolName": "인천청라초등학교",
         "districtName": "서구",
         "casePolicyLabel": "유지·관리 대상",
         "caseStatusLabel": "접근 양호",
-        "potentialDemand2029": 663,
-        "potentialDemand2031": 584,
-        "nearestParkDistanceM": 140.0,
-        "greenRatio": 80.5,
+        "potentialDemand2029": 1105,
+        "potentialDemand2031": 1025,
+        "nearestParkDistanceM": 146.0,
+        "greenRatio": 11.5,
         "playgroundCount": 0,
-        "currentStudentCount": 829
+        "currentStudentCount": 1281
       }
     },
     {
@@ -873,7 +873,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
       "totalPotentialDemand2029": 1235,
       "totalPotentialDemand2031": 985,
       "avgNearestParkDistanceM": 3705.3,
-      "avgGreenRatio": 2.7,
+      "avgGreenRatio": 0.4,
       "avgPlaygroundCount": 0.0,
       "topPrioritySchools": [],
       "bestSchool": {
@@ -885,7 +885,7 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
         "potentialDemand2029": 106,
         "potentialDemand2031": 95,
         "nearestParkDistanceM": 0.0,
-        "greenRatio": 13.0,
+        "greenRatio": 3.8,
         "playgroundCount": 0,
         "currentStudentCount": 131
       }
@@ -1562,15 +1562,15 @@ export const cityStatisticsPreviewDataSafe: CityStatisticsData = {
   ],
   "cityBestSchool": {
     "rank": 1,
-    "schoolName": "인천중산초등학교",
-    "districtName": "중구",
+    "schoolName": "인천신송초등학교",
+    "districtName": "연수구",
     "casePolicyLabel": "유지·관리 대상",
     "caseStatusLabel": "접근 양호",
-    "potentialDemand2029": 1567,
-    "potentialDemand2031": 1549,
-    "nearestParkDistanceM": 55.7,
-    "greenRatio": 95.9,
-    "playgroundCount": 4,
-    "currentStudentCount": 1582
+    "potentialDemand2029": 299,
+    "potentialDemand2031": 216,
+    "nearestParkDistanceM": 0.0,
+    "greenRatio": 54.3,
+    "playgroundCount": 0,
+    "currentStudentCount": 472
   }
 };

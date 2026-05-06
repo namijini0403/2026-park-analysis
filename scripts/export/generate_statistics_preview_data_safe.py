@@ -9,7 +9,7 @@ import pandas as pd
 BASE = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(BASE))
 from scripts.config.region_config import CITY_NAME  # noqa: E402
-PRIORITY_PATH = BASE / "data_processed" / "school_priority.csv"
+PRIORITY_PATH = BASE / "data_processed" / "school_priority_with_functional_park_layer.csv"
 FORECAST_PATH = BASE / "data_processed" / "school_enrollment_forecast_20260418_model1.csv"
 STUDENT_TREND_PATH = BASE / "data_processed" / "student_trend.csv"
 APARTMENT_ADJUSTMENT_PATH = BASE / "data_processed" / "school_walk_500m_apartment_adjustment_20260504.csv"
@@ -25,6 +25,9 @@ CASE_POLICY_LABELS = {
     4.0: "유지·관리 대상",
 }
 
+GREEN_RATIO_SOURCE_COLUMNS = ("display_green_ratio", "corrected_green_ratio", "iso_green_ratio")
+STATISTICS_GREEN_RATIO_COLUMN = "statistics_green_ratio"
+
 
 def round1(value: float | int | None) -> float:
     if value is None or pd.isna(value):
@@ -36,6 +39,18 @@ def numeric_series(df: pd.DataFrame, column: str) -> pd.Series:
     if column not in df.columns:
         return pd.Series(0, index=df.index, dtype=float)
     return pd.to_numeric(df[column], errors="coerce").fillna(0)
+
+
+def attach_statistics_green_ratio(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy()
+    series = pd.Series(pd.NA, index=out.index, dtype="Float64")
+    for column in GREEN_RATIO_SOURCE_COLUMNS:
+        if column not in out.columns:
+            continue
+        values = pd.to_numeric(out[column], errors="coerce")
+        series = series.where(series.notna(), values)
+    out[STATISTICS_GREEN_RATIO_COLUMN] = series.fillna(0).astype(float)
+    return out
 
 
 def quartile_cutoffs(series: pd.Series) -> tuple[float, float, float]:
@@ -71,7 +86,7 @@ def school_record(row: pd.Series, rank: int) -> dict:
         "potentialDemand2029": int(round(float(row["forecast_2029"]))),
         "potentialDemand2031": int(round(float(row["forecast_2031"]))),
         "nearestParkDistanceM": round1(row["nearest_park_dist_m"]),
-        "greenRatio": round1(row["iso_green_ratio"]),
+        "greenRatio": round1(row[STATISTICS_GREEN_RATIO_COLUMN]),
         "playgroundCount": int(round(float(row["iso_playground_count"]))),
         "currentStudentCount": int(round(float(row["current_student_count"]))),
     }
@@ -94,27 +109,27 @@ def build_empty_best_school(district_name: str) -> dict:
 
 
 def choose_best_school(df: pd.DataFrame) -> pd.Series | None:
-    valid = df.copy()
+    valid = attach_statistics_green_ratio(df)
     valid["nearest_park_dist_m"] = pd.to_numeric(valid["nearest_park_dist_m"], errors="coerce")
-    valid["iso_green_ratio"] = pd.to_numeric(valid["iso_green_ratio"], errors="coerce")
+    valid[STATISTICS_GREEN_RATIO_COLUMN] = pd.to_numeric(valid[STATISTICS_GREEN_RATIO_COLUMN], errors="coerce")
     valid["iso_playground_count"] = pd.to_numeric(valid["iso_playground_count"], errors="coerce").fillna(0)
 
     candidates = valid[
         valid["nearest_park_dist_m"].notna()
-        & valid["iso_green_ratio"].notna()
+        & valid[STATISTICS_GREEN_RATIO_COLUMN].notna()
         & (valid["nearest_park_dist_m"] <= 200)
     ].copy()
     if candidates.empty:
         return None
 
-    q1, q2, q3 = quartile_cutoffs(valid["iso_green_ratio"])
+    q1, q2, q3 = quartile_cutoffs(valid[STATISTICS_GREEN_RATIO_COLUMN])
     quartile_order = {"Q4": 0, "Q3": 1, "Q2": 2, "Q1": 3}
-    candidates["green_quartile"] = candidates["iso_green_ratio"].apply(lambda v: assign_quartile(v, q1, q2, q3))
+    candidates["green_quartile"] = candidates[STATISTICS_GREEN_RATIO_COLUMN].apply(lambda v: assign_quartile(v, q1, q2, q3))
     candidates["quartile_order"] = candidates["green_quartile"].map(quartile_order).fillna(99)
     candidates["playground_flag"] = (candidates["iso_playground_count"] >= 1).astype(int)
 
     candidates = candidates.sort_values(
-        by=["quartile_order", "iso_green_ratio", "playground_flag", "nearest_park_dist_m"],
+        by=["quartile_order", STATISTICS_GREEN_RATIO_COLUMN, "playground_flag", "nearest_park_dist_m"],
         ascending=[True, False, False, True],
         kind="mergesort",
     )
@@ -217,6 +232,7 @@ def main() -> None:
     merged["forecast_2031"] = pd.to_numeric(merged["forecast_2031"], errors="coerce").fillna(0)
     merged["current_student_count"] = pd.to_numeric(merged["current_student_count"], errors="coerce").fillna(0)
     merged["casePolicyLabel"] = merged["case_type"].map(CASE_POLICY_LABELS).fillna("별도 정책 적용")
+    merged = attach_statistics_green_ratio(merged)
 
     district_rows: list[dict] = []
     for district_name, district_df in merged.groupby("gu", sort=False):
@@ -240,7 +256,7 @@ def main() -> None:
                 "totalPotentialDemand2029": int(round(district_df["forecast_2029"].sum())),
                 "totalPotentialDemand2031": int(round(district_df["forecast_2031"].sum())),
                 "avgNearestParkDistanceM": round1(pd.to_numeric(district_df["nearest_park_dist_m"], errors="coerce").mean()),
-                "avgGreenRatio": round1(pd.to_numeric(district_df["iso_green_ratio"], errors="coerce").mean()),
+                "avgGreenRatio": round1(pd.to_numeric(district_df[STATISTICS_GREEN_RATIO_COLUMN], errors="coerce").mean()),
                 "avgPlaygroundCount": round(float(pd.to_numeric(district_df["iso_playground_count"], errors="coerce").fillna(0).mean()), 2),
                 "topPrioritySchools": [school_record(row, idx + 1) for idx, (_, row) in enumerate(top_df.iterrows())],
                 "bestSchool": school_record(best_row, 1) if best_row is not None else build_empty_best_school(str(district_name)),
@@ -253,12 +269,12 @@ def main() -> None:
         ascending=[True, False, False],
     )
     city_top_playground_df = city_case1_df.sort_values(
-        by=["iso_park_count", "iso_green_ratio", "iso_playground_count", "current_student_count", "priority_rank"],
+        by=["iso_park_count", STATISTICS_GREEN_RATIO_COLUMN, "iso_playground_count", "current_student_count", "priority_rank"],
         ascending=[True, True, True, False, True],
         kind="mergesort",
     )
     city_top_student_df = city_case1_df.sort_values(
-        by=["current_student_count", "iso_park_count", "iso_green_ratio", "iso_playground_count", "priority_rank"],
+        by=["current_student_count", "iso_park_count", STATISTICS_GREEN_RATIO_COLUMN, "iso_playground_count", "priority_rank"],
         ascending=[False, True, True, True, True],
         kind="mergesort",
     )

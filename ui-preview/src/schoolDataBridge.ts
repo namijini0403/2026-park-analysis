@@ -104,6 +104,15 @@ function getDisplayGreenRatio(row: RawRow): number {
   );
 }
 
+function getSimilarSchoolGreenRatio(row: RawRow, index: number): number {
+  return (
+    maybeNumber(row[`similar_school_${index}_display_green_ratio`]) ??
+    maybeNumber(row[`similar_school_${index}_corrected_green_ratio`]) ??
+    maybeNumber(row[`similar_school_${index}_iso_green_ratio`]) ??
+    0
+  );
+}
+
 type ManualBarrierOverride = {
   nearestParkName?: string;
   note: string;
@@ -386,7 +395,7 @@ export function mapSchoolRowToReportProps(
       schoolName: s(row[`similar_school_${i}_name`]),
       districtName: s(row[`similar_school_${i}_gu`] ?? row[`similar_school_${i}_districtName`] ?? ""),
       nearestParkDistanceM: n(row[`similar_school_${i}_nearest_park_dist_m`]),
-      greenRatio: n(row[`similar_school_${i}_iso_green_ratio`]),
+      greenRatio: getSimilarSchoolGreenRatio(row, i),
       playgroundCount: n(row[`similar_school_${i}_iso_playground_count`]),
     }))
     .filter(isFiniteSimilarSchool)

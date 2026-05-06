@@ -139,7 +139,7 @@ function BestSchoolCard({ school, label }: { school: StatisticsSchoolItem; label
           <p className="mt-1 text-2xl font-black text-white">{formatDecimal(school.nearestParkDistanceM, 1)}m</p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-navy-900/95 px-4 py-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">녹지 비율</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">표시 녹지 비율</p>
           <p className="mt-1 text-2xl font-black text-white">{formatDecimal(school.greenRatio, 1)}%</p>
         </div>
       </div>
@@ -319,7 +319,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
           <SectionTitle
             eyebrow="City Best"
             title="시 전체 최우수 학교"
-            description="생활환경 벤치마크 역할을 하는 학교 1개를 따로 떼어 보여줍니다."
+            description="생활환경 벤치마크 역할을 하는 학교 1개를 표시 녹지비율 기준으로 보여줍니다."
           />
           <div className="mt-5">
             <BestSchoolCard school={data.cityBestSchool} label="인천시 최우수 학교" />
@@ -369,7 +369,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
                 <SummaryCard
                   title="평균 최근접 공원"
                   value={`${formatDecimal(selectedDistrict.avgNearestParkDistanceM, 1)}m`}
-                  helper={`평균 녹지 ${formatDecimal(selectedDistrict.avgGreenRatio, 1)}%`}
+                  helper={`평균 표시 녹지 ${formatDecimal(selectedDistrict.avgGreenRatio, 1)}%`}
                 />
                 <SummaryCard
                   title="평균 도보권 놀이터"
