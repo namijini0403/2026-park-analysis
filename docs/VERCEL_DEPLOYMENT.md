@@ -28,6 +28,30 @@
    - 커스텀 도메인을 쓰면 그 도메인도 추가한다.
    - Vercel preview 도메인까지 지도 테스트를 하려면 preview URL도 별도로 추가한다.
 
+## Kakao 지도 키 확인
+
+현재 앱의 기본 Kakao JavaScript 키는 `index.html` 안의 `DEFAULT_KAKAO_MAP_KEY` 값이다. Kakao Developers에서 도메인을 등록할 때 반드시 이 JavaScript 키가 속한 애플리케이션에 등록해야 한다.
+
+도메인을 등록했는데도 지도가 뜨지 않고 콘솔 또는 네트워크에서 `domain mismatched`가 보이면 다음 중 하나다.
+
+1. 다른 Kakao 애플리케이션에 도메인을 등록했다.
+2. Vercel preview 도메인과 production 도메인이 달라 preview 도메인만 열고 있다.
+3. Vercel 도메인을 등록한 뒤 아직 앱을 새로고침하지 않았다.
+
+네 Kakao JavaScript 키를 Vercel 배포에 직접 쓰려면 Vercel Project Settings에서 Environment Variable을 추가한다.
+
+- Name: `KAKAO_MAP_KEY`
+- Value: Kakao Developers의 JavaScript 키
+- Environment: Production, Preview 모두 필요하면 둘 다 선택
+
+환경변수를 추가하거나 수정한 뒤에는 반드시 Redeploy해야 한다. `scripts/deploy/build_vercel_static.mjs`가 배포 시 `index.html`의 기본 Kakao 키를 이 값으로 바꿔 넣는다.
+
+급하게 테스트만 할 때는 URL에 직접 키를 붙일 수도 있다.
+
+```text
+https://2026-park-analysis.vercel.app/?kakaoKey=여기에_JavaScript_키
+```
+
 ## 배포 후 확인 URL
 
 - `/`

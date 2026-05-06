@@ -1,4 +1,4 @@
-import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
+import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -40,6 +40,26 @@ function copyFileToOutput(relativePath) {
   copyFileSync(source, destination);
 }
 
+function copyIndexHtml() {
+  const source = path.join(root, "index.html");
+  const destination = path.join(outputDir, "index.html");
+  assertExists(source);
+  mkdirSync(path.dirname(destination), { recursive: true });
+
+  const kakaoMapKey = process.env.KAKAO_MAP_KEY || process.env.VITE_KAKAO_MAP_KEY;
+  let html = readFileSync(source, "utf-8");
+  if (kakaoMapKey) {
+    html = html.replace(
+      /const DEFAULT_KAKAO_MAP_KEY = "([^"]*)";/,
+      `const DEFAULT_KAKAO_MAP_KEY = "${kakaoMapKey}";`,
+    );
+    console.log("Kakao map key injected from Vercel environment.");
+  } else {
+    console.log("Kakao map key env not set; using index.html default key.");
+  }
+  writeFileSync(destination, html, "utf-8");
+}
+
 function copyDirectoryToOutput(relativePath) {
   const source = path.join(root, relativePath);
   const destination = path.join(outputDir, relativePath);
@@ -51,7 +71,11 @@ rmSync(outputDir, { recursive: true, force: true });
 mkdirSync(outputDir, { recursive: true });
 
 for (const file of requiredRootFiles) {
-  copyFileToOutput(file);
+  if (file === "index.html") {
+    copyIndexHtml();
+  } else {
+    copyFileToOutput(file);
+  }
 }
 
 for (const file of requiredDataFiles) {

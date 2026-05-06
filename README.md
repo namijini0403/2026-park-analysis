@@ -46,6 +46,7 @@ Vercel 설정은 `vercel.json`에 고정되어 있다.
 - Build Command: `npm run build:vercel`
 - Output Directory: `vercel_public`
 - 상세 절차: `docs/VERCEL_DEPLOYMENT.md`
+- Kakao 지도 키를 바꿔야 하면 Vercel 환경변수 `KAKAO_MAP_KEY`에 Kakao JavaScript 키를 등록한 뒤 Redeploy한다.
 
 ## 복구 메모
 
