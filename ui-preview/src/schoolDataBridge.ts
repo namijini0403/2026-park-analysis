@@ -91,6 +91,19 @@ function s(value: unknown, fallback = ""): string {
   return value != null ? String(value) : fallback;
 }
 
+function boolFlag(value: unknown): boolean {
+  return value === true || s(value).toLowerCase() === "true";
+}
+
+function getDisplayGreenRatio(row: RawRow): number {
+  return (
+    maybeNumber(row.display_green_ratio) ??
+    maybeNumber(row.corrected_green_ratio) ??
+    maybeNumber(row.iso_green_ratio) ??
+    0
+  );
+}
+
 type ManualBarrierOverride = {
   nearestParkName?: string;
   note: string;
@@ -155,7 +168,7 @@ function buildCaseStatusLabel(row: RawRow, cityAvgGreenRatio = CITY_AVG.greenRat
   if (isSpecialPolicySchool(row)) return CASE_LABELS[99].status;
 
   const nearestParkDistanceM = n(row.nearest_park_dist_m, 9999);
-  const greenRatio = n(row.iso_green_ratio);
+  const greenRatio = getDisplayGreenRatio(row);
   const playgroundCount = n(row.iso_playground_count);
   const hasParkWithin500m = n(row.iso_park_count) > 0 && nearestParkDistanceM < 500;
   const strongGreenThreshold = Math.max(4, cityAvgGreenRatio * 0.7);
@@ -185,7 +198,7 @@ function getManualBarrierOverride(row: RawRow): ManualBarrierOverride | undefine
 function buildProblemTags(row: RawRow): string[] {
   const tags: string[] = [];
   const dist = n(row.nearest_park_dist_m, 9999);
-  const green = n(row.iso_green_ratio);
+  const green = getDisplayGreenRatio(row);
   const playground = n(row.iso_playground_count);
   const demand2029 = n(row.forecast_2029);
 
@@ -338,7 +351,7 @@ export function mapSchoolRowToReportProps(
   const nearestParkDistanceM = n(row.nearest_park_dist_m);
   const manualBarrierOverride = getManualBarrierOverride(row);
   const nearestParkName = s(manualBarrierOverride?.nearestParkName ?? row.nearest_park_name ?? row.nearest_park_name_clean ?? "");
-  const greenRatio = n(row.iso_green_ratio);
+  const greenRatio = getDisplayGreenRatio(row);
   const playgroundCount = n(row.iso_playground_count);
 
   const cityAvg = avgBlock(row, "_cityAvg");
@@ -448,10 +461,13 @@ export function mapSchoolRowToReportProps(
     ...(s(row.access_condition_type) ? { accessConditionType: s(row.access_condition_type) } : {}),
     ...(s(row.access_condition_label) ? { accessConditionLabel: s(row.access_condition_label) } : {}),
     ...(s(row.access_condition_description) ? { accessConditionDescription: s(row.access_condition_description) } : {}),
-    activitySpaceLimited: Boolean(row.activity_space_limited_flag === true || s(row.activity_space_limited_flag).toLowerCase() === "true"),
-    onlyMicroPark: Boolean(row.only_micro_park_flag === true || s(row.only_micro_park_flag).toLowerCase() === "true"),
-    noFunctionalPark: Boolean(row.no_functional_park_flag === true || s(row.no_functional_park_flag).toLowerCase() === "true"),
-    noOfficialParkFlag: Boolean(row.no_official_park_flag === true || s(row.no_official_park_flag).toLowerCase() === "true"),
+    ...(s(row.green_ratio_display_basis) ? { greenRatioDisplayBasis: s(row.green_ratio_display_basis) } : {}),
+    ...(s(row.green_ratio_review_note) ? { greenRatioReviewNote: s(row.green_ratio_review_note) } : {}),
+    greenRatioHighReviewFlag: boolFlag(row.green_ratio_high_review_flag),
+    activitySpaceLimited: boolFlag(row.activity_space_limited_flag),
+    onlyMicroPark: boolFlag(row.only_micro_park_flag),
+    noFunctionalPark: boolFlag(row.no_functional_park_flag),
+    noOfficialParkFlag: boolFlag(row.no_official_park_flag),
     nearestParkDistanceCityAvg: cityAvg?.nearestParkDistanceM ?? CITY_AVG.nearestParkDist,
     nearestParkDistanceDistrictAvg:
       districtAvg?.nearestParkDistanceM ?? cityAvg?.nearestParkDistanceM ?? CITY_AVG.nearestParkDist,

@@ -40,6 +40,16 @@
 - nominal_access_gap_flag: 102개교
 - near_park_low_green_imbalance_flag: 71개교
 
+## 녹지비율 표시값 검수 플래그
+
+- display_green_ratio 80% 이상 검수 대상: 2개교
+- 이 플래그는 기존 `iso_green_ratio` 또는 Case를 변경하지 않고, 앱 표시와 해석에서 추가 검수가 필요함을 알리기 위한 보조 정보다.
+
+| 학교명 | gu | iso_green_ratio | corrected_green_ratio | display_green_ratio | isochrone_area_m2 | iso_park_area | green_ratio_review_note |
+|---|---|---|---|---|---|---|---|
+| 인천백운초등학교 | 부평구 | 88.17562877160037 | 88.175629 | 88.175629 | 63717.81306736571 | 56183.582311662656 | 80% 이상 고비율로, 도보권 분모와 공원 추정 폴리곤을 추가 검수해야 합니다. |
+| 인천함박초등학교 | 연수구 | 86.17997786576106 | 85.508648 | 85.508648 | 337948.30286433187 | 291243.77260619635 | 80% 이상 고비율로, 도보권 분모와 공원 추정 폴리곤을 추가 검수해야 합니다. |
+
 ## access_condition_type별 학교 수
 
 | 값 | 개수 |

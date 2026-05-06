@@ -50,6 +50,7 @@ WALKING_BARRIER_REPORT_PATH = REPORTS / "walking_barrier_logic_validation.md"
 CRS_METRIC = "EPSG:5179"
 WALK_DISTANCE_CUTOFF_M = 5000
 GREEN_WARNING_THRESHOLD = 5.0
+GREEN_HIGH_REVIEW_THRESHOLD = 80.0
 ACCIDENT_DATA_PATH = ROOT / "data" / "raw" / "전국교통사고다발지역표준데이터.csv"
 ACCIDENT_REGION_KEYWORD = "인천"
 ACCIDENT_COL_REGION = "사고다발지역시도시군구"
@@ -101,7 +102,7 @@ ACCESS_DESCRIPTIONS = {
     "no_official_park": "도보생활권 내 공식 공원이 확인되지 않아 야외활동 인프라 자체가 부족한 유형입니다.",
     "nominal_access_only": "공원은 있으나 대부분 초소형 공간으로, 단순 공원 개수만으로는 야외활동 환경을 과대평가할 수 있습니다.",
     "near_park_low_green_imbalance": "가까운 활동 가능 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮은 유형입니다.",
-    "functional_access_with_barrier": "활동 가능 공원은 있으나, 도달 경로에 간선도로 횡단 또는 교차로 부담이 포함될 수 있습니다.",
+    "functional_access_with_barrier": "활동 가능 공원은 있으나, 도달 경로에 우회 부담 등 보행부담 요소가 포함될 수 있습니다.",
     "functional_access_available": "도보권 내 활동 가능 공원이 확인되는 유형입니다.",
     "unknown": "접근성 판단에 필요한 일부 값이 누락되어 추가 검토가 필요합니다.",
 }
@@ -428,6 +429,49 @@ def barrier_summary(counts: dict[str, int], large_intersection: bool, accident_f
     return " · ".join(parts) if parts else barrier_label_for_level(level)
 
 
+def barrier_description(
+    counts: dict[str, int],
+    large_intersection: bool,
+    accident_flag: Any,
+    detour_ratio: float | None,
+    level: int | None,
+) -> str:
+    if level is None:
+        return "경로 자료가 없어 보행부담을 추정할 수 없습니다."
+
+    major_count = sum(counts.get(bucket, 0) for bucket in MAJOR_CROSSING_BUCKETS)
+    has_detour = detour_ratio is not None and detour_ratio >= 1.6
+    has_large_detour = detour_ratio is not None and detour_ratio >= 2.0
+
+    if level == 0:
+        return "생활도로 중심의 접근 경로로 보행 부담이 낮은 편입니다."
+    if level == 1:
+        if detour_ratio is not None and detour_ratio >= 1.3:
+            return "간선도로 횡단이나 대형 교차로 인접은 확인되지 않지만, 일부 우회가 포함된 경로입니다."
+        return "일부 일반 횡단 또는 지구 내 간선도로 구간이 포함될 수 있습니다."
+
+    if major_count == 0 and not large_intersection and accident_flag is not True and has_detour:
+        if has_large_detour:
+            return "간선도로 횡단이나 대형 교차로 인접은 확인되지 않지만, 실제 보행 경로가 직선거리 대비 크게 우회하는 것으로 계산됩니다."
+        return "간선도로 횡단이나 대형 교차로 인접은 확인되지 않지만, 일부 우회 부담이 확인됩니다."
+
+    parts: list[str] = []
+    if major_count > 0:
+        parts.append("간선도로 횡단")
+    if large_intersection:
+        parts.append("대형 교차로 인접")
+    if accident_flag is True:
+        parts.append("사고위험 지점 인접")
+    if has_detour:
+        parts.append("우회 부담")
+
+    if parts:
+        joined = " · ".join(parts)
+        return f"도보 경로에 {joined}이 포함되어, 초등학생 보행 관점에서 접근 품질을 함께 검토해야 합니다."
+
+    return barrier_label_for_level(level)
+
+
 def compute_barrier_level(counts: dict[str, int], large_intersection: bool, accident_flag: Any, detour_ratio: float | None) -> int:
     major_count = sum(counts.get(bucket, 0) for bucket in MAJOR_CROSSING_BUCKETS)
     primary_or_higher = counts.get("motorway", 0) + counts.get("trunk", 0) + counts.get("primary", 0)
@@ -450,16 +494,6 @@ def compute_barrier_level(counts: dict[str, int], large_intersection: bool, acci
     if (detour_ratio is not None and detour_ratio >= 1.3) or counts.get("tertiary", 0) > 0:
         return 1
     return 0
-
-
-def barrier_description_for_level(level: int | None) -> str:
-    descriptions = {
-        0: "생활도로 중심의 접근 경로로 보행 부담이 낮은 편입니다.",
-        1: "일부 우회 또는 일반 횡단 구간이 포함됩니다.",
-        2: "도보 경로에 간선도로 횡단, 대형 교차로 인접, 또는 우회 부담이 포함됩니다.",
-        3: "거리상 접근 가능하더라도, 초등학생 보행 기준에서는 간선도로·교차로·우회 부담을 함께 검토해야 합니다.",
-    }
-    return descriptions.get(level, "경로 자료가 없어 보행부담을 추정할 수 없습니다.")
 
 
 def route_barrier_meta(
@@ -502,6 +536,7 @@ def route_barrier_meta(
     level = compute_barrier_level(counts, large_intersection, accident["flag"], detour_ratio)
     label = barrier_label_for_level(level)
     summary = barrier_summary(counts, large_intersection, accident["flag"], detour_ratio, level)
+    description = barrier_description(counts, large_intersection, accident["flag"], detour_ratio, level)
 
     return {
         f"{prefix}_route_dist_m": round(route_dist, 1),
@@ -512,7 +547,7 @@ def route_barrier_meta(
         f"{prefix}_barrier_level": int(level),
         f"{prefix}_barrier_label": label,
         f"{prefix}_barrier_summary": summary,
-        f"{prefix}_barrier_description": barrier_description_for_level(level),
+        f"{prefix}_barrier_description": description,
     }
 
 
@@ -842,6 +877,36 @@ def is_functional_present(row: dict[str, Any]) -> bool:
     return bool((pd.notna(functional_count) and functional_count > 0) or (pd.notna(functional_dist) and functional_dist <= 500))
 
 
+def add_green_display_fields(result: pd.DataFrame) -> pd.DataFrame:
+    iso_green = pd.to_numeric(
+        result["iso_green_ratio"] if "iso_green_ratio" in result.columns else pd.Series(pd.NA, index=result.index),
+        errors="coerce",
+    )
+    corrected_green = pd.to_numeric(
+        result["corrected_green_ratio"] if "corrected_green_ratio" in result.columns else pd.Series(pd.NA, index=result.index),
+        errors="coerce",
+    )
+    display_green = corrected_green.where(corrected_green.notna(), iso_green)
+    result["display_green_ratio"] = display_green.round(6)
+
+    corrected_differs = corrected_green.notna() & iso_green.notna() & (corrected_green - iso_green).abs().gt(0.005)
+    result["green_ratio_display_basis"] = "walk_iso"
+    result.loc[corrected_green.notna() & corrected_differs, "green_ratio_display_basis"] = "apartment_adjusted"
+
+    high_review = display_green.ge(GREEN_HIGH_REVIEW_THRESHOLD).fillna(False)
+    result["green_ratio_high_review_flag"] = high_review
+    result["green_ratio_review_note"] = ""
+    result.loc[
+        corrected_green.notna() & corrected_differs,
+        "green_ratio_review_note",
+    ] = "아파트 단지 내부 보행 가능성 보정값을 우선 표시합니다."
+    result.loc[
+        high_review,
+        "green_ratio_review_note",
+    ] = "80% 이상 고비율로, 도보권 분모와 공원 추정 폴리곤을 추가 검수해야 합니다."
+    return result
+
+
 def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd.DataFrame, iso_counts: pd.DataFrame, walk_distances: pd.DataFrame) -> pd.DataFrame:
     result = priority.copy()
     nearest_cols = ["학교ID", "nearest_park_name", "nearest_park_dist_m"]
@@ -951,6 +1016,8 @@ def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd
     ]
     for col in bool_cols:
         result[col] = to_bool_series(result[col])
+
+    result = add_green_display_fields(result)
 
     return result
 
@@ -1163,6 +1230,35 @@ def write_validation_report(
     lines.extend(["", "## 학교 플래그 집계", ""])
     for col in flag_cols:
         lines.append(f"- {col}: {int(school_layer[col].fillna(False).astype(bool).sum())}개교")
+
+    high_green = school_layer[school_layer.get("green_ratio_high_review_flag", pd.Series(False, index=school_layer.index)).fillna(False).astype(bool)].copy()
+    lines.extend(
+        [
+            "",
+            "## 녹지비율 표시값 검수 플래그",
+            "",
+            f"- display_green_ratio 80% 이상 검수 대상: {len(high_green)}개교",
+            "- 이 플래그는 기존 `iso_green_ratio` 또는 Case를 변경하지 않고, 앱 표시와 해석에서 추가 검수가 필요함을 알리기 위한 보조 정보다.",
+            "",
+        ]
+    )
+    if high_green.empty:
+        lines.append("- 검수 대상 없음")
+    else:
+        preview_cols = [
+            "학교명",
+            "gu",
+            "iso_green_ratio",
+            "corrected_green_ratio",
+            "display_green_ratio",
+            "isochrone_area_m2",
+            "iso_park_area",
+            "green_ratio_review_note",
+        ]
+        preview_cols = [col for col in preview_cols if col in high_green.columns]
+        lines.extend(["| " + " | ".join(preview_cols) + " |", "|" + "|".join(["---"] * len(preview_cols)) + "|"])
+        for row in high_green.sort_values("display_green_ratio", ascending=False)[preview_cols].to_dict("records"):
+            lines.append("| " + " | ".join(str(row.get(col, "")) for col in preview_cols) + " |")
 
     lines.extend(
         [
