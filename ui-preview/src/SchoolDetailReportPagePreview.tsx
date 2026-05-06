@@ -43,7 +43,7 @@ type RedevelopmentProject = {
 };
 
 export const CASE_LABELS = {
-  1: { policy: "즉시 개선 대상", status: "공원 접근 불가" },
+  1: { policy: "즉시 개선 대상", status: "공원 접근 결핍" },
   2: { policy: "우선 검토 대상", status: "공원 접근 가능 · 녹지 부족" },
   3: { policy: "모니터링 대상", status: "공원 접근 가능 · 녹지 비율 양호" },
   4: { policy: "유지·관리 대상", status: "공원 접근 양호 · 녹지 충분" },
@@ -66,6 +66,24 @@ export type SchoolDetailReportProps = {
   nearestFunctionalParkDistanceM?: number | null;
   nearestFunctionalParkName?: string;
   nearestFunctionalParkAreaM2?: number | null;
+  nearestOfficialRouteDistanceM?: number | null;
+  nearestOfficialRouteDetourRatio?: number | null;
+  nearestOfficialMajorRoadCrossingCount?: number | null;
+  nearestOfficialLargeIntersectionFlag?: boolean | null;
+  nearestOfficialAccidentHotspotFlag?: boolean | null;
+  nearestOfficialBarrierLevel?: number | null;
+  nearestOfficialBarrierLabel?: string;
+  nearestOfficialBarrierSummary?: string;
+  nearestOfficialBarrierDescription?: string;
+  nearestFunctionalRouteDistanceM?: number | null;
+  nearestFunctionalRouteDetourRatio?: number | null;
+  nearestFunctionalMajorRoadCrossingCount?: number | null;
+  nearestFunctionalLargeIntersectionFlag?: boolean | null;
+  nearestFunctionalAccidentHotspotFlag?: boolean | null;
+  nearestFunctionalBarrierLevel?: number | null;
+  nearestFunctionalBarrierLabel?: string;
+  nearestFunctionalBarrierSummary?: string;
+  nearestFunctionalBarrierDescription?: string;
   accessConditionType?: string;
   accessConditionLabel?: string;
   accessConditionDescription?: string;
@@ -178,6 +196,26 @@ function formatOptionalDistance(value?: number | null) {
 function formatOptionalArea(value?: number | null) {
   if (value == null || !Number.isFinite(Number(value))) return "자료 없음";
   return `${formatNumber(Math.round(Number(value)))}㎡`;
+}
+
+function formatOptionalRatio(value?: number | null) {
+  if (value == null || !Number.isFinite(Number(value))) return "자료 없음";
+  return formatDecimal(Number(value), 2);
+}
+
+function formatOptionalCount(value?: number | null) {
+  if (value == null || !Number.isFinite(Number(value))) return "자료 없음";
+  return formatNumber(Math.round(Number(value)));
+}
+
+function formatBooleanFlag(value?: boolean | null) {
+  if (value == null) return "자료 없음";
+  return value ? "인접" : "확인 안 됨";
+}
+
+function compactBarrierLabel(label?: string) {
+  if (!label) return "자료 없음";
+  return label.replace(/^보행 부담\s*/, "").trim();
 }
 
 function formatDecimal(value: number, digits = 1) {
@@ -532,7 +570,7 @@ function SectionShell({ kicker, title, children }: { kicker: string; title: stri
     <section className="space-y-4">
       <div className="space-y-1">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">{kicker}</p>
-        <h2 className="text-2xl font-bold tracking-tight text-white">{title}</h2>
+        <h2 className="text-xl font-bold tracking-tight text-white">{title}</h2>
       </div>
       {children}
     </section>
@@ -559,7 +597,7 @@ function MetricCard({ title, icon, value, unit, tone, headline, emphasisLine, co
         <div>
           <p className="text-sm font-medium text-slate-400">{icon} {title}</p>
           <div className="mt-3 flex items-end gap-2">
-            <p className="text-4xl font-bold tracking-tight text-white">{value}</p>
+            <p className="text-3xl font-bold tracking-tight text-white">{value}</p>
             <p className="pb-1 text-sm font-medium text-slate-400">{unit}</p>
           </div>
         </div>
@@ -692,7 +730,7 @@ function SchoolHeader({ schoolName, districtName, casePolicyLabel, caseStatusLab
           <span className="rounded-full border border-white/10 bg-navy-900/95 px-3 py-1 text-[11px] font-semibold tracking-wide text-slate-300">{caseStatusLabel}</span>
         </div>
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">{schoolName}</h1>
+          <h1 className="text-3xl font-black tracking-tight text-white lg:text-4xl">{schoolName}</h1>
           <p className="mt-2 text-base font-semibold text-slate-300">{districtName}</p>
           {statusSummary ? <p className="mt-4 max-w-3xl text-base leading-7 font-medium text-slate-200">{statusSummary}</p> : null}
         </div>
@@ -707,7 +745,71 @@ function SchoolHeader({ schoolName, districtName, casePolicyLabel, caseStatusLab
   );
 }
 
-function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "nearestParkDistanceCityAvg" | "nearestParkDistanceDistrictAvg" | "nearestParkDistanceCityPercentile" | "nearestParkDistanceDistrictPercentile" | "greenRatio" | "greenRatioCityAvg" | "greenRatioDistrictAvg" | "greenRatioCityPercentile" | "greenRatioDistrictPercentile" | "greenRatioCityPercentile_lt" | "greenRatioDistrictPercentile_lt" | "greenRatioCityZeroShare" | "greenRatioDistrictZeroShare" | "greenRatioCityNonZeroPercentile" | "greenRatioDistrictNonZeroPercentile" | "greenRatioCityNonZeroAvg" | "greenRatioDistrictNonZeroAvg" | "playgroundCount" | "playgroundCountCityAvg" | "playgroundCountDistrictAvg" | "playgroundCountCityPercentile" | "playgroundCountDistrictPercentile" | "playgroundCountCityPercentile_lt" | "playgroundCountDistrictPercentile_lt" | "playgroundCountCityZeroShare" | "playgroundCountDistrictZeroShare" | "playgroundCountCityNonZeroPercentile" | "playgroundCountDistrictNonZeroPercentile" | "playgroundCountCityNonZeroAvg" | "playgroundCountDistrictNonZeroAvg" | "studentTrend" | "studentTrendChangePct" | "studentTrendCityAvg" | "studentTrendDistrictAvg" | "currentStudentCount2025" | "currentStudentCountCityPercentile" | "currentStudentCountDistrictPercentile" | "nearestParkName" | "nearestParkAccessNote" | "nearestOfficialParkType" | "nearestOfficialParkAreaM2" | "nearestOfficialParkFunctionLabel" | "nearestFunctionalParkDistanceM" | "nearestFunctionalParkName" | "nearestFunctionalParkAreaM2" | "accessConditionLabel" | "accessConditionDescription" | "activitySpaceLimited" | "onlyMicroPark" | "noFunctionalPark" | "noOfficialParkFlag" | "straightLinePlaygroundCount" | "noParkWithin500m" | "accessibilityRatio" | "parkShortageVsAvg">) {
+function ParkAccessConditionCard(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "greenRatio" | "nearestParkName" | "nearestParkAccessNote" | "nearestOfficialParkType" | "nearestOfficialParkAreaM2" | "nearestOfficialParkFunctionLabel" | "nearestFunctionalParkDistanceM" | "nearestFunctionalParkName" | "nearestFunctionalParkAreaM2" | "nearestOfficialRouteDistanceM" | "nearestOfficialRouteDetourRatio" | "nearestOfficialMajorRoadCrossingCount" | "nearestOfficialLargeIntersectionFlag" | "nearestOfficialAccidentHotspotFlag" | "nearestOfficialBarrierLabel" | "nearestOfficialBarrierSummary" | "nearestOfficialBarrierDescription" | "nearestFunctionalRouteDistanceM" | "nearestFunctionalRouteDetourRatio" | "nearestFunctionalMajorRoadCrossingCount" | "nearestFunctionalLargeIntersectionFlag" | "nearestFunctionalAccidentHotspotFlag" | "nearestFunctionalBarrierLabel" | "nearestFunctionalBarrierSummary" | "nearestFunctionalBarrierDescription" | "accessConditionType" | "accessConditionLabel" | "accessConditionDescription" | "noOfficialParkFlag">) {
+  const isImbalance =
+    props.accessConditionType === "near_park_low_green_imbalance" ||
+    ((props.nearestFunctionalParkDistanceM ?? Infinity) <= 500 && props.greenRatio < 5);
+  const routeDistance = props.nearestOfficialRouteDistanceM ?? props.nearestParkDistanceM;
+  const finalInterpretation = props.noOfficialParkFlag
+    ? "도보생활권 내 공식 공원이 확인되지 않아 신규 조성 또는 학교 내부 공간 활용을 우선 검토해야 합니다."
+    : isImbalance
+      ? "가장 가까운 공원은 거리와 면적 기준 모두 양호합니다. 다만 학교 도보생활권 전체의 녹지 비율은 낮아, 공원 접근성과 생활권 녹지환경을 분리해 해석해야 합니다."
+      : props.accessConditionDescription ?? "공식 공원 접근성과 활동 가능 공원 접근성을 분리해 추가 검토할 수 있습니다.";
+
+  return (
+    <Card className="p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-forest-300">Existing Facility Access</p>
+          <h3 className="mt-2 text-xl font-bold tracking-tight text-white">가장 가까운 공원의 이용 조건</h3>
+        </div>
+        <Badge tone={isImbalance ? "warning" : props.noOfficialParkFlag ? "danger" : "positive"}>
+          {props.accessConditionLabel ?? "추가 검토 필요"}
+        </Badge>
+      </div>
+
+      <div className="mt-5 grid gap-3 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4">
+          <p className="text-base font-bold text-white">
+            {props.nearestParkName ?? "자료 없음"}
+            {props.nearestOfficialParkType ? ` · ${props.nearestOfficialParkType}` : ""}
+            {` · ${formatOptionalArea(props.nearestOfficialParkAreaM2)}`}
+          </p>
+          <p className="mt-2 text-sm font-semibold text-forest-200">{props.nearestOfficialParkFunctionLabel ?? "기능등급 자료 없음"}</p>
+          <div className="mt-4 grid gap-2 text-sm text-slate-200 sm:grid-cols-2">
+            <div className="rounded-xl bg-white/[0.04] px-3 py-2">거리: <span className="font-bold text-white">{formatOptionalDistance(routeDistance)}</span></div>
+            <div className="rounded-xl bg-white/[0.04] px-3 py-2">활동 가능 공원까지: <span className="font-bold text-white">{formatOptionalDistance(props.nearestFunctionalParkDistanceM)}</span></div>
+            <div className="rounded-xl bg-white/[0.04] px-3 py-2">보행 부담: <span className="font-bold text-white">{compactBarrierLabel(props.nearestOfficialBarrierLabel)}</span></div>
+            <div className="rounded-xl bg-white/[0.04] px-3 py-2">간선도로 횡단: <span className="font-bold text-white">{props.nearestOfficialMajorRoadCrossingCount == null ? "자료 없음" : `${formatOptionalCount(props.nearestOfficialMajorRoadCrossingCount)}회`}</span></div>
+            <div className="rounded-xl bg-white/[0.04] px-3 py-2">대형 교차로: <span className="font-bold text-white">{formatBooleanFlag(props.nearestOfficialLargeIntersectionFlag)}</span></div>
+            <div className="rounded-xl bg-white/[0.04] px-3 py-2">우회율: <span className="font-bold text-white">{formatOptionalRatio(props.nearestOfficialRouteDetourRatio)}</span></div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4">
+          <p className="text-sm font-semibold text-slate-300">경로 특성</p>
+          <p className="mt-2 text-base font-bold leading-7 text-white">{props.nearestOfficialBarrierSummary ?? "자료 없음"}</p>
+          <div className="mt-3 space-y-2 text-sm leading-6 text-slate-300">
+            <p>{props.nearestOfficialBarrierDescription ?? "경로 자료가 없어 보행부담을 추정할 수 없습니다."}</p>
+            <p>사고위험 지점: {formatBooleanFlag(props.nearestOfficialAccidentHotspotFlag)}</p>
+            {props.nearestFunctionalParkName && props.nearestFunctionalParkName !== props.nearestParkName ? (
+              <p>
+                활동 가능 공원 경로: {props.nearestFunctionalParkName} · {formatOptionalDistance(props.nearestFunctionalRouteDistanceM)} · {compactBarrierLabel(props.nearestFunctionalBarrierLabel)}
+              </p>
+            ) : null}
+            {props.nearestParkAccessNote ? <p>{props.nearestParkAccessNote}</p> : null}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium leading-6 text-slate-100">
+        {finalInterpretation}
+      </div>
+    </Card>
+  );
+}
+
+function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "nearestParkDistanceCityAvg" | "nearestParkDistanceDistrictAvg" | "nearestParkDistanceCityPercentile" | "nearestParkDistanceDistrictPercentile" | "greenRatio" | "greenRatioCityAvg" | "greenRatioDistrictAvg" | "greenRatioCityPercentile" | "greenRatioDistrictPercentile" | "greenRatioCityPercentile_lt" | "greenRatioDistrictPercentile_lt" | "greenRatioCityZeroShare" | "greenRatioDistrictZeroShare" | "greenRatioCityNonZeroPercentile" | "greenRatioDistrictNonZeroPercentile" | "greenRatioCityNonZeroAvg" | "greenRatioDistrictNonZeroAvg" | "playgroundCount" | "playgroundCountCityAvg" | "playgroundCountDistrictAvg" | "playgroundCountCityPercentile" | "playgroundCountDistrictPercentile" | "playgroundCountCityPercentile_lt" | "playgroundCountDistrictPercentile_lt" | "playgroundCountCityZeroShare" | "playgroundCountDistrictZeroShare" | "playgroundCountCityNonZeroPercentile" | "playgroundCountDistrictNonZeroPercentile" | "playgroundCountCityNonZeroAvg" | "playgroundCountDistrictNonZeroAvg" | "studentTrend" | "studentTrendChangePct" | "studentTrendCityAvg" | "studentTrendDistrictAvg" | "currentStudentCount2025" | "currentStudentCountCityPercentile" | "currentStudentCountDistrictPercentile" | "nearestParkName" | "nearestParkAccessNote" | "nearestOfficialParkType" | "nearestOfficialParkAreaM2" | "nearestOfficialParkFunctionLabel" | "nearestFunctionalParkDistanceM" | "nearestFunctionalParkName" | "nearestFunctionalParkAreaM2" | "nearestOfficialRouteDistanceM" | "nearestOfficialRouteDetourRatio" | "nearestOfficialMajorRoadCrossingCount" | "nearestOfficialLargeIntersectionFlag" | "nearestOfficialAccidentHotspotFlag" | "nearestOfficialBarrierLevel" | "nearestOfficialBarrierLabel" | "nearestOfficialBarrierSummary" | "nearestOfficialBarrierDescription" | "nearestFunctionalRouteDistanceM" | "nearestFunctionalRouteDetourRatio" | "nearestFunctionalMajorRoadCrossingCount" | "nearestFunctionalLargeIntersectionFlag" | "nearestFunctionalAccidentHotspotFlag" | "nearestFunctionalBarrierLevel" | "nearestFunctionalBarrierLabel" | "nearestFunctionalBarrierSummary" | "nearestFunctionalBarrierDescription" | "accessConditionType" | "accessConditionLabel" | "accessConditionDescription" | "activitySpaceLimited" | "onlyMicroPark" | "noFunctionalPark" | "noOfficialParkFlag" | "straightLinePlaygroundCount" | "noParkWithin500m" | "accessibilityRatio" | "parkShortageVsAvg">) {
   const [comparisonBasis, setComparisonBasis] = React.useState<"city" | "district">("city");
   const parkPercentile = comparisonBasis === "city" ? props.nearestParkDistanceCityPercentile : props.nearestParkDistanceDistrictPercentile;
   const basisLabel = comparisonBasis === "city" ? "인천시 기준" : "구 기준";
@@ -730,15 +832,6 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
   const currentStudentCount = props.currentStudentCount2025 ?? last;
   const studentDemandTone = getStudentDemandTone(currentStudentCount, comparisonBasis === "city" ? props.currentStudentCountCityPercentile : props.currentStudentCountDistrictPercentile);
   const parkScaleMax = Math.max(1200, props.nearestParkDistanceM, parkAvg, props.nearestParkDistanceDistrictAvg, props.nearestParkDistanceCityAvg);
-  const functionalNotice = props.noOfficialParkFlag
-    ? "도보생활권 내 공식 공원이 확인되지 않습니다."
-    : props.onlyMicroPark
-      ? "도보권 내 공식 공원은 확인되지만, 3,000㎡ 이상 활동 가능 공원은 확인되지 않습니다."
-      : props.activitySpaceLimited
-        ? "가까운 공원은 있으나, 면적상 넓은 야외활동 공간으로 보기에는 제한적입니다."
-        : props.noFunctionalPark
-          ? "도보권 내 활동 가능 공원은 확인되지 않습니다."
-          : "도보권 내 활동 가능 공원이 확인됩니다.";
   const greenScaleMax = Math.max(12, props.greenRatio, greenAvg, greenNonZeroAvg ?? 0);
   const playgroundScaleMax = Math.max(3, props.playgroundCount + 1, playgroundAvg * 3, (playgroundNonZeroAvg ?? 0) * 3);
   const scaleToRatio = (value: number, max: number, higherIsBetter: boolean) => {
@@ -830,38 +923,6 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
               directionLabel="거리 짧을수록 유리"
             />
           }
-          footer={
-            props.nearestParkName || props.nearestParkAccessNote || props.accessConditionLabel ? (
-              <div className="rounded-2xl bg-navy-900/95 px-4 py-3 text-sm text-slate-200">
-                {props.nearestParkName ? (
-                  <div>
-                    최근접 공식 공원: {props.nearestParkName}
-                    {props.nearestOfficialParkType ? ` · ${props.nearestOfficialParkType}` : ""}
-                    {" · "}
-                    {formatOptionalArea(props.nearestOfficialParkAreaM2)}
-                  </div>
-                ) : null}
-                {props.nearestOfficialParkFunctionLabel ? (
-                  <div className="mt-1 font-semibold text-forest-200">{props.nearestOfficialParkFunctionLabel}</div>
-                ) : null}
-                <div className="mt-2 border-t border-white/10 pt-2 leading-6">
-                  <span className="font-semibold text-white">{props.accessConditionLabel ?? "추가 검토 필요"}</span>
-                  <br />
-                  {props.accessConditionDescription ?? functionalNotice}
-                </div>
-                <div className="mt-2 leading-6">
-                  활동 가능 공원까지: {formatOptionalDistance(props.nearestFunctionalParkDistanceM)}
-                  {props.nearestFunctionalParkName ? ` · ${props.nearestFunctionalParkName}` : ""}
-                  {props.nearestFunctionalParkAreaM2 != null ? ` · ${formatOptionalArea(props.nearestFunctionalParkAreaM2)}` : ""}
-                </div>
-                {props.nearestParkAccessNote ? (
-                  <div className="mt-2 border-t border-white/10 pt-2 leading-6">
-                    {props.nearestParkAccessNote}
-                  </div>
-                ) : null}
-              </div>
-            ) : null
-          }
         />
         <MetricCard
           title="녹지 비율"
@@ -935,6 +996,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
           footer={<StudentTrendMini data={props.studentTrend} />}
         />
       </div>
+      <ParkAccessConditionCard {...props} />
       <Card className="p-5">
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4"><p className="text-sm font-medium text-slate-400">접근성 유형</p><p className="mt-2 text-xl font-bold text-white">{props.accessConditionLabel ?? (props.noParkWithin500m ? "공원 접근 결핍형" : "추가 검토 필요")}</p></div>

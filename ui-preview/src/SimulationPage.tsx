@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+﻿import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import KakaoMap, { CandidateMarker, CandidateRouteLine } from "./KakaoMap";
 
 const LETTERS = "ABCDEFGHIJ".split("");
@@ -182,10 +182,10 @@ const SIM_ACCENT_PANEL: CSSProperties = {
 };
 
 const FILTER_COPY: Array<{ key: keyof FilterState; title: string; description: string }> = [
-  { key: "excludePrimary", title: "도시 대로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 도시 대로 횡단이 1회 이상 있으면 제외합니다." },
-  { key: "excludeSecondary", title: "중간급 도로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 중간급 도로 횡단이 1회 이상 있으면 제외합니다." },
-  { key: "excludeTertiary", title: "일반 도로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 일반 도로 횡단이 1회 이상 있으면 제외합니다." },
-  { key: "excludeAccident", title: "사고다발지역 경유 후보 제외", description: "사고다발지역 buffer 경유 정보가 있으면 해당 후보를 제외합니다." },
+  { key: "excludePrimary", title: "주요 도시 간선도로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 주요 도시 간선도로 횡단이 1회 이상 있으면 제외합니다." },
+  { key: "excludeSecondary", title: "중간급 간선도로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 중간급 간선도로 횡단이 1회 이상 있으면 제외합니다." },
+  { key: "excludeTertiary", title: "지구 내 간선도로 횡단 후보 제외", description: "학교에서 후보지로 가는 최단 경로에 지구 내 간선도로 횡단이 1회 이상 있으면 제외합니다." },
+  { key: "excludeAccident", title: "사고위험 지점 인접 후보 제외", description: "사고위험 지점 인접 정보가 있으면 해당 후보를 제외합니다." },
   { key: "excludeRedev", title: "재개발 영향권 후보 제외", description: "재개발 영향권에 포함된 후보지를 제외합니다." },
   { key: "excludeLargeApt", title: "500세대 이상 대단지 인근 후보 제외", description: "대단지 인근 후보지를 제외합니다." },
 ];
@@ -271,28 +271,40 @@ function getBarrierColor(candidate: Candidate): string {
   return candidate.barrier_color ?? BARRIER_COLOR[getBarrierSeverity(candidate)];
 }
 
+function sanitizeBarrierText(value?: string): string {
+  return String(value ?? "")
+    .replace(/주요 도시 간선도로/g, "주요 도시 간선도로")
+    .replace(/주요 도시 간선도로/g, "주요 도시 간선도로")
+    .replace(/주요 도시 간선도로 계열/g, "주요 도시 간선도로")
+    .replace(/주요 도시 간선도로/g, "주요 도시 간선도로")
+    .replace(/주요 도시 간선도로/g, "주요 도시 간선도로")
+    .replace(/중간급 간선도로/g, "중간급 간선도로")
+    .replace(/지구 내 간선도로/g, "지구 내 간선도로")
+    .replace(/간선도로 횡단 부담이 낮아/g, "간선도로 횡단 부담이 낮아")
+    .replace(/사고위험 지점/g, "사고위험 지점");
+}
+
 function getBarrierLabel(candidate: Candidate): string {
   if (candidate.is_school_internal) return "학교 내부 설치";
-  return candidate.barrier_severity_label ?? "경로 정보 준비 중";
+  return sanitizeBarrierText(candidate.barrier_severity_label ?? "경로 정보 준비 중");
 }
 
 function getBarrierNote(candidate: Candidate): string {
   if (candidate.is_school_internal) {
     return "학교 안에 설치하는 대안입니다. 별도 도로 횡단 없이 바로 이용할 수 있는 옵션으로 해석합니다.";
   }
-  return candidate.barrier_note ?? "경로 정보가 아직 연결되지 않은 후보지입니다.";
+  return sanitizeBarrierText(candidate.barrier_note ?? "경로 정보가 아직 연결되지 않은 후보지입니다.");
 }
 
 function getBarrierCountSummary(candidate: Candidate): string {
   if (candidate.is_school_internal) return "학교 내부 설치 후보";
   const counts = getBarrierCounts(candidate);
   const parts: string[] = [];
-  if (counts.motorway > 0) parts.push(`고속도로 ${counts.motorway}회 횡단`);
-  if (counts.trunk > 0) parts.push(`자동차 전용 간선 ${counts.trunk}회 횡단`);
-  if (counts.primary > 0) parts.push(`도시 대로 ${counts.primary}회 횡단`);
-  if (counts.secondary > 0) parts.push(`중간급 도로 ${counts.secondary}회 횡단`);
-  if (counts.tertiary > 0) parts.push(`일반 도로 ${counts.tertiary}회 횡단`);
-  return parts.length ? parts.join(" / ") : "큰 도로 횡단 없음";
+  const cityArterialCount = counts.motorway + counts.trunk + counts.primary;
+  if (cityArterialCount > 0) parts.push(`주요 도시 간선도로 ${cityArterialCount}회 횡단`);
+  if (counts.secondary > 0) parts.push(`중간급 간선도로 ${counts.secondary}회 횡단`);
+  if (counts.tertiary > 0) parts.push(`지구 내 간선도로 ${counts.tertiary}회 횡단`);
+  return parts.length ? parts.join(" / ") : "생활도로 중심 경로";
 }
 
 function hasLargeAptNearby(candidate: Candidate): boolean {
@@ -421,8 +433,8 @@ function computeAiRecommendations(candidates: Candidate[]): AiRecommendationResu
     recommendations,
     fallbackApplied,
     filterSummary: fallbackApplied
-      ? "도시 대로 미횡단 후보는 유지하고, 중간급 도로 미횡단 후보가 없어 중간급 도로 조건만 완화했습니다."
-      : "도시 대로 미횡단 + 중간급 도로 미횡단 조건으로 기본 추천을 계산했습니다.",
+      ? "주요 도시 간선도로 미횡단 후보는 유지하고, 중간급 간선도로 미횡단 후보가 없어 중간급 간선도로 조건만 완화했습니다."
+      : "주요 도시 간선도로 미횡단 + 중간급 간선도로 미횡단 조건으로 기본 추천을 계산했습니다.",
   };
 }
 
@@ -446,10 +458,10 @@ function getCandidateTierStyle(candidate: Candidate) {
 
 function buildFilterReasonSummary(filters: FilterState): string[] {
   const summaries: string[] = [];
-  if (filters.excludePrimary) summaries.push("도시 대로 횡단 후보 제외");
-  if (filters.excludeSecondary) summaries.push("중간급 도로 횡단 후보 제외");
-  if (filters.excludeTertiary) summaries.push("일반 도로 횡단 후보 제외");
-  if (filters.excludeAccident) summaries.push("사고다발지역 경유 후보 제외");
+  if (filters.excludePrimary) summaries.push("주요 도시 간선도로 횡단 후보 제외");
+  if (filters.excludeSecondary) summaries.push("중간급 간선도로 횡단 후보 제외");
+  if (filters.excludeTertiary) summaries.push("지구 내 간선도로 횡단 후보 제외");
+  if (filters.excludeAccident) summaries.push("사고위험 지점 인접 후보 제외");
   if (filters.excludeRedev) summaries.push("재개발 영향권 후보 제외");
   if (filters.excludeLargeApt) summaries.push("500세대 이상 대단지 인근 후보 제외");
   return summaries;
@@ -721,10 +733,10 @@ export default function SimulationPage({
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 12 }}>
           <LegendItem color={SIM_COLORS.greenDark} shape="diamond" label="학교" />
           <LegendItem color={SIM_COLORS.blue} shape="circle" label="교내 설치" />
-          <LegendItem color={BARRIER_COLOR.green} shape="circle" label="큰 도로 횡단 없음" />
-          <LegendItem color={BARRIER_COLOR.yellow} shape="circle" label="중간급 도로 포함" />
-          <LegendItem color={BARRIER_COLOR.orange} shape="circle" label="도시 대로 포함" />
-          <LegendItem color={BARRIER_COLOR.red} shape="circle" label="trunk·motorway 포함" />
+          <LegendItem color={BARRIER_COLOR.green} shape="circle" label="생활도로 중심" />
+          <LegendItem color={BARRIER_COLOR.yellow} shape="circle" label="중간급 간선도로 포함" />
+          <LegendItem color={BARRIER_COLOR.orange} shape="circle" label="주요 도시 간선도로 포함" />
+          <LegendItem color={BARRIER_COLOR.red} shape="circle" label="간선도로 부담 큼" />
         </div>
       </div>
 
@@ -1036,7 +1048,7 @@ export default function SimulationPage({
           ) : null}
           <div style={{ display: "grid", gap: 8, fontSize: 13, color: SIM_COLORS.secondary, lineHeight: 1.7 }}>
             <div>{getBarrierNote(selectedCandidate)}</div>
-            {selectedCandidate.accident_hotspot_text ? <div>{selectedCandidate.accident_hotspot_text}</div> : null}
+            {selectedCandidate.accident_hotspot_text ? <div>{sanitizeBarrierText(selectedCandidate.accident_hotspot_text)}</div> : null}
             {selectedCandidate.redev_warning_text ? <div>{selectedCandidate.redev_warning_text}</div> : null}
           </div>
           {internalCandidate ? (
@@ -1106,9 +1118,6 @@ function LegendItem({
     </div>
   );
 }
-
-
-
 
 
 

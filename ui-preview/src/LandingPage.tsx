@@ -20,7 +20,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-forest-300">
                 Incheon Outdoor-Access Lens
               </p>
-              <p className="text-base font-bold text-white">반경 너머, 도달 가능성으로</p>
+              <p className="text-base font-bold text-white">반경 너머,<br className="sm:hidden" /> 도달 가능성으로</p>
             </div>
           </div>
           <span className="hidden rounded-full border border-white/15 bg-navy-850/95 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-slate-200 lg:inline-flex">
@@ -32,7 +32,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
         <section className="mt-12 grid items-center gap-12 lg:mt-16 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <span className="eyebrow">Policy Decision Support</span>
-            <h1 className="mt-4 text-4xl font-black leading-[1.15] tracking-tight text-white sm:text-5xl lg:text-[56px]">
+            <h1 className="mt-4 text-4xl font-black leading-[1.16] tracking-tight text-white sm:text-[46px] lg:text-[50px]">
               <span className="block">반경 너머,</span>
               <span className="block">도달 가능성으로</span>
             </h1>
@@ -99,7 +99,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
           <Pillar
             tag="Pillar 3"
             title="사용자 조정 시뮬"
-            description="단절요소는 점수 감점이 아닌 필터로. AI 추천은 시작점일 뿐, 사용자가 슬라이더로 즉시 재계산합니다."
+            description="보행부담은 점수 감점이 아닌 필터로. AI 추천은 시작점일 뿐, 사용자가 슬라이더로 즉시 재계산합니다."
             metric="Human-in-the-loop"
           />
         </section>

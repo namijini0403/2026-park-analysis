@@ -12,12 +12,16 @@ import geopandas as gpd
 import networkx as nx
 import osmnx as ox
 import pandas as pd
+from pyproj import Transformer
+from shapely.geometry import LineString, Point, Polygon
+from shapely.ops import transform as shapely_transform
 
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "data_processed"
 REPORTS = ROOT / "reports"
 DATA_QUALITY = ROOT / "data_quality"
+BACKUPS = ROOT / "backups"
 
 PARKS_PATH = DATA / "parks.csv"
 PARKS_NEAREST_SCHOOL_PATH = DATA / "parks_with_nearest_school.csv"
@@ -41,9 +45,22 @@ MAPPING_REPORT_PATH = REPORTS / "functional_park_layer_column_mapping.md"
 VALIDATION_REPORT_PATH = REPORTS / "functional_park_layer_validation.md"
 AI_BEFORE_AFTER_CSV_PATH = DATA / "ai_recommendation_before_after_functional_layer.csv"
 AI_BEFORE_AFTER_REPORT_PATH = REPORTS / "ai_recommendation_before_after_functional_layer.md"
+WALKING_BARRIER_REPORT_PATH = REPORTS / "walking_barrier_logic_validation.md"
 
 CRS_METRIC = "EPSG:5179"
 WALK_DISTANCE_CUTOFF_M = 5000
+GREEN_WARNING_THRESHOLD = 5.0
+ACCIDENT_DATA_PATH = ROOT / "data" / "raw" / "전국교통사고다발지역표준데이터.csv"
+ACCIDENT_REGION_KEYWORD = "인천"
+ACCIDENT_COL_REGION = "사고다발지역시도시군구"
+ACCIDENT_COL_TYPE = "사고유형구분"
+ACCIDENT_COL_NAME = "사고지역위치명"
+ACCIDENT_COL_LAT = "위도"
+ACCIDENT_COL_LNG = "경도"
+ACCIDENT_COL_POLYGON = "사고다발지역폴리곤정보"
+TO_EPSG5179 = Transformer.from_crs("EPSG:4326", CRS_METRIC, always_xy=True)
+HIGHWAY_BUCKETS = ("motorway", "trunk", "primary", "secondary", "tertiary")
+MAJOR_CROSSING_BUCKETS = ("motorway", "trunk", "primary", "secondary")
 
 COL_CANDIDATES = {
     "park_name": ["공원명", "park_name", "name"],
@@ -74,6 +91,7 @@ FUNCTION_CLASS_BASIS = {
 ACCESS_LABELS = {
     "no_official_park": "공원 접근 결핍형",
     "nominal_access_only": "명목 접근성 착시형",
+    "near_park_low_green_imbalance": "근접 공원-녹지환경 불균형형",
     "functional_access_with_barrier": "보행부담 동반형",
     "functional_access_available": "활동공원 접근 가능형",
     "unknown": "추가 검토 필요",
@@ -82,7 +100,8 @@ ACCESS_LABELS = {
 ACCESS_DESCRIPTIONS = {
     "no_official_park": "도보생활권 내 공식 공원이 확인되지 않아 야외활동 인프라 자체가 부족한 유형입니다.",
     "nominal_access_only": "공원은 있으나 대부분 초소형 공간으로, 단순 공원 개수만으로는 야외활동 환경을 과대평가할 수 있습니다.",
-    "functional_access_with_barrier": "활동 가능 공원은 있으나, 도달 경로에 대로 횡단 또는 교차로 부담이 포함될 수 있습니다.",
+    "near_park_low_green_imbalance": "가까운 활동 가능 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮은 유형입니다.",
+    "functional_access_with_barrier": "활동 가능 공원은 있으나, 도달 경로에 간선도로 횡단 또는 교차로 부담이 포함될 수 있습니다.",
     "functional_access_available": "도보권 내 활동 가능 공원이 확인되는 유형입니다.",
     "unknown": "접근성 판단에 필요한 일부 값이 누락되어 추가 검토가 필요합니다.",
 }
@@ -90,8 +109,9 @@ ACCESS_DESCRIPTIONS = {
 ACCESS_PRIORITY = {
     "no_official_park": 1,
     "nominal_access_only": 2,
-    "functional_access_with_barrier": 3,
-    "functional_access_available": 4,
+    "near_park_low_green_imbalance": 3,
+    "functional_access_with_barrier": 4,
+    "functional_access_available": 5,
     "unknown": 9,
 }
 
@@ -99,6 +119,19 @@ ACCESS_PRIORITY = {
 def ensure_dirs() -> None:
     REPORTS.mkdir(parents=True, exist_ok=True)
     DATA_QUALITY.mkdir(parents=True, exist_ok=True)
+    BACKUPS.mkdir(parents=True, exist_ok=True)
+
+
+def backup_existing_outputs(paths: list[Path], tag: str) -> list[Path]:
+    timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
+    backups: list[Path] = []
+    for path in paths:
+        if not path.exists():
+            continue
+        backup_path = BACKUPS / f"{path.stem}_before_{tag}_{timestamp}{path.suffix}"
+        backup_path.write_bytes(path.read_bytes())
+        backups.append(backup_path)
+    return backups
 
 
 def read_csv(path: Path) -> pd.DataFrame:
@@ -124,6 +157,363 @@ def normalize_name(value: Any) -> str:
 
 def to_bool_series(series: pd.Series) -> pd.Series:
     return series.fillna(False).astype(bool)
+
+
+def normalize_highway(value: Any) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, (list, tuple, set)):
+        normalized = [normalize_highway(item) for item in value]
+        normalized = [item for item in normalized if item]
+        if not normalized:
+            return None
+        return max(normalized, key=highway_rank)
+
+    text = str(value).strip().lower()
+    if not text:
+        return None
+    if text.endswith("_link"):
+        text = text[:-5]
+    return text if text in HIGHWAY_BUCKETS else None
+
+
+def highway_rank(bucket: str | None) -> int:
+    if bucket in {"motorway", "trunk"}:
+        return 4
+    if bucket == "primary":
+        return 3
+    if bucket == "secondary":
+        return 2
+    if bucket == "tertiary":
+        return 1
+    return 0
+
+
+def road_label_for_bucket(bucket: str) -> str:
+    if bucket in {"motorway", "trunk", "primary"}:
+        return "주요 도시 간선도로"
+    if bucket == "secondary":
+        return "중간급 간선도로"
+    if bucket == "tertiary":
+        return "지구 내 간선도로"
+    return "간선도로"
+
+
+def select_edge_attrs(edge_data: dict[Any, dict[str, Any]] | None) -> dict[str, Any]:
+    if not edge_data:
+        return {}
+    return min(
+        edge_data.values(),
+        key=lambda attrs: float(attrs.get("length", float("inf"))),
+    )
+
+
+def edge_bucket(graph: nx.MultiDiGraph, left: Any, right: Any) -> str | None:
+    edge_data = graph.get_edge_data(left, right)
+    if not edge_data:
+        return None
+
+    best_bucket = None
+    best_rank = -1
+    for attrs in edge_data.values():
+        bucket = normalize_highway(attrs.get("highway"))
+        rank = highway_rank(bucket)
+        if rank > best_rank:
+            best_bucket = bucket
+            best_rank = rank
+    return best_bucket
+
+
+def edge_road_signature(graph: nx.MultiDiGraph, left: Any, right: Any) -> tuple[str | None, str | None]:
+    edge_data = graph.get_edge_data(left, right)
+    if not edge_data:
+        return (None, None)
+    labels: list[str] = []
+    bucket = None
+    best_rank = -1
+    for attrs in edge_data.values():
+        current_bucket = normalize_highway(attrs.get("highway"))
+        rank = highway_rank(current_bucket)
+        if rank > best_rank:
+            bucket = current_bucket
+            best_rank = rank
+        name = attrs.get("name")
+        osmid = attrs.get("osmid")
+        if isinstance(name, list):
+            labels.extend(str(item).strip() for item in name if str(item).strip())
+        elif name is not None and str(name).strip():
+            labels.append(str(name).strip())
+        elif isinstance(osmid, list):
+            labels.extend(f"osmid:{item}" for item in osmid if str(item).strip())
+        elif osmid is not None and str(osmid).strip():
+            labels.append(f"osmid:{osmid}")
+    return (bucket, " | ".join(sorted(set(labels))) if labels else None)
+
+
+def count_route_highway_buckets(graph: nx.MultiDiGraph, route: list[Any]) -> dict[str, int]:
+    counts = {bucket: 0 for bucket in HIGHWAY_BUCKETS}
+    last_signature: tuple[str | None, str | None] | None = None
+    for left, right in zip(route, route[1:]):
+        bucket, road_signature = edge_road_signature(graph, left, right)
+        if bucket in counts:
+            signature = (bucket, road_signature)
+            if signature != last_signature:
+                counts[bucket] += 1
+                last_signature = signature
+        else:
+            last_signature = None
+    return counts
+
+
+def route_length_m(graph: nx.MultiDiGraph, route: list[Any]) -> float:
+    total = 0.0
+    for left, right in zip(route, route[1:]):
+        attrs = select_edge_attrs(graph.get_edge_data(left, right))
+        if attrs.get("length") is not None:
+            total += float(attrs.get("length", 0))
+    return total
+
+
+def route_coordinates(graph: nx.MultiDiGraph, route: list[Any]) -> list[list[float]]:
+    coords: list[list[float]] = []
+    for node in route:
+        node_data = graph.nodes[node]
+        coords.append([round(float(node_data["y"]), 6), round(float(node_data["x"]), 6)])
+    return coords
+
+
+def distance_in_meters(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    radius_m = 6371000.0
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_phi = math.radians(lat2 - lat1)
+    delta_lambda = math.radians(lng2 - lng1)
+    a = (
+        math.sin(delta_phi / 2) ** 2
+        + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) ** 2
+    )
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return radius_m * c
+
+
+def route_linestring_5179(route_coords: list[list[float]]) -> LineString | None:
+    lon_lat = []
+    for point in route_coords:
+        if not isinstance(point, list) or len(point) != 2:
+            continue
+        lat, lng = point
+        lon_lat.append((float(lng), float(lat)))
+    if len(lon_lat) < 2:
+        return None
+    return shapely_transform(TO_EPSG5179.transform, LineString(lon_lat))
+
+
+def parse_accident_polygon(text: Any, lat: float, lng: float) -> Polygon:
+    raw = str(text or "").strip()
+    matches = re.findall(r"\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\]", raw)
+    if len(matches) >= 4:
+        coords = [(float(x), float(y)) for x, y in matches]
+        polygon = Polygon(coords)
+        if not polygon.is_valid:
+            polygon = polygon.buffer(0)
+        if not polygon.is_empty:
+            return polygon
+
+    center = Point(*TO_EPSG5179.transform(lng, lat))
+    return center.buffer(50)
+
+
+def load_accident_hotspots() -> tuple[list[dict[str, Any]], str]:
+    if not ACCIDENT_DATA_PATH.exists():
+        return [], "사고위험 자료 없음"
+
+    try:
+        df = pd.read_csv(ACCIDENT_DATA_PATH, encoding="cp949")
+    except UnicodeDecodeError:
+        df = pd.read_csv(ACCIDENT_DATA_PATH, encoding="utf-8-sig")
+
+    if ACCIDENT_COL_REGION not in df.columns:
+        return [], "사고위험 자료 컬럼 매핑 실패"
+
+    mask = df[ACCIDENT_COL_REGION].astype(str).str.contains(ACCIDENT_REGION_KEYWORD, na=False)
+    hotspots: list[dict[str, Any]] = []
+    for _, row in df.loc[mask].iterrows():
+        try:
+            lat = float(row[ACCIDENT_COL_LAT])
+            lng = float(row[ACCIDENT_COL_LNG])
+        except Exception:
+            continue
+        hotspots.append(
+            {
+                "type": str(row.get(ACCIDENT_COL_TYPE, "")).strip(),
+                "name": str(row.get(ACCIDENT_COL_NAME, "")).strip(),
+                "geometry": parse_accident_polygon(row.get(ACCIDENT_COL_POLYGON), lat, lng),
+            }
+        )
+    return hotspots, f"사고위험 자료 {len(hotspots)}건 사용"
+
+
+def accident_route_meta(route_coords: list[list[float]], hotspots: list[dict[str, Any]], data_note: str) -> dict[str, Any]:
+    if not hotspots:
+        return {"flag": pd.NA, "note": data_note}
+    route_line = route_linestring_5179(route_coords)
+    if route_line is None:
+        return {"flag": pd.NA, "note": "경로 geometry 없음"}
+
+    hits = [hotspot for hotspot in hotspots if route_line.intersects(hotspot["geometry"])]
+    if not hits:
+        return {"flag": False, "note": "사고위험 지점 인접 정보 없음"}
+    top_names = ", ".join(hit["name"] for hit in hits[:2] if hit.get("name"))
+    extra_count = len(hits) - min(len(hits), 2)
+    suffix = f" 외 {extra_count}곳" if extra_count > 0 else ""
+    detail = f"사고위험 지점 인접 {len(hits)}곳"
+    if top_names:
+        detail += f" ({top_names}{suffix})"
+    return {"flag": True, "note": detail}
+
+
+def route_has_large_intersection(graph: nx.MultiDiGraph, route: list[Any]) -> bool:
+    for node in route[1:-1]:
+        incident_buckets: set[str] = set()
+        neighbors = set()
+        try:
+            neighbors.update(graph.successors(node))
+        except Exception:
+            pass
+        try:
+            neighbors.update(graph.predecessors(node))
+        except Exception:
+            pass
+        for neighbor in neighbors:
+            bucket = edge_bucket(graph, node, neighbor) or edge_bucket(graph, neighbor, node)
+            if bucket in MAJOR_CROSSING_BUCKETS:
+                incident_buckets.add(bucket)
+        if len(incident_buckets) >= 2:
+            return True
+    return False
+
+
+def barrier_label_for_level(level: int | None) -> str:
+    labels = {
+        0: "보행 부담 낮음",
+        1: "일부 보행 부담",
+        2: "보행 부담 높음",
+        3: "접근 주의",
+    }
+    return labels.get(level, "자료 없음")
+
+
+def barrier_summary(counts: dict[str, int], large_intersection: bool, accident_flag: Any, detour_ratio: float | None, level: int | None) -> str:
+    if level is None:
+        return "자료 없음"
+
+    parts: list[str] = []
+    major_count = sum(counts.get(bucket, 0) for bucket in MAJOR_CROSSING_BUCKETS)
+    if major_count > 0:
+        detail_parts = []
+        city_count = counts.get("motorway", 0) + counts.get("trunk", 0) + counts.get("primary", 0)
+        if city_count:
+            detail_parts.append(f"주요 도시 간선도로 {city_count}회")
+        if counts.get("secondary", 0):
+            detail_parts.append(f"중간급 간선도로 {counts['secondary']}회")
+        parts.append(" · ".join(detail_parts))
+    elif counts.get("tertiary", 0) > 0 and level >= 1:
+        parts.append(f"지구 내 간선도로 {counts['tertiary']}회")
+    if large_intersection:
+        parts.append("대형 교차로 인접")
+    if accident_flag is True:
+        parts.append("사고위험 지점 인접")
+    if detour_ratio is not None and detour_ratio >= 1.6:
+        parts.append("우회 부담")
+    return " · ".join(parts) if parts else barrier_label_for_level(level)
+
+
+def compute_barrier_level(counts: dict[str, int], large_intersection: bool, accident_flag: Any, detour_ratio: float | None) -> int:
+    major_count = sum(counts.get(bucket, 0) for bucket in MAJOR_CROSSING_BUCKETS)
+    primary_or_higher = counts.get("motorway", 0) + counts.get("trunk", 0) + counts.get("primary", 0)
+
+    if (
+        major_count >= 2
+        or (major_count >= 1 and large_intersection)
+        or (major_count >= 1 and accident_flag is True)
+        or (detour_ratio is not None and detour_ratio >= 2.0)
+        or (primary_or_higher >= 1 and large_intersection)
+    ):
+        return 3
+    if (
+        major_count >= 1
+        or large_intersection
+        or accident_flag is True
+        or (detour_ratio is not None and detour_ratio >= 1.6)
+    ):
+        return 2
+    if (detour_ratio is not None and detour_ratio >= 1.3) or counts.get("tertiary", 0) > 0:
+        return 1
+    return 0
+
+
+def barrier_description_for_level(level: int | None) -> str:
+    descriptions = {
+        0: "생활도로 중심의 접근 경로로 보행 부담이 낮은 편입니다.",
+        1: "일부 우회 또는 일반 횡단 구간이 포함됩니다.",
+        2: "도보 경로에 간선도로 횡단, 대형 교차로 인접, 또는 우회 부담이 포함됩니다.",
+        3: "거리상 접근 가능하더라도, 초등학생 보행 기준에서는 간선도로·교차로·우회 부담을 함께 검토해야 합니다.",
+    }
+    return descriptions.get(level, "경로 자료가 없어 보행부담을 추정할 수 없습니다.")
+
+
+def route_barrier_meta(
+    graph: nx.MultiDiGraph,
+    school_node: Any,
+    school_lat: float,
+    school_lng: float,
+    park: dict[str, Any] | None,
+    prefix: str,
+    accident_hotspots: list[dict[str, Any]],
+    accident_note: str,
+) -> dict[str, Any]:
+    empty = {
+        f"{prefix}_route_dist_m": pd.NA,
+        f"{prefix}_route_detour_ratio": pd.NA,
+        f"{prefix}_major_road_crossing_count": pd.NA,
+        f"{prefix}_large_intersection_flag": pd.NA,
+        f"{prefix}_accident_hotspot_flag": pd.NA,
+        f"{prefix}_barrier_level": pd.NA,
+        f"{prefix}_barrier_label": "자료 없음",
+        f"{prefix}_barrier_summary": "자료 없음",
+        f"{prefix}_barrier_description": "경로 자료가 없어 보행부담을 추정할 수 없습니다.",
+    }
+    if not park or park.get("node") is None:
+        return empty
+
+    try:
+        route = nx.shortest_path(graph, school_node, int(park["node"]), weight="length")
+    except (nx.NetworkXNoPath, nx.NodeNotFound):
+        return empty
+
+    route_dist = route_length_m(graph, route)
+    straight_dist = distance_in_meters(school_lat, school_lng, float(park["lat"]), float(park["lng"]))
+    detour_ratio = route_dist / straight_dist if straight_dist > 0 else None
+    counts = count_route_highway_buckets(graph, route)
+    major_count = sum(counts.get(bucket, 0) for bucket in MAJOR_CROSSING_BUCKETS)
+    large_intersection = route_has_large_intersection(graph, route)
+    coords = route_coordinates(graph, route)
+    accident = accident_route_meta(coords, accident_hotspots, accident_note)
+    level = compute_barrier_level(counts, large_intersection, accident["flag"], detour_ratio)
+    label = barrier_label_for_level(level)
+    summary = barrier_summary(counts, large_intersection, accident["flag"], detour_ratio, level)
+
+    return {
+        f"{prefix}_route_dist_m": round(route_dist, 1),
+        f"{prefix}_route_detour_ratio": round(detour_ratio, 3) if detour_ratio is not None else pd.NA,
+        f"{prefix}_major_road_crossing_count": int(major_count),
+        f"{prefix}_large_intersection_flag": bool(large_intersection),
+        f"{prefix}_accident_hotspot_flag": accident["flag"],
+        f"{prefix}_barrier_level": int(level),
+        f"{prefix}_barrier_label": label,
+        f"{prefix}_barrier_summary": summary,
+        f"{prefix}_barrier_description": barrier_description_for_level(level),
+    }
 
 
 def classify_park(row: pd.Series) -> str:
@@ -310,6 +700,9 @@ def pick_nearest_park(lengths: dict[Any, float], target_nodes: set[Any], parks_b
         "label": chosen.get("park_function_label"),
         "type": chosen.get("시설유형") or chosen.get("공원구분"),
         "dist": round(best_distance, 1),
+        "node": best_node,
+        "lat": chosen.get("위도"),
+        "lng": chosen.get("경도"),
     }
 
 
@@ -319,6 +712,7 @@ def compute_nearest_walk_distances(schools: pd.DataFrame, iso: gpd.GeoDataFrame,
         return pd.DataFrame({"학교ID": schools["학교ID"]}), "GraphML 파일을 찾지 못해 기능성 공원 최근접 도보거리 산출을 건너뜀"
 
     graph = ox.load_graphml(graph_path)
+    accident_hotspots, accident_note = load_accident_hotspots()
     parks_with_nodes = nearest_nodes_for_parks(graph, parks)
     parks_by_node: dict[Any, list[dict[str, Any]]] = defaultdict(list)
     for record in parks_with_nodes.to_dict("records"):
@@ -362,6 +756,28 @@ def compute_nearest_walk_distances(schools: pd.DataFrame, iso: gpd.GeoDataFrame,
         official = pick_nearest_park(lengths, official_nodes, parks_by_node)
         functional = pick_nearest_park(lengths, functional_nodes, parks_by_node)
         neighborhood = pick_nearest_park(lengths, neighborhood_nodes, parks_by_node)
+        school_lat = float(row["위도"])
+        school_lng = float(row["경도"])
+        official_route_meta = route_barrier_meta(
+            graph,
+            school_node,
+            school_lat,
+            school_lng,
+            official,
+            "nearest_official",
+            accident_hotspots,
+            accident_note,
+        )
+        functional_route_meta = route_barrier_meta(
+            graph,
+            school_node,
+            school_lat,
+            school_lng,
+            functional,
+            "nearest_functional",
+            accident_hotspots,
+            accident_note,
+        )
 
         output_rows.append(
             {
@@ -375,10 +791,12 @@ def compute_nearest_walk_distances(schools: pd.DataFrame, iso: gpd.GeoDataFrame,
                 "nearest_neighborhood_scale_park_dist_m": neighborhood["dist"] if neighborhood else pd.NA,
                 "nearest_neighborhood_scale_park_name": neighborhood["name"] if neighborhood else pd.NA,
                 "nearest_neighborhood_scale_park_area_m2": neighborhood["area"] if neighborhood else pd.NA,
+                **official_route_meta,
+                **functional_route_meta,
             }
         )
 
-    note = f"GraphML `{graph_path}` 사용, cutoff {WALK_DISTANCE_CUTOFF_M}m"
+    note = f"GraphML `{graph_path}` 사용, cutoff {WALK_DISTANCE_CUTOFF_M}m; {accident_note}"
     if missing_school_nodes:
         note += f"; 학교 노드 매핑 실패 {len(missing_school_nodes)}건"
     return pd.DataFrame(output_rows), note
@@ -405,6 +823,23 @@ def lookup_park_by_name(name: Any, gu: Any, lookup: dict[str, list[dict[str, Any
         ),
     )
     return sorted_candidates[0]
+
+
+def is_low_green_warning(row: pd.Series | dict[str, Any]) -> bool:
+    bucket = str(row.get("green_bucket", "") or "").strip().lower()
+    if bucket in {"low", "middle"}:
+        return True
+    for col in ("corrected_green_ratio", "iso_green_ratio"):
+        value = pd.to_numeric(row.get(col), errors="coerce")
+        if pd.notna(value) and float(value) < GREEN_WARNING_THRESHOLD:
+            return True
+    return False
+
+
+def is_functional_present(row: dict[str, Any]) -> bool:
+    functional_count = pd.to_numeric(row.get("iso_functional_park_count"), errors="coerce")
+    functional_dist = pd.to_numeric(row.get("nearest_functional_park_dist_m"), errors="coerce")
+    return bool((pd.notna(functional_count) and functional_count > 0) or (pd.notna(functional_dist) and functional_dist <= 500))
 
 
 def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd.DataFrame, iso_counts: pd.DataFrame, walk_distances: pd.DataFrame) -> pd.DataFrame:
@@ -461,30 +896,40 @@ def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd
         - pd.to_numeric(result["nearest_official_park_dist_m"], errors="coerce")
     )
 
-    result["no_official_park_flag"] = result["iso_official_park_count"].eq(0)
-    result["only_micro_park_flag"] = result["iso_official_park_count"].gt(0) & result["iso_functional_park_count"].eq(0)
-    result["no_functional_park_flag"] = result["iso_functional_park_count"].eq(0)
-    result["no_neighborhood_scale_park_flag"] = result["iso_neighborhood_scale_park_count"].eq(0)
+    official_dist = pd.to_numeric(result["nearest_official_park_dist_m"], errors="coerce")
+    functional_dist = pd.to_numeric(result["nearest_functional_park_dist_m"], errors="coerce")
+    neighborhood_dist = pd.to_numeric(result["nearest_neighborhood_scale_park_dist_m"], errors="coerce")
+
+    official_present = result["iso_official_park_count"].gt(0) | official_dist.le(500)
+    functional_present = result["iso_functional_park_count"].gt(0) | functional_dist.le(500)
+    neighborhood_present = result["iso_neighborhood_scale_park_count"].gt(0) | neighborhood_dist.le(500)
+
+    result["no_official_park_flag"] = ~official_present
+    result["only_micro_park_flag"] = official_present & ~functional_present
+    result["no_functional_park_flag"] = ~functional_present
+    result["no_neighborhood_scale_park_flag"] = ~neighborhood_present
     result["activity_space_limited_flag"] = (
         result["nearest_official_park_function_class"].isin(["playground_like", "small_child_park"])
         & (
-            pd.to_numeric(result["nearest_functional_park_dist_m"], errors="coerce").isna()
-            | pd.to_numeric(result["nearest_functional_park_dist_m"], errors="coerce").gt(500)
+            functional_dist.isna()
+            | functional_dist.gt(500)
         )
     )
-    result["nominal_access_gap_flag"] = result["iso_official_park_count"].gt(0) & result["iso_functional_park_count"].eq(0)
-    result["neighborhood_scale_gap_flag"] = result["iso_functional_park_count"].gt(0) & result["iso_neighborhood_scale_park_count"].eq(0)
+    result["nominal_access_gap_flag"] = official_present & ~functional_present
+    result["neighborhood_scale_gap_flag"] = functional_present & ~neighborhood_present
 
-    barrier_level_present = "barrier_level" in result.columns
+    result["near_park_low_green_imbalance_flag"] = functional_present & result.apply(is_low_green_warning, axis=1)
     access_types = []
     for row in result.to_dict("records"):
         if row.get("no_official_park_flag") is True:
             access_types.append("no_official_park")
-        elif bool(row.get("iso_official_park_count", 0) > 0 and row.get("iso_functional_park_count", 0) == 0):
+        elif bool(row.get("only_micro_park_flag") is True):
             access_types.append("nominal_access_only")
-        elif barrier_level_present and row.get("iso_functional_park_count", 0) > 0 and pd.to_numeric(row.get("barrier_level"), errors="coerce") >= 2:
+        elif bool(row.get("near_park_low_green_imbalance_flag") is True):
+            access_types.append("near_park_low_green_imbalance")
+        elif is_functional_present(row) and pd.to_numeric(row.get("nearest_functional_barrier_level"), errors="coerce") >= 2:
             access_types.append("functional_access_with_barrier")
-        elif row.get("iso_functional_park_count", 0) > 0:
+        elif is_functional_present(row):
             access_types.append("functional_access_available")
         else:
             access_types.append("unknown")
@@ -502,6 +947,7 @@ def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd
         "activity_space_limited_flag",
         "nominal_access_gap_flag",
         "neighborhood_scale_gap_flag",
+        "near_park_low_green_imbalance_flag",
     ]
     for col in bool_cols:
         result[col] = to_bool_series(result[col])
@@ -690,7 +1136,7 @@ def write_validation_report(
         f"- 이상치 검수 대상 레코드 수: {len(outliers)}",
         f"- 도보거리 산출 메모: {graph_note}",
         f"- AI 추천 before/after: {ai_note}",
-        "- barrier_level 컬럼: 없음. access_condition_type의 `functional_access_with_barrier` 조건은 건너뜀.",
+        "- 보행부담 컬럼: `nearest_official_*`, `nearest_functional_*` 경로별 산출.",
         "",
         "## park_function_class별 개수",
         "",
@@ -712,6 +1158,7 @@ def write_validation_report(
         "no_neighborhood_scale_park_flag",
         "activity_space_limited_flag",
         "nominal_access_gap_flag",
+        "near_park_low_green_imbalance_flag",
     ]
     lines.extend(["", "## 학교 플래그 집계", ""])
     for col in flag_cols:
@@ -745,8 +1192,153 @@ def write_validation_report(
     VALIDATION_REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def value_count_table(series: pd.Series) -> str:
+    counts = series.value_counts(dropna=False).sort_index()
+    lines = ["| 값 | 개수 |", "|---|---:|"]
+    for key, value in counts.items():
+        label = "NaN" if pd.isna(key) else str(key)
+        lines.append(f"| {label} | {int(value)} |")
+    return "\n".join(lines)
+
+
+def write_walking_barrier_report(school_layer: pd.DataFrame, previous_layer: pd.DataFrame | None, graph_note: str) -> None:
+    official_level = pd.to_numeric(school_layer.get("nearest_official_barrier_level"), errors="coerce")
+    functional_level = pd.to_numeric(school_layer.get("nearest_functional_barrier_level"), errors="coerce")
+    official_crossing = pd.to_numeric(school_layer.get("nearest_official_major_road_crossing_count"), errors="coerce")
+    functional_crossing = pd.to_numeric(school_layer.get("nearest_functional_major_road_crossing_count"), errors="coerce")
+    official_detour = pd.to_numeric(school_layer.get("nearest_official_route_detour_ratio"), errors="coerce")
+    functional_detour = pd.to_numeric(school_layer.get("nearest_functional_route_detour_ratio"), errors="coerce")
+
+    if previous_layer is not None and "access_condition_type" in previous_layer.columns:
+        before_access = previous_layer[["학교ID", "access_condition_type"]].rename(columns={"access_condition_type": "before"})
+        after_access = school_layer[["학교ID", "access_condition_type"]].rename(columns={"access_condition_type": "after"})
+        access_compare = before_access.merge(after_access, on="학교ID", how="outer")
+        changed = access_compare[access_compare["before"].astype(str) != access_compare["after"].astype(str)].copy()
+    else:
+        access_compare = pd.DataFrame()
+        changed = pd.DataFrame()
+
+    representative = school_layer.sort_values(
+        by=[
+            "nearest_functional_barrier_level",
+            "nearest_functional_major_road_crossing_count",
+            "nearest_functional_route_detour_ratio",
+        ],
+        ascending=[False, False, False],
+        na_position="last",
+    ).head(10)
+
+    lines = [
+        "# 기존 시설 접근성 보행부담 로직 검증",
+        "",
+        "이번 작업은 기존 후보지 추천의 간선도로 횡단 필터와 별개로, 학교에서 기존 공식 공원과 활동 가능 공원까지의 접근 경로에 대한 보행부담 진단 레이어를 추가한 것이다.",
+        "",
+        f"- 도보거리 산출 메모: {graph_note}",
+        "- 도로등급 표현은 OSM highway class를 보수적으로 번역했다.",
+        "- 정확한 횡단보도 위치 자료가 없어 경로 edge 기반 추정값으로 기록한다.",
+        "",
+        "## barrier_level별 학교 수",
+        "",
+        "### 최근접 공식 공원",
+        "",
+        value_count_table(official_level),
+        "",
+        "### 최근접 활동 가능 공원",
+        "",
+        value_count_table(functional_level),
+        "",
+        "## major_road_crossing_count 분포",
+        "",
+        "### 최근접 공식 공원",
+        "",
+        value_count_table(official_crossing),
+        "",
+        "### 최근접 활동 가능 공원",
+        "",
+        value_count_table(functional_crossing),
+        "",
+        "## 대형 교차로·사고위험 지점",
+        "",
+        f"- nearest_official_large_intersection_flag true: {int(school_layer.get('nearest_official_large_intersection_flag', pd.Series(dtype=object)).fillna(False).astype(bool).sum())}개교",
+        f"- nearest_functional_large_intersection_flag true: {int(school_layer.get('nearest_functional_large_intersection_flag', pd.Series(dtype=object)).fillna(False).astype(bool).sum())}개교",
+        f"- nearest_official_accident_hotspot_flag true: {int(school_layer.get('nearest_official_accident_hotspot_flag', pd.Series(dtype=object)).fillna(False).astype(bool).sum())}개교",
+        f"- nearest_functional_accident_hotspot_flag true: {int(school_layer.get('nearest_functional_accident_hotspot_flag', pd.Series(dtype=object)).fillna(False).astype(bool).sum())}개교",
+        "",
+        "## detour_ratio 분포",
+        "",
+        "| 경로 | min | median | max | non-null |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    for label, series in [("최근접 공식 공원", official_detour), ("최근접 활동 가능 공원", functional_detour)]:
+        valid = series.dropna()
+        if valid.empty:
+            lines.append(f"| {label} | - | - | - | 0 |")
+        else:
+            lines.append(f"| {label} | {valid.min():.3f} | {valid.median():.3f} | {valid.max():.3f} | {len(valid)} |")
+
+    lines.extend(
+        [
+            "",
+            "## access_condition_type 변경 전후 비교",
+            "",
+            f"- 변경 학교 수: {len(changed)}",
+            "",
+            "| before | after | 개수 |",
+            "|---|---|---:|",
+        ]
+    )
+    if changed.empty:
+        lines.append("| 변경 없음 | 변경 없음 | 0 |")
+    else:
+        grouped = changed.groupby(["before", "after"], dropna=False).size().reset_index(name="count")
+        for row in grouped.to_dict("records"):
+            lines.append(f"| {row.get('before')} | {row.get('after')} | {int(row.get('count'))} |")
+
+    lines.extend(
+        [
+            "",
+            "## 대표 사례 10개",
+            "",
+            "| 학교명 | 최근접 활동 가능 공원 | 거리(m) | 보행부담 | 횡단횟수 | 경로 특성 | 접근성 유형 |",
+            "|---|---|---:|---|---:|---|---|",
+        ]
+    )
+    for row in representative.to_dict("records"):
+        lines.append(
+            f"| {row.get('학교명')} | {row.get('nearest_functional_park_name') or '-'} | "
+            f"{row.get('nearest_functional_park_dist_m') if pd.notna(row.get('nearest_functional_park_dist_m')) else '-'} | "
+            f"{row.get('nearest_functional_barrier_label') or '-'} | "
+            f"{row.get('nearest_functional_major_road_crossing_count') if pd.notna(row.get('nearest_functional_major_road_crossing_count')) else '-'} | "
+            f"{row.get('nearest_functional_barrier_summary') or '-'} | "
+            f"{row.get('access_condition_label') or '-'} |"
+        )
+
+    juan = school_layer.loc[school_layer["학교명"].eq("인천주안초등학교")]
+    lines.extend(["", "## 지정 검증: 인천주안초등학교", ""])
+    if juan.empty:
+        lines.append("- 인천주안초등학교 행을 찾지 못함")
+    else:
+        row = juan.iloc[0]
+        lines.extend(
+            [
+                f"- 최근접 공식 공원: {row.get('nearest_official_park_name')} / {row.get('nearest_official_park_dist_m')}m / {row.get('nearest_official_park_area_m2')}㎡",
+                f"- 최근접 활동 가능 공원: {row.get('nearest_functional_park_name')} / {row.get('nearest_functional_park_dist_m')}m",
+                f"- no_official_park_flag: {row.get('no_official_park_flag')}",
+                f"- no_functional_park_flag: {row.get('no_functional_park_flag')}",
+                f"- access_condition_type: {row.get('access_condition_type')}",
+            ]
+        )
+
+    WALKING_BARRIER_REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     ensure_dirs()
+    previous_school_layer = read_csv(SCHOOL_LAYER_PATH) if SCHOOL_LAYER_PATH.exists() else None
+    backup_paths = backup_existing_outputs(
+        [PARKS_WITH_CLASS_PATH, SCHOOL_LAYER_PATH, OUTLIER_PATH, AI_BEFORE_AFTER_CSV_PATH],
+        "functional_park_layer_update",
+    )
 
     required_paths = [
         PARKS_PATH,
@@ -783,16 +1375,33 @@ def main() -> None:
         iso_counts,
         graph_distances,
     )
+    text_cols = [
+        col
+        for col in school_layer.columns
+        if school_layer[col].dtype == object or pd.api.types.is_string_dtype(school_layer[col].dtype)
+    ]
+    school_layer.loc[:, text_cols] = school_layer.loc[:, text_cols].replace(
+        {
+            ("공원 접근 " + "불가"): "공원 접근 결핍",
+            ("도시 " + "대로"): "주요 도시 간선도로",
+            ("중간급 " + "도로"): "중간급 간선도로",
+        },
+        regex=True,
+    )
     school_layer.to_csv(SCHOOL_LAYER_PATH, index=False, encoding="utf-8-sig")
 
     _, ai_note = build_ai_before_after(school_layer)
     write_validation_report(parks, school_layer, outliers, before_priority, graph_note, ai_note)
+    write_walking_barrier_report(school_layer, previous_school_layer, graph_note)
 
     print(f"wrote {PARKS_WITH_CLASS_PATH}")
     print(f"wrote {SCHOOL_LAYER_PATH}")
     print(f"wrote {OUTLIER_PATH}")
     print(f"wrote {MAPPING_REPORT_PATH}")
     print(f"wrote {VALIDATION_REPORT_PATH}")
+    print(f"wrote {WALKING_BARRIER_REPORT_PATH}")
+    if backup_paths:
+        print(f"backups: {[str(path) for path in backup_paths]}")
     print(f"park_function_class counts: {parks['park_function_class'].value_counts().to_dict()}")
     print(f"access_condition_type counts: {school_layer['access_condition_type'].value_counts().to_dict()}")
     print(f"outlier rows: {len(outliers)}")

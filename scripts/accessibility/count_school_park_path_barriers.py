@@ -29,11 +29,11 @@ CRS_WGS84 = "EPSG:4326"
 CRS_METRIC = "EPSG:5179"
 
 USER_LABELS = {
-    "motorway": "고속도로 (보행 불가)",
-    "trunk": "자동차 전용 간선도로 (사실상 단절)",
-    "primary": "도시 대로 (건너기 부담)",
-    "secondary": "중간급 도로 (주의 필요)",
-    "tertiary": "소규모 도로 (보행 가능)",
+    "motorway": "주요 도시 간선도로 (보행부담 큼)",
+    "trunk": "주요 도시 간선도로 (보행부담 큼)",
+    "primary": "주요 도시 간선도로 (보행부담 검토)",
+    "secondary": "중간급 간선도로 (주의 필요)",
+    "tertiary": "지구 내 간선도로 (보행 가능)",
 }
 
 COUNT_KEYS = ["motorway", "trunk", "primary", "secondary", "tertiary"]
@@ -216,7 +216,7 @@ def summarize(detail_df: pd.DataFrame) -> dict:
 
 def write_summary_markdown(summary: dict) -> None:
     lines = [
-        "# 학교-최근접 공원 경로 단절요소 요약",
+        "# 학교-최근접 공원 경로 보행부담 요소 요약",
         "",
         f"- 전체 학교 행: {summary['total_school_rows']}",
         f"- 분석 성공: {summary['analyzed_school_rows']}",
@@ -229,7 +229,7 @@ def write_summary_markdown(summary: dict) -> None:
     lines.extend(
         [
             "",
-            f"- 주요 단절요소(고속도로·trunk·primary) 포함 학교: {summary['schools_with_major_barrier']}개교",
+            f"- 주요 보행부담 요소(motorway·trunk·primary) 포함 학교: {summary['schools_with_major_barrier']}개교",
             f"- 주의 요소까지 포함(secondary 이상) 학교: {summary['schools_with_any_caution_barrier']}개교",
             "",
             "## 주요 학교 예시",

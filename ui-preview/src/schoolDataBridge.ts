@@ -97,24 +97,24 @@ type ManualBarrierOverride = {
 };
 
 const MANUAL_BARRIER_OVERRIDES: Record<string, ManualBarrierOverride> = {
-  B000025206: { nearestParkName: "동춘1구역근린공원", note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
-  B000002963: { nearestParkName: "화도진공원", note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
-  B000003102: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 2번 지나야 합니다." },
-  B000003132: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번 지나야 합니다." },
-  B000002981: { nearestParkName: "다솔어린이공원", note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
-  B000025246: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번 지나야 합니다." },
-  B000002959: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번 지나야 합니다." },
-  B000025189: { note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
-  B000025236: { note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
-  B000003158: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번 지나야 합니다." },
-  B000026504: { note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
-  B000003048: { nearestParkName: "달빛공원", note: "공원까지 가는 길에는 차가 많고 폭이 넓은 대로 같은 큰 단절 요소가 없어, 비교적 안전하게 이동할 수 있습니다." },
-  B000003123: { note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번, 중간급 도로를 1번 지나야 합니다." },
-  B000003144: { nearestParkName: "석곶체육공원", note: "공원까지 가려면 중간급 도로를 2번 지나야 합니다." },
-  B000003077: { note: "공원까지 가려면 중간급 도로를 1번 지나야 합니다." },
-  B000002990: { note: "공원까지 가려면 중간급 도로를 1번 지나야 합니다." },
-  B000003145: { nearestParkName: "석곶체육공원", note: "공원까지 가려면 차가 많고 폭이 넓은 도시 대로를 1번, 중간급 도로를 1번 지나야 합니다." },
-  B000003029: { note: "공원까지 가려면 중간급 도로를 1번 지나야 합니다." },
+  B000025206: { nearestParkName: "동춘1구역근린공원", note: "공원까지 가는 길은 생활도로 중심으로, 간선도로 횡단 부담이 낮은 편입니다." },
+  B000002963: { nearestParkName: "화도진공원", note: "공원까지 가는 길은 생활도로 중심으로, 간선도로 횡단 부담이 낮은 편입니다." },
+  B000003102: { note: "공원까지 가려면 주요 도시 간선도로를 2번 횡단해야 합니다." },
+  B000003132: { note: "공원까지 가려면 주요 도시 간선도로를 1번 횡단해야 합니다." },
+  B000002981: { nearestParkName: "다솔어린이공원", note: "공원까지 가는 길은 생활도로 중심으로, 간선도로 횡단 부담이 낮은 편입니다." },
+  B000025246: { note: "공원까지 가려면 주요 도시 간선도로를 1번 횡단해야 합니다." },
+  B000002959: { note: "공원까지 가려면 주요 도시 간선도로를 1번 횡단해야 합니다." },
+  B000025189: { note: "공원까지 가는 길은 생활도로 중심으로, 간선도로 횡단 부담이 낮은 편입니다." },
+  B000025236: { note: "공원까지 가는 길은 생활도로 중심으로, 간선도로 횡단 부담이 낮은 편입니다." },
+  B000003158: { note: "공원까지 가려면 주요 도시 간선도로를 1번 횡단해야 합니다." },
+  B000026504: { note: "공원까지 가는 길은 생활도로 중심으로, 간선도로 횡단 부담이 낮은 편입니다." },
+  B000003048: { nearestParkName: "달빛공원", note: "공원까지 가는 길은 생활도로 중심으로, 간선도로 횡단 부담이 낮은 편입니다." },
+  B000003123: { note: "공원까지 가려면 주요 도시 간선도로를 1번, 중간급 간선도로를 1번 횡단해야 합니다." },
+  B000003144: { nearestParkName: "석곶체육공원", note: "공원까지 가려면 중간급 간선도로를 2번 횡단해야 합니다." },
+  B000003077: { note: "공원까지 가려면 중간급 간선도로를 1번 횡단해야 합니다." },
+  B000002990: { note: "공원까지 가려면 중간급 간선도로를 1번 횡단해야 합니다." },
+  B000003145: { nearestParkName: "석곶체육공원", note: "공원까지 가려면 주요 도시 간선도로를 1번, 중간급 간선도로를 1번 횡단해야 합니다." },
+  B000003029: { note: "공원까지 가려면 중간급 간선도로를 1번 횡단해야 합니다." },
 };
 
 function isSpecialPolicySchool(row: RawRow): boolean {
@@ -160,7 +160,7 @@ function buildCaseStatusLabel(row: RawRow, cityAvgGreenRatio = CITY_AVG.greenRat
   const hasParkWithin500m = n(row.iso_park_count) > 0 && nearestParkDistanceM < 500;
   const strongGreenThreshold = Math.max(4, cityAvgGreenRatio * 0.7);
 
-  if (!hasParkWithin500m) return "공원 접근 불가";
+  if (!hasParkWithin500m) return "공원 접근 결핍";
   if (greenRatio === 0) return "공원 접근 가능 · 녹지 없음";
   if (greenRatio < 3) return "공원 접근 가능 · 녹지 부족";
   if (playgroundCount === 0) return "공원 접근 가능 · 놀이환경 부족";
@@ -207,7 +207,7 @@ function buildContextTags(row: RawRow): string[] {
   const caseType = getCaseType(row, 0);
 
   if (caseType === 1 || caseType === 3) {
-    tags.push("보행 동선에 단절 구간이 있을 가능성이 있습니다");
+    tags.push("보행 동선에 경로 부담 요인이 있을 가능성이 있습니다");
   }
   tags.push("학교 주변에 바로 접근 가능한 녹지나 놀이터가 부족합니다");
   tags.push("주거 밀도 대비 아동 체류 공간이 부족한 편입니다");
@@ -403,6 +403,48 @@ export function mapSchoolRowToReportProps(
     ...(maybeNumber(row.nearest_functional_park_area_m2) != null
       ? { nearestFunctionalParkAreaM2: maybeNumber(row.nearest_functional_park_area_m2)! }
       : {}),
+    ...(maybeNumber(row.nearest_official_route_dist_m) != null
+      ? { nearestOfficialRouteDistanceM: maybeNumber(row.nearest_official_route_dist_m)! }
+      : {}),
+    ...(maybeNumber(row.nearest_official_route_detour_ratio) != null
+      ? { nearestOfficialRouteDetourRatio: maybeNumber(row.nearest_official_route_detour_ratio)! }
+      : {}),
+    ...(maybeNumber(row.nearest_official_major_road_crossing_count) != null
+      ? { nearestOfficialMajorRoadCrossingCount: maybeNumber(row.nearest_official_major_road_crossing_count)! }
+      : {}),
+    ...(row.nearest_official_large_intersection_flag != null
+      ? { nearestOfficialLargeIntersectionFlag: row.nearest_official_large_intersection_flag === true || s(row.nearest_official_large_intersection_flag).toLowerCase() === "true" }
+      : {}),
+    ...(row.nearest_official_accident_hotspot_flag != null
+      ? { nearestOfficialAccidentHotspotFlag: row.nearest_official_accident_hotspot_flag === true || s(row.nearest_official_accident_hotspot_flag).toLowerCase() === "true" }
+      : {}),
+    ...(maybeNumber(row.nearest_official_barrier_level) != null
+      ? { nearestOfficialBarrierLevel: maybeNumber(row.nearest_official_barrier_level)! }
+      : {}),
+    ...(s(row.nearest_official_barrier_label) ? { nearestOfficialBarrierLabel: s(row.nearest_official_barrier_label) } : {}),
+    ...(s(row.nearest_official_barrier_summary) ? { nearestOfficialBarrierSummary: s(row.nearest_official_barrier_summary) } : {}),
+    ...(s(row.nearest_official_barrier_description) ? { nearestOfficialBarrierDescription: s(row.nearest_official_barrier_description) } : {}),
+    ...(maybeNumber(row.nearest_functional_route_dist_m) != null
+      ? { nearestFunctionalRouteDistanceM: maybeNumber(row.nearest_functional_route_dist_m)! }
+      : {}),
+    ...(maybeNumber(row.nearest_functional_route_detour_ratio) != null
+      ? { nearestFunctionalRouteDetourRatio: maybeNumber(row.nearest_functional_route_detour_ratio)! }
+      : {}),
+    ...(maybeNumber(row.nearest_functional_major_road_crossing_count) != null
+      ? { nearestFunctionalMajorRoadCrossingCount: maybeNumber(row.nearest_functional_major_road_crossing_count)! }
+      : {}),
+    ...(row.nearest_functional_large_intersection_flag != null
+      ? { nearestFunctionalLargeIntersectionFlag: row.nearest_functional_large_intersection_flag === true || s(row.nearest_functional_large_intersection_flag).toLowerCase() === "true" }
+      : {}),
+    ...(row.nearest_functional_accident_hotspot_flag != null
+      ? { nearestFunctionalAccidentHotspotFlag: row.nearest_functional_accident_hotspot_flag === true || s(row.nearest_functional_accident_hotspot_flag).toLowerCase() === "true" }
+      : {}),
+    ...(maybeNumber(row.nearest_functional_barrier_level) != null
+      ? { nearestFunctionalBarrierLevel: maybeNumber(row.nearest_functional_barrier_level)! }
+      : {}),
+    ...(s(row.nearest_functional_barrier_label) ? { nearestFunctionalBarrierLabel: s(row.nearest_functional_barrier_label) } : {}),
+    ...(s(row.nearest_functional_barrier_summary) ? { nearestFunctionalBarrierSummary: s(row.nearest_functional_barrier_summary) } : {}),
+    ...(s(row.nearest_functional_barrier_description) ? { nearestFunctionalBarrierDescription: s(row.nearest_functional_barrier_description) } : {}),
     ...(s(row.access_condition_type) ? { accessConditionType: s(row.access_condition_type) } : {}),
     ...(s(row.access_condition_label) ? { accessConditionLabel: s(row.access_condition_label) } : {}),
     ...(s(row.access_condition_description) ? { accessConditionDescription: s(row.access_condition_description) } : {}),
@@ -618,7 +660,7 @@ export function mapCandidateFeatures(
     barrier_severity: "green",
     barrier_severity_label: "학교 내부 설치",
     barrier_color: "#2980b9",
-    barrier_note: "학교 내부 설치 후보지로, 공원까지 이동 경로 단절성 대신 학교 안 설치 가능성을 우선 검토합니다.",
+    barrier_note: "학교 내부 설치 후보지로, 기존 공원까지의 외부 경로 부담 대신 학교 안 설치 가능성을 우선 검토합니다.",
   };
 
   return [schoolInternal, ...external];

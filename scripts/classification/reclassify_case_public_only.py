@@ -82,7 +82,7 @@ def classify_cases(df: pd.DataFrame) -> pd.DataFrame:
     case_type.loc[active & case_type.eq("")] = "4"
 
     case_label_map = {
-        "1": "공원 접근 불가",
+        "1": "공원 접근 결핍",
         "2": "공원 있으나 접근성 낮음",
         "3": "접근 가능, 중간 수준",
         "4": "접근 양호",

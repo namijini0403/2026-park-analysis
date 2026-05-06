@@ -620,7 +620,7 @@ def main() -> None:
     school_priority.loc[candidate_mask & school_priority["green_bucket"].eq("high"), "case_type"] = "4"
 
     label_map = {
-        "1": "공원 접근 불가",
+        "1": "공원 접근 결핍",
         "2": "접근 가능하나 녹지 부족",
         "3": "접근 가능, 중간 수준",
         "4": "접근 양호",

@@ -4,7 +4,7 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
   schoolName: "인천석암초등학교",
   districtName: "인천광역시 미추홀구",
   casePolicyLabel: "즉시 개선 대상",
-  caseStatusLabel: "공원 접근 불가",
+  caseStatusLabel: "공원 접근 결핍",
   statusSummary:
     "도보권 공원이 없고, 생활권 안 녹지와 놀이시설도 확인되지 않는 학교입니다. 즉시 개선 검토가 필요한 상태입니다.",
   nearestParkDistanceM: 947.1,
@@ -115,12 +115,12 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
     playgroundCount: 0,
   },
   problemTags: [
-    "도보권 공원이 없어 공원 접근이 단절된 상태입니다",
+    "도보권 공원이 없어 공원 접근성이 결핍된 상태입니다",
     "녹지 비율과 도보권 놀이터 수가 모두 0입니다",
     "도보권 아동 수가 높아 개선 우선순위가 큽니다",
   ],
   contextTags: [
-    "보행 동선에 대로 횡단 구간이 있습니다",
+    "보행 동선에 간선도로 횡단 부담이 있습니다",
     "학교 주변에서 바로 대체할 수 있는 공원 선택지가 없습니다",
     "주거 밀도 대비 아동 체류 공간이 부족합니다",
   ],

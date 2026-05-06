@@ -175,10 +175,10 @@ def severity_from_counts(counts: dict[str, int]) -> str:
 
 def severity_label(severity: str) -> str:
     labels = {
-        "green": "큰 도로 횡단 없음",
-        "yellow": "중간급 도로 횡단",
-        "orange": "도시 대로 횡단",
-        "red": "자동차 전용 간선/고속화도로 포함",
+        "green": "생활도로 중심",
+        "yellow": "중간급 간선도로 횡단",
+        "orange": "주요 도시 간선도로 횡단",
+        "red": "주요 도시 간선도로 부담 큼",
     }
     return labels[severity]
 
@@ -195,24 +195,24 @@ def severity_color(severity: str) -> str:
 
 def build_note(counts: dict[str, int], severity: str) -> str:
     if severity == "green":
-        return "큰 도로 횡단이 없어 생활도로 중심으로 이동할 수 있습니다."
+        return "생활도로 중심으로 이동할 수 있습니다."
 
     if severity == "red":
         parts = []
         if counts["motorway"] > 0:
-            parts.append(f"고속화도로 계열 {counts['motorway']}회")
+            parts.append(f"주요 도시 간선도로 {counts['motorway']}회")
         if counts["trunk"] > 0:
-            parts.append(f"자동차 전용 간선도로 {counts['trunk']}회")
+            parts.append(f"주요 도시 간선도로 {counts['trunk']}회")
         return "후보지까지 가는 경로에는 " + ", ".join(parts) + "가 포함되어 보행 부담이 매우 큽니다."
 
     parts = []
     if counts["primary"] > 0:
-        parts.append(f"도시 대로 {counts['primary']}회")
+        parts.append(f"주요 도시 간선도로 {counts['primary']}회")
     if counts["secondary"] > 0:
-        parts.append(f"중간급 도로 {counts['secondary']}회")
+        parts.append(f"중간급 간선도로 {counts['secondary']}회")
 
     if not parts:
-        return "큰 도로 횡단이 없어 생활도로 중심으로 이동할 수 있습니다."
+        return "생활도로 중심으로 이동할 수 있습니다."
 
     return "후보지까지 가려면 " + ", ".join(parts) + "를 지나야 합니다."
 
@@ -295,14 +295,14 @@ def accident_route_meta(route_coords: list[list[float]], hotspots: list[dict[str
             return "스쿨존어린이"
         if normalized == "자전거":
             return "자전거"
-        return "보행사고다발지역"
+        return "보행 사고위험 지점"
 
     type_counts = pd.Series([summarize_accident_type(hit["type"]) for hit in hits]).value_counts()
     top_names = ", ".join(hit["name"] for hit in hits[:2])
     extra_count = len(hits) - min(len(hits), 2)
     count_summary = ", ".join(f"{label} {count}곳" for label, count in type_counts.items())
     extra_suffix = f" 외 {extra_count}곳" if extra_count > 0 else ""
-    text = f"사고다발지역 {len(hits)}곳 경유: {count_summary} ({top_names}{extra_suffix})"
+    text = f"사고위험 지점 {len(hits)}곳 인접: {count_summary} ({top_names}{extra_suffix})"
     return {
         "accident_hotspot_flag": True,
         "accident_hotspot_text": text,

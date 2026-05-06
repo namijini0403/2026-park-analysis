@@ -26,8 +26,30 @@
 |---|---|---|
 | 존재 | 학교 주변에 공식 공원 또는 놀이터가 존재하는가 | 공공데이터상 공원·놀이터 레코드와 기존 최근접 공원 산출값을 보존한다 |
 | 도달 | 실제 보행 네트워크 기준으로 도달 가능한가 | OSMnx·Valhalla 기반 도보 500m 생활권을 직선 반경과 분리한다 |
-| 보행 부담 | 대로 횡단, 대형 교차로, 사고위험 등 초등학생 보행 부담이 있는가 | 단절요소는 점수 감점이 아니라 별도 검토·필터 조건으로 둔다 |
+| 보행 부담 | 간선도로 횡단, 대형 교차로, 사고위험 등 초등학생 보행 부담이 있는가 | 보행부담 요소는 점수 감점이 아니라 별도 검토·필터 조건으로 둔다 |
 | 공간 기능성 | 도달한 공간이 실제 야외활동 공간으로 기능할 만한 면적을 갖추었는가 | 면적 기반 `park_function_class` 보조 레이어로 해석한다 |
+
+---
+
+## 도로·보행부담 용어 통일 기준
+
+본 프로젝트는 도로 횡단과 교차로 부담을 초등학생의 녹지 접근성을 낮추는 요인으로 해석하되, 공식 도로명 또는 법정 도로분류를 입증할 수 없는 표현은 사용하지 않는다. 따라서 “고속화도로”, “자동차 전용 간선”, “접근 불가”와 같은 표현은 사용하지 않고, 분석 데이터의 도로등급에 따라 “주요 도시 간선도로”, “중간급 간선도로”, “지구 내 간선도로”로 표현한다.
+
+본 분석에서 도로 관련 요소는 물리적 접근 불가능성을 의미하지 않는다. 보행 경로는 존재하지만, 초등학생 관점에서 간선도로 횡단, 대형 교차로 인접, 우회 부담 등이 접근 품질을 낮출 수 있음을 의미한다. 따라서 최종 표현은 “단절”보다 “보행부담”, “접근 품질 저하”, “간선도로 횡단 부담”을 우선 사용한다.
+
+| 데이터 기준 | 발표 표현 |
+|---|---|
+| primary | 주요 도시 간선도로 |
+| secondary | 중간급 간선도로 |
+| tertiary | 지구 내 간선도로 |
+| residential/service/living_street | 생활도로 |
+| major_road_crossing_count | 간선도로 횡단 횟수 |
+| large_intersection_flag | 대형 교차로 인접 |
+| barrier_level | 보행부담 등급 |
+
+금지 표현: 고속화도로, 자동차 전용 간선, 접근 불가, 완전 단절, 이용 불가, 위험 도로.
+
+권장 표현: 주요 도시 간선도로 횡단, 중간급 간선도로 횡단, 지구 내 간선도로 횡단, 보행부담, 접근 품질 저하, 초등학생 보행 관점에서 추가 검토 필요.
 
 ---
 
@@ -112,7 +134,7 @@
 | 학생수 전망 | Model 1 채택 후 2029/2031 예측 파일 고정 |
 | 후보지 잠재수요 | 1km 총량 예측 → 250m 분배. LightGBM은 share 보정 역할로 한정 |
 | AI 추천 | 기본값 `schoolDistance 70 / benefit 20 / parkDistance 10`, 사용자가 즉시 조정 가능 |
-| 단절요소 | 점수 감점이 아니라 boolean 필터로 제외 |
+| 보행부담 요소 | 점수 감점이 아니라 boolean 필터로 제외 |
 | 재개발 | 모델 feature가 아니라 경고 레이어 |
 | 수동 검수값 | 자동 재계산보다 봉인값 우선 |
 
@@ -140,7 +162,7 @@ index.html (Kakao Map)
 | `nearestPark` | `data_processed/school_nearest_park.csv` | 최근접 공원 |
 | `beneficiaryForecast` | `data_processed/school_enrollment_forecast_20260418_model1.csv` | 학교별 2029/2031 학생 전망 |
 | `similarSchools` | `data_processed/school_similar_schools_top5.csv` | KNN 유사학교 |
-| `candidateBarrierRoutes` | `data_processed/candidate_barrier_routes_by_school.json` | 후보지-학교 경로 단절요소 |
+| `candidateBarrierRoutes` | `data_processed/candidate_barrier_routes_by_school.json` | 후보지-학교 경로 보행부담 요소 |
 | `parks` | `data_processed/parks.csv` | 공원·놀이터 통합 |
 | `isochrone` | `data_processed/isochrone_valhalla.geojson` | 지도 표시용 도보 500m 레이어 |
 | `buffer` | `data_processed/school_buffer_500m.geojson` | 직선 500m 비교 버퍼 |
@@ -161,7 +183,7 @@ index.html (Kakao Map)
   ↓
 공간분석: 도보 500m + 직선 500m buffer
   ↓
-공원·녹지·놀이터·단절요소 산출
+공원·녹지·놀이터·보행부담 요소 산출
   ↓
 2026-05-04 녹지비율 교정:
   도보권/직선권 polygon ∩ 공원 추정 polygon 교차면적 기준으로 재계산
@@ -172,7 +194,7 @@ case 1~4 및 별도 묶음 분류
   ↓
 학생수 전망, 후보지 잠재수요, KNN 유사학교 산출
   ↓
-후보지 생성·학교부지 배제·단절요소 필터
+후보지 생성·학교부지 배제·보행부담 필터
   ↓
 Kakao Map + React iframe 웹 앱
 ```
@@ -185,7 +207,7 @@ Kakao Map + React iframe 웹 앱
 
 | Case | 규칙 | 정책 라벨 | 상태 라벨 |
 |---|---|---|---|
-| case 1 | `nearest_park_dist_m >= 500` AND `iso_park_count == 0` AND `iso_green_ratio == 0` | 즉시 개선 대상 | 공원 접근 불가 |
+| case 1 | `nearest_park_dist_m >= 500` AND `iso_park_count == 0` AND `iso_green_ratio == 0` | 즉시 개선 대상 | 공원 접근 결핍 |
 | case 2 | 비교군 AND `iso_green_ratio < 1` | 우선 검토 대상 | 공원 접근 가능 · 녹지 부족 |
 | case 3 | 비교군 AND `1 <= iso_green_ratio < 5` | 모니터링 대상 | 공원 접근 가능 · 녹지 양호 |
 | case 4 | 비교군 AND `iso_green_ratio >= 5` | 유지·관리 대상 | 공원 접근 양호 · 녹지 충분 |
@@ -339,8 +361,8 @@ AI_DEFAULT_WEIGHTS = {
 }
 ```
 
-- 도시 대로·중간급 도로 횡단 후보는 기본 추천에서 제외한다.
-- 후보가 없으면 도시 대로 미횡단 조건은 유지하고, 중간급 도로 조건만 완화한다.
+- 주요 도시 간선도로·중간급 간선도로 횡단 후보는 기본 추천에서 제외한다.
+- 후보가 없으면 주요 도시 간선도로 미횡단 조건은 유지하고, 중간급 간선도로 조건만 완화한다.
 - 추천은 3개까지만 보여주며, 모든 후보는 필터와 점수 구조를 통해 설명 가능하다.
 
 ---
@@ -351,7 +373,7 @@ AI_DEFAULT_WEIGHTS = {
 
 - 최근접 공원명·도보거리: `school_nearest_park.csv`, `school_priority.csv`에 일관 반영
 - 수동 녹지비율: 예를 들어 인천신석초 `iso_green_ratio=7.3447%` 봉인
-- 경로 단절요소: 자동 산출이 현장·지도 확인과 다르면 봉인값 우선
+- 경로 보행부담 요소: 자동 산출이 현장·지도 확인과 다르면 봉인값 우선
 - 봉인 저장: `output/sealed_nearest_park_dist.json`
 - 2026-05-04 자동 녹지 교정에서도 보호 학교 19개교, 수동 녹지비율 6개교는 덮어쓰지 않음
 
@@ -516,7 +538,7 @@ AI_DEFAULT_WEIGHTS = {
 | 가중합 단일 priority 점수 | 임의 가중치가 정책 판단을 숨김 |
 | 직선거리만으로 접근성 평가 | 강·철도·대로·단지 구조를 반영하지 못함 |
 | OSMnx convex_hull 등시선만 사용 | 노드가 적은 학교에서 비정상 산출 가능 |
-| 단절요소 거리 가중 감점 | 안전 문제를 낮은 점수로 희석할 위험 |
+| 보행부담 요소 거리 가중 감점 | 보행 부담을 낮은 점수로 희석할 위험 |
 | 재개발을 모델 feature로 사용 | 정책 외생변수가 모델 판단에 섞임 |
 | 결과 변수로 모델 학습 | 자기복원·데이터 누수 위험 |
 | XGBoost 단독 후보지 수요 | 학교 단위 평균 입력으로 후보지별 차이 왜곡 |
