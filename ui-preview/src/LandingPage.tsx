@@ -20,7 +20,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-forest-300">
                 Incheon Outdoor-Access Lens
               </p>
-              <p className="text-base font-bold text-white">ParkLens · 인천 초등 야외활동 환경 분석</p>
+              <p className="text-base font-bold text-white">반경 너머, 도달 가능성으로</p>
             </div>
           </div>
           <span className="hidden rounded-full border border-white/15 bg-navy-850/95 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-slate-200 lg:inline-flex">
@@ -33,17 +33,13 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
           <div>
             <span className="eyebrow">Policy Decision Support</span>
             <h1 className="mt-4 text-4xl font-black leading-[1.15] tracking-tight text-white sm:text-5xl lg:text-[56px]">
-              <span className="block">"걸어서 갈 수 있는</span>
-              <span className="block">
-                공원<span className="text-forest-300">,</span> 데이터로 다시 보다."
-              </span>
+              <span className="block">반경 너머,</span>
+              <span className="block">도달 가능성으로</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              인천 272개 초등학교의 야외활동 환경을
-              <span className="font-semibold text-white"> 직선 500m</span>가 아니라
-              <span className="font-semibold text-forest-300"> 실제 도보 500m</span>로 다시 측정합니다.
-              임의 종합점수 대신 <span className="font-semibold text-white">분류·필터·시뮬레이션</span>으로
-              정책 의사결정을 설명가능하게 지원하는 웹 시스템입니다.
+              도보 네트워크·보행 부담·활동 가능 면적을 반영한 초등학교 야외활동 환경 진단 및
+              <span className="font-semibold text-forest-300"> XAI 우선지원 의사결정 시스템</span>입니다.
+              공식 공원 존재와 실제 활동공간 기능성을 분리해 정책 판단 근거를 보여줍니다.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -96,9 +92,9 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
           />
           <Pillar
             tag="Pillar 2"
-            title="설명가능한 분류"
-            description="case 1~4 + 별도묶음. 4개 변수의 명시적 임계 규칙으로 분류하고, 같은 case 내부는 사전식 우선순위로만 정렬합니다."
-            metric="case1 17 · case2 68 · case3 77 · case4 80"
+            title="활동 가능 면적"
+            description="공식 공원 여부를 부정하지 않고, 1,500㎡·10,000㎡ 법정 기준과 3,000㎡ 운영 기준으로 공간 기능성을 분리합니다."
+            metric="3,000㎡는 분석상 운영 기준"
           />
           <Pillar
             tag="Pillar 3"

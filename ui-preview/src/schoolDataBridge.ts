@@ -390,6 +390,26 @@ export function mapSchoolRowToReportProps(
     nearestParkDistanceM,
     ...(nearestParkName ? { nearestParkName } : {}),
     ...(manualBarrierOverride?.note ? { nearestParkAccessNote: manualBarrierOverride.note } : {}),
+    ...(s(row.nearest_official_park_type) ? { nearestOfficialParkType: s(row.nearest_official_park_type) } : {}),
+    ...(maybeNumber(row.nearest_official_park_area_m2) != null
+      ? { nearestOfficialParkAreaM2: maybeNumber(row.nearest_official_park_area_m2)! }
+      : {}),
+    ...(s(row.nearest_official_park_function_class) ? { nearestOfficialParkFunctionClass: s(row.nearest_official_park_function_class) } : {}),
+    ...(s(row.nearest_official_park_function_label) ? { nearestOfficialParkFunctionLabel: s(row.nearest_official_park_function_label) } : {}),
+    ...(maybeNumber(row.nearest_functional_park_dist_m) != null
+      ? { nearestFunctionalParkDistanceM: maybeNumber(row.nearest_functional_park_dist_m)! }
+      : {}),
+    ...(s(row.nearest_functional_park_name) ? { nearestFunctionalParkName: s(row.nearest_functional_park_name) } : {}),
+    ...(maybeNumber(row.nearest_functional_park_area_m2) != null
+      ? { nearestFunctionalParkAreaM2: maybeNumber(row.nearest_functional_park_area_m2)! }
+      : {}),
+    ...(s(row.access_condition_type) ? { accessConditionType: s(row.access_condition_type) } : {}),
+    ...(s(row.access_condition_label) ? { accessConditionLabel: s(row.access_condition_label) } : {}),
+    ...(s(row.access_condition_description) ? { accessConditionDescription: s(row.access_condition_description) } : {}),
+    activitySpaceLimited: Boolean(row.activity_space_limited_flag === true || s(row.activity_space_limited_flag).toLowerCase() === "true"),
+    onlyMicroPark: Boolean(row.only_micro_park_flag === true || s(row.only_micro_park_flag).toLowerCase() === "true"),
+    noFunctionalPark: Boolean(row.no_functional_park_flag === true || s(row.no_functional_park_flag).toLowerCase() === "true"),
+    noOfficialParkFlag: Boolean(row.no_official_park_flag === true || s(row.no_official_park_flag).toLowerCase() === "true"),
     nearestParkDistanceCityAvg: cityAvg?.nearestParkDistanceM ?? CITY_AVG.nearestParkDist,
     nearestParkDistanceDistrictAvg:
       districtAvg?.nearestParkDistanceM ?? cityAvg?.nearestParkDistanceM ?? CITY_AVG.nearestParkDist,

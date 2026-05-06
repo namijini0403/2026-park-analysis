@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>인천 초등학교 아동 야외활동 환경 격차 지도</title>
+  <title>반경 너머, 도달 가능성으로</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
@@ -865,7 +865,8 @@
       color: #FDA4AF;
     }
 
-    .case-filter-group {
+    .case-filter-group,
+    .access-filter-group {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -874,7 +875,8 @@
       border-top: 1px solid var(--line);
     }
 
-    .case-filter-group::before {
+    .case-filter-group::before,
+    .access-filter-group::before {
       content: "학교 상태";
       display: inline-flex;
       align-items: center;
@@ -887,7 +889,12 @@
       text-transform: uppercase;
     }
 
-    .case-filter-btn {
+    .access-filter-group::before {
+      content: "접근성 결핍";
+    }
+
+    .case-filter-btn,
+    .access-filter-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -904,14 +911,22 @@
       transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
     }
 
-    .case-filter-btn:hover {
+    .case-filter-btn:hover,
+    .access-filter-btn:hover {
       transform: translateY(-1px);
     }
 
-    .case-filter-btn.is-on {
+    .case-filter-btn.is-on,
+    .access-filter-btn.is-on {
       background: var(--accent-hover);
       border-color: rgba(16, 185, 129, 0.42);
       color: #ffffff;
+    }
+
+    .access-filter-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .app-cover {
@@ -1872,14 +1887,15 @@
       <div class="app-cover-shell">
         <div class="app-cover-main">
           <p class="app-cover-kicker">Incheon Outdoor Equity</p>
-          <h1 class="app-cover-title" id="appCoverTitle">초등학교 야외활동 환경 격차 지도</h1>
-          <p class="app-cover-statement">반경이 아니라,<br>실제 도달 가능성으로 판단합니다.</p>
+          <h1 class="app-cover-title" id="appCoverTitle">반경 너머, 도달 가능성으로</h1>
+          <p class="app-cover-statement">도보 네트워크·보행 부담·활동 가능 면적을 함께 봅니다.</p>
           <p class="app-cover-copy">
-            학교 주변 환경을 실제 도보생활권으로 계산하고, 현재 환경 격차와 2029·2031년 잠재 수요를 연결해
-            정책 지원 후보지를 비교합니다.
+            초등학교 야외활동 환경을 공식 공원 존재, 실제 도달 가능성, 보행 부담, 활동 가능 면적으로 나누어 진단하고
+            XAI 우선지원 의사결정을 지원합니다.
           </p>
           <div class="app-cover-tags" aria-label="핵심 분석 기준">
             <span class="app-cover-tag">실제 도보생활권</span>
+            <span class="app-cover-tag">활동 가능 면적</span>
             <span class="app-cover-tag">학교별 환경 진단</span>
             <span class="app-cover-tag">미래 수요 반영</span>
             <span class="app-cover-tag">설명 가능한 추천</span>
@@ -1891,7 +1907,7 @@
           </div>
         </div>
         <div class="app-cover-visual" aria-label="앱 로고">
-          <img class="app-cover-logo" src="./logo.png" alt="인천 초등학교 야외활동 환경 격차 지도 로고" />
+          <img class="app-cover-logo" src="./logo.png" alt="반경 너머, 도달 가능성으로 로고" />
           <p class="app-cover-caption">도보 접근성, 환경 격차, 미래 수요를 하나의 판단 흐름으로 연결합니다.</p>
         </div>
       </div>
@@ -1925,14 +1941,22 @@
         <button class="case-filter-btn" type="button" data-case-filter="case3">수요 관리 필요</button>
         <button class="case-filter-btn" type="button" data-case-filter="case4">접근 양호</button>
       </div>
+      <div class="access-filter-group" aria-label="접근성 결핍 유형 필터">
+        <button class="access-filter-btn is-on" type="button" data-access-filter="all">전체</button>
+        <button class="access-filter-btn" type="button" data-access-filter="no_official_park">공식 공원 없음</button>
+        <button class="access-filter-btn" type="button" data-access-filter="only_micro_park">활동면적 제한</button>
+        <button class="access-filter-btn" type="button" data-access-filter="no_functional_park">활동 가능 공원 없음</button>
+        <button class="access-filter-btn" type="button" data-access-filter="no_neighborhood_scale_park">근린공원급 없음</button>
+        <button class="access-filter-btn" type="button" data-access-filter="barrier_with_functional" disabled title="barrier_level 컬럼이 없어 현재 비활성화">보행부담 동반</button>
+      </div>
     </div>
 
     <aside class="panel" id="controlPanel">
       <div class="panel-header">
         <div class="mobile-handle"></div>
         <p class="eyebrow">Incheon Outdoor Equity</p>
-        <h1 class="panel-title">초등학교 야외활동 환경 격차 지도</h1>
-        <p class="panel-subtitle">구 전체 현황과 학교별 진단을 한 화면에서 확인합니다.</p>
+        <h1 class="panel-title">반경 너머, 도달 가능성으로</h1>
+        <p class="panel-subtitle">도보 네트워크·보행 부담·활동 가능 면적을 반영해 학교별 야외활동 환경을 진단합니다.</p>
       </div>
 
       <div class="panel-body">
@@ -2037,7 +2061,7 @@
     window.KAKAO_MAP_KEY = urlKey || DEFAULT_KAKAO_MAP_KEY;
 
     const PATHS = {
-      schools: "./data_processed/school_priority.csv",
+      schools: "./data_processed/school_priority_with_functional_park_layer.csv",
       schoolCoords: "./data_processed/schools.csv",
       studentTrend: "./data_processed/student_trend.csv",
       nearestPark: "./data_processed/school_nearest_park.csv",
@@ -2184,6 +2208,7 @@
       currentPanelMode: null,
       selectedGu: "전체",
       selectedCaseFilter: "all",
+      selectedAccessFilter: "all",
       selectedSchoolJoinKey: null,
       selectedSchoolId: null,
       selectedPanelData: null,
@@ -2237,10 +2262,10 @@
 
     const GUIDE_CONTENT = {
       hero: {
-        title: "반경이 아니라,\n실제 도달 가능성으로 봅니다",
+        title: "반경 너머,\n도달 가능성으로",
         subtitle:
-          "학교 주변 환경을 실제 도보생활권으로 다시 계산하고,\n현재 격차와 미래 수요를 함께 반영해\n설명 가능한 후보지를 제안합니다.",
-        badges: ["실제 도보생활권", "학교별 환경 진단", "미래 수요 반영", "설명 가능한 AI 추천", "Human-in-the-loop"],
+          "도보 네트워크·보행 부담·활동 가능 면적을 반영해\n초등학교 야외활동 환경을 진단하고\n설명 가능한 후보지를 제안합니다.",
+        badges: ["실제 도보생활권", "활동 가능 면적", "학교별 환경 진단", "설명 가능한 AI 추천", "Human-in-the-loop"],
         thesis:
           "단순 지도앱이 아니라,\n학교 주변 환경을 도달 가능성 기준으로 분석하고\n정책 판단의 근거를 연결하는 의사결정 시스템입니다."
       },
@@ -2260,7 +2285,7 @@
           short: "직선거리가 아니라 실제 보행 가능한 범위를 계산합니다.",
           headline: "반경 500m 안에 있어도 실제로 걸어갈 수 없다면\n접근성은 충분하지 않습니다.",
           items: ["실제 보행 가능 범위", "도보생활권 내 공원 수", "최근접 공원까지의 실제 거리", "도로·단절 요소를 고려한 접근성"],
-          principle: "반경이 아니라 도달 가능성을 기준으로 판단합니다.",
+          principle: "반경 너머의 도달 가능성을 기준으로 판단합니다.",
           actionText: "실제 도보이동 500m 레이어로 직선 버퍼와의 차이를 확인합니다."
         },
         {
@@ -2268,7 +2293,7 @@
           title: "환경 격차 진단",
           short: "공원 거리, 녹지비율, 놀이터, KNN 유사학교 비교를 확인합니다.",
           headline: "학교별 환경을 하나의 점수가 아니라\n여러 근거로 나누어 봅니다.",
-          items: ["최근접 공원 거리", "도보권 내 공원 수", "녹지비율", "놀이터 정보", "Case 분류", "KNN 유사학교 비교"],
+          items: ["최근접 공식 공원 거리", "활동 가능 공원 거리", "도보권 내 공원 수", "녹지비율", "Case 분류", "KNN 유사학교 비교"],
           principle: "복합 환경을 단일 점수로 뭉개지 않고 설명 가능한 지표로 분리합니다.",
           actionText: "학교 상세 리포트에서 현재 격차와 비교 기준을 함께 봅니다."
         },
@@ -2302,7 +2327,7 @@
       ],
       principles: [
         {
-          title: "반경이 아니라 도달 가능성",
+          title: "반경 너머 도달 가능성",
           detail: "직선거리가 아닌 실제 보행 가능 범위를 기준으로 접근성을 봅니다."
         },
         {
@@ -2362,11 +2387,16 @@
         candidate: document.getElementById("toggleCandidate") || false
       },
       layerButtons: Array.from(document.querySelectorAll(".layer-toggle-btn[data-layer]")),
-      caseFilterButtons: Array.from(document.querySelectorAll(".case-filter-btn"))
+      caseFilterButtons: Array.from(document.querySelectorAll(".case-filter-btn")),
+      accessFilterButtons: Array.from(document.querySelectorAll(".access-filter-btn"))
     };
 
     function refreshCaseFilterButtons() {
       ui.caseFilterButtons = Array.from(document.querySelectorAll(".case-filter-btn"));
+    }
+
+    function refreshAccessFilterButtons() {
+      ui.accessFilterButtons = Array.from(document.querySelectorAll(".access-filter-btn"));
     }
 
     function ensureSpecialPolicyCaseFilterButton() {
@@ -2417,8 +2447,17 @@
       });
     }
 
+    function syncAccessFilterButtons() {
+      ui.accessFilterButtons.forEach((button) => {
+        const isOn = button.dataset.accessFilter === state.selectedAccessFilter;
+        button.classList.toggle("is-on", isOn);
+        button.setAttribute("aria-pressed", String(isOn));
+      });
+    }
+
     function setupLayerToggleBar() {
       ensureSpecialPolicyCaseFilterButton();
+      refreshAccessFilterButtons();
       ui.layerButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const layer = button.dataset.layer;
@@ -2436,8 +2475,17 @@
           renderSchoolMarkers();
         });
       });
+      ui.accessFilterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (button.disabled) return;
+          state.selectedAccessFilter = button.dataset.accessFilter || "all";
+          syncAccessFilterButtons();
+          renderSchoolMarkers();
+        });
+      });
       syncLayerToggleButtons();
       syncCaseFilterButtons();
+      syncAccessFilterButtons();
     }
 
     const FEASIBILITY_COLORS = {
@@ -2684,7 +2732,9 @@
       const row = findSchoolBySearch(ui.schoolSearchInput?.value);
       if (!row) return;
       state.selectedCaseFilter = "all";
+      state.selectedAccessFilter = "all";
       syncCaseFilterButtons();
+      syncAccessFilterButtons();
       if (ui.guFilter && detectGu(row)) {
         ui.guFilter.value = detectGu(row);
         state.selectedGu = ui.guFilter.value;
@@ -3192,11 +3242,36 @@
       return Math.round(numeric).toLocaleString("ko-KR");
     }
 
+    function formatAreaSquareMeters(value) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return "자료 없음";
+      return `${Math.round(numeric).toLocaleString("ko-KR")}㎡`;
+    }
+
     function hasTruthyFlag(value) {
       if (typeof value === "boolean") return value;
       const numeric = Number(value);
       if (Number.isFinite(numeric)) return numeric === 1;
       return String(value || "").trim().toLowerCase() === "true";
+    }
+
+    function getFunctionalAccessNotice(row = {}) {
+      if (hasTruthyFlag(row.no_official_park_flag)) {
+        return "도보생활권 내 공식 공원이 확인되지 않습니다.";
+      }
+      if (String(row.nearest_official_park_function_class || "") === "playground_like") {
+        return "가까운 공원은 있으나, 면적상 넓은 야외활동 공간으로 보기에는 제한적입니다.";
+      }
+      if (hasTruthyFlag(row.only_micro_park_flag)) {
+        return "도보권 내 공식 공원은 확인되지만, 3,000㎡ 이상 활동 가능 공원은 확인되지 않습니다.";
+      }
+      if (String(row.nearest_official_park_function_class || "") === "small_child_park") {
+        return "소규모 공원으로 놀이·휴식 기능은 있으나, 넓은 야외활동 공간으로는 제한적일 수 있습니다.";
+      }
+      if (Number(row.iso_functional_park_count) > 0) {
+        return "도보권 내 활동 가능 공원이 확인됩니다.";
+      }
+      return "기존 시설 접근성은 추가 검토가 필요합니다.";
     }
 
     function formatSummaryPercent(value) {
@@ -3474,6 +3549,7 @@
       const isoParkCount = row.iso_park_count ?? "-";
       const isoChild = row.iso_child_6_12 ?? "-";
       const gapCount = formatDecimal(row.gap_count, 2);
+      const accessLabel = row.access_condition_label || "추가 검토 필요";
       const trendMarkup = getStudentTrendMarkup(row);
 
       return `
@@ -3486,6 +3562,7 @@
           👶 초등학령 아동: ${formatCount(isoChild)}명<br>
           📊 접근성 비율: ${formatAccessRatio(row.access_ratio)} (도보/직선)<br>
           📉 공원 부족: ${gapCount}개 (평균 대비)<br>
+          🧭 기존 시설 접근성: ${accessLabel}<br>
           ${trendMarkup}
         </div>
       `;
@@ -3556,7 +3633,7 @@
     }
 
     function shouldUseSchoolClusterer() {
-      return Boolean(state.map) && state.map.getLevel() >= 10 && state.selectedCaseFilter === "all";
+      return Boolean(state.map) && state.map.getLevel() >= 10 && state.selectedCaseFilter === "all" && state.selectedAccessFilter === "all";
     }
 
     function getSummaryRow() {
@@ -3568,6 +3645,7 @@
         const totalSchools = formatCount(state.datasets.schools.length);
         const prioritySchools = formatCount(state.datasets.schools.filter((row) => Number(row.priority_score) >= 3).length);
         const zeroParkSchools = formatCount(state.datasets.schools.filter((row) => Number(row.iso_park_count) === 0).length);
+        const noFunctionalSchools = formatCount(state.datasets.schools.filter((row) => row.no_functional_park_flag === true || String(row.no_functional_park_flag) === "True").length);
         ui.guSummaryBox.innerHTML = `
           <div class="summary-grid">
             <div class="summary-stat-card">
@@ -3581,6 +3659,10 @@
             <div class="summary-stat-card">
               <div class="summary-stat-label">공원 0개 학교</div>
               <div class="summary-stat-value">${zeroParkSchools}<span class="summary-stat-unit">개</span></div>
+            </div>
+            <div class="summary-stat-card">
+              <div class="summary-stat-label">활동 가능 공원 없음</div>
+              <div class="summary-stat-value">${noFunctionalSchools}<span class="summary-stat-unit">개</span></div>
             </div>
           </div>
         `;
@@ -3596,6 +3678,8 @@
       const totalSchools = formatCount(summary.total_school_count);
       const prioritySchools = formatCount(summary.priority_score_3plus_count);
       const zeroParkSchools = formatCount(summary.iso_park_count_0_count);
+      const districtRows = state.datasets.schools.filter((row) => detectGu(row) === state.selectedGu);
+      const noFunctionalSchools = formatCount(districtRows.filter((row) => row.no_functional_park_flag === true || String(row.no_functional_park_flag) === "True").length);
       ui.guSummaryBox.innerHTML = `
         <div class="summary-grid">
           <div class="summary-stat-card">
@@ -3609,6 +3693,10 @@
           <div class="summary-stat-card">
             <div class="summary-stat-label">공원 0개 학교</div>
             <div class="summary-stat-value">${zeroParkSchools}<span class="summary-stat-unit">개</span></div>
+          </div>
+          <div class="summary-stat-card">
+            <div class="summary-stat-label">활동 가능 공원 없음</div>
+            <div class="summary-stat-value">${noFunctionalSchools}<span class="summary-stat-unit">개</span></div>
           </div>
         </div>
       `;
@@ -3704,8 +3792,25 @@
       return normalizeCaseType(row.case_type, row) === state.selectedCaseFilter;
     }
 
+    function getAccessConditionType(row = {}) {
+      return String(row.access_condition_type || "").trim();
+    }
+
+    function shouldShowByAccessFilter(row) {
+      const filter = state.selectedAccessFilter || "all";
+      if (filter === "all") return true;
+      if (filter === "no_official_park") return row.no_official_park_flag === true || String(row.no_official_park_flag) === "True";
+      if (filter === "only_micro_park") return row.only_micro_park_flag === true || String(row.only_micro_park_flag) === "True";
+      if (filter === "no_functional_park") return row.no_functional_park_flag === true || String(row.no_functional_park_flag) === "True";
+      if (filter === "no_neighborhood_scale_park") return row.no_neighborhood_scale_park_flag === true || String(row.no_neighborhood_scale_park_flag) === "True";
+      if (filter === "barrier_with_functional") {
+        return getAccessConditionType(row) === "functional_access_with_barrier";
+      }
+      return true;
+    }
+
     function shouldShowSchoolMarker(row) {
-      return shouldShowByGu(row) && shouldShowByCaseFilter(row);
+      return shouldShowByGu(row) && shouldShowByCaseFilter(row) && shouldShowByAccessFilter(row);
     }
 
     function bindSchoolPopup(marker, row) {
@@ -5021,6 +5126,11 @@
       const aptScenarioText = Number.isFinite(aptAdjustedGreen) && aptAddedArea > 0
         ? ` &nbsp;·&nbsp; 🏘 단지보정 ${formatDecimal(aptAdjustedGreen, 1)}%`
         : "";
+      const functionalNotice = getFunctionalAccessNotice(row);
+      const accessLabel = row.access_condition_label || "추가 검토 필요";
+      const officialParkArea = formatAreaSquareMeters(row.nearest_official_park_area_m2);
+      const functionalParkDistance = formatDistanceMeters(row.nearest_functional_park_dist_m);
+      const functionalParkDistanceText = functionalParkDistance === "-" ? "자료 없음" : `${functionalParkDistance}m`;
 
       // 우측 패널: 미니멀 요약 카드만 표시
       ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
@@ -5040,6 +5150,12 @@
           🌳 최근접 공원 ${formatDistanceMeters(row.nearest_park_dist_m)}m &nbsp;·&nbsp;
           🛝 도보 놀이터 ${formatCount(row.iso_playground_count)}개 &nbsp;·&nbsp;
           🌿 녹지 ${formatDecimal(row.iso_green_ratio, 1)}%${aptScenarioText}
+        </div>
+        <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:12px; line-height:1.75; margin-bottom:16px;">
+          <strong>기존 시설 접근성 · ${accessLabel}</strong><br>
+          ${row.nearest_official_park_name ? `최근접 공식 공원: ${row.nearest_official_park_name} · ${officialParkArea} · ${row.nearest_official_park_function_label || "자료 없음"}<br>` : ""}
+          활동 가능 공원까지: ${functionalParkDistanceText}<br>
+          ${functionalNotice}
         </div>
         <button
           onclick="openSimulationOverlay()"
