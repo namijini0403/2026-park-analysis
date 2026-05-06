@@ -86,6 +86,13 @@
   - 운영값 `iso_green_ratio`, `case_type`은 유지
   - 시나리오 산출물: `data_processed/school_walk_500m_apartment_adjustment_20260504.csv`
   - 조정 등시권: `data_processed/school_isochrone_500m_apt_adjusted_20260504.geojson`
+- 2026-05-06 앱 표시용 녹지비율 보수 산정 레이어를 추가했다.
+  - 원본 `iso_green_ratio`, `corrected_green_ratio`, `case_type`은 변경하지 않는다.
+  - 앱 표시값 `display_green_ratio`는 지도에서 실제 표시하는 `isochrone_valhalla.geojson` 도보권을 우선 분모로 사용한다.
+  - 아파트 보정 도보권이 Valhalla 도보권보다 넓은 경우에는 보정 도보권을 표시용 분모로 사용한다.
+  - 공원 중심점+면적 원형 프록시는 대형 공원에서 생활권을 과대 덮을 수 있어, 앱 표시용 녹지비율에는 공원별 기여면적 상한 30,000㎡를 적용한다.
+  - 산출물: `data_processed/school_green_ratio_display_guardrail_20260506.csv`, `reports/green_ratio_display_guardrail_20260506.md`
+  - 검증값: 인천백운초 `display_green_ratio=21.370886%`, 인천함박초 `display_green_ratio=8.091936%`, 표시 녹지비율 80% 이상 0개교.
 
 ### 검증 결과
 - 기존 반경 녹지 원자료 기준 100% 초과 사례: 23개교

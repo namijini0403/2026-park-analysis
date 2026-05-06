@@ -2975,13 +2975,25 @@
     }
 
     function detectGu(row) {
-      return (
+      const directGu = (
         row.gu ||
         row["구"] ||
         row["구명"] ||
         row["행정구역"] ||
         extractGuFromAddress(row["소재지도로명주소"] || row["주소"] || row["위치"] || "")
       );
+      if (directGu) return directGu;
+
+      const schoolId = row["학교ID"] || row.school_id || row.schoolId || "";
+      const schoolName = row["학교명"] || row.school_name || row.name || "";
+      const matched = (state.datasets.schools || []).find((school) => {
+        if (school === row) return false;
+        return (
+          (schoolId && getSchoolId(school) === schoolId) ||
+          (schoolName && getSchoolName(school) === schoolName)
+        );
+      });
+      return matched ? (matched.gu || matched["구"] || matched["구명"] || "") : "";
     }
 
     function extractGuFromAddress(text) {
@@ -5257,7 +5269,7 @@
           const _sim = state.datasets.schools.find((s) => getSchoolName(s) === _simName);
           if (_sim) {
             _enrichedRow["similar_school_" + _i + "_nearest_park_dist_m"] = _sim.nearest_park_dist_m;
-            _enrichedRow["similar_school_" + _i + "_iso_green_ratio"] = _sim.iso_green_ratio;
+            _enrichedRow["similar_school_" + _i + "_iso_green_ratio"] = getDisplayGreenRatio(_sim);
             _enrichedRow["similar_school_" + _i + "_iso_playground_count"] = _sim.iso_playground_count;
           }
         }
@@ -5362,9 +5374,14 @@
 
       const _allSchools = state.datasets.schools || [];
       const _validSchools = _allSchools.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0);
+      const _greenMetricRows = _allSchools.map((school) => ({
+        ...school,
+        __display_green_ratio: getDisplayGreenRatio(school)
+      }));
+      const _currentDisplayGreenRatio = getDisplayGreenRatio(row);
       const _cityAvg = {
         nearestParkDistanceM: _safeAvg(_validSchools, "nearest_park_dist_m"),
-        greenRatio: _safeAvg(_allSchools, "iso_green_ratio"),
+        greenRatio: _safeAvg(_greenMetricRows, "__display_green_ratio"),
         playgroundCount: _safeAvg(_allSchools, "iso_playground_count"),
         studentTrendPct: _safeAvg(
           _allSchools.map((school) => {
@@ -5381,11 +5398,11 @@
       _enrichedRow._cityAvg = _cityAvg;
 
       _enrichedRow.nearestParkDistanceCityPercentile = _shareGe(_validSchools, "nearest_park_dist_m", row.nearest_park_dist_m);
-      _enrichedRow.greenRatioCityPercentile = _shareLe(_allSchools, "iso_green_ratio", row.iso_green_ratio);
-      _enrichedRow.greenRatioCityPercentile_lt = _shareLt(_allSchools, "iso_green_ratio", row.iso_green_ratio);
+      _enrichedRow.greenRatioCityPercentile = _shareLe(_greenMetricRows, "__display_green_ratio", _currentDisplayGreenRatio);
+      _enrichedRow.greenRatioCityPercentile_lt = _shareLt(_greenMetricRows, "__display_green_ratio", _currentDisplayGreenRatio);
       _enrichedRow.playgroundCountCityPercentile = _shareLe(_allSchools, "iso_playground_count", row.iso_playground_count);
       _enrichedRow.playgroundCountCityPercentile_lt = _shareLt(_allSchools, "iso_playground_count", row.iso_playground_count);
-      const _cityGreenZeroStats = _buildZeroInflatedStats(_allSchools, "iso_green_ratio", row.iso_green_ratio);
+      const _cityGreenZeroStats = _buildZeroInflatedStats(_greenMetricRows, "__display_green_ratio", _currentDisplayGreenRatio);
       const _cityPlaygroundZeroStats = _buildZeroInflatedStats(_allSchools, "iso_playground_count", row.iso_playground_count);
       _enrichedRow.greenRatioCityZeroShare = _cityGreenZeroStats.zeroShare;
       _enrichedRow.greenRatioCityNonZeroPercentile = _cityGreenZeroStats.nonZeroPercentile;
@@ -5400,7 +5417,7 @@
         : null;
 
       const _isSuspiciousGreenSchool = (school) => {
-        const green = Number(school.iso_green_ratio) || 0;
+        const green = getDisplayGreenRatio(school) || 0;
         const playground = Number(school.iso_playground_count) || 0;
         const parkCount = Number(school.iso_park_count) || 0;
         const parkDist = Number(school.nearest_park_dist_m) || 0;
@@ -5412,7 +5429,7 @@
       };
 
       const _scoreBestEnvironmentSchool = (rows) => {
-        const valid = rows.filter((school) => Number.isFinite(Number(school.nearest_park_dist_m)) && Number.isFinite(Number(school.iso_green_ratio)));
+        const valid = rows.filter((school) => Number.isFinite(Number(school.nearest_park_dist_m)) && Number.isFinite(Number(getDisplayGreenRatio(school))));
         const candidates = valid.filter((school) => Number(school.nearest_park_dist_m) <= 200);
         if (!candidates.length) return [];
 
@@ -5441,13 +5458,13 @@
           return 1;
         };
 
-        const greenCutoffs = _quartileCutoffs(valid.map((school) => school.iso_green_ratio));
+        const greenCutoffs = _quartileCutoffs(valid.map((school) => getDisplayGreenRatio(school)));
         return candidates
           .map((school) => ({
             school,
-            quartile: _assignQuartile(school.iso_green_ratio, greenCutoffs),
+            quartile: _assignQuartile(getDisplayGreenRatio(school), greenCutoffs),
             playgroundFlag: Number(school.iso_playground_count) >= 1 ? 1 : 0,
-            greenRatio: Number(school.iso_green_ratio) || 0,
+            greenRatio: getDisplayGreenRatio(school) || 0,
             parkDistance: Number(school.nearest_park_dist_m) || 0,
           }))
           .sort((a, b) =>
@@ -5464,7 +5481,7 @@
           schoolName: getSchoolName(_cityBest),
           districtName: "인천광역시 " + (detectGu(_cityBest) || ""),
           nearestParkDistanceM: Number(_cityBest.nearest_park_dist_m),
-          greenRatio: Number(_cityBest.iso_green_ratio) || 0,
+          greenRatio: getDisplayGreenRatio(_cityBest) || 0,
           playgroundCount: Number(_cityBest.iso_playground_count) || 0,
         };
       }
@@ -5472,9 +5489,13 @@
       // 구 최우수 학교
       if (_gu) {
         const _districtRows = _allSchools.filter((s) => (detectGu(s) || "") === _gu);
+        const _districtGreenMetricRows = _districtRows.map((school) => ({
+          ...school,
+          __display_green_ratio: getDisplayGreenRatio(school)
+        }));
         _enrichedRow._districtAvg = {
           nearestParkDistanceM: _safeAvg(_districtRows.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0), "nearest_park_dist_m"),
-          greenRatio: _safeAvg(_districtRows, "iso_green_ratio"),
+          greenRatio: _safeAvg(_districtGreenMetricRows, "__display_green_ratio"),
           playgroundCount: _safeAvg(_districtRows, "iso_playground_count"),
           studentTrendPct: _safeAvg(
             _districtRows.map((school) => {
@@ -5490,11 +5511,11 @@
         };
         const _validDistrictSchools = _districtRows.filter((s) => Number.isFinite(Number(s.nearest_park_dist_m)) && Number(s.nearest_park_dist_m) > 0);
         _enrichedRow.nearestParkDistanceDistrictPercentile = _shareGe(_validDistrictSchools, "nearest_park_dist_m", row.nearest_park_dist_m);
-        _enrichedRow.greenRatioDistrictPercentile = _shareLe(_districtRows, "iso_green_ratio", row.iso_green_ratio);
-        _enrichedRow.greenRatioDistrictPercentile_lt = _shareLt(_districtRows, "iso_green_ratio", row.iso_green_ratio);
+        _enrichedRow.greenRatioDistrictPercentile = _shareLe(_districtGreenMetricRows, "__display_green_ratio", _currentDisplayGreenRatio);
+        _enrichedRow.greenRatioDistrictPercentile_lt = _shareLt(_districtGreenMetricRows, "__display_green_ratio", _currentDisplayGreenRatio);
         _enrichedRow.playgroundCountDistrictPercentile = _shareLe(_districtRows, "iso_playground_count", row.iso_playground_count);
         _enrichedRow.playgroundCountDistrictPercentile_lt = _shareLt(_districtRows, "iso_playground_count", row.iso_playground_count);
-        const _districtGreenZeroStats = _buildZeroInflatedStats(_districtRows, "iso_green_ratio", row.iso_green_ratio);
+        const _districtGreenZeroStats = _buildZeroInflatedStats(_districtGreenMetricRows, "__display_green_ratio", _currentDisplayGreenRatio);
         const _districtPlaygroundZeroStats = _buildZeroInflatedStats(_districtRows, "iso_playground_count", row.iso_playground_count);
         _enrichedRow.greenRatioDistrictZeroShare = _districtGreenZeroStats.zeroShare;
         _enrichedRow.greenRatioDistrictNonZeroPercentile = _districtGreenZeroStats.nonZeroPercentile;
@@ -5512,7 +5533,7 @@
             schoolName: getSchoolName(_distBest),
             districtName: "인천광역시 " + _gu,
             nearestParkDistanceM: Number(_distBest.nearest_park_dist_m),
-            greenRatio: Number(_distBest.iso_green_ratio) || 0,
+            greenRatio: getDisplayGreenRatio(_distBest) || 0,
             playgroundCount: Number(_distBest.iso_playground_count) || 0,
           };
         }

@@ -46,6 +46,7 @@ VALIDATION_REPORT_PATH = REPORTS / "functional_park_layer_validation.md"
 AI_BEFORE_AFTER_CSV_PATH = DATA / "ai_recommendation_before_after_functional_layer.csv"
 AI_BEFORE_AFTER_REPORT_PATH = REPORTS / "ai_recommendation_before_after_functional_layer.md"
 WALKING_BARRIER_REPORT_PATH = REPORTS / "walking_barrier_logic_validation.md"
+GREEN_DISPLAY_GUARDRAIL_PATH = DATA / "school_green_ratio_display_guardrail_20260506.csv"
 
 CRS_METRIC = "EPSG:5179"
 WALK_DISTANCE_CUTOFF_M = 5000
@@ -893,17 +894,44 @@ def add_green_display_fields(result: pd.DataFrame) -> pd.DataFrame:
     result["green_ratio_display_basis"] = "walk_iso"
     result.loc[corrected_green.notna() & corrected_differs, "green_ratio_display_basis"] = "apartment_adjusted"
 
-    high_review = display_green.ge(GREEN_HIGH_REVIEW_THRESHOLD).fillna(False)
-    result["green_ratio_high_review_flag"] = high_review
     result["green_ratio_review_note"] = ""
     result.loc[
         corrected_green.notna() & corrected_differs,
         "green_ratio_review_note",
     ] = "아파트 단지 내부 보행 가능성 보정값을 우선 표시합니다."
+
+    if GREEN_DISPLAY_GUARDRAIL_PATH.exists():
+        guardrail = pd.read_csv(GREEN_DISPLAY_GUARDRAIL_PATH, encoding="utf-8-sig")
+        required = {"학교ID", "green_ratio_display_guardrail"}
+        if required.issubset(guardrail.columns):
+            guardrail = guardrail.drop_duplicates("학교ID").set_index("학교ID")
+            guardrail_ratio = pd.to_numeric(
+                result["학교ID"].map(guardrail["green_ratio_display_guardrail"]),
+                errors="coerce",
+            )
+            has_guardrail = guardrail_ratio.notna()
+            result.loc[has_guardrail, "display_green_ratio"] = guardrail_ratio[has_guardrail].round(6)
+
+            if "green_ratio_display_guardrail_basis" in guardrail.columns:
+                guardrail_basis = result["학교ID"].map(guardrail["green_ratio_display_guardrail_basis"])
+                basis_mask = has_guardrail & guardrail_basis.notna()
+                result.loc[basis_mask, "green_ratio_display_basis"] = guardrail_basis[basis_mask]
+
+            if "green_ratio_display_guardrail_note" in guardrail.columns:
+                guardrail_note = result["학교ID"].map(guardrail["green_ratio_display_guardrail_note"]).fillna("")
+                note_mask = has_guardrail & guardrail_note.astype(str).str.len().gt(0)
+                result.loc[note_mask, "green_ratio_review_note"] = guardrail_note[note_mask]
+
+    display_green_final = pd.to_numeric(result["display_green_ratio"], errors="coerce")
+    high_review = display_green_final.ge(GREEN_HIGH_REVIEW_THRESHOLD).fillna(False)
+    result["green_ratio_high_review_flag"] = high_review
     result.loc[
         high_review,
         "green_ratio_review_note",
-    ] = "80% 이상 고비율로, 도보권 분모와 공원 추정 폴리곤을 추가 검수해야 합니다."
+    ] = result.loc[high_review, "green_ratio_review_note"].where(
+        result.loc[high_review, "green_ratio_review_note"].astype(str).str.len().gt(0),
+        "80% 이상 고비율로, 도보권 분모와 공원 추정 폴리곤을 추가 검수해야 합니다.",
+    )
     return result
 
 
