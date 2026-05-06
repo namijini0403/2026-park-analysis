@@ -33,6 +33,20 @@ http://localhost:8080/
   - `data_processed/school_priority.csv`
   - `ui-preview/dist/index.html`
 
+## Vercel 배포
+
+학교/기관 PC에서 GitHub Pages가 차단될 경우 Vercel 정적 배포를 사용한다.
+
+```powershell
+npm run build:vercel
+```
+
+Vercel 설정은 `vercel.json`에 고정되어 있다.
+
+- Build Command: `npm run build:vercel`
+- Output Directory: `vercel_public`
+- 상세 절차: `docs/VERCEL_DEPLOYMENT.md`
+
 ## 복구 메모
 
 2026-04-26에 공개 앱이 깨진 뒤 `origin/main`을 `b4ee217`로 복구했다. 이후 수정은 이 커밋을 기준으로 최소 단위로 적용한다.

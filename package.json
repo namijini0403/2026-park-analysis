@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "build:vercel": "node scripts/deploy/build_vercel_static.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
