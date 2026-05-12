@@ -37,9 +37,9 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <span className="block">도달 가능성으로</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              도보 네트워크·보행 부담·활동 가능 면적을 반영한 초등학교 야외활동 환경 진단 및
+              도보 네트워크·보행 부담·활동규모 기준을 반영한 초등학교 야외활동 환경 진단 및
               <span className="font-semibold text-forest-300"> XAI 우선지원 의사결정 시스템</span>입니다.
-              공식 공원 존재와 실제 활동공간 기능성을 분리해 정책 판단 근거를 보여줍니다.
+              공식 공원 존재와 실제 활동규모 기준을 분리해 정책 판단 근거를 보여줍니다.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -92,8 +92,8 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
           />
           <Pillar
             tag="Pillar 2"
-            title="활동 가능 면적"
-            description="공식 공원 여부를 부정하지 않고, 1,500㎡·10,000㎡ 법정 기준과 3,000㎡ 운영 기준으로 공간 기능성을 분리합니다."
+            title="활동규모 기준"
+            description="공식 공원 여부를 부정하지 않고, 1,500㎡·10,000㎡ 법정 기준과 3,000㎡ 운영 기준으로 아이들이 머물며 활동할 수 있는 규모를 분리합니다."
             metric="3,000㎡는 분석상 운영 기준"
           />
           <Pillar

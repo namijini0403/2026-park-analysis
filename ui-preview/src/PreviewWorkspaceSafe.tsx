@@ -27,6 +27,7 @@ type LargeApartmentComplex = {
 function readInitialView(): ViewMode {
   if (typeof window === "undefined") return "landing";
   const view = new URLSearchParams(window.location.search).get("view");
+  if (view === "recommendation") return "simulation";
   if (view === "simulation" || view === "statistics" || view === "report" || view === "landing") {
     return view as ViewMode;
   }

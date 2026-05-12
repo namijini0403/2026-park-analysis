@@ -91,6 +91,13 @@ function s(value: unknown, fallback = ""): string {
   return value != null ? String(value) : fallback;
 }
 
+function activityScaleText(value: string): string {
+  return value
+    .replace(/활동 가능 공원/g, "활동규모 공원")
+    .replace(/활동공원/g, "활동규모 공원")
+    .replace(/활동 가능/g, "활동규모");
+}
+
 function boolFlag(value: unknown): boolean {
   return value === true || s(value).toLowerCase() === "true";
 }
@@ -359,9 +366,18 @@ export function mapSchoolRowToReportProps(
 
   const nearestParkDistanceM = n(row.nearest_park_dist_m);
   const manualBarrierOverride = getManualBarrierOverride(row);
-  const nearestParkName = s(manualBarrierOverride?.nearestParkName ?? row.nearest_park_name ?? row.nearest_park_name_clean ?? "");
+  const nearestOfficialParkName = s(row.nearest_official_park_name ?? row.nearest_park_name ?? row.nearest_park_name_clean ?? "");
+  const nearestParkName = s(manualBarrierOverride?.nearestParkName ?? nearestOfficialParkName);
   const greenRatio = getDisplayGreenRatio(row);
   const playgroundCount = n(row.iso_playground_count);
+  const graphNearestOfficialParkName = s(row.graph_nearest_official_park_name);
+  const officialRouteMatchesPark =
+    !graphNearestOfficialParkName ||
+    !nearestOfficialParkName ||
+    graphNearestOfficialParkName === nearestOfficialParkName;
+  const officialRouteMismatchSummary = graphNearestOfficialParkName
+    ? `보행 경로 산출 대상(${graphNearestOfficialParkName})과 공식 최근접 공원(${nearestOfficialParkName})이 달라, 공식 공원 경로 특성은 지도에서 별도 확인이 필요합니다.`
+    : "공식 최근접 공원 경로 특성은 지도에서 별도 확인이 필요합니다.";
 
   const cityAvg = avgBlock(row, "_cityAvg");
   const districtAvg = avgBlock(row, "_districtAvg");
@@ -425,27 +441,39 @@ export function mapSchoolRowToReportProps(
     ...(maybeNumber(row.nearest_functional_park_area_m2) != null
       ? { nearestFunctionalParkAreaM2: maybeNumber(row.nearest_functional_park_area_m2)! }
       : {}),
-    ...(maybeNumber(row.nearest_official_route_dist_m) != null
+    ...(officialRouteMatchesPark && maybeNumber(row.nearest_official_route_dist_m) != null
       ? { nearestOfficialRouteDistanceM: maybeNumber(row.nearest_official_route_dist_m)! }
       : {}),
-    ...(maybeNumber(row.nearest_official_route_detour_ratio) != null
+    ...(officialRouteMatchesPark && maybeNumber(row.nearest_official_route_detour_ratio) != null
       ? { nearestOfficialRouteDetourRatio: maybeNumber(row.nearest_official_route_detour_ratio)! }
       : {}),
-    ...(maybeNumber(row.nearest_official_major_road_crossing_count) != null
+    ...(officialRouteMatchesPark && maybeNumber(row.nearest_official_major_road_crossing_count) != null
       ? { nearestOfficialMajorRoadCrossingCount: maybeNumber(row.nearest_official_major_road_crossing_count)! }
       : {}),
-    ...(row.nearest_official_large_intersection_flag != null
+    ...(officialRouteMatchesPark && row.nearest_official_large_intersection_flag != null
       ? { nearestOfficialLargeIntersectionFlag: row.nearest_official_large_intersection_flag === true || s(row.nearest_official_large_intersection_flag).toLowerCase() === "true" }
       : {}),
-    ...(row.nearest_official_accident_hotspot_flag != null
+    ...(officialRouteMatchesPark && row.nearest_official_accident_hotspot_flag != null
       ? { nearestOfficialAccidentHotspotFlag: row.nearest_official_accident_hotspot_flag === true || s(row.nearest_official_accident_hotspot_flag).toLowerCase() === "true" }
       : {}),
-    ...(maybeNumber(row.nearest_official_barrier_level) != null
+    ...(officialRouteMatchesPark && maybeNumber(row.nearest_official_barrier_level) != null
       ? { nearestOfficialBarrierLevel: maybeNumber(row.nearest_official_barrier_level)! }
       : {}),
-    ...(s(row.nearest_official_barrier_label) ? { nearestOfficialBarrierLabel: s(row.nearest_official_barrier_label) } : {}),
-    ...(s(row.nearest_official_barrier_summary) ? { nearestOfficialBarrierSummary: s(row.nearest_official_barrier_summary) } : {}),
-    ...(s(row.nearest_official_barrier_description) ? { nearestOfficialBarrierDescription: s(row.nearest_official_barrier_description) } : {}),
+    ...(officialRouteMatchesPark && s(row.nearest_official_barrier_label)
+      ? { nearestOfficialBarrierLabel: s(row.nearest_official_barrier_label) }
+      : !officialRouteMatchesPark
+        ? { nearestOfficialBarrierLabel: "경로 재확인 필요" }
+        : {}),
+    ...(officialRouteMatchesPark && s(row.nearest_official_barrier_summary)
+      ? { nearestOfficialBarrierSummary: s(row.nearest_official_barrier_summary) }
+      : !officialRouteMatchesPark
+        ? { nearestOfficialBarrierSummary: officialRouteMismatchSummary }
+        : {}),
+    ...(officialRouteMatchesPark && s(row.nearest_official_barrier_description)
+      ? { nearestOfficialBarrierDescription: s(row.nearest_official_barrier_description) }
+      : !officialRouteMatchesPark
+        ? { nearestOfficialBarrierDescription: "현재 데이터에서는 공식 최근접 공원명과 그래프 기반 경로 산출 대상이 일치하지 않아, 간선도로 횡단 여부를 단정 표시하지 않습니다." }
+        : {}),
     ...(maybeNumber(row.nearest_functional_route_dist_m) != null
       ? { nearestFunctionalRouteDistanceM: maybeNumber(row.nearest_functional_route_dist_m)! }
       : {}),
@@ -468,8 +496,8 @@ export function mapSchoolRowToReportProps(
     ...(s(row.nearest_functional_barrier_summary) ? { nearestFunctionalBarrierSummary: s(row.nearest_functional_barrier_summary) } : {}),
     ...(s(row.nearest_functional_barrier_description) ? { nearestFunctionalBarrierDescription: s(row.nearest_functional_barrier_description) } : {}),
     ...(s(row.access_condition_type) ? { accessConditionType: s(row.access_condition_type) } : {}),
-    ...(s(row.access_condition_label) ? { accessConditionLabel: s(row.access_condition_label) } : {}),
-    ...(s(row.access_condition_description) ? { accessConditionDescription: s(row.access_condition_description) } : {}),
+    ...(s(row.access_condition_label) ? { accessConditionLabel: activityScaleText(s(row.access_condition_label)) } : {}),
+    ...(s(row.access_condition_description) ? { accessConditionDescription: activityScaleText(s(row.access_condition_description)) } : {}),
     ...(s(row.green_ratio_display_basis) ? { greenRatioDisplayBasis: s(row.green_ratio_display_basis) } : {}),
     ...(s(row.green_ratio_review_note) ? { greenRatioReviewNote: s(row.green_ratio_review_note) } : {}),
     greenRatioHighReviewFlag: boolFlag(row.green_ratio_high_review_flag),

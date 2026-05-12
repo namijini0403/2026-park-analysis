@@ -79,8 +79,8 @@ COL_CANDIDATES = {
 FUNCTION_CLASS_LABELS = {
     "playground_like": "놀이터급·초소형 공간",
     "small_child_park": "소규모 어린이공원급",
-    "mid_activity_park": "중간 규모 활동공간",
-    "neighborhood_park_scale": "근린공원급 활동공간",
+    "mid_activity_park": "활동규모 공원",
+    "neighborhood_park_scale": "근린공원급 활동규모 공원",
 }
 
 FUNCTION_CLASS_BASIS = {
@@ -95,16 +95,16 @@ ACCESS_LABELS = {
     "nominal_access_only": "명목 접근성 착시형",
     "near_park_low_green_imbalance": "근접 공원-녹지환경 불균형형",
     "functional_access_with_barrier": "보행부담 동반형",
-    "functional_access_available": "활동공원 접근 가능형",
+    "functional_access_available": "활동규모 공원 접근 가능형",
     "unknown": "추가 검토 필요",
 }
 
 ACCESS_DESCRIPTIONS = {
     "no_official_park": "도보생활권 내 공식 공원이 확인되지 않아 야외활동 인프라 자체가 부족한 유형입니다.",
     "nominal_access_only": "공원은 있으나 대부분 초소형 공간으로, 단순 공원 개수만으로는 야외활동 환경을 과대평가할 수 있습니다.",
-    "near_park_low_green_imbalance": "가까운 활동 가능 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮은 유형입니다.",
-    "functional_access_with_barrier": "활동 가능 공원은 있으나, 도달 경로에 우회 부담 등 보행부담 요소가 포함될 수 있습니다.",
-    "functional_access_available": "도보권 내 활동 가능 공원이 확인되는 유형입니다.",
+    "near_park_low_green_imbalance": "가까운 활동규모 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮은 유형입니다.",
+    "functional_access_with_barrier": "활동규모 공원은 있으나, 도달 경로에 간선도로 횡단·교차로·우회 부담 등 보행부담 요소가 포함될 수 있습니다.",
+    "functional_access_available": "도보권 내 활동규모 공원이 확인되는 유형입니다.",
     "unknown": "접근성 판단에 필요한 일부 값이 누락되어 추가 검토가 필요합니다.",
 }
 
@@ -745,7 +745,7 @@ def pick_nearest_park(lengths: dict[Any, float], target_nodes: set[Any], parks_b
 def compute_nearest_walk_distances(schools: pd.DataFrame, iso: gpd.GeoDataFrame, parks: pd.DataFrame) -> tuple[pd.DataFrame, str]:
     graph_path = resolve_graph_path()
     if graph_path is None:
-        return pd.DataFrame({"학교ID": schools["학교ID"]}), "GraphML 파일을 찾지 못해 기능성 공원 최근접 도보거리 산출을 건너뜀"
+        return pd.DataFrame({"학교ID": schools["학교ID"]}), "GraphML 파일을 찾지 못해 활동규모 공원 최근접 도보거리 산출을 건너뜀"
 
     graph = ox.load_graphml(graph_path)
     accident_hotspots, accident_note = load_accident_hotspots()
@@ -1159,7 +1159,7 @@ def build_ai_before_after(school_layer: pd.DataFrame) -> tuple[pd.DataFrame, str
 
 def write_mapping_report(dataframes: dict[Path, pd.DataFrame], mappings: dict[Path, dict[str, str | None]]) -> None:
     lines = [
-        "# 기능성 공원 레이어 컬럼 매핑",
+        "# 활동규모 공원 레이어 컬럼 매핑",
         "",
         "각 파일의 존재 여부와 자동 탐색한 컬럼명이다. 매핑 실패 항목은 빈 값으로 남겨 후속 검토 대상임을 표시한다.",
         "",
@@ -1219,9 +1219,11 @@ def write_validation_report(
     )
 
     lines = [
-        "# 기능성 공원 접근성 보조 레이어 검증",
+        "# 활동규모 공원 접근성 보조 레이어 검증",
         "",
-        "이번 작업은 기존 Case 분류를 변경하지 않고, 공식 공원 접근성과 활동 가능 공원 접근성을 분리하는 보조 해석 레이어를 추가한 것이다.",
+        "이번 작업은 기존 Case 분류를 변경하지 않고, 공식 공원 접근성과 활동규모 공원 접근성을 분리하는 보조 해석 레이어를 추가한 것이다.",
+        "",
+        "활동규모 공원은 본 프로젝트의 운영 기준인 3,000㎡ 이상으로, 아이들이 머물며 활동할 수 있는 규모의 공원으로 해석한다.",
         "",
         "## 입력·산출 요약",
         "",
@@ -1355,7 +1357,7 @@ def write_walking_barrier_report(school_layer: pd.DataFrame, previous_layer: pd.
     lines = [
         "# 기존 시설 접근성 보행부담 로직 검증",
         "",
-        "이번 작업은 기존 후보지 추천의 간선도로 횡단 필터와 별개로, 학교에서 기존 공식 공원과 활동 가능 공원까지의 접근 경로에 대한 보행부담 진단 레이어를 추가한 것이다.",
+        "이번 작업은 기존 후보지 추천의 간선도로 횡단 필터와 별개로, 학교에서 기존 공식 공원과 활동규모 공원까지의 접근 경로에 대한 보행부담 진단 레이어를 추가한 것이다.",
         "",
         f"- 도보거리 산출 메모: {graph_note}",
         "- 도로등급 표현은 OSM highway class를 보수적으로 번역했다.",
@@ -1367,7 +1369,7 @@ def write_walking_barrier_report(school_layer: pd.DataFrame, previous_layer: pd.
         "",
         value_count_table(official_level),
         "",
-        "### 최근접 활동 가능 공원",
+        "### 최근접 활동규모 공원",
         "",
         value_count_table(functional_level),
         "",
@@ -1377,7 +1379,7 @@ def write_walking_barrier_report(school_layer: pd.DataFrame, previous_layer: pd.
         "",
         value_count_table(official_crossing),
         "",
-        "### 최근접 활동 가능 공원",
+        "### 최근접 활동규모 공원",
         "",
         value_count_table(functional_crossing),
         "",
@@ -1393,7 +1395,7 @@ def write_walking_barrier_report(school_layer: pd.DataFrame, previous_layer: pd.
         "| 경로 | min | median | max | non-null |",
         "|---|---:|---:|---:|---:|",
     ]
-    for label, series in [("최근접 공식 공원", official_detour), ("최근접 활동 가능 공원", functional_detour)]:
+    for label, series in [("최근접 공식 공원", official_detour), ("최근접 활동규모 공원", functional_detour)]:
         valid = series.dropna()
         if valid.empty:
             lines.append(f"| {label} | - | - | - | 0 |")
@@ -1423,7 +1425,7 @@ def write_walking_barrier_report(school_layer: pd.DataFrame, previous_layer: pd.
             "",
             "## 대표 사례 10개",
             "",
-            "| 학교명 | 최근접 활동 가능 공원 | 거리(m) | 보행부담 | 횡단횟수 | 경로 특성 | 접근성 유형 |",
+            "| 학교명 | 최근접 활동규모 공원 | 거리(m) | 보행부담 | 횡단횟수 | 경로 특성 | 접근성 유형 |",
             "|---|---|---:|---|---:|---|---|",
         ]
     )
@@ -1446,7 +1448,7 @@ def write_walking_barrier_report(school_layer: pd.DataFrame, previous_layer: pd.
         lines.extend(
             [
                 f"- 최근접 공식 공원: {row.get('nearest_official_park_name')} / {row.get('nearest_official_park_dist_m')}m / {row.get('nearest_official_park_area_m2')}㎡",
-                f"- 최근접 활동 가능 공원: {row.get('nearest_functional_park_name')} / {row.get('nearest_functional_park_dist_m')}m",
+                f"- 최근접 활동규모 공원: {row.get('nearest_functional_park_name')} / {row.get('nearest_functional_park_dist_m')}m",
                 f"- no_official_park_flag: {row.get('no_official_park_flag')}",
                 f"- no_functional_park_flag: {row.get('no_functional_park_flag')}",
                 f"- access_condition_type: {row.get('access_condition_type')}",

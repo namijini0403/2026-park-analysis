@@ -769,14 +769,16 @@
       z-index: 28;
       display: flex;
       flex-direction: row;
+      flex-wrap: wrap;
       gap: 10px;
       align-items: stretch;
       justify-content: flex-end;
-      width: var(--sidebar-width);
+      width: min(560px, calc(100vw - 40px));
     }
 
     .top-action-button {
       min-height: 44px;
+      min-width: 92px;
       padding: 11px 14px;
       border-radius: 10px;
       border: 1px solid var(--panel-border);
@@ -1905,14 +1907,14 @@
         <div class="app-cover-main">
           <p class="app-cover-kicker">Incheon Outdoor Equity</p>
           <h1 class="app-cover-title" id="appCoverTitle"><span>반경 너머,</span><span>도달 가능성으로</span></h1>
-          <p class="app-cover-statement">도보 네트워크·보행 부담·활동 가능 면적을 함께 봅니다.</p>
+          <p class="app-cover-statement">도보 네트워크·보행 부담·활동규모 기준을 함께 봅니다.</p>
           <p class="app-cover-copy">
-            초등학교 야외활동 환경을 공식 공원 존재, 실제 도달 가능성, 보행 부담, 활동 가능 면적으로 나누어 진단하고
+            초등학교 야외활동 환경을 공식 공원 존재, 실제 도달 가능성, 보행 부담, 활동규모 기준으로 나누어 진단하고
             XAI 우선지원 의사결정을 지원합니다.
           </p>
           <div class="app-cover-tags" aria-label="핵심 분석 기준">
             <span class="app-cover-tag">실제 도보생활권</span>
-            <span class="app-cover-tag">활동 가능 면적</span>
+            <span class="app-cover-tag">활동규모 기준</span>
             <span class="app-cover-tag">학교별 환경 진단</span>
             <span class="app-cover-tag">미래 수요 반영</span>
             <span class="app-cover-tag">설명 가능한 추천</span>
@@ -1938,8 +1940,10 @@
     </div>
 
     <div class="top-action-stack" aria-label="상단 바로가기">
-      <button class="top-action-button primary" id="statisticsShortcutButton" type="button">전체 통계</button>
-      <button class="top-action-button secondary" id="guideShortcutButton" type="button">사용설명서</button>
+      <button class="top-action-button primary" type="button" data-shortcut-action="report">학교 진단</button>
+      <button class="top-action-button secondary" type="button" data-shortcut-action="simulation">시뮬레이션</button>
+      <button class="top-action-button secondary" id="statisticsShortcutButton" type="button" data-shortcut-action="statistics">전체 통계</button>
+      <button class="top-action-button secondary" id="guideShortcutButton" type="button" data-shortcut-action="guide">사용설명서</button>
     </div>
 
     <button class="floating-button" id="panelToggleButton" type="button">필터 열기</button>
@@ -1961,7 +1965,7 @@
         <button class="access-filter-btn is-on" type="button" data-access-filter="all">전체</button>
         <button class="access-filter-btn" type="button" data-access-filter="no_official_park">공식 공원 없음</button>
         <button class="access-filter-btn" type="button" data-access-filter="only_micro_park">활동면적 제한</button>
-        <button class="access-filter-btn" type="button" data-access-filter="no_functional_park">활동 가능 공원 없음</button>
+        <button class="access-filter-btn" type="button" data-access-filter="no_functional_park">활동규모 공원 없음</button>
         <button class="access-filter-btn" type="button" data-access-filter="no_neighborhood_scale_park">근린공원급 없음</button>
         <button class="access-filter-btn" type="button" data-access-filter="barrier_with_functional">보행부담 동반</button>
       </div>
@@ -1972,7 +1976,7 @@
         <div class="mobile-handle"></div>
         <p class="eyebrow">Incheon Outdoor Equity</p>
         <h1 class="panel-title">반경 너머, 도달 가능성으로</h1>
-        <p class="panel-subtitle">도보 네트워크·보행 부담·활동 가능 면적을 반영해 학교별 야외활동 환경을 진단합니다.</p>
+        <p class="panel-subtitle">도보 네트워크·보행 부담·활동규모 기준을 반영해 학교별 야외활동 환경을 진단합니다.</p>
       </div>
 
       <div class="panel-body">
@@ -2273,8 +2277,8 @@
       hero: {
         title: "반경 너머,\n도달 가능성으로",
         subtitle:
-          "도보 네트워크·보행 부담·활동 가능 면적을 반영해\n초등학교 야외활동 환경을 진단하고\n설명 가능한 후보지를 제안합니다.",
-        badges: ["실제 도보생활권", "활동 가능 면적", "학교별 환경 진단", "설명 가능한 AI 추천", "Human-in-the-loop"],
+          "도보 네트워크·보행 부담·활동규모 기준을 반영해\n초등학교 야외활동 환경을 진단하고\n설명 가능한 후보지를 제안합니다.",
+        badges: ["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "설명 가능한 AI 추천", "Human-in-the-loop"],
         thesis:
           "단순 지도앱이 아니라,\n학교 주변 환경을 도달 가능성 기준으로 분석하고\n정책 판단의 근거를 연결하는 의사결정 시스템입니다."
       },
@@ -2302,7 +2306,7 @@
           title: "환경 격차 진단",
           short: "공원 거리, 녹지비율, 놀이터, KNN 유사학교 비교를 확인합니다.",
           headline: "학교별 환경을 하나의 점수가 아니라\n여러 근거로 나누어 봅니다.",
-          items: ["최근접 공식 공원 거리", "활동 가능 공원 거리", "도보권 내 공원 수", "녹지비율", "Case 분류", "KNN 유사학교 비교"],
+          items: ["최근접 공식 공원 거리", "활동규모 공원 거리", "도보권 내 공원 수", "녹지비율", "Case 분류", "KNN 유사학교 비교"],
           principle: "복합 환경을 단일 점수로 뭉개지 않고 설명 가능한 지표로 분리합니다.",
           actionText: "학교 상세 리포트에서 현재 격차와 비교 기준을 함께 봅니다."
         },
@@ -3298,34 +3302,70 @@
 
     function getFunctionalAccessNotice(row = {}) {
       if (String(row.access_condition_type || "") === "near_park_low_green_imbalance") {
-        return "가까운 활동 가능 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮아 공원 접근성과 생활권 녹지환경을 분리해 해석해야 합니다.";
+        return "가까운 활동규모 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮아 공원 접근성과 생활권 녹지환경을 분리해 해석해야 합니다.";
       }
       if (String(row.access_condition_type || "") === "functional_access_with_barrier") {
-        const crossing = Number(row.nearest_official_major_road_crossing_count);
-        const detour = Number(row.nearest_official_route_detour_ratio);
-        const intersection = hasTruthyFlag(row.nearest_official_large_intersection_flag);
-        const accident = hasTruthyFlag(row.nearest_official_accident_hotspot_flag);
+        const crossing = Number(row.nearest_functional_major_road_crossing_count);
+        const detour = Number(row.nearest_functional_route_detour_ratio);
+        const intersection = hasTruthyFlag(row.nearest_functional_large_intersection_flag);
+        const accident = hasTruthyFlag(row.nearest_functional_accident_hotspot_flag);
         if ((!Number.isFinite(crossing) || crossing === 0) && !intersection && !accident && Number.isFinite(detour) && detour >= 1.6) {
           return "간선도로 횡단이나 대형 교차로 인접은 확인되지 않지만, 실제 보행 경로가 직선거리 대비 우회하는 것으로 계산됩니다.";
         }
-        return "활동 가능 공원은 있으나, 도달 경로에 우회 부담 등 보행부담 요소가 포함될 수 있습니다.";
+        return "활동규모 공원은 있으나, 도달 경로에 간선도로 횡단·교차로·우회 부담 등 보행부담 요소가 포함될 수 있습니다.";
       }
       if (hasTruthyFlag(row.no_official_park_flag)) {
         return "도보생활권 내 공식 공원이 확인되지 않습니다.";
       }
+      if (hasTruthyFlag(row.no_functional_park_flag)) {
+        return "도보권 내 3,000㎡ 이상 활동규모 공원은 확인되지 않습니다. 활동규모 공원은 기준 면적 이상으로 아이들이 머물며 활동할 수 있는 규모의 공원입니다.";
+      }
       if (String(row.nearest_official_park_function_class || "") === "playground_like") {
-        return "가까운 공원은 있으나, 면적상 넓은 야외활동 공간으로 보기에는 제한적입니다.";
+        return "가까운 공식 공원은 있으나, 면적상 넓은 야외활동 공간으로 보기에는 제한적입니다.";
       }
       if (hasTruthyFlag(row.only_micro_park_flag)) {
-        return "도보권 내 공식 공원은 확인되지만, 3,000㎡ 이상 활동 가능 공원은 확인되지 않습니다.";
+        return "도보권 내 공식 공원은 확인되지만, 3,000㎡ 이상 활동규모 공원은 확인되지 않습니다.";
       }
       if (String(row.nearest_official_park_function_class || "") === "small_child_park") {
         return "소규모 공원으로 놀이·휴식 기능은 있으나, 넓은 야외활동 공간으로는 제한적일 수 있습니다.";
       }
       if (Number(row.iso_functional_park_count) > 0) {
-        return "도보권 내 활동 가능 공원이 확인됩니다.";
+        return "도보권 내 활동규모 공원이 확인됩니다.";
       }
       return "기존 시설 접근성은 추가 검토가 필요합니다.";
+    }
+
+    function getRouteBasisWarning(row = {}) {
+      const officialLevel = Number(row.nearest_official_barrier_level);
+      const functionalLevel = Number(row.nearest_functional_barrier_level);
+      const officialCrossing = Number(row.nearest_official_major_road_crossing_count);
+      const functionalCrossing = Number(row.nearest_functional_major_road_crossing_count);
+      const officialIntersection = hasTruthyFlag(row.nearest_official_large_intersection_flag);
+      const functionalIntersection = hasTruthyFlag(row.nearest_functional_large_intersection_flag);
+      const officialAccident = hasTruthyFlag(row.nearest_official_accident_hotspot_flag);
+      const functionalAccident = hasTruthyFlag(row.nearest_functional_accident_hotspot_flag);
+      const reasons = [];
+
+      if (Number.isFinite(functionalLevel) && Number.isFinite(officialLevel) && functionalLevel > officialLevel) {
+        reasons.push("보행부담 등급");
+      }
+      if (Number.isFinite(functionalCrossing) && Number.isFinite(officialCrossing) && functionalCrossing > officialCrossing) {
+        reasons.push("간선도로 횡단");
+      }
+      if (functionalIntersection && !officialIntersection) reasons.push("대형 교차로");
+      if (functionalAccident && !officialAccident) reasons.push("사고위험 지점");
+
+      if (reasons.length) {
+        return `활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 ${reasons.join("·")} 항목이 더 불리하게 산정됩니다.`;
+      }
+
+      const officialName = String(row.nearest_official_park_name || row.nearest_park_name || "").trim();
+      const functionalName = String(row.nearest_functional_park_name || "").trim();
+      if (officialName && functionalName && officialName !== functionalName) {
+        return "공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.";
+      }
+
+      return "";
     }
 
     function formatBooleanAccessFlag(value) {
@@ -3720,7 +3760,7 @@
               <div class="summary-stat-value">${zeroParkSchools}<span class="summary-stat-unit">개</span></div>
             </div>
             <div class="summary-stat-card">
-              <div class="summary-stat-label">활동 가능 공원 없음</div>
+              <div class="summary-stat-label">활동규모 공원 없음</div>
               <div class="summary-stat-value">${noFunctionalSchools}<span class="summary-stat-unit">개</span></div>
             </div>
           </div>
@@ -3754,7 +3794,7 @@
             <div class="summary-stat-value">${zeroParkSchools}<span class="summary-stat-unit">개</span></div>
           </div>
           <div class="summary-stat-card">
-            <div class="summary-stat-label">활동 가능 공원 없음</div>
+            <div class="summary-stat-label">활동규모 공원 없음</div>
             <div class="summary-stat-value">${noFunctionalSchools}<span class="summary-stat-unit">개</span></div>
           </div>
         </div>
@@ -4512,30 +4552,25 @@
 
     function handleGuideCta(action) {
       closeGuideOverlay();
-      const guideCtaHandlers = {
-        "school-report": () => openPreviewOverlay("report"),
-        simulation: () => openPreviewOverlay("simulation"),
-        "ai-recommendation": () => openPreviewOverlay("recommendation")
-      };
-      (guideCtaHandlers[action] || guideCtaHandlers["school-report"])();
+      runShortcutAction(action).catch((error) => {
+        console.error("[guide-shortcut-action]", error);
+      });
     }
 
     function closeAppCover() {
       const cover = document.getElementById("appCover");
       if (!cover) return;
+      if (cover.contains(document.activeElement)) {
+        document.activeElement.blur();
+      }
       cover.classList.add("is-hidden");
       cover.setAttribute("aria-hidden", "true");
     }
 
     function handleCoverAction(action) {
-      closeAppCover();
-      if (action === "guide") {
-        openGuideOverlay();
-        return;
-      }
-      if (action === "report") {
-        openPreviewOverlay("report");
-      }
+      runShortcutAction(action).catch((error) => {
+        console.error("[cover-shortcut-action]", error);
+      });
     }
 
     document.getElementById("appCover")?.addEventListener("click", (event) => {
@@ -4550,7 +4585,77 @@
       }
     });
 
-    ui.guideShortcutButton?.addEventListener("click", openGuideOverlay);
+    function getShortcutSchoolRow() {
+      if (state.currentPanelMode === "school" && state.selectedPanelData) return state.selectedPanelData;
+      if (state.selectedSchoolId) {
+        const selected = state.datasets.schools.find((row) => getSchoolId(row) === state.selectedSchoolId);
+        if (selected) return selected;
+      }
+
+      const searched = findSchoolBySearch(ui.schoolSearchInput?.value);
+      if (searched) return searched;
+
+      const visibleRows = (state.datasets.schools || []).filter((row) => {
+        const latLng = toLatLng(row);
+        return latLng && shouldShowByGu(row) && shouldShowByCaseFilter(row) && shouldShowByAccessFilter(row);
+      });
+      const pool = visibleRows.length ? visibleRows : (state.datasets.schools || []);
+      return [...pool].sort((a, b) => Number(b.priority_score || 0) - Number(a.priority_score || 0))[0] || null;
+    }
+
+    async function prepareShortcutSchoolBridge() {
+      const row = getShortcutSchoolRow();
+      if (!row) return null;
+      setSchoolPanelSelection(row);
+      await renderSchoolDetail(row);
+      return row;
+    }
+
+    async function runShortcutAction(action = "report") {
+      const normalizedAction = String(action || "report");
+      closeAppCover();
+
+      if (normalizedAction === "guide") {
+        openGuideOverlay();
+        return;
+      }
+
+      if (normalizedAction === "start" || normalizedAction === "map") {
+        const overlay = document.getElementById("simulationOverlay");
+        if (overlay) overlay.style.display = "none";
+        return;
+      }
+
+      if (normalizedAction === "statistics") {
+        openPreviewOverlay("statistics");
+        return;
+      }
+
+      if (normalizedAction === "school-report" || normalizedAction === "report") {
+        await prepareShortcutSchoolBridge();
+        openPreviewOverlay("report");
+        return;
+      }
+
+      if (normalizedAction === "simulation" || normalizedAction === "ai-recommendation" || normalizedAction === "recommendation") {
+        await prepareShortcutSchoolBridge();
+        openPreviewOverlay("simulation");
+        return;
+      }
+
+      await prepareShortcutSchoolBridge();
+      openPreviewOverlay("report");
+    }
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-shortcut-action]");
+      if (!button) return;
+      event.preventDefault();
+      runShortcutAction(button.dataset.shortcutAction).catch((error) => {
+        console.error("[shortcut-action]", error);
+        setStatus("바로가기 실행 중 오류가 발생했습니다. 콘솔 로그를 확인하세요.");
+      });
+    });
 
     function wireEvents() {
       ui.guFilter.addEventListener("change", (event) => {
@@ -5173,19 +5278,36 @@
       const aptScenarioText = row.green_ratio_display_basis === "apartment_adjusted" || (Number.isFinite(aptAdjustedGreen) && aptAddedArea > 0)
         ? ` &nbsp;·&nbsp; 🏘 단지보정 반영`
         : "";
-      const greenReviewText = row.green_ratio_review_note
-        ? `<br><span style="color:#facc15;">녹지비율 검수: ${row.green_ratio_review_note}</span>`
-        : "";
+      const greenReviewText = "";
       const functionalNotice = getFunctionalAccessNotice(row);
+      const routeBasisWarning = getRouteBasisWarning(row);
       const accessLabel = row.access_condition_label || "추가 검토 필요";
+      const officialParkName = row.nearest_official_park_name || row.nearest_park_name || "";
+      const officialRouteBasisName = row.graph_nearest_official_park_name || "";
+      const officialRouteMatchesPark = !officialRouteBasisName || !officialParkName || officialRouteBasisName === officialParkName;
+      const officialRouteMismatchSummary = officialRouteBasisName
+        ? `보행 경로 산출 대상(${officialRouteBasisName})과 공식 최근접 공원(${officialParkName})이 달라, 공식 공원 경로 특성은 지도에서 별도 확인이 필요합니다.`
+        : "공식 최근접 공원 경로 특성은 지도에서 별도 확인이 필요합니다.";
       const officialParkArea = formatAreaSquareMeters(row.nearest_official_park_area_m2);
+      const activityParkArea = formatAreaSquareMeters(row.nearest_functional_park_area_m2);
       const functionalParkDistance = formatDistanceMeters(row.nearest_functional_park_dist_m);
       const functionalParkDistanceText = functionalParkDistance === "-" ? "자료 없음" : `${functionalParkDistance}m`;
-      const barrierLabel = row.nearest_official_barrier_label || "자료 없음";
-      const barrierSummary = row.nearest_official_barrier_summary || "자료 없음";
-      const majorCrossing = Number.isFinite(Number(row.nearest_official_major_road_crossing_count))
+      const barrierLabel = officialRouteMatchesPark ? (row.nearest_official_barrier_label || "자료 없음") : "경로 재확인 필요";
+      const barrierSummary = officialRouteMatchesPark ? (row.nearest_official_barrier_summary || "자료 없음") : officialRouteMismatchSummary;
+      const majorCrossing = officialRouteMatchesPark && Number.isFinite(Number(row.nearest_official_major_road_crossing_count))
         ? `${formatCount(row.nearest_official_major_road_crossing_count)}회`
         : "자료 없음";
+      const officialLargeIntersection = officialRouteMatchesPark
+        ? formatBooleanAccessFlag(row.nearest_official_large_intersection_flag)
+        : "자료 확인 필요";
+      const activityBarrierLabel = row.nearest_functional_barrier_label || "자료 없음";
+      const activityBarrierSummary = row.nearest_functional_barrier_summary || "자료 없음";
+      const activityMajorCrossing = Number.isFinite(Number(row.nearest_functional_major_road_crossing_count))
+        ? `${formatCount(row.nearest_functional_major_road_crossing_count)}회`
+        : "자료 없음";
+      const activityParkLine = row.nearest_functional_park_name
+        ? `${row.nearest_functional_park_name} · ${activityParkArea}<br>`
+        : "활동규모 공원 자료 없음<br>";
 
       // 우측 패널: 미니멀 요약 카드만 표시
       ui.schoolDetailBox.className = `school-detail-box ${getCaseThemeClass(row)}`;
@@ -5207,13 +5329,21 @@
           🌿 녹지 ${formatDecimal(displayGreenRatio, 1)}%${aptScenarioText}${greenReviewText}
         </div>
         <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:12px; line-height:1.75; margin-bottom:16px;">
-          <strong>가장 가까운 공원의 이용 조건 · ${accessLabel}</strong><br>
-          ${row.nearest_official_park_name ? `${row.nearest_official_park_name} · ${row.nearest_official_park_type || "공원"} · ${officialParkArea}<br>` : ""}
-          ${row.nearest_official_park_function_label || "기능등급 자료 없음"}<br>
+          <strong>공식 최근접 공원 · ${accessLabel}</strong><br>
+          ${officialParkName ? `${officialParkName} · ${row.nearest_official_park_type || "공원"} · ${officialParkArea}<br>` : ""}
+          규모 기준: ${row.nearest_official_park_function_label || "자료 없음"}<br>
           보행 부담: ${barrierLabel} · 간선도로 횡단 ${majorCrossing}<br>
-          대형 교차로: ${formatBooleanAccessFlag(row.nearest_official_large_intersection_flag)}<br>
-          활동 가능 공원까지: ${functionalParkDistanceText}<br>
-          경로 특성: ${barrierSummary}<br>
+          대형 교차로: ${officialLargeIntersection}<br>
+          공식 공원 경로 특성: ${barrierSummary}<br>
+          <span style="display:block; height:1px; background:rgba(148,163,184,0.22); margin:10px 0;"></span>
+          <strong>활동규모 공원(3,000㎡ 이상)</strong><br>
+          <span style="color:var(--muted);">기준 면적 이상으로 아이들이 머물며 활동할 수 있는 규모의 공원입니다.</span><br>
+          ${activityParkLine}
+          활동규모 공원까지: ${functionalParkDistanceText}<br>
+          보행 부담: ${activityBarrierLabel} · 간선도로 횡단 ${activityMajorCrossing}<br>
+          대형 교차로: ${formatBooleanAccessFlag(row.nearest_functional_large_intersection_flag)}<br>
+          활동규모 공원 경로 특성: ${activityBarrierSummary}<br>
+          ${routeBasisWarning ? `<span style="color:#fbbf24;">${routeBasisWarning}</span><br>` : ""}
           ${functionalNotice}
         </div>
         <button

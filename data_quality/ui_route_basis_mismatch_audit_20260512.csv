@@ -1,0 +1,273 @@
+﻿school_id,school_name,gu,access_condition_type,official_park,functional_park,route_names_differ,official_barrier_level,functional_barrier_level,official_crossing_count,functional_crossing_count,official_large_intersection,functional_large_intersection,official_accident_hotspot,functional_accident_hotspot,functional_risk,official_risk,hidden_if_official_only,understated_if_official_only,mismatch_reasons,ui_warning_text,audit_category
+B000002949,인천신흥초등학교,중구,no_official_park,율목공원,율목공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002950,인천신광초등학교,중구,nominal_access_only,도원공원,용마루어린이공원,True,2,3,0,2,False,True,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단 · 대형 교차로,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·대형 교차로 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002951,인천신선초등학교,중구,no_official_park,햇님공원,용정공원,True,2,3,1,2,False,False,False,True,True,True,False,True,보행부담 등급 · 간선도로 횡단 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002952,인천송월초등학교,중구,functional_access_available,자유공원,자유공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002953,인천운서초등학교,중구,functional_access_available,용샘공원,눈돌공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000002954,인천용유초등학교,중구,no_official_park,영종하늘도시 6호,,False,2,,1,,False,False,False,False,False,True,False,False,,,aligned_route_basis
+B000002955,인천연안초등학교,중구,no_official_park,햇님공원,용정공원,True,2,3,0,9,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002956,인천운남초등학교,중구,near_park_low_green_imbalance,운남제1호공원,운남제1호공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000002957,인천공항초등학교,중구,functional_access_available,뒷마루공원,뒷마루공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002958,인천삼목초등학교,중구,nominal_access_only,나리공원,영마루공원,True,1,3,0,0,False,False,False,False,True,False,True,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002959,인천영종초등학교,중구,functional_access_available,파크골프공원,파크골프공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002960,인성초등학교,중구,functional_access_with_barrier,자유공원,자유공원,False,2,3,0,0,False,False,True,False,True,True,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002962,인천영종초등학교금산분교장,중구,no_official_park,미단시티 2호,미단시티 2호,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002963,인천만석초등학교,동구,near_park_low_green_imbalance,화수3공원,화도진공원,True,2,0,1,0,False,False,False,False,False,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000002964,인천송현초등학교,동구,nominal_access_only,화수13공원,화도진공원,True,1,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000002965,인천창영초등학교,동구,nominal_access_only,창영공원,솔마루공원,True,0,2,0,0,False,False,False,True,True,False,True,True,보행부담 등급 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002966,인천송림초등학교,동구,near_park_low_green_imbalance,솔마루공원,솔마루공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002967,인천서흥초등학교,동구,nominal_access_only,송현공원,송현공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002968,인천서림초등학교,동구,no_official_park,송현공원,송현공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002969,인천동명초등학교,동구,nominal_access_only,창영공원,송현공원,True,1,1,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000002970,영화초등학교,동구,nominal_access_only,창영공원,송현공원,True,3,1,0,0,False,False,False,False,False,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000002971,인천숭의초등학교,미추홀구,nominal_access_only,주인공원,주인공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002972,인천용정초등학교,미추홀구,nominal_access_only,주인공원,주인공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002973,인천용일초등학교,미추홀구,near_park_low_green_imbalance,용남공원,용남공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002974,인천용현초등학교,미추홀구,near_park_low_green_imbalance,용정공원,용정공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002975,인천용현남초등학교,미추홀구,nominal_access_only,햇님공원,용정공원,True,3,3,1,1,False,False,False,False,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000002976,인천학산초등학교,미추홀구,near_park_low_green_imbalance,모리포공원,모리포공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002977,인천백학초등학교,미추홀구,functional_access_available,묵동공원,문학공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000002978,인천도화초등학교,미추홀구,no_official_park,수봉공원,수봉공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000002979,인천문학초등학교,미추홀구,near_park_low_green_imbalance,소성어린이공원,삼호어린이공원,True,0,2,0,1,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002980,인천관교초등학교,미추홀구,nominal_access_only,관교공원,구월문화공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002981,인천경원초등학교,미추홀구,nominal_access_only,비선거리공원,하늘새어린이공원,True,2,3,1,3,False,True,False,True,True,True,False,True,보행부담 등급 · 간선도로 횡단 · 대형 교차로 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·대형 교차로·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002982,인천석암초등학교,미추홀구,no_official_park,주안공원,주안공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002983,인천남부초등학교,미추홀구,nominal_access_only,사미공원,승기어린이공원,True,2,3,0,1,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002984,인천승학초등학교,미추홀구,functional_access_with_barrier,중앙공원,중앙공원,False,2,2,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000002985,인천서화초등학교,미추홀구,functional_access_available,배말근린공원,배말근린공원,False,1,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002986,인천대화초등학교,미추홀구,nominal_access_only,쑥골공원,화동공원,True,2,3,0,1,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002987,인천주안북초등학교,미추홀구,nominal_access_only,염창공원,돌샘어린이공원,True,0,2,0,0,False,False,False,True,True,False,True,True,보행부담 등급 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002989,인천주안남초등학교,미추홀구,nominal_access_only,미니공원,미추어린이공원,True,1,3,0,2,False,False,False,True,True,False,True,True,보행부담 등급 · 간선도로 횡단 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000002990,인천학익초등학교,미추홀구,nominal_access_only,학익공원,학익공원,False,2,2,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000002991,인천인주초등학교,미추홀구,near_park_low_green_imbalance,나리공원,선비공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000002992,인천연학초등학교,미추홀구,functional_access_available,물방울어린이공원,미추홀공원,True,1,1,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000002993,연평초등학교,옹진군,no_official_park,창포공원,,False,2,,1,,False,False,False,False,False,True,False,False,,,aligned_route_basis
+B000002994,대청초등학교,옹진군,no_official_park,창포공원,,False,2,,1,,False,False,False,False,False,True,False,False,,,aligned_route_basis
+B000002995,영흥초등학교,옹진군,no_official_park,영종하늘도시 6호,,False,,,,,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002996,덕적초등학교,옹진군,no_official_park,영종하늘도시 6호,,False,,,,,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000002997,북포초등학교,옹진군,no_official_park,창포공원,,False,2,,1,,False,False,False,False,False,True,False,False,,,aligned_route_basis
+B000002998,백령초등학교,옹진군,no_official_park,창포공원,,False,2,,1,,False,False,False,False,False,True,False,False,,,aligned_route_basis
+B000002999,인천공항초등학교신도분교장,옹진군,no_official_park,창포공원,,False,,,,,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003000,인천삼목초등학교장봉분교장,옹진군,no_official_park,창포공원,,False,2,,1,,False,False,False,False,False,True,False,False,,,aligned_route_basis
+B000003004,인천남부초등학교이작분교장,옹진군,no_official_park,영종하늘도시 6호,,False,,,,,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003005,인천용현남초등학교자월분교장,옹진군,no_official_park,영종하늘도시 6호,,False,,,,,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003006,인천부평서초등학교,부평구,nominal_access_only,서부동놀이공원,부흥놀이공원,True,1,2,0,0,False,False,False,True,True,False,True,True,보행부담 등급 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003007,인천부곡초등학교,부평구,nominal_access_only,마장공원,마장공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003008,인천마곡초등학교,부평구,nominal_access_only,성벽어린이공원,푸른내어린이공원,True,0,3,0,0,False,False,False,False,True,False,True,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003009,인천대정초등학교,부평구,nominal_access_only,마장공원,마장공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003010,인천청천초등학교,부평구,near_park_low_green_imbalance,어울림어린이공원,어울림어린이공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003011,인천갈산초등학교,부평구,near_park_low_green_imbalance,상꾸지놀이공원,상꾸지놀이공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003012,인천후정초등학교,부평구,nominal_access_only,동화놀이공원,도드리놀이공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003013,인천영선초등학교,부평구,near_park_low_green_imbalance,햇살공원,햇살공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003014,인천진산초등학교,부평구,near_park_low_green_imbalance,새싹공원,새싹공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003015,인천구산초등학교,부평구,functional_access_available,부개공원,부개공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003016,인천부일초등학교,부평구,near_park_low_green_imbalance,동소정놀이공원,새말놀이공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003017,인천부내초등학교,부평구,functional_access_with_barrier,대촌공원,대촌공원,False,2,2,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003018,인천부개서초등학교,부평구,nominal_access_only,한가람공원,한가람공원,False,3,3,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003019,인천부광초등학교,부평구,functional_access_available,세영공원,세영공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003020,인천일신초등학교,부평구,near_park_low_green_imbalance,일신놀이공원,일신놀이공원,False,2,2,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003021,인천금마초등학교,부평구,nominal_access_only,일신놀이공원,일신놀이공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003022,인천상정초등학교,부평구,near_park_low_green_imbalance,한마음어린이공원,한마음어린이공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003023,인천부평북초등학교,부평구,nominal_access_only,삼산어린이공원,햇살공원,True,3,3,2,3,False,False,False,False,True,True,False,True,간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003024,인천갈월초등학교,부평구,functional_access_with_barrier,굴포공원,굴포공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003025,인천부개초등학교,부평구,nominal_access_only,마분놀이공원,일신놀이공원,True,1,1,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003026,인천동수초등학교,부평구,nominal_access_only,만월공원,만월공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003027,인천부원초등학교,부평구,no_official_park,신트리공원,신트리공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003028,인천부흥초등학교,부평구,near_park_low_green_imbalance,부흥놀이공원,부흥놀이공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003029,인천부평동초등학교,부평구,nominal_access_only,꿈나무공원,부흥놀이공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003030,인천부평남초등학교,부평구,nominal_access_only,이야기꽃어린이공원,부평공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003031,인천산곡북초등학교,부평구,nominal_access_only,성벽어린이공원,다온어린이공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003032,인천산곡초등학교,부평구,nominal_access_only,산곡소공원,산곡어린이공원,True,3,3,3,2,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003033,인천부마초등학교,부평구,no_official_park,산곡소공원,산곡어린이공원,True,3,3,3,2,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003034,인천미산초등학교,부평구,no_official_park,마장공원,마장공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003035,인천산곡남초등학교,부평구,nominal_access_only,마장공원,마장공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003036,인천신촌초등학교,부평구,near_park_low_green_imbalance,함봉공원(1단계),함봉공원(1단계),False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003037,인천하정초등학교,부평구,near_park_low_green_imbalance,수정놀이공원,한마음어린이공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003038,인천십정초등학교,부평구,nominal_access_only,하동놀이공원,한마음어린이공원,True,0,2,0,1,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003039,인천백운초등학교,부평구,functional_access_with_barrier,십정공원,십정공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003040,인천동암초등학교,부평구,nominal_access_only,약산놀이공원,석촌공원,True,0,3,0,1,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003041,인천용마초등학교,부평구,nominal_access_only,다온어린이공원,다온어린이공원,False,3,3,2,2,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003042,인천마장초등학교,부평구,no_official_park,마장공원,마장공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003043,인천개흥초등학교,부평구,nominal_access_only,신복공원,신트리공원,True,2,3,0,1,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003044,인천삼산초등학교,부평구,near_park_low_green_imbalance,사랑샘공원,사랑샘공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003045,인천한길초등학교,부평구,near_park_low_green_imbalance,도드리놀이공원,도드리놀이공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003046,인천굴포초등학교,부평구,near_park_low_green_imbalance,무지개공원,무지개공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003047,한일초등학교,부평구,nominal_access_only,숲속어린이공원,산곡어린이공원,True,0,3,0,2,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003048,인천명선초등학교,연수구,nominal_access_only,새아침공원,새아침공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003049,인천축현초등학교,연수구,near_park_low_green_imbalance,청룡공원,청룡공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003050,인천송도초등학교,연수구,nominal_access_only,향나무공원,청룡공원,True,3,3,1,1,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003051,인천능허대초등학교,연수구,nominal_access_only,새싹공원,능허대공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003052,인천선학초등학교,연수구,near_park_low_green_imbalance,선학공원,선학공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003053,인천중앙초등학교,연수구,functional_access_available,솔밭공원,솔밭공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003054,인천연화초등학교,연수구,near_park_low_green_imbalance,샘말공원,양지공원,True,2,2,1,1,False,False,False,False,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003055,인천함박초등학교,연수구,functional_access_with_barrier,장미공원,장미공원,False,2,2,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003056,인천청학초등학교,연수구,functional_access_with_barrier,하나공원,하나공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003057,인천청량초등학교,연수구,near_park_low_green_imbalance,청량공원,청량공원,False,3,3,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003058,인천연성초등학교,연수구,near_park_low_green_imbalance,부수지공원,부수지공원,False,2,2,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003059,인천동춘초등학교,연수구,functional_access_available,동춘3공원,동춘3공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003060,인천동막초등학교,연수구,near_park_low_green_imbalance,동막공원,동막공원,False,3,3,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003061,인천서면초등학교,연수구,nominal_access_only,봉재공원,봉재공원,False,2,2,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003062,인천연수초등학교,연수구,nominal_access_only,연일공원,연일공원,False,2,2,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003063,인천문남초등학교,연수구,functional_access_with_barrier,문남공원,문남공원,False,2,2,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003064,인천옥련초등학교,연수구,nominal_access_only,새싹공원,능허대공원,True,3,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003065,인천신정초등학교,연수구,nominal_access_only,송도  11호 어린이공원,센트럴파크,True,2,1,0,0,False,False,True,False,False,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003066,인천해송초등학교,연수구,functional_access_available,미추홀공원,미추홀공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003067,인천신송초등학교,연수구,functional_access_available,신송공원,신송공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003068,인천먼우금초등학교,연수구,nominal_access_only,먼우금공원(송도1호),달빛공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003069,인천박문초등학교,연수구,functional_access_available,동춘5공원,동춘4공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003070,인천남촌초등학교,남동구,near_park_low_green_imbalance,소촌공원,남촌공원,True,1,1,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003071,인천성리초등학교,남동구,nominal_access_only,작은성말공원,아시아드선수촌공원,True,2,3,0,3,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003073,인천정각초등학교,남동구,nominal_access_only,장다리공원,구월공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003074,인천간석초등학교,남동구,near_park_low_green_imbalance,용광공원,구월공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003075,인천구월서초등학교,남동구,functional_access_with_barrier,석바위공원,석바위공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003076,인천상아초등학교,남동구,nominal_access_only,용광공원,구월공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003077,상인천초등학교,남동구,near_park_low_green_imbalance,풀무골소공원,풀무골소공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003078,인천석정초등학교,남동구,nominal_access_only,석정공원,돌샘어린이공원,True,0,2,0,1,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003079,인천만수북초등학교,남동구,nominal_access_only,향촌소공원,아단공원,True,2,1,0,0,False,False,False,False,False,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003080,인천동부초등학교,남동구,nominal_access_only,화교공원,새말소공원,True,2,3,0,1,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003081,인천인수초등학교,남동구,near_park_low_green_imbalance,아단공원,아단공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003082,인천만수초등학교,남동구,near_park_low_green_imbalance,창대공원,담방문화공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003083,인천도림초등학교,남동구,functional_access_with_barrier,오봉공원,오봉공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003084,인천은봉초등학교,남동구,functional_access_with_barrier,논현중앙공원,논현중앙공원,False,3,3,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003085,인천장도초등학교,남동구,nominal_access_only,방죽공원,너른들공원,True,1,2,0,0,False,False,False,False,True,False,True,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003086,인천동방초등학교,남동구,near_park_low_green_imbalance,논현공원(논현2택지),호구포공원,True,2,3,0,1,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003087,인천원동초등학교,남동구,near_park_low_green_imbalance,돌섬공원,돌섬공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003088,인천사리울초등학교,남동구,near_park_low_green_imbalance,해오름공원,해오름공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003089,인천고잔초등학교,남동구,functional_access_available,푸른공원,한아름공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003090,인천약산초등학교,남동구,functional_access_with_barrier,산밑말근린공원,산밑말근린공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003091,인천주원초등학교,남동구,nominal_access_only,간석육교공원,이화공원,True,3,3,0,2,False,True,True,True,True,True,False,True,간선도로 횡단 · 대형 교차로,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 간선도로 횡단·대형 교차로 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003092,인천송천초등학교,남동구,functional_access_with_barrier,고잔,바람공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003093,인천석천초등학교,남동구,nominal_access_only,하늘공원,이화공원,True,3,3,1,2,False,False,False,False,True,True,False,True,간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003094,인천신월초등학교,남동구,near_park_low_green_imbalance,남동문화공원,남동문화공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003095,인천구월초등학교,남동구,nominal_access_only,만월공원,구월공원,True,2,3,0,1,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003096,인천소래초등학교,남동구,nominal_access_only,소래공원,너른들공원,True,2,2,0,0,False,False,True,False,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003097,인천논현초등학교,남동구,nominal_access_only,아랫말공원,논현중앙공원,True,0,3,0,1,False,False,False,True,True,False,True,True,보행부담 등급 · 간선도로 횡단 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003098,인천논곡초등학교,남동구,functional_access_available,논현포대공원,논현포대공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003099,인천새말초등학교,남동구,near_park_low_green_imbalance,향촌소공원,만수공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003100,인천조동초등학교,남동구,functional_access_available,돌골공원,만수공원,True,2,0,0,0,False,False,True,False,False,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003101,인천인동초등학교,남동구,nominal_access_only,한울소공원,새말소공원,True,2,3,0,1,False,False,True,True,True,True,False,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003102,인천장수초등학교,남동구,near_park_low_green_imbalance,새골공원,새골공원,False,2,3,1,0,False,False,False,False,True,True,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003103,인천담방초등학교,남동구,near_park_low_green_imbalance,골마루공원,골마루공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003104,인천남동초등학교,남동구,near_park_low_green_imbalance,남동공원,담방문화공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003105,인천서창초등학교,남동구,nominal_access_only,선래공원,서창공원,True,1,2,0,0,False,False,False,False,True,False,True,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003106,경인교육대학교부설초등학교,계양구,functional_access_available,이촌공원,이촌공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003107,인천효성동초등학교,계양구,nominal_access_only,꿈나무공원,꿈나무공원,False,3,3,2,2,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003108,인천효성남초등학교,계양구,near_park_low_green_imbalance,효성공원,효성공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003109,인천효성초등학교,계양구,nominal_access_only,이촌공원,이촌공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003110,인천해서초등학교,계양구,nominal_access_only,고향골공원,갈개공원,True,2,0,0,0,False,False,False,False,False,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003111,인천안남초등학교,계양구,nominal_access_only,개나리공원,오조산공원,True,1,2,0,0,False,False,False,True,True,False,True,True,보행부담 등급 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003112,인천성지초등학교,계양구,near_park_low_green_imbalance,효성공원,효성공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003113,인천화전초등학교,계양구,nominal_access_only,하마리공원,된밭공원,True,3,3,1,2,False,False,True,True,True,True,False,True,간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003114,인천서운초등학교,계양구,functional_access_with_barrier,도두머리공원,도두머리공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003115,인천신대초등학교,계양구,nominal_access_only,은행공원,계양교통공원,True,2,3,0,0,False,False,True,True,True,True,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003116,인천길주초등학교,계양구,near_park_low_green_imbalance,용종5공원,학마을공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003117,인천병방초등학교,계양구,nominal_access_only,낙원공원,학마을공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003118,인천양촌초등학교,계양구,near_park_low_green_imbalance,양촌공원,양촌공원,False,2,2,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003119,인천소양초등학교,계양구,nominal_access_only,소양공원,박촌공원,True,0,2,0,1,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003120,인천당산초등학교,계양구,nominal_access_only,동양택지2공원,동양공원,True,3,2,0,0,False,False,False,False,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003121,인천귤현초등학교,계양구,nominal_access_only,귤현공원,들놀이공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003122,인천계양초등학교,계양구,near_park_low_green_imbalance,중앙공원,동산공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003123,인천계산초등학교,계양구,nominal_access_only,부일공원,계양근린공원,True,2,1,0,0,False,False,True,False,False,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003124,인천안산초등학교,계양구,nominal_access_only,임학공원,임학공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003125,인천부평초등학교,계양구,nominal_access_only,계산1호공원,갈개공원,True,3,3,1,1,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003126,인천부현초등학교,계양구,nominal_access_only,계산4공원,된밭공원,True,3,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003127,인천부현동초등학교,계양구,functional_access_with_barrier,계양교통공원,계양교통공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003128,인천작전초등학교,계양구,near_park_low_green_imbalance,된밭공원,된밭공원,False,2,2,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003129,인천작동초등학교,계양구,near_park_low_green_imbalance,도두리공원,도두리공원,False,3,3,2,2,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003130,인천명현초등학교,계양구,near_park_low_green_imbalance,꿈나무공원,꿈나무공원,False,3,3,2,2,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003131,인천효성서초등학교,계양구,nominal_access_only,새벌공원,새벌공원,False,3,3,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000003132,인천계양초등학교상야분교장,계양구,nominal_access_only,상야공원,동양공원,True,2,2,1,1,False,False,False,False,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003133,인천해원초등학교,서구,near_park_low_green_imbalance,흰여울공원,물고기자리공원,True,2,3,0,0,False,False,False,False,True,True,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003134,인천경명초등학교,서구,nominal_access_only,물병자리공원,물병자리공원,False,3,3,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003135,인천공촌초등학교,서구,functional_access_available,서곶공원,서곶공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003137,인천간재울초등학교,서구,nominal_access_only,검암소공원,빈정공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003138,인천경서초등학교,서구,near_park_low_green_imbalance,쑥공원(경서3호),쑥공원(경서3호),False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003139,인천청라초등학교,서구,functional_access_with_barrier,연일공원,연일공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003140,인천초은초등학교,서구,near_park_low_green_imbalance,거울어린이공원,거울어린이공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003141,인천양지초등학교,서구,functional_access_available,용두공원,샘내공원,True,1,1,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003142,인천심곡초등학교,서구,functional_access_with_barrier,절골공원,모통공원,True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003143,인천신석초등학교,서구,nominal_access_only,석남도시숲,원신공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003144,인천석남초등학교,서구,nominal_access_only,석남공원,신촌공원,True,1,3,0,1,False,False,False,True,True,False,True,True,보행부담 등급 · 간선도로 횡단 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003145,인천천마초등학교,서구,nominal_access_only,석남공원,신촌공원,True,1,3,0,1,False,False,False,True,True,False,True,True,보행부담 등급 · 간선도로 횡단 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003146,인천봉수초등학교,서구,nominal_access_only,가경공원,가정공원,True,2,3,1,3,False,True,False,False,True,True,False,True,보행부담 등급 · 간선도로 횡단 · 대형 교차로,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·대형 교차로 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003147,인천신현북초등학교,서구,nominal_access_only,원신공원,원신공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003148,인천가림초등학교,서구,near_park_low_green_imbalance,가좌공원,가좌공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003149,인천봉화초등학교,서구,no_official_park,감중공원,감중공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003150,인천건지초등학교,서구,near_park_low_green_imbalance,건지공원,건지공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003151,인천능내초등학교,서구,functional_access_available,검단2지구 2호근린공원,검단2지구 2호근린공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003152,인천검단초등학교,서구,nominal_access_only,마전지구2호 어린이공원,마전지구2호 어린이공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003153,인천완정초등학교,서구,functional_access_available,능내공원,능내공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003154,인천불로초등학교,서구,nominal_access_only,불로지구5호 어린이공원,마전지구2호 어린이공원,True,0,3,0,1,False,False,False,True,True,False,True,True,보행부담 등급 · 간선도로 횡단 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003155,인천목향초등학교,서구,nominal_access_only,불로5호소공원,원당지구 3호공원,True,2,2,0,1,False,False,True,False,True,True,False,True,간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003156,인천왕길초등학교,서구,near_park_low_green_imbalance,왕길새싹공원,왕길새싹공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003157,인천단봉초등학교,서구,near_park_low_green_imbalance,봉화공원,금호공원(오류지구 어린이공원),True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003158,인천원당초등학교,서구,near_park_low_green_imbalance,원당지구 1호공원,원당지구 1호공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003159,인천발산초등학교,서구,functional_access_with_barrier,원당지구 5호 어린이공원,맑은물빛공원,True,0,2,0,0,False,False,False,False,True,False,True,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003160,인천창신초등학교,서구,nominal_access_only,원당지구 4호 어린이공원,원당지구 3호공원,True,3,2,1,1,False,False,False,False,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000003161,인천금곡초등학교,서구,near_park_low_green_imbalance,왕길새싹공원,왕길새싹공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003162,인천가석초등학교,서구,no_official_park,서인공원,서인공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003163,인천가좌초등학교,서구,near_park_low_green_imbalance,가좌공원,가좌공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003164,인천가정초등학교,서구,no_official_park,장고개근린공원,장고개근린공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003165,인천당하초등학교,서구,near_park_low_green_imbalance,당하지구3호 어린이공원,당하지구 1호공원,True,1,1,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003166,인천마전초등학교,서구,nominal_access_only,검단2지구 3호 어린이공원,검단2지구 2호 어린이공원,True,1,3,0,0,False,False,False,True,True,False,True,True,보행부담 등급 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000003167,인천석남서초등학교,서구,nominal_access_only,신촌공원,신촌공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003168,인천가현초등학교,서구,nominal_access_only,수차공원,가정공원,True,1,1,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003169,인천신현초등학교,서구,no_official_park,원신공원,원신공원,False,3,3,1,1,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000003170,인천서곶초등학교,서구,functional_access_available,경명공원,경명공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003171,인천검암초등학교,서구,near_park_low_green_imbalance,상동공원,상동공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003172,인천은지초등학교,서구,nominal_access_only,허암공원,상동공원,True,3,0,0,0,False,False,False,False,False,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003173,길상초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003174,양도초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003175,조산초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003176,화도초등학교,강화군,functional_access_available,미단시티 13호,미단시티 13호,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003177,대월초등학교,강화군,no_official_park,불로지구1호 어린이공원,갑룡공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003178,갑룡초등학교,강화군,near_park_low_green_imbalance,불로지구1호 어린이공원,갑룡공원,True,0,0,0,0,False,False,False,False,False,False,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_no_extra_functional_risk
+B000003179,강화초등학교,강화군,near_park_low_green_imbalance,남산근린공원,남산근린공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003180,합일초등학교,강화군,functional_access_available,남산근린공원,남산근린공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003181,송해초등학교,강화군,near_park_low_green_imbalance,남산근린공원,남산근린공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003182,선원초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003183,불은초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003184,삼성초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003185,하점초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003186,명신초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003187,양사초등학교,강화군,near_park_low_green_imbalance,남산근린공원,남산근린공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003188,내가초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003189,해명초등학교,강화군,functional_access_available,미단시티 13호,미단시티 13호,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003190,삼산초등학교,강화군,no_official_park,창포공원,,False,3,,3,,False,False,False,False,False,True,False,False,,,aligned_route_basis
+B000003192,교동초등학교,강화군,no_official_park,백석공원(마),백석공원(마),False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000003194,서도초등학교,강화군,no_official_park,창포공원,,False,2,,1,,False,False,False,False,False,True,False,False,,,aligned_route_basis
+B000022832,인천한빛초등학교,남동구,functional_access_with_barrier,누리공원,갯골3호수변공원,True,1,3,0,0,False,False,False,False,True,False,True,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000022834,인천청람초등학교,서구,functional_access_with_barrier,물병자리공원,물병자리공원,False,2,2,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000022839,인천청일초등학교,서구,nominal_access_only,포리공원,포리공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000024924,인천하늘초등학교,중구,functional_access_available,박석공원,박석공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025189,인천송명초등학교,연수구,functional_access_available,첨단산업클러스터2호어린이공원,첨단산업클러스터2호어린이공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025193,인천만월초등학교,남동구,functional_access_available,찬우물공원,찬우물공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025196,인천장서초등학교,남동구,near_park_low_green_imbalance,흰여울공원,어울공원,True,0,2,0,0,False,False,False,False,True,False,True,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000025202,인천장아초등학교,남동구,functional_access_available,장아산공원,장아산공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025206,인천새봄초등학교,연수구,nominal_access_only,새아침공원,새아침공원,False,3,3,4,4,True,True,False,False,True,True,False,False,,,aligned_route_basis
+B000025210,인천연송초등학교,연수구,nominal_access_only,송도  12호 어린이공원,센트럴파크,True,0,2,0,1,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000025222,인천현송초등학교,연수구,nominal_access_only,랜드마크시티 3호 근린공원,랜드마크시티 3호 근린공원,False,3,3,2,2,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000025225,인천송빛초등학교,연수구,no_official_park,랜드마크시티 3호 수변공원,랜드마크시티 3호 수변공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000025226,인천송일초등학교,연수구,nominal_access_only,송도  16호 어린이공원,소리공원(송도26호공원),True,2,2,0,0,False,False,True,True,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000025228,인천예송초등학교,연수구,nominal_access_only,송도  14호 어린이공원,센트럴파크,True,0,3,0,3,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000025236,인천첨단초등학교,연수구,functional_access_available,첨단산업클러스터2호어린이공원,첨단산업클러스터2호어린이공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025246,인천미송초등학교,연수구,functional_access_available,랜드마크시티 1호 수변공원,랜드마크시티 1호 수변공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025248,인천은송초등학교,연수구,no_official_park,랜드마크시티 3호 근린공원,랜드마크시티 3호 근린공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025256,인천송원초등학교,연수구,functional_access_available,국제화복합단지 1호 근린공원,국제화복합단지 1호 근린공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025512,인천용학초등학교,미추홀구,near_park_low_green_imbalance,도담어린이공원,도담어린이공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025677,인천주안초등학교,미추홀구,near_park_low_green_imbalance,승기어린이공원,승기어린이공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025690,인천별빛초등학교,중구,near_park_low_green_imbalance,영종하늘도시 29호,영종하늘도시 29호,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000025751,인천경연초등학교,서구,near_park_low_green_imbalance,황소자리공원,황소자리공원,False,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000025752,인천도담초등학교,서구,functional_access_with_barrier,포리공원,포리공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000025756,인천청호초등학교,서구,functional_access_with_barrier,물병자리공원,물병자리공원,False,3,3,0,0,False,False,True,True,True,True,False,False,,,aligned_route_basis
+B000026155,인천한들초등학교,서구,nominal_access_only,당하어린이공원,당하지구 1호공원,True,2,2,1,1,False,False,False,False,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000026332,인천백석초등학교,서구,functional_access_with_barrier,당하지구7호 어린이공원,당하지구 1호공원,True,0,2,0,1,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000026333,인천가원초등학교,서구,nominal_access_only,가경공원,거울어린이공원,True,2,3,1,1,False,False,False,True,True,True,False,True,보행부담 등급 · 사고위험 지점,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·사고위험 지점 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000026466,인천아라초등학교,서구,functional_access_with_barrier,아라노을공원,아라노을공원,False,2,2,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000026467,인천해든초등학교,서구,near_park_low_green_imbalance,해든공원,해든공원,False,3,3,0,0,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000026468,인천아람초등학교,서구,nominal_access_only,동글동글나이테공원,바래미공원,True,0,1,0,0,False,False,False,False,False,False,False,True,보행부담 등급,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000026469,인천한별초등학교,서구,functional_access_available,도담공원,도담공원,False,1,1,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
+B000026470,인천이음초등학교,서구,nominal_access_only,아랫목어린이공원,도담공원,True,1,3,0,1,False,False,False,False,True,False,True,True,보행부담 등급 · 간선도로 횡단,활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 보행부담 등급·간선도로 횡단 항목이 더 불리하게 산정됩니다.,activity_scale_route_understated_by_official_route
+B000026471,인천신검단초등학교,서구,nominal_access_only,원당지구 4호 어린이공원,원당지구 3호공원,True,2,2,1,1,False,False,False,False,True,True,False,False,,공식 최근접 공원과 활동규모 공원 대상지가 달라 경로 특성을 별도로 해석합니다.,different_route_functional_risk_visible
+B000026504,인천송담초등학교,연수구,nominal_access_only,랜드마크시티 1호 수변공원,랜드마크시티 1호 수변공원,False,2,2,1,1,False,False,False,False,True,True,False,False,,,aligned_route_basis
+B000027505,인천중산초등학교,중구,functional_access_available,박석공원,박석공원,False,0,0,0,0,False,False,False,False,False,False,False,False,,,aligned_route_basis
