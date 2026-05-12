@@ -146,3 +146,47 @@ body {
 .recharts-tooltip-label {
   color: #E5E7EB !important;
 }
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  :root,
+  body {
+    background: #050B14 !important;
+    color: #F8FAFC !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body {
+    min-height: auto;
+  }
+
+  .app-print-hidden {
+    display: none !important;
+  }
+
+  #root,
+  #root > div {
+    min-height: auto !important;
+  }
+
+  .panel,
+  .panel-soft,
+  .panel-inset,
+  .panel-light,
+  .stat-card,
+  section,
+  article {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  button,
+  [role="button"] {
+    box-shadow: none !important;
+  }
+}

@@ -1184,8 +1184,27 @@
       cursor: pointer;
     }
 
+    .guide-print-button {
+      position: absolute;
+      top: 16px;
+      right: 66px;
+      z-index: 3;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid rgba(16, 185, 129, 0.42);
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.14);
+      color: #d1fae5;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
     .guide-close:hover,
-    .guide-close:focus {
+    .guide-close:focus,
+    .guide-print-button:hover,
+    .guide-print-button:focus {
       border-color: rgba(16, 185, 129, 0.55);
       outline: none;
       box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
@@ -1213,7 +1232,7 @@
 
     .guide-hero h2 {
       margin: 0;
-      padding-right: 48px;
+      padding-right: 140px;
       color: #f8fafc;
       font-size: clamp(28px, 3.2vw, 42px);
       line-height: 1.18;
@@ -1665,6 +1684,115 @@
       color: #a7f3d0;
     }
 
+    .simulation-overlay-card {
+      position: relative;
+      width: min(1080px, 98vw);
+      height: 92vh;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    }
+
+    .simulation-overlay-actions {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      z-index: 2;
+      display: flex;
+      gap: 8px;
+    }
+
+    .simulation-overlay-button {
+      min-height: 34px;
+      padding: 6px 13px;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      border-radius: 8px;
+      background: #f0f0f0;
+      color: #111827;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .simulation-overlay-button.print {
+      border-color: rgba(16, 185, 129, 0.32);
+      background: #d1fae5;
+      color: #064e3b;
+    }
+
+    .simulation-overlay-button:hover,
+    .simulation-overlay-button:focus {
+      outline: none;
+      filter: brightness(0.97);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 12mm;
+      }
+
+      body.print-guide-active {
+        background: #050b14 !important;
+        color: #f8fafc !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      body.print-guide-active > *:not(#guideOverlay) {
+        display: none !important;
+      }
+
+      body.print-guide-active #guideOverlay {
+        display: block !important;
+        position: static !important;
+        inset: auto !important;
+        z-index: auto !important;
+        padding: 0 !important;
+        background: #050b14 !important;
+        backdrop-filter: none !important;
+      }
+
+      body.print-guide-active .guide-dialog {
+        width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        border-radius: 0 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+      }
+
+      body.print-guide-active .guide-dialog::before,
+      body.print-guide-active .guide-close,
+      body.print-guide-active .guide-print-button,
+      body.print-guide-active .guide-cta-row {
+        display: none !important;
+      }
+
+      body.print-guide-active .guide-scroll {
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 0 !important;
+      }
+
+      body.print-guide-active .guide-section-block,
+      body.print-guide-active .guide-flow-stage,
+      body.print-guide-active .guide-detail-panel,
+      body.print-guide-active .guide-principle-card,
+      body.print-guide-active .guide-faq-item,
+      body.print-guide-active .guide-cta-panel {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      body.print-guide-active .guide-faq-answer {
+        display: block !important;
+      }
+    }
+
     @media (max-width: 768px) {
       .panel {
         top: auto;
@@ -1821,7 +1949,7 @@
       }
 
       .guide-hero h2 {
-        padding-right: 44px;
+        padding-right: 128px;
         font-size: 25px;
       }
 
@@ -4389,6 +4517,7 @@
       const activeStep = getGuideStep(overlay.dataset.activeStep);
       overlay.innerHTML = `
         <div class="guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+          <button class="guide-print-button" type="button" data-guide-print>PDF/인쇄</button>
           <button class="guide-close" type="button" data-guide-close aria-label="사용 설명서 닫기">×</button>
           <div class="guide-scroll">
             <section class="guide-hero">
@@ -4486,6 +4615,22 @@
       document.getElementById("guideOverlay")?.classList.remove("is-open");
     }
 
+    function printGuideOverlay() {
+      const overlay = renderGuideOverlay();
+      overlay.classList.add("is-open");
+      const previousTitle = document.title;
+      const restorePrintState = () => {
+        document.body.classList.remove("print-guide-active");
+        document.title = previousTitle;
+        window.removeEventListener("afterprint", restorePrintState);
+      };
+      document.title = "ParkLens - 사용설명서";
+      document.body.classList.add("print-guide-active");
+      window.addEventListener("afterprint", restorePrintState);
+      window.print();
+      window.setTimeout(restorePrintState, 1500);
+    }
+
     function updateGuideActiveStep(stepId) {
       const overlay = document.getElementById("guideOverlay");
       if (!overlay) return;
@@ -4506,6 +4651,12 @@
       const closeButton = event.target.closest("[data-guide-close]");
       if (closeButton || event.target === overlay) {
         closeGuideOverlay();
+        return;
+      }
+
+      const printButton = event.target.closest("[data-guide-print]");
+      if (printButton) {
+        printGuideOverlay();
         return;
       }
 
@@ -5732,6 +5883,45 @@
       const frame = document.getElementById("simulationFrame");
       frame.src = frame.src; // iframe 리셋
     }
+
+    function getPreviewPrintLabel(view) {
+      if (view === "simulation") return "후보지 시뮬레이션";
+      if (view === "statistics") return "전체 통계 리포트";
+      return "학교 상세 리포트";
+    }
+
+    function getStoredPrintSchoolName() {
+      try {
+        const row = JSON.parse(localStorage.getItem("parkAnalysis_school") || "{}");
+        return row.학교명 || row.schoolName || row.school_name || "ParkLens";
+      } catch {
+        return "ParkLens";
+      }
+    }
+
+    function printSimulationOverlay() {
+      const frame = document.getElementById("simulationFrame");
+      if (!frame || !frame.contentWindow) return;
+      let view = "report";
+      try {
+        view = new URL(frame.src, window.location.href).searchParams.get("view") || "report";
+      } catch {
+        view = "report";
+      }
+      const frameDocument = frame.contentDocument;
+      const previousTitle = frameDocument?.title;
+      const restoreTitle = () => {
+        if (frameDocument && previousTitle) frameDocument.title = previousTitle;
+        frame.contentWindow.removeEventListener("afterprint", restoreTitle);
+      };
+      if (frameDocument) {
+        frameDocument.title = `${getStoredPrintSchoolName()} - ${getPreviewPrintLabel(view)}`;
+      }
+      frame.contentWindow.addEventListener("afterprint", restoreTitle);
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+      window.setTimeout(restoreTitle, 1500);
+    }
   </script>
 
   <!-- 시뮬레이션 전체화면 오버레이 -->
@@ -5740,19 +5930,11 @@
     background:rgba(0,0,0,0.6);
     align-items:center; justify-content:center;
   ">
-    <div style="
-      position:relative; width:min(1080px,98vw); height:92vh;
-      background:#fff; border-radius:16px; overflow:hidden;
-      box-shadow:0 24px 64px rgba(0,0,0,0.4);
-    ">
-      <button
-        onclick="closeSimulationOverlay()"
-        style="
-          position:absolute; top:12px; right:14px; z-index:1;
-          background:#f0f0f0; border:none; border-radius:8px;
-          padding:6px 14px; cursor:pointer; font-size:13px; font-weight:600;
-        "
-      >✕ 닫기</button>
+    <div class="simulation-overlay-card">
+      <div class="simulation-overlay-actions">
+        <button class="simulation-overlay-button print" type="button" onclick="printSimulationOverlay()">PDF/인쇄</button>
+        <button class="simulation-overlay-button" type="button" onclick="closeSimulationOverlay()">✕ 닫기</button>
+      </div>
       <iframe
         id="simulationFrame"
         src="ui-preview/dist/index.html"

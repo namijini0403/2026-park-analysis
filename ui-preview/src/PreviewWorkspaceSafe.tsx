@@ -9,6 +9,13 @@ import { applyLegacySchoolSnapshot, mapSchoolRowToReportProps, mapCandidateFeatu
 
 type ViewMode = "landing" | "report" | "simulation" | "statistics";
 
+const VIEW_PRINT_LABELS: Record<ViewMode, string> = {
+  landing: "시스템 시작 화면",
+  report: "학교 상세 리포트",
+  simulation: "후보지 시뮬레이션",
+  statistics: "전체 통계 리포트",
+};
+
 type RedevelopmentProject = {
   name: string;
   stage: string;
@@ -149,13 +156,27 @@ export default function PreviewWorkspaceSafe() {
   const redevelopmentProjects = useMemo(() => readRedevelopmentProjects(schoolRow), [schoolRow]);
   const largeApartmentComplexes = useMemo(() => readLargeApartmentComplexes(schoolRow), [schoolRow]);
 
+  const handlePrint = () => {
+    if (typeof window === "undefined") return;
+    const previousTitle = document.title;
+    const printTitle = `${detailProps.schoolName} - ${VIEW_PRINT_LABELS[view]}`;
+    const restoreTitle = () => {
+      document.title = previousTitle;
+      window.removeEventListener("afterprint", restoreTitle);
+    };
+    document.title = printTitle;
+    window.addEventListener("afterprint", restoreTitle);
+    window.print();
+    window.setTimeout(restoreTitle, 1500);
+  };
+
   if (view === "landing") {
     return <LandingPage onEnter={(target) => setView(target)} />;
   }
 
   return (
     <div className="min-h-screen">
-      <div className="sticky top-0 z-20 border-b border-white/10 bg-navy-950/95">
+      <div className="app-print-hidden sticky top-0 z-20 border-b border-white/10 bg-navy-950/95">
         <div className="mx-auto flex max-w-[1380px] flex-wrap items-center justify-between gap-3 px-4 py-3 lg:px-8">
           <div className="flex items-center gap-3">
             <button
@@ -198,6 +219,13 @@ export default function PreviewWorkspaceSafe() {
                 </button>
               );
             })}
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="rounded-full border border-forest-400/45 bg-forest-500/10 px-4 py-2 text-sm font-semibold text-forest-100 transition hover:bg-forest-500/20"
+            >
+              PDF/인쇄
+            </button>
           </div>
         </div>
       </div>
