@@ -82,6 +82,7 @@ for (const file of requiredDataFiles) {
 }
 
 copyDirectoryToOutput(path.join("ui-preview", "dist"));
+copyDirectoryToOutput("assets");
 
 let fileCount = 0;
 let totalBytes = 0;

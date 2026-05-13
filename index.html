@@ -1212,10 +1212,10 @@
 
     .guide-hero {
       display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(390px, 0.72fr);
-      gap: 30px;
-      align-items: center;
-      padding: 30px;
+      grid-template-columns: minmax(0, 0.82fr) minmax(430px, 0.95fr);
+      gap: 24px;
+      align-items: stretch;
+      padding: 26px;
       border-radius: 16px;
       background: rgba(21, 34, 56, 0.96);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1232,11 +1232,68 @@
 
     .guide-hero h2 {
       margin: 0;
-      padding-right: 140px;
       color: #f8fafc;
       font-size: clamp(28px, 3.2vw, 42px);
       line-height: 1.18;
       letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .guide-hero-lead {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .guide-impact-stat {
+      display: grid;
+      grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(5, 11, 20, 0.72);
+      border: 1px solid rgba(16, 185, 129, 0.26);
+      box-shadow: inset 3px 0 0 rgba(16, 185, 129, 0.82);
+    }
+
+    .guide-impact-number {
+      color: #ffffff;
+      font-size: clamp(38px, 5.2vw, 64px);
+      font-weight: 950;
+      line-height: 0.96;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .guide-impact-number span {
+      display: block;
+      margin-top: 4px;
+      color: #a7f3d0;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .guide-impact-copy {
+      min-width: 0;
+    }
+
+    .guide-impact-copy strong {
+      display: block;
+      color: #f8fafc;
+      font-size: 16px;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+
+    .guide-impact-copy span {
+      display: block;
+      margin-top: 8px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.5;
       word-break: keep-all;
     }
 
@@ -1258,12 +1315,143 @@
 
     .guide-badges {
       justify-content: flex-start;
+      margin-top: auto;
+      padding-top: 20px;
     }
 
     .guide-hero-aside {
       width: 100%;
-      max-width: 450px;
+      max-width: 560px;
       justify-self: end;
+    }
+
+    .guide-capture-card {
+      position: relative;
+      margin: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #081421;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 20px 42px rgba(2, 6, 23, 0.32);
+    }
+
+    .guide-capture-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      object-position: 50% 50%;
+      filter: saturate(0.92) contrast(1.02);
+    }
+
+    .guide-capture-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(5, 11, 20, 0.02), rgba(5, 11, 20, 0.52));
+    }
+
+    .guide-capture-labels {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      z-index: 1;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .guide-capture-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: #f8fafc;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(8, 20, 33, 0.88);
+      backdrop-filter: blur(8px);
+    }
+
+    .guide-capture-label.straight {
+      color: #fed7aa;
+      border-color: rgba(237, 137, 54, 0.46);
+    }
+
+    .guide-capture-label.walk {
+      color: #bfdbfe;
+      border-color: rgba(43, 108, 176, 0.52);
+    }
+
+    .guide-case-card {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(5, 11, 20, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .guide-case-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .guide-case-title {
+      margin: 0;
+      color: #ffffff;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+
+    .guide-case-label {
+      flex: 0 0 auto;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(244, 63, 94, 0.14);
+      border: 1px solid rgba(244, 63, 94, 0.34);
+      color: #fecdd3;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .guide-case-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .guide-case-metric {
+      min-height: 74px;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(21, 34, 56, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .guide-case-metric span {
+      display: block;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .guide-case-metric strong {
+      display: block;
+      margin-top: 7px;
+      color: #f8fafc;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: 0;
     }
 
     .guide-badge {
@@ -1961,8 +2149,26 @@
       }
 
       .guide-hero h2 {
-        padding-right: 128px;
         font-size: 25px;
+      }
+
+      .guide-impact-stat {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 15px;
+      }
+
+      .guide-impact-number {
+        white-space: normal;
+      }
+
+      .guide-case-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .guide-case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .guide-section-head {
@@ -4533,16 +4739,42 @@
           <button class="guide-close" type="button" data-guide-close aria-label="사용 설명서 닫기">×</button>
           <div class="guide-scroll">
             <section class="guide-hero">
-              <div>
+              <div class="guide-hero-lead">
                 <p class="guide-kicker">Interactive System Flowmap</p>
                 <h2 id="guideTitle">${guideTextHtml(GUIDE_CONTENT.hero.title)}</h2>
                 <p>${guideTextHtml(GUIDE_CONTENT.hero.subtitle)}</p>
-              </div>
-              <div class="guide-hero-aside">
+                <div class="guide-impact-stat" aria-label="핵심 발견">
+                  <div class="guide-impact-number">10.3%<span>28 / 272개교</span></div>
+                  <div class="guide-impact-copy">
+                    <strong>직선 500m 안에 공원이 잡혀도 실제 도보 500m 생활권에서는 공원이 0개인 학교가 있습니다.</strong>
+                    <span>반경이 아니라 도달 가능성을 기준으로 보면 정책 우선순위가 달라집니다.</span>
+                  </div>
+                </div>
                 <div class="guide-badges">
                   ${GUIDE_CONTENT.hero.badges.map((badge) => `<span class="guide-badge">${escapeGuideText(badge)}</span>`).join("")}
                 </div>
-                <div class="guide-system-note">${guideTextHtml(GUIDE_CONTENT.hero.thesis)}</div>
+              </div>
+              <div class="guide-hero-aside">
+                <figure class="guide-capture-card">
+                  <img src="./assets/guide-bonghwa-both.png" alt="인천봉화초등학교 지도에서 직선거리 500m와 실제 도보이동 500m 레이어를 함께 표시한 앱 캡처" />
+                  <figcaption class="guide-capture-labels">
+                    <span class="guide-capture-label straight">직선 500m 안 공원 1개</span>
+                    <span class="guide-capture-label walk">도보 500m 생활권 공원 0개</span>
+                  </figcaption>
+                </figure>
+                <div class="guide-case-card" aria-label="인천봉화초등학교 대표 사례">
+                  <div class="guide-case-head">
+                    <h3 class="guide-case-title">인천봉화초등학교</h3>
+                    <span class="guide-case-label">공원 접근 결핍</span>
+                  </div>
+                  <div class="guide-case-grid">
+                    <div class="guide-case-metric"><span>도보 생활권 공원</span><strong>0개</strong></div>
+                    <div class="guide-case-metric"><span>직선 500m 공원</span><strong>1개</strong></div>
+                    <div class="guide-case-metric"><span>놀이터</span><strong>0개</strong></div>
+                    <div class="guide-case-metric"><span>녹지 비율</span><strong>0%</strong></div>
+                    <div class="guide-case-metric"><span>우선 검토 점수</span><strong>4</strong></div>
+                  </div>
+                </div>
               </div>
             </section>
 
