@@ -1454,6 +1454,63 @@
       letter-spacing: 0;
     }
 
+    .guide-screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .guide-screenshot-card {
+      overflow: hidden;
+      border-radius: 16px;
+      background: rgba(16, 27, 45, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 18px 38px rgba(2, 6, 23, 0.18);
+    }
+
+    .guide-screenshot-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: 50% 12%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .guide-screenshot-card-body {
+      padding: 14px;
+    }
+
+    .guide-screenshot-card-body span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      margin-bottom: 9px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #a7f3d0;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .guide-screenshot-card-body h4 {
+      margin: 0;
+      color: #f8fafc;
+      font-size: 15px;
+      line-height: 1.35;
+      word-break: keep-all;
+    }
+
+    .guide-screenshot-card-body p {
+      margin: 8px 0 0;
+      color: #cbd5e1;
+      font-size: 12px;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+
     .guide-badge {
       display: inline-flex;
       align-items: center;
@@ -2169,6 +2226,10 @@
 
       .guide-case-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .guide-screenshot-grid {
+        grid-template-columns: 1fr;
       }
 
       .guide-section-head {
@@ -4775,6 +4836,47 @@
                     <div class="guide-case-metric"><span>우선 검토 점수</span><strong>4</strong></div>
                   </div>
                 </div>
+              </div>
+            </section>
+
+            <section class="guide-section-block">
+              <div class="guide-section-head">
+                <h3>실제 앱 화면으로 보는 판단 흐름</h3>
+                <p>지도 탐색 전에 핵심 기능을 캡처로 먼저 보여주어, 데이터·진단·시뮬레이션·통계가 하나의 시스템으로 연결됨을 확인할 수 있습니다.</p>
+              </div>
+              <div class="guide-screenshot-grid">
+                <article class="guide-screenshot-card">
+                  <img src="./assets/guide-shot-map-layers.png" alt="인천봉화초 지도에서 직선거리 500m와 실제 도보이동 500m 레이어를 함께 켠 화면" />
+                  <div class="guide-screenshot-card-body">
+                    <span>지도 레이어</span>
+                    <h4>직선 반경과 도보 생활권 비교</h4>
+                    <p>같은 500m라도 행정적 반경과 실제 도달 가능 범위가 다르게 보이는 장면입니다.</p>
+                  </div>
+                </article>
+                <article class="guide-screenshot-card">
+                  <img src="./assets/guide-shot-report.png" alt="인천봉화초 상세 리포트 화면" />
+                  <div class="guide-screenshot-card-body">
+                    <span>학교 진단</span>
+                    <h4>대표 학교 상세 리포트</h4>
+                    <p>공원 거리, 녹지, 놀이터, 500m 내 공원 여부를 정책 언어로 해석합니다.</p>
+                  </div>
+                </article>
+                <article class="guide-screenshot-card">
+                  <img src="./assets/guide-shot-simulation.png" alt="인천봉화초 후보지 시뮬레이션 화면" />
+                  <div class="guide-screenshot-card-body">
+                    <span>시뮬레이션</span>
+                    <h4>후보지 추천과 기준 조정</h4>
+                    <p>사용자가 기준을 바꾸면 후보지와 추천 이유가 어떻게 달라지는지 비교합니다.</p>
+                  </div>
+                </article>
+                <article class="guide-screenshot-card">
+                  <img src="./assets/guide-shot-statistics.png" alt="인천 학교 전체 통계 리포트 화면" />
+                  <div class="guide-screenshot-card-body">
+                    <span>전체 통계</span>
+                    <h4>구조적 격차 분포 확인</h4>
+                    <p>개별 사례가 아니라 인천 전체 학교의 우선지원 흐름을 함께 보여줍니다.</p>
+                  </div>
+                </article>
               </div>
             </section>
 
