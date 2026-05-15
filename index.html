@@ -1212,8 +1212,8 @@
 
     .guide-hero {
       display: grid;
-      grid-template-columns: minmax(0, 0.82fr) minmax(430px, 0.95fr);
-      gap: 24px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
       align-items: stretch;
       padding: 26px;
       border-radius: 16px;
@@ -1242,11 +1242,12 @@
     .guide-hero-lead {
       display: flex;
       flex-direction: column;
+      max-width: 880px;
     }
 
     .guide-impact-stat {
       display: grid;
-      grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) minmax(118px, auto);
       gap: 16px;
       align-items: center;
       margin-top: 22px;
@@ -1259,18 +1260,19 @@
 
     .guide-impact-number {
       color: #ffffff;
-      font-size: clamp(38px, 5.2vw, 64px);
+      font-size: clamp(24px, 2.8vw, 34px);
       font-weight: 950;
-      line-height: 0.96;
+      line-height: 1;
       letter-spacing: 0;
       white-space: nowrap;
+      text-align: right;
     }
 
     .guide-impact-number span {
       display: block;
-      margin-top: 4px;
+      margin-top: 6px;
       color: #a7f3d0;
-      font-size: 17px;
+      font-size: 13px;
       font-weight: 900;
       line-height: 1.2;
     }
@@ -1282,7 +1284,7 @@
     .guide-impact-copy strong {
       display: block;
       color: #f8fafc;
-      font-size: 16px;
+      font-size: 19px;
       line-height: 1.55;
       word-break: keep-all;
     }
@@ -1321,8 +1323,8 @@
 
     .guide-hero-aside {
       width: 100%;
-      max-width: 560px;
-      justify-self: end;
+      max-width: none;
+      justify-self: stretch;
     }
 
     .guide-capture-card {
@@ -1341,7 +1343,7 @@
       aspect-ratio: 16 / 9;
       object-fit: cover;
       object-position: 50% 50%;
-      filter: brightness(1.08) saturate(1.08) contrast(1.03);
+      filter: brightness(1.02) saturate(1.04) contrast(1.02);
     }
 
     .guide-capture-card::after {
@@ -1456,12 +1458,13 @@
 
     .guide-screenshot-grid {
       display: grid;
-      gap: 14px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
     }
 
     .guide-screenshot-card {
-      display: grid;
-      grid-template-columns: minmax(230px, 0.36fr) minmax(0, 0.64fr);
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       border-radius: 16px;
       background: rgba(16, 27, 45, 0.96);
@@ -1472,18 +1475,18 @@
     .guide-screenshot-card img {
       display: block;
       width: 100%;
-      height: 420px;
+      height: 310px;
       object-fit: contain;
       object-position: 50% 50%;
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       background: #081421;
-      filter: brightness(1.08) saturate(1.08);
+      filter: brightness(1.01) saturate(1.04);
     }
 
     .guide-screenshot-card-body {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       padding: 18px;
     }
 
@@ -1697,7 +1700,7 @@
 
     .guide-detail-panel {
       display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(0, 0.62fr) minmax(0, 1.16fr);
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
       gap: 22px;
       align-items: stretch;
       margin-top: 14px;
@@ -1796,28 +1799,6 @@
       color: #94a3b8;
       font-size: 13px;
       line-height: 1.55;
-    }
-
-    .guide-detail-media {
-      margin: 0;
-      display: flex;
-      align-items: center;
-      min-height: 360px;
-      padding: 14px;
-      border-radius: 14px;
-      background: rgba(5, 11, 20, 0.78);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .guide-detail-media img {
-      display: block;
-      width: 100%;
-      max-height: 430px;
-      object-fit: contain;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: #081421;
-      filter: brightness(1.08) saturate(1.08);
     }
 
     .guide-principle-grid {
@@ -2245,6 +2226,7 @@
 
       .guide-impact-number {
         white-space: normal;
+        text-align: left;
       }
 
       .guide-case-head {
@@ -2268,7 +2250,6 @@
         height: auto;
         max-height: 460px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        border-left: 0;
       }
 
       .guide-section-head {
@@ -2332,10 +2313,6 @@
       .guide-detail-panel {
         grid-template-columns: 1fr;
         padding: 18px;
-      }
-
-      .guide-detail-media {
-        min-height: auto;
       }
 
       .guide-detail-title {
@@ -4823,9 +4800,6 @@
             ${step.items.map((item) => `<li>${escapeGuideText(item)}</li>`).join("")}
           </ul>
         </div>
-        <figure class="guide-detail-media">
-          <img src="${escapeGuideText(step.image || "./assets/guide-bright-map-layers.png")}" alt="${escapeGuideText(step.imageAlt || `${step.title} 관련 화면 캡처`)}" />
-        </figure>
       `;
     }
 
@@ -4863,11 +4837,11 @@
                 <h2 id="guideTitle">${guideTextHtml(GUIDE_CONTENT.hero.title)}</h2>
                 <p>${guideTextHtml(GUIDE_CONTENT.hero.subtitle)}</p>
                 <div class="guide-impact-stat" aria-label="핵심 발견">
-                  <div class="guide-impact-number">10.3%<span>28 / 272개교</span></div>
                   <div class="guide-impact-copy">
-                    <strong>직선 500m 안에 공원이 잡혀도 실제 도보 500m 생활권에서는 공원이 0개인 학교가 있습니다.</strong>
+                    <strong>실제 도보 500m 내 도달 가능한 공원이 없는 학교가 28개교, 전체의 10.3%입니다.</strong>
                     <span>반경이 아니라 도달 가능성을 기준으로 보면 정책 우선순위가 달라집니다.</span>
                   </div>
+                  <div class="guide-impact-number">28개교<span>전체 10.3%</span></div>
                 </div>
                 <div class="guide-badges">
                   ${GUIDE_CONTENT.hero.badges.map((badge) => `<span class="guide-badge">${escapeGuideText(badge)}</span>`).join("")}
@@ -4900,7 +4874,7 @@
             <section class="guide-section-block">
               <div class="guide-section-head">
                 <h3>실제 앱 화면으로 보는 판단 흐름</h3>
-                <p>기존 캡처를 밝게 보정하고 화면에 맞게 다듬어, 상세 리포트·후보지 추천·전체 통계가 하나의 시스템으로 연결됨을 확인할 수 있습니다.</p>
+                <p>학교 진단, 시뮬레이션, 전체 통계가 어떤 순서로 정책 판단을 돕는지 한눈에 비교합니다.</p>
               </div>
               <div class="guide-screenshot-grid">
                 <article class="guide-screenshot-card">
@@ -4917,7 +4891,7 @@
                     <h4>후보지 추천과 기준 조정</h4>
                     <p>지도와 후보지 경로를 먼저 보고, 아래 기준 조정 영역에서 필터와 가중치를 바꿉니다.</p>
                   </div>
-                  <img src="./assets/guide-bright-simulation.png" alt="후보지 추천과 기준 조정 화면" />
+                  <img src="./assets/guide-simulation-map-weights.png" alt="지도와 기준 조정 영역 중심의 후보지 추천 화면" />
                 </article>
                 <article class="guide-screenshot-card">
                   <div class="guide-screenshot-card-body">
@@ -4933,7 +4907,7 @@
             <section class="guide-section-block">
               <div class="guide-section-head">
                 <h3>정책 판단 흐름도</h3>
-                <p>각 단계를 누르면 판단 설명과 관련 화면 캡처가 함께 표시됩니다. case2 단계는 봉화초 단일 사례가 아니라 전형적 검토 학교 흐름으로 읽히도록 지도 레이어 화면을 붙였습니다.</p>
+                <p>각 단계를 누르면 아래에 판단 설명이 표시됩니다. 화면 캡처는 위의 3단계 앱 화면 섹션에서 먼저 확인하고, 흐름도는 판단 논리에 집중합니다.</p>
               </div>
               <div class="guide-flow-stage">
                 <div class="guide-flow-track">
