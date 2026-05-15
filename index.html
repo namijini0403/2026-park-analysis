@@ -1340,8 +1340,8 @@
     .guide-capture-card img {
       display: block;
       width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
+      max-height: 500px;
+      object-fit: contain;
       object-position: 50% 50%;
       filter: brightness(1.02) saturate(1.04) contrast(1.02);
     }
@@ -1351,18 +1351,18 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(to bottom, rgba(5, 11, 20, 0.02), rgba(5, 11, 20, 0.52));
+      background: linear-gradient(to bottom, rgba(5, 11, 20, 0.01), rgba(5, 11, 20, 0.08));
     }
 
     .guide-capture-labels {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 14px;
-      z-index: 1;
+      display: none;
+    }
+
+    .guide-case-finding {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      margin: 10px 0 14px;
     }
 
     .guide-capture-label {
@@ -1475,9 +1475,9 @@
     .guide-screenshot-card img {
       display: block;
       width: 100%;
-      height: 310px;
-      object-fit: contain;
-      object-position: 50% 50%;
+      height: 440px;
+      object-fit: cover;
+      object-position: top center;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       background: #081421;
       filter: brightness(1.01) saturate(1.04);
@@ -2768,11 +2768,11 @@
         {
           id: 6,
           title: "사용자 기준 조정",
-          short: "필터와 우선순위를 바꿔 다른 판단 기준을 적용합니다.",
-          headline: "정책 판단 기준은 하나로 고정되지 않으므로\n사용자가 조건을 바꿔 비교할 수 있어야 합니다.",
-          items: ["사용자 가중치 조정", "필터 적용", "우선순위 변화", "AI 추천과 사용자 판단 비교"],
-          principle: "Human-in-the-loop 구조로 최종 판단의 투명성을 높입니다.",
-          actionText: "시뮬레이션에서 정책 기준을 바꿔 추천 결과의 변화를 비교합니다.",
+          short: "XAI 근거를 보며 필터와 우선순위를 조정합니다.",
+          headline: "XAI는 추천 이유를 드러내고,\n사용자는 정책 기준을 바꿔 비교합니다.",
+          items: ["설명 가능한 AI 추천 근거", "사용자 가중치 조정", "필터 적용", "우선순위 변화", "AI 추천과 사용자 판단 비교"],
+          principle: "XAI + Human-in-the-loop 구조로 최종 판단의 투명성과 책임성을 높입니다.",
+          actionText: "시뮬레이션에서 추천 근거를 확인한 뒤 정책 기준을 바꿔 결과 변화를 비교합니다.",
           image: "./assets/guide-bright-simulation.png",
           imageAlt: "후보지 추천과 기준 조정 화면 캡처"
         }
@@ -2792,7 +2792,7 @@
         },
         {
           title: "AI 추천 + 사용자 조정",
-          detail: "AI 기본 추천을 제공하되, 사용자가 정책 기준을 바꿔 비교할 수 있습니다."
+          detail: "XAI로 추천 근거를 드러내고, 사용자가 정책 기준을 바꿔 비교할 수 있습니다."
         }
       ],
       faq: [
@@ -4850,15 +4850,15 @@
               <div class="guide-hero-aside">
                 <figure class="guide-capture-card">
                   <img src="./assets/guide-bright-map-layers.png" alt="지도에서 직선거리 500m와 실제 도보이동 500m 레이어를 함께 표시한 앱 캡처" />
-                  <figcaption class="guide-capture-labels">
-                    <span class="guide-capture-label straight">직선 500m 안 공원 1개</span>
-                    <span class="guide-capture-label walk">도보 500m 생활권 공원 0개</span>
-                  </figcaption>
                 </figure>
                 <div class="guide-case-card" aria-label="인천봉화초등학교 대표 사례">
                   <div class="guide-case-head">
                     <h3 class="guide-case-title">인천봉화초등학교</h3>
                     <span class="guide-case-label">공원 접근 결핍</span>
+                  </div>
+                  <div class="guide-case-finding">
+                    <span class="guide-capture-label straight">직선 500m 안 공원 1개</span>
+                    <span class="guide-capture-label walk">도보 500m 생활권 공원 0개</span>
                   </div>
                   <div class="guide-case-grid">
                     <div class="guide-case-metric"><span>도보 생활권 공원</span><strong>0개</strong></div>
@@ -4883,7 +4883,7 @@
                     <h4>대표 학교 상세 리포트</h4>
                     <p>공원 거리, 녹지, 놀이터, 500m 내 공원 여부를 정책 언어로 해석합니다.</p>
                   </div>
-                  <img src="./assets/guide-bright-report.png" alt="대표학교 상세 리포트 화면" />
+                  <img src="./assets/guide-full-report-page.png" alt="대표학교 상세 리포트 전체 페이지 화면" />
                 </article>
                 <article class="guide-screenshot-card">
                   <div class="guide-screenshot-card-body">
@@ -4891,7 +4891,7 @@
                     <h4>후보지 추천과 기준 조정</h4>
                     <p>지도와 후보지 경로를 먼저 보고, 아래 기준 조정 영역에서 필터와 가중치를 바꿉니다.</p>
                   </div>
-                  <img src="./assets/guide-simulation-map-weights.png" alt="지도와 기준 조정 영역 중심의 후보지 추천 화면" />
+                  <img src="./assets/guide-full-simulation-page.png" alt="후보지 추천과 기준 조정 전체 페이지 화면" />
                 </article>
                 <article class="guide-screenshot-card">
                   <div class="guide-screenshot-card-body">
@@ -4899,7 +4899,7 @@
                     <h4>구조적 격차 분포 확인</h4>
                     <p>개별 사례가 아니라 인천 전체 학교의 우선지원 흐름을 함께 보여줍니다.</p>
                   </div>
-                  <img src="./assets/guide-bright-statistics.png" alt="구조적 격차 분포 확인 화면" />
+                  <img src="./assets/guide-full-statistics-page.png" alt="구조적 격차 분포 확인 전체 페이지 화면" />
                 </article>
               </div>
             </section>
@@ -4913,7 +4913,7 @@
                 <div class="guide-flow-track">
                   ${GUIDE_CONTENT.flowSteps.map((step, index) => guideFlowNodeHtml(step, index, activeStep.id)).join("")}
                 </div>
-                <div class="guide-feedback-note">AI 후보지 추천 ↔ 사용자 기준 조정: 추천은 결론이 아니라 조정 가능한 정책 시나리오입니다.</div>
+                <div class="guide-feedback-note">XAI(설명가능 AI) 추천 ↔ 사용자 기준 조정: 추천은 결론이 아니라 근거를 확인하고 조정하는 정책 시나리오입니다.</div>
               </div>
               <div class="guide-detail-panel" id="guideDetailPanel">
                 ${guideDetailHtml(activeStep)}
