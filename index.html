@@ -1341,7 +1341,7 @@
       aspect-ratio: 16 / 9;
       object-fit: cover;
       object-position: 50% 50%;
-      filter: saturate(0.92) contrast(1.02);
+      filter: brightness(1.08) saturate(1.08) contrast(1.03);
     }
 
     .guide-capture-card::after {
@@ -1456,11 +1456,12 @@
 
     .guide-screenshot-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
     }
 
     .guide-screenshot-card {
+      display: grid;
+      grid-template-columns: minmax(230px, 0.36fr) minmax(0, 0.64fr);
       overflow: hidden;
       border-radius: 16px;
       background: rgba(16, 27, 45, 0.96);
@@ -1471,14 +1472,19 @@
     .guide-screenshot-card img {
       display: block;
       width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      object-position: 50% 12%;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      height: 420px;
+      object-fit: contain;
+      object-position: 50% 50%;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      background: #081421;
+      filter: brightness(1.08) saturate(1.08);
     }
 
     .guide-screenshot-card-body {
-      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 18px;
     }
 
     .guide-screenshot-card-body span {
@@ -1498,7 +1504,7 @@
     .guide-screenshot-card-body h4 {
       margin: 0;
       color: #f8fafc;
-      font-size: 15px;
+      font-size: 17px;
       line-height: 1.35;
       word-break: keep-all;
     }
@@ -1506,8 +1512,8 @@
     .guide-screenshot-card-body p {
       margin: 8px 0 0;
       color: #cbd5e1;
-      font-size: 12px;
-      line-height: 1.55;
+      font-size: 13px;
+      line-height: 1.65;
       word-break: keep-all;
     }
 
@@ -1691,7 +1697,7 @@
 
     .guide-detail-panel {
       display: grid;
-      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 0.62fr) minmax(0, 1.16fr);
       gap: 22px;
       align-items: stretch;
       margin-top: 14px;
@@ -1790,6 +1796,28 @@
       color: #94a3b8;
       font-size: 13px;
       line-height: 1.55;
+    }
+
+    .guide-detail-media {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      min-height: 360px;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(5, 11, 20, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .guide-detail-media img {
+      display: block;
+      width: 100%;
+      max-height: 430px;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #081421;
+      filter: brightness(1.08) saturate(1.08);
     }
 
     .guide-principle-grid {
@@ -2232,6 +2260,17 @@
         grid-template-columns: 1fr;
       }
 
+      .guide-screenshot-card {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-screenshot-card img {
+        height: auto;
+        max-height: 460px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 0;
+      }
+
       .guide-section-head {
         align-items: start;
         flex-direction: column;
@@ -2293,6 +2332,10 @@
       .guide-detail-panel {
         grid-template-columns: 1fr;
         padding: 18px;
+      }
+
+      .guide-detail-media {
+        min-height: auto;
       }
 
       .guide-detail-title {
@@ -2697,16 +2740,20 @@
           headline: "분석의 출발점은 행정구역이 아니라\n학교입니다.",
           items: ["학교 위치", "학교 주변 공원·녹지·놀이터 데이터", "학생 수와 주변 생활권 정보"],
           principle: "정책 판단 단위를 학교 중심으로 고정합니다.",
-          actionText: "지도에서 학교를 선택하거나 학교 상세 진단으로 이동합니다."
+          actionText: "지도에서 학교를 선택하거나 학교 상세 진단으로 이동합니다.",
+          image: "./assets/guide-bright-map-layers.png",
+          imageAlt: "학교 선택 후 지도 레이어와 상세 패널이 연결된 화면"
         },
         {
           id: 2,
           title: "실제 도보생활권",
           short: "직선거리가 아니라 실제 보행 가능한 범위를 계산합니다.",
-          headline: "반경 500m 안에 있어도 실제로 걸어갈 수 없다면\n접근성은 충분하지 않습니다.",
+          headline: "case2처럼 겉으로는 접근 가능해 보여도\n활동 규모와 경로 조건을 함께 확인해야 합니다.",
           items: ["실제 보행 가능 범위", "도보생활권 내 공원 수", "최근접 공원까지의 실제 거리", "도로·보행부담 요소를 고려한 접근성"],
           principle: "반경 너머의 도달 가능성을 기준으로 판단합니다.",
-          actionText: "실제 도보이동 500m 레이어로 직선 버퍼와의 차이를 확인합니다."
+          actionText: "봉화초 단일 사례가 아니라, case2 전형 학교의 지도 레이어 흐름으로 확인합니다.",
+          image: "./assets/guide-bright-map-layers.png",
+          imageAlt: "case2 전형 학교의 도보생활권과 지도 레이어 화면"
         },
         {
           id: 3,
@@ -2715,7 +2762,9 @@
           headline: "학교별 환경을 하나의 점수가 아니라\n여러 근거로 나누어 봅니다.",
           items: ["최근접 공식 공원 거리", "활동규모 공원 거리", "도보권 내 공원 수", "녹지비율", "Case 분류", "KNN 유사학교 비교"],
           principle: "복합 환경을 단일 점수로 뭉개지 않고 설명 가능한 지표로 분리합니다.",
-          actionText: "학교 상세 리포트에서 현재 격차와 비교 기준을 함께 봅니다."
+          actionText: "학교 상세 리포트에서 현재 격차와 비교 기준을 함께 봅니다.",
+          image: "./assets/guide-bright-report.png",
+          imageAlt: "대표학교 상세 리포트 화면 캡처"
         },
         {
           id: 4,
@@ -2724,7 +2773,9 @@
           headline: "현재 부족한 곳이 앞으로도\n중요한 지원 대상인지 함께 확인합니다.",
           items: ["2029년 잠재 수요", "2031년 잠재 수요", "수혜 가능 아동 규모", "현재 환경 격차와 미래 수요의 결합"],
           principle: "현재 격차와 미래 수요를 함께 고려합니다.",
-          actionText: "잠재 수혜학생 규모를 현재 접근성 지표와 나란히 비교합니다."
+          actionText: "잠재 수혜학생 규모를 현재 접근성 지표와 나란히 비교합니다.",
+          image: "./assets/guide-bright-statistics.png",
+          imageAlt: "구조적 격차 분포와 전체 통계 화면 캡처"
         },
         {
           id: 5,
@@ -2733,7 +2784,9 @@
           headline: "AI 추천은 최종 결론이 아니라,\n설명 가능한 기본 시나리오입니다.",
           items: ["후보지 추천 결과", "학교와의 거리", "잠재 수혜학생 수", "기존 공원 접근성", "위험 횡단·재개발 등 필터 조건"],
           principle: "추천 결과보다 추천 근거를 함께 보여줍니다.",
-          actionText: "AI 추천 보기에서 후보지별 판단 근거와 보완 조건을 확인합니다."
+          actionText: "AI 추천 보기에서 후보지별 판단 근거와 보완 조건을 확인합니다.",
+          image: "./assets/guide-bright-simulation.png",
+          imageAlt: "후보지 추천과 지도 중심 화면 캡처"
         },
         {
           id: 6,
@@ -2742,7 +2795,9 @@
           headline: "정책 판단 기준은 하나로 고정되지 않으므로\n사용자가 조건을 바꿔 비교할 수 있어야 합니다.",
           items: ["사용자 가중치 조정", "필터 적용", "우선순위 변화", "AI 추천과 사용자 판단 비교"],
           principle: "Human-in-the-loop 구조로 최종 판단의 투명성을 높입니다.",
-          actionText: "시뮬레이션에서 정책 기준을 바꿔 추천 결과의 변화를 비교합니다."
+          actionText: "시뮬레이션에서 정책 기준을 바꿔 추천 결과의 변화를 비교합니다.",
+          image: "./assets/guide-bright-simulation.png",
+          imageAlt: "후보지 추천과 기준 조정 화면 캡처"
         }
       ],
       principles: [
@@ -4768,6 +4823,9 @@
             ${step.items.map((item) => `<li>${escapeGuideText(item)}</li>`).join("")}
           </ul>
         </div>
+        <figure class="guide-detail-media">
+          <img src="${escapeGuideText(step.image || "./assets/guide-bright-map-layers.png")}" alt="${escapeGuideText(step.imageAlt || `${step.title} 관련 화면 캡처`)}" />
+        </figure>
       `;
     }
 
@@ -4817,7 +4875,7 @@
               </div>
               <div class="guide-hero-aside">
                 <figure class="guide-capture-card">
-                  <img src="./assets/guide-bonghwa-both.png" alt="인천봉화초등학교 지도에서 직선거리 500m와 실제 도보이동 500m 레이어를 함께 표시한 앱 캡처" />
+                  <img src="./assets/guide-bright-map-layers.png" alt="지도에서 직선거리 500m와 실제 도보이동 500m 레이어를 함께 표시한 앱 캡처" />
                   <figcaption class="guide-capture-labels">
                     <span class="guide-capture-label straight">직선 500m 안 공원 1개</span>
                     <span class="guide-capture-label walk">도보 500m 생활권 공원 0개</span>
@@ -4842,40 +4900,32 @@
             <section class="guide-section-block">
               <div class="guide-section-head">
                 <h3>실제 앱 화면으로 보는 판단 흐름</h3>
-                <p>지도 탐색 전에 핵심 기능을 캡처로 먼저 보여주어, 데이터·진단·시뮬레이션·통계가 하나의 시스템으로 연결됨을 확인할 수 있습니다.</p>
+                <p>기존 캡처를 밝게 보정하고 화면에 맞게 다듬어, 상세 리포트·후보지 추천·전체 통계가 하나의 시스템으로 연결됨을 확인할 수 있습니다.</p>
               </div>
               <div class="guide-screenshot-grid">
                 <article class="guide-screenshot-card">
-                  <img src="./assets/guide-shot-map-layers.png" alt="인천봉화초 지도에서 직선거리 500m와 실제 도보이동 500m 레이어를 함께 켠 화면" />
-                  <div class="guide-screenshot-card-body">
-                    <span>지도 레이어</span>
-                    <h4>직선 반경과 도보 생활권 비교</h4>
-                    <p>같은 500m라도 행정적 반경과 실제 도달 가능 범위가 다르게 보이는 장면입니다.</p>
-                  </div>
-                </article>
-                <article class="guide-screenshot-card">
-                  <img src="./assets/guide-shot-report.png" alt="인천봉화초 상세 리포트 화면" />
                   <div class="guide-screenshot-card-body">
                     <span>학교 진단</span>
                     <h4>대표 학교 상세 리포트</h4>
                     <p>공원 거리, 녹지, 놀이터, 500m 내 공원 여부를 정책 언어로 해석합니다.</p>
                   </div>
+                  <img src="./assets/guide-bright-report.png" alt="대표학교 상세 리포트 화면" />
                 </article>
                 <article class="guide-screenshot-card">
-                  <img src="./assets/guide-shot-simulation.png" alt="인천봉화초 후보지 시뮬레이션 화면" />
                   <div class="guide-screenshot-card-body">
                     <span>시뮬레이션</span>
                     <h4>후보지 추천과 기준 조정</h4>
-                    <p>사용자가 기준을 바꾸면 후보지와 추천 이유가 어떻게 달라지는지 비교합니다.</p>
+                    <p>지도와 후보지 경로를 먼저 보고, 아래 기준 조정 영역에서 필터와 가중치를 바꿉니다.</p>
                   </div>
+                  <img src="./assets/guide-bright-simulation.png" alt="후보지 추천과 기준 조정 화면" />
                 </article>
                 <article class="guide-screenshot-card">
-                  <img src="./assets/guide-shot-statistics.png" alt="인천 학교 전체 통계 리포트 화면" />
                   <div class="guide-screenshot-card-body">
                     <span>전체 통계</span>
                     <h4>구조적 격차 분포 확인</h4>
                     <p>개별 사례가 아니라 인천 전체 학교의 우선지원 흐름을 함께 보여줍니다.</p>
                   </div>
+                  <img src="./assets/guide-bright-statistics.png" alt="구조적 격차 분포 확인 화면" />
                 </article>
               </div>
             </section>
@@ -4883,7 +4933,7 @@
             <section class="guide-section-block">
               <div class="guide-section-head">
                 <h3>정책 판단 흐름도</h3>
-                <p>학교 선택에서 AI 추천과 사용자 조정까지, 시스템이 판단 근거를 어떻게 쌓아가는지 한 흐름으로 보여줍니다.</p>
+                <p>각 단계를 누르면 판단 설명과 관련 화면 캡처가 함께 표시됩니다. case2 단계는 봉화초 단일 사례가 아니라 전형적 검토 학교 흐름으로 읽히도록 지도 레이어 화면을 붙였습니다.</p>
               </div>
               <div class="guide-flow-stage">
                 <div class="guide-flow-track">
