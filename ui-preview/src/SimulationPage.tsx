@@ -705,16 +705,24 @@ function getDriverImpactLabel(driver: ShapDriver): string {
   return "영향 작음";
 }
 
+function getDriverImpactShare(driver: ShapDriver, visibleDrivers: ShapDriver[]): string {
+  const totalImpact = visibleDrivers.reduce((sum, item) => sum + Math.abs(item.shap_value), 0);
+  if (totalImpact <= 0) return "";
+  const share = Math.round((Math.abs(driver.shap_value) / totalImpact) * 100);
+  return `약 ${share}%`;
+}
+
 function DriverList({ title, drivers, positive = false }: { title: string; drivers: ShapDriver[]; positive?: boolean }) {
+  const visibleDrivers = drivers.slice(0, 3);
   return (
     <div style={{ padding: "10px 12px", borderRadius: 10, background: SIM_COLORS.panel }}>
       <div style={{ fontSize: 12, fontWeight: 900, color: positive ? SIM_COLORS.greenSoft : SIM_COLORS.amber, marginBottom: 8 }}>{title}</div>
       <div style={{ display: "grid", gap: 6, fontSize: 12, color: SIM_COLORS.secondary }}>
-        {drivers.length ? drivers.slice(0, 3).map((driver) => (
+        {visibleDrivers.length ? visibleDrivers.map((driver) => (
           <div key={`${driver.feature}-${driver.shap_value}`} style={{ display: "grid", gap: 4, padding: "8px 0", borderTop: `1px solid ${SIM_COLORS.border}` }}>
             <span style={{ lineHeight: 1.5 }}>{getDriverNaturalText(driver, positive)}</span>
             <span style={{ width: "fit-content", padding: "2px 7px", borderRadius: 999, background: positive ? "rgba(16, 185, 129, 0.12)" : "rgba(251, 191, 36, 0.10)", color: positive ? SIM_COLORS.greenSoft : SIM_COLORS.amber, fontSize: 11, fontWeight: 800 }}>
-              {getDriverImpactLabel(driver)}
+              {getDriverImpactLabel(driver)} ({getDriverImpactShare(driver, visibleDrivers)})
             </span>
           </div>
         )) : <div>표시할 변수가 없습니다.</div>}
