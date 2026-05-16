@@ -2836,8 +2836,8 @@
       hero: {
         title: "반경 너머, 도달 가능성으로",
         subtitle:
-          "도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 진단하고 설명 가능한 후보지를 제안합니다.",
-        badges: ["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "설명 가능한 AI 추천", "Human-in-the-loop"],
+          "도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 진단하고 견고한 후보지와 SHAP 진단을 제안합니다.",
+        badges: ["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "견고 후보 추천", "SHAP 후보 진단", "Human-in-the-loop"],
         thesis:
           "단순 지도앱이 아니라,\n학교 주변 환경을 도달 가능성 기준으로 분석하고\n정책 판단의 근거를 연결하는 의사결정 시스템입니다."
       },
@@ -2888,25 +2888,25 @@
         },
         {
           id: 5,
-          title: "AI 후보지 추천",
-          short: "조건을 반영해 설명 가능한 후보지를 제안합니다.",
-          headline: "AI 추천은 최종 결론이 아니라,\n설명 가능한 기본 시나리오입니다.",
-          items: ["후보지 추천 결과", "학교와의 거리", "잠재 수혜학생 수", "기존 공원 접근성", "위험 횡단·재개발 등 필터 조건"],
-          principle: "추천 결과보다 추천 근거를 함께 보여줍니다.",
-          actionText: "AI 추천 보기에서 후보지별 판단 근거와 보완 조건을 확인합니다.",
+          title: "AI 기반 견고 후보 추천",
+          short: "미래 수요, Pareto 후보군, 순위 안정성을 함께 봅니다.",
+          headline: "추천 후보가 정책 선호 변화에도\n상위권에 남는지 확인합니다.",
+          items: ["Pareto 후보 여부", "Top5 안정성", "평균 순위", "추천 유형", "미래 수혜 아동 수"],
+          principle: "정책 가중치를 하나로 고정하지 않고, 1,000회 샘플링으로 견고성을 확인합니다.",
+          actionText: "AI 기반 견고 후보 추천에서 카드별 안정성 지표와 추천 유형을 확인합니다.",
           image: "./assets/guide-bright-simulation.png",
-          imageAlt: "후보지 추천과 지도 중심 화면 캡처"
+          imageAlt: "AI 기반 견고 후보 추천과 지도 중심 화면 캡처"
         },
         {
           id: 6,
-          title: "사용자 기준 조정",
-          short: "XAI 근거를 보며 필터와 우선순위를 조정합니다.",
-          headline: "XAI는 추천 이유를 드러내고,\n사용자는 정책 기준을 바꿔 비교합니다.",
-          items: ["설명 가능한 AI 추천 근거", "사용자 가중치 조정", "필터 적용", "우선순위 변화", "AI 추천과 사용자 판단 비교"],
-          principle: "XAI + Human-in-the-loop 구조로 최종 판단의 투명성과 책임성을 높입니다.",
-          actionText: "시뮬레이션에서 추천 근거를 확인한 뒤 정책 기준을 바꿔 결과 변화를 비교합니다.",
+          title: "SHAP 진단과 기준 조정",
+          short: "예측 근거를 열어보고 정책 기준을 조정합니다.",
+          headline: "SHAP은 최종 순위가 아니라\n미래 수요 예측 근거를 설명합니다.",
+          items: ["SHAP 예측 근거 보기", "예측값을 높인 변수", "예측값을 낮춘 변수", "사용자 가중치 조정", "정책 필터 적용"],
+          principle: "SHAP은 자동추천의 근거가 아니라 Human-in-the-loop 최종 판단을 위한 후보 진단 정보입니다.",
+          actionText: "후보 카드의 SHAP 예측 근거 보기 버튼을 눌러 미래 수혜 아동 수 예측 근거를 펼칩니다.",
           image: "./assets/guide-bright-simulation.png",
-          imageAlt: "후보지 추천과 기준 조정 화면 캡처"
+          imageAlt: "SHAP 예측 근거와 기준 조정 화면 캡처"
         }
       ],
       principles: [
@@ -2923,14 +2923,14 @@
           detail: "하나의 종합점수보다 추천 이유와 지표를 분리해 보여줍니다."
         },
         {
-          title: "AI 추천 + 사용자 조정",
-          detail: "XAI로 추천 근거를 드러내고, 사용자가 정책 기준을 바꿔 비교할 수 있습니다."
+          title: "견고 추천 + SHAP 진단",
+          detail: "Pareto와 순위 안정성으로 후보를 좁히고, SHAP으로 미래 수요 예측 근거를 진단합니다."
         }
       ],
       faq: [
         {
           question: "AI 추천은 최종 결론인가요?",
-          answer: "아닙니다. AI 추천은 기본 시나리오입니다. 사용자는 필터와 우선순위를 바꿔 다른 판단 기준을 적용할 수 있습니다."
+          answer: "아닙니다. AI 기반 견고 후보 추천은 비교 시작점입니다. Pareto 여부와 안정성 점수, SHAP 진단, 정책 필터, 현장 검토를 함께 보고 최종 판단합니다."
         },
         {
           question: "왜 점수 하나로 순위를 정하지 않나요?",
@@ -2946,7 +2946,7 @@
       ctas: [
         { label: "학교 진단 보기", action: "school-report", variant: "primary" },
         { label: "시뮬레이션 시작하기", action: "simulation", variant: "secondary" },
-        { label: "AI 추천 보기", action: "ai-recommendation", variant: "tertiary" }
+        { label: "견고 추천 보기", action: "ai-recommendation", variant: "tertiary" }
       ]
     };
 
@@ -5064,14 +5064,14 @@
                   </div>
                   <img src="./assets/guide-full-report-page.png" alt="대표학교 상세 리포트 전체 페이지 화면" />
                 </article>
-                <article class="guide-screenshot-card" tabindex="0" role="button" data-guide-preview="./assets/guide-full-simulation-page.png" data-guide-preview-title="시뮬레이션: 후보지 추천과 기준 조정" data-guide-preview-alt="후보지 추천과 기준 조정 전체 페이지 화면">
+                <article class="guide-screenshot-card" tabindex="0" role="button" data-guide-preview="./assets/guide-full-simulation-page.png" data-guide-preview-title="시뮬레이션: 견고 후보 추천과 SHAP 진단" data-guide-preview-alt="견고 후보 추천과 SHAP 진단 전체 페이지 화면">
                   <div class="guide-screenshot-card-body">
                     <span>시뮬레이션</span>
-                    <h4>후보지 추천과 기준 조정</h4>
-                    <p>지도와 후보지 경로를 먼저 보고, 아래 기준 조정 영역에서 필터와 가중치를 바꿉니다.</p>
+                    <h4>견고 후보 추천과 SHAP 진단</h4>
+                    <p>Pareto 후보, Top5 안정성, 평균 순위를 확인하고 SHAP 버튼으로 미래 수요 예측 근거를 펼칩니다.</p>
                     <em class="guide-screen-hint">크게 보기</em>
                   </div>
-                  <img src="./assets/guide-full-simulation-page.png" alt="후보지 추천과 기준 조정 전체 페이지 화면" />
+                  <img src="./assets/guide-full-simulation-page.png" alt="견고 후보 추천과 SHAP 진단 전체 페이지 화면" />
                 </article>
                 <article class="guide-screenshot-card" tabindex="0" role="button" data-guide-preview="./assets/guide-full-statistics-page.png" data-guide-preview-title="전체 통계: 구조적 격차 분포 확인" data-guide-preview-alt="구조적 격차 분포 확인 전체 페이지 화면">
                   <div class="guide-screenshot-card-body">

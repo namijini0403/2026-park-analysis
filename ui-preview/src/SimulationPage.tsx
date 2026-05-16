@@ -567,10 +567,12 @@ function buildCandidateReasons(candidate: Partial<Pick<ScoredCandidate, "benefit
 function RobustCandidateBrief({
   candidate,
   compact = false,
+  isOpen = false,
   onShapClick,
 }: {
   candidate: Candidate;
   compact?: boolean;
+  isOpen?: boolean;
   onShapClick: (event: MouseEvent<HTMLButtonElement>) => void;
 }) {
   if (!hasRobustRecommendation(candidate)) return null;
@@ -598,8 +600,9 @@ function RobustCandidateBrief({
         onClick={onShapClick}
         style={{ marginTop: 10, border: `1px solid ${SIM_COLORS.borderStrong}`, background: SIM_COLORS.elevated, color: SIM_COLORS.greenSoft, borderRadius: 999, padding: "7px 10px", fontSize: 12, fontWeight: 800, cursor: "pointer" }}
       >
-        SHAP 예측 근거 보기
+        {isOpen ? "SHAP 예측 근거 닫기" : "SHAP 예측 근거 보기"}
       </button>
+      {isOpen ? <ShapDiagnosticPanel candidate={candidate} /> : null}
     </div>
   );
 }
@@ -1116,7 +1119,11 @@ export default function SimulationPage({
                     </span>
                   ))}
                 </div>
-                <RobustCandidateBrief candidate={topCandidate} onShapClick={(event) => openShapPanel(topCandidate, event)} />
+                <RobustCandidateBrief
+                  candidate={topCandidate}
+                  isOpen={shapOpenId === topCandidate.grid_id}
+                  onShapClick={(event) => openShapPanel(topCandidate, event)}
+                />
               </div>
             );
           })()}
@@ -1151,7 +1158,12 @@ export default function SimulationPage({
                     <div>{getCandidateDistanceLabel(candidate)} <b>{formatDistance(candidate.nearest_school_dist)}</b></div>
                     <div>공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b></div>
                   </div>
-                  <RobustCandidateBrief candidate={candidate} compact onShapClick={(event) => openShapPanel(candidate, event)} />
+                  <RobustCandidateBrief
+                    candidate={candidate}
+                    compact
+                    isOpen={shapOpenId === candidate.grid_id}
+                    onShapClick={(event) => openShapPanel(candidate, event)}
+                  />
                 </div>
               );
             })}
@@ -1206,8 +1218,11 @@ export default function SimulationPage({
               </div>
             </div>
           ) : null}
-          <RobustCandidateBrief candidate={selectedCandidate} onShapClick={(event) => openShapPanel(selectedCandidate, event)} />
-          {shapOpenId === selectedCandidate.grid_id ? <ShapDiagnosticPanel candidate={selectedCandidate} /> : null}
+          <RobustCandidateBrief
+            candidate={selectedCandidate}
+            isOpen={shapOpenId === selectedCandidate.grid_id}
+            onShapClick={(event) => openShapPanel(selectedCandidate, event)}
+          />
           <div style={{ display: "grid", gap: 8, fontSize: 13, color: SIM_COLORS.secondary, lineHeight: 1.7 }}>
             <div>{getBarrierNote(selectedCandidate)}</div>
             {selectedCandidate.accident_hotspot_text ? <div>{sanitizeBarrierText(selectedCandidate.accident_hotspot_text)}</div> : null}

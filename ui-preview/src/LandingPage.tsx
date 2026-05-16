@@ -76,24 +76,24 @@ const flowSteps: FlowStep[] = [
   },
   {
     id: 5,
-    title: "AI 후보지 추천",
-    summary: "조건을 반영해 설명 가능한 후보지를 제안합니다.",
+    title: "AI 기반 견고 후보 추천",
+    summary: "미래 수요, Pareto 후보군, 순위 안정성을 함께 봅니다.",
     detail:
-      "후보지 추천은 자동 결정이 아니라 비교 시작점입니다. 지도에서 후보 위치를 먼저 확인하고, 도로 횡단 부담과 수혜 학생 수를 함께 읽습니다.",
+      "후보지 추천은 자동 결정이 아니라 비교 시작점입니다. 후보 카드에서 Pareto 여부, Top5 안정성, 평균 순위, 추천 유형을 함께 확인합니다.",
     image: guideSimulation,
-    imageAlt: "후보지 추천과 지도 중심 화면",
-    actionLabel: "후보지 추천 보기",
+    imageAlt: "AI 기반 견고 후보 추천과 지도 중심 화면",
+    actionLabel: "견고 추천 보기",
     actionView: "simulation",
   },
   {
     id: 6,
-    title: "사용자 기준 조정",
-    summary: "필터와 우선순위를 바꿔 다른 판단 기준을 적용합니다.",
+    title: "SHAP 진단과 기준 조정",
+    summary: "예측 근거를 열어보고 정책 기준을 조정합니다.",
     detail:
-      "사용자는 주요 도로 횡단 제외, 재개발 영향권 제외, 수혜 학생 수와 학교 거리 가중치 등을 조정하며 정책 기준이 결과를 어떻게 바꾸는지 확인합니다.",
+      "SHAP 예측 근거 보기는 최종 추천 순위가 아니라 미래 수혜 아동 수 예측값의 변수별 근거를 보여줍니다. 사용자는 이 진단과 필터·가중치 변화를 함께 보며 현장 검토 대상을 좁힙니다.",
     image: guideSimulation,
-    imageAlt: "후보지 추천과 기준 조정 화면",
-    actionLabel: "기준 조정 열기",
+    imageAlt: "SHAP 예측 근거와 기준 조정 화면",
+    actionLabel: "SHAP 진단 열기",
     actionView: "simulation",
   },
 ];
@@ -110,11 +110,11 @@ const guideShots: GuideShot[] = [
   },
   {
     eyebrow: "Candidate Recommendation",
-    title: "후보지 추천과 기준 조정",
+    title: "견고 후보 추천과 SHAP 진단",
     description:
-      "지도와 후보지 경로를 먼저 보고, 아래 기준 조정 영역에서 필터와 가중치를 바꿉니다.",
+      "카드에서 Pareto 후보, Top5 안정성, 평균 순위를 확인하고 SHAP 예측 근거 보기로 미래 수요 예측 근거를 펼칩니다.",
     image: guideSimulation,
-    imageAlt: "후보지 추천과 기준 조정 캡처",
+    imageAlt: "견고 후보 추천과 SHAP 진단 캡처",
     view: "simulation",
     imageClass: "object-[center_72%]",
   },
@@ -174,7 +174,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 진단하고,
-                <span className="font-semibold text-forest-300"> 설명 가능한 후보지</span>를 제안합니다.
+                <span className="font-semibold text-forest-300"> 견고한 후보지와 SHAP 진단</span>을 제안합니다.
               </p>
             </div>
 
@@ -187,7 +187,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "설명 가능한 AI 추천", "Human-in-the-loop"].map((item) => (
+              {["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "견고 후보 추천", "SHAP 후보 진단", "Human-in-the-loop"].map((item) => (
                 <span key={item} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold text-slate-100">
                   {item}
                 </span>
@@ -218,7 +218,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <h2 className="mt-2 text-2xl font-black text-white">주요 화면 사용 설명서</h2>
             </div>
             <p className="max-w-xl text-sm leading-relaxed text-slate-400">
-              캡처는 기존 화면을 밝게 보정하고, 모달 바깥 지도 배경이 덜 보이도록 맞췄습니다.
+              후보 카드는 Pareto 여부와 Top5 안정성을 먼저 보여주고, SHAP 버튼은 최종 추천이 아니라 미래 수요 예측 근거를 펼칩니다.
             </p>
           </div>
 
