@@ -1,10 +1,17 @@
 ﻿import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import type { MouseEvent } from "react";
 import KakaoMap, { CandidateMarker, CandidateRouteLine } from "./KakaoMap";
 
 const LETTERS = "ABCDEFGHIJ".split("");
 const BARRIER_KEYS = ["motorway", "trunk", "primary", "secondary", "tertiary"] as const;
 
 type BarrierKey = (typeof BARRIER_KEYS)[number];
+
+type ShapDriver = {
+  feature: string;
+  value: number;
+  shap_value: number;
+};
 
 interface Candidate {
   grid_id: string;
@@ -43,6 +50,19 @@ interface Candidate {
   redev_warning_text?: string;
   accident_hotspot_flag?: boolean;
   accident_hotspot_text?: string;
+  pareto_candidate?: boolean;
+  top5_stability_score?: number;
+  mean_rank?: number;
+  rank_std?: number;
+  robust_rank?: number;
+  recommendation_type?: string | null;
+  robust_recommendation_reason?: string | null;
+  predicted_beneficiaries_used?: number;
+  shap_diagnostic_tag?: string | null;
+  shap_positive_drivers?: ShapDriver[];
+  shap_negative_drivers?: ShapDriver[];
+  shap_explanation_text?: string | null;
+  shap_waterfall_image_path?: string | null;
 }
 
 interface RedevelopmentProject {
@@ -131,6 +151,15 @@ const AI_DEFAULT_WEIGHTS: WeightState = {
 };
 
 const AI_RECOMMENDATION_COUNT = 3;
+
+const RECOMMENDATION_TYPE_LABELS: Record<string, string> = {
+  stable: "안정형",
+  demand_strong: "수혜극대화형",
+  access_gap_reduction: "접근성보완형",
+  proximity_first: "근접우선형",
+  scenario_sensitive: "시나리오민감형",
+  balanced: "균형형",
+};
 
 const BARRIER_COLOR: Record<NonNullable<Candidate["barrier_severity"]>, string> = {
   green: "#10B981",
@@ -249,6 +278,32 @@ function formatDistance(value: number): string {
 
 function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`;
+}
+
+function formatOneDecimal(value: number | undefined): string {
+  if (value == null || !Number.isFinite(value)) return "-";
+  return value.toFixed(1);
+}
+
+function formatStability(value: number | undefined): string {
+  if (value == null || !Number.isFinite(value)) return "-";
+  return `${Math.round(value * 100)}%`;
+}
+
+function hasRobustRecommendation(candidate: Candidate): boolean {
+  return Number.isFinite(candidate.robust_rank) || Number.isFinite(candidate.top5_stability_score);
+}
+
+function getRecommendationTypeLabel(candidate: Candidate): string {
+  const key = candidate.recommendation_type ?? "";
+  return RECOMMENDATION_TYPE_LABELS[key] ?? "후보 진단형";
+}
+
+function getShapTagLabel(tag: string | null | undefined): string {
+  if (tag === "development_dependent") return "미래 개발 의존형";
+  if (tag === "access_gap_driven") return "접근성 보완형";
+  if (tag === "uncertainty_attention") return "주의 검토형";
+  return "안정 수요형";
 }
 
 function getBarrierCounts(candidate: Candidate): Record<BarrierKey, number> {
@@ -427,6 +482,12 @@ function computeAiRecommendations(candidates: Candidate[]): AiRecommendationResu
       ...candidate,
       ai_message: buildAiMessage(candidate),
     }))
+    .sort((left, right) => {
+      const leftRank = Number.isFinite(left.robust_rank) ? left.robust_rank! : Number.POSITIVE_INFINITY;
+      const rightRank = Number.isFinite(right.robust_rank) ? right.robust_rank! : Number.POSITIVE_INFINITY;
+      if (leftRank !== rightRank) return leftRank - rightRank;
+      return right.final_score - left.final_score;
+    })
     .slice(0, AI_RECOMMENDATION_COUNT);
 
   return {
@@ -503,6 +564,96 @@ function buildCandidateReasons(candidate: Partial<Pick<ScoredCandidate, "benefit
   return reasons.slice(0, 3);
 }
 
+function RobustCandidateBrief({
+  candidate,
+  compact = false,
+  onShapClick,
+}: {
+  candidate: Candidate;
+  compact?: boolean;
+  onShapClick: (event: MouseEvent<HTMLButtonElement>) => void;
+}) {
+  if (!hasRobustRecommendation(candidate)) return null;
+  return (
+    <div style={{ marginTop: 10, padding: compact ? "10px 12px" : "12px 14px", borderRadius: 12, background: "rgba(37, 99, 235, 0.10)", border: "1px solid rgba(96, 165, 250, 0.25)" }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
+        {candidate.pareto_candidate ? (
+          <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(16, 185, 129, 0.14)", color: SIM_COLORS.greenSoft, fontSize: 11, fontWeight: 800 }}>Pareto 후보</span>
+        ) : null}
+        <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(255,255,255,0.08)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>
+          Top5 안정성 {formatStability(candidate.top5_stability_score)}
+        </span>
+        <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(255,255,255,0.08)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>
+          평균 순위 {formatOneDecimal(candidate.mean_rank)}위
+        </span>
+        <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(251, 191, 36, 0.10)", color: SIM_COLORS.amber, fontSize: 11, fontWeight: 800 }}>
+          {getRecommendationTypeLabel(candidate)}
+        </span>
+      </div>
+      {candidate.robust_recommendation_reason ? (
+        <div style={{ fontSize: compact ? 12 : 13, color: SIM_COLORS.secondary, lineHeight: 1.55 }}>{candidate.robust_recommendation_reason}</div>
+      ) : null}
+      <button
+        type="button"
+        onClick={onShapClick}
+        style={{ marginTop: 10, border: `1px solid ${SIM_COLORS.borderStrong}`, background: SIM_COLORS.elevated, color: SIM_COLORS.greenSoft, borderRadius: 999, padding: "7px 10px", fontSize: 12, fontWeight: 800, cursor: "pointer" }}
+      >
+        SHAP 예측 근거 보기
+      </button>
+    </div>
+  );
+}
+
+function ShapDiagnosticPanel({ candidate }: { candidate: Candidate }) {
+  const positive = candidate.shap_positive_drivers ?? [];
+  const negative = candidate.shap_negative_drivers ?? [];
+  if (!hasRobustRecommendation(candidate) && !positive.length && !negative.length) return null;
+  return (
+    <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 12, background: SIM_COLORS.inset, border: `1px solid ${SIM_COLORS.border}` }}>
+      <div style={{ fontSize: 13, fontWeight: 900, color: SIM_COLORS.text, marginBottom: 6 }}>SHAP 예측 근거</div>
+      <div style={{ fontSize: 12, color: SIM_COLORS.muted, lineHeight: 1.6, marginBottom: 10 }}>
+        이 설명은 최종 추천 순위가 아니라, 미래 수혜 아동 수 예측값의 변수별 근거입니다. 최종 후보 판단은 안정성 점수, 정책 필터, 현장 검토를 함께 고려합니다.
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 10, marginBottom: 10 }}>
+        <div style={{ padding: "10px 12px", borderRadius: 10, background: SIM_COLORS.panel }}>
+          예상 수혜 아동 수 <b>{formatCount(candidate.predicted_beneficiaries_used ?? candidate.walkshed_potential_2031)}명</b>
+        </div>
+        <div style={{ padding: "10px 12px", borderRadius: 10, background: SIM_COLORS.panel }}>
+          진단 태그 <b>{getShapTagLabel(candidate.shap_diagnostic_tag)}</b>
+        </div>
+      </div>
+      {candidate.shap_explanation_text ? <div style={{ fontSize: 13, color: SIM_COLORS.secondary, lineHeight: 1.6, marginBottom: 10 }}>{candidate.shap_explanation_text}</div> : null}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+        <DriverList title="예측값을 높인 변수" drivers={positive} positive />
+        <DriverList title="예측값을 낮춘 변수" drivers={negative} />
+      </div>
+      {candidate.shap_waterfall_image_path ? (
+        <img
+          src={candidate.shap_waterfall_image_path.startsWith("http") ? candidate.shap_waterfall_image_path : `../../${candidate.shap_waterfall_image_path}`}
+          alt="SHAP waterfall"
+          style={{ width: "100%", maxWidth: 680, marginTop: 12, borderRadius: 10, border: `1px solid ${SIM_COLORS.border}` }}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function DriverList({ title, drivers, positive = false }: { title: string; drivers: ShapDriver[]; positive?: boolean }) {
+  return (
+    <div style={{ padding: "10px 12px", borderRadius: 10, background: SIM_COLORS.panel }}>
+      <div style={{ fontSize: 12, fontWeight: 900, color: positive ? SIM_COLORS.greenSoft : SIM_COLORS.amber, marginBottom: 8 }}>{title}</div>
+      <div style={{ display: "grid", gap: 6, fontSize: 12, color: SIM_COLORS.secondary }}>
+        {drivers.length ? drivers.slice(0, 3).map((driver) => (
+          <div key={`${driver.feature}-${driver.shap_value}`} style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+            <span>{driver.feature}</span>
+            <b>{driver.shap_value.toFixed(1)}</b>
+          </div>
+        )) : <div>표시할 변수가 없습니다.</div>}
+      </div>
+    </div>
+  );
+}
+
 export default function SimulationPage({
   schoolName,
   schoolLat,
@@ -520,6 +671,7 @@ export default function SimulationPage({
   const [weightToggles, setWeightToggles] = useState<WeightToggleState>(DEFAULT_WEIGHT_TOGGLES);
   const [weightsExpanded, setWeightsExpanded] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [shapOpenId, setShapOpenId] = useState<string | null>(null);
 
   const internalCandidate = useMemo(
     () => candidates.find((candidate) => candidate.is_school_internal),
@@ -645,6 +797,12 @@ export default function SimulationPage({
     aiRecommendations.recommendations.forEach((candidate) => byId.set(candidate.grid_id, candidate));
     return selectedId ? byId.get(selectedId) ?? null : null;
   }, [aiRecommendations.recommendations, internalCandidate, rankedCandidates, selectedId]);
+
+  const openShapPanel = (candidate: Candidate, event?: MouseEvent<HTMLButtonElement>) => {
+    event?.stopPropagation();
+    setSelectedId(candidate.grid_id);
+    setShapOpenId((previous) => (previous === candidate.grid_id ? null : candidate.grid_id));
+  };
 
   return (
     <div
@@ -790,7 +948,7 @@ export default function SimulationPage({
             fontWeight: 800,
           }}
         >
-          AI 추천 모드
+          AI 기반 견고 후보 추천
         </button>
         <button
           type="button"
@@ -884,7 +1042,7 @@ export default function SimulationPage({
         </div>
       ) : (
         <div style={{ marginBottom: 18, padding: "14px 16px", borderRadius: 18, background: "rgba(16, 185, 129, 0.10)", color: SIM_COLORS.greenSoft, fontSize: 13, lineHeight: 1.7 }}>
-          AI는 안전성과 접근성을 우선 고려한 기본 추천을 제공합니다. 이후 필터와 가중치를 조정하여 원하는 조건에 맞게 결과를 변경할 수 있습니다.
+          미래 수요 예측, Pareto 후보군, 1,000회 가중치 샘플링 기반 순위 안정성을 결합해 다양한 정책 선호에서도 상위권에 유지되는 후보를 제시합니다.
           <div style={{ marginTop: 6 }}>{aiRecommendations.filterSummary}</div>
         </div>
       )}
@@ -958,6 +1116,7 @@ export default function SimulationPage({
                     </span>
                   ))}
                 </div>
+                <RobustCandidateBrief candidate={topCandidate} onShapClick={(event) => openShapPanel(topCandidate, event)} />
               </div>
             );
           })()}
@@ -992,6 +1151,7 @@ export default function SimulationPage({
                     <div>{getCandidateDistanceLabel(candidate)} <b>{formatDistance(candidate.nearest_school_dist)}</b></div>
                     <div>공원 거리 <b>{formatDistance(candidate.nearest_park_dist)}</b></div>
                   </div>
+                  <RobustCandidateBrief candidate={candidate} compact onShapClick={(event) => openShapPanel(candidate, event)} />
                 </div>
               );
             })}
@@ -1046,6 +1206,8 @@ export default function SimulationPage({
               </div>
             </div>
           ) : null}
+          <RobustCandidateBrief candidate={selectedCandidate} onShapClick={(event) => openShapPanel(selectedCandidate, event)} />
+          {shapOpenId === selectedCandidate.grid_id ? <ShapDiagnosticPanel candidate={selectedCandidate} /> : null}
           <div style={{ display: "grid", gap: 8, fontSize: 13, color: SIM_COLORS.secondary, lineHeight: 1.7 }}>
             <div>{getBarrierNote(selectedCandidate)}</div>
             {selectedCandidate.accident_hotspot_text ? <div>{sanitizeBarrierText(selectedCandidate.accident_hotspot_text)}</div> : null}
@@ -1118,7 +1280,3 @@ function LegendItem({
     </div>
   );
 }
-
-
-
-

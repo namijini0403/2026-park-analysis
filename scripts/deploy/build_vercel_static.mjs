@@ -16,6 +16,8 @@ const requiredDataFiles = [
   "school_enrollment_forecast_20260418_model1.csv",
   "school_similar_schools_top5.csv",
   "candidate_barrier_routes_by_school.json",
+  "robust_candidate_recommendations.json",
+  "robust_shap_candidate_explanations.json",
   "gu_summary.csv",
   "parks.csv",
   "isochrone_valhalla.geojson",
@@ -83,6 +85,7 @@ for (const file of requiredDataFiles) {
 
 copyDirectoryToOutput(path.join("ui-preview", "dist"));
 copyDirectoryToOutput("assets");
+copyDirectoryToOutput(path.join("outputs", "robust_xai"));
 
 let fileCount = 0;
 let totalBytes = 0;

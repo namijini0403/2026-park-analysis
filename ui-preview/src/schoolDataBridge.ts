@@ -46,6 +46,19 @@ export interface Candidate {
   redev_warning_text?: string;
   accident_hotspot_flag?: boolean;
   accident_hotspot_text?: string;
+  pareto_candidate?: boolean;
+  top5_stability_score?: number;
+  mean_rank?: number;
+  rank_std?: number;
+  robust_rank?: number;
+  recommendation_type?: string | null;
+  robust_recommendation_reason?: string | null;
+  predicted_beneficiaries_used?: number;
+  shap_diagnostic_tag?: string | null;
+  shap_positive_drivers?: Array<{ feature: string; value: number; shap_value: number }>;
+  shap_negative_drivers?: Array<{ feature: string; value: number; shap_value: number }>;
+  shap_explanation_text?: string | null;
+  shap_waterfall_image_path?: string | null;
 }
 
 type RawRow = Record<string, unknown>;
@@ -690,6 +703,19 @@ export function mapCandidateFeatures(
     ...(s(feature.accident_hotspot_text ?? feature.accident_buffer_text)
       ? { accident_hotspot_text: s(feature.accident_hotspot_text ?? feature.accident_buffer_text) }
       : {}),
+    ...(feature.pareto_candidate != null ? { pareto_candidate: Boolean(feature.pareto_candidate) } : {}),
+    ...(maybeNumber(feature.top5_stability_score) != null ? { top5_stability_score: maybeNumber(feature.top5_stability_score)! } : {}),
+    ...(maybeNumber(feature.mean_rank) != null ? { mean_rank: maybeNumber(feature.mean_rank)! } : {}),
+    ...(maybeNumber(feature.rank_std) != null ? { rank_std: maybeNumber(feature.rank_std)! } : {}),
+    ...(maybeNumber(feature.robust_rank) != null ? { robust_rank: maybeNumber(feature.robust_rank)! } : {}),
+    ...(s(feature.recommendation_type) ? { recommendation_type: s(feature.recommendation_type) } : {}),
+    ...(s(feature.robust_recommendation_reason) ? { robust_recommendation_reason: s(feature.robust_recommendation_reason) } : {}),
+    ...(maybeNumber(feature.predicted_beneficiaries_used) != null ? { predicted_beneficiaries_used: maybeNumber(feature.predicted_beneficiaries_used)! } : {}),
+    ...(s(feature.shap_diagnostic_tag) ? { shap_diagnostic_tag: s(feature.shap_diagnostic_tag) } : {}),
+    ...(Array.isArray(feature.shap_positive_drivers) ? { shap_positive_drivers: feature.shap_positive_drivers as Array<{ feature: string; value: number; shap_value: number }> } : {}),
+    ...(Array.isArray(feature.shap_negative_drivers) ? { shap_negative_drivers: feature.shap_negative_drivers as Array<{ feature: string; value: number; shap_value: number }> } : {}),
+    ...(s(feature.shap_explanation_text) ? { shap_explanation_text: s(feature.shap_explanation_text) } : {}),
+    ...(s(feature.shap_waterfall_image_path) ? { shap_waterfall_image_path: s(feature.shap_waterfall_image_path) } : {}),
   }));
 
   const schoolInternal: Candidate = {

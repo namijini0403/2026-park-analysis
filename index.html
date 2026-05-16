@@ -2640,6 +2640,7 @@
       beneficiaryForecast: "./data_processed/school_enrollment_forecast_20260418_model1.csv",
       similarSchools: "./data_processed/school_similar_schools_top5.csv",
       candidateBarrierRoutes: "./data_processed/candidate_barrier_routes_by_school.json",
+      robustRecommendations: "./data_processed/robust_candidate_recommendations.json",
       candidatePanelExamples: "./data/examples/candidate_panel_examples.json",
       guSummary: "./data_processed/gu_summary.csv",
       parks: "./data_processed/parks.csv",
@@ -2810,7 +2811,9 @@
         isochrone: null,
         buffer: null,
         candidateFeatures: [],
-        candidateBarrierRoutes: {}
+        candidateBarrierRoutes: {},
+        robustRecommendations: [],
+        robustRecommendationMap: {}
       }
     };
 
@@ -3677,6 +3680,44 @@
       };
     }
 
+    function buildRobustRecommendationMap(rows = []) {
+      const map = {};
+      if (!Array.isArray(rows)) return map;
+      rows.forEach((row) => {
+        const gridId = String(row?.grid_id || row?.candidate_id || "").trim();
+        if (!gridId) return;
+        const schoolId = String(row?.school_id || "").trim();
+        const schoolName = String(row?.school_name || "").trim();
+        if (schoolId) map[`${schoolId}__${gridId}`] = row;
+        if (schoolName) map[`${schoolName}__${gridId}`] = row;
+      });
+      return map;
+    }
+
+    function mergeCandidateRobustMeta(candidate = {}, schoolId = "", schoolName = "") {
+      const map = state.datasets.robustRecommendationMap || {};
+      const resolvedSchoolId = resolveSchoolIdForBarrierMeta(schoolId, schoolName);
+      const gridId = String(candidate.grid_id || "").trim();
+      const robust = map[`${resolvedSchoolId}__${gridId}`] || map[`${schoolName}__${gridId}`];
+      if (!robust) return candidate;
+      return {
+        ...candidate,
+        pareto_candidate: Boolean(robust.pareto_candidate),
+        top5_stability_score: Number(robust.top5_stability_score),
+        mean_rank: Number(robust.mean_rank),
+        rank_std: Number(robust.rank_std),
+        robust_rank: Number(robust.robust_rank),
+        recommendation_type: robust.recommendation_type || null,
+        robust_recommendation_reason: robust.robust_recommendation_reason || null,
+        predicted_beneficiaries_used: Number(robust.predicted_beneficiaries_used),
+        shap_diagnostic_tag: robust.shap_diagnostic_tag || null,
+        shap_positive_drivers: Array.isArray(robust.shap_positive_drivers) ? robust.shap_positive_drivers : [],
+        shap_negative_drivers: Array.isArray(robust.shap_negative_drivers) ? robust.shap_negative_drivers : [],
+        shap_explanation_text: robust.shap_explanation_text || null,
+        shap_waterfall_image_path: robust.shap_waterfall_image_path || null,
+      };
+    }
+
     const SUPPLEMENTAL_CANDIDATE_MINIMUM_COUNT = 6;
     const SUPPLEMENTAL_CANDIDATE_MAX_STRAIGHT_DISTANCE_M = 600;
     const SUPPLEMENTAL_CANDIDATE_NOTE =
@@ -3721,7 +3762,11 @@
         )
         .slice(0, Math.max(0, minimumCount - baseCandidates.length))
         .map((item) => {
-          const merged = mergeCandidateBarrierMeta(item.candidate, schoolId, schoolName);
+          const merged = mergeCandidateRobustMeta(
+            mergeCandidateBarrierMeta(item.candidate, schoolId, schoolName),
+            schoolId,
+            schoolName
+          );
           const roundedDistance = Math.round(item.straightDistance);
           const supplementalCandidate = {
             ...merged,
@@ -4805,6 +4850,7 @@
         beneficiaryForecast,
         similarSchools,
         candidateBarrierRoutes,
+        robustRecommendations,
         candidatePanelExamples,
         guSummary,
         parks,
@@ -4820,6 +4866,7 @@
         loadCSV(PATHS.beneficiaryForecast),
         loadCSV(PATHS.similarSchools),
         loadJSON(PATHS.candidateBarrierRoutes),
+        loadJSON(PATHS.robustRecommendations),
         loadCandidateExamples(),
         loadCSV(PATHS.guSummary),
         loadCSV(PATHS.parks),
@@ -4835,6 +4882,8 @@
       state.datasets.beneficiaryForecast = beneficiaryForecast;
       state.datasets.similarSchools = similarSchools;
       state.datasets.candidateBarrierRoutes = candidateBarrierRoutes || {};
+      state.datasets.robustRecommendations = Array.isArray(robustRecommendations) ? robustRecommendations : [];
+      state.datasets.robustRecommendationMap = buildRobustRecommendationMap(state.datasets.robustRecommendations);
       state.datasets.candidatePanelExamples = Array.isArray(candidatePanelExamples)
         ? candidatePanelExamples
         : getFallbackCandidateExamples();
@@ -6358,7 +6407,7 @@
       const _schoolId = getSchoolId(row);
       const _linkedCandidatesBase = (state.datasets.candidateFeatures || [])
         .filter((p) => Array.isArray(p.linked_schools) && p.linked_schools.includes(_schoolName))
-        .map((p) => mergeCandidateBarrierMeta(p, _schoolId, _schoolName))
+        .map((p) => mergeCandidateRobustMeta(mergeCandidateBarrierMeta(p, _schoolId, _schoolName), _schoolId, _schoolName))
         .slice(0, 20);
       const _normalizedCaseType = normalizeCaseType(row.case_type, row);
       const _linkedCandidates = _normalizedCaseType === "case4"

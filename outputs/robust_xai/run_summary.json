@@ -1,0 +1,27 @@
+{
+  "input_candidate_geojson": "data_processed\\candidate_grid_final.geojson",
+  "input_route_csv": "output\\candidate_barrier_routes_by_school.csv",
+  "rows": 1551,
+  "schools": 195,
+  "merge_success": 1551,
+  "merge_fail": 0,
+  "score_metadata": {
+    "demand_column": "walkshed_beneficiary_2031",
+    "access_gap_column": "nearest_park_dist",
+    "proximity_column": "route_length_m",
+    "normalization": "school-wise min-max with 1-99 percentile clipping when group sample size is at least 20"
+  },
+  "weight_samples": 1000,
+  "weight_seed": 42,
+  "explainability_method": "surrogate_random_forest_shap",
+  "warnings": [],
+  "outputs": [
+    "outputs\\robust_xai\\robust_candidate_recommendations.csv",
+    "outputs\\robust_xai\\robust_candidate_recommendations.json",
+    "outputs\\robust_xai\\shap_candidate_explanations.json",
+    "outputs/robust_xai/shap_summary.png",
+    "outputs/robust_xai/shap_feature_importance.png",
+    "data_processed\\robust_candidate_recommendations.json",
+    "data_processed\\robust_shap_candidate_explanations.json"
+  ]
+}
