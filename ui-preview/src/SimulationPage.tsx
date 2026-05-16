@@ -627,8 +627,8 @@ function ShapDiagnosticPanel({ candidate }: { candidate: Candidate }) {
       </div>
       {candidate.shap_explanation_text ? <div style={{ fontSize: 13, color: SIM_COLORS.secondary, lineHeight: 1.6, marginBottom: 10 }}>{candidate.shap_explanation_text}</div> : null}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
-        <DriverList title="예측값을 높인 변수" drivers={positive} positive />
-        <DriverList title="예측값을 낮춘 변수" drivers={negative} />
+        <DriverList title="예측값을 높인 쉬운 근거" drivers={positive} positive />
+        <DriverList title="예측값을 낮춘 쉬운 근거" drivers={negative} />
       </div>
       {candidate.shap_waterfall_image_path ? (
         <img
@@ -641,15 +641,81 @@ function ShapDiagnosticPanel({ candidate }: { candidate: Candidate }) {
   );
 }
 
+function getDriverNaturalText(driver: ShapDriver, positive: boolean): string {
+  const feature = driver.feature.toLowerCase();
+  if (feature.includes("proximity") || feature.includes("route_length") || feature.includes("school_dist")) {
+    return positive
+      ? "학교와 후보지가 가까워 아이들이 일상적으로 이용하기 쉬운 위치입니다."
+      : "학교와 후보지 사이 거리가 상대적으로 멀어 실제 이용 가능 수요를 낮췄습니다.";
+  }
+  if (feature.includes("park") || feature.includes("access_gap") || feature.includes("green")) {
+    return positive
+      ? "주변에 대체할 활동가능공원이 부족해 새 공간의 보완 효과가 크게 잡혔습니다."
+      : "이미 가까운 공원이나 녹지 대안이 있어 추가 수혜 효과가 상대적으로 낮게 잡혔습니다.";
+  }
+  if (feature.includes("child") || feature.includes("demand") || feature.includes("beneficiar")) {
+    return positive
+      ? "후보지 주변의 아동 규모와 미래 수요가 높아 수혜 아동 수를 끌어올렸습니다."
+      : "후보지 주변의 아동 규모나 미래 수요가 상대적으로 작아 예측 수혜를 낮췄습니다.";
+  }
+  if (feature.includes("apt")) {
+    return positive
+      ? "주변 대단지 아파트 신호가 있어 앞으로 이용 수요가 늘 가능성이 반영됐습니다."
+      : "대단지 아파트와의 연결 신호가 약해 추가 수요 기대가 낮게 잡혔습니다.";
+  }
+  if (feature.includes("redev")) {
+    return positive
+      ? "재개발·정비사업 등 향후 생활권 변화 가능성이 수요 증가 신호로 반영됐습니다."
+      : "재개발·정비사업 신호가 약하거나 불확실해 미래 수요를 낮추는 쪽으로 작용했습니다.";
+  }
+  if (feature.includes("playground") || feature.includes("pg")) {
+    return positive
+      ? "주변 놀이공간이 부족해 새 야외활동 공간의 필요성이 높게 반영됐습니다."
+      : "주변 놀이공간 대안이 있어 새 후보지의 추가 수혜가 낮게 잡혔습니다.";
+  }
+  if (feature.includes("motorway") || feature.includes("trunk") || feature.includes("primary") || feature.includes("secondary") || feature.includes("tertiary")) {
+    return positive
+      ? "경로 조건을 함께 볼 때 이 후보가 비교 후보군 안에서 수요가 있는 위치로 해석됐습니다."
+      : "도로 횡단 부담이 있어 실제 이용 가능성이 낮아질 수 있는 신호로 작용했습니다.";
+  }
+  if (feature.includes("linked_school")) {
+    return positive
+      ? "여러 학교 생활권과 연결되어 공동 수혜 가능성이 높게 반영됐습니다."
+      : "연결되는 학교 생활권이 제한적이라 수혜 범위가 좁게 잡혔습니다.";
+  }
+  if (feature.includes("case") || feature.includes("priority")) {
+    return positive
+      ? "학교 주변 환경 취약성이 커 지원 필요성이 높은 후보로 해석됐습니다."
+      : "환경 취약성 신호가 상대적으로 약해 예측 수혜를 낮췄습니다.";
+  }
+  if (feature.includes("w_hat")) {
+    return positive
+      ? "격자 단위 인구 배분에서 이 후보 주변으로 수요가 모이는 신호가 반영됐습니다."
+      : "격자 단위 인구 배분에서 이 후보 주변 수요 비중이 낮게 반영됐습니다.";
+  }
+  return positive
+    ? "모델이 이 후보의 수혜 아동 수를 높게 보는 데 보탬이 된 신호입니다."
+    : "모델이 이 후보의 수혜 아동 수를 낮게 보는 데 작용한 신호입니다.";
+}
+
+function getDriverImpactLabel(driver: ShapDriver): string {
+  const impact = Math.abs(driver.shap_value);
+  if (impact >= 10) return "영향 큼";
+  if (impact >= 3) return "영향 보통";
+  return "영향 작음";
+}
+
 function DriverList({ title, drivers, positive = false }: { title: string; drivers: ShapDriver[]; positive?: boolean }) {
   return (
     <div style={{ padding: "10px 12px", borderRadius: 10, background: SIM_COLORS.panel }}>
       <div style={{ fontSize: 12, fontWeight: 900, color: positive ? SIM_COLORS.greenSoft : SIM_COLORS.amber, marginBottom: 8 }}>{title}</div>
       <div style={{ display: "grid", gap: 6, fontSize: 12, color: SIM_COLORS.secondary }}>
         {drivers.length ? drivers.slice(0, 3).map((driver) => (
-          <div key={`${driver.feature}-${driver.shap_value}`} style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-            <span>{driver.feature}</span>
-            <b>{driver.shap_value.toFixed(1)}</b>
+          <div key={`${driver.feature}-${driver.shap_value}`} style={{ display: "grid", gap: 4, padding: "8px 0", borderTop: `1px solid ${SIM_COLORS.border}` }}>
+            <span style={{ lineHeight: 1.5 }}>{getDriverNaturalText(driver, positive)}</span>
+            <span style={{ width: "fit-content", padding: "2px 7px", borderRadius: 999, background: positive ? "rgba(16, 185, 129, 0.12)" : "rgba(251, 191, 36, 0.10)", color: positive ? SIM_COLORS.greenSoft : SIM_COLORS.amber, fontSize: 11, fontWeight: 800 }}>
+              {getDriverImpactLabel(driver)}
+            </span>
           </div>
         )) : <div>표시할 변수가 없습니다.</div>}
       </div>
