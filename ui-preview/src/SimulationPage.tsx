@@ -600,7 +600,7 @@ function RobustCandidateBrief({
         onClick={onShapClick}
         style={{ marginTop: 10, border: `1px solid ${SIM_COLORS.borderStrong}`, background: SIM_COLORS.elevated, color: SIM_COLORS.greenSoft, borderRadius: 999, padding: "7px 10px", fontSize: 12, fontWeight: 800, cursor: "pointer" }}
       >
-        {isOpen ? "SHAP 예측 근거 닫기" : "SHAP 예측 근거 보기"}
+        {isOpen ? "SHAP 후보 근거 닫기" : "SHAP 후보 근거 보기"}
       </button>
       {isOpen ? <ShapDiagnosticPanel candidate={candidate} /> : null}
     </div>
@@ -613,9 +613,9 @@ function ShapDiagnosticPanel({ candidate }: { candidate: Candidate }) {
   if (!hasRobustRecommendation(candidate) && !positive.length && !negative.length) return null;
   return (
     <div style={{ marginTop: 12, padding: "12px 14px", borderRadius: 12, background: SIM_COLORS.inset, border: `1px solid ${SIM_COLORS.border}` }}>
-      <div style={{ fontSize: 13, fontWeight: 900, color: SIM_COLORS.text, marginBottom: 6 }}>SHAP 예측 근거</div>
+      <div style={{ fontSize: 13, fontWeight: 900, color: SIM_COLORS.text, marginBottom: 6 }}>SHAP 후보 예측 근거</div>
       <div style={{ fontSize: 12, color: SIM_COLORS.muted, lineHeight: 1.6, marginBottom: 10 }}>
-        이 설명은 최종 추천 순위가 아니라, 미래 수혜 아동 수 예측값의 변수별 근거입니다. 최종 후보 판단은 안정성 점수, 정책 필터, 현장 검토를 함께 고려합니다.
+        이 설명은 최종 추천 순위나 학교 단위 미래수요 예측이 아니라, 이 후보지의 예상 수혜 아동 수를 높이거나 낮춘 변수별 근거입니다. 최종 후보 판단은 안정성 점수, 정책 필터, 현장 검토를 함께 고려합니다.
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 10, marginBottom: 10 }}>
         <div style={{ padding: "10px 12px", borderRadius: 10, background: SIM_COLORS.panel }}>
@@ -627,8 +627,8 @@ function ShapDiagnosticPanel({ candidate }: { candidate: Candidate }) {
       </div>
       {candidate.shap_explanation_text ? <div style={{ fontSize: 13, color: SIM_COLORS.secondary, lineHeight: 1.6, marginBottom: 10 }}>{candidate.shap_explanation_text}</div> : null}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
-        <DriverList title="예측값을 높인 쉬운 근거" drivers={positive} positive />
-        <DriverList title="예측값을 낮춘 쉬운 근거" drivers={negative} />
+        <DriverList title="후보지 예측값을 높인 쉬운 근거" drivers={positive} positive />
+        <DriverList title="후보지 예측값을 낮춘 쉬운 근거" drivers={negative} />
       </div>
       {candidate.shap_waterfall_image_path ? (
         <img

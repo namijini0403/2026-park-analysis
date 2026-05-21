@@ -87,13 +87,13 @@ const flowSteps: FlowStep[] = [
   },
   {
     id: 6,
-    title: "SHAP 진단과 기준 조정",
-    summary: "예측 근거를 열어보고 정책 기준을 조정합니다.",
+    title: "SHAP 후보 진단과 기준 조정",
+    summary: "후보지별 예측 근거를 열어보고 정책 기준을 조정합니다.",
     detail:
-      "SHAP 예측 근거 보기는 최종 추천 순위가 아니라 미래 수혜 아동 수 예측값의 변수별 근거를 보여줍니다. 사용자는 이 진단과 필터·가중치 변화를 함께 보며 현장 검토 대상을 좁힙니다.",
+      "SHAP 후보 근거 보기는 최종 추천 순위나 학교 단위 미래수요 예측이 아니라, 후보지별 예상 수혜 아동 수를 높이거나 낮춘 변수별 근거를 보여줍니다. 사용자는 이 진단과 필터·가중치 변화를 함께 보며 현장 검토 대상을 좁힙니다.",
     image: guideSimulation,
-    imageAlt: "SHAP 예측 근거와 기준 조정 화면",
-    actionLabel: "SHAP 진단 열기",
+    imageAlt: "SHAP 후보 근거와 기준 조정 화면",
+    actionLabel: "SHAP 후보 진단 열기",
     actionView: "simulation",
   },
 ];
@@ -110,11 +110,11 @@ const guideShots: GuideShot[] = [
   },
   {
     eyebrow: "Candidate Recommendation",
-    title: "견고 후보 추천과 SHAP 진단",
+    title: "견고 후보 추천과 SHAP 후보 진단",
     description:
-      "카드에서 Pareto 후보, Top5 안정성, 평균 순위를 확인하고 SHAP 예측 근거 보기로 미래 수요 예측 근거를 펼칩니다.",
+      "카드에서 Pareto 후보, Top5 안정성, 평균 순위를 확인하고 SHAP 후보 근거 보기로 후보지별 예상 수혜 아동 수의 설명 근거를 펼칩니다.",
     image: guideSimulation,
-    imageAlt: "견고 후보 추천과 SHAP 진단 캡처",
+    imageAlt: "견고 후보 추천과 SHAP 후보 진단 캡처",
     view: "simulation",
     imageClass: "object-[center_72%]",
   },
@@ -174,7 +174,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 진단하고,
-                <span className="font-semibold text-forest-300"> 견고한 후보지와 SHAP 진단</span>을 제안합니다.
+                <span className="font-semibold text-forest-300"> 견고한 후보지와 SHAP 후보 진단</span>을 제안합니다.
               </p>
             </div>
 
@@ -218,7 +218,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <h2 className="mt-2 text-2xl font-black text-white">주요 화면 사용 설명서</h2>
             </div>
             <p className="max-w-xl text-sm leading-relaxed text-slate-400">
-              후보 카드는 Pareto 여부와 Top5 안정성을 먼저 보여주고, SHAP 버튼은 최종 추천이 아니라 미래 수요 예측 근거를 펼칩니다.
+              후보 카드는 Pareto 여부와 Top5 안정성을 먼저 보여주고, SHAP 버튼은 최종 추천이 아니라 후보지별 예상 수혜 아동 수의 설명 근거를 펼칩니다.
             </p>
           </div>
 
