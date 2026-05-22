@@ -1,5 +1,6 @@
 ﻿import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import type { MouseEvent } from "react";
+import AiExplainerPanel from "./AiExplainerPanel";
 import KakaoMap, { CandidateMarker, CandidateRouteLine } from "./KakaoMap";
 
 const LETTERS = "ABCDEFGHIJ".split("");
@@ -1307,6 +1308,41 @@ export default function SimulationPage({
               교내 설치 대안도 유지됩니다. 필요하면 지도에서 `교내` 마커를 선택해 수혜 규모를 함께 비교할 수 있습니다.
             </div>
           ) : null}
+        </div>
+      ) : null}
+      {selectedCandidate ? (
+        <div style={{ marginTop: 18 }}>
+          <AiExplainerPanel
+            title="선택 후보지 AI 근거 해설"
+            description="선택된 후보지 지표와 봉인된 근거 문서 안에서만 추천 이유와 주의사항을 설명합니다."
+            schoolContext={{
+              school_name: schoolName,
+              case_label: casePolicyLabel,
+            }}
+            candidateContext={{
+              grid_id: selectedCandidate.grid_id,
+              candidate_label: candidateLabelMap.get(selectedCandidate.grid_id) ?? undefined,
+              nearest_school_distance_m: selectedCandidate.nearest_school_dist,
+              nearest_park_distance_m: selectedCandidate.nearest_park_dist,
+              nearest_playground_distance_m: selectedCandidate.nearest_pg_dist,
+              walkshed_potential_2029: selectedCandidate.walkshed_potential_2029,
+              walkshed_potential_2031: selectedCandidate.walkshed_potential_2031,
+              resident_children_2029: selectedCandidate.resident_children_2029,
+              resident_children_2031: selectedCandidate.resident_children_2031,
+              final_score:
+                "final_score" in selectedCandidate
+                  ? Number((selectedCandidate as Partial<ScoredCandidate>).final_score)
+                  : undefined,
+              pareto_candidate: selectedCandidate.pareto_candidate,
+              top5_stability_score: selectedCandidate.top5_stability_score,
+              mean_rank: selectedCandidate.mean_rank,
+              recommendation_type: selectedCandidate.recommendation_type,
+              shap_diagnostic_tag: selectedCandidate.shap_diagnostic_tag,
+              shap_explanation_text: selectedCandidate.shap_explanation_text,
+              barrier_summary: getBarrierCountSummary(selectedCandidate),
+              barrier_note: getBarrierNote(selectedCandidate),
+            }}
+          />
         </div>
       ) : null}
     </div>

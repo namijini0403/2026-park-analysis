@@ -44,6 +44,18 @@
 - Value: Kakao Developers의 JavaScript 키
 - Environment: Production, Preview 모두 필요하면 둘 다 선택
 
+## AI 해설 패널 환경변수
+
+식별앱에서 RAG 기반 AI 해설 패널을 켜려면 Vercel Project Settings에 아래 값을 추가한다.
+
+- `OPENAI_API_KEY`: OpenAI API 키. 브라우저 번들에 넣지 않고 `/api/ai-explainer` 서버리스 함수에서만 사용한다.
+- `AI_EXPLAINER_ENABLED`: `true`일 때 서버리스 함수가 응답한다.
+- `VITE_AI_EXPLAINER_ENABLED`: `true`일 때 상세 리포트와 후보지 시뮬레이션 화면에 AI 해설 패널을 노출한다.
+- 선택값 `AI_EXPLAINER_MODEL`: 기본값은 `gpt-5.4-mini`.
+- 선택값 `AI_EXPLAINER_MAX_OUTPUT_TOKENS`: 기본값은 `700`.
+
+식별앱 제출 허용 전이거나 비식별 공개 버전에서는 `AI_EXPLAINER_ENABLED=false`, `VITE_AI_EXPLAINER_ENABLED=false`로 둔다.
+
 환경변수를 추가하거나 수정한 뒤에는 반드시 Redeploy해야 한다. `scripts/deploy/build_vercel_static.mjs`가 배포 시 `index.html`의 기본 Kakao 키를 이 값으로 바꿔 넣는다.
 
 급하게 테스트만 할 때는 URL에 직접 키를 붙일 수도 있다.
@@ -59,6 +71,7 @@ https://2026-park-analysis.vercel.app/?kakaoKey=여기에_JavaScript_키
 - `/data_processed/school_priority_with_functional_park_layer.csv`
 - `/data_processed/candidate_grid_final.geojson`
 - `/ui-preview/dist/index.html`
+- `/api/ai-explainer`는 `POST` 전용이며, `AI_EXPLAINER_ENABLED=true`와 `OPENAI_API_KEY`가 있을 때만 동작한다.
 
 ## 학교 PC에서 막힐 경우의 대안
 

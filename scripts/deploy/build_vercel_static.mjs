@@ -1,4 +1,5 @@
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -6,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, "..", "..");
 const outputDir = path.join(root, "vercel_public");
+const uiPreviewDir = path.join(root, "ui-preview");
 
 const requiredRootFiles = ["index.html", "logo.png"];
 const requiredDataFiles = [
@@ -31,6 +33,31 @@ function assertExists(targetPath) {
   if (!existsSync(targetPath)) {
     throw new Error(`Missing required deployment file: ${path.relative(root, targetPath)}`);
   }
+}
+
+function npmCommand() {
+  return process.platform === "win32" ? "npm.cmd" : "npm";
+}
+
+function runPrebuildSteps() {
+  execFileSync("node", [path.join("scripts", "build_ai_explainer_chunks.mjs")], {
+    cwd: root,
+    stdio: "inherit",
+  });
+
+  if (!existsSync(path.join(uiPreviewDir, "node_modules"))) {
+    execFileSync(npmCommand(), ["--prefix", "ui-preview", "ci"], {
+      cwd: root,
+      stdio: "inherit",
+      shell: true,
+    });
+  }
+
+  execFileSync(npmCommand(), ["--prefix", "ui-preview", "run", "build"], {
+    cwd: root,
+    stdio: "inherit",
+    shell: true,
+  });
 }
 
 function copyFileToOutput(relativePath) {
@@ -67,6 +94,8 @@ function copyDirectoryToOutput(relativePath) {
   assertExists(source);
   cpSync(source, destination, { recursive: true });
 }
+
+runPrebuildSteps();
 
 rmSync(outputDir, { recursive: true, force: true });
 mkdirSync(outputDir, { recursive: true });

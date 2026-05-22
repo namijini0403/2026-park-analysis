@@ -1,6 +1,8 @@
 {
   "private": true,
   "scripts": {
+    "build:ai-chunks": "node scripts/build_ai_explainer_chunks.mjs",
+    "build:ui-preview": "npm --prefix ui-preview run build",
     "build:vercel": "node scripts/deploy/build_vercel_static.mjs"
   },
   "engines": {

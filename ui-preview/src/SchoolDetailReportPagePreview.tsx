@@ -9,6 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import AiExplainerPanel from "./AiExplainerPanel";
 
 // 백분위 방향 규칙
 // nearestParkDistance: share_ge 기준 -> 낮을수록 불리 (10% = 상위 10% 불리 = 위험)
@@ -1530,5 +1531,29 @@ function SimulationEntry({
 }
 
 export default function SchoolDetailReportPage(props: SchoolDetailReportProps) {
-  return <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-4 py-8 lg:px-8"><SchoolHeader {...props} /><SchoolProfileGrid {...props} /><ProblemSection {...props} /><ContextSection {...props} /><SimilarSchoolsSection {...props} /><RedevelopmentNotice {...props} /><SimulationEntry {...props} /></div>;
+  return (
+    <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-4 py-8 lg:px-8">
+      <SchoolHeader {...props} />
+      <SchoolProfileGrid {...props} />
+      <ProblemSection {...props} />
+      <ContextSection {...props} />
+      <SimilarSchoolsSection {...props} />
+      <AiExplainerPanel
+        schoolContext={{
+          school_name: props.schoolName,
+          district_name: props.districtName,
+          case_label: props.casePolicyLabel,
+          case_status_label: props.caseStatusLabel,
+          nearest_park_distance_m: props.nearestParkDistanceM,
+          nearest_park_name: props.nearestParkName,
+          green_ratio: props.greenRatio,
+          playground_count: props.playgroundCount,
+          potential_demand_2029: props.potentialDemand2029,
+          potential_demand_2031: props.potentialDemand2031,
+        }}
+      />
+      <RedevelopmentNotice {...props} />
+      <SimulationEntry {...props} />
+    </div>
+  );
 }
