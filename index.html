@@ -958,6 +958,127 @@
       display: none;
     }
 
+    .auth-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 10040;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        linear-gradient(135deg, rgba(5, 11, 20, 0.99) 0%, rgba(8, 20, 33, 0.99) 56%, rgba(16, 27, 45, 0.98) 100%),
+        #050B14;
+      color: #f8fafc;
+    }
+
+    .auth-gate.is-hidden {
+      display: none;
+    }
+
+    .auth-gate::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.86), rgba(0, 0, 0, 0.22));
+    }
+
+    .auth-card {
+      position: relative;
+      width: min(480px, 100%);
+      padding: clamp(26px, 5vw, 42px);
+      border-radius: 24px;
+      background: rgba(16, 27, 45, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 30px 90px rgba(2, 6, 23, 0.48);
+    }
+
+    .auth-kicker {
+      margin: 0 0 12px;
+      color: #a7f3d0;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .auth-title {
+      margin: 0;
+      color: #f8fafc;
+      font-size: clamp(28px, 5vw, 40px);
+      line-height: 1.18;
+      letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .auth-copy {
+      margin: 14px 0 0;
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: keep-all;
+    }
+
+    .auth-form {
+      display: grid;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .auth-label {
+      font-size: 13px;
+      font-weight: 900;
+      color: #d1fae5;
+    }
+
+    .auth-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: #081421;
+      color: #f8fafc;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      outline: none;
+    }
+
+    .auth-input:focus {
+      border-color: rgba(16, 185, 129, 0.62);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    }
+
+    .auth-submit {
+      min-height: 48px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(167, 243, 208, 0.7);
+      background: #10b981;
+      color: #052e24;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 18px 34px rgba(16, 185, 129, 0.24);
+    }
+
+    .auth-message {
+      min-height: 20px;
+      margin: 2px 0 0;
+      color: #fca5a5;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
     .app-cover::before {
       content: "";
       position: absolute;
@@ -2309,6 +2430,19 @@
         width: min(190px, 70vw);
       }
 
+      .auth-gate {
+        align-items: stretch;
+        padding: 10px;
+      }
+
+      .auth-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 24px 18px;
+        border-radius: 24px;
+      }
+
       .guide-overlay {
         padding: 10px;
         align-items: flex-end;
@@ -2457,6 +2591,20 @@
 <body>
   <div class="app-shell">
     <div id="map"></div>
+
+    <section class="auth-gate" id="authGate" role="dialog" aria-modal="true" aria-labelledby="authGateTitle">
+      <div class="auth-card">
+        <p class="auth-kicker">Private Preview</p>
+        <h1 class="auth-title" id="authGateTitle">인증번호 입력</h1>
+        <p class="auth-copy">공개 전 검토용 화면입니다. 전달받은 인증번호를 입력하면 지도 화면으로 이동합니다.</p>
+        <form class="auth-form" id="authForm" novalidate>
+          <label class="auth-label" for="authCodeInput">인증번호</label>
+          <input class="auth-input" id="authCodeInput" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="인증번호" aria-describedby="authMessage" />
+          <button class="auth-submit" type="submit">지도 화면으로 이동</button>
+          <p class="auth-message" id="authMessage" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
 
     <section class="app-cover" id="appCover" role="dialog" aria-modal="true" aria-labelledby="appCoverTitle">
       <div class="app-cover-shell">
@@ -2629,6 +2777,8 @@
   -->
   <script>
     const DEFAULT_KAKAO_MAP_KEY = "429ad574cd834de9ebdaee46f4478138";
+    const ACCESS_CODE = "2026";
+    const AUTH_SESSION_KEY = "parkAnalysis_auth_ok";
     const urlKey = new URLSearchParams(window.location.search).get("key");
     window.KAKAO_MAP_KEY = urlKey || DEFAULT_KAKAO_MAP_KEY;
 
@@ -6421,6 +6571,67 @@
       openSimulationOverlay();
     }
 
+    function isAuthenticated() {
+      try {
+        return sessionStorage.getItem(AUTH_SESSION_KEY) === "1";
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function hideAuthGate() {
+      const gate = document.getElementById("authGate");
+      if (!gate) return;
+      gate.classList.add("is-hidden");
+      gate.setAttribute("aria-hidden", "true");
+    }
+
+    let appStarted = false;
+
+    function startAppOnce() {
+      if (appStarted) return;
+      appStarted = true;
+      hideAuthGate();
+      init().catch((error) => {
+        console.error("[init]", error);
+        setStatus("앱 초기화 중 오류가 발생했습니다. 콘솔 로그를 확인하세요.");
+      });
+    }
+
+    function initAuthGate() {
+      const gate = document.getElementById("authGate");
+      const form = document.getElementById("authForm");
+      const input = document.getElementById("authCodeInput");
+      const message = document.getElementById("authMessage");
+
+      if (!gate || !form || !input || !message || isAuthenticated()) {
+        startAppOnce();
+        return;
+      }
+
+      gate.classList.remove("is-hidden");
+      gate.removeAttribute("aria-hidden");
+      input.focus();
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const entered = String(input.value || "").trim();
+        if (entered !== ACCESS_CODE) {
+          message.textContent = "인증번호가 일치하지 않습니다.";
+          input.select();
+          return;
+        }
+
+        try {
+          sessionStorage.setItem(AUTH_SESSION_KEY, "1");
+        } catch (error) {
+          // sessionStorage가 막힌 환경에서도 현재 화면 진입은 허용합니다.
+        }
+        message.textContent = "";
+        startAppOnce();
+      });
+    }
+
     async function init() {
       try {
         await loadKakaoMapSdk();
@@ -6464,7 +6675,7 @@
       await loadCandidateLayer();
     }
 
-    init();
+    initAuthGate();
 
     /* ── 시뮬레이션 오버레이 ──────────────────────────── */
     function openPreviewOverlay(initialView = "report") {
