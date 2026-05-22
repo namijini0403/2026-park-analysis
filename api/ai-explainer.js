@@ -251,7 +251,7 @@ module.exports = async function handler(req, res) {
   if (req.method === "OPTIONS") return json(res, 200, {});
   if (req.method !== "POST") return json(res, 405, safeFailure("POST 요청만 지원합니다.", 405));
 
-  if (process.env.AI_EXPLAINER_ENABLED !== "true") {
+  if (process.env.AI_EXPLAINER_ENABLED === "false") {
     return json(res, 503, safeFailure("AI 해설 패널이 현재 비활성화되어 있습니다.", 503));
   }
   if (!process.env.OPENAI_API_KEY) {

@@ -101,7 +101,7 @@ const PRESETS: Preset[] = [
 ];
 
 function isEnabled() {
-  return import.meta.env.VITE_AI_EXPLAINER_ENABLED === "true";
+  return import.meta.env.VITE_AI_EXPLAINER_ENABLED !== "false";
 }
 
 function isDisplayable(response: AiExplainerResponse) {
