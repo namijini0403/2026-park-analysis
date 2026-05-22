@@ -4,6 +4,12 @@ const path = require("node:path");
 const MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.4-mini";
 const MAX_OUTPUT_TOKENS = Number(process.env.AI_EXPLAINER_MAX_OUTPUT_TOKENS || 700);
 const CHUNKS_PATH = path.join(__dirname, "ai_explainer_chunks.json");
+const ALLOWED_ORIGIN_PATTERNS = [
+  /^https:\/\/2026-park-analysis\.vercel\.app$/,
+  /^https:\/\/2026-park-analysis-[a-z0-9-]+-namijini0403s-projects\.vercel\.app$/,
+  /^http:\/\/localhost:\d+$/,
+  /^http:\/\/127\.0\.0\.1:\d+$/,
+];
 
 loadLocalEnvForDevelopment();
 
@@ -37,7 +43,18 @@ function loadLocalEnvForDevelopment() {
   }
 }
 
-function json(res, statusCode, payload) {
+function applyCors(req, res) {
+  const origin = req.headers?.origin;
+  if (!origin || origin === "null" || ALLOWED_ORIGIN_PATTERNS.some((pattern) => pattern.test(origin))) {
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
+    res.setHeader("Vary", "Origin");
+  }
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
+function json(req, res, statusCode, payload) {
+  applyCors(req, res);
   res.statusCode = statusCode;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.end(JSON.stringify(payload));
@@ -250,29 +267,29 @@ async function readBody(req) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method === "OPTIONS") return json(res, 200, {});
-  if (req.method !== "POST") return json(res, 405, safeFailure("POST 요청만 지원합니다.", 405));
+  if (req.method === "OPTIONS") return json(req, res, 200, {});
+  if (req.method !== "POST") return json(req, res, 405, safeFailure("POST 요청만 지원합니다.", 405));
 
   if (process.env.AI_EXPLAINER_ENABLED === "false") {
-    return json(res, 503, safeFailure("AI 해설 패널이 현재 비활성화되어 있습니다.", 503));
+    return json(req, res, 503, safeFailure("AI 해설 패널이 현재 비활성화되어 있습니다.", 503));
   }
   if (!process.env.OPENAI_API_KEY) {
-    return json(res, 503, safeFailure("서버에 OpenAI API 키가 설정되어 있지 않습니다.", 503));
+    return json(req, res, 503, safeFailure("서버에 OpenAI API 키가 설정되어 있지 않습니다.", 503));
   }
 
   try {
     const payload = await readBody(req);
     const question = String(payload.question || "").trim();
     if (!question || question.length > 220) {
-      return json(res, 400, safeFailure("질문은 1자 이상 220자 이하로 입력해야 합니다.", 400));
+      return json(req, res, 400, safeFailure("질문은 1자 이상 220자 이하로 입력해야 합니다.", 400));
     }
     if (payload.mode !== "identified_school_explainer") {
-      return json(res, 400, safeFailure("식별앱 AI 해설 모드만 지원합니다.", 400));
+      return json(req, res, 400, safeFailure("식별앱 AI 해설 모드만 지원합니다.", 400));
     }
 
     const chunks = loadChunks();
     const selectedChunks = selectChunks(payload, chunks);
-    if (selectedChunks.length < 3) return json(res, 200, safeFailure());
+    if (selectedChunks.length < 3) return json(req, res, 200, safeFailure());
 
     const openaiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -298,14 +315,14 @@ module.exports = async function handler(req, res) {
     });
 
     if (!openaiResponse.ok) {
-      return json(res, 200, safeFailure("AI 해설을 생성하지 못했습니다. 잠시 후 다시 시도해 주세요."));
+      return json(req, res, 200, safeFailure("AI 해설을 생성하지 못했습니다. 잠시 후 다시 시도해 주세요."));
     }
 
     const data = await openaiResponse.json();
     const rawText = extractText(data);
     const parsed = JSON.parse(rawText);
-    return json(res, 200, validateAnswer(parsed, selectedChunks));
+    return json(req, res, 200, validateAnswer(parsed, selectedChunks));
   } catch {
-    return json(res, 200, safeFailure("AI 해설을 안전하게 생성하지 못했습니다."));
+    return json(req, res, 200, safeFailure("AI 해설을 안전하게 생성하지 못했습니다."));
   }
 };

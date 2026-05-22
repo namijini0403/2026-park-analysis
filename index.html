@@ -2977,6 +2977,7 @@
   <script>
     const DEFAULT_KAKAO_MAP_KEY = "429ad574cd834de9ebdaee46f4478138";
     const ACCESS_CODE = "2026";
+    const PRODUCTION_AI_EXPLAINER_URL = "https://2026-park-analysis.vercel.app/api/ai-explainer";
     const urlKey = new URLSearchParams(window.location.search).get("key");
     window.KAKAO_MAP_KEY = urlKey || DEFAULT_KAKAO_MAP_KEY;
 
@@ -4858,6 +4859,36 @@
       `;
     }
 
+    function getAiExplainerEndpoints() {
+      const isProductionHost = window.location.hostname === "2026-park-analysis.vercel.app";
+      const sameOriginEndpoint = "/api/ai-explainer";
+      if (window.location.protocol === "file:" || !isProductionHost) {
+        return [PRODUCTION_AI_EXPLAINER_URL, sameOriginEndpoint];
+      }
+      return [sameOriginEndpoint];
+    }
+
+    async function postAiExplainer(payload) {
+      let lastError = null;
+      for (const endpoint of getAiExplainerEndpoints()) {
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const text = await response.text();
+          const data = text ? JSON.parse(text) : null;
+          if (!response.ok && data?.cannot_answer_reason) return data;
+          if (!response.ok) throw new Error(`AI endpoint ${response.status}`);
+          return data;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      throw lastError || new Error("AI endpoint unavailable");
+    }
+
     async function askAiExplainer(question, questionType = "case_reason") {
       const trimmed = String(question || "").trim();
       if (!trimmed) return;
@@ -4866,22 +4897,17 @@
       if (ui.aiChatAnswer) ui.aiChatAnswer.innerHTML = `<div class="ai-answer-block">근거 문서에서 답변을 생성하는 중입니다.</div>`;
 
       try {
-        const response = await fetch("/api/ai-explainer", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            mode: "identified_school_explainer",
-            question: trimmed,
-            question_type: questionType,
-            school_context: getAiSchoolContext(),
-            candidate_context: null
-          })
+        const data = await postAiExplainer({
+          mode: "identified_school_explainer",
+          question: trimmed,
+          question_type: questionType,
+          school_context: getAiSchoolContext(),
+          candidate_context: null
         });
-        const data = await response.json();
         renderAiAnswer(data);
       } catch (error) {
         console.error("[ai-explainer]", error);
-        renderAiSafeFailure("AI 해설을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+        renderAiSafeFailure("AI 해설 API에 연결하지 못했습니다. 배포 주소에서 다시 열거나 네트워크를 확인해 주세요.");
       }
     }
 
