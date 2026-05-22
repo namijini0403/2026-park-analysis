@@ -808,6 +808,167 @@
       background: var(--surface);
     }
 
+    .top-action-button.ai {
+      border-color: rgba(16, 185, 129, 0.42);
+      background: rgba(16, 185, 129, 0.16);
+      color: #D1FAE5;
+    }
+
+    .top-action-button.ai.is-open {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .ai-chat-panel {
+      position: absolute;
+      top: 76px;
+      right: 20px;
+      z-index: 70;
+      width: min(420px, calc(100vw - 40px));
+      max-height: calc(100vh - 112px);
+      overflow: auto;
+      display: none;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(8, 20, 33, 0.98);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+    }
+
+    .ai-chat-panel.is-open {
+      display: block;
+    }
+
+    .ai-chat-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .ai-chat-kicker {
+      margin: 0 0 4px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .ai-chat-title {
+      margin: 0;
+      color: var(--secondary);
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .ai-chat-copy {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .ai-chat-close {
+      border: 1px solid var(--panel-border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      min-height: 34px;
+      padding: 0 12px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .ai-question-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .ai-question-btn {
+      min-height: 38px;
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .ai-question-btn:hover {
+      border-color: rgba(16, 185, 129, 0.36);
+      background: var(--surface-muted);
+    }
+
+    .ai-chat-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .ai-chat-input {
+      flex: 1;
+      min-width: 0;
+      min-height: 42px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--panel-border);
+      background: var(--surface-muted);
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .ai-chat-submit {
+      min-height: 42px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .ai-chat-answer {
+      display: grid;
+      gap: 10px;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .ai-answer-block {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.52);
+    }
+
+    .ai-answer-label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .ai-citation-list {
+      margin: 6px 0 0;
+      padding-left: 16px;
+      color: var(--muted);
+    }
+
     .layer-toggle-btn {
       display: inline-flex;
       align-items: center;
@@ -2366,6 +2527,17 @@
         font-size: 13px;
       }
 
+      .ai-chat-panel {
+        top: 228px;
+        right: 12px;
+        width: calc(100vw - 24px);
+        max-height: calc(100vh - 252px);
+      }
+
+      .ai-question-grid {
+        grid-template-columns: 1fr;
+      }
+
       .layer-toggle-btn {
         flex: 1 1 calc(50% - 8px);
         font-size: 13px;
@@ -2648,7 +2820,34 @@
       <button class="top-action-button secondary" type="button" data-shortcut-action="simulation">시뮬레이션</button>
       <button class="top-action-button secondary" id="statisticsShortcutButton" type="button" data-shortcut-action="statistics">전체 통계</button>
       <button class="top-action-button secondary" id="guideShortcutButton" type="button" data-shortcut-action="guide">사용설명서</button>
+      <button class="top-action-button ai" id="aiChatToggleButton" type="button">AI 챗봇</button>
     </div>
+
+    <section class="ai-chat-panel" id="aiChatPanel" aria-label="AI 근거 해설 패널">
+      <div class="ai-chat-head">
+        <div>
+          <p class="ai-chat-kicker">RAG Explainer</p>
+          <h2 class="ai-chat-title">AI 챗봇</h2>
+        </div>
+        <button class="ai-chat-close" id="aiChatCloseButton" type="button">닫기</button>
+      </div>
+      <p class="ai-chat-copy" id="aiChatContextText">
+        학교를 선택하면 해당 학교의 Case 기준을, 선택 전에는 전체 Case 분류 기준을 근거 문서 안에서만 설명합니다.
+      </p>
+      <div class="ai-question-grid">
+        <button class="ai-question-btn" type="button" data-ai-question-type="case_reason" data-ai-question="Case 판정 기준을 설명해줘">Case 판정 기준</button>
+        <button class="ai-question-btn" type="button" data-ai-question-type="policy_check" data-ai-question="정책 담당자가 무엇을 확인해야 하나요?">정책 확인사항</button>
+        <button class="ai-question-btn" type="button" data-ai-question-type="limitation" data-ai-question="이 분석의 한계와 주의점을 설명해줘">한계와 주의점</button>
+        <button class="ai-question-btn" type="button" data-ai-question-type="shap" data-ai-question="SHAP 해석은 어떤 역할인가요?">SHAP 해석</button>
+      </div>
+      <form class="ai-chat-form" id="aiChatForm">
+        <input class="ai-chat-input" id="aiChatInput" type="text" maxlength="220" placeholder="짧게 질문하세요" />
+        <button class="ai-chat-submit" id="aiChatSubmitButton" type="submit">질문</button>
+      </form>
+      <div class="ai-chat-answer" id="aiChatAnswer">
+        <div class="ai-answer-block">질문 버튼을 누르거나 직접 입력하세요.</div>
+      </div>
+    </section>
 
     <button class="floating-button" id="panelToggleButton" type="button">필터 열기</button>
 
@@ -2778,7 +2977,6 @@
   <script>
     const DEFAULT_KAKAO_MAP_KEY = "429ad574cd834de9ebdaee46f4478138";
     const ACCESS_CODE = "2026";
-    const AUTH_SESSION_KEY = "parkAnalysis_auth_ok";
     const urlKey = new URLSearchParams(window.location.search).get("key");
     window.KAKAO_MAP_KEY = urlKey || DEFAULT_KAKAO_MAP_KEY;
 
@@ -3111,6 +3309,13 @@
       panelToggleButton: document.getElementById("panelToggleButton"),
       statisticsShortcutButton: document.getElementById("statisticsShortcutButton"),
       guideShortcutButton: document.getElementById("guideShortcutButton"),
+      aiChatToggleButton: document.getElementById("aiChatToggleButton"),
+      aiChatPanel: document.getElementById("aiChatPanel"),
+      aiChatCloseButton: document.getElementById("aiChatCloseButton"),
+      aiChatForm: document.getElementById("aiChatForm"),
+      aiChatInput: document.getElementById("aiChatInput"),
+      aiChatAnswer: document.getElementById("aiChatAnswer"),
+      aiChatContextText: document.getElementById("aiChatContextText"),
       layerToggleBar: document.getElementById("layerToggleBar"),
       toggles: {
         isochrone: document.getElementById("toggleIsochrone"),
@@ -3383,6 +3588,7 @@
       state.selectedCandidateId = null;
       state.selectedCandidateData = null;
       state.selectedPanelData = null;
+      updateAiChatContext();
 
       if (!preservePanel) {
         renderDetailPanel(null);
@@ -3395,6 +3601,7 @@
       state.selectedCandidateId = null;
       state.selectedCandidateData = null;
       state.selectedPanelData = row;
+      updateAiChatContext();
     }
 
     function setCandidatePanelSelection(rawCandidateResponse) {
@@ -3403,6 +3610,7 @@
       state.selectedCandidateId = rawCandidateResponse?.candidate_meta?.candidate_id || null;
       state.selectedCandidateData = rawCandidateResponse;
       state.selectedPanelData = rawCandidateResponse;
+      updateAiChatContext();
     }
 
     function focusSchool(row) {
@@ -4035,6 +4243,15 @@
       return numeric.toFixed(digits);
     }
 
+    function escapeHtml(value = "") {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
     function getDisplayGreenRatio(row = {}) {
       const display = Number(row.display_green_ratio);
       if (Number.isFinite(display)) return display;
@@ -4502,66 +4719,161 @@
       return state.datasets.guSummary.find((row) => String(row.gu || "").trim() === state.selectedGu) || null;
     }
 
+    function getCaseStats(rows = []) {
+      const stats = { case1: 0, case2: 0, case3: 0, case4: 0, island: 0 };
+      rows.forEach((row) => {
+        const key = normalizeCaseType(row.case_type, row);
+        if (stats[key] !== undefined) stats[key] += 1;
+      });
+      return stats;
+    }
+
+    function renderCaseStatsSummary(rows = []) {
+      const stats = getCaseStats(rows);
+      const items = ["case1", "case2", "case3", "case4"]
+        .map((key) => {
+          const meta = CASE_META[key] || {};
+          return `
+            <div class="summary-stat-card">
+              <div class="summary-stat-label">${escapeHtml(meta.label || key)}</div>
+              <div class="summary-stat-value">${formatCount(stats[key])}<span class="summary-stat-unit">개</span></div>
+            </div>
+          `;
+        })
+        .join("");
+      const islandItem = stats.island > 0
+        ? `
+          <div class="summary-stat-card">
+            <div class="summary-stat-label">별도 정책 묶음</div>
+            <div class="summary-stat-value">${formatCount(stats.island)}<span class="summary-stat-unit">개</span></div>
+          </div>
+        `
+        : "";
+
+      return `<div class="summary-grid">${items}${islandItem}</div>`;
+    }
+
     function renderGuSummary() {
       if (state.selectedGu === "전체") {
-        const totalSchools = formatCount(state.datasets.schools.length);
-        const prioritySchools = formatCount(state.datasets.schools.filter((row) => Number(row.priority_score) >= 3).length);
-        const zeroParkSchools = formatCount(state.datasets.schools.filter((row) => Number(row.iso_park_count) === 0).length);
-        const noFunctionalSchools = formatCount(state.datasets.schools.filter((row) => row.no_functional_park_flag === true || String(row.no_functional_park_flag) === "True").length);
-        ui.guSummaryBox.innerHTML = `
-          <div class="summary-grid">
-            <div class="summary-stat-card">
-              <div class="summary-stat-label">총 학교 수</div>
-              <div class="summary-stat-value">${totalSchools}<span class="summary-stat-unit">개</span></div>
-            </div>
-            <div class="summary-stat-card">
-              <div class="summary-stat-label">우선지원 학교</div>
-              <div class="summary-stat-value">${prioritySchools}<span class="summary-stat-unit">개</span></div>
-            </div>
-            <div class="summary-stat-card">
-              <div class="summary-stat-label">공원 0개 학교</div>
-              <div class="summary-stat-value">${zeroParkSchools}<span class="summary-stat-unit">개</span></div>
-            </div>
-            <div class="summary-stat-card">
-              <div class="summary-stat-label">활동규모 공원 없음</div>
-              <div class="summary-stat-value">${noFunctionalSchools}<span class="summary-stat-unit">개</span></div>
-            </div>
-          </div>
-        `;
+        ui.guSummaryBox.innerHTML = renderCaseStatsSummary(state.datasets.schools);
         return;
       }
 
-      const summary = getSummaryRow();
-      if (!summary) {
+      const districtRows = state.datasets.schools.filter((row) => detectGu(row) === state.selectedGu);
+      if (!districtRows.length && !getSummaryRow()) {
         ui.guSummaryBox.innerHTML = "선택한 구의 요약 데이터가 없습니다.";
         return;
       }
 
-      const totalSchools = formatCount(summary.total_school_count);
-      const prioritySchools = formatCount(summary.priority_score_3plus_count);
-      const zeroParkSchools = formatCount(summary.iso_park_count_0_count);
-      const districtRows = state.datasets.schools.filter((row) => detectGu(row) === state.selectedGu);
-      const noFunctionalSchools = formatCount(districtRows.filter((row) => row.no_functional_park_flag === true || String(row.no_functional_park_flag) === "True").length);
-      ui.guSummaryBox.innerHTML = `
-        <div class="summary-grid">
-          <div class="summary-stat-card">
-            <div class="summary-stat-label">총 학교 수</div>
-            <div class="summary-stat-value">${totalSchools}<span class="summary-stat-unit">개</span></div>
-          </div>
-          <div class="summary-stat-card">
-            <div class="summary-stat-label">우선지원 학교</div>
-            <div class="summary-stat-value">${prioritySchools}<span class="summary-stat-unit">개</span></div>
-          </div>
-          <div class="summary-stat-card">
-            <div class="summary-stat-label">공원 0개 학교</div>
-            <div class="summary-stat-value">${zeroParkSchools}<span class="summary-stat-unit">개</span></div>
-          </div>
-          <div class="summary-stat-card">
-            <div class="summary-stat-label">활동규모 공원 없음</div>
-            <div class="summary-stat-value">${noFunctionalSchools}<span class="summary-stat-unit">개</span></div>
-          </div>
+      ui.guSummaryBox.innerHTML = renderCaseStatsSummary(districtRows);
+    }
+
+    function getAiSchoolContext() {
+      const row = state.currentPanelMode === "school" && state.selectedPanelData
+        ? state.selectedPanelData
+        : null;
+      if (!row) return null;
+
+      const badge = getSchoolBadge(row);
+      return {
+        school_name: getSchoolName(row),
+        district_name: detectGu(row) || null,
+        case_label: getCaseTypeLabel(row),
+        case_status_label: badge.text
+      };
+    }
+
+    function updateAiChatContext() {
+      if (!ui.aiChatContextText) return;
+      const context = getAiSchoolContext();
+      ui.aiChatContextText.textContent = context
+        ? `${context.school_name} · ${context.case_label} 기준으로 근거 문서 안에서만 설명합니다.`
+        : "학교를 선택하면 해당 학교의 Case 기준을, 선택 전에는 전체 Case 분류 기준을 근거 문서 안에서만 설명합니다.";
+    }
+
+    function setAiChatOpen(open) {
+      ui.aiChatPanel?.classList.toggle("is-open", open);
+      ui.aiChatToggleButton?.classList.toggle("is-open", open);
+      if (open) updateAiChatContext();
+    }
+
+    function renderAiSafeFailure(message = "제공된 근거 문서 안에서 확인할 수 없습니다.") {
+      if (!ui.aiChatAnswer) return;
+      ui.aiChatAnswer.innerHTML = `<div class="ai-answer-block">${escapeHtml(message)}</div>`;
+    }
+
+    function renderAiAnswer(answer) {
+      if (!ui.aiChatAnswer) return;
+      if (
+        !answer ||
+        answer.answerable !== true ||
+        !Array.isArray(answer.evidence) ||
+        !answer.evidence.length ||
+        !Array.isArray(answer.cited_chunk_ids) ||
+        !answer.cited_chunk_ids.length
+      ) {
+        renderAiSafeFailure(answer?.cannot_answer_reason || "근거 chunk가 없어 표시하지 않았습니다.");
+        return;
+      }
+
+      const evidence = answer.evidence
+        .map((item) => `
+          <li>
+            <strong>${escapeHtml(item.label || "근거")}</strong>: ${escapeHtml(item.value || "")}
+            <br><span>${escapeHtml(item.chunk_id || "")}</span>
+          </li>
+        `)
+        .join("");
+      const citations = answer.cited_chunk_ids
+        .map((id) => `<li>${escapeHtml(id)}</li>`)
+        .join("");
+
+      ui.aiChatAnswer.innerHTML = `
+        <div class="ai-answer-block">
+          <span class="ai-answer-label">요약</span>
+          ${escapeHtml(answer.summary || "")}
+        </div>
+        <div class="ai-answer-block">
+          <span class="ai-answer-label">근거</span>
+          <ul class="ai-citation-list">${evidence}</ul>
+        </div>
+        <div class="ai-answer-block">
+          <span class="ai-answer-label">해석</span>
+          ${escapeHtml(answer.interpretation || "")}
+        </div>
+        <div class="ai-answer-block">
+          <span class="ai-answer-label">주의사항</span>
+          ${escapeHtml(answer.limitations || "")}
+          <ul class="ai-citation-list">${citations}</ul>
         </div>
       `;
+    }
+
+    async function askAiExplainer(question, questionType = "case_reason") {
+      const trimmed = String(question || "").trim();
+      if (!trimmed) return;
+      setAiChatOpen(true);
+      if (ui.aiChatInput) ui.aiChatInput.value = trimmed;
+      if (ui.aiChatAnswer) ui.aiChatAnswer.innerHTML = `<div class="ai-answer-block">근거 문서에서 답변을 생성하는 중입니다.</div>`;
+
+      try {
+        const response = await fetch("/api/ai-explainer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mode: "identified_school_explainer",
+            question: trimmed,
+            question_type: questionType,
+            school_context: getAiSchoolContext(),
+            candidate_context: null
+          })
+        });
+        const data = await response.json();
+        renderAiAnswer(data);
+      } catch (error) {
+        console.error("[ai-explainer]", error);
+        renderAiSafeFailure("AI 해설을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      }
     }
 
     function focusSchoolById(schoolId) {
@@ -5587,6 +5899,25 @@
         ui.panelToggleButton.textContent = ui.panel.classList.contains("open") ? "필터 닫기" : "필터 열기";
       });
 
+      ui.aiChatToggleButton?.addEventListener("click", () => {
+        setAiChatOpen(!ui.aiChatPanel?.classList.contains("is-open"));
+      });
+
+      ui.aiChatCloseButton?.addEventListener("click", () => {
+        setAiChatOpen(false);
+      });
+
+      document.querySelectorAll("[data-ai-question]").forEach((button) => {
+        button.addEventListener("click", () => {
+          askAiExplainer(button.dataset.aiQuestion, button.dataset.aiQuestionType || "case_reason");
+        });
+      });
+
+      ui.aiChatForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        askAiExplainer(ui.aiChatInput?.value || "", "custom_question");
+      });
+
       ui.statisticsShortcutButton?.addEventListener("click", () => {
         openPreviewOverlay("statistics");
       });
@@ -6226,28 +6557,9 @@
         <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:13px; margin-bottom:16px;">
           ${getDiagnosticMessage(row)}
         </div>
-        <div style="font-size:12px; color:var(--muted); line-height:1.7; margin-bottom:20px;">
-          🌳 최근접 공원 ${formatDistanceMeters(row.nearest_park_dist_m)}m &nbsp;·&nbsp;
-          🛝 도보 놀이터 ${formatCount(row.iso_playground_count)}개 &nbsp;·&nbsp;
-          🌿 녹지 ${formatDecimal(displayGreenRatio, 1)}%${aptScenarioText}${greenReviewText}
-        </div>
         <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:12px; line-height:1.75; margin-bottom:16px;">
-          <strong>공식 최근접 공원 · ${accessLabel}</strong><br>
-          ${officialParkName ? `${officialParkName} · ${row.nearest_official_park_type || "공원"} · ${officialParkArea}<br>` : ""}
-          규모 기준: ${row.nearest_official_park_function_label || "자료 없음"}<br>
-          보행 부담: ${barrierLabel} · 간선도로 횡단 ${majorCrossing}<br>
-          대형 교차로: ${officialLargeIntersection}<br>
-          공식 공원 경로 특성: ${barrierSummary}<br>
-          <span style="display:block; height:1px; background:rgba(148,163,184,0.22); margin:10px 0;"></span>
-          <strong>활동규모 공원(3,000㎡ 이상)</strong><br>
-          <span style="color:var(--muted);">기준 면적 이상으로 아이들이 머물며 활동할 수 있는 규모의 공원입니다.</span><br>
-          ${activityParkLine}
-          활동규모 공원까지: ${functionalParkDistanceText}<br>
-          보행 부담: ${activityBarrierLabel} · 간선도로 횡단 ${activityMajorCrossing}<br>
-          대형 교차로: ${formatBooleanAccessFlag(row.nearest_functional_large_intersection_flag)}<br>
-          활동규모 공원 경로 특성: ${activityBarrierSummary}<br>
-          ${routeBasisWarning ? `<span style="color:#fbbf24;">${routeBasisWarning}</span><br>` : ""}
-          ${functionalNotice}
+          우측 지도 패널은 현재 학교의 개별 공원 수치 대신 Case 분류만 간단히 보여줍니다.<br>
+          상세 수치와 후보지 비교는 아래 리포트 화면에서 확인합니다.
         </div>
         <button
           onclick="openSimulationOverlay()"
@@ -6571,14 +6883,6 @@
       openSimulationOverlay();
     }
 
-    function isAuthenticated() {
-      try {
-        return sessionStorage.getItem(AUTH_SESSION_KEY) === "1";
-      } catch (error) {
-        return false;
-      }
-    }
-
     function hideAuthGate() {
       const gate = document.getElementById("authGate");
       if (!gate) return;
@@ -6604,7 +6908,7 @@
       const input = document.getElementById("authCodeInput");
       const message = document.getElementById("authMessage");
 
-      if (!gate || !form || !input || !message || isAuthenticated()) {
+      if (!gate || !form || !input || !message) {
         startAppOnce();
         return;
       }
@@ -6622,11 +6926,6 @@
           return;
         }
 
-        try {
-          sessionStorage.setItem(AUTH_SESSION_KEY, "1");
-        } catch (error) {
-          // sessionStorage가 막힌 환경에서도 현재 화면 진입은 허용합니다.
-        }
         message.textContent = "";
         startAppOnce();
       });
