@@ -95,7 +95,7 @@ writeFileSync(
   outputPath,
   `${JSON.stringify(
     {
-      generated_at: new Date().toISOString(),
+      generated_at: "static",
       required_docs: requiredDocs,
       chunks,
     },

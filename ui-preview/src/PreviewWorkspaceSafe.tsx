@@ -3,6 +3,7 @@ import SchoolDetailReportPage from "./SchoolDetailReportPagePreview";
 import SimulationPage from "./SimulationPage";
 import StatisticsPageSafe from "./StatisticsPageSafe";
 import LandingPage from "./LandingPage";
+import AiExplainerPanel from "./AiExplainerPanel";
 import { previewSchoolDetailReport } from "./previewData";
 import { cityStatisticsPreviewDataSafe } from "./statisticsPreviewDataSafe";
 import { applyLegacySchoolSnapshot, mapSchoolRowToReportProps, mapCandidateFeatures } from "./schoolDataBridge";
@@ -115,6 +116,7 @@ function getPreviewCaseType(schoolRow: Record<string, any> | null): number {
 
 export default function PreviewWorkspaceSafe() {
   const [view, setView] = useState<ViewMode>(() => readInitialView());
+  const [aiChatOpen, setAiChatOpen] = useState(false);
   const logoSrc = `${import.meta.env.BASE_URL}logo.png`;
 
   // localStorage에서 학교 데이터 읽기 (없으면 석암초 fallback)
@@ -221,6 +223,17 @@ export default function PreviewWorkspaceSafe() {
             })}
             <button
               type="button"
+              onClick={() => setAiChatOpen((current) => !current)}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                aiChatOpen
+                  ? "bg-forest-grad text-white shadow-glow"
+                  : "border border-forest-400/45 bg-forest-500/10 text-forest-100 hover:bg-forest-500/20"
+              }`}
+            >
+              AI 챗봇
+            </button>
+            <button
+              type="button"
               onClick={handlePrint}
               className="rounded-full border border-forest-400/45 bg-forest-500/10 px-4 py-2 text-sm font-semibold text-forest-100 transition hover:bg-forest-500/20"
             >
@@ -229,6 +242,43 @@ export default function PreviewWorkspaceSafe() {
           </div>
         </div>
       </div>
+
+      {aiChatOpen ? (
+        <div className="app-print-hidden fixed inset-x-4 top-[82px] z-40 mx-auto max-w-[1380px] sm:inset-x-6 lg:inset-x-8">
+          <div className="ml-auto max-h-[calc(100vh-104px)] w-full max-w-[560px] overflow-y-auto rounded-3xl border border-white/15 bg-navy-950/95 p-2 shadow-2xl backdrop-blur">
+            <div className="flex items-center justify-between px-3 py-2">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-forest-300">AI Chatbot</p>
+                <p className="text-sm font-bold text-white">{detailProps.schoolName} 근거 해설</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAiChatOpen(false)}
+                className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-100 transition hover:bg-white/10"
+              >
+                닫기
+              </button>
+            </div>
+            <AiExplainerPanel
+              title="AI 챗봇"
+              description="현재 선택 학교의 Case, 지표, 정책 확인사항을 근거 문서 안에서만 설명합니다. 후보지별 질문은 시뮬레이션 상세에서 선택 후보를 연 뒤 사용할 수 있습니다."
+              schoolContext={{
+                school_name: detailProps.schoolName,
+                district_name: detailProps.districtName,
+                case_label: detailProps.casePolicyLabel,
+                case_status_label: detailProps.caseStatusLabel,
+                nearest_park_distance_m: detailProps.nearestParkDistanceM,
+                nearest_park_name: detailProps.nearestParkName,
+                green_ratio: detailProps.greenRatio,
+                playground_count: detailProps.playgroundCount,
+                no_park_within_500m: detailProps.noParkWithin500m,
+                potential_demand_2029: detailProps.potentialDemand2029,
+                potential_demand_2031: detailProps.potentialDemand2031,
+              }}
+            />
+          </div>
+        </div>
+      ) : null}
 
       {view === "simulation" ? (
         <SimulationPage
