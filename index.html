@@ -4775,10 +4775,12 @@
       if (!row) return null;
 
       const badge = getSchoolBadge(row);
+      const normalizedCase = normalizeCaseType(row.case_type, row);
+      const numericCase = normalizedCase.startsWith("case") ? normalizedCase.replace("case", "Case ") : normalizedCase;
       return {
         school_name: getSchoolName(row),
         district_name: detectGu(row) || null,
-        case_label: getCaseTypeLabel(row),
+        case_label: `${numericCase} · ${getCaseTypeLabel(row)}`,
         case_status_label: badge.text
       };
     }
