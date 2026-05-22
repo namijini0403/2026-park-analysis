@@ -32,6 +32,7 @@ type SchoolContext = {
   nearest_park_name?: string;
   green_ratio?: number;
   playground_count?: number;
+  no_park_within_500m?: boolean;
   potential_demand_2029?: number;
   potential_demand_2031?: number;
 };

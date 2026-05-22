@@ -1548,6 +1548,7 @@ export default function SchoolDetailReportPage(props: SchoolDetailReportProps) {
           nearest_park_name: props.nearestParkName,
           green_ratio: props.greenRatio,
           playground_count: props.playgroundCount,
+          no_park_within_500m: props.noParkWithin500m,
           potential_demand_2029: props.potentialDemand2029,
           potential_demand_2031: props.potentialDemand2031,
         }}
