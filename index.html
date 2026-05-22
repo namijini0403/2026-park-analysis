@@ -2835,7 +2835,7 @@
         학교를 선택하면 해당 학교의 Case 기준을, 선택 전에는 전체 Case 분류 기준을 근거 문서 안에서만 설명합니다.
       </p>
       <div class="ai-question-grid">
-        <button class="ai-question-btn" type="button" data-ai-question-type="case_reason" data-ai-question="Case 판정 기준을 설명해줘">Case 판정 기준</button>
+        <button class="ai-question-btn" type="button" data-ai-question-type="case_rule" data-ai-question="Case 1부터 Case 4까지 분류 기준을 설명해줘">Case 판정 기준</button>
         <button class="ai-question-btn" type="button" data-ai-question-type="policy_check" data-ai-question="정책 담당자가 무엇을 확인해야 하나요?">정책 확인사항</button>
         <button class="ai-question-btn" type="button" data-ai-question-type="limitation" data-ai-question="이 분석의 한계와 주의점을 설명해줘">한계와 주의점</button>
         <button class="ai-question-btn" type="button" data-ai-question-type="shap" data-ai-question="SHAP 해석은 어떤 역할인가요?">SHAP 해석</button>
@@ -4772,7 +4772,14 @@
       const row = state.currentPanelMode === "school" && state.selectedPanelData
         ? state.selectedPanelData
         : null;
-      if (!row) return null;
+      if (!row) {
+        return {
+          school_name: "전체 Case 기준",
+          district_name: "인천광역시",
+          case_label: "Case 1, Case 2, Case 3, Case 4 전체 분류 기준",
+          case_status_label: "전체 Case 기준 설명"
+        };
+      }
 
       const badge = getSchoolBadge(row);
       const normalizedCase = normalizeCaseType(row.case_type, row);
