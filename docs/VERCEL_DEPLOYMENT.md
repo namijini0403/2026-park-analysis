@@ -48,11 +48,14 @@
 
 식별앱에서 RAG 기반 AI 해설 패널을 켜려면 Vercel Project Settings에 아래 값을 추가한다.
 
-- `OPENAI_API_KEY`: OpenAI API 키. 브라우저 번들에 넣지 않고 `/api/ai-explainer` 서버리스 함수에서만 사용한다.
+- `OPENAI_API_KEY`: OpenAI API 키. 브라우저 번들에 넣지 않고 `/api/ai-explainer-v2` 서버리스 함수에서만 사용한다.
 - `AI_EXPLAINER_ENABLED`: `false`일 때 서버리스 함수를 강제로 비활성화한다. 생략하면 `OPENAI_API_KEY`가 있을 때 동작한다.
 - `VITE_AI_EXPLAINER_ENABLED`: `false`일 때 상세 리포트와 후보지 시뮬레이션 화면에서 AI 해설 패널을 숨긴다. 생략하면 노출한다.
 - 선택값 `AI_EXPLAINER_MODEL`: 기본값은 `gpt-5.4-mini`.
-- 선택값 `AI_EXPLAINER_MAX_OUTPUT_TOKENS`: 기본값은 `700`.
+- 선택값 `AI_EXPLAINER_MAX_OUTPUT_TOKENS`: 기본값은 `900`.
+- 선택값 `AI_EXPLAINER_V2_MIN_SCORE`: retrieval 최소 점수. 기본값은 `8`.
+
+AI 해설 v2는 앱이 먼저 선택 학교·후보지 context pack과 검색된 근거 chunk를 고정한 뒤 OpenAI Responses API에 전달한다. 서버리스 함수는 `strict json_schema`, `tool_choice=none`, `store=false`를 사용하며, 검색되지 않은 chunk id를 인용한 응답은 프론트에 표시하지 않는다.
 
 식별앱 제출 허용 전이거나 비식별 공개 버전에서는 `AI_EXPLAINER_ENABLED=false`, `VITE_AI_EXPLAINER_ENABLED=false`로 둔다. 식별앱 운영 배포에서는 최소 `OPENAI_API_KEY`만 반드시 설정한다.
 
@@ -71,7 +74,7 @@ https://2026-park-analysis.vercel.app/?kakaoKey=여기에_JavaScript_키
 - `/data_processed/school_priority_with_functional_park_layer.csv`
 - `/data_processed/candidate_grid_final.geojson`
 - `/ui-preview/dist/index.html`
-- `/api/ai-explainer`는 `POST` 전용이며, `AI_EXPLAINER_ENABLED=true`와 `OPENAI_API_KEY`가 있을 때만 동작한다.
+- `/api/ai-explainer-v2`는 `POST` 전용이며, `AI_EXPLAINER_ENABLED=true`와 `OPENAI_API_KEY`가 있을 때만 동작한다.
 
 ## 학교 PC에서 막힐 경우의 대안
 

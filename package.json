@@ -2,6 +2,8 @@
   "private": true,
   "scripts": {
     "build:ai-chunks": "node scripts/build_ai_explainer_chunks.mjs",
+    "smoke:ai-explainer-v2": "node scripts/smoke_ai_explainer_v2.mjs",
+    "qa:ai-explainer-v2": "node scripts/qa_ai_explainer_v2.mjs",
     "build:ui-preview": "npm --prefix ui-preview run build",
     "build:vercel": "node scripts/deploy/build_vercel_static.mjs"
   },

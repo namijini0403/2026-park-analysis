@@ -2977,7 +2977,7 @@
   <script>
     const DEFAULT_KAKAO_MAP_KEY = "429ad574cd834de9ebdaee46f4478138";
     const ACCESS_CODE = "2026";
-    const PRODUCTION_AI_EXPLAINER_URL = "https://2026-park-analysis.vercel.app/api/ai-explainer";
+    const PRODUCTION_AI_EXPLAINER_V2_URL = "https://2026-park-analysis.vercel.app/api/ai-explainer-v2";
     const urlKey = new URLSearchParams(window.location.search).get("key");
     window.KAKAO_MAP_KEY = urlKey || DEFAULT_KAKAO_MAP_KEY;
 
@@ -4769,12 +4769,30 @@
       ui.guSummaryBox.innerHTML = renderCaseStatsSummary(districtRows);
     }
 
+    function getAiNumber(value) {
+      const numeric = Number(value);
+      return Number.isFinite(numeric) ? numeric : null;
+    }
+
+    function getAiBoolean(value) {
+      if (value === null || value === undefined || value === "") return null;
+      if (typeof value === "boolean") return value;
+      const numeric = Number(value);
+      if (Number.isFinite(numeric)) return numeric === 1;
+      const text = String(value).trim().toLowerCase();
+      if (text === "true" || text === "yes" || text === "y") return true;
+      if (text === "false" || text === "no" || text === "n") return false;
+      return null;
+    }
+
     function getAiSchoolContext() {
       const row = state.currentPanelMode === "school" && state.selectedPanelData
         ? state.selectedPanelData
         : null;
       if (!row) {
         return {
+          context_scope: "general_case_rules",
+          school_id: null,
           school_name: "전체 Case 기준",
           district_name: "인천광역시",
           case_label: "Case 1, Case 2, Case 3, Case 4 전체 분류 기준",
@@ -4786,15 +4804,78 @@
       const normalizedCase = normalizeCaseType(row.case_type, row);
       const numericCase = normalizedCase.startsWith("case") ? normalizedCase.replace("case", "Case ") : normalizedCase;
       return {
+        context_scope: "selected_school",
+        school_id: getSchoolId(row) || null,
         school_name: getSchoolName(row),
         district_name: detectGu(row) || null,
+        case_type: normalizedCase,
         case_label: `${numericCase} · ${getCaseTypeLabel(row)}`,
-        case_status_label: badge.text
+        case_status_label: badge.text,
+        nearest_park_name: row.nearest_park_name || row.nearest_park_name_clean || null,
+        nearest_park_dist_m: getAiNumber(row.nearest_park_dist_m),
+        iso_green_ratio: getAiNumber(row.iso_green_ratio),
+        display_green_ratio: getAiNumber(getDisplayGreenRatio(row)),
+        iso_park_count: getAiNumber(row.iso_park_count),
+        iso_park_area_m2: getAiNumber(row.iso_park_area),
+        iso_playground_count: getAiNumber(row.iso_playground_count),
+        buf_park_count: getAiNumber(row.buf_park_count),
+        buf_playground_count: getAiNumber(row.buf_playground_count),
+        iso_child_6_12: getAiNumber(row.iso_child_6_12),
+        priority_score: getAiNumber(row.priority_score),
+        priority_rank: getAiNumber(row.priority_rank),
+        predicted_2029: getAiNumber(row.predicted_2029),
+        predicted_2031: getAiNumber(row.predicted_2031),
+        is_separate_bundle: getAiBoolean(row.is_separate_bundle_tag),
+        is_island: getAiBoolean(row.is_island_tag),
+        access_condition_label: row.access_condition_label || null
+      };
+    }
+
+    function getAiCandidateContext() {
+      const panel = state.currentPanelMode === "candidate" && state.selectedCandidateData
+        ? state.selectedCandidateData
+        : null;
+      if (!panel || !isCandidatePanelResponse(panel)) return null;
+
+      const meta = panel.candidate_meta || {};
+      const demand = panel.demand_summary || {};
+      const access = panel.accessibility_summary || {};
+      const strategy = panel.strategy_recommendation || {};
+      const explanation = panel.explanation || {};
+      const linked = panel.linked_schools || {};
+
+      return {
+        context_scope: "selected_candidate",
+        grid_id: meta.candidate_id || state.selectedCandidateId || null,
+        candidate_type: meta.candidate_type || null,
+        district_name: meta.gu || null,
+        dong_name: meta.dong || null,
+        center_x: getAiNumber(meta.center_x),
+        center_y: getAiNumber(meta.center_y),
+        predicted_2029: getAiNumber(demand.predicted_2029),
+        predicted_2031: getAiNumber(demand.predicted_2031),
+        demand_label: demand.demand_label || null,
+        nearby_park_count: getAiNumber(access.nearby_park_count),
+        nearby_playground_count: getAiNumber(access.nearby_playground_count),
+        nearest_park_dist_m: getAiNumber(access.nearest_park_dist_m),
+        land_feasibility_level: access.land_feasibility_level || null,
+        redev_status_simple: access.redev_status_simple || null,
+        primary_recommendation: strategy.primary_recommendation || null,
+        secondary_option: strategy.secondary_option || null,
+        recommendation_reason_summary: explanation.recommendation_reason_summary || null,
+        explanation_tags: Array.isArray(explanation.explanation_tags) ? explanation.explanation_tags : [],
+        linked_school_count: getAiNumber(linked.linked_school_count),
+        linked_school_names: Array.isArray(linked.linked_school_names) ? linked.linked_school_names : []
       };
     }
 
     function updateAiChatContext() {
       if (!ui.aiChatContextText) return;
+      const candidateContext = getAiCandidateContext();
+      if (candidateContext) {
+        ui.aiChatContextText.textContent = `${candidateContext.grid_id || "선택 후보지"} 기준으로 근거 문서와 선택 지표 안에서만 설명합니다.`;
+        return;
+      }
       const context = getAiSchoolContext();
       ui.aiChatContextText.textContent = context
         ? `${context.school_name} · ${context.case_label} 기준으로 근거 문서 안에서만 설명합니다.`
@@ -4814,29 +4895,53 @@
 
     function renderAiAnswer(answer) {
       if (!ui.aiChatAnswer) return;
+      const evidenceItems = Array.isArray(answer?.evidence) ? answer.evidence : [];
+      const normalizedEvidence = evidenceItems
+        .map((item) => ({
+          label: item?.label || "근거",
+          value: item?.value || item?.claim || "",
+          chunkId: item?.chunk_id || item?.source_chunk_id || ""
+        }))
+        .filter((item) => item.value && item.chunkId);
+      const citedChunkIds = Array.isArray(answer?.cited_chunk_ids)
+        ? answer.cited_chunk_ids
+        : normalizedEvidence.map((item) => item.chunkId);
+
       if (
         !answer ||
         answer.answerable !== true ||
-        !Array.isArray(answer.evidence) ||
-        !answer.evidence.length ||
-        !Array.isArray(answer.cited_chunk_ids) ||
-        !answer.cited_chunk_ids.length
+        !normalizedEvidence.length ||
+        !citedChunkIds.length ||
+        answer.blocked_reason
       ) {
-        renderAiSafeFailure(answer?.cannot_answer_reason || "근거 chunk가 없어 표시하지 않았습니다.");
+        renderAiSafeFailure(answer?.blocked_reason || answer?.cannot_answer_reason || "근거 chunk가 없어 표시하지 않았습니다.");
         return;
       }
 
-      const evidence = answer.evidence
+      const evidence = normalizedEvidence
         .map((item) => `
           <li>
             <strong>${escapeHtml(item.label || "근거")}</strong>: ${escapeHtml(item.value || "")}
-            <br><span>${escapeHtml(item.chunk_id || "")}</span>
+            <br><span>${escapeHtml(item.chunkId || "")}</span>
           </li>
         `)
         .join("");
-      const citations = answer.cited_chunk_ids
+      const citations = citedChunkIds
         .map((id) => `<li>${escapeHtml(id)}</li>`)
         .join("");
+      const limitationText = Array.isArray(answer.limitations)
+        ? answer.limitations.map((item) => item?.text).filter(Boolean).join("\n")
+        : answer.limitations;
+      const checklist = Array.isArray(answer.policy_checklist) && answer.policy_checklist.length
+        ? `
+          <div class="ai-answer-block">
+            <span class="ai-answer-label">확인사항</span>
+            <ul class="ai-citation-list">
+              ${answer.policy_checklist.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+            </ul>
+          </div>
+        `
+        : "";
 
       ui.aiChatAnswer.innerHTML = `
         <div class="ai-answer-block">
@@ -4853,17 +4958,18 @@
         </div>
         <div class="ai-answer-block">
           <span class="ai-answer-label">주의사항</span>
-          ${escapeHtml(answer.limitations || "")}
+          ${escapeHtml(limitationText || "")}
           <ul class="ai-citation-list">${citations}</ul>
         </div>
+        ${checklist}
       `;
     }
 
     function getAiExplainerEndpoints() {
       const isProductionHost = window.location.hostname === "2026-park-analysis.vercel.app";
-      const sameOriginEndpoint = "/api/ai-explainer";
+      const sameOriginEndpoint = "/api/ai-explainer-v2";
       if (window.location.protocol === "file:" || !isProductionHost) {
-        return [PRODUCTION_AI_EXPLAINER_URL, sameOriginEndpoint];
+        return [PRODUCTION_AI_EXPLAINER_V2_URL, sameOriginEndpoint];
       }
       return [sameOriginEndpoint];
     }
@@ -4879,7 +4985,7 @@
           });
           const text = await response.text();
           const data = text ? JSON.parse(text) : null;
-          if (!response.ok && data?.cannot_answer_reason) return data;
+          if (!response.ok && (data?.blocked_reason || data?.cannot_answer_reason)) return data;
           if (!response.ok) throw new Error(`AI endpoint ${response.status}`);
           return data;
         } catch (error) {
@@ -4902,7 +5008,7 @@
           question: trimmed,
           question_type: questionType,
           school_context: getAiSchoolContext(),
-          candidate_context: null
+          candidate_context: getAiCandidateContext()
         });
         renderAiAnswer(data);
       } catch (error) {

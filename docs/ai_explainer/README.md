@@ -12,7 +12,7 @@ tags: 식별앱, 비식별앱, 공개범위, 안전장치
 ### [chunk: README#answer-guard]
 tags: RAG, citation, 차단, JSON
 
-AI 해설은 검색된 chunk와 선택된 학교·후보지 context pack 안에서만 답변한다. 답변에는 반드시 `cited_chunk_ids`가 포함되어야 하며, 근거 chunk가 비어 있으면 프론트엔드에서 답변을 표시하지 않는다.
+AI 해설은 검색된 chunk와 선택된 학교·후보지 context pack 안에서만 답변한다. 답변의 각 근거 문장에는 반드시 검색된 chunk의 `source_chunk_id`가 붙어야 하며, 근거 chunk가 비어 있거나 검색되지 않은 chunk id를 인용하면 프론트엔드에서 답변을 표시하지 않는다.
 
 ### [chunk: README#decision-role]
 tags: HITL, 정책지원, 의사결정
