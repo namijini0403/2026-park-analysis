@@ -970,6 +970,34 @@
       color: var(--muted);
     }
 
+    .ai-answer-details {
+      border: 1px solid rgba(16, 185, 129, 0.28);
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.36);
+      overflow: hidden;
+    }
+
+    .ai-answer-details summary {
+      min-height: 40px;
+      padding: 10px 12px;
+      color: #D1FAE5;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      list-style-position: inside;
+    }
+
+    .ai-answer-details[open] summary {
+      border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+      background: rgba(16, 185, 129, 0.12);
+    }
+
+    .ai-answer-detail-body {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+
     .layer-toggle-btn {
       display: inline-flex;
       align-items: center;
@@ -4950,19 +4978,27 @@
           ${escapeHtml(answer.summary || "")}
         </div>
         <div class="ai-answer-block">
-          <span class="ai-answer-label">근거</span>
-          <ul class="ai-citation-list">${evidence}</ul>
-        </div>
-        <div class="ai-answer-block">
           <span class="ai-answer-label">해석</span>
           ${escapeHtml(answer.interpretation || "")}
         </div>
         <div class="ai-answer-block">
           <span class="ai-answer-label">주의사항</span>
           ${escapeHtml(limitationText || "")}
-          <ul class="ai-citation-list">${citations}</ul>
         </div>
-        ${checklist}
+        <details class="ai-answer-details">
+          <summary>근거/챗봇 설정 더 보기</summary>
+          <div class="ai-answer-detail-body">
+            <div class="ai-answer-block">
+              <span class="ai-answer-label">근거</span>
+              <ul class="ai-citation-list">${evidence}</ul>
+            </div>
+            ${checklist}
+            <div class="ai-answer-block">
+              <span class="ai-answer-label">인용 chunk</span>
+              <ul class="ai-citation-list">${citations}</ul>
+            </div>
+          </div>
+        </details>
       `;
     }
 
