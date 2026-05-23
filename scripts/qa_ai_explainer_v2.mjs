@@ -34,6 +34,13 @@ const qaCases = [
     expected_chunk_ids: ["02_case_rules#case2"],
   },
   {
+    id: "manual-case1-distance-check",
+    question_type: "case_rule",
+    question: "도보 500m 안에 공원이 없으면 녹지비율도 0%일 텐데, 왜 Case 1에 최근접 공원거리 500m 조건을 또 붙여?",
+    expected: "answerable",
+    expected_chunk_ids: ["02_case_rules#case1-distance-check"],
+  },
+  {
     id: "manual-boundary-5",
     question_type: "case_rule",
     question: "녹지비율 5%면 Case4야?",
