@@ -2826,7 +2826,7 @@
           </div>
           <div class="app-cover-actions">
             <button class="app-cover-button primary" type="button" data-cover-action="start">지도에서 시작하기</button>
-            <button class="app-cover-button" type="button" data-cover-action="guide">정책 흐름 보기</button>
+            <button class="app-cover-button" type="button" data-cover-action="guide">활용 가이드</button>
             <button class="app-cover-button ghost" type="button" data-cover-action="report">학교 진단 보기</button>
           </div>
         </div>
@@ -2848,7 +2848,7 @@
       <button class="top-action-button primary" type="button" data-shortcut-action="report">학교 진단</button>
       <button class="top-action-button secondary" type="button" data-shortcut-action="simulation">시뮬레이션</button>
       <button class="top-action-button secondary" id="statisticsShortcutButton" type="button" data-shortcut-action="statistics">전체 통계</button>
-      <button class="top-action-button secondary" id="guideShortcutButton" type="button" data-shortcut-action="guide">사용설명서</button>
+      <button class="top-action-button secondary" id="guideShortcutButton" type="button" data-shortcut-action="guide">활용 가이드</button>
       <button class="top-action-button ai" id="aiChatToggleButton" type="button">AI 챗봇</button>
     </div>
 
@@ -5651,7 +5651,7 @@
       overlay.innerHTML = `
         <div class="guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
           <button class="guide-print-button" type="button" data-guide-print>PDF/인쇄</button>
-          <button class="guide-close" type="button" data-guide-close aria-label="사용 설명서 닫기">×</button>
+          <button class="guide-close" type="button" data-guide-close aria-label="활용 가이드 닫기">×</button>
           <div class="guide-scroll">
             <section class="guide-hero">
               <div class="guide-hero-lead">
@@ -5663,10 +5663,10 @@
                 </div>
                 <div class="guide-impact-stat" aria-label="핵심 발견">
                   <div class="guide-impact-copy">
-                    <strong><span class="guide-impact-emphasis">실제 도보 500m 내 도달 가능한 공원이 0개인 학교가</span> 28개교, 전체의 10.3%입니다.</strong>
-                    <span>반경이 아니라 도달 가능성을 기준으로 보면 정책 우선순위가 달라집니다.</span>
+                    <strong><span class="guide-impact-emphasis">도보 500m 생활권 녹지비율 0.5% 미만 학교가</span> 37개교입니다.</strong>
+                    <span>PPT 기준 핵심 격차 지표로, 생활권 안에서 체감 가능한 녹지 부족을 보여줍니다.</span>
                   </div>
-                  <div class="guide-impact-number">10.3%<span>28개교</span></div>
+                  <div class="guide-impact-number">0.5% 미만<span>37개교</span></div>
                 </div>
               </div>
               <div class="guide-hero-aside">
@@ -5820,7 +5820,7 @@
         document.title = previousTitle;
         window.removeEventListener("afterprint", restorePrintState);
       };
-      document.title = "ParkLens - 사용설명서";
+      document.title = "ParkLens - 활용 가이드";
       document.body.classList.add("print-guide-active");
       window.addEventListener("afterprint", restorePrintState);
       window.print();
