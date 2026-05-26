@@ -32,6 +32,7 @@ SCHOOLS_PATH = DATA / "schools.csv"
 ISOCHRONE_PATH = DATA / "school_isochrone_500m.geojson"
 BUFFER_PATH = DATA / "school_buffer_500m.geojson"
 CANDIDATE_GRID_PATH = DATA / "candidate_grid_final.csv"
+CANDIDATE_GRID_GEOJSON_PATH = DATA / "candidate_grid_final.geojson"
 GRAPH_PATHS = [
     ROOT / "data_processed" / "incheon_walk_graph_v2.graphml",
     ROOT / "data" / "processed" / "incheon_walk_graph_v2.graphml",
@@ -52,6 +53,8 @@ CRS_METRIC = "EPSG:5179"
 WALK_DISTANCE_CUTOFF_M = 5000
 GREEN_WARNING_THRESHOLD = 5.0
 GREEN_HIGH_REVIEW_THRESHOLD = 80.0
+CASE_GREEN_LOW_THRESHOLD = 1.0
+CASE_GREEN_HIGH_THRESHOLD = 5.0
 ACCIDENT_DATA_PATH = ROOT / "data" / "raw" / "전국교통사고다발지역표준데이터.csv"
 ACCIDENT_REGION_KEYWORD = "인천"
 ACCIDENT_COL_REGION = "사고다발지역시도시군구"
@@ -838,6 +841,57 @@ def compute_nearest_walk_distances(schools: pd.DataFrame, iso: gpd.GeoDataFrame,
     return pd.DataFrame(output_rows), note
 
 
+def fallback_walk_distances_from_previous(
+    walk_distances: pd.DataFrame,
+    previous_school_layer: pd.DataFrame | None,
+) -> tuple[pd.DataFrame, str | None]:
+    expected_cols = [
+        "graph_nearest_official_park_dist_m",
+        "graph_nearest_official_park_name",
+        "nearest_functional_park_dist_m",
+        "nearest_functional_park_name",
+        "nearest_functional_park_area_m2",
+        "nearest_functional_park_function_class",
+        "nearest_neighborhood_scale_park_dist_m",
+        "nearest_neighborhood_scale_park_name",
+        "nearest_neighborhood_scale_park_area_m2",
+        "nearest_official_route_dist_m",
+        "nearest_official_route_detour_ratio",
+        "nearest_official_major_road_crossing_count",
+        "nearest_official_large_intersection_flag",
+        "nearest_official_accident_hotspot_flag",
+        "nearest_official_barrier_level",
+        "nearest_official_barrier_label",
+        "nearest_official_barrier_summary",
+        "nearest_official_barrier_description",
+        "nearest_functional_route_dist_m",
+        "nearest_functional_route_detour_ratio",
+        "nearest_functional_major_road_crossing_count",
+        "nearest_functional_large_intersection_flag",
+        "nearest_functional_accident_hotspot_flag",
+        "nearest_functional_barrier_level",
+        "nearest_functional_barrier_label",
+        "nearest_functional_barrier_summary",
+        "nearest_functional_barrier_description",
+    ]
+    missing = [col for col in expected_cols if col not in walk_distances.columns]
+    if not missing:
+        return walk_distances, None
+    if previous_school_layer is None:
+        for col in missing:
+            walk_distances[col] = pd.NA
+        return walk_distances, "기존 보행거리 컬럼이 없어 누락 컬럼을 NA로 채움"
+
+    reusable_cols = ["학교ID"] + [col for col in expected_cols if col in previous_school_layer.columns]
+    previous_walk = previous_school_layer[reusable_cols].drop_duplicates("학교ID")
+    base = walk_distances[["학교ID"]].drop_duplicates("학교ID")
+    merged = base.merge(previous_walk, on="학교ID", how="left")
+    for col in expected_cols:
+        if col not in merged.columns:
+            merged[col] = pd.NA
+    return merged, "GraphML 부재/누락 컬럼으로 기존 최종 CSV의 보행거리·보행부담 컬럼을 유지"
+
+
 def build_name_lookup(parks: pd.DataFrame) -> dict[str, list[dict[str, Any]]]:
     lookup: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for record in parks.to_dict("records"):
@@ -935,6 +989,50 @@ def add_green_display_fields(result: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
+def apply_display_green_case_classification(result: pd.DataFrame) -> pd.DataFrame:
+    """Recompute operational case labels from the final display green ratio."""
+    required_cols = {"case_type", "case_label", "priority_score", "green_bucket"}
+    missing = required_cols - set(result.columns)
+    if missing:
+        raise ValueError(f"Missing required case columns: {sorted(missing)}")
+
+    out = result.copy()
+    display_green = pd.to_numeric(out["display_green_ratio"], errors="coerce").fillna(0.0)
+    nearest_dist = pd.to_numeric(out["nearest_park_dist_m"], errors="coerce")
+    park_count = pd.to_numeric(out["iso_park_count"], errors="coerce").fillna(0)
+    active = pd.to_numeric(out.get("is_separate_bundle_tag", 0), errors="coerce").fillna(0).eq(0)
+
+    hard_case1 = active & nearest_dist.ge(500) & park_count.eq(0) & display_green.eq(0)
+    candidate = active & ~hard_case1 & (park_count.ge(1) | nearest_dist.lt(500))
+
+    out.loc[active, ["case_type", "case_label", "priority_score", "green_bucket"]] = pd.NA
+    out.loc[hard_case1, "case_type"] = 1
+    out.loc[candidate & display_green.lt(CASE_GREEN_LOW_THRESHOLD), "case_type"] = 2
+    out.loc[
+        candidate
+        & display_green.ge(CASE_GREEN_LOW_THRESHOLD)
+        & display_green.lt(CASE_GREEN_HIGH_THRESHOLD),
+        "case_type",
+    ] = 3
+    out.loc[candidate & display_green.ge(CASE_GREEN_HIGH_THRESHOLD), "case_type"] = 4
+
+    out.loc[out["case_type"].eq(2), "green_bucket"] = "low"
+    out.loc[out["case_type"].eq(3), "green_bucket"] = "middle"
+    out.loc[out["case_type"].eq(4), "green_bucket"] = "high"
+
+    label_map = {
+        1: "공원 접근 결핍",
+        2: "접근 가능하나 녹지 부족",
+        3: "접근 가능, 중간 수준",
+        4: "접근 양호",
+    }
+    score_map = {1: 4, 2: 3, 3: 2, 4: 1}
+    case_numeric = pd.to_numeric(out["case_type"], errors="coerce")
+    out.loc[case_numeric.notna(), "case_label"] = case_numeric.map(label_map)
+    out.loc[case_numeric.notna(), "priority_score"] = case_numeric.map(score_map)
+    return out
+
+
 def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd.DataFrame, iso_counts: pd.DataFrame, walk_distances: pd.DataFrame) -> pd.DataFrame:
     result = priority.copy()
     nearest_cols = ["학교ID", "nearest_park_name", "nearest_park_dist_m"]
@@ -1011,6 +1109,9 @@ def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd
     result["nominal_access_gap_flag"] = official_present & ~functional_present
     result["neighborhood_scale_gap_flag"] = functional_present & ~neighborhood_present
 
+    result = add_green_display_fields(result)
+    result = apply_display_green_case_classification(result)
+
     result["near_park_low_green_imbalance_flag"] = functional_present & result.apply(is_low_green_warning, axis=1)
     access_types = []
     for row in result.to_dict("records"):
@@ -1045,14 +1146,15 @@ def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd
     for col in bool_cols:
         result[col] = to_bool_series(result[col])
 
-    result = add_green_display_fields(result)
-
     return result
 
 
 def parse_linked_schools(value: Any) -> list[str]:
     if isinstance(value, list):
-        return [str(item).strip() for item in value if str(item).strip()]
+        flattened: list[str] = []
+        for item in value:
+            flattened.extend(parse_linked_schools(item))
+        return flattened
     text = str(value or "").strip()
     if not text or text.lower() == "nan":
         return []
@@ -1065,13 +1167,77 @@ def parse_linked_schools(value: Any) -> list[str]:
             return flattened
     except Exception:
         pass
+    quoted_names = [name.strip() for name in re.findall(r"'([^']+)'", text) if name.strip()]
+    if len(quoted_names) > 1:
+        return quoted_names
     try:
         parsed = ast.literal_eval(text)
         if isinstance(parsed, (list, tuple)):
             return [str(item).strip() for item in parsed if str(item).strip()]
     except Exception:
         pass
-    return [name.strip() for name in re.findall(r"'([^']+)'", text) if name.strip()]
+    return quoted_names
+
+
+def candidate_case_fields(record: dict[str, Any], school_case: dict[str, float], school_green: dict[str, float]) -> dict[str, Any]:
+    names = parse_linked_schools(record.get("linked_schools"))
+    cases = [school_case[name] for name in names if name in school_case and pd.notna(school_case[name])]
+    greens = [school_green[name] for name in names if name in school_green and pd.notna(school_green[name])]
+    fields: dict[str, Any] = {}
+    if cases:
+        fields["worst_case_type"] = float(min(cases))
+    if greens:
+        fields["avg_green_ratio"] = round(float(sum(greens) / len(greens)), 6)
+    if names:
+        fields["linked_school_count"] = len(names)
+    return fields
+
+
+def refresh_candidate_case_fields(school_layer: pd.DataFrame) -> str:
+    school_case = {
+        str(row["학교명"]): float(row["case_type"])
+        for row in school_layer.to_dict("records")
+        if pd.notna(row.get("case_type"))
+    }
+    school_green = {
+        str(row["학교명"]): float(row["display_green_ratio"])
+        for row in school_layer.to_dict("records")
+        if pd.notna(row.get("display_green_ratio"))
+    }
+
+    updated_files: list[str] = []
+    if CANDIDATE_GRID_PATH.exists():
+        candidates = read_csv(CANDIDATE_GRID_PATH)
+        for idx, record in candidates.to_dict("index").items():
+            for key, value in candidate_case_fields(record, school_case, school_green).items():
+                candidates.at[idx, key] = value
+        candidates.to_csv(CANDIDATE_GRID_PATH, index=False, encoding="utf-8-sig")
+        updated_files.append(CANDIDATE_GRID_PATH.name)
+
+    if CANDIDATE_GRID_GEOJSON_PATH.exists():
+        with CANDIDATE_GRID_GEOJSON_PATH.open("r", encoding="utf-8") as f:
+            geojson = json.load(f)
+        for feature in geojson.get("features", []):
+            props = feature.get("properties") or {}
+            props.update(candidate_case_fields(props, school_case, school_green))
+            feature["properties"] = props
+        with CANDIDATE_GRID_GEOJSON_PATH.open("w", encoding="utf-8") as f:
+            f.write("{\n")
+            f.write(f"\"type\": {json.dumps(geojson.get('type'), ensure_ascii=False)},\n")
+            if "name" in geojson:
+                f.write(f"\"name\": {json.dumps(geojson.get('name'), ensure_ascii=False)},\n")
+            if "crs" in geojson:
+                f.write(f"\"crs\": {json.dumps(geojson.get('crs'), ensure_ascii=False)},\n")
+            f.write("\"features\": [\n")
+            features = geojson.get("features", [])
+            for idx, feature in enumerate(features):
+                suffix = "," if idx < len(features) - 1 else ""
+                f.write(json.dumps(feature, ensure_ascii=False) + suffix + "\n")
+            f.write("]\n")
+            f.write("}\n")
+        updated_files.append(CANDIDATE_GRID_GEOJSON_PATH.name)
+
+    return ", ".join(updated_files) if updated_files else "candidate_grid_final 파일 없음"
 
 
 def build_ai_before_after(school_layer: pd.DataFrame) -> tuple[pd.DataFrame, str]:
@@ -1208,9 +1374,17 @@ def write_validation_report(
     )
     access_counts = school_layer["access_condition_type"].value_counts().reindex(ACCESS_LABELS.keys(), fill_value=0)
 
-    case_unchanged = before_priority["case_type"].astype(str).fillna("").equals(
-        school_layer.loc[before_priority.index, "case_type"].astype(str).fillna("")
-    )
+    before_case = pd.to_numeric(before_priority["case_type"], errors="coerce")
+    after_case = pd.to_numeric(school_layer.loc[before_priority.index, "case_type"], errors="coerce")
+    case_changed = ~((before_case.eq(after_case)) | (before_case.isna() & after_case.isna()))
+    active_case = school_layer[
+        pd.to_numeric(school_layer.get("is_separate_bundle_tag", 0), errors="coerce").fillna(0).eq(0)
+        & pd.to_numeric(school_layer["case_type"], errors="coerce").notna()
+    ].copy()
+    display_green = pd.to_numeric(active_case["display_green_ratio"], errors="coerce")
+    case123 = pd.to_numeric(active_case["case_type"], errors="coerce").isin([1, 2, 3])
+    display_under_5 = display_green.lt(CASE_GREEN_HIGH_THRESHOLD)
+    case_display_mismatch = int((case123 != display_under_5).sum())
     dist_unchanged = pd.to_numeric(before_priority["nearest_park_dist_m"], errors="coerce").fillna(-1).equals(
         pd.to_numeric(school_layer.loc[before_priority.index, "nearest_park_dist_m"], errors="coerce").fillna(-1)
     )
@@ -1221,7 +1395,7 @@ def write_validation_report(
     lines = [
         "# 활동규모 공원 접근성 보조 레이어 검증",
         "",
-        "이번 작업은 기존 Case 분류를 변경하지 않고, 공식 공원 접근성과 활동규모 공원 접근성을 분리하는 보조 해석 레이어를 추가한 것이다.",
+        "이번 작업은 공식 공원 접근성과 활동규모 공원 접근성을 분리하는 보조 해석 레이어를 추가하고, 최종 표시 녹지비율 기준으로 Case 분류를 갱신한 것이다.",
         "",
         "활동규모 공원은 본 프로젝트의 운영 기준인 3,000㎡ 이상으로, 아이들이 머물며 활동할 수 있는 규모의 공원으로 해석한다.",
         "",
@@ -1268,7 +1442,7 @@ def write_validation_report(
             "## 녹지비율 표시값 검수 플래그",
             "",
             f"- display_green_ratio 80% 이상 검수 대상: {len(high_green)}개교",
-            "- 이 플래그는 기존 `iso_green_ratio` 또는 Case를 변경하지 않고, 앱 표시와 해석에서 추가 검수가 필요함을 알리기 위한 보조 정보다.",
+            "- 이 플래그는 Case 분류에 사용하는 최종 표시 녹지비율이 비정상적으로 높을 때 추가 검수가 필요함을 알리기 위한 보조 정보다.",
             "",
         ]
     )
@@ -1297,9 +1471,13 @@ def write_validation_report(
             "",
             metric_table(access_counts),
             "",
-            "## 기존 값 보존 검증",
+            "## Case 갱신 및 기존 값 보존 검증",
             "",
-            f"- 기존 case 컬럼 값 변경 없음: {case_unchanged}",
+            f"- Case 분류 기준: `display_green_ratio` 0%, 1%, 5% 임계값",
+            f"- Case 변경 학교 수: {int(case_changed.sum())}개교",
+            f"- Case 1~3 학교 수: {int(case123.sum())}개교",
+            f"- `display_green_ratio < 5%` 학교 수: {int(display_under_5.sum())}개교",
+            f"- Case 1~3과 `display_green_ratio < 5%` 불일치: {case_display_mismatch}개교",
             f"- 기존 최근접 공원 거리 컬럼 변경 없음: {dist_unchanged}",
             f"- 기존 녹지비율 컬럼 변경 없음: {green_unchanged}",
             "",
@@ -1492,6 +1670,9 @@ def main() -> None:
 
     schools = dataframes[SCHOOLS_PATH]
     graph_distances, graph_note = compute_nearest_walk_distances(schools, iso, parks)
+    graph_distances, fallback_note = fallback_walk_distances_from_previous(graph_distances, previous_school_layer)
+    if fallback_note:
+        graph_note = f"{graph_note}; {fallback_note}"
 
     before_priority = dataframes[SCHOOL_PRIORITY_PATH].copy()
     school_layer = enrich_school_layer(
@@ -1516,7 +1697,9 @@ def main() -> None:
     )
     school_layer.to_csv(SCHOOL_LAYER_PATH, index=False, encoding="utf-8-sig")
 
+    candidate_note = refresh_candidate_case_fields(school_layer)
     _, ai_note = build_ai_before_after(school_layer)
+    ai_note = f"{ai_note}; candidate case fields refreshed: {candidate_note}"
     write_validation_report(parks, school_layer, outliers, before_priority, graph_note, ai_note)
     write_walking_barrier_report(school_layer, previous_school_layer, graph_note)
 

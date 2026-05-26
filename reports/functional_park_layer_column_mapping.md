@@ -2,7 +2,7 @@
 
 각 파일의 존재 여부와 자동 탐색한 컬럼명이다. 매핑 실패 항목은 빈 값으로 남겨 후속 검토 대상임을 표시한다.
 
-## `C:/2026_data_analysis_park/data_processed/parks.csv`
+## `C:/Users/Mijin/Desktop/공공데이터공모전/2026-park-analysis/data_processed/parks.csv`
 
 - 존재 여부: 있음
 - 행/열: 1093행, 8열
@@ -20,7 +20,7 @@
 | nearest_park_name | 매핑 실패 |
 | nearest_park_dist | 매핑 실패 |
 
-## `C:/2026_data_analysis_park/data_processed/parks_with_nearest_school.csv`
+## `C:/Users/Mijin/Desktop/공공데이터공모전/2026-park-analysis/data_processed/parks_with_nearest_school.csv`
 
 - 존재 여부: 있음
 - 행/열: 789행, 9열
@@ -38,7 +38,7 @@
 | nearest_park_name | 매핑 실패 |
 | nearest_park_dist | 매핑 실패 |
 
-## `C:/2026_data_analysis_park/data_processed/blocked_parks_by_apt_adjustment_20260504.csv`
+## `C:/Users/Mijin/Desktop/공공데이터공모전/2026-park-analysis/data_processed/blocked_parks_by_apt_adjustment_20260504.csv`
 
 - 존재 여부: 있음
 - 행/열: 296행, 7열
@@ -56,7 +56,7 @@
 | nearest_park_name | 매핑 실패 |
 | nearest_park_dist | 매핑 실패 |
 
-## `C:/2026_data_analysis_park/data_processed/school_priority.csv`
+## `C:/Users/Mijin/Desktop/공공데이터공모전/2026-park-analysis/data_processed/school_priority.csv`
 
 - 존재 여부: 있음
 - 행/열: 272행, 45열
@@ -74,7 +74,7 @@
 | nearest_park_name | 매핑 실패 |
 | nearest_park_dist | nearest_park_dist_m |
 
-## `C:/2026_data_analysis_park/data_processed/school_nearest_park.csv`
+## `C:/Users/Mijin/Desktop/공공데이터공모전/2026-park-analysis/data_processed/school_nearest_park.csv`
 
 - 존재 여부: 있음
 - 행/열: 272행, 4열
@@ -92,7 +92,7 @@
 | nearest_park_name | nearest_park_name |
 | nearest_park_dist | nearest_park_dist_m |
 
-## `C:/2026_data_analysis_park/data_processed/schools.csv`
+## `C:/Users/Mijin/Desktop/공공데이터공모전/2026-park-analysis/data_processed/schools.csv`
 
 - 존재 여부: 있음
 - 행/열: 272행, 6열

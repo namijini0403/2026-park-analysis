@@ -1,6 +1,6 @@
 # 활동규모 공원 접근성 보조 레이어 검증
 
-이번 작업은 기존 Case 분류를 변경하지 않고, 공식 공원 접근성과 활동규모 공원 접근성을 분리하는 보조 해석 레이어를 추가한 것이다.
+이번 작업은 공식 공원 접근성과 활동규모 공원 접근성을 분리하는 보조 해석 레이어를 추가하고, 최종 표시 녹지비율 기준으로 Case 분류를 갱신한 것이다.
 
 활동규모 공원은 본 프로젝트의 운영 기준인 3,000㎡ 이상으로, 아이들이 머물며 활동할 수 있는 규모의 공원으로 해석한다.
 
@@ -10,8 +10,8 @@
 - 공원면적 있는 레코드 수: 789
 - 공원면적 없는 레코드 수: 304
 - 이상치 검수 대상 레코드 수: 138
-- 도보거리 산출 메모: GraphML `C:\2026_data_analysis_park\data\processed\incheon_walk_graph_v2.graphml` 사용, cutoff 5000m; 사고위험 자료 325건 사용
-- AI 추천 before/after: C:\2026_data_analysis_park\data_processed\ai_recommendation_before_after_functional_layer.csv 생성
+- 도보거리 산출 메모: GraphML 파일을 찾지 못해 활동규모 공원 최근접 도보거리 산출을 건너뜀; GraphML 부재/누락 컬럼으로 기존 최종 CSV의 보행거리·보행부담 컬럼을 유지
+- AI 추천 before/after: C:\Users\Mijin\Desktop\공공데이터공모전\2026-park-analysis\data_processed\ai_recommendation_before_after_functional_layer.csv 생성; candidate case fields refreshed: candidate_grid_final.csv, candidate_grid_final.geojson
 - 보행부담 컬럼: `nearest_official_*`, `nearest_functional_*` 경로별 산출.
 
 ## park_function_class별 개수
@@ -40,12 +40,12 @@
 - no_neighborhood_scale_park_flag: 187개교
 - activity_space_limited_flag: 87개교
 - nominal_access_gap_flag: 102개교
-- near_park_low_green_imbalance_flag: 71개교
+- near_park_low_green_imbalance_flag: 75개교
 
 ## 녹지비율 표시값 검수 플래그
 
 - display_green_ratio 80% 이상 검수 대상: 0개교
-- 이 플래그는 기존 `iso_green_ratio` 또는 Case를 변경하지 않고, 앱 표시와 해석에서 추가 검수가 필요함을 알리기 위한 보조 정보다.
+- 이 플래그는 Case 분류에 사용하는 최종 표시 녹지비율이 비정상적으로 높을 때 추가 검수가 필요함을 알리기 위한 보조 정보다.
 
 - 검수 대상 없음
 
@@ -55,14 +55,18 @@
 |---|---:|
 | no_official_park | 41 |
 | nominal_access_only | 102 |
-| near_park_low_green_imbalance | 70 |
+| near_park_low_green_imbalance | 74 |
 | functional_access_with_barrier | 24 |
-| functional_access_available | 35 |
+| functional_access_available | 31 |
 | unknown | 0 |
 
-## 기존 값 보존 검증
+## Case 갱신 및 기존 값 보존 검증
 
-- 기존 case 컬럼 값 변경 없음: True
+- Case 분류 기준: `display_green_ratio` 0%, 1%, 5% 임계값
+- Case 변경 학교 수: 50개교
+- Case 1~3 학교 수: 163개교
+- `display_green_ratio < 5%` 학교 수: 163개교
+- Case 1~3과 `display_green_ratio < 5%` 불일치: 0개교
 - 기존 최근접 공원 거리 컬럼 변경 없음: True
 - 기존 녹지비율 컬럼 변경 없음: True
 
