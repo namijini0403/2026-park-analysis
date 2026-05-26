@@ -12,6 +12,7 @@ type ShapDriver = {
   feature: string;
   value: number;
   shap_value: number;
+  impact_share_pct?: number;
 };
 
 interface Candidate {
@@ -119,6 +120,15 @@ type ScoredCandidate = Candidate & {
   school_distance_score: number;
   facility_gap_score: number;
   ai_message?: string;
+};
+
+type ScoreContribution = {
+  key: keyof WeightState;
+  title: string;
+  score: number;
+  weight: number;
+  weightedScore: number;
+  share: number;
 };
 
 const DEFAULT_FILTERS: FilterState = {
@@ -565,6 +575,21 @@ function buildCandidateReasons(candidate: Partial<Pick<ScoredCandidate, "benefit
   return reasons.slice(0, 3);
 }
 
+function buildScoreContributions(candidate: ScoredCandidate, weights: WeightState): ScoreContribution[] {
+  const normalizedWeights = normalizeWeights(weights);
+  const items: Array<Omit<ScoreContribution, "weightedScore" | "share">> = [
+    { key: "benefit", title: "잠재수혜학생수", score: candidate.benefit_score ?? 0, weight: normalizedWeights.benefit },
+    { key: "schoolDistance", title: "학교에서의 거리", score: candidate.school_distance_score ?? 0, weight: normalizedWeights.schoolDistance },
+    { key: "parkDistance", title: "기존 공원과의 거리", score: candidate.facility_gap_score ?? 0, weight: normalizedWeights.parkDistance },
+  ];
+  const weighted = items.map((item) => ({ ...item, weightedScore: item.score * item.weight }));
+  const total = weighted.reduce((sum, item) => sum + item.weightedScore, 0);
+  return weighted.map((item) => ({
+    ...item,
+    share: total > 0 ? item.weightedScore / total : 0,
+  }));
+}
+
 function RobustCandidateBrief({
   candidate,
   compact = false,
@@ -707,6 +732,10 @@ function getDriverImpactLabel(driver: ShapDriver): string {
 }
 
 function getDriverImpactShare(driver: ShapDriver, visibleDrivers: ShapDriver[]): string {
+  if (Number.isFinite(driver.impact_share_pct)) {
+    const share = Number(driver.impact_share_pct);
+    return `약 ${Number.isInteger(share) ? share : share.toFixed(1)}%`;
+  }
   const totalImpact = visibleDrivers.reduce((sum, item) => sum + Math.abs(item.shap_value), 0);
   if (totalImpact <= 0) return "";
   const share = Math.round((Math.abs(driver.shap_value) / totalImpact) * 100);
@@ -871,10 +900,17 @@ export default function SimulationPage({
   const selectedCandidate = useMemo(() => {
     const byId = new Map<string, Candidate>();
     if (internalCandidate) byId.set(internalCandidate.grid_id, internalCandidate);
-    rankedCandidates.forEach((candidate) => byId.set(candidate.grid_id, candidate));
-    aiRecommendations.recommendations.forEach((candidate) => byId.set(candidate.grid_id, candidate));
+    displayedCandidates.forEach((candidate) => byId.set(candidate.grid_id, candidate));
+    rankedCandidates.forEach((candidate) => {
+      if (!byId.has(candidate.grid_id)) byId.set(candidate.grid_id, candidate);
+    });
+    aiRecommendations.recommendations.forEach((candidate) => {
+      if (!byId.has(candidate.grid_id)) byId.set(candidate.grid_id, candidate);
+    });
     return selectedId ? byId.get(selectedId) ?? null : null;
-  }, [aiRecommendations.recommendations, internalCandidate, rankedCandidates, selectedId]);
+  }, [aiRecommendations.recommendations, displayedCandidates, internalCandidate, rankedCandidates, selectedId]);
+
+  const scoreContributionWeights = mode === "ai" ? AI_DEFAULT_WEIGHTS : effectiveWeights;
 
   const openShapPanel = (candidate: Candidate, event?: MouseEvent<HTMLButtonElement>) => {
     event?.stopPropagation();
@@ -1291,6 +1327,10 @@ export default function SimulationPage({
                   <div key={reason}>{index + 1}. {reason}</div>
                 ))}
               </div>
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${SIM_COLORS.border}` }}>
+                <div style={{ fontSize: 12, fontWeight: 900, color: SIM_COLORS.text, marginBottom: 8 }}>현재 가중치 기준 추천점수 기여</div>
+                <ScoreContributionPanel contributions={buildScoreContributions(selectedCandidate as ScoredCandidate, scoreContributionWeights)} />
+              </div>
             </div>
           ) : null}
           <RobustCandidateBrief
@@ -1372,6 +1412,31 @@ function MetricPill({
     >
       <div style={{ fontSize: 11, color: SIM_COLORS.muted, marginBottom: 4 }}>{label}</div>
       <div style={{ fontSize: 16, fontWeight: 800, color: tone }}>{value}</div>
+    </div>
+  );
+}
+
+function ScoreContributionPanel({ contributions }: { contributions: ScoreContribution[] }) {
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      {contributions.map((item) => (
+        <div key={item.key} style={{ display: "grid", gap: 5 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", fontSize: 12 }}>
+            <span style={{ color: SIM_COLORS.secondary, fontWeight: 800 }}>{item.title}</span>
+            <span style={{ color: SIM_COLORS.amber, fontWeight: 900 }}>{formatPercent(item.share)}</span>
+          </div>
+          <div style={{ height: 7, borderRadius: 999, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+            <div
+              style={{
+                width: `${Math.max(0, Math.min(100, item.share * 100))}%`,
+                height: "100%",
+                borderRadius: 999,
+                background: item.key === "benefit" ? SIM_COLORS.green : item.key === "schoolDistance" ? SIM_COLORS.blue : SIM_COLORS.amber,
+              }}
+            />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

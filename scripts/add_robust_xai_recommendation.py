@@ -381,6 +381,9 @@ def make_surrogate_explanations(frame: pd.DataFrame, warnings_list: list[str]) -
                     "shap_value": round(float(contribution), 4),
                 }
             )
+        total_abs_shap = sum(abs(item["shap_value"]) for item in feature_payload) or 1.0
+        for item in feature_payload:
+            item["impact_share_pct"] = round(abs(item["shap_value"]) / total_abs_shap * 100, 1)
         positive = sorted([item for item in feature_payload if item["shap_value"] > 0], key=lambda item: item["shap_value"], reverse=True)[:3]
         negative = sorted([item for item in feature_payload if item["shap_value"] < 0], key=lambda item: item["shap_value"])[:3]
         tag = diagnostic_tag(positive, negative, feature_payload)
