@@ -115,6 +115,34 @@ function boolFlag(value: unknown): boolean {
   return value === true || s(value).toLowerCase() === "true";
 }
 
+function functionalPhysicalBarrier(row: RawRow): { active: boolean; label?: string; basis?: string } {
+  const explicitFlag = row.functional_access_physical_barrier_flag;
+  if (explicitFlag != null && boolFlag(explicitFlag)) {
+    return {
+      active: true,
+      label: s(row.functional_access_physical_barrier_label, "보행부담 동반형"),
+      basis: s(row.functional_access_physical_barrier_basis),
+    };
+  }
+
+  const functionalCount = n(row.iso_functional_park_count);
+  const functionalDistance = maybeNumber(row.nearest_functional_park_dist_m);
+  const functionalPresent = functionalCount > 0 || (functionalDistance != null && functionalDistance <= 500);
+  if (!functionalPresent) return { active: false };
+
+  const crossingCount = n(row.nearest_functional_major_road_crossing_count);
+  const hasRoadCrossing = crossingCount >= 1;
+  const hasLargeIntersection = boolFlag(row.nearest_functional_large_intersection_flag);
+  if (!hasRoadCrossing && !hasLargeIntersection) return { active: false };
+
+  const reasons = [
+    hasRoadCrossing ? `간선급 도로 횡단 ${crossingCount}회` : "",
+    hasLargeIntersection ? "대형 교차로 통과" : "",
+  ].filter(Boolean);
+
+  return { active: true, label: "보행부담 동반형", basis: reasons.join(" · ") };
+}
+
 function getDisplayGreenRatio(row: RawRow): number {
   return (
     maybeNumber(row.display_green_ratio) ??
@@ -391,6 +419,7 @@ export function mapSchoolRowToReportProps(
   const officialRouteMismatchSummary = graphNearestOfficialParkName
     ? `보행 경로 산출 대상(${graphNearestOfficialParkName})과 공식 최근접 공원(${nearestOfficialParkName})이 달라, 공식 공원 경로 특성은 지도에서 별도 확인이 필요합니다.`
     : "공식 최근접 공원 경로 특성은 지도에서 별도 확인이 필요합니다.";
+  const physicalBarrier = functionalPhysicalBarrier(row);
 
   const cityAvg = avgBlock(row, "_cityAvg");
   const districtAvg = avgBlock(row, "_districtAvg");
@@ -511,6 +540,9 @@ export function mapSchoolRowToReportProps(
     ...(s(row.access_condition_type) ? { accessConditionType: s(row.access_condition_type) } : {}),
     ...(s(row.access_condition_label) ? { accessConditionLabel: activityScaleText(s(row.access_condition_label)) } : {}),
     ...(s(row.access_condition_description) ? { accessConditionDescription: activityScaleText(s(row.access_condition_description)) } : {}),
+    functionalAccessPhysicalBarrierFlag: physicalBarrier.active,
+    ...(physicalBarrier.label ? { functionalAccessPhysicalBarrierLabel: physicalBarrier.label } : {}),
+    ...(physicalBarrier.basis ? { functionalAccessPhysicalBarrierBasis: physicalBarrier.basis } : {}),
     ...(s(row.green_ratio_display_basis) ? { greenRatioDisplayBasis: s(row.green_ratio_display_basis) } : {}),
     ...(s(row.green_ratio_review_note) ? { greenRatioReviewNote: s(row.green_ratio_review_note) } : {}),
     greenRatioHighReviewFlag: boolFlag(row.green_ratio_high_review_flag),

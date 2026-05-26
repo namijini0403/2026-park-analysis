@@ -88,6 +88,9 @@ export type SchoolDetailReportProps = {
   accessConditionType?: string;
   accessConditionLabel?: string;
   accessConditionDescription?: string;
+  functionalAccessPhysicalBarrierFlag?: boolean;
+  functionalAccessPhysicalBarrierLabel?: string;
+  functionalAccessPhysicalBarrierBasis?: string;
   activitySpaceLimited?: boolean;
   onlyMicroPark?: boolean;
   noFunctionalPark?: boolean;
@@ -750,39 +753,30 @@ function SchoolHeader({ schoolName, districtName, casePolicyLabel, caseStatusLab
   );
 }
 
-function ParkAccessConditionCard(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "greenRatio" | "nearestParkName" | "nearestParkAccessNote" | "nearestOfficialParkType" | "nearestOfficialParkAreaM2" | "nearestOfficialParkFunctionLabel" | "nearestFunctionalParkDistanceM" | "nearestFunctionalParkName" | "nearestFunctionalParkAreaM2" | "nearestOfficialRouteDistanceM" | "nearestOfficialRouteDetourRatio" | "nearestOfficialMajorRoadCrossingCount" | "nearestOfficialLargeIntersectionFlag" | "nearestOfficialAccidentHotspotFlag" | "nearestOfficialBarrierLevel" | "nearestOfficialBarrierLabel" | "nearestOfficialBarrierSummary" | "nearestOfficialBarrierDescription" | "nearestFunctionalRouteDistanceM" | "nearestFunctionalRouteDetourRatio" | "nearestFunctionalMajorRoadCrossingCount" | "nearestFunctionalLargeIntersectionFlag" | "nearestFunctionalAccidentHotspotFlag" | "nearestFunctionalBarrierLevel" | "nearestFunctionalBarrierLabel" | "nearestFunctionalBarrierSummary" | "nearestFunctionalBarrierDescription" | "accessConditionType" | "accessConditionLabel" | "accessConditionDescription" | "noOfficialParkFlag" | "noFunctionalPark">) {
+function ParkAccessConditionCard(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "greenRatio" | "nearestParkName" | "nearestParkAccessNote" | "nearestOfficialParkType" | "nearestOfficialParkAreaM2" | "nearestOfficialParkFunctionLabel" | "nearestFunctionalParkDistanceM" | "nearestFunctionalParkName" | "nearestFunctionalParkAreaM2" | "nearestOfficialRouteDistanceM" | "nearestOfficialRouteDetourRatio" | "nearestOfficialMajorRoadCrossingCount" | "nearestOfficialLargeIntersectionFlag" | "nearestOfficialAccidentHotspotFlag" | "nearestOfficialBarrierLevel" | "nearestOfficialBarrierLabel" | "nearestOfficialBarrierSummary" | "nearestOfficialBarrierDescription" | "nearestFunctionalRouteDistanceM" | "nearestFunctionalRouteDetourRatio" | "nearestFunctionalMajorRoadCrossingCount" | "nearestFunctionalLargeIntersectionFlag" | "nearestFunctionalAccidentHotspotFlag" | "nearestFunctionalBarrierLevel" | "nearestFunctionalBarrierLabel" | "nearestFunctionalBarrierSummary" | "nearestFunctionalBarrierDescription" | "accessConditionType" | "accessConditionLabel" | "accessConditionDescription" | "functionalAccessPhysicalBarrierFlag" | "functionalAccessPhysicalBarrierLabel" | "functionalAccessPhysicalBarrierBasis" | "noOfficialParkFlag" | "noFunctionalPark">) {
   const isImbalance =
     props.accessConditionType === "near_park_low_green_imbalance" ||
     ((props.nearestFunctionalParkDistanceM ?? Infinity) <= 500 && props.greenRatio < 5);
-  const activityBarrierLevel = Number(props.nearestFunctionalBarrierLevel ?? 0);
-  const officialBarrierLevel = Number(props.nearestOfficialBarrierLevel ?? 0);
-  const hasBarrier = props.accessConditionType === "functional_access_with_barrier" || activityBarrierLevel >= 2;
+  const hasBarrier = props.functionalAccessPhysicalBarrierFlag === true;
   const roadCrossingCount = Number(props.nearestFunctionalMajorRoadCrossingCount ?? 0);
   const officialRoadCrossingCount = Number(props.nearestOfficialMajorRoadCrossingCount ?? 0);
-  const hasRoadCrossing = Number.isFinite(roadCrossingCount) && roadCrossingCount > 0;
   const hasLargeIntersection = props.nearestFunctionalLargeIntersectionFlag === true;
   const officialHasLargeIntersection = props.nearestOfficialLargeIntersectionFlag === true;
-  const hasAccidentHotspot = props.nearestFunctionalAccidentHotspotFlag === true;
-  const officialHasAccidentHotspot = props.nearestOfficialAccidentHotspotFlag === true;
-  const detourRatio = Number(props.nearestFunctionalRouteDetourRatio);
-  const hasDetourBurden = Number.isFinite(detourRatio) && detourRatio >= 1.6;
-  const detourOnlyBarrier = hasBarrier && hasDetourBurden && !hasRoadCrossing && !hasLargeIntersection && !hasAccidentHotspot;
   const routeDistance = props.nearestOfficialRouteDistanceM ?? props.nearestParkDistanceM;
   const activityRouteDistance = props.nearestFunctionalRouteDistanceM ?? props.nearestFunctionalParkDistanceM;
+  const physicalBarrierLabel = hasBarrier ? props.functionalAccessPhysicalBarrierBasis ?? "간선급 도로 횡단 또는 대형 교차로 통과" : "해당 없음";
   const routeNamesDiffer = Boolean(
     props.nearestParkName &&
       props.nearestFunctionalParkName &&
       props.nearestParkName !== props.nearestFunctionalParkName,
   );
   const higherActivityRiskReasons = [
-    activityBarrierLevel > officialBarrierLevel ? "보행부담 등급" : "",
     Number.isFinite(roadCrossingCount) &&
     Number.isFinite(officialRoadCrossingCount) &&
     roadCrossingCount > officialRoadCrossingCount
       ? "간선도로 횡단"
       : "",
     hasLargeIntersection && !officialHasLargeIntersection ? "대형 교차로" : "",
-    hasAccidentHotspot && !officialHasAccidentHotspot ? "사고위험 지점" : "",
   ].filter(Boolean);
   const routeBasisWarning = higherActivityRiskReasons.length
     ? `활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 ${higherActivityRiskReasons.join("·")} 항목이 더 불리하게 산정됩니다.`
@@ -793,10 +787,12 @@ function ParkAccessConditionCard(props: Pick<SchoolDetailReportProps, "nearestPa
     ? "도보생활권 내 공식 공원이 확인되지 않아 신규 조성 또는 학교 내부 공간 활용을 우선 검토해야 합니다."
     : props.noFunctionalPark
       ? "도보권 내 3,000㎡ 이상 활동규모 공원은 확인되지 않습니다. 활동규모 공원은 기준 면적 이상으로 아이들이 머물며 활동할 수 있는 규모의 공원입니다."
+    : isImbalance && hasBarrier
+      ? `가까운 활동규모 공원은 있으나 학교 도보생활권 전체의 녹지 비율은 낮고, 도달 경로에 ${physicalBarrierLabel}이 확인됩니다.`
     : isImbalance
       ? "가까운 활동규모 공원은 있으나 학교 도보생활권 전체의 녹지 비율은 낮아, 공원 접근성과 생활권 녹지환경을 분리해 해석해야 합니다."
-      : detourOnlyBarrier
-        ? "간선도로 횡단이나 대형 교차로 인접은 확인되지 않지만, 실제 보행 경로가 직선거리 대비 크게 우회하는 것으로 계산됩니다. 이 경우 보행부담의 원인은 도로 횡단이 아니라 우회 부담으로 해석합니다."
+      : hasBarrier
+        ? `활동규모 공원은 있으나, 도달 경로에 ${physicalBarrierLabel}이 확인됩니다.`
       : props.accessConditionDescription ?? "공식 공원 접근성과 활동규모 공원 접근성을 분리해 추가 검토할 수 있습니다.";
 
   return (
@@ -806,9 +802,12 @@ function ParkAccessConditionCard(props: Pick<SchoolDetailReportProps, "nearestPa
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-forest-300">Existing Facility Access</p>
           <h3 className="mt-2 text-xl font-bold tracking-tight text-white">공식 공원과 활동규모 공원</h3>
         </div>
-        <Badge tone={isImbalance || hasBarrier ? "warning" : props.noOfficialParkFlag ? "danger" : "positive"}>
-          {props.accessConditionLabel ?? "추가 검토 필요"}
-        </Badge>
+        <div className="flex flex-wrap gap-2">
+          <Badge tone={isImbalance ? "warning" : props.noOfficialParkFlag ? "danger" : "positive"}>
+            {props.accessConditionLabel ?? "추가 검토 필요"}
+          </Badge>
+          {hasBarrier ? <Badge tone="warning">{props.functionalAccessPhysicalBarrierLabel ?? "보행부담 동반형"}</Badge> : null}
+        </div>
       </div>
 
       <div className="mt-5 grid gap-3 lg:grid-cols-[1.05fr_0.95fr]">
@@ -841,7 +840,7 @@ function ParkAccessConditionCard(props: Pick<SchoolDetailReportProps, "nearestPa
           </p>
           <div className="mt-4 grid gap-2 text-sm text-slate-200 sm:grid-cols-2">
             <div className="rounded-xl bg-white/[0.04] px-3 py-2">거리: <span className="font-bold text-white">{formatOptionalDistance(activityRouteDistance)}</span></div>
-            <div className="rounded-xl bg-white/[0.04] px-3 py-2">보행 부담: <span className="font-bold text-white">{compactBarrierLabel(props.nearestFunctionalBarrierLabel)}</span></div>
+            <div className="rounded-xl bg-white/[0.04] px-3 py-2">보행부담 태그: <span className="font-bold text-white">{physicalBarrierLabel}</span></div>
             <div className="rounded-xl bg-white/[0.04] px-3 py-2">간선도로 횡단: <span className="font-bold text-white">{props.nearestFunctionalMajorRoadCrossingCount == null ? "자료 없음" : `${formatOptionalCount(props.nearestFunctionalMajorRoadCrossingCount)}회`}</span></div>
             <div className="rounded-xl bg-white/[0.04] px-3 py-2">대형 교차로: <span className="font-bold text-white">{formatBooleanFlag(props.nearestFunctionalLargeIntersectionFlag)}</span></div>
           </div>
@@ -876,7 +875,7 @@ function ParkAccessConditionCard(props: Pick<SchoolDetailReportProps, "nearestPa
   );
 }
 
-function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "nearestParkDistanceCityAvg" | "nearestParkDistanceDistrictAvg" | "nearestParkDistanceCityPercentile" | "nearestParkDistanceDistrictPercentile" | "greenRatio" | "greenRatioDisplayBasis" | "greenRatioReviewNote" | "greenRatioHighReviewFlag" | "greenRatioCityAvg" | "greenRatioDistrictAvg" | "greenRatioCityPercentile" | "greenRatioDistrictPercentile" | "greenRatioCityPercentile_lt" | "greenRatioDistrictPercentile_lt" | "greenRatioCityZeroShare" | "greenRatioDistrictZeroShare" | "greenRatioCityNonZeroPercentile" | "greenRatioDistrictNonZeroPercentile" | "greenRatioCityNonZeroAvg" | "greenRatioDistrictNonZeroAvg" | "playgroundCount" | "playgroundCountCityAvg" | "playgroundCountDistrictAvg" | "playgroundCountCityPercentile" | "playgroundCountDistrictPercentile" | "playgroundCountCityPercentile_lt" | "playgroundCountDistrictPercentile_lt" | "playgroundCountCityZeroShare" | "playgroundCountDistrictZeroShare" | "playgroundCountCityNonZeroPercentile" | "playgroundCountDistrictNonZeroPercentile" | "playgroundCountCityNonZeroAvg" | "playgroundCountDistrictNonZeroAvg" | "studentTrend" | "studentTrendChangePct" | "studentTrendCityAvg" | "studentTrendDistrictAvg" | "currentStudentCount2025" | "currentStudentCountCityPercentile" | "currentStudentCountDistrictPercentile" | "nearestParkName" | "nearestParkAccessNote" | "nearestOfficialParkType" | "nearestOfficialParkAreaM2" | "nearestOfficialParkFunctionClass" | "nearestOfficialParkFunctionLabel" | "nearestFunctionalParkDistanceM" | "nearestFunctionalParkName" | "nearestFunctionalParkAreaM2" | "nearestOfficialRouteDistanceM" | "nearestOfficialRouteDetourRatio" | "nearestOfficialMajorRoadCrossingCount" | "nearestOfficialLargeIntersectionFlag" | "nearestOfficialAccidentHotspotFlag" | "nearestOfficialBarrierLevel" | "nearestOfficialBarrierLabel" | "nearestOfficialBarrierSummary" | "nearestOfficialBarrierDescription" | "nearestFunctionalRouteDistanceM" | "nearestFunctionalRouteDetourRatio" | "nearestFunctionalMajorRoadCrossingCount" | "nearestFunctionalLargeIntersectionFlag" | "nearestFunctionalAccidentHotspotFlag" | "nearestFunctionalBarrierLevel" | "nearestFunctionalBarrierLabel" | "nearestFunctionalBarrierSummary" | "nearestFunctionalBarrierDescription" | "accessConditionType" | "accessConditionLabel" | "accessConditionDescription" | "activitySpaceLimited" | "onlyMicroPark" | "noFunctionalPark" | "noOfficialParkFlag" | "straightLinePlaygroundCount" | "noParkWithin500m" | "accessibilityRatio" | "parkShortageVsAvg">) {
+function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDistanceM" | "nearestParkDistanceCityAvg" | "nearestParkDistanceDistrictAvg" | "nearestParkDistanceCityPercentile" | "nearestParkDistanceDistrictPercentile" | "greenRatio" | "greenRatioDisplayBasis" | "greenRatioReviewNote" | "greenRatioHighReviewFlag" | "greenRatioCityAvg" | "greenRatioDistrictAvg" | "greenRatioCityPercentile" | "greenRatioDistrictPercentile" | "greenRatioCityPercentile_lt" | "greenRatioDistrictPercentile_lt" | "greenRatioCityZeroShare" | "greenRatioDistrictZeroShare" | "greenRatioCityNonZeroPercentile" | "greenRatioDistrictNonZeroPercentile" | "greenRatioCityNonZeroAvg" | "greenRatioDistrictNonZeroAvg" | "playgroundCount" | "playgroundCountCityAvg" | "playgroundCountDistrictAvg" | "playgroundCountCityPercentile" | "playgroundCountDistrictPercentile" | "playgroundCountCityPercentile_lt" | "playgroundCountDistrictPercentile_lt" | "playgroundCountCityZeroShare" | "playgroundCountDistrictZeroShare" | "playgroundCountCityNonZeroPercentile" | "playgroundCountDistrictNonZeroPercentile" | "playgroundCountCityNonZeroAvg" | "playgroundCountDistrictNonZeroAvg" | "studentTrend" | "studentTrendChangePct" | "studentTrendCityAvg" | "studentTrendDistrictAvg" | "currentStudentCount2025" | "currentStudentCountCityPercentile" | "currentStudentCountDistrictPercentile" | "nearestParkName" | "nearestParkAccessNote" | "nearestOfficialParkType" | "nearestOfficialParkAreaM2" | "nearestOfficialParkFunctionClass" | "nearestOfficialParkFunctionLabel" | "nearestFunctionalParkDistanceM" | "nearestFunctionalParkName" | "nearestFunctionalParkAreaM2" | "nearestOfficialRouteDistanceM" | "nearestOfficialRouteDetourRatio" | "nearestOfficialMajorRoadCrossingCount" | "nearestOfficialLargeIntersectionFlag" | "nearestOfficialAccidentHotspotFlag" | "nearestOfficialBarrierLevel" | "nearestOfficialBarrierLabel" | "nearestOfficialBarrierSummary" | "nearestOfficialBarrierDescription" | "nearestFunctionalRouteDistanceM" | "nearestFunctionalRouteDetourRatio" | "nearestFunctionalMajorRoadCrossingCount" | "nearestFunctionalLargeIntersectionFlag" | "nearestFunctionalAccidentHotspotFlag" | "nearestFunctionalBarrierLevel" | "nearestFunctionalBarrierLabel" | "nearestFunctionalBarrierSummary" | "nearestFunctionalBarrierDescription" | "accessConditionType" | "accessConditionLabel" | "accessConditionDescription" | "functionalAccessPhysicalBarrierFlag" | "functionalAccessPhysicalBarrierLabel" | "activitySpaceLimited" | "onlyMicroPark" | "noFunctionalPark" | "noOfficialParkFlag" | "straightLinePlaygroundCount" | "noParkWithin500m" | "accessibilityRatio" | "parkShortageVsAvg">) {
   const [comparisonBasis, setComparisonBasis] = React.useState<"city" | "district">("city");
   const parkPercentile = comparisonBasis === "city" ? props.nearestParkDistanceCityPercentile : props.nearestParkDistanceDistrictPercentile;
   const basisLabel = comparisonBasis === "city" ? "인천시 기준" : "구 기준";
@@ -946,6 +945,10 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
   const playgroundTone = displayedPlaygroundPercentile != null
     ? playgroundToneFromPercentile(displayedPlaygroundPercentile)
     : playgroundToneFromValue(props.playgroundCount, playgroundAvg);
+  const accessDisplayLabel =
+    props.functionalAccessPhysicalBarrierFlag && !(props.accessConditionLabel ?? "").includes("보행부담")
+      ? `${props.accessConditionLabel ?? "추가 검토 필요"} · ${props.functionalAccessPhysicalBarrierLabel ?? "보행부담 동반형"}`
+      : props.accessConditionLabel ?? (props.noParkWithin500m ? "공원 접근 결핍형" : "추가 검토 필요");
 
   return (
     <SectionShell kicker="Profile" title="핵심 취약성·현황">
@@ -1093,7 +1096,7 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
       <ParkAccessConditionCard {...props} />
       <Card className="p-5">
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4"><p className="text-sm font-medium text-slate-400">접근성 유형</p><p className="mt-2 text-xl font-bold text-white">{props.accessConditionLabel ?? (props.noParkWithin500m ? "공원 접근 결핍형" : "추가 검토 필요")}</p></div>
+          <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4"><p className="text-sm font-medium text-slate-400">접근성 유형</p><p className="mt-2 text-xl font-bold text-white">{accessDisplayLabel}</p></div>
           <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4"><p className="text-sm font-medium text-slate-400">접근성 비율</p><p className="mt-2 text-2xl font-bold text-white">{props.accessibilityRatio != null ? `${formatDecimal(props.accessibilityRatio, 1)}%` : "-"}</p></div>
           <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4"><p className="text-sm font-medium text-slate-400">평균 대비 공원 부족</p><p className="mt-2 text-2xl font-bold text-white">{props.parkShortageVsAvg != null ? `${formatDecimal(props.parkShortageVsAvg, 1)}개` : "-"}</p></div>
           <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4"><p className="text-sm font-medium text-slate-400">최근접 활동규모 공원</p><p className="mt-2 text-2xl font-bold text-white">{formatOptionalDistance(props.nearestFunctionalParkDistanceM)}</p></div>
@@ -1114,9 +1117,11 @@ function ProblemSection({
   potentialDemand2029,
   accessConditionLabel,
   accessConditionDescription,
+  functionalAccessPhysicalBarrierFlag,
+  functionalAccessPhysicalBarrierLabel,
 }: Pick<
   SchoolDetailReportProps,
-  "problemTags" | "studentTrend" | "studentTrendChangePct" | "noParkWithin500m" | "nearestParkDistanceM" | "greenRatio" | "playgroundCount" | "potentialDemand2029" | "accessConditionLabel" | "accessConditionDescription"
+  "problemTags" | "studentTrend" | "studentTrendChangePct" | "noParkWithin500m" | "nearestParkDistanceM" | "greenRatio" | "playgroundCount" | "potentialDemand2029" | "accessConditionLabel" | "accessConditionDescription" | "functionalAccessPhysicalBarrierFlag" | "functionalAccessPhysicalBarrierLabel"
 >) {
   const first = studentTrend[0]?.value ?? 0;
   const last = studentTrend[studentTrend.length - 1]?.value ?? 0;
@@ -1126,6 +1131,10 @@ function ProblemSection({
   const noPlayground = playgroundCount <= 0;
   const highDemand = potentialDemand2029 >= 400;
   const mediumDemand = potentialDemand2029 >= 220;
+  const accessDisplayLabel =
+    functionalAccessPhysicalBarrierFlag && !(accessConditionLabel ?? "").includes("보행부담")
+      ? `${accessConditionLabel ?? "추가 검토 필요"} · ${functionalAccessPhysicalBarrierLabel ?? "보행부담 동반형"}`
+      : accessConditionLabel;
 
   let decisionText = "";
   if (hasNoWalkablePark && lowGreen && noPlayground) {
@@ -1158,9 +1167,9 @@ function ProblemSection({
     <SectionShell kicker="Decision" title="핵심 판단">
       <Card className="p-5">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Decision Signal</p>
-        {accessConditionLabel ? (
+        {accessDisplayLabel ? (
           <div className="mb-4 rounded-2xl border border-white/10 bg-navy-900/95 px-4 py-3">
-            <p className="text-sm font-bold text-forest-200">{accessConditionLabel}</p>
+            <p className="text-sm font-bold text-forest-200">{accessDisplayLabel}</p>
             <p className="mt-1 text-sm leading-6 text-slate-200">{accessConditionDescription}</p>
           </div>
         ) : null}

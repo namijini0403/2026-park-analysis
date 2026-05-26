@@ -1,0 +1,16 @@
+﻿학교ID,학교명,gu,access_condition_type,access_condition_label,functional_access_physical_barrier_flag,functional_access_physical_barrier_basis,nearest_functional_park_name,nearest_functional_major_road_crossing_count,nearest_functional_large_intersection_flag,nearest_functional_route_detour_ratio,nearest_functional_accident_hotspot_flag,display_green_ratio,case_type
+B000002979,인천문학초등학교,미추홀구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 1회,삼호어린이공원,1.0,False,1.213,False,2.219829,3.0
+B000002984,인천승학초등학교,미추홀구,functional_access_with_barrier,보행부담 동반형,True,간선급 도로 횡단 1회,중앙공원,1.0,False,1.828,False,13.334573,4.0
+B000003011,인천갈산초등학교,부평구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 1회,상꾸지놀이공원,1.0,False,1.129,True,2.535788,3.0
+B000003017,인천부내초등학교,부평구,functional_access_with_barrier,보행부담 동반형,True,간선급 도로 횡단 1회,대촌공원,1.0,False,1.309,False,13.992181,4.0
+B000003052,인천선학초등학교,연수구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 1회,선학공원,1.0,False,2.482,True,6.920216,4.0
+B000003054,인천연화초등학교,연수구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 1회,양지공원,1.0,False,1.131,False,5.662483,4.0
+B000003055,인천함박초등학교,연수구,functional_access_with_barrier,보행부담 동반형,True,간선급 도로 횡단 1회,장미공원,1.0,False,1.012,False,8.091936,4.0
+B000003057,인천청량초등학교,연수구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 1회,청량공원,1.0,False,2.436,False,1.983622,3.0
+B000003084,인천은봉초등학교,남동구,functional_access_with_barrier,보행부담 동반형,True,간선급 도로 횡단 1회,논현중앙공원,1.0,False,2.073,False,7.365198,4.0
+B000003086,인천동방초등학교,남동구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 1회,호구포공원,1.0,False,1.04,True,0.775974,2.0
+B000003087,인천원동초등학교,남동구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 1회,돌섬공원,1.0,False,0.965,True,4.824011,3.0
+B000003118,인천양촌초등학교,계양구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 1회,양촌공원,1.0,False,1.621,False,1.420022,3.0
+B000003129,인천작동초등학교,계양구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 2회,도두리공원,2.0,False,1.106,True,1.209994,3.0
+B000003130,인천명현초등학교,계양구,near_park_low_green_imbalance,근접 공원-녹지환경 불균형형,True,간선급 도로 횡단 2회,꿈나무공원,2.0,False,1.424,True,1.049332,3.0
+B000026332,인천백석초등학교,서구,functional_access_with_barrier,보행부담 동반형,True,간선급 도로 횡단 1회,당하지구 1호공원,1.0,False,1.31,False,5.907785,4.0

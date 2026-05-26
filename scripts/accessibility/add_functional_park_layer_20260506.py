@@ -106,7 +106,7 @@ ACCESS_DESCRIPTIONS = {
     "no_official_park": "도보생활권 내 공식 공원이 확인되지 않아 야외활동 인프라 자체가 부족한 유형입니다.",
     "nominal_access_only": "공원은 있으나 대부분 초소형 공간으로, 단순 공원 개수만으로는 야외활동 환경을 과대평가할 수 있습니다.",
     "near_park_low_green_imbalance": "가까운 활동규모 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮은 유형입니다.",
-    "functional_access_with_barrier": "활동규모 공원은 있으나, 도달 경로에 간선도로 횡단·교차로·우회 부담 등 보행부담 요소가 포함될 수 있습니다.",
+    "functional_access_with_barrier": "활동규모 공원은 있으나, 도달 경로에 간선급 도로 횡단 또는 대형 교차로 통과가 확인되는 유형입니다.",
     "functional_access_available": "도보권 내 활동규모 공원이 확인되는 유형입니다.",
     "unknown": "접근성 판단에 필요한 일부 값이 누락되어 추가 검토가 필요합니다.",
 }
@@ -162,6 +162,15 @@ def normalize_name(value: Any) -> str:
 
 def to_bool_series(series: pd.Series) -> pd.Series:
     return series.fillna(False).astype(bool)
+
+
+def parse_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    numeric = pd.to_numeric(value, errors="coerce")
+    if pd.notna(numeric):
+        return bool(int(numeric) == 1)
+    return str(value or "").strip().lower() == "true"
 
 
 def normalize_highway(value: Any) -> str | None:
@@ -932,6 +941,23 @@ def is_functional_present(row: dict[str, Any]) -> bool:
     return bool((pd.notna(functional_count) and functional_count > 0) or (pd.notna(functional_dist) and functional_dist <= 500))
 
 
+def physical_functional_barrier_meta(row: dict[str, Any]) -> dict[str, Any]:
+    if not is_functional_present(row):
+        return {"active": False, "label": "", "basis": ""}
+    crossing = pd.to_numeric(row.get("nearest_functional_major_road_crossing_count"), errors="coerce")
+    crossing_count = int(crossing) if pd.notna(crossing) else 0
+    large_intersection = parse_bool(row.get("nearest_functional_large_intersection_flag"))
+    if crossing_count < 1 and not large_intersection:
+        return {"active": False, "label": "", "basis": ""}
+
+    reasons: list[str] = []
+    if crossing_count >= 1:
+        reasons.append(f"간선급 도로 횡단 {crossing_count}회")
+    if large_intersection:
+        reasons.append("대형 교차로 통과")
+    return {"active": True, "label": "보행부담 동반형", "basis": " · ".join(reasons)}
+
+
 def add_green_display_fields(result: pd.DataFrame) -> pd.DataFrame:
     iso_green = pd.to_numeric(
         result["iso_green_ratio"] if "iso_green_ratio" in result.columns else pd.Series(pd.NA, index=result.index),
@@ -1114,20 +1140,31 @@ def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd
 
     result["near_park_low_green_imbalance_flag"] = functional_present & result.apply(is_low_green_warning, axis=1)
     access_types = []
+    physical_barrier_flags = []
+    physical_barrier_labels = []
+    physical_barrier_bases = []
     for row in result.to_dict("records"):
+        physical_barrier = physical_functional_barrier_meta(row)
+        physical_barrier_flags.append(physical_barrier["active"])
+        physical_barrier_labels.append(physical_barrier["label"])
+        physical_barrier_bases.append(physical_barrier["basis"])
+
         if row.get("no_official_park_flag") is True:
             access_types.append("no_official_park")
         elif bool(row.get("only_micro_park_flag") is True):
             access_types.append("nominal_access_only")
         elif bool(row.get("near_park_low_green_imbalance_flag") is True):
             access_types.append("near_park_low_green_imbalance")
-        elif is_functional_present(row) and pd.to_numeric(row.get("nearest_functional_barrier_level"), errors="coerce") >= 2:
+        elif physical_barrier["active"]:
             access_types.append("functional_access_with_barrier")
         elif is_functional_present(row):
             access_types.append("functional_access_available")
         else:
             access_types.append("unknown")
 
+    result["functional_access_physical_barrier_flag"] = physical_barrier_flags
+    result["functional_access_physical_barrier_label"] = physical_barrier_labels
+    result["functional_access_physical_barrier_basis"] = physical_barrier_bases
     result["access_condition_type"] = access_types
     result["access_condition_label"] = result["access_condition_type"].map(ACCESS_LABELS)
     result["access_condition_description"] = result["access_condition_type"].map(ACCESS_DESCRIPTIONS)
@@ -1142,6 +1179,7 @@ def enrich_school_layer(priority: pd.DataFrame, nearest: pd.DataFrame, parks: pd
         "nominal_access_gap_flag",
         "neighborhood_scale_gap_flag",
         "near_park_low_green_imbalance_flag",
+        "functional_access_physical_barrier_flag",
     ]
     for col in bool_cols:
         result[col] = to_bool_series(result[col])

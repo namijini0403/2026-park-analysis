@@ -37,7 +37,10 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
   accessConditionType: "functional_access_with_barrier",
   accessConditionLabel: "보행부담 동반형",
   accessConditionDescription:
-    "활동규모 공원은 있으나, 도달 경로에 간선도로 횡단·교차로·우회 부담 등 보행부담 요소가 포함될 수 있습니다.",
+    "활동규모 공원은 있으나, 도달 경로에 간선급 도로 횡단 또는 대형 교차로 통과가 확인되는 유형입니다.",
+  functionalAccessPhysicalBarrierFlag: true,
+  functionalAccessPhysicalBarrierLabel: "보행부담 동반형",
+  functionalAccessPhysicalBarrierBasis: "간선급 도로 횡단 1회",
   nearestParkDistanceCityAvg: 1176.827,
   nearestParkDistanceDistrictAvg: 266.061,
   nearestParkDistanceCityPercentile: 10.7,

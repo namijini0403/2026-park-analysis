@@ -4306,19 +4306,56 @@
       return String(value || "").trim().toLowerCase() === "true";
     }
 
+    function isFunctionalParkPresent(row = {}) {
+      const functionalCount = Number(row.iso_functional_park_count);
+      const functionalDistance = Number(row.nearest_functional_park_dist_m);
+      return (Number.isFinite(functionalCount) && functionalCount > 0)
+        || (Number.isFinite(functionalDistance) && functionalDistance <= 500);
+    }
+
+    function getFunctionalPhysicalBarrierMeta(row = {}) {
+      if (!isFunctionalParkPresent(row)) {
+        return { active: false, label: "", basis: "" };
+      }
+      const crossing = Number(row.nearest_functional_major_road_crossing_count);
+      const crossingCount = Number.isFinite(crossing) ? crossing : 0;
+      const hasRoadCrossing = crossingCount >= 1;
+      const hasLargeIntersection = hasTruthyFlag(row.nearest_functional_large_intersection_flag);
+      if (!hasRoadCrossing && !hasLargeIntersection) {
+        return { active: false, label: "", basis: "" };
+      }
+      const reasons = [];
+      if (hasRoadCrossing) reasons.push(`간선급 도로 횡단 ${formatCount(crossingCount)}회`);
+      if (hasLargeIntersection) reasons.push("대형 교차로 통과");
+      return {
+        active: true,
+        label: "보행부담 동반형",
+        basis: reasons.join(" · ")
+      };
+    }
+
+    function hasFunctionalPhysicalBarrier(row = {}) {
+      return getFunctionalPhysicalBarrierMeta(row).active;
+    }
+
+    function getAccessConditionDisplayLabel(row = {}) {
+      const label = row.access_condition_label || "추가 검토 필요";
+      const barrierMeta = getFunctionalPhysicalBarrierMeta(row);
+      if (!barrierMeta.active && String(label).includes("보행부담")) return "활동규모 공원 접근 가능형";
+      if (!barrierMeta.active || String(label).includes("보행부담")) return label;
+      return `${label} · ${barrierMeta.label}`;
+    }
+
     function getFunctionalAccessNotice(row = {}) {
+      const barrierMeta = getFunctionalPhysicalBarrierMeta(row);
       if (String(row.access_condition_type || "") === "near_park_low_green_imbalance") {
+        if (barrierMeta.active) {
+          return `가까운 활동규모 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮고 도달 경로에 ${barrierMeta.basis}이 확인됩니다.`;
+        }
         return "가까운 활동규모 공원은 있으나, 학교 도보생활권 전체의 녹지 비율은 낮아 공원 접근성과 생활권 녹지환경을 분리해 해석해야 합니다.";
       }
-      if (String(row.access_condition_type || "") === "functional_access_with_barrier") {
-        const crossing = Number(row.nearest_functional_major_road_crossing_count);
-        const detour = Number(row.nearest_functional_route_detour_ratio);
-        const intersection = hasTruthyFlag(row.nearest_functional_large_intersection_flag);
-        const accident = hasTruthyFlag(row.nearest_functional_accident_hotspot_flag);
-        if ((!Number.isFinite(crossing) || crossing === 0) && !intersection && !accident && Number.isFinite(detour) && detour >= 1.6) {
-          return "간선도로 횡단이나 대형 교차로 인접은 확인되지 않지만, 실제 보행 경로가 직선거리 대비 우회하는 것으로 계산됩니다.";
-        }
-        return "활동규모 공원은 있으나, 도달 경로에 간선도로 횡단·교차로·우회 부담 등 보행부담 요소가 포함될 수 있습니다.";
+      if (barrierMeta.active) {
+        return `활동규모 공원은 있으나, 도달 경로에 ${barrierMeta.basis}이 확인됩니다.`;
       }
       if (hasTruthyFlag(row.no_official_park_flag)) {
         return "도보생활권 내 공식 공원이 확인되지 않습니다.";
@@ -4342,24 +4379,16 @@
     }
 
     function getRouteBasisWarning(row = {}) {
-      const officialLevel = Number(row.nearest_official_barrier_level);
-      const functionalLevel = Number(row.nearest_functional_barrier_level);
       const officialCrossing = Number(row.nearest_official_major_road_crossing_count);
       const functionalCrossing = Number(row.nearest_functional_major_road_crossing_count);
       const officialIntersection = hasTruthyFlag(row.nearest_official_large_intersection_flag);
       const functionalIntersection = hasTruthyFlag(row.nearest_functional_large_intersection_flag);
-      const officialAccident = hasTruthyFlag(row.nearest_official_accident_hotspot_flag);
-      const functionalAccident = hasTruthyFlag(row.nearest_functional_accident_hotspot_flag);
       const reasons = [];
 
-      if (Number.isFinite(functionalLevel) && Number.isFinite(officialLevel) && functionalLevel > officialLevel) {
-        reasons.push("보행부담 등급");
-      }
       if (Number.isFinite(functionalCrossing) && Number.isFinite(officialCrossing) && functionalCrossing > officialCrossing) {
         reasons.push("간선도로 횡단");
       }
       if (functionalIntersection && !officialIntersection) reasons.push("대형 교차로");
-      if (functionalAccident && !officialAccident) reasons.push("사고위험 지점");
 
       if (reasons.length) {
         return `활동규모 공원 경로는 공식 최근접 공원 경로와 비교해 ${reasons.join("·")} 항목이 더 불리하게 산정됩니다.`;
@@ -4654,7 +4683,7 @@
       const isoParkCount = row.iso_park_count ?? "-";
       const isoChild = row.iso_child_6_12 ?? "-";
       const gapCount = formatDecimal(row.gap_count, 2);
-      const accessLabel = row.access_condition_label || "추가 검토 필요";
+      const accessLabel = getAccessConditionDisplayLabel(row);
       const trendMarkup = getStudentTrendMarkup(row);
 
       return `
@@ -5140,10 +5169,6 @@
       return normalizeCaseType(row.case_type, row) === state.selectedCaseFilter;
     }
 
-    function getAccessConditionType(row = {}) {
-      return String(row.access_condition_type || "").trim();
-    }
-
     function shouldShowByAccessFilter(row) {
       const filter = state.selectedAccessFilter || "all";
       if (filter === "all") return true;
@@ -5152,7 +5177,7 @@
       if (filter === "no_functional_park") return hasTruthyFlag(row.no_functional_park_flag);
       if (filter === "no_neighborhood_scale_park") return hasTruthyFlag(row.no_neighborhood_scale_park_flag);
       if (filter === "barrier_with_functional") {
-        return getAccessConditionType(row) === "functional_access_with_barrier";
+        return hasFunctionalPhysicalBarrier(row);
       }
       return true;
     }
@@ -6678,7 +6703,7 @@
       const greenReviewText = "";
       const functionalNotice = getFunctionalAccessNotice(row);
       const routeBasisWarning = getRouteBasisWarning(row);
-      const accessLabel = row.access_condition_label || "추가 검토 필요";
+      const accessLabel = getAccessConditionDisplayLabel(row);
       const officialParkName = row.nearest_official_park_name || row.nearest_park_name || "";
       const officialRouteBasisName = row.graph_nearest_official_park_name || "";
       const officialRouteMatchesPark = !officialRouteBasisName || !officialParkName || officialRouteBasisName === officialParkName;
@@ -6738,6 +6763,10 @@
       // localStorage에 학교 데이터 저장 (iframe 브릿지)
       // 유사학교 공원 데이터 보강 + 시·구 최우수학교 보강
       const _enrichedRow = Object.assign({}, row);
+      const _functionalBarrierMeta = getFunctionalPhysicalBarrierMeta(row);
+      _enrichedRow.functional_access_physical_barrier_flag = _functionalBarrierMeta.active;
+      _enrichedRow.functional_access_physical_barrier_label = _functionalBarrierMeta.label;
+      _enrichedRow.functional_access_physical_barrier_basis = _functionalBarrierMeta.basis;
       const _gu = detectGu(row) || "";
       let _legacySnapshot = null;
 
