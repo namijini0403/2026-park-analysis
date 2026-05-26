@@ -111,6 +111,9 @@ function topicForChunk(chunk) {
 function collectTerms(payload) {
   const question = normalizeText(payload.question);
   const terms = [payload.question];
+  const caseText = normalizeText(`${payload.question || ""} ${payload.school_context?.case_label || ""} ${payload.school_context?.case_type || ""}`);
+  const caseMatch = caseText.match(/(?:case|케이스)\s*([1-4])/);
+  if (caseMatch) terms.push(`case${caseMatch[1]}`);
   if (question.includes("봉인")) terms.push("봉인값");
   if (question.includes("검증")) terms.push("검증");
   if (question.includes("녹지면적")) terms.push("녹지면적");
@@ -325,6 +328,48 @@ function validateAnswer(answer, selectedChunks) {
   return answer;
 }
 
+function compactText(value) {
+  return String(value ?? "").replace(/\s+/g, " ").trim();
+}
+
+function chunkClaim(chunk) {
+  const body = String(chunk?.body || "");
+  const match = body.match(/정의:\s*([\s\S]*?)(?:\n\n해석:|\n\n주의:|\n\n잘못된 해석:|$)/);
+  return compactText(match ? match[1] : body).slice(0, 220);
+}
+
+function fallbackMode(payload) {
+  const questionType = String(payload.question_type || "").toLowerCase();
+  if (questionType.includes("candidate") || hasSelectedCandidateContext(payload)) return "candidate_explanation";
+  if (questionType.includes("school") || hasSelectedSchoolContext(payload)) return "school_explanation";
+  return "concept_explanation";
+}
+
+function buildRetrievalFallback(payload, selectedChunks) {
+  const fallbackChunks = selectedChunks.slice(0, 3);
+  const evidence = fallbackChunks.map((chunk) => ({
+    claim: chunkClaim(chunk),
+    source_chunk_id: chunk.id,
+  })).filter((item) => item.claim);
+  const sourceChunkId = evidence[0]?.source_chunk_id || selectedChunks[0]?.id || "README#answer-guard";
+  return {
+    answerable: evidence.length > 0,
+    mode: evidence.length > 0 ? fallbackMode(payload) : "blocked",
+    summary: evidence[0]?.claim || null,
+    evidence,
+    interpretation: evidence.length > 0
+      ? "외부 AI 응답 생성이 실패해 검색된 근거 문서만 요약했습니다. 새 정책 판단이나 데이터 밖 추론은 포함하지 않았습니다."
+      : null,
+    limitations: evidence.length > 0
+      ? [{ text: "상세 문장 생성 대신 근거 chunk 요약만 제공하므로, 선택 학교·후보지의 세부 수치는 화면 지표와 함께 확인해야 합니다.", source_chunk_id: sourceChunkId }]
+      : [],
+    policy_checklist: evidence.length > 0
+      ? ["선택된 학교·후보지 지표와 함께 확인", "필터·가중치·현장 조건을 별도로 검토"]
+      : [],
+    blocked_reason: evidence.length > 0 ? null : "관련 근거 chunk가 충분하지 않아 답변하지 않습니다.",
+  };
+}
+
 async function readBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
   if (typeof req.body === "string") return JSON.parse(req.body || "{}");
@@ -341,12 +386,12 @@ module.exports = async function handler(req, res) {
   if (process.env.AI_EXPLAINER_ENABLED === "false") {
     return json(req, res, 503, blocked("AI 해설 패널이 현재 비활성화되어 있습니다.", 503));
   }
-  if (!process.env.OPENAI_API_KEY) {
-    return json(req, res, 503, blocked("서버에 OpenAI API 키가 설정되어 있지 않습니다.", 503));
-  }
 
+  let payloadForFallback = null;
+  let chunksForFallback = [];
   try {
     const payload = await readBody(req);
+    payloadForFallback = payload;
     const question = String(payload.question || "").trim();
     if (!question || question.length > 220) {
       return json(req, res, 400, blocked("질문은 1자 이상 220자 이하로 입력해야 합니다.", 400));
@@ -354,8 +399,13 @@ module.exports = async function handler(req, res) {
 
     const chunks = loadChunks();
     const selectedChunks = selectChunks(payload, chunks);
+    chunksForFallback = selectedChunks;
     const gateResult = answerabilityGate(payload, selectedChunks);
     if (gateResult) return json(req, res, gateResult.blocked_reason === "지원하지 않는 AI 해설 모드입니다." ? 400 : 200, gateResult);
+
+    if (!process.env.OPENAI_API_KEY) {
+      return json(req, res, 200, buildRetrievalFallback(payload, selectedChunks));
+    }
 
     const openaiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -385,13 +435,17 @@ module.exports = async function handler(req, res) {
     });
 
     if (!openaiResponse.ok) {
-      return json(req, res, 200, blocked("AI 해설을 생성하지 못했습니다. 잠시 후 다시 시도해 주세요."));
+      return json(req, res, 200, buildRetrievalFallback(payload, selectedChunks));
     }
 
     const data = await openaiResponse.json();
     const parsed = JSON.parse(extractText(data));
-    return json(req, res, 200, validateAnswer(parsed, selectedChunks));
+    const validated = validateAnswer(parsed, selectedChunks);
+    return json(req, res, 200, validated.answerable === true ? validated : buildRetrievalFallback(payload, selectedChunks));
   } catch {
+    if (payloadForFallback && chunksForFallback.length) {
+      return json(req, res, 200, buildRetrievalFallback(payloadForFallback, chunksForFallback));
+    }
     return json(req, res, 200, blocked("AI 해설을 안전하게 생성하지 못했습니다."));
   }
 };
