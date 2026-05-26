@@ -88,6 +88,7 @@ function detectTopic(payload) {
   const question = normalizeText(payload.question);
   if (questionType.includes("shap") || /shap|기여|예측근거/.test(question)) return "shap";
   if (questionType.includes("limitation")) return "limitation";
+  if (questionType.includes("metric") || questionType.includes("indicator")) return "metrics";
   if (questionType.includes("case") || /case|분류|즉시|우선|모니터링|유지/.test(question)) return "case";
   if (/한계|주의|비식별|실제 설치|설치 가능성|현장 조사|대체할 수|답하면 안|선택된 학교가 없어도|근거 문서|답변/.test(question)) {
     return "limitation";
@@ -151,7 +152,10 @@ function selectChunks(payload, chunks) {
   const hasDesiredTopic = ranked.some((item) => topicForChunk(item.chunk) === desiredTopic);
   if (!hasDesiredTopic) return [];
 
-  return ranked.slice(0, 5).map((item) => item.chunk);
+  return [
+    ...ranked.filter((item) => topicForChunk(item.chunk) === desiredTopic),
+    ...ranked.filter((item) => topicForChunk(item.chunk) !== desiredTopic),
+  ].slice(0, 5).map((item) => item.chunk);
 }
 
 function hasSelectedSchoolContext(payload) {
