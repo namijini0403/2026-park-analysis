@@ -2973,10 +2973,6 @@
           <section class="section">
             <div class="legend">
               <div class="legend-item">
-                <span class="swatch" style="background:#ffffff; border:3px solid #6B46C1; box-sizing:border-box;"></span>
-                <span>행정착시(보라 테두리)</span>
-              </div>
-              <div class="legend-item">
                 <span class="swatch" style="background:#E53E3E;"></span>
                 <span>최우선 지원(case 3)</span>
               </div>
@@ -3917,15 +3913,9 @@
       );
     }
 
-    function getOutlierType(row = {}) {
-      const value = String(row.outlier_type || "").trim().toLowerCase();
-      return value === "착시" ? value : "";
-    }
-
     function getMarkerStyle(row = {}) {
-      const outlierType = getOutlierType(row);
       const caseType = Number(row.case_type);
-      const borderColor = outlierType === "착시" ? "#6B46C1" : "";
+      const borderColor = "";
       if (caseType === 3) return { color: "#E53E3E", symbol: "", borderColor };
       if (caseType === 2) return { color: "#ED8936", symbol: "", borderColor };
       if (caseType === 1) return { color: "#F6E05E", symbol: "", borderColor };
@@ -4259,10 +4249,6 @@
       if (caseType === 2) return { text: "우선 지원", className: "high" };
       if (caseType === 1) return { text: "관심 필요", className: "watch" };
       return { text: "일반 관리", className: "normal" };
-    }
-
-    function getMirageBadge(row = {}) {
-      return getOutlierType(row) === "착시" ? { text: "행정착시", className: "immediate" } : null;
     }
 
     function formatAccessRatio(value) {
@@ -6161,8 +6147,7 @@
     }
 
     function getMarkerStyle(row = {}) {
-      const outlierType = getOutlierType(row);
-      const borderColor = outlierType === "李⑹떆" ? "#6B46C1" : "";
+      const borderColor = "";
       if (isSpecialPolicySchool(row)) {
         return { color: "#6B7280", symbol: "", borderColor };
       }
@@ -6212,10 +6197,6 @@
       if (!legend) return;
       legend.innerHTML = `
         <div class="legend-item">
-          <span class="swatch" style="background:#ffffff; border:3px solid #6B46C1; box-sizing:border-box;"></span>
-          <span>행정착시(보라 테두리)</span>
-        </div>
-        <div class="legend-item">
           <span class="swatch" style="background:#E53935;"></span>
           <span>즉시개선필요</span>
         </div>
@@ -6247,13 +6228,8 @@
     }
 
     function getMarkerStyle(row = {}) {
-      const outlierType = getOutlierType(row);
       const hasExtremeFlag = Number(row.extreme_flag || 0) === 1;
-      const borderColor = hasExtremeFlag
-        ? "#FFD700"
-        : outlierType === "착시"
-          ? "#6B46C1"
-          : "";
+      const borderColor = hasExtremeFlag ? "#FFD700" : "";
       return { color: getCaseMeta(row).color, symbol: "", borderColor };
     }
 
@@ -6693,7 +6669,6 @@
       const gu = detectGu(row) || "-";
       const caseLabel = getCaseTypeLabel(row);
       const badge = getSchoolBadge(row);
-      const mirageBadge = getMirageBadge(row);
       const displayGreenRatio = getDisplayGreenRatio(row);
       const aptAdjustedGreen = Number(row.corrected_green_ratio);
       const aptAddedArea = Number(row.apt_blocked_m2);
@@ -6739,7 +6714,6 @@
           <div class="detail-subtitle">${caseLabel}</div>
           <div class="detail-badge-row">
             <div class="detail-badge ${badge.className}">[${badge.text}]</div>
-            ${mirageBadge ? `<div class="detail-badge ${mirageBadge.className}">[${mirageBadge.text}]</div>` : ""}
           </div>
         </div>
         <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:13px; margin-bottom:16px;">
