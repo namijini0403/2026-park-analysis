@@ -23,6 +23,25 @@ type AiExplainerResponse = {
   cited_chunk_ids: string[];
 };
 
+type V2EvidenceItem = {
+  claim: string;
+  source_chunk_id: string;
+};
+
+type V2LimitationItem = {
+  text: string;
+  source_chunk_id: string;
+};
+
+type AiExplainerV2Response = {
+  answerable: boolean;
+  summary: string | null;
+  evidence: V2EvidenceItem[];
+  interpretation: string | null;
+  limitations: V2LimitationItem[];
+  blocked_reason: string | null;
+};
+
 type SchoolContext = {
   school_name: string;
   district_name?: string;
@@ -110,6 +129,71 @@ function isDisplayable(response: AiExplainerResponse) {
   return response.evidence.length > 0 && response.cited_chunk_ids.length > 0;
 }
 
+function getAiExplainerEndpoints() {
+  const sameOriginEndpoint = "/api/ai-explainer-v2";
+  const productionEndpoint = "https://2026-park-analysis.vercel.app/api/ai-explainer-v2";
+  if (typeof window === "undefined") return [sameOriginEndpoint];
+  if (window.location.protocol === "file:") return [productionEndpoint];
+  if (window.location.hostname === "2026-park-analysis.vercel.app") return [sameOriginEndpoint];
+  return [sameOriginEndpoint, productionEndpoint];
+}
+
+function normalizeResponse(data: AiExplainerResponse | AiExplainerV2Response): AiExplainerResponse {
+  const evidence = Array.isArray(data.evidence) ? data.evidence : [];
+  const firstEvidence = evidence[0] as EvidenceItem | V2EvidenceItem | undefined;
+  if (!firstEvidence || "chunk_id" in firstEvidence) return data as AiExplainerResponse;
+
+  const v2 = data as AiExplainerV2Response;
+  const limitationItems = Array.isArray(v2.limitations) ? v2.limitations : [];
+  const citedIds = new Set<string>();
+  const normalizedEvidence = evidence
+    .map((item) => item as V2EvidenceItem)
+    .filter((item) => item.claim && item.source_chunk_id)
+    .map((item) => {
+      citedIds.add(item.source_chunk_id);
+      return {
+        label: "근거",
+        value: item.claim,
+        chunk_id: item.source_chunk_id,
+      };
+    });
+
+  for (const item of limitationItems) {
+    if (item.source_chunk_id) citedIds.add(item.source_chunk_id);
+  }
+
+  return {
+    answerable: v2.answerable,
+    summary: v2.summary,
+    evidence: normalizedEvidence,
+    interpretation: v2.interpretation,
+    limitations: limitationItems.map((item) => item.text).filter(Boolean).join(" "),
+    cannot_answer_reason: v2.blocked_reason,
+    cited_chunk_ids: Array.from(citedIds),
+  };
+}
+
+async function postAiExplainer(payload: Record<string, unknown>) {
+  let lastError: unknown = null;
+  for (const endpoint of getAiExplainerEndpoints()) {
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+      if (!res.ok && !data) throw new Error(`AI endpoint ${res.status}`);
+      if (!data) throw new Error("AI endpoint returned an empty response");
+      return normalizeResponse(data as AiExplainerResponse | AiExplainerV2Response);
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError || new Error("AI endpoint unavailable");
+}
+
 export default function AiExplainerPanel({
   schoolContext,
   candidateContext = null,
@@ -141,18 +225,13 @@ export default function AiExplainerPanel({
     setLoadingId(loadingKey);
 
     try {
-      const res = await fetch("/api/ai-explainer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mode: "identified_school_explainer",
-          question: trimmed,
-          question_type: questionType,
-          school_context: schoolContext,
-          candidate_context: candidateContext,
-        }),
+      const data = await postAiExplainer({
+        mode: "identified_school_explainer",
+        question: trimmed,
+        question_type: questionType,
+        school_context: schoolContext,
+        candidate_context: candidateContext,
       });
-      const data = (await res.json()) as AiExplainerResponse;
       if (!isDisplayable(data)) {
         setError("근거 chunk가 없는 답변은 표시하지 않았습니다.");
         return;

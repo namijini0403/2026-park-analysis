@@ -281,7 +281,7 @@ function buildRetrievalFallback(selectedChunks) {
     summary: evidence[0]?.value || null,
     evidence,
     interpretation: evidence.length > 0
-      ? "외부 AI 응답 생성이 실패해 검색된 근거 문서만 요약했습니다. 새 정책 판단이나 데이터 밖 추론은 포함하지 않았습니다."
+      ? "검색된 근거 문서를 우선 요약했습니다. 새 정책 판단이나 데이터 밖 추론은 포함하지 않았습니다."
       : null,
     limitations: evidence.length > 0
       ? "상세 문장 생성 대신 근거 chunk 요약만 제공하므로, 선택 학교·후보지의 세부 수치는 화면 지표와 함께 확인해야 합니다."

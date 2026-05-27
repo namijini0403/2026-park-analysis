@@ -362,7 +362,7 @@ function buildRetrievalFallback(payload, selectedChunks) {
     summary: evidence[0]?.claim || null,
     evidence,
     interpretation: evidence.length > 0
-      ? "외부 AI 응답 생성이 실패해 검색된 근거 문서만 요약했습니다. 새 정책 판단이나 데이터 밖 추론은 포함하지 않았습니다."
+      ? "검색된 근거 문서를 우선 요약했습니다. 새 정책 판단이나 데이터 밖 추론은 포함하지 않았습니다."
       : null,
     limitations: evidence.length > 0
       ? [{ text: "상세 문장 생성 대신 근거 chunk 요약만 제공하므로, 선택 학교·후보지의 세부 수치는 화면 지표와 함께 확인해야 합니다.", source_chunk_id: sourceChunkId }]
@@ -372,6 +372,36 @@ function buildRetrievalFallback(payload, selectedChunks) {
       : [],
     blocked_reason: evidence.length > 0 ? null : "관련 근거 chunk가 충분하지 않아 답변하지 않습니다.",
   };
+}
+
+function shouldRetryOpenAiStatus(status) {
+  return [408, 409, 429, 500, 502, 503, 504].includes(Number(status));
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchOpenAiResponse(requestBody) {
+  let lastError = null;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const response = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+      if (response.ok || !shouldRetryOpenAiStatus(response.status) || attempt === 1) return response;
+    } catch (error) {
+      lastError = error;
+      if (attempt === 1) throw error;
+    }
+    await wait(350);
+  }
+  throw lastError || new Error("OpenAI response request failed");
 }
 
 async function readBody(req) {
@@ -411,31 +441,24 @@ module.exports = async function handler(req, res) {
       return json(req, res, 200, buildRetrievalFallback(payload, selectedChunks));
     }
 
-    const openaiResponse = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        input: buildInput(payload, selectedChunks),
-        store: false,
-        temperature: 0,
-        max_output_tokens: MAX_OUTPUT_TOKENS,
-        reasoning: { effort: "none" },
-        tools: [],
-        tool_choice: "none",
-        parallel_tool_calls: false,
-        text: {
-          format: {
-            type: "json_schema",
-            name: "ai_explainer_v2_response",
-            strict: true,
-            schema: buildSchema(),
-          },
+    const openaiResponse = await fetchOpenAiResponse({
+      model: MODEL,
+      input: buildInput(payload, selectedChunks),
+      store: false,
+      temperature: 0,
+      max_output_tokens: MAX_OUTPUT_TOKENS,
+      reasoning: { effort: "none" },
+      tools: [],
+      tool_choice: "none",
+      parallel_tool_calls: false,
+      text: {
+        format: {
+          type: "json_schema",
+          name: "ai_explainer_v2_response",
+          strict: true,
+          schema: buildSchema(),
         },
-      }),
+      },
     });
 
     if (!openaiResponse.ok) {
@@ -445,7 +468,7 @@ module.exports = async function handler(req, res) {
     const data = await openaiResponse.json();
     const parsed = JSON.parse(extractText(data));
     const validated = validateAnswer(parsed, selectedChunks);
-    return json(req, res, 200, validated.answerable === true ? validated : buildRetrievalFallback(payload, selectedChunks));
+    return json(req, res, 200, validated.answerable === true || validated.blocked_reason ? validated : buildRetrievalFallback(payload, selectedChunks));
   } catch {
     if (payloadForFallback && chunksForFallback.length) {
       return json(req, res, 200, buildRetrievalFallback(payloadForFallback, chunksForFallback));
