@@ -575,6 +575,16 @@ function buildCandidateReasons(candidate: Partial<Pick<ScoredCandidate, "benefit
   return reasons.slice(0, 3);
 }
 
+function hasScoreFields(candidate: Candidate | null | undefined): candidate is ScoredCandidate {
+  return Boolean(
+    candidate &&
+      "final_score" in candidate &&
+      "benefit_score" in candidate &&
+      "school_distance_score" in candidate &&
+      "facility_gap_score" in candidate,
+  );
+}
+
 function buildScoreContributions(candidate: ScoredCandidate, weights: WeightState): ScoreContribution[] {
   const normalizedWeights = normalizeWeights(weights);
   const items: Array<Omit<ScoreContribution, "weightedScore" | "share">> = [
@@ -911,6 +921,16 @@ export default function SimulationPage({
   }, [aiRecommendations.recommendations, displayedCandidates, internalCandidate, rankedCandidates, selectedId]);
 
   const scoreContributionWeights = mode === "ai" ? AI_DEFAULT_WEIGHTS : effectiveWeights;
+  const selectedScoredCandidate = useMemo(() => {
+    if (!selectedCandidate || selectedCandidate.is_school_internal) return null;
+    if (hasScoreFields(selectedCandidate)) return selectedCandidate;
+    return (
+      displayedCandidates.find((candidate) => candidate.grid_id === selectedCandidate.grid_id) ??
+      rankedCandidates.find((candidate) => candidate.grid_id === selectedCandidate.grid_id) ??
+      aiRecommendations.recommendations.find((candidate) => candidate.grid_id === selectedCandidate.grid_id) ??
+      null
+    );
+  }, [aiRecommendations.recommendations, displayedCandidates, rankedCandidates, selectedCandidate]);
 
   const openShapPanel = (candidate: Candidate, event?: MouseEvent<HTMLButtonElement>) => {
     event?.stopPropagation();
@@ -1319,17 +1339,17 @@ export default function SimulationPage({
             <div style={{ padding: "10px 12px", borderRadius: 12, background: SIM_COLORS.inset }}>기존 공원 거리 <b>{formatDistance(selectedCandidate.nearest_park_dist)}</b></div>
           </div>
           <div style={{ marginBottom: 12, fontSize: 13, fontWeight: 700, color: getBarrierColor(selectedCandidate) }}>{getBarrierCountSummary(selectedCandidate)}</div>
-          {"final_score" in selectedCandidate ? (
+          {selectedScoredCandidate ? (
             <div style={{ marginBottom: 12, padding: "12px 14px", borderRadius: 12, background: SIM_COLORS.inset }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: SIM_COLORS.text, marginBottom: 6 }}>이 후보가 높은 이유</div>
               <div style={{ display: "grid", gap: 6, fontSize: 13, color: SIM_COLORS.secondary }}>
-                {buildCandidateReasons(selectedCandidate as ScoredCandidate).map((reason, index) => (
+                {buildCandidateReasons(selectedScoredCandidate).map((reason, index) => (
                   <div key={reason}>{index + 1}. {reason}</div>
                 ))}
               </div>
               <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${SIM_COLORS.border}` }}>
-                <div style={{ fontSize: 12, fontWeight: 900, color: SIM_COLORS.text, marginBottom: 8 }}>현재 가중치 기준 추천점수 기여</div>
-                <ScoreContributionPanel contributions={buildScoreContributions(selectedCandidate as ScoredCandidate, scoreContributionWeights)} />
+                <div style={{ fontSize: 12, fontWeight: 900, color: SIM_COLORS.text, marginBottom: 8 }}>현재 가중치 기준 추천점수 기여(SHAP 별도)</div>
+                <ScoreContributionPanel contributions={buildScoreContributions(selectedScoredCandidate, scoreContributionWeights)} />
               </div>
             </div>
           ) : null}
@@ -1369,10 +1389,7 @@ export default function SimulationPage({
               walkshed_potential_2031: selectedCandidate.walkshed_potential_2031,
               resident_children_2029: selectedCandidate.resident_children_2029,
               resident_children_2031: selectedCandidate.resident_children_2031,
-              final_score:
-                "final_score" in selectedCandidate
-                  ? Number((selectedCandidate as Partial<ScoredCandidate>).final_score)
-                  : undefined,
+              final_score: selectedScoredCandidate ? Number(selectedScoredCandidate.final_score) : undefined,
               pareto_candidate: selectedCandidate.pareto_candidate,
               top5_stability_score: selectedCandidate.top5_stability_score,
               mean_rank: selectedCandidate.mean_rank,
