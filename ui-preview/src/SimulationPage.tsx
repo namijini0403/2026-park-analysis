@@ -571,7 +571,7 @@ function buildCandidateReasons(candidate: Partial<Pick<ScoredCandidate, "benefit
   if (facilityScore >= 0.65) reasons.push("기존 공원 부족 지역에 가까움");
   if (benefitScore < 0.4) reasons.push("수요 규모는 상대적으로 제한적임");
   if (schoolScore < 0.4) reasons.push("학교와의 거리는 다소 있는 편임");
-  if (facilityScore < 0.4) reasons.push("기존 공원과의 차별성은 크지 않음");
+  if (facilityScore < 0.4) reasons.push("기존 공원과 가까워 보완 효과는 제한적임");
   return reasons.slice(0, 3);
 }
 
