@@ -126,6 +126,25 @@ function collectTerms(payload) {
     .filter((term) => term.length >= 2);
 }
 
+function isCaseOverviewQuestion(payload) {
+  const question = normalizeText(payload.question);
+  const questionType = String(payload.question_type || "").toLowerCase();
+  if (!questionType.includes("case") && !/case|케이스|분류/.test(question)) return false;
+  const caseNumbers = new Set([...question.matchAll(/(?:case|케이스)\s*([1-4])/g)].map((match) => match[1]));
+  if (caseNumbers.size === 1 && !/전체|1\s*(부터|에서|~|-)|case\s*1|case1/.test(question)) return false;
+  return (
+    /case\s*1\s*(부터|에서|~|-|부터\s*case)?\s*case?\s*4/.test(question) ||
+    /case\s*1\s*4/.test(question) ||
+    /case1\s*case4/.test(question) ||
+    /case\s*전체|전체\s*case|전체분류|분류\s*기준|판정\s*기준/.test(question)
+  );
+}
+
+function isCaseDistanceCheckQuestion(payload) {
+  const question = normalizeText(payload.question);
+  return /500m|500\s*m|최근접|거리|중복|또\s*붙|왜/.test(question) && /case\s*1|case1|케이스\s*1/.test(question);
+}
+
 function scoreChunk(chunk, terms, desiredTopic) {
   const tags = Array.isArray(chunk.tags) ? chunk.tags : [];
   const haystack = normalizeText(`${chunk.id} ${chunk.title} ${tags.join(" ")} ${chunk.body}`);
@@ -144,6 +163,18 @@ function scoreChunk(chunk, terms, desiredTopic) {
 function selectChunks(payload, chunks) {
   const desiredTopic = detectTopic(payload);
   const terms = collectTerms(payload);
+  const byId = new Map(chunks.map((chunk) => [chunk.id, chunk]));
+
+  if (desiredTopic === "case" && isCaseOverviewQuestion(payload) && !isCaseDistanceCheckQuestion(payload)) {
+    return [
+      "02_case_rules#case-overview",
+      "02_case_rules#case1",
+      "02_case_rules#case2",
+      "02_case_rules#case3",
+      "02_case_rules#case4",
+    ].map((id) => byId.get(id)).filter(Boolean);
+  }
+
   const ranked = chunks
     .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms, desiredTopic) }))
     .filter((item) => item.score >= MIN_RETRIEVAL_SCORE)
@@ -374,6 +405,47 @@ function buildRetrievalFallback(payload, selectedChunks) {
   };
 }
 
+function buildCaseOverviewAnswer(selectedChunks) {
+  const allowed = new Set(selectedChunks.map((chunk) => chunk.id));
+  const source = (id) => allowed.has(id) ? id : "02_case_rules#case-overview";
+  return {
+    answerable: true,
+    mode: "concept_explanation",
+    summary:
+      "Case 1은 도보권 녹지비율 0%이면서 최근접 공원 도보거리 500m 이상, " +
+      "Case 2는 Case 1을 제외하고 최종 표시용 도보권 녹지비율 1% 미만, " +
+      "Case 3은 1% 이상 5% 미만, Case 4는 5% 이상입니다.",
+    evidence: [
+      {
+        claim: "Case 1은 가장 강한 공원·녹지 접근 결핍군이며 즉시 개선 대상으로 본다.",
+        source_chunk_id: source("02_case_rules#case1"),
+      },
+      {
+        claim: "Case 2는 도보권 녹지 경험이 거의 없는 우선 검토 대상이다.",
+        source_chunk_id: source("02_case_rules#case2"),
+      },
+      {
+        claim: "Case 3은 녹지량이 제한적인 모니터링 대상, Case 4는 상대적 양호군이다.",
+        source_chunk_id: source("02_case_rules#case-overview"),
+      },
+    ],
+    interpretation:
+      "이 분류는 학교 생활권의 현재 공원·녹지 접근 결핍을 설명하기 위한 정책 지원 기준입니다. 낮은 Case일수록 현장 검토와 후보지 검토 우선도가 높게 해석됩니다.",
+    limitations: [
+      {
+        text: "Case는 예산 배정이나 설치 여부를 자동 확정하지 않으며, 도서지역 별도묶음과 현장 여건은 분리해 검토해야 한다.",
+        source_chunk_id: source("02_case_rules#case-overview"),
+      },
+    ],
+    policy_checklist: [
+      "Case 1~2는 접근 결핍과 녹지 부족을 우선 확인",
+      "Case 3은 주변 개발 변화와 장기 보완 필요성 확인",
+      "Case 4도 유지·관리, 안전, 민원 조건은 별도 확인",
+    ],
+    blocked_reason: null,
+  };
+}
+
 function shouldRetryOpenAiStatus(status) {
   return [408, 409, 429, 500, 502, 503, 504].includes(Number(status));
 }
@@ -436,6 +508,14 @@ module.exports = async function handler(req, res) {
     chunksForFallback = selectedChunks;
     const gateResult = answerabilityGate(payload, selectedChunks);
     if (gateResult) return json(req, res, gateResult.blocked_reason === "지원하지 않는 AI 해설 모드입니다." ? 400 : 200, gateResult);
+
+    if (
+      isCaseOverviewQuestion(payload) &&
+      !isCaseDistanceCheckQuestion(payload) &&
+      selectedChunks.some((chunk) => chunk.id === "02_case_rules#case-overview")
+    ) {
+      return json(req, res, 200, buildCaseOverviewAnswer(selectedChunks));
+    }
 
     if (!process.env.OPENAI_API_KEY) {
       return json(req, res, 200, buildRetrievalFallback(payload, selectedChunks));

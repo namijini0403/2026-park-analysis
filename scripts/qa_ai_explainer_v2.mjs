@@ -27,6 +27,14 @@ const selectedSchool = {
 
 const qaCases = [
   {
+    id: "manual-case-overview",
+    question_type: "case_rule",
+    question: "Case 1부터 Case 4까지 분류 기준을 설명해줘",
+    expected: "answerable",
+    expected_chunk_ids: ["02_case_rules#case-overview"],
+    expected_summary_pattern: /Case 1.*Case 2.*Case 3.*Case 4/,
+  },
+  {
     id: "manual-case2",
     question_type: "case_rule",
     question: "Case 2 기준이 뭐야?",
@@ -180,6 +188,12 @@ for (const qaCase of qaCases) {
       qaCase.expected_chunk_ids.some((id) => sourceIds.includes(id)),
       `${qaCase.id}: expected one of [${qaCase.expected_chunk_ids.join(", ")}], got [${sourceIds.join(", ")}]`,
     );
+    if (qaCase.expected_summary_pattern) {
+      assert(
+        qaCase.expected_summary_pattern.test(answer?.summary || ""),
+        `${qaCase.id}: summary did not match ${qaCase.expected_summary_pattern}`,
+      );
+    }
   } else if (qaCase.expected_block_pattern) {
     assert(
       qaCase.expected_block_pattern.test(answer?.blocked_reason || ""),
