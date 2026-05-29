@@ -1269,6 +1269,43 @@
       line-height: 1.5;
     }
 
+    .auth-review-notice {
+      position: absolute;
+      right: 24px;
+      bottom: 22px;
+      z-index: 1;
+      width: min(420px, calc(100vw - 32px));
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(167, 243, 208, 0.22);
+      background: rgba(8, 20, 33, 0.82);
+      box-shadow: 0 18px 44px rgba(2, 6, 23, 0.32);
+      color: #cbd5e1;
+      font-size: 12px;
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+    .auth-review-notice strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #d1fae5;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    @media (min-width: 721px) and (max-height: 700px) {
+      .auth-gate {
+        align-items: flex-start;
+        overflow-y: auto;
+      }
+
+      .auth-card {
+        margin-top: 24px;
+        margin-bottom: 132px;
+      }
+    }
+
     .app-cover::before {
       content: "";
       position: absolute;
@@ -2639,6 +2676,8 @@
 
       .auth-gate {
         align-items: stretch;
+        flex-direction: column;
+        justify-content: center;
         padding: 10px;
       }
 
@@ -2648,6 +2687,15 @@
         justify-content: center;
         padding: 24px 18px;
         border-radius: 24px;
+      }
+
+      .auth-review-notice {
+        position: static;
+        width: 100%;
+        max-width: none;
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 18px;
       }
 
       .guide-overlay {
@@ -2811,6 +2859,10 @@
           <p class="auth-message" id="authMessage" aria-live="polite"></p>
         </form>
       </div>
+      <aside class="auth-review-notice" aria-label="심사용 인증번호 안내">
+        <strong>심사용 임시 인증번호: 2026</strong>
+        본 인증번호는 공모전 심사 기간 동안 서비스 확인을 위해 제공됩니다. 심사 종료 후에는 정식 인증번호 기반 접근 방식으로 전환됩니다.
+      </aside>
     </section>
 
     <section class="app-cover" id="appCover" role="dialog" aria-modal="true" aria-labelledby="appCoverTitle">
@@ -7077,6 +7129,9 @@
     function hideAuthGate() {
       const gate = document.getElementById("authGate");
       if (!gate) return;
+      if (gate.contains(document.activeElement)) {
+        document.activeElement.blur();
+      }
       gate.classList.add("is-hidden");
       gate.setAttribute("aria-hidden", "true");
     }
