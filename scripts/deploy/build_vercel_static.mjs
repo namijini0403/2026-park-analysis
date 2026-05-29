@@ -22,7 +22,7 @@ const requiredDataFiles = [
   "robust_shap_candidate_explanations.json",
   "gu_summary.csv",
   "parks.csv",
-  "isochrone_valhalla.geojson",
+  "school_isochrone_500m.geojson",
   "school_buffer_500m.geojson",
   "redevelopment_geocoded.csv",
   "large_apt_complexes_2025.csv",
