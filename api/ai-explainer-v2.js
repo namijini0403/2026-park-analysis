@@ -86,15 +86,30 @@ function normalizeText(value) {
 function detectTopic(payload) {
   const questionType = String(payload.question_type || "").toLowerCase();
   const question = normalizeText(payload.question);
-  if (questionType.includes("shap") || /shap|기여|예측근거/.test(question)) return "shap";
+
+  // 1) 질문 본문의 강한 주제 신호를 question_type보다 먼저 본다.
+  //    custom 질문은 question_type이 case_reason으로 고정되므로, KNN·후보지 같은
+  //    디테일 질문이 case 주제로 잘못 라우팅되어 근거 chunk를 못 찾는 문제를 막는다.
+  //    단, 특정 Case 번호를 명시하거나 Case 전체기준·거리검증을 묻는 질문은
+  //    녹지비율·최근접 같은 지표 단어가 섞여 있어도 case 주제로 본다.
+  if (/case ?[1-4]|케이스 ?[1-4]/.test(question) || isCaseOverviewQuestion(payload) || isCaseDistanceCheckQuestion(payload)) return "case";
+  if (/shap|기여|예측근거/.test(question)) return "shap";
+  if (/knn|유사학교|유사조건|비교군|벤치마크|활동규모|공원 ?기능|기능 ?등급|등시권|등시선|hitl|human ?in/.test(question)) return "glossary";
+  if (/후보지|후보군|격자|추천|pareto|파레토|top ?5|안정성|가중치|슬라이더|필터|견고|우선순위/.test(question)) return "decision";
+  if (/놀이터|녹지비율|최근접|미래 ?수요|잠재 ?수요|지표/.test(question)) return "metrics";
+
+  // 2) question_type 기반 신호
+  if (questionType.includes("shap")) return "shap";
   if (questionType.includes("limitation")) return "limitation";
   if (questionType.includes("metric") || questionType.includes("indicator")) return "metrics";
-  if (questionType.includes("case") || /case|분류|즉시|우선|모니터링|유지/.test(question)) return "case";
+  if (questionType.includes("candidate")) return "decision";
+  if (questionType.includes("case")) return "case";
+
+  // 3) 질문 본문의 case / 한계 신호 (약한 신호)
+  if (/case|케이스|분류|즉시|우선|모니터링|유지/.test(question)) return "case";
   if (/한계|주의|비식별|실제 설치|설치 가능성|현장 조사|대체할 수|답하면 안|선택된 학교가 없어도|근거 문서|답변/.test(question)) {
     return "limitation";
   }
-  if (questionType.includes("candidate") || /후보|추천|pareto|top5|가중치|필터/.test(question)) return "decision";
-  if (/녹지|거리|놀이터|미래|수요|지표/.test(question)) return "metrics";
   return "glossary";
 }
 
@@ -109,12 +124,36 @@ function topicForChunk(chunk) {
   return "glossary";
 }
 
+const CASE_POLICY_LABELS = {
+  1: "Case 1 (즉시 개선 대상)",
+  2: "Case 2 (우선 검토 대상)",
+  3: "Case 3 (모니터링 대상)",
+  4: "Case 4 (유지·관리 대상)",
+};
+
+// 선택된 학교의 확정 Case 번호를 case_label/case_status_label/case_type에서 도출한다.
+// 라벨 텍스트("즉시 개선 대상" 등)에는 "case N" 패턴이 없으므로 정책 라벨 표현도 함께 매칭한다.
+function resolveSchoolCaseNumber(payload) {
+  const school = payload.school_context || {};
+  const text = normalizeText(`${school.case_label || ""} ${school.case_status_label || ""} ${school.case_type || ""}`);
+  const explicit = text.match(/(?:case|케이스)\s*([1-4])/);
+  if (explicit) return Number(explicit[1]);
+  if (/즉시\s*개선/.test(text)) return 1;
+  if (/우선\s*검토/.test(text)) return 2;
+  if (/모니터링/.test(text)) return 3;
+  if (/유지|관리/.test(text)) return 4;
+  return null;
+}
+
 function collectTerms(payload) {
   const question = normalizeText(payload.question);
   const terms = [payload.question];
   const caseText = normalizeText(`${payload.question || ""} ${payload.school_context?.case_label || ""} ${payload.school_context?.case_type || ""}`);
   const caseMatch = caseText.match(/(?:case|케이스)\s*([1-4])/);
   if (caseMatch) terms.push(`case${caseMatch[1]}`);
+  // 학교의 확정 Case 정의 chunk가 검색 결과에 포함되도록 실제 Case 번호를 검색어로 추가한다.
+  const resolvedCase = resolveSchoolCaseNumber(payload);
+  if (resolvedCase) terms.push(`case${resolvedCase}`);
   if (question.includes("봉인")) terms.push("봉인값");
   if (question.includes("검증")) terms.push("검증");
   if (question.includes("녹지면적")) terms.push("녹지면적");
@@ -183,10 +222,22 @@ function selectChunks(payload, chunks) {
   const hasDesiredTopic = ranked.some((item) => topicForChunk(item.chunk) === desiredTopic);
   if (!hasDesiredTopic) return [];
 
-  return [
+  const selected = [
     ...ranked.filter((item) => topicForChunk(item.chunk) === desiredTopic),
     ...ranked.filter((item) => topicForChunk(item.chunk) !== desiredTopic),
   ].slice(0, 5).map((item) => item.chunk);
+
+  // case 질문에서는 선택 학교의 확정 Case 정의 chunk가 빠지지 않도록 보강한다.
+  if (desiredTopic === "case") {
+    const resolvedCase = resolveSchoolCaseNumber(payload);
+    const resolvedChunk = resolvedCase ? byId.get(`02_case_rules#case${resolvedCase}`) : null;
+    if (resolvedChunk && !selected.some((chunk) => chunk.id === resolvedChunk.id)) {
+      selected.pop();
+      selected.unshift(resolvedChunk);
+    }
+  }
+
+  return selected;
 }
 
 function hasSelectedSchoolContext(payload) {
@@ -305,6 +356,15 @@ function buildInput(payload, chunks) {
     body: chunk.body,
   }));
 
+  const resolvedCase = resolveSchoolCaseNumber(payload);
+  const resolvedSchoolCase = resolvedCase
+    ? {
+        case_number: resolvedCase,
+        policy_label: CASE_POLICY_LABELS[resolvedCase],
+        note: "이 값은 선택된 학교의 확정된 Case 분류다. 질문에 다른 Case 용어가 나와도 학교의 실제 Case는 이 값이다.",
+      }
+    : null;
+
   return [
     {
       role: "system",
@@ -312,7 +372,14 @@ function buildInput(payload, chunks) {
         "너는 인천 초등학교 야외활동 환경 격차 분석 앱의 RAG-lite 해설 패널이다. " +
         "최종안 기준 문서와 selected_context 안에서만 답한다. 문서에 없는 내부 구현 추정은 말하지 않는다. " +
         "새 정책 판단, 신규 추천, 법적 판단, 예산 산정, 데이터 밖 추론을 하지 않는다. " +
+        "selected_context.resolved_school_case가 있으면 그것이 선택된 학교의 확정 Case다. " +
+        "사용자가 '이 학교가 OO 대상이냐'처럼 특정 Case나 정책 라벨에 해당하는지 물으면, 질문에 등장한 단어가 아니라 resolved_school_case.case_number를 기준으로 판정한다. " +
+        "질문 속 Case·라벨과 학교의 실제 Case가 다르면, 학교의 실제 Case(case_number와 policy_label)를 먼저 분명히 밝히고 질문의 전제가 맞지 않음을 설명한다. " +
+        "질문에 특정 라벨 단어가 들어 있다는 이유로 학교를 그 Case로 재분류하지 않는다. " +
         "answerable=true라면 모든 evidence.claim과 limitations.text에 RETRIEVED_CHUNKS 안의 source_chunk_id를 붙인다. " +
+        "source_chunk_id에는 retrieved_chunks의 chunk_id만 사용한다. resolved_school_case나 school_context 같은 context 필드명은 source_chunk_id로 절대 쓰지 않는다. " +
+        "학교의 확정 Case를 근거로 들 때도 해당 Case 정의 chunk(예: 02_case_rules#case1)를 source_chunk_id로 단다. " +
+        "질문이 retrieved_chunks 안에 명시된 수치나 기준(예: KNN 변수 개수, 후보지·격자 수, 공원 면적 임계, 임계 비율)을 직접 물으면, 그 값이 chunk에 있을 때는 answerable=true로 해당 값을 명확히 답한다. 표현이 약간 달라도 chunk에 같은 의미의 값이 있으면 근거 부족으로 차단하지 않는다. " +
         "근거가 부족하거나 선택 context가 부족하면 answerable=false, mode=blocked로 답한다.",
     },
     {
@@ -323,6 +390,7 @@ function buildInput(payload, chunks) {
           question_type: payload.question_type,
           selected_context: {
             school_context: payload.school_context || null,
+            resolved_school_case: resolvedSchoolCase,
             candidate_context: payload.candidate_context || null,
           },
           retrieved_chunks: evidencePack,
@@ -373,10 +441,20 @@ function chunkClaim(chunk) {
   return compactText(match ? match[1] : body).slice(0, 220);
 }
 
-function fallbackMode(payload) {
+// 응답 mode는 모델 자유 선택에 맡기지 않고, 질문 유형과 선택 컨텍스트로 결정론적으로 정한다.
+function resolveExplanationMode(payload) {
   const questionType = String(payload.question_type || "").toLowerCase();
-  if (questionType.includes("candidate") || hasSelectedCandidateContext(payload)) return "candidate_explanation";
-  if (questionType.includes("school") || hasSelectedSchoolContext(payload)) return "school_explanation";
+  // 명시적 후보지 질문(candidate_reason, shap_interpretation)
+  if (questionType.includes("candidate") || questionType.includes("shap")) {
+    return hasSelectedCandidateContext(payload) ? "candidate_explanation" : "concept_explanation";
+  }
+  // 명시적 학교 질문(case_reason, school_explanation)
+  if (questionType.includes("case") || questionType.includes("school")) {
+    return hasSelectedSchoolContext(payload) ? "school_explanation" : "concept_explanation";
+  }
+  // policy_check, limitations 등 공통 질문은 선택된 컨텍스트 기준으로 정한다.
+  if (hasSelectedCandidateContext(payload)) return "candidate_explanation";
+  if (hasSelectedSchoolContext(payload)) return "school_explanation";
   return "concept_explanation";
 }
 
@@ -389,7 +467,7 @@ function buildRetrievalFallback(payload, selectedChunks) {
   const sourceChunkId = evidence[0]?.source_chunk_id || selectedChunks[0]?.id || "README#answer-guard";
   return {
     answerable: evidence.length > 0,
-    mode: evidence.length > 0 ? fallbackMode(payload) : "blocked",
+    mode: evidence.length > 0 ? resolveExplanationMode(payload) : "blocked",
     summary: evidence[0]?.claim || null,
     evidence,
     interpretation: evidence.length > 0
@@ -548,6 +626,8 @@ module.exports = async function handler(req, res) {
     const data = await openaiResponse.json();
     const parsed = JSON.parse(extractText(data));
     const validated = validateAnswer(parsed, selectedChunks);
+    // 답변 가능한 경우 mode는 모델 선택을 신뢰하지 않고 컨텍스트 기준으로 확정한다.
+    if (validated.answerable === true) validated.mode = resolveExplanationMode(payload);
     return json(req, res, 200, validated.answerable === true || validated.blocked_reason ? validated : buildRetrievalFallback(payload, selectedChunks));
   } catch {
     if (payloadForFallback && chunksForFallback.length) {
