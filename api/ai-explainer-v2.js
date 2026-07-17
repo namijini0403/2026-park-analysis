@@ -4,6 +4,9 @@ const path = require("node:path");
 const MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.4-mini";
 const MAX_OUTPUT_TOKENS = Number(process.env.AI_EXPLAINER_MAX_OUTPUT_TOKENS || 900);
 const MIN_RETRIEVAL_SCORE = Number(process.env.AI_EXPLAINER_V2_MIN_SCORE || 8);
+// 주제 친화도(+14)만으로는 chunk가 선택되지 않도록, 질문 단어가 chunk에 실제로
+// 매칭된 점수(term evidence)를 별도로 요구한다. 4점 = 본문 매칭 2회 또는 태그+본문 1회 수준.
+const MIN_TERM_EVIDENCE = Number(process.env.AI_EXPLAINER_V2_MIN_TERM_SCORE || 4);
 const CHUNKS_PATH = path.join(__dirname, "ai_explainer_chunks.json");
 const ALLOWED_ORIGIN_PATTERNS = [
   /^https:\/\/2026-park-analysis\.vercel\.app$/,
@@ -160,9 +163,20 @@ function collectTerms(payload) {
   if (question.includes("설치") && question.includes("가능")) terms.push("설치가능성");
   if (question.includes("최종") && question.includes("정답")) terms.push("오해방지", "추천순위");
   if (question.includes("정책") && question.includes("가중치")) terms.push("정책가중치", "가중치");
-  return normalizeText(terms.filter(Boolean).join(" "))
+  const baseTerms = normalizeText(terms.filter(Boolean).join(" "))
     .split(/\s+/)
     .filter((term) => term.length >= 2);
+
+  // 한글 조사가 붙은 단어("등시권이", "녹지비율은")도 chunk 본문("등시권", "녹지비율")과
+  // 매칭되도록 조사를 뗀 변형을 함께 넣는다.
+  const PARTICLE_SUFFIX = /(이란|이라|에서|으로|까지|부터|처럼|보다|은|는|이|가|을|를|와|과|의|로|도|만|요|에)$/;
+  const expanded = new Set(baseTerms);
+  for (const term of baseTerms) {
+    if (term.length < 3 || !/[가-힣]$/.test(term)) continue;
+    const stripped = term.replace(PARTICLE_SUFFIX, "");
+    if (stripped.length >= 2 && stripped !== term) expanded.add(stripped);
+  }
+  return [...expanded];
 }
 
 function isCaseOverviewQuestion(payload) {
@@ -187,16 +201,18 @@ function isCaseDistanceCheckQuestion(payload) {
 function scoreChunk(chunk, terms, desiredTopic) {
   const tags = Array.isArray(chunk.tags) ? chunk.tags : [];
   const haystack = normalizeText(`${chunk.id} ${chunk.title} ${tags.join(" ")} ${chunk.body}`);
-  let score = topicForChunk(chunk) === desiredTopic ? 14 : 0;
+  let termScore = 0;
 
   for (const term of terms) {
     if (!term) continue;
-    if (haystack.includes(term)) score += 2;
-    if (tags.some((tag) => normalizeText(tag).includes(term))) score += 3;
-    if (normalizeText(chunk.id).includes(term)) score += 4;
+    if (haystack.includes(term)) termScore += 2;
+    if (tags.some((tag) => normalizeText(tag).includes(term))) termScore += 3;
+    if (normalizeText(chunk.id).includes(term)) termScore += 4;
   }
 
-  return score;
+  // 주제 친화도(+14)는 순위 보정용일 뿐, termScore 없이는 chunk가 선택되지 않는다.
+  const topicScore = topicForChunk(chunk) === desiredTopic ? 14 : 0;
+  return { score: topicScore + termScore, termScore };
 }
 
 function selectChunks(payload, chunks) {
@@ -215,8 +231,8 @@ function selectChunks(payload, chunks) {
   }
 
   const ranked = chunks
-    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms, desiredTopic) }))
-    .filter((item) => item.score >= MIN_RETRIEVAL_SCORE)
+    .map((chunk) => ({ chunk, ...scoreChunk(chunk, terms, desiredTopic) }))
+    .filter((item) => item.termScore >= MIN_TERM_EVIDENCE && item.score >= MIN_RETRIEVAL_SCORE)
     .sort((left, right) => right.score - left.score);
 
   const hasDesiredTopic = ranked.some((item) => topicForChunk(item.chunk) === desiredTopic);
@@ -266,6 +282,57 @@ function hasRequiredContext(payload) {
   return true;
 }
 
+// ---- 범위 밖 질문 차단 (3중 가드) -------------------------------------------
+// 1) 명백한 오프도메인 주제(음식, 날씨, 주식, 연예 등)는 도메인 단어가 섞여 있어도 차단한다.
+const OFF_DOMAIN_PATTERN = new RegExp(
+  [
+    "저녁|아침 ?메뉴|점심|메뉴 ?추천|맛집|요리|레시피|음식",
+    "날씨|기온|비 ?올|우산",
+    "주식|코인|비트코인|투자|재테크|로또|환율",
+    "연애|소개팅|결혼",
+    "영화|드라마|웹툰|아이돌|노래 ?추천|플레이리스트",
+    "게임 ?추천|롤 |오버워치",
+    "여행 ?추천|여행지|호텔|항공권",
+    "운세|사주|타로|별자리",
+    "농담|유머|웃긴|심심",
+    "코드 ?짜|코딩 ?해|프로그램 ?만들|번역해|영작|숙제|시 ?써|소설 ?써|자기소개서|이력서",
+  ].join("|"),
+);
+
+// 2) 프롬프트 주입·역할 변경 시도는 내용과 무관하게 차단한다.
+const INJECTION_PATTERN =
+  /프롬프트|시스템 ?(메시지|명령|지시)|지시(를|사항을)? ?무시|규칙(을)? ?무시|ignore (all|previous|above)|system prompt|jailbreak|역할극|롤플레|이제부터 너는|너는 이제/i;
+
+// 3) 질문에 앱 도메인 신호가 하나도 없으면 검색을 시도하지 않고 차단한다.
+const DOMAIN_SIGNAL_PATTERN = new RegExp(
+  [
+    "공원|녹지|놀이터|놀이시설|학교|초등|학생|아동|어린이",
+    "도보|보행|등시권|생활권|반경|500\\s*m|500m|거리|접근",
+    "case|케이스|분류|판정|즉시 ?개선|우선 ?검토|모니터링|수요 ?관리|현상 ?유지|양호|별도 ?(정책|묶음)",
+    "knn|유사|비교군|벤치마크|shap|기여|예측|수요|전망|prophet|미래",
+    "후보지?|격자|그리드|추천|순위|가중치|슬라이더|필터|파레토|pareto|안정성|견고|시뮬레이션",
+    "지표|비율|수치|통계|분포|데이터|산출|계산|기준|임계|봉인",
+    "재개발|대단지|아파트|도로|횡단|안전|사고",
+    "정책|예산|설치|개선|지원|담당자|확인사항|체크리스트",
+    "한계|주의|비식별|익명|근거|출처|문서|chunk|모델|ai|인공지능|챗봇|해설|설명|rag|hitl|xai",
+    "인천|미추홀|부평|계양|연수|남동|서구|중구|동구|강화|옹진|도서",
+  ].join("|"),
+  "i",
+);
+
+function isOffDomainQuestion(payload) {
+  return OFF_DOMAIN_PATTERN.test(normalizeText(payload.question));
+}
+
+function isInjectionAttempt(payload) {
+  return INJECTION_PATTERN.test(String(payload.question || ""));
+}
+
+function lacksDomainSignal(payload) {
+  return !DOMAIN_SIGNAL_PATTERN.test(normalizeText(payload.question));
+}
+// -----------------------------------------------------------------------------
+
 function containsIdentifyingQuestion(payload) {
   const question = normalizeText(payload.question);
   return /학교명|후보지|공원명|좌표|거리|수혜|실명|어디|몇 m|몇명/.test(question);
@@ -274,6 +341,20 @@ function containsIdentifyingQuestion(payload) {
 function containsPolicyCommitmentQuestion(payload) {
   const question = normalizeText(payload.question);
   return /무조건|반드시|최종 확정|예산.*배정|지원해야|설치해야/.test(question);
+}
+
+// 검색 이전에 실행되는 선차단 게이트: 명백한 범위 밖 질문은 chunk 검색 없이 즉시 거부한다.
+function preAnswerGate(payload) {
+  if (isInjectionAttempt(payload)) {
+    return blocked("시스템 지시 변경, 역할 변경, 프롬프트 관련 요청에는 응답하지 않습니다. 앱의 분석 내용에 대해 질문해 주세요.");
+  }
+  if (isOffDomainQuestion(payload)) {
+    return blocked("이 해설 패널은 앱의 분석 내용(공원·녹지 접근성, Case 분류, 지표, 후보지 추천)만 설명합니다. 분석 범위 밖 주제는 답변하지 않습니다.");
+  }
+  if (lacksDomainSignal(payload)) {
+    return blocked("질문에서 앱 분석과 관련된 주제를 찾지 못했습니다. Case 분류, 지표(녹지비율·공원거리), KNN 유사학교, 후보지 추천, 데이터 출처 등에 대해 질문해 주세요.");
+  }
+  return null;
 }
 
 function answerabilityGate(payload, selectedChunks) {
@@ -580,6 +661,9 @@ module.exports = async function handler(req, res) {
     if (!question || question.length > 220) {
       return json(req, res, 400, blocked("질문은 1자 이상 220자 이하로 입력해야 합니다.", 400));
     }
+
+    const preGateResult = preAnswerGate(payload);
+    if (preGateResult) return json(req, res, 200, preGateResult);
 
     const chunks = loadChunks();
     const selectedChunks = selectChunks(payload, chunks);
