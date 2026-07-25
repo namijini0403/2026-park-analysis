@@ -2,6 +2,7 @@
 import type { MouseEvent } from "react";
 import AiExplainerPanel from "./AiExplainerPanel";
 import KakaoMap, { CandidateMarker, CandidateRouteLine } from "./KakaoMap";
+import { useIsNarrow } from "./useIsNarrow";
 
 const LETTERS = "ABCDEFGHIJ".split("");
 const BARRIER_KEYS = ["motorway", "trunk", "primary", "secondary", "tertiary"] as const;
@@ -782,6 +783,7 @@ export default function SimulationPage({
   largeApartmentComplexes = [],
   onBack,
 }: SimulationPageProps) {
+  const isNarrow = useIsNarrow();
   const [mode, setMode] = useState<SimulationMode>("manual");
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [weights, setWeights] = useState<WeightState>(DEFAULT_WEIGHTS);
@@ -944,7 +946,7 @@ export default function SimulationPage({
         fontFamily: "Pretendard, sans-serif",
         maxWidth: 1180,
         margin: "0 auto",
-        padding: "24px 28px 40px",
+        padding: isNarrow ? "16px 12px 28px" : "24px 28px 40px",
       }}
     >
       <button
@@ -1020,7 +1022,7 @@ export default function SimulationPage({
           routes={routeLines}
           selected={new Set(selectedId ? [selectedId] : [])}
           onToggle={toggleSelect}
-          height={Math.max(420, Math.round((typeof window !== "undefined" ? window.innerHeight : 1000) * 0.42))}
+          height={Math.max(isNarrow ? 300 : 420, Math.round((typeof window !== "undefined" ? window.innerHeight : 1000) * 0.42))}
         />
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 12 }}>
           <LegendItem color={SIM_COLORS.greenDark} shape="diamond" label="학교" />
@@ -1102,7 +1104,7 @@ export default function SimulationPage({
       </div>
 
       {mode === "manual" ? (
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(260px, 1fr) minmax(260px, 1fr)", gap: 16, marginBottom: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isNarrow ? "1fr" : "minmax(260px, 1fr) minmax(260px, 1fr)", gap: 16, marginBottom: 18 }}>
           <div style={{ padding: 18, borderRadius: 18, ...SIM_PANEL_FLAT }}>
             <div style={{ fontSize: 18, fontWeight: 800, color: SIM_COLORS.text, marginBottom: 12 }}>제외 조건 설정</div>
             <div style={{ display: "grid", gap: 10 }}>
