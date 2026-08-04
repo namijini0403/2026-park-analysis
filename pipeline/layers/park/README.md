@@ -31,7 +31,7 @@
 | `analysis_step1_osmnx.py` | 인천 보행 도로망(OSM) | 보행망 그래프 (isochrone 단계 입력) | |
 | `analysis_step3_isochrone.py` | `schools.csv` + 보행망 | `data_processed/school_isochrone_500m.geojson` | index.html 실사용 |
 | `analysis_nearest_park.py` | `parks.csv`(전단계) | `data_processed/parks.csv`, `school_nearest_park.csv` | ⚠️봉인 관련 |
-| `analysis_large_apt_kakao.py` | 카카오 지오코딩 결과 | `data_processed/large_apt_complexes_2025.csv`, `has_large_apt_diff.csv` | index.html 실사용. 3형제(`analysis_large_apt.py` → `_exact.py` → `_kakao.py`) 중 최종본, 나머지 2개는 [실험] — 이관 대상 아님 |
+| `analysis_large_apt_kakao.py` | 카카오 지오코딩 결과 | `data_processed/large_apt_complexes_2025.csv`, `has_large_apt_diff.csv` | index.html 실사용. 3형제(`analysis_large_apt.py` (→ `_attic/2026-08/experiments/analysis_large_apt.py`로 보관됨) → `_exact.py` (→ `_attic/2026-08/experiments/analysis_large_apt_exact.py`로 보관됨) → `_kakao.py`) 중 최종본, 나머지 2개는 [실험] — 이관 대상 아님 |
 | `analysis_redev_isochrone.py`, `analysis_redev_proximity.py` | `redevelopment.csv` + 등시선 | `data_processed/redevelopment_geocoded.csv` | index.html 실사용 |
 | `add_functional_park_layer_20260506.py` | `parks.csv`, `school_isochrone_500m.geojson` | `parks_with_function_class.csv`, `school_priority_with_functional_park_layer.csv` | ⚠️봉인 관련(school_green_ratio_display_guardrail 산출값 참조) |
 | **`scripts/accessibility/build_green_ratio_display_guardrail_20260506.py`** | ⚠️봉인값(`sealed_nearest_park_dist.json` 계열) | `data_processed/school_green_ratio_display_guardrail_20260506.csv` | **⚠️ 재실행 금지, 봉인값 보호** — 앱 표시용 녹지비율 보수 산정 레이어 |
@@ -54,7 +54,7 @@
 | 스크립트 경로 | 입력 | 출력 | 비고 |
 |---|---|---|---|
 | `analysis_school_priority.py` | `schools.csv`, `school_nearest_park.csv`, `priority_ml.csv` | `data_processed/school_priority.csv` | ⚠️봉인 관련(실측 case/거리 반영) — 핵심 산출 스크립트 |
-| **`apply_case_system_20260411.py`** | `school_priority.csv`, `school_nearest_park.csv` | `school_priority_case_system_20260411.csv`, `school_nearest_park_case_system_20260411.csv` (+ `*_before_case_system.csv` 백업) | **[일회성 fix], ⚠️봉인 관련 — 재실행 금지.** `scripts/classification/` 사본 쪽에 로직이 더 있어(중복 공원 제거 함수) 병합 검토 필요, 삭제·재실행 전 사람 확인 |
+| **`apply_case_system_20260411.py`** (→ `_attic/2026-08/oneoff_fixes/apply_case_system_20260411.py`로 보관됨) | `school_priority.csv`, `school_nearest_park.csv` | `school_priority_case_system_20260411.csv`, `school_nearest_park_case_system_20260411.csv` (+ `*_before_case_system.csv` 백업) | **[일회성 fix], ⚠️봉인 관련 — 재실행 금지.** `scripts/classification/` 사본(→ `_attic/2026-08/scripts_stale/classification/apply_case_system_20260411.py`로 보관됨) 쪽에 로직이 더 있어(중복 공원 제거 함수) 병합 검토 필요, 삭제·재실행 전 사람 확인 |
 | `rebuild_priority_with_redev.py` | `school_priority.csv`, `redevelopment_geocoded.csv` | `school_priority.csv` 갱신 | scripts/ 사본과 완전 동일 파일이라 실행본 불확실(task-2 불확실 항목 2) |
 | `apply_public_park_case_rules_20260422.py` | `parks.csv`, `school_nearest_park.csv` | `gu_summary.csv` 등 | |
 | `run_school_similarity_v3.py` | `schools.csv`, `student_trend.csv` | `data_processed/school_similar_schools_top5.csv` | index.html 실사용. v1/v2는 `scripts/classification/`에만 존재하는 실험본 — 이관 대상 아님 |
@@ -66,7 +66,7 @@
 | `analysis/build_candidate_barrier_routes.py` | `schools.csv`, 보행망 그래프 | `data_processed/candidate_barrier_routes_by_school.json` | index.html 실사용. ⚠️봉인 관련 가능성(GRAPH_PATH가 구경로 사용 — 정상 동작 여부 불확실) |
 | `count_school_park_path_barriers.py` | 등시선 + 도로망 | barrier 집계 (위 파일의 입력) | |
 | `analysis/exclude_school_sites.py` | 후보 격자 + 학교부지 폴리곤 | `data_processed/school_exclusion_log.csv` | |
-| **`analysis/build_mixed_demand_model.py`** | `candidate_grid_population_alloc_v1.*`, `school_priority.csv` 등 | **`data_processed/candidate_grid_final.geojson`** | **최종 후보지 파이프라인(2026-04-19 확정), index.html이 실제 fetch하는 파일**. `generate_candidate_grid(.py/_v2.py)`, `predict_grid_demand.py`, XGB 계열은 전부 이 스크립트로 대체된 [실험] 구버전 — 이관 대상 아님 |
+| **`analysis/build_mixed_demand_model.py`** | `candidate_grid_population_alloc_v1.*`, `school_priority.csv` 등 | **`data_processed/candidate_grid_final.geojson`** | **최종 후보지 파이프라인(2026-04-19 확정), index.html이 실제 fetch하는 파일**. `generate_candidate_grid(.py/_v2.py)` (→ `_attic/2026-08/analysis_superseded/generate_candidate_grid.py`, `_attic/2026-08/analysis_superseded/generate_candidate_grid_v2.py`로 보관됨), `predict_grid_demand.py` (→ `_attic/2026-08/analysis_superseded/predict_grid_demand.py`로 보관됨), XGB 계열은 전부 이 스크립트로 대체된 [실험] 구버전 — 이관 대상 아님 |
 
 ## 6단계: export
 
