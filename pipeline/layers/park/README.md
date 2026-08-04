@@ -36,7 +36,7 @@
 | `add_functional_park_layer_20260506.py` | `parks.csv`, `school_isochrone_500m.geojson` | `parks_with_function_class.csv`, `school_priority_with_functional_park_layer.csv` | ⚠️봉인 관련(school_green_ratio_display_guardrail 산출값 참조) |
 | **`scripts/accessibility/build_green_ratio_display_guardrail_20260506.py`** | ⚠️봉인값(`sealed_nearest_park_dist.json` 계열) | `data_processed/school_green_ratio_display_guardrail_20260506.csv` | **⚠️ 재실행 금지, 봉인값 보호** — 앱 표시용 녹지비율 보수 산정 레이어 |
 | **`scripts/accessibility/update_manual_verified_nearest_parks.py`** | 수동검증 80개교 결과 | `school_nearest_park.csv` 갱신 | **[일회성 fix], ⚠️ 재실행 금지, 봉인값 보호 — 최우선 확인 대상**(운영 파이프라인 스텝이 아니라 봉인값 반영용 일회성 보정 스크립트) |
-| **`scripts/accessibility/recalc_nearest_park_public_only.py`** | `parks.csv`, `sealed_nearest_park_dist.json` | `school_nearest_park.csv` 재계산 | **[일회성 fix], ⚠️ 재실행 금지, 봉인값 보호**(코드 내 봉인값을 덮어쓰지 않는 로직 포함되어 있으나 원본 재실행은 금지. 운영 파이프라인 스텝이 아니라 봉인값 반영용 일회성 보정 스크립트) |
+| **`recalc_nearest_park_public_only.py`** (scripts/ 구경로 사본은 `_attic/2026-08/scripts_stale/accessibility/`에 보관) | `parks.csv`, `sealed_nearest_park_dist.json` | `school_nearest_park.csv` 재계산 | **[일회성 fix], ⚠️ 재실행 금지, 봉인값 보호**(코드 내 봉인값을 덮어쓰지 않는 로직 포함되어 있으나 원본 재실행은 금지. 운영 파이프라인 스텝이 아니라 봉인값 반영용 일회성 보정 스크립트) |
 | `scripts/recommendation/run_valhalla_priority_refresh.py` | `isochrone_valhalla.geojson` | 우선순위 갱신 입력 | ⚠️봉인 관련 |
 | `add_nearest_school_to_parks.py` | `parks.csv`, `schools.csv` | `data_processed/parks_with_nearest_school.csv` | 경로가 구경로(`data/processed`) 사용 — 실제 최근 실행 여부 불확실(task-2 불확실 항목 3) |
 
