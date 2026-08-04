@@ -18,14 +18,11 @@
 
 ## D. scripts/** 구경로 사본 (scripts_stale/)
 
-### accessibility/ (12개)
+### accessibility/ (9개)
 - `analysis_large_apt.py` — 대형아파트 분석 (루트/kakao가 최종)
 - `analysis_large_apt_exact.py` — 대형아파트 정확도 분석 (obsolete)
 - `analysis_large_apt_kakao.py` — 대형아파트 분석 구경로 사본
 - `analysis_nearest_park.py` — 최인접 공원 분석 구경로 사본
-- `build_apartment_permeability_walk_adjustment_20260504.py` — 보행로 보정 구경로 사본
-- `compare_nearest_park_walk_straight_20260423.py` — 최인접 공원 비교 구경로 사본
-- `count_school_park_path_barriers.py` — 학교-공원 경로 장애물 카운팅 구경로 사본
 - `fix_has_large_apt_500m.py` — 500m 대형아파트 보정 구경로 사본
 - `recalc_nearest_park_all_records.py` — 모든 최인접 공원 재계산 구경로 사본
 - `recalc_nearest_park_public_only.py` — 공용 최인접 공원 재계산 구경로 사본
@@ -44,11 +41,10 @@
 - `rebuild_candidate_population_demand.py` — 후보지 인구 수요 재구축 구경로 사본
 - `refresh_candidate_simulation_metrics.py` — 후보지 시뮬레이션 메트릭 갱신 구경로 사본
 
-### classification/ (11개, E 유사도 구버전 3개 포함)
+### classification/ (10개, E 유사도 구버전 3개 포함)
 - `analysis_clustering.py` — 클러스터링 분석 구경로 사본
 - `analysis_ml_models.py` — ML 모델 분석 구경로 사본
 - **`apply_case_system_20260411.py`** — 케이스 시스템 적용 (루트판에 없는 `deduplicate_public_parks()` 함수 추가분 있음 → **로직 병합 검토 필요**)
-- `apply_public_park_case_rules_20260422.py` — 공용 공원 케이스 규칙 적용 구경로 사본
 - `incheon_student_green_correlation_20260424.py` — 인천 학생-녹지 상관 구경로 사본
 - `incheon_vulnerable_green_correlation_20260423.py` — 인천 취약층-녹지 상관 구경로 사본
 - `michuhol_vulnerable_green_correlation_20260422.py` — 미추홀 취약층-녹지 상관 구경로 사본
@@ -57,33 +53,24 @@
 - `run_school_similarity_v2.py` — 학교 유사도 계산 v2 (E: 규칙 D와 무관 무조건 이동)
 - `run_school_similarity_v3.py` — 학교 유사도 계산 v3 (규칙 D: data/processed 매치)
 
-### export/ (6개)
-- `build_submission_package.py` — 제출 패키지 구축 구경로 사본
+### export/ (3개)
 - `export_school_enrollment_forecast_versioned.py` — 학교 등록 예측 버전별 내보내기 구경로 사본
 - `generate_statistics_preview_data.py` — 통계 미리보기 생성 구경로 사본
-- `generate_word_doc.py` — Word 문서 생성 구경로 사본
 - `render_park_count_green_ratio_scatter_20260422.py` — 공원 개수-녹지 비율 산점도 렌더링 구경로 사본
-- `validate_outputs.py` — 출력 검증 구경로 사본
 
-### forecasting/ (3개)
-- `build_prophet_cohort_change.py` — Prophet 코호트 변화 구축 구경로 사본
+### forecasting/ (2개)
 - `compare_school_enrollment_models.py` — 학교 등록 모델 비교 구경로 사본
 - `run_model2_ablation_v3.py` — 모델2 제거 테스트 v3 구경로 사본
 
-### preprocess/ (5개)
-- `extract_schools_michuhol.py` — 미추홀 학교 추출 구경로 사본
-- `preprocess_step1_redevelopment.py` — 전처리 Step1 재개발 구경로 사본
-- `preprocess_step1_schools.py` — 전처리 Step1 학교 구경로 사본
-- `preprocess_step2_childcare.py` — 전처리 Step2 보육시설 구경로 사본
-- `preprocess_step2_parks.py` — 전처리 Step2 공원 구경로 사본
-
-### recommendation/ (2개)
-- `run_valhalla_priority_refresh.py` — Valhalla 우선순위 갱신 구경로 사본
+### recommendation/ (1개)
 - `rebuild_priority_with_redev.py` — 재개발 포함 우선순위 재구축 (루트판 동일 사본)
 
 ---
 
-**총 이동 파일 수: 59개** (A:4 + B:2 + C:4 + D:49)
-**D 세부: D-1:12 + D-2:10 + D-3:11(E 포함) + D-4:6 + D-5:3 + D-6:5 + D-7:2 = 49개**
+**총 이동 파일 수: 45개** (A:4 + B:2 + C:4 + D:35)
+**D 세부: D-1:9 + D-2:10 + D-3:10(E 포함) + D-4:3 + D-5:2 + D-6:0 + D-7:1 = 35개**
+**복원 사유: 유일본 운영·검증 스크립트 14개는 구경로 참조 여부와 무관하게 scripts/ 원위치 잔류 (인벤토리 기준)**
 **이동 전 안전 검증: 잔류 파일 import 참조 0건**
 **특별 주의: D-3 scripts/classification/apply_case_system_20260411.py 로직 병합 검토 권장**
+
+주의: scripts/ 잔류 파일 중 일부는 구경로(data/processed, data/raw)를 참조하므로 재실행 전 경로 수정 필요 — pipeline/registry/data_registry.yaml 참고

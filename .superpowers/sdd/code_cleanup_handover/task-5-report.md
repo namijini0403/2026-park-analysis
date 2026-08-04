@@ -206,6 +206,46 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 
 ---
 
+## 추가 수정: 유일본 운영·검증 스크립트 복원
+
+### 복원 사유
+규칙 D(구경로 참조)로 이동한 파일 중 14개는 **root/analysis에 대체본이 없는 유일본이면서 인벤토리(task-2-report.md)에서 [운영 파이프라인] 또는 [검증·감사]로 분류된 파일**. 구경로를 쓰더라도 유일본 운영·검증 스크립트는 잔류가 원칙이므로 원위치로 복원.
+
+### 복원 14개 파일
+_attic/2026-08/scripts_stale/ 에서 scripts/ 원래 위치로 복원:
+
+1. **scripts/recommendation/run_valhalla_priority_refresh.py** — [운영] Valhalla 우선순위 갱신
+2. **scripts/forecasting/build_prophet_cohort_change.py** — [운영] Prophet 코호트 변화 구축
+3. **scripts/classification/apply_public_park_case_rules_20260422.py** — [검증] 공용 공원 케이스 규칙 적용
+4. **scripts/accessibility/count_school_park_path_barriers.py** — [검증] 학교-공원 경로 장애물 카운팅
+5. **scripts/accessibility/build_apartment_permeability_walk_adjustment_20260504.py** — [운영] 보행로 보정
+6. **scripts/accessibility/compare_nearest_park_walk_straight_20260423.py** — [검증] 최인접 공원 비교
+7. **scripts/preprocess/preprocess_step1_schools.py** — [운영] 전처리 Step1 학교
+8. **scripts/preprocess/preprocess_step1_redevelopment.py** — [운영] 전처리 Step1 재개발
+9. **scripts/preprocess/preprocess_step2_childcare.py** — [운영] 전처리 Step2 보육시설
+10. **scripts/preprocess/preprocess_step2_parks.py** — [운영] 전처리 Step2 공원
+11. **scripts/preprocess/extract_schools_michuhol.py** — [검증] 미추홀 학교 추출
+12. **scripts/export/generate_word_doc.py** — [운영] Word 문서 생성
+13. **scripts/export/validate_outputs.py** — [운영] 출력 검증
+14. **scripts/export/build_submission_package.py** — [운영] 제출 패키지 구축
+
+### 복원 후 카운트 조정
+- **총 파일**: 59 → 45개 (14개 복원)
+- **D (scripts_stale)**: 49 → 35개
+  - D-1 accessibility: 12 → 9 (3개 복원)
+  - D-2 candidate_generation: 10 (변화 없음)
+  - D-3 classification: 11 → 10 (1개 복원)
+  - D-4 export: 6 → 3 (3개 복원)
+  - D-5 forecasting: 3 → 2 (1개 복원)
+  - D-6 preprocess: 5 → 0 (5개 모두 복원)
+  - D-7 recommendation: 2 → 1 (1개 복원)
+
+### 안전 검증
+- 복원 대상 14개 파일 모두 잔류 .py에서 import/참조 0건
+- 복원 후 git status 확인: R 이동 35개, 잔류 A-B-C-D 정상
+
+---
+
 ## 최종 체크리스트
 
 - [x] 모든 A-E 범주 파일 이동 (61개)
