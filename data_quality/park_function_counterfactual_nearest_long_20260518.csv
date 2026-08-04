@@ -1,0 +1,817 @@
+﻿school_id,school_name,scenario,nearest_eligible_park_name_straight,nearest_eligible_park_class,nearest_eligible_park_area_m2,nearest_eligible_park_dist_m_straight
+B000003024,인천갈월초등학교,baseline_all_classes,명월놀이공원,small_child_park,2076.0,134.2
+B000003024,인천갈월초등학교,exclude_playground_like,명월놀이공원,small_child_park,2076.0,134.2
+B000003024,인천갈월초등학교,exclude_playground_and_small_child,굴포공원,neighborhood_park_scale,20529.0,143.0
+B000003057,인천청량초등학교,baseline_all_classes,청량공원,mid_activity_park,8583.0,121.8
+B000003057,인천청량초등학교,exclude_playground_like,청량공원,mid_activity_park,8583.0,121.8
+B000003057,인천청량초등학교,exclude_playground_and_small_child,청량공원,mid_activity_park,8583.0,121.8
+B000025246,인천미송초등학교,baseline_all_classes,랜드마크시티 1호 수변공원,neighborhood_park_scale,77873.0,396.5
+B000025246,인천미송초등학교,exclude_playground_like,랜드마크시티 1호 수변공원,neighborhood_park_scale,77873.0,396.5
+B000025246,인천미송초등학교,exclude_playground_and_small_child,랜드마크시티 1호 수변공원,neighborhood_park_scale,77873.0,396.5
+B000026469,인천한별초등학교,baseline_all_classes,웃목어린이공원,mid_activity_park,4699.1,89.2
+B000026469,인천한별초등학교,exclude_playground_like,웃목어린이공원,mid_activity_park,4699.1,89.2
+B000026469,인천한별초등학교,exclude_playground_and_small_child,웃목어린이공원,mid_activity_park,4699.1,89.2
+B000026466,인천아라초등학교,baseline_all_classes,아라노을공원,neighborhood_park_scale,48206.9,156.4
+B000026466,인천아라초등학교,exclude_playground_like,아라노을공원,neighborhood_park_scale,48206.9,156.4
+B000026466,인천아라초등학교,exclude_playground_and_small_child,아라노을공원,neighborhood_park_scale,48206.9,156.4
+B000003178,갑룡초등학교,baseline_all_classes,갑룡공원,neighborhood_park_scale,18605.0,92.6
+B000003178,갑룡초등학교,exclude_playground_like,갑룡공원,neighborhood_park_scale,18605.0,92.6
+B000003178,갑룡초등학교,exclude_playground_and_small_child,갑룡공원,neighborhood_park_scale,18605.0,92.6
+B000003098,인천논곡초등학교,baseline_all_classes,아담공원,small_child_park,2491.0,179.4
+B000003098,인천논곡초등학교,exclude_playground_like,아담공원,small_child_park,2491.0,179.4
+B000003098,인천논곡초등학교,exclude_playground_and_small_child,논현포대공원,neighborhood_park_scale,207370.0,327.3
+B000002959,인천영종초등학교,baseline_all_classes,파크골프공원,neighborhood_park_scale,16941.0,136.6
+B000002959,인천영종초등학교,exclude_playground_like,파크골프공원,neighborhood_park_scale,16941.0,136.6
+B000002959,인천영종초등학교,exclude_playground_and_small_child,파크골프공원,neighborhood_park_scale,16941.0,136.6
+B000025228,인천예송초등학교,baseline_all_classes,송도  14호 어린이공원,small_child_park,1500.3,110.3
+B000025228,인천예송초등학교,exclude_playground_like,송도  14호 어린이공원,small_child_park,1500.3,110.3
+B000025228,인천예송초등학교,exclude_playground_and_small_child,센트럴파크,neighborhood_park_scale,351113.9,754.7
+B000003150,인천건지초등학교,baseline_all_classes,건지공원,mid_activity_park,7988.0,236.7
+B000003150,인천건지초등학교,exclude_playground_like,건지공원,mid_activity_park,7988.0,236.7
+B000003150,인천건지초등학교,exclude_playground_and_small_child,건지공원,mid_activity_park,7988.0,236.7
+B000025202,인천장아초등학교,baseline_all_classes,장아산공원,neighborhood_park_scale,333049.0,37.8
+B000025202,인천장아초등학교,exclude_playground_like,장아산공원,neighborhood_park_scale,333049.0,37.8
+B000025202,인천장아초등학교,exclude_playground_and_small_child,장아산공원,neighborhood_park_scale,333049.0,37.8
+B000003013,인천영선초등학교,baseline_all_classes,햇살공원,mid_activity_park,3338.0,150.8
+B000003013,인천영선초등학교,exclude_playground_like,햇살공원,mid_activity_park,3338.0,150.8
+B000003013,인천영선초등학교,exclude_playground_and_small_child,햇살공원,mid_activity_park,3338.0,150.8
+B000003127,인천부현동초등학교,baseline_all_classes,까치공원,neighborhood_park_scale,17043.9,296.0
+B000003127,인천부현동초등학교,exclude_playground_like,까치공원,neighborhood_park_scale,17043.9,296.0
+B000003127,인천부현동초등학교,exclude_playground_and_small_child,까치공원,neighborhood_park_scale,17043.9,296.0
+B000003012,인천후정초등학교,baseline_all_classes,후정공원,neighborhood_park_scale,22209.0,65.8
+B000003012,인천후정초등학교,exclude_playground_like,후정공원,neighborhood_park_scale,22209.0,65.8
+B000003012,인천후정초등학교,exclude_playground_and_small_child,후정공원,neighborhood_park_scale,22209.0,65.8
+B000003007,인천부곡초등학교,baseline_all_classes,마장공원,neighborhood_park_scale,15020.0,317.8
+B000003007,인천부곡초등학교,exclude_playground_like,마장공원,neighborhood_park_scale,15020.0,317.8
+B000003007,인천부곡초등학교,exclude_playground_and_small_child,마장공원,neighborhood_park_scale,15020.0,317.8
+B000027505,인천중산초등학교,baseline_all_classes,박석공원,neighborhood_park_scale,352000.0,142.4
+B000027505,인천중산초등학교,exclude_playground_like,박석공원,neighborhood_park_scale,352000.0,142.4
+B000027505,인천중산초등학교,exclude_playground_and_small_child,박석공원,neighborhood_park_scale,352000.0,142.4
+B000024924,인천하늘초등학교,baseline_all_classes,씨사이드파크 영종진 숲체험장 놀이터,playground_like,,2.1
+B000024924,인천하늘초등학교,exclude_playground_like,선사공원,neighborhood_park_scale,31629.0,408.4
+B000024924,인천하늘초등학교,exclude_playground_and_small_child,선사공원,neighborhood_park_scale,31629.0,408.4
+B000003137,인천간재울초등학교,baseline_all_classes,검암소공원,playground_like,641.0,289.2
+B000003137,인천간재울초등학교,exclude_playground_like,과기공원,small_child_park,2395.0,315.6
+B000003137,인천간재울초등학교,exclude_playground_and_small_child,경서근린공원,neighborhood_park_scale,21935.0,509.3
+B000003148,인천가림초등학교,baseline_all_classes,가좌공원,mid_activity_park,8939.0,217.5
+B000003148,인천가림초등학교,exclude_playground_like,가좌공원,mid_activity_park,8939.0,217.5
+B000003148,인천가림초등학교,exclude_playground_and_small_child,가좌공원,mid_activity_park,8939.0,217.5
+B000003189,해명초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,13183.5
+B000003189,해명초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,13183.5
+B000003189,해명초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,13183.5
+B000003113,인천화전초등학교,baseline_all_classes,하마리공원,playground_like,291.0,251.8
+B000003113,인천화전초등학교,exclude_playground_like,된밭공원,neighborhood_park_scale,11655.0,575.0
+B000003113,인천화전초등학교,exclude_playground_and_small_child,된밭공원,neighborhood_park_scale,11655.0,575.0
+B000003131,인천효성서초등학교,baseline_all_classes,새벌공원,neighborhood_park_scale,131302.0,248.8
+B000003131,인천효성서초등학교,exclude_playground_like,새벌공원,neighborhood_park_scale,131302.0,248.8
+B000003131,인천효성서초등학교,exclude_playground_and_small_child,새벌공원,neighborhood_park_scale,131302.0,248.8
+B000026155,인천한들초등학교,baseline_all_classes,당하어린이공원,small_child_park,1800.0,755.1
+B000026155,인천한들초등학교,exclude_playground_like,당하어린이공원,small_child_park,1800.0,755.1
+B000026155,인천한들초등학교,exclude_playground_and_small_child,장모루공원,mid_activity_park,5704.0,1355.9
+B000025248,인천은송초등학교,baseline_all_classes,랜드마크시티 3호 근린공원,neighborhood_park_scale,81848.7,1002.9
+B000025248,인천은송초등학교,exclude_playground_like,랜드마크시티 3호 근린공원,neighborhood_park_scale,81848.7,1002.9
+B000025248,인천은송초등학교,exclude_playground_and_small_child,랜드마크시티 3호 근린공원,neighborhood_park_scale,81848.7,1002.9
+B000003095,인천구월초등학교,baseline_all_classes,만월공원,small_child_park,1510.0,213.8
+B000003095,인천구월초등학교,exclude_playground_like,만월공원,small_child_park,1510.0,213.8
+B000003095,인천구월초등학교,exclude_playground_and_small_child,전재울공원,neighborhood_park_scale,122963.0,526.8
+B000003140,인천초은초등학교,baseline_all_classes,거울어린이공원,mid_activity_park,8963.9,88.4
+B000003140,인천초은초등학교,exclude_playground_like,거울어린이공원,mid_activity_park,8963.9,88.4
+B000003140,인천초은초등학교,exclude_playground_and_small_child,거울어린이공원,mid_activity_park,8963.9,88.4
+B000025189,인천송명초등학교,baseline_all_classes,첨단산업클러스터2호어린이공원,mid_activity_park,9065.0,103.4
+B000025189,인천송명초등학교,exclude_playground_like,첨단산업클러스터2호어린이공원,mid_activity_park,9065.0,103.4
+B000025189,인천송명초등학교,exclude_playground_and_small_child,첨단산업클러스터2호어린이공원,mid_activity_park,9065.0,103.4
+B000025677,인천주안초등학교,baseline_all_classes,승기어린이공원,mid_activity_park,8785.3,121.8
+B000025677,인천주안초등학교,exclude_playground_like,승기어린이공원,mid_activity_park,8785.3,121.8
+B000025677,인천주안초등학교,exclude_playground_and_small_child,승기어린이공원,mid_activity_park,8785.3,121.8
+B000003164,인천가정초등학교,baseline_all_classes,장고개공원,mid_activity_park,4278.0,164.5
+B000003164,인천가정초등학교,exclude_playground_like,장고개공원,mid_activity_park,4278.0,164.5
+B000003164,인천가정초등학교,exclude_playground_and_small_child,장고개공원,mid_activity_park,4278.0,164.5
+B000003187,양사초등학교,baseline_all_classes,강화읍소공원,playground_like,311.0,8349.4
+B000003187,양사초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,8540.7
+B000003187,양사초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,8540.7
+B000003133,인천해원초등학교,baseline_all_classes,흰여울공원,small_child_park,2965.5,67.4
+B000003133,인천해원초등학교,exclude_playground_like,흰여울공원,small_child_park,2965.5,67.4
+B000003133,인천해원초등학교,exclude_playground_and_small_child,물고기자리공원,mid_activity_park,3806.5,152.7
+B000002968,인천서림초등학교,baseline_all_classes,대헌소공원,playground_like,1384.2,583.5
+B000002968,인천서림초등학교,exclude_playground_like,송현공원,neighborhood_park_scale,73323.7,655.4
+B000002968,인천서림초등학교,exclude_playground_and_small_child,송현공원,neighborhood_park_scale,73323.7,655.4
+B000026333,인천가원초등학교,baseline_all_classes,윗말공원,playground_like,,482.5
+B000026333,인천가원초등학교,exclude_playground_like,용머리공원,neighborhood_park_scale,15840.5,788.9
+B000026333,인천가원초등학교,exclude_playground_and_small_child,용머리공원,neighborhood_park_scale,15840.5,788.9
+B000003175,조산초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,10513.8
+B000003175,조산초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,10513.8
+B000003175,조산초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,10513.8
+B000003074,인천간석초등학교,baseline_all_classes,용광공원,playground_like,597.0,191.5
+B000003074,인천간석초등학교,exclude_playground_like,구월공원,mid_activity_park,3194.0,258.0
+B000003074,인천간석초등학교,exclude_playground_and_small_child,구월공원,mid_activity_park,3194.0,258.0
+B000002993,연평초등학교,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,63552.9
+B000002993,연평초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,69258.1
+B000002993,연평초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,69258.1
+B000025236,인천첨단초등학교,baseline_all_classes,첨단산업클러스터5호 근린공원,neighborhood_park_scale,10424.4,96.5
+B000025236,인천첨단초등학교,exclude_playground_like,첨단산업클러스터5호 근린공원,neighborhood_park_scale,10424.4,96.5
+B000025236,인천첨단초등학교,exclude_playground_and_small_child,첨단산업클러스터5호 근린공원,neighborhood_park_scale,10424.4,96.5
+B000026470,인천이음초등학교,baseline_all_classes,도담공원,neighborhood_park_scale,28592.8,172.6
+B000026470,인천이음초등학교,exclude_playground_like,도담공원,neighborhood_park_scale,28592.8,172.6
+B000026470,인천이음초등학교,exclude_playground_and_small_child,도담공원,neighborhood_park_scale,28592.8,172.6
+B000003124,인천안산초등학교,baseline_all_classes,임학공원,mid_activity_park,8339.9,498.7
+B000003124,인천안산초등학교,exclude_playground_like,임학공원,mid_activity_park,8339.9,498.7
+B000003124,인천안산초등학교,exclude_playground_and_small_child,임학공원,mid_activity_park,8339.9,498.7
+B000003185,하점초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,6813.5
+B000003185,하점초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,6813.5
+B000003185,하점초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,6813.5
+B000003065,인천신정초등학교,baseline_all_classes,송도  11호 어린이공원,small_child_park,2000.1,332.5
+B000003065,인천신정초등학교,exclude_playground_like,송도  11호 어린이공원,small_child_park,2000.1,332.5
+B000003065,인천신정초등학교,exclude_playground_and_small_child,센트럴파크,neighborhood_park_scale,370750.0,776.9
+B000002962,인천영종초등학교금산분교장,baseline_all_classes,금산어린이집 놀이터,playground_like,,852.2
+B000002962,인천영종초등학교금산분교장,exclude_playground_like,미단시티 2호,neighborhood_park_scale,66408.0,1037.4
+B000002962,인천영종초등학교금산분교장,exclude_playground_and_small_child,미단시티 2호,neighborhood_park_scale,66408.0,1037.4
+B000003158,인천원당초등학교,baseline_all_classes,원당지구 1호공원,neighborhood_park_scale,18321.0,288.1
+B000003158,인천원당초등학교,exclude_playground_like,원당지구 1호공원,neighborhood_park_scale,18321.0,288.1
+B000003158,인천원당초등학교,exclude_playground_and_small_child,원당지구 1호공원,neighborhood_park_scale,18321.0,288.1
+B000025512,인천용학초등학교,baseline_all_classes,도담어린이공원,mid_activity_park,4577.9,57.8
+B000025512,인천용학초등학교,exclude_playground_like,도담어린이공원,mid_activity_park,4577.9,57.8
+B000025512,인천용학초등학교,exclude_playground_and_small_child,도담어린이공원,mid_activity_park,4577.9,57.8
+B000003087,인천원동초등학교,baseline_all_classes,물방울공원,small_child_park,1689.0,167.4
+B000003087,인천원동초등학교,exclude_playground_like,물방울공원,small_child_park,1689.0,167.4
+B000003087,인천원동초등학교,exclude_playground_and_small_child,하늬공원,neighborhood_park_scale,10633.0,167.5
+B000025222,인천현송초등학교,baseline_all_classes,랜드마크시티 17 근린공원,neighborhood_park_scale,60158.0,492.1
+B000025222,인천현송초등학교,exclude_playground_like,랜드마크시티 17 근린공원,neighborhood_park_scale,60158.0,492.1
+B000025222,인천현송초등학교,exclude_playground_and_small_child,랜드마크시티 17 근린공원,neighborhood_park_scale,60158.0,492.1
+B000003016,인천부일초등학교,baseline_all_classes,동소정놀이공원,small_child_park,1550.0,56.4
+B000003016,인천부일초등학교,exclude_playground_like,동소정놀이공원,small_child_park,1550.0,56.4
+B000003016,인천부일초등학교,exclude_playground_and_small_child,청운공원,neighborhood_park_scale,15587.0,225.6
+B000003170,인천서곶초등학교,baseline_all_classes,대평공원,mid_activity_park,3103.0,183.6
+B000003170,인천서곶초등학교,exclude_playground_like,대평공원,mid_activity_park,3103.0,183.6
+B000003170,인천서곶초등학교,exclude_playground_and_small_child,대평공원,mid_activity_park,3103.0,183.6
+B000026504,인천송담초등학교,baseline_all_classes,랜드마크시티 1호 수변공원,neighborhood_park_scale,77873.0,486.2
+B000026504,인천송담초등학교,exclude_playground_like,랜드마크시티 1호 수변공원,neighborhood_park_scale,77873.0,486.2
+B000026504,인천송담초등학교,exclude_playground_and_small_child,랜드마크시티 1호 수변공원,neighborhood_park_scale,77873.0,486.2
+B000003176,화도초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,13372.9
+B000003176,화도초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,13372.9
+B000003176,화도초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,13372.9
+B000003139,인천청라초등학교,baseline_all_classes,뜰어린이공원,mid_activity_park,9604.6,75.2
+B000003139,인천청라초등학교,exclude_playground_like,뜰어린이공원,mid_activity_park,9604.6,75.2
+B000003139,인천청라초등학교,exclude_playground_and_small_child,뜰어린이공원,mid_activity_park,9604.6,75.2
+B000025210,인천연송초등학교,baseline_all_classes,송도  12호 어린이공원,small_child_park,1500.1,249.6
+B000025210,인천연송초등학교,exclude_playground_like,송도  12호 어린이공원,small_child_park,1500.1,249.6
+B000025210,인천연송초등학교,exclude_playground_and_small_child,송도  17호 어린이공원,mid_activity_park,8838.4,874.5
+B000003179,강화초등학교,baseline_all_classes,강화읍소공원,playground_like,311.0,258.9
+B000003179,강화초등학교,exclude_playground_like,관청근린공원,neighborhood_park_scale,83454.0,569.9
+B000003179,강화초등학교,exclude_playground_and_small_child,관청근린공원,neighborhood_park_scale,83454.0,569.9
+B000003101,인천인동초등학교,baseline_all_classes,쇄판공원,playground_like,1499.0,58.7
+B000003101,인천인동초등학교,exclude_playground_like,새말소공원,mid_activity_park,4191.0,425.8
+B000003101,인천인동초등학교,exclude_playground_and_small_child,새말소공원,mid_activity_park,4191.0,425.8
+B000002982,인천석암초등학교,baseline_all_classes,두리어린이공원,playground_like,1052.0,581.1
+B000002982,인천석암초등학교,exclude_playground_like,돌샘어린이공원,mid_activity_park,5853.5,670.2
+B000002982,인천석암초등학교,exclude_playground_and_small_child,돌샘어린이공원,mid_activity_park,5853.5,670.2
+B000002956,인천운남초등학교,baseline_all_classes,운남제1호공원,neighborhood_park_scale,11065.0,78.8
+B000002956,인천운남초등학교,exclude_playground_like,운남제1호공원,neighborhood_park_scale,11065.0,78.8
+B000002956,인천운남초등학교,exclude_playground_and_small_child,운남제1호공원,neighborhood_park_scale,11065.0,78.8
+B000003153,인천완정초등학교,baseline_all_classes,마전근린공원,neighborhood_park_scale,113000.0,343.8
+B000003153,인천완정초등학교,exclude_playground_like,마전근린공원,neighborhood_park_scale,113000.0,343.8
+B000003153,인천완정초등학교,exclude_playground_and_small_child,마전근린공원,neighborhood_park_scale,113000.0,343.8
+B000003160,인천창신초등학교,baseline_all_classes,원당지구 4호 어린이공원,small_child_park,2950.0,46.7
+B000003160,인천창신초등학교,exclude_playground_like,원당지구 4호 어린이공원,small_child_park,2950.0,46.7
+B000003160,인천창신초등학교,exclude_playground_and_small_child,원당지구 3호공원,neighborhood_park_scale,11115.0,370.5
+B000026332,인천백석초등학교,baseline_all_classes,당하지구7호 어린이공원,small_child_park,2566.0,125.3
+B000026332,인천백석초등학교,exclude_playground_like,당하지구7호 어린이공원,small_child_park,2566.0,125.3
+B000026332,인천백석초등학교,exclude_playground_and_small_child,당하지구 1호공원,neighborhood_park_scale,28761.0,311.3
+B000003186,명신초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,7924.9
+B000003186,명신초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,7924.9
+B000003186,명신초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,7924.9
+B000003122,인천계양초등학교,baseline_all_classes,중앙공원,small_child_park,2384.5,190.2
+B000003122,인천계양초등학교,exclude_playground_like,중앙공원,small_child_park,2384.5,190.2
+B000003122,인천계양초등학교,exclude_playground_and_small_child,동산공원,mid_activity_park,4845.9,266.9
+B000003194,서도초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,22640.5
+B000003194,서도초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,22640.5
+B000003194,서도초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,22640.5
+B000003112,인천성지초등학교,baseline_all_classes,효성공원,neighborhood_park_scale,10877.0,389.4
+B000003112,인천성지초등학교,exclude_playground_like,효성공원,neighborhood_park_scale,10877.0,389.4
+B000003112,인천성지초등학교,exclude_playground_and_small_child,효성공원,neighborhood_park_scale,10877.0,389.4
+B000003120,인천당산초등학교,baseline_all_classes,동양택지2공원,small_child_park,1930.2,101.2
+B000003120,인천당산초등학교,exclude_playground_like,동양택지2공원,small_child_park,1930.2,101.2
+B000003120,인천당산초등학교,exclude_playground_and_small_child,동양공원,neighborhood_park_scale,16261.4,315.3
+B000002967,인천서흥초등학교,baseline_all_classes,돌산공원,mid_activity_park,8111.0,467.7
+B000002967,인천서흥초등학교,exclude_playground_like,돌산공원,mid_activity_park,8111.0,467.7
+B000002967,인천서흥초등학교,exclude_playground_and_small_child,돌산공원,mid_activity_park,8111.0,467.7
+B000003192,교동초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,18152.5
+B000003192,교동초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,18152.5
+B000003192,교동초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,18152.5
+B000003134,인천경명초등학교,baseline_all_classes,백조자리공원,small_child_park,1544.8,480.6
+B000003134,인천경명초등학교,exclude_playground_like,백조자리공원,small_child_park,1544.8,480.6
+B000003134,인천경명초등학교,exclude_playground_and_small_child,물병자리공원,neighborhood_park_scale,88118.9,500.6
+B000003184,삼성초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,4685.6
+B000003184,삼성초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,4685.6
+B000003184,삼성초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,4685.6
+B000022839,인천청일초등학교,baseline_all_classes,청라호수공원,neighborhood_park_scale,690573.9,177.5
+B000022839,인천청일초등학교,exclude_playground_like,청라호수공원,neighborhood_park_scale,690573.9,177.5
+B000022839,인천청일초등학교,exclude_playground_and_small_child,청라호수공원,neighborhood_park_scale,690573.9,177.5
+B000026471,인천신검단초등학교,baseline_all_classes,산들바람공원,neighborhood_park_scale,63663.4,886.3
+B000026471,인천신검단초등학교,exclude_playground_like,산들바람공원,neighborhood_park_scale,63663.4,886.3
+B000026471,인천신검단초등학교,exclude_playground_and_small_child,산들바람공원,neighborhood_park_scale,63663.4,886.3
+B000003141,인천양지초등학교,baseline_all_classes,용두공원,playground_like,1347.0,145.4
+B000003141,인천양지초등학교,exclude_playground_like,샘내공원,mid_activity_park,3109.0,197.0
+B000003141,인천양지초등학교,exclude_playground_and_small_child,샘내공원,mid_activity_park,3109.0,197.0
+B000003190,삼산초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,14648.1
+B000003190,삼산초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,14648.1
+B000003190,삼산초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,14648.1
+B000026467,인천해든초등학교,baseline_all_classes,해든공원,mid_activity_park,8251.8,94.2
+B000026467,인천해든초등학교,exclude_playground_like,해든공원,mid_activity_park,8251.8,94.2
+B000026467,인천해든초등학교,exclude_playground_and_small_child,해든공원,mid_activity_park,8251.8,94.2
+B000003083,인천도림초등학교,baseline_all_classes,오봉공원,playground_like,1429.0,78.5
+B000003083,인천도림초등학교,exclude_playground_like,오봉공원,neighborhood_park_scale,10256.0,78.5
+B000003083,인천도림초등학교,exclude_playground_and_small_child,오봉공원,neighborhood_park_scale,10256.0,78.5
+B000003177,대월초등학교,baseline_all_classes,관청근린공원,neighborhood_park_scale,83454.0,1311.1
+B000003177,대월초등학교,exclude_playground_like,관청근린공원,neighborhood_park_scale,83454.0,1311.1
+B000003177,대월초등학교,exclude_playground_and_small_child,관청근린공원,neighborhood_park_scale,83454.0,1311.1
+B000002997,북포초등학교,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,160751.8
+B000002997,북포초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,161863.4
+B000002997,북포초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,161863.4
+B000003094,인천신월초등학교,baseline_all_classes,남동문화공원,neighborhood_park_scale,34679.0,164.7
+B000003094,인천신월초등학교,exclude_playground_like,남동문화공원,neighborhood_park_scale,34679.0,164.7
+B000003094,인천신월초등학교,exclude_playground_and_small_child,남동문화공원,neighborhood_park_scale,34679.0,164.7
+B000003171,인천검암초등학교,baseline_all_classes,상동공원,neighborhood_park_scale,12475.0,194.0
+B000003171,인천검암초등학교,exclude_playground_like,상동공원,neighborhood_park_scale,12475.0,194.0
+B000003171,인천검암초등학교,exclude_playground_and_small_child,상동공원,neighborhood_park_scale,12475.0,194.0
+B000022834,인천청람초등학교,baseline_all_classes,물병자리공원,neighborhood_park_scale,88118.9,232.5
+B000022834,인천청람초등학교,exclude_playground_like,물병자리공원,neighborhood_park_scale,88118.9,232.5
+B000022834,인천청람초등학교,exclude_playground_and_small_child,물병자리공원,neighborhood_park_scale,88118.9,232.5
+B000003169,인천신현초등학교,baseline_all_classes,석남체육공원,neighborhood_park_scale,10880.0,600.4
+B000003169,인천신현초등학교,exclude_playground_like,석남체육공원,neighborhood_park_scale,10880.0,600.4
+B000003169,인천신현초등학교,exclude_playground_and_small_child,석남체육공원,neighborhood_park_scale,10880.0,600.4
+B000003085,인천장도초등학교,baseline_all_classes,동녘공원,small_child_park,1740.0,174.4
+B000003085,인천장도초등학교,exclude_playground_like,동녘공원,small_child_park,1740.0,174.4
+B000003085,인천장도초등학교,exclude_playground_and_small_child,너른들공원,mid_activity_park,3294.0,430.3
+B000003161,인천금곡초등학교,baseline_all_classes,왕길새싹공원,mid_activity_park,3309.0,330.9
+B000003161,인천금곡초등학교,exclude_playground_like,왕길새싹공원,mid_activity_park,3309.0,330.9
+B000003161,인천금곡초등학교,exclude_playground_and_small_child,왕길새싹공원,mid_activity_park,3309.0,330.9
+B000025256,인천송원초등학교,baseline_all_classes,국제화복합단지 1호 근린공원,neighborhood_park_scale,83541.5,267.4
+B000025256,인천송원초등학교,exclude_playground_like,국제화복합단지 1호 근린공원,neighborhood_park_scale,83541.5,267.4
+B000025256,인천송원초등학교,exclude_playground_and_small_child,국제화복합단지 1호 근린공원,neighborhood_park_scale,83541.5,267.4
+B000003004,인천남부초등학교이작분교장,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,33813.9
+B000003004,인천남부초등학교이작분교장,exclude_playground_like,랜드마크시티 3호 수변공원,neighborhood_park_scale,60158.0,39699.3
+B000003004,인천남부초등학교이작분교장,exclude_playground_and_small_child,랜드마크시티 3호 수변공원,neighborhood_park_scale,60158.0,39699.3
+B000003183,불은초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,6506.1
+B000003183,불은초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,6506.1
+B000003183,불은초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,6506.1
+B000003082,인천만수초등학교,baseline_all_classes,시영공원,small_child_park,1500.0,162.3
+B000003082,인천만수초등학교,exclude_playground_like,시영공원,small_child_park,1500.0,162.3
+B000003082,인천만수초등학교,exclude_playground_and_small_child,담방문화공원,mid_activity_park,7126.0,162.9
+B000002980,인천관교초등학교,baseline_all_classes,관교공원,small_child_park,1698.7,175.4
+B000002980,인천관교초등학교,exclude_playground_like,관교공원,small_child_park,1698.7,175.4
+B000002980,인천관교초등학교,exclude_playground_and_small_child,구월문화공원,mid_activity_park,3718.0,540.8
+B000003110,인천해서초등학교,baseline_all_classes,고향골공원,playground_like,1485.4,165.4
+B000003110,인천해서초등학교,exclude_playground_like,갈개공원,mid_activity_park,7437.0,566.9
+B000003110,인천해서초등학교,exclude_playground_and_small_child,갈개공원,mid_activity_park,7437.0,566.9
+B000025196,인천장서초등학교,baseline_all_classes,흰여울공원,small_child_park,1587.0,132.8
+B000025196,인천장서초등학교,exclude_playground_like,흰여울공원,small_child_park,1587.0,132.8
+B000025196,인천장서초등학교,exclude_playground_and_small_child,어울공원,neighborhood_park_scale,42487.0,193.1
+B000003045,인천한길초등학교,baseline_all_classes,나래놀이공원,playground_like,913.0,90.0
+B000003045,인천한길초등학교,exclude_playground_like,도드리놀이공원,mid_activity_park,3239.0,166.2
+B000003045,인천한길초등학교,exclude_playground_and_small_child,도드리놀이공원,mid_activity_park,3239.0,166.2
+B000003167,인천석남서초등학교,baseline_all_classes,석남공원,small_child_park,2290.0,675.6
+B000003167,인천석남서초등학교,exclude_playground_like,석남공원,small_child_park,2290.0,675.6
+B000003167,인천석남서초등학교,exclude_playground_and_small_child,감중공원,mid_activity_park,5572.0,831.5
+B000003173,길상초등학교,baseline_all_classes,백석공원(마),neighborhood_park_scale,45013.0,11063.3
+B000003173,길상초등학교,exclude_playground_like,백석공원(마),neighborhood_park_scale,45013.0,11063.3
+B000003173,길상초등학교,exclude_playground_and_small_child,백석공원(마),neighborhood_park_scale,45013.0,11063.3
+B000025206,인천새봄초등학교,baseline_all_classes,동춘1근린공원,neighborhood_park_scale,10853.1,684.8
+B000025206,인천새봄초등학교,exclude_playground_like,동춘1근린공원,neighborhood_park_scale,10853.1,684.8
+B000025206,인천새봄초등학교,exclude_playground_and_small_child,동춘1근린공원,neighborhood_park_scale,10853.1,684.8
+B000003033,인천부마초등학교,baseline_all_classes,산곡소공원,playground_like,761.0,605.5
+B000003033,인천부마초등학교,exclude_playground_like,마장공원,neighborhood_park_scale,15020.0,648.7
+B000003033,인천부마초등학교,exclude_playground_and_small_child,마장공원,neighborhood_park_scale,15020.0,648.7
+B000003182,선원초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,2988.6
+B000003182,선원초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,2988.6
+B000003182,선원초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,2988.6
+B000003009,인천대정초등학교,baseline_all_classes,부평공원,neighborhood_park_scale,113123.0,602.9
+B000003009,인천대정초등학교,exclude_playground_like,부평공원,neighborhood_park_scale,113123.0,602.9
+B000003009,인천대정초등학교,exclude_playground_and_small_child,부평공원,neighborhood_park_scale,113123.0,602.9
+B000003000,인천삼목초등학교장봉분교장,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,8330.3
+B000003000,인천삼목초등학교장봉분교장,exclude_playground_like,유수지공원,neighborhood_park_scale,58961.0,13186.7
+B000003000,인천삼목초등학교장봉분교장,exclude_playground_and_small_child,유수지공원,neighborhood_park_scale,58961.0,13186.7
+B000003119,인천소양초등학교,baseline_all_classes,소양공원,small_child_park,2431.0,230.3
+B000003119,인천소양초등학교,exclude_playground_like,소양공원,small_child_park,2431.0,230.3
+B000003119,인천소양초등학교,exclude_playground_and_small_child,박촌공원,mid_activity_park,4019.0,457.2
+B000003111,인천안남초등학교,baseline_all_classes,개나리공원,playground_like,625.7,299.6
+B000003111,인천안남초등학교,exclude_playground_like,계산4공원,small_child_park,2143.4,379.5
+B000003111,인천안남초등학교,exclude_playground_and_small_child,오조산공원,neighborhood_park_scale,18314.4,563.7
+B000002995,영흥초등학교,baseline_all_classes,솔찬공원,neighborhood_park_scale,157445.0,19421.0
+B000002995,영흥초등학교,exclude_playground_like,솔찬공원,neighborhood_park_scale,157445.0,19421.0
+B000002995,영흥초등학교,exclude_playground_and_small_child,솔찬공원,neighborhood_park_scale,157445.0,19421.0
+B000003064,인천옥련초등학교,baseline_all_classes,새싹공원,small_child_park,2362.0,79.0
+B000003064,인천옥련초등학교,exclude_playground_like,새싹공원,small_child_park,2362.0,79.0
+B000003064,인천옥련초등학교,exclude_playground_and_small_child,능허대공원,neighborhood_park_scale,12363.0,624.1
+B000003063,인천문남초등학교,baseline_all_classes,문남공원,neighborhood_park_scale,21810.9,63.3
+B000003063,인천문남초등학교,exclude_playground_like,문남공원,neighborhood_park_scale,21810.9,63.3
+B000003063,인천문남초등학교,exclude_playground_and_small_child,문남공원,neighborhood_park_scale,21810.9,63.3
+B000003059,인천동춘초등학교,baseline_all_classes,동춘공원,neighborhood_park_scale,10000.1,166.6
+B000003059,인천동춘초등학교,exclude_playground_like,동춘공원,neighborhood_park_scale,10000.1,166.6
+B000003059,인천동춘초등학교,exclude_playground_and_small_child,동춘공원,neighborhood_park_scale,10000.1,166.6
+B000003068,인천먼우금초등학교,baseline_all_classes,먼우금공원(송도1호),playground_like,1499.8,112.6
+B000003068,인천먼우금초등학교,exclude_playground_like,새아침공원,neighborhood_park_scale,102024.0,357.3
+B000003068,인천먼우금초등학교,exclude_playground_and_small_child,새아침공원,neighborhood_park_scale,102024.0,357.3
+B000003023,인천부평북초등학교,baseline_all_classes,갈산공원,neighborhood_park_scale,45686.0,356.3
+B000003023,인천부평북초등학교,exclude_playground_like,갈산공원,neighborhood_park_scale,45686.0,356.3
+B000003023,인천부평북초등학교,exclude_playground_and_small_child,갈산공원,neighborhood_park_scale,45686.0,356.3
+B000003097,인천논현초등학교,baseline_all_classes,아랫말공원,small_child_park,2400.0,67.9
+B000003097,인천논현초등학교,exclude_playground_like,아랫말공원,small_child_park,2400.0,67.9
+B000003097,인천논현초등학교,exclude_playground_and_small_child,논현중앙공원,neighborhood_park_scale,60073.0,542.8
+B000003066,인천해송초등학교,baseline_all_classes,미추홀공원,neighborhood_park_scale,160099.0,165.0
+B000003066,인천해송초등학교,exclude_playground_like,미추홀공원,neighborhood_park_scale,160099.0,165.0
+B000003066,인천해송초등학교,exclude_playground_and_small_child,미추홀공원,neighborhood_park_scale,160099.0,165.0
+B000003132,인천계양초등학교상야분교장,baseline_all_classes,상야공원,small_child_park,1500.5,208.5
+B000003132,인천계양초등학교상야분교장,exclude_playground_like,상야공원,small_child_park,1500.5,208.5
+B000003132,인천계양초등학교상야분교장,exclude_playground_and_small_child,동양공원,neighborhood_park_scale,16261.4,2703.8
+B000003128,인천작전초등학교,baseline_all_classes,된밭공원,neighborhood_park_scale,11655.0,238.7
+B000003128,인천작전초등학교,exclude_playground_like,된밭공원,neighborhood_park_scale,11655.0,238.7
+B000003128,인천작전초등학교,exclude_playground_and_small_child,된밭공원,neighborhood_park_scale,11655.0,238.7
+B000003159,인천발산초등학교,baseline_all_classes,원당지구 5호 어린이공원,small_child_park,2320.0,157.9
+B000003159,인천발산초등학교,exclude_playground_like,원당지구 5호 어린이공원,small_child_park,2320.0,157.9
+B000003159,인천발산초등학교,exclude_playground_and_small_child,맑은물빛공원,neighborhood_park_scale,32687.5,202.1
+B000003138,인천경서초등학교,baseline_all_classes,쑥공원(경서3호),mid_activity_park,4205.0,244.3
+B000003138,인천경서초등학교,exclude_playground_like,쑥공원(경서3호),mid_activity_park,4205.0,244.3
+B000003138,인천경서초등학교,exclude_playground_and_small_child,쑥공원(경서3호),mid_activity_park,4205.0,244.3
+B000003079,인천만수북초등학교,baseline_all_classes,동부초교3호,playground_like,205.0,213.3
+B000003079,인천만수북초등학교,exclude_playground_like,둥지공원,small_child_park,2400.0,549.2
+B000003079,인천만수북초등학교,exclude_playground_and_small_child,아단공원,mid_activity_park,4764.0,566.5
+B000003157,인천단봉초등학교,baseline_all_classes,금호공원(오류지구 어린이공원),mid_activity_park,3335.0,102.6
+B000003157,인천단봉초등학교,exclude_playground_like,금호공원(오류지구 어린이공원),mid_activity_park,3335.0,102.6
+B000003157,인천단봉초등학교,exclude_playground_and_small_child,금호공원(오류지구 어린이공원),mid_activity_park,3335.0,102.6
+B000003067,인천신송초등학교,baseline_all_classes,신송공원,neighborhood_park_scale,38919.9,59.8
+B000003067,인천신송초등학교,exclude_playground_like,신송공원,neighborhood_park_scale,38919.9,59.8
+B000003067,인천신송초등학교,exclude_playground_and_small_child,신송공원,neighborhood_park_scale,38919.9,59.8
+B000003041,인천용마초등학교,baseline_all_classes,다온어린이공원,mid_activity_park,5268.0,339.5
+B000003041,인천용마초등학교,exclude_playground_like,다온어린이공원,mid_activity_park,5268.0,339.5
+B000003041,인천용마초등학교,exclude_playground_and_small_child,다온어린이공원,mid_activity_park,5268.0,339.5
+B000003048,인천명선초등학교,baseline_all_classes,송도  11호 어린이공원,small_child_park,2000.1,331.6
+B000003048,인천명선초등학교,exclude_playground_like,송도  11호 어린이공원,small_child_park,2000.1,331.6
+B000003048,인천명선초등학교,exclude_playground_and_small_child,새아침공원,neighborhood_park_scale,104709.0,752.2
+B000003109,인천효성초등학교,baseline_all_classes,이촌공원,neighborhood_park_scale,22810.0,142.5
+B000003109,인천효성초등학교,exclude_playground_like,이촌공원,neighborhood_park_scale,22810.0,142.5
+B000003109,인천효성초등학교,exclude_playground_and_small_child,이촌공원,neighborhood_park_scale,22810.0,142.5
+B000002975,인천용현남초등학교,baseline_all_classes,도담어린이공원,mid_activity_park,4577.9,127.8
+B000002975,인천용현남초등학교,exclude_playground_like,도담어린이공원,mid_activity_park,4577.9,127.8
+B000002975,인천용현남초등학교,exclude_playground_and_small_child,도담어린이공원,mid_activity_park,4577.9,127.8
+B000003114,인천서운초등학교,baseline_all_classes,도두머리공원,neighborhood_park_scale,12365.0,93.7
+B000003114,인천서운초등학교,exclude_playground_like,도두머리공원,neighborhood_park_scale,12365.0,93.7
+B000003114,인천서운초등학교,exclude_playground_and_small_child,도두머리공원,neighborhood_park_scale,12365.0,93.7
+B000003054,인천연화초등학교,baseline_all_classes,솔안공원,neighborhood_park_scale,13580.7,149.7
+B000003054,인천연화초등학교,exclude_playground_like,솔안공원,neighborhood_park_scale,13580.7,149.7
+B000003054,인천연화초등학교,exclude_playground_and_small_child,솔안공원,neighborhood_park_scale,13580.7,149.7
+B000002955,인천연안초등학교,baseline_all_classes,비취맨션3단지아파트10동앞놀이터,playground_like,,316.6
+B000002955,인천연안초등학교,exclude_playground_like,월미공원,neighborhood_park_scale,590614.0,1960.2
+B000002955,인천연안초등학교,exclude_playground_and_small_child,월미공원,neighborhood_park_scale,590614.0,1960.2
+B000002965,인천창영초등학교,baseline_all_classes,창영공원,playground_like,1028.8,103.7
+B000002965,인천창영초등학교,exclude_playground_like,율목공원,mid_activity_park,9785.0,621.7
+B000002965,인천창영초등학교,exclude_playground_and_small_child,율목공원,mid_activity_park,9785.0,621.7
+B000003027,인천부원초등학교,baseline_all_classes,꿈나무공원,small_child_park,2582.0,458.7
+B000003027,인천부원초등학교,exclude_playground_like,꿈나무공원,small_child_park,2582.0,458.7
+B000003027,인천부원초등학교,exclude_playground_and_small_child,신트리공원,neighborhood_park_scale,58595.0,561.8
+B000003099,인천새말초등학교,baseline_all_classes,둥지공원,small_child_park,2400.0,192.7
+B000003099,인천새말초등학교,exclude_playground_like,둥지공원,small_child_park,2400.0,192.7
+B000003099,인천새말초등학교,exclude_playground_and_small_child,만수공원,neighborhood_park_scale,12528.0,312.0
+B000002960,인성초등학교,baseline_all_classes,중부감리교회 놀이터,playground_like,,140.1
+B000002960,인성초등학교,exclude_playground_like,자유공원,neighborhood_park_scale,68112.0,154.7
+B000002960,인성초등학교,exclude_playground_and_small_child,자유공원,neighborhood_park_scale,68112.0,154.7
+B000003044,인천삼산초등학교,baseline_all_classes,사랑샘공원,mid_activity_park,4066.0,215.5
+B000003044,인천삼산초등학교,exclude_playground_like,사랑샘공원,mid_activity_park,4066.0,215.5
+B000003044,인천삼산초등학교,exclude_playground_and_small_child,사랑샘공원,mid_activity_park,4066.0,215.5
+B000003015,인천구산초등학교,baseline_all_classes,부개공원,neighborhood_park_scale,10986.0,152.7
+B000003015,인천구산초등학교,exclude_playground_like,부개공원,neighborhood_park_scale,10986.0,152.7
+B000003015,인천구산초등학교,exclude_playground_and_small_child,부개공원,neighborhood_park_scale,10986.0,152.7
+B000002950,인천신광초등학교,baseline_all_classes,한별프라이빌 놀이터,playground_like,,41.7
+B000002950,인천신광초등학교,exclude_playground_like,용마루어린이공원,mid_activity_park,3784.9,733.5
+B000002950,인천신광초등학교,exclude_playground_and_small_child,용마루어린이공원,mid_activity_park,3784.9,733.5
+B000002976,인천학산초등학교,baseline_all_classes,모리포공원,mid_activity_park,5589.7,104.1
+B000002976,인천학산초등학교,exclude_playground_like,모리포공원,mid_activity_park,5589.7,104.1
+B000002976,인천학산초등학교,exclude_playground_and_small_child,모리포공원,mid_activity_park,5589.7,104.1
+B000003092,인천송천초등학교,baseline_all_classes,모험공원,small_child_park,1531.0,123.9
+B000003092,인천송천초등학교,exclude_playground_like,모험공원,small_child_park,1531.0,123.9
+B000003092,인천송천초등학교,exclude_playground_and_small_child,바람공원,mid_activity_park,8511.0,153.5
+B000002986,인천대화초등학교,baseline_all_classes,쑥골공원,small_child_park,2378.8,264.5
+B000002986,인천대화초등학교,exclude_playground_like,쑥골공원,small_child_park,2378.8,264.5
+B000002986,인천대화초등학교,exclude_playground_and_small_child,화동공원,neighborhood_park_scale,20176.0,556.1
+B000002992,인천연학초등학교,baseline_all_classes,물방울어린이공원,small_child_park,2447.0,162.3
+B000002992,인천연학초등학교,exclude_playground_like,물방울어린이공원,small_child_park,2447.0,162.3
+B000002992,인천연학초등학교,exclude_playground_and_small_child,미추홀공원,neighborhood_park_scale,38950.0,334.5
+B000003123,인천계산초등학교,baseline_all_classes,부일공원,playground_like,1171.3,420.1
+B000003123,인천계산초등학교,exclude_playground_like,계양근린공원,neighborhood_park_scale,344582.8,721.7
+B000003123,인천계산초등학교,exclude_playground_and_small_child,계양근린공원,neighborhood_park_scale,344582.8,721.7
+B000002987,인천주안북초등학교,baseline_all_classes,염창공원,small_child_park,2105.3,245.0
+B000002987,인천주안북초등학교,exclude_playground_like,염창공원,small_child_park,2105.3,245.0
+B000002987,인천주안북초등학교,exclude_playground_and_small_child,주안공원,mid_activity_park,7974.2,600.2
+B000003144,인천석남초등학교,baseline_all_classes,석남체육공원,playground_like,,467.5
+B000003144,인천석남초등학교,exclude_playground_like,석남체육공원,neighborhood_park_scale,10880.0,490.8
+B000003144,인천석남초등학교,exclude_playground_and_small_child,석남체육공원,neighborhood_park_scale,10880.0,490.8
+B000003168,인천가현초등학교,baseline_all_classes,수차공원,playground_like,,140.7
+B000003168,인천가현초등학교,exclude_playground_like,가정공원,mid_activity_park,6612.0,532.4
+B000003168,인천가현초등학교,exclude_playground_and_small_child,가정공원,mid_activity_park,6612.0,532.4
+B000003142,인천심곡초등학교,baseline_all_classes,절골공원,small_child_park,2451.0,98.5
+B000003142,인천심곡초등학교,exclude_playground_like,절골공원,small_child_park,2451.0,98.5
+B000003142,인천심곡초등학교,exclude_playground_and_small_child,모통공원,mid_activity_park,3003.0,364.3
+B000002996,덕적초등학교,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,33387.1
+B000002996,덕적초등학교,exclude_playground_like,창포공원,small_child_park,1523.0,42002.0
+B000002996,덕적초등학교,exclude_playground_and_small_child,뒷마루공원,neighborhood_park_scale,12500.0,42133.9
+B000003025,인천부개초등학교,baseline_all_classes,마분놀이공원,playground_like,1474.0,201.1
+B000003025,인천부개초등학교,exclude_playground_like,세모공원,mid_activity_park,5140.0,408.4
+B000003025,인천부개초등학교,exclude_playground_and_small_child,세모공원,mid_activity_park,5140.0,408.4
+B000003103,인천담방초등학교,baseline_all_classes,골마루공원,neighborhood_park_scale,10379.0,135.3
+B000003103,인천담방초등학교,exclude_playground_like,골마루공원,neighborhood_park_scale,10379.0,135.3
+B000003103,인천담방초등학교,exclude_playground_and_small_child,골마루공원,neighborhood_park_scale,10379.0,135.3
+B000003088,인천사리울초등학교,baseline_all_classes,해오름공원,neighborhood_park_scale,34712.0,334.3
+B000003088,인천사리울초등학교,exclude_playground_like,해오름공원,neighborhood_park_scale,34712.0,334.3
+B000003088,인천사리울초등학교,exclude_playground_and_small_child,해오름공원,neighborhood_park_scale,34712.0,334.3
+B000002957,인천공항초등학교,baseline_all_classes,금호베스트빌 2차아파트 놀이터(202동 옆),playground_like,,79.7
+B000002957,인천공항초등학교,exclude_playground_like,창포공원,small_child_park,1523.0,145.5
+B000002957,인천공항초등학교,exclude_playground_and_small_child,뒷마루공원,neighborhood_park_scale,12500.0,148.9
+B000003075,인천구월서초등학교,baseline_all_classes,수봉,playground_like,,127.8
+B000003075,인천구월서초등학교,exclude_playground_like,석바위공원,neighborhood_park_scale,47005.0,182.3
+B000003075,인천구월서초등학교,exclude_playground_and_small_child,석바위공원,neighborhood_park_scale,47005.0,182.3
+B000002964,인천송현초등학교,baseline_all_classes,화수13공원,playground_like,415.8,176.6
+B000002964,인천송현초등학교,exclude_playground_like,화도진공원,neighborhood_park_scale,20830.0,504.5
+B000002964,인천송현초등학교,exclude_playground_and_small_child,화도진공원,neighborhood_park_scale,20830.0,504.5
+B000003051,인천능허대초등학교,baseline_all_classes,한진어린이공원 놀이시설,playground_like,,103.3
+B000003051,인천능허대초등학교,exclude_playground_like,새싹공원,small_child_park,2362.0,230.1
+B000003051,인천능허대초등학교,exclude_playground_and_small_child,능허대공원,neighborhood_park_scale,12363.0,567.0
+B000003035,인천산곡남초등학교,baseline_all_classes,마장공원,neighborhood_park_scale,15020.0,447.1
+B000003035,인천산곡남초등학교,exclude_playground_like,마장공원,neighborhood_park_scale,15020.0,447.1
+B000003035,인천산곡남초등학교,exclude_playground_and_small_child,마장공원,neighborhood_park_scale,15020.0,447.1
+B000003152,인천검단초등학교,baseline_all_classes,마전지구2호 어린이공원,mid_activity_park,7446.0,483.2
+B000003152,인천검단초등학교,exclude_playground_like,마전지구2호 어린이공원,mid_activity_park,7446.0,483.2
+B000003152,인천검단초등학교,exclude_playground_and_small_child,마전지구2호 어린이공원,mid_activity_park,7446.0,483.2
+B000003107,인천효성동초등학교,baseline_all_classes,꿈나무공원,mid_activity_park,4741.0,500.6
+B000003107,인천효성동초등학교,exclude_playground_like,꿈나무공원,mid_activity_park,4741.0,500.6
+B000003107,인천효성동초등학교,exclude_playground_and_small_child,꿈나무공원,mid_activity_park,4741.0,500.6
+B000003166,인천마전초등학교,baseline_all_classes,검단2지구 1호 어린이공원,small_child_park,2297.0,59.8
+B000003166,인천마전초등학교,exclude_playground_like,검단2지구 1호 어린이공원,small_child_park,2297.0,59.8
+B000003166,인천마전초등학교,exclude_playground_and_small_child,검단2지구 2호 어린이공원,mid_activity_park,3692.0,253.1
+B000003105,인천서창초등학교,baseline_all_classes,서창공원,neighborhood_park_scale,17518.0,299.4
+B000003105,인천서창초등학교,exclude_playground_like,서창공원,neighborhood_park_scale,17518.0,299.4
+B000003105,인천서창초등학교,exclude_playground_and_small_child,서창공원,neighborhood_park_scale,17518.0,299.4
+B000002979,인천문학초등학교,baseline_all_classes,문학소공원,playground_like,786.0,100.8
+B000002979,인천문학초등학교,exclude_playground_like,삼호어린이공원,mid_activity_park,3933.3,305.4
+B000002979,인천문학초등학교,exclude_playground_and_small_child,삼호어린이공원,mid_activity_park,3933.3,305.4
+B000003030,인천부평남초등학교,baseline_all_classes,부평공원,neighborhood_park_scale,113123.0,496.3
+B000003030,인천부평남초등학교,exclude_playground_like,부평공원,neighborhood_park_scale,113123.0,496.3
+B000003030,인천부평남초등학교,exclude_playground_and_small_child,부평공원,neighborhood_park_scale,113123.0,496.3
+B000003005,인천용현남초등학교자월분교장,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,24329.4
+B000003005,인천용현남초등학교자월분교장,exclude_playground_like,영종하늘도시 8호,neighborhood_park_scale,26615.0,30493.1
+B000003005,인천용현남초등학교자월분교장,exclude_playground_and_small_child,영종하늘도시 8호,neighborhood_park_scale,26615.0,30493.1
+B000003019,인천부광초등학교,baseline_all_classes,세영공원,neighborhood_park_scale,10105.0,87.8
+B000003019,인천부광초등학교,exclude_playground_like,세영공원,neighborhood_park_scale,10105.0,87.8
+B000003019,인천부광초등학교,exclude_playground_and_small_child,세영공원,neighborhood_park_scale,10105.0,87.8
+B000003040,인천동암초등학교,baseline_all_classes,약산놀이공원,small_child_park,1649.0,161.1
+B000003040,인천동암초등학교,exclude_playground_like,약산놀이공원,small_child_park,1649.0,161.1
+B000003040,인천동암초등학교,exclude_playground_and_small_child,석촌공원,neighborhood_park_scale,52723.0,319.8
+B000002984,인천승학초등학교,baseline_all_classes,중앙공원,neighborhood_park_scale,351770.8,190.1
+B000002984,인천승학초등학교,exclude_playground_like,중앙공원,neighborhood_park_scale,351770.8,190.1
+B000002984,인천승학초등학교,exclude_playground_and_small_child,중앙공원,neighborhood_park_scale,351770.8,190.1
+B000003017,인천부내초등학교,baseline_all_classes,새말놀이공원,mid_activity_park,3901.0,105.6
+B000003017,인천부내초등학교,exclude_playground_like,새말놀이공원,mid_activity_park,3901.0,105.6
+B000003017,인천부내초등학교,exclude_playground_and_small_child,새말놀이공원,mid_activity_park,3901.0,105.6
+B000002963,인천만석초등학교,baseline_all_classes,화수3공원,playground_like,411.5,181.4
+B000002963,인천만석초등학교,exclude_playground_like,화도진공원,neighborhood_park_scale,20830.0,336.9
+B000002963,인천만석초등학교,exclude_playground_and_small_child,화도진공원,neighborhood_park_scale,20830.0,336.9
+B000003143,인천신석초등학교,baseline_all_classes,원신공원,neighborhood_park_scale,57685.0,572.2
+B000003143,인천신석초등학교,exclude_playground_like,원신공원,neighborhood_park_scale,57685.0,572.2
+B000003143,인천신석초등학교,exclude_playground_and_small_child,원신공원,neighborhood_park_scale,57685.0,572.2
+B000003100,인천조동초등학교,baseline_all_classes,돌골공원,small_child_park,2086.0,322.5
+B000003100,인천조동초등학교,exclude_playground_like,돌골공원,small_child_park,2086.0,322.5
+B000003100,인천조동초등학교,exclude_playground_and_small_child,만수공원,neighborhood_park_scale,12528.0,434.0
+B000025756,인천청호초등학교,baseline_all_classes,물병자리공원,neighborhood_park_scale,88118.9,110.5
+B000025756,인천청호초등학교,exclude_playground_like,물병자리공원,neighborhood_park_scale,88118.9,110.5
+B000025756,인천청호초등학교,exclude_playground_and_small_child,물병자리공원,neighborhood_park_scale,88118.9,110.5
+B000022832,인천한빛초등학교,baseline_all_classes,갯골3호수변공원,neighborhood_park_scale,29051.0,85.5
+B000022832,인천한빛초등학교,exclude_playground_like,갯골3호수변공원,neighborhood_park_scale,29051.0,85.5
+B000022832,인천한빛초등학교,exclude_playground_and_small_child,갯골3호수변공원,neighborhood_park_scale,29051.0,85.5
+B000003106,경인교육대학교부설초등학교,baseline_all_classes,이촌공원,neighborhood_park_scale,22810.0,160.0
+B000003106,경인교육대학교부설초등학교,exclude_playground_like,이촌공원,neighborhood_park_scale,22810.0,160.0
+B000003106,경인교육대학교부설초등학교,exclude_playground_and_small_child,이촌공원,neighborhood_park_scale,22810.0,160.0
+B000003020,인천일신초등학교,baseline_all_classes,일신놀이공원,mid_activity_park,3049.0,123.7
+B000003020,인천일신초등학교,exclude_playground_like,일신놀이공원,mid_activity_park,3049.0,123.7
+B000003020,인천일신초등학교,exclude_playground_and_small_child,일신놀이공원,mid_activity_park,3049.0,123.7
+B000003046,인천굴포초등학교,baseline_all_classes,박물관공원,neighborhood_park_scale,18075.0,152.5
+B000003046,인천굴포초등학교,exclude_playground_like,박물관공원,neighborhood_park_scale,18075.0,152.5
+B000003046,인천굴포초등학교,exclude_playground_and_small_child,박물관공원,neighborhood_park_scale,18075.0,152.5
+B000003042,인천마장초등학교,baseline_all_classes,마장공원,neighborhood_park_scale,15020.0,618.1
+B000003042,인천마장초등학교,exclude_playground_like,마장공원,neighborhood_park_scale,15020.0,618.1
+B000003042,인천마장초등학교,exclude_playground_and_small_child,마장공원,neighborhood_park_scale,15020.0,618.1
+B000002991,인천인주초등학교,baseline_all_classes,선비공원,mid_activity_park,3150.0,192.7
+B000002991,인천인주초등학교,exclude_playground_like,선비공원,mid_activity_park,3150.0,192.7
+B000002991,인천인주초등학교,exclude_playground_and_small_child,선비공원,mid_activity_park,3150.0,192.7
+B000003034,인천미산초등학교,baseline_all_classes,마장공원,neighborhood_park_scale,15020.0,462.5
+B000003034,인천미산초등학교,exclude_playground_like,마장공원,neighborhood_park_scale,15020.0,462.5
+B000003034,인천미산초등학교,exclude_playground_and_small_child,마장공원,neighborhood_park_scale,15020.0,462.5
+B000003102,인천장수초등학교,baseline_all_classes,새골공원,mid_activity_park,4000.0,155.7
+B000003102,인천장수초등학교,exclude_playground_like,새골공원,mid_activity_park,4000.0,155.7
+B000003102,인천장수초등학교,exclude_playground_and_small_child,새골공원,mid_activity_park,4000.0,155.7
+B000002989,인천주안남초등학교,baseline_all_classes,미니공원,small_child_park,1653.2,46.0
+B000002989,인천주안남초등학교,exclude_playground_like,미니공원,small_child_park,1653.2,46.0
+B000002989,인천주안남초등학교,exclude_playground_and_small_child,미추어린이공원,mid_activity_park,3238.8,669.0
+B000003077,상인천초등학교,baseline_all_classes,풀무골소공원,mid_activity_park,3186.0,315.5
+B000003077,상인천초등학교,exclude_playground_like,풀무골소공원,mid_activity_park,3186.0,315.5
+B000003077,상인천초등학교,exclude_playground_and_small_child,풀무골소공원,mid_activity_park,3186.0,315.5
+B000003060,인천동막초등학교,baseline_all_classes,동막공원,neighborhood_park_scale,10000.1,90.9
+B000003060,인천동막초등학교,exclude_playground_like,동막공원,neighborhood_park_scale,10000.1,90.9
+B000003060,인천동막초등학교,exclude_playground_and_small_child,동막공원,neighborhood_park_scale,10000.1,90.9
+B000002969,인천동명초등학교,baseline_all_classes,창영공원,playground_like,1028.8,452.0
+B000002969,인천동명초등학교,exclude_playground_like,송현공원,neighborhood_park_scale,73323.7,476.6
+B000002969,인천동명초등학교,exclude_playground_and_small_child,송현공원,neighborhood_park_scale,73323.7,476.6
+B000002990,인천학익초등학교,baseline_all_classes,재넘이어린이공원,neighborhood_park_scale,10187.0,175.3
+B000002990,인천학익초등학교,exclude_playground_like,재넘이어린이공원,neighborhood_park_scale,10187.0,175.3
+B000002990,인천학익초등학교,exclude_playground_and_small_child,재넘이어린이공원,neighborhood_park_scale,10187.0,175.3
+B000003104,인천남동초등학교,baseline_all_classes,남동공원,small_child_park,1500.0,85.3
+B000003104,인천남동초등학교,exclude_playground_like,남동공원,small_child_park,1500.0,85.3
+B000003104,인천남동초등학교,exclude_playground_and_small_child,담방문화공원,mid_activity_park,7126.0,435.6
+B000003047,한일초등학교,baseline_all_classes,숲속어린이공원,small_child_park,2506.0,148.0
+B000003047,한일초등학교,exclude_playground_like,숲속어린이공원,small_child_park,2506.0,148.0
+B000003047,한일초등학교,exclude_playground_and_small_child,산곡어린이공원,mid_activity_park,3080.0,476.4
+B000003091,인천주원초등학교,baseline_all_classes,간석육교어린이공원,playground_like,,95.1
+B000003091,인천주원초등학교,exclude_playground_like,주원공원,small_child_park,1924.0,267.3
+B000003091,인천주원초등학교,exclude_playground_and_small_child,이화공원,mid_activity_park,6978.0,360.6
+B000003032,인천산곡초등학교,baseline_all_classes,산곡소공원,playground_like,761.0,263.0
+B000003032,인천산곡초등학교,exclude_playground_like,산곡어린이공원,mid_activity_park,3080.0,382.2
+B000003032,인천산곡초등학교,exclude_playground_and_small_child,산곡어린이공원,mid_activity_park,3080.0,382.2
+B000003076,인천상아초등학교,baseline_all_classes,하늘공원,small_child_park,1519.0,175.1
+B000003076,인천상아초등학교,exclude_playground_like,하늘공원,small_child_park,1519.0,175.1
+B000003076,인천상아초등학교,exclude_playground_and_small_child,구월공원,mid_activity_park,3194.0,573.9
+B000003055,인천함박초등학교,baseline_all_classes,장미공원,neighborhood_park_scale,1025454.0,268.1
+B000003055,인천함박초등학교,exclude_playground_like,장미공원,neighborhood_park_scale,1025454.0,268.1
+B000003055,인천함박초등학교,exclude_playground_and_small_child,장미공원,neighborhood_park_scale,1025454.0,268.1
+B000003052,인천선학초등학교,baseline_all_classes,선학공원,mid_activity_park,9132.0,121.8
+B000003052,인천선학초등학교,exclude_playground_like,선학공원,mid_activity_park,9132.0,121.8
+B000003052,인천선학초등학교,exclude_playground_and_small_child,선학공원,mid_activity_park,9132.0,121.8
+B000002953,인천운서초등학교,baseline_all_classes,용샘공원,small_child_park,2805.0,120.6
+B000002953,인천운서초등학교,exclude_playground_like,용샘공원,small_child_park,2805.0,120.6
+B000002953,인천운서초등학교,exclude_playground_and_small_child,무지개길공원1,mid_activity_park,3717.0,259.5
+B000003069,인천박문초등학교,baseline_all_classes,동춘5공원,playground_like,475.7,95.8
+B000003069,인천박문초등학교,exclude_playground_like,동춘4공원,neighborhood_park_scale,168150.0,136.5
+B000003069,인천박문초등학교,exclude_playground_and_small_child,동춘4공원,neighborhood_park_scale,168150.0,136.5
+B000003022,인천상정초등학교,baseline_all_classes,한마음어린이공원,mid_activity_park,8114.0,310.2
+B000003022,인천상정초등학교,exclude_playground_like,한마음어린이공원,mid_activity_park,8114.0,310.2
+B000003022,인천상정초등학교,exclude_playground_and_small_child,한마음어린이공원,mid_activity_park,8114.0,310.2
+B000002973,인천용일초등학교,baseline_all_classes,용남공원,mid_activity_park,3439.3,312.1
+B000002973,인천용일초등학교,exclude_playground_like,용남공원,mid_activity_park,3439.3,312.1
+B000002973,인천용일초등학교,exclude_playground_and_small_child,용남공원,mid_activity_park,3439.3,312.1
+B000003155,인천목향초등학교,baseline_all_classes,불로지구5호 어린이공원,small_child_park,2253.0,634.3
+B000003155,인천목향초등학교,exclude_playground_like,불로지구5호 어린이공원,small_child_park,2253.0,634.3
+B000003155,인천목향초등학교,exclude_playground_and_small_child,산들바람공원,neighborhood_park_scale,63663.4,1841.4
+B000003089,인천고잔초등학교,baseline_all_classes,별빛공원,small_child_park,1591.0,112.5
+B000003089,인천고잔초등학교,exclude_playground_like,별빛공원,small_child_park,1591.0,112.5
+B000003089,인천고잔초등학교,exclude_playground_and_small_child,한아름공원,neighborhood_park_scale,34712.0,314.3
+B000003096,인천소래초등학교,baseline_all_classes,갯마을공원,small_child_park,2275.0,123.9
+B000003096,인천소래초등학교,exclude_playground_like,갯마을공원,small_child_park,2275.0,123.9
+B000003096,인천소래초등학교,exclude_playground_and_small_child,너른들공원,mid_activity_park,3294.0,454.1
+B000002977,인천백학초등학교,baseline_all_classes,묵동공원,small_child_park,1500.0,84.0
+B000002977,인천백학초등학교,exclude_playground_like,묵동공원,small_child_park,1500.0,84.0
+B000002977,인천백학초등학교,exclude_playground_and_small_child,문학공원,neighborhood_park_scale,209546.0,262.0
+B000003056,인천청학초등학교,baseline_all_classes,하나공원,mid_activity_park,6199.9,97.2
+B000003056,인천청학초등학교,exclude_playground_like,하나공원,mid_activity_park,6199.9,97.2
+B000003056,인천청학초등학교,exclude_playground_and_small_child,하나공원,mid_activity_park,6199.9,97.2
+B000003073,인천정각초등학교,baseline_all_classes,장다리공원,small_child_park,1500.0,353.8
+B000003073,인천정각초등학교,exclude_playground_like,장다리공원,small_child_park,1500.0,353.8
+B000003073,인천정각초등학교,exclude_playground_and_small_child,구월공원,mid_activity_park,3194.0,418.5
+B000003130,인천명현초등학교,baseline_all_classes,꿈나무공원,mid_activity_park,4741.0,258.3
+B000003130,인천명현초등학교,exclude_playground_like,꿈나무공원,mid_activity_park,4741.0,258.3
+B000003130,인천명현초등학교,exclude_playground_and_small_child,꿈나무공원,mid_activity_park,4741.0,258.3
+B000002974,인천용현초등학교,baseline_all_classes,용정공원,neighborhood_park_scale,29552.0,260.2
+B000002974,인천용현초등학교,exclude_playground_like,용정공원,neighborhood_park_scale,29552.0,260.2
+B000002974,인천용현초등학교,exclude_playground_and_small_child,용정공원,neighborhood_park_scale,29552.0,260.2
+B000003151,인천능내초등학교,baseline_all_classes,능내공원,neighborhood_park_scale,77340.0,125.5
+B000003151,인천능내초등학교,exclude_playground_like,능내공원,neighborhood_park_scale,77340.0,125.5
+B000003151,인천능내초등학교,exclude_playground_and_small_child,능내공원,neighborhood_park_scale,77340.0,125.5
+B000003058,인천연성초등학교,baseline_all_classes,부수지공원,neighborhood_park_scale,19001.3,140.6
+B000003058,인천연성초등학교,exclude_playground_like,부수지공원,neighborhood_park_scale,19001.3,140.6
+B000003058,인천연성초등학교,exclude_playground_and_small_child,부수지공원,neighborhood_park_scale,19001.3,140.6
+B000003062,인천연수초등학교,baseline_all_classes,두리공원,small_child_park,1591.1,201.9
+B000003062,인천연수초등학교,exclude_playground_like,두리공원,small_child_park,1591.1,201.9
+B000003062,인천연수초등학교,exclude_playground_and_small_child,은행나무공원,mid_activity_park,4452.7,278.1
+B000003080,인천동부초등학교,baseline_all_classes,동부초교2호,playground_like,177.0,54.3
+B000003080,인천동부초등학교,exclude_playground_like,새말소공원,mid_activity_park,4191.0,702.9
+B000003080,인천동부초등학교,exclude_playground_and_small_child,새말소공원,mid_activity_park,4191.0,702.9
+B000003154,인천불로초등학교,baseline_all_classes,불로5호소공원,playground_like,546.0,168.5
+B000003154,인천불로초등학교,exclude_playground_like,불로지구5호 어린이공원,small_child_park,2253.0,186.9
+B000003154,인천불로초등학교,exclude_playground_and_small_child,산들바람공원,neighborhood_park_scale,63663.4,2018.8
+B000003181,송해초등학교,baseline_all_classes,강화읍소공원,playground_like,311.0,3242.6
+B000003181,송해초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,3493.3
+B000003181,송해초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,3493.3
+B000003145,인천천마초등학교,baseline_all_classes,석남공원,small_child_park,2290.0,458.2
+B000003145,인천천마초등학교,exclude_playground_like,석남공원,small_child_park,2290.0,458.2
+B000003145,인천천마초등학교,exclude_playground_and_small_child,석남체육공원,neighborhood_park_scale,10880.0,771.8
+B000003018,인천부개서초등학교,baseline_all_classes,한가람공원,mid_activity_park,7519.0,131.5
+B000003018,인천부개서초등학교,exclude_playground_like,한가람공원,mid_activity_park,7519.0,131.5
+B000003018,인천부개서초등학교,exclude_playground_and_small_child,한가람공원,mid_activity_park,7519.0,131.5
+B000003188,내가초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,8173.3
+B000003188,내가초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,8173.3
+B000003188,내가초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,8173.3
+B000002954,인천용유초등학교,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,3750.1
+B000002954,인천용유초등학교,exclude_playground_like,창포공원,small_child_park,1523.0,8036.7
+B000002954,인천용유초등학교,exclude_playground_and_small_child,뒷마루공원,neighborhood_park_scale,12500.0,8203.7
+B000002978,인천도화초등학교,baseline_all_classes,수봉공원,neighborhood_park_scale,332694.0,459.1
+B000002978,인천도화초등학교,exclude_playground_like,수봉공원,neighborhood_park_scale,332694.0,459.1
+B000002978,인천도화초등학교,exclude_playground_and_small_child,수봉공원,neighborhood_park_scale,332694.0,459.1
+B000003043,인천개흥초등학교,baseline_all_classes,꿈나무공원,small_child_park,2582.0,308.7
+B000003043,인천개흥초등학교,exclude_playground_like,꿈나무공원,small_child_park,2582.0,308.7
+B000003043,인천개흥초등학교,exclude_playground_and_small_child,신트리공원,neighborhood_park_scale,58595.0,425.3
+B000003090,인천약산초등학교,baseline_all_classes,산밑말근린공원,neighborhood_park_scale,29545.0,205.0
+B000003090,인천약산초등학교,exclude_playground_like,산밑말근린공원,neighborhood_park_scale,29545.0,205.0
+B000003090,인천약산초등학교,exclude_playground_and_small_child,산밑말근린공원,neighborhood_park_scale,29545.0,205.0
+B000003146,인천봉수초등학교,baseline_all_classes,애두름공원,playground_like,,404.5
+B000003146,인천봉수초등학교,exclude_playground_like,가정공원,mid_activity_park,6612.0,719.5
+B000003146,인천봉수초등학교,exclude_playground_and_small_child,가정공원,mid_activity_park,6612.0,719.5
+B000003084,인천은봉초등학교,baseline_all_classes,논현중앙공원,neighborhood_park_scale,60073.0,179.2
+B000003084,인천은봉초등학교,exclude_playground_like,논현중앙공원,neighborhood_park_scale,60073.0,179.2
+B000003084,인천은봉초등학교,exclude_playground_and_small_child,논현중앙공원,neighborhood_park_scale,60073.0,179.2
+B000003174,양도초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,7972.1
+B000003174,양도초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,7972.1
+B000003174,양도초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,7972.1
+B000025193,인천만월초등학교,baseline_all_classes,찬우물공원,neighborhood_park_scale,18682.0,200.9
+B000025193,인천만월초등학교,exclude_playground_like,찬우물공원,neighborhood_park_scale,18682.0,200.9
+B000025193,인천만월초등학교,exclude_playground_and_small_child,찬우물공원,neighborhood_park_scale,18682.0,200.9
+B000025226,인천송일초등학교,baseline_all_classes,송도  16호 어린이공원,playground_like,1499.7,390.2
+B000025226,인천송일초등학교,exclude_playground_like,송도  14호 어린이공원,small_child_park,1500.3,526.1
+B000025226,인천송일초등학교,exclude_playground_and_small_child,소리공원(송도26호공원),neighborhood_park_scale,1179180.0,592.2
+B000003014,인천진산초등학교,baseline_all_classes,새싹공원,mid_activity_park,4095.0,202.6
+B000003014,인천진산초등학교,exclude_playground_like,새싹공원,mid_activity_park,4095.0,202.6
+B000003014,인천진산초등학교,exclude_playground_and_small_child,새싹공원,mid_activity_park,4095.0,202.6
+B000002972,인천용정초등학교,baseline_all_classes,수봉공원,neighborhood_park_scale,332694.0,622.7
+B000002972,인천용정초등학교,exclude_playground_like,수봉공원,neighborhood_park_scale,332694.0,622.7
+B000002972,인천용정초등학교,exclude_playground_and_small_child,수봉공원,neighborhood_park_scale,332694.0,622.7
+B000003070,인천남촌초등학교,baseline_all_classes,하촌은행나무공원,playground_like,258.0,144.7
+B000003070,인천남촌초등학교,exclude_playground_like,남촌공원,mid_activity_park,6256.0,434.9
+B000003070,인천남촌초등학교,exclude_playground_and_small_child,남촌공원,mid_activity_park,6256.0,434.9
+B000003115,인천신대초등학교,baseline_all_classes,살나리공원,playground_like,669.0,179.7
+B000003115,인천신대초등학교,exclude_playground_like,계양교통공원,neighborhood_park_scale,21091.5,247.1
+B000003115,인천신대초등학교,exclude_playground_and_small_child,계양교통공원,neighborhood_park_scale,21091.5,247.1
+B000002958,인천삼목초등학교,baseline_all_classes,영종풍림6-1아파트 놀이터,playground_like,,115.9
+B000002958,인천삼목초등학교,exclude_playground_like,매화공원,small_child_park,1886.0,272.1
+B000002958,인천삼목초등학교,exclude_playground_and_small_child,영마루공원,neighborhood_park_scale,60116.0,349.9
+B000003011,인천갈산초등학교,baseline_all_classes,새갈놀이공원,small_child_park,2812.0,124.6
+B000003011,인천갈산초등학교,exclude_playground_like,새갈놀이공원,small_child_park,2812.0,124.6
+B000003011,인천갈산초등학교,exclude_playground_and_small_child,상꾸지놀이공원,mid_activity_park,3766.0,318.8
+B000003156,인천왕길초등학교,baseline_all_classes,왕길새싹공원,mid_activity_park,3309.0,58.9
+B000003156,인천왕길초등학교,exclude_playground_like,왕길새싹공원,mid_activity_park,3309.0,58.9
+B000003156,인천왕길초등학교,exclude_playground_and_small_child,왕길새싹공원,mid_activity_park,3309.0,58.9
+B000003093,인천석천초등학교,baseline_all_classes,하늘공원,small_child_park,1519.0,178.5
+B000003093,인천석천초등학교,exclude_playground_like,하늘공원,small_child_park,1519.0,178.5
+B000003093,인천석천초등학교,exclude_playground_and_small_child,구월공원,mid_activity_park,3194.0,905.2
+B000002966,인천송림초등학교,baseline_all_classes,구립장미어린이집 놀이터,playground_like,,309.8
+B000002966,인천송림초등학교,exclude_playground_like,솔마루공원,mid_activity_park,4613.8,316.0
+B000002966,인천송림초등학교,exclude_playground_and_small_child,솔마루공원,mid_activity_park,4613.8,316.0
+B000003036,인천신촌초등학교,baseline_all_classes,슬아어린이공원,playground_like,1472.0,380.8
+B000003036,인천신촌초등학교,exclude_playground_like,함봉공원(1단계),neighborhood_park_scale,55945.0,395.6
+B000003036,인천신촌초등학교,exclude_playground_and_small_child,함봉공원(1단계),neighborhood_park_scale,55945.0,395.6
+B000003028,인천부흥초등학교,baseline_all_classes,부흥놀이공원,mid_activity_park,3756.0,118.7
+B000003028,인천부흥초등학교,exclude_playground_like,부흥놀이공원,mid_activity_park,3756.0,118.7
+B000003028,인천부흥초등학교,exclude_playground_and_small_child,부흥놀이공원,mid_activity_park,3756.0,118.7
+B000002971,인천숭의초등학교,baseline_all_classes,수봉공원,neighborhood_park_scale,332694.0,848.2
+B000002971,인천숭의초등학교,exclude_playground_like,수봉공원,neighborhood_park_scale,332694.0,848.2
+B000002971,인천숭의초등학교,exclude_playground_and_small_child,수봉공원,neighborhood_park_scale,332694.0,848.2
+B000003029,인천부평동초등학교,baseline_all_classes,꿈나무공원,small_child_park,2582.0,364.1
+B000003029,인천부평동초등학교,exclude_playground_like,꿈나무공원,small_child_park,2582.0,364.1
+B000003029,인천부평동초등학교,exclude_playground_and_small_child,부흥놀이공원,mid_activity_park,3756.0,758.1
+B000026468,인천아람초등학교,baseline_all_classes,동글동글나이테공원,small_child_park,2283.2,80.2
+B000026468,인천아람초등학교,exclude_playground_like,동글동글나이테공원,small_child_park,2283.2,80.2
+B000026468,인천아람초등학교,exclude_playground_and_small_child,두물머리공원,neighborhood_park_scale,12677.6,399.6
+B000025690,인천별빛초등학교,baseline_all_classes,영종하늘도시KCC스위첸아파트 104동 앞 놀이시설,playground_like,,199.9
+B000025690,인천별빛초등학교,exclude_playground_like,파크골프공원,neighborhood_park_scale,16941.0,357.1
+B000025690,인천별빛초등학교,exclude_playground_and_small_child,파크골프공원,neighborhood_park_scale,16941.0,357.1
+B000003038,인천십정초등학교,baseline_all_classes,열우물놀이공원,playground_like,1459.0,225.8
+B000003038,인천십정초등학교,exclude_playground_like,하정놀이공원,small_child_park,1500.0,252.0
+B000003038,인천십정초등학교,exclude_playground_and_small_child,한마음어린이공원,mid_activity_park,8114.0,522.0
+B000003117,인천병방초등학교,baseline_all_classes,낙원공원,playground_like,900.8,246.9
+B000003117,인천병방초등학교,exclude_playground_like,병방공원,small_child_park,1667.5,259.8
+B000003117,인천병방초등학교,exclude_playground_and_small_child,학마을공원,mid_activity_park,6634.0,315.7
+B000002994,대청초등학교,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,153664.9
+B000002994,대청초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,157422.4
+B000002994,대청초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,157422.4
+B000025752,인천도담초등학교,baseline_all_classes,포리공원,neighborhood_park_scale,14216.2,105.3
+B000025752,인천도담초등학교,exclude_playground_like,포리공원,neighborhood_park_scale,14216.2,105.3
+B000025752,인천도담초등학교,exclude_playground_and_small_child,포리공원,neighborhood_park_scale,14216.2,105.3
+B000003135,인천공촌초등학교,baseline_all_classes,서곶공원,neighborhood_park_scale,151333.0,259.6
+B000003135,인천공촌초등학교,exclude_playground_like,서곶공원,neighborhood_park_scale,151333.0,259.6
+B000003135,인천공촌초등학교,exclude_playground_and_small_child,서곶공원,neighborhood_park_scale,151333.0,259.6
+B000003049,인천축현초등학교,baseline_all_classes,한진공원,playground_like,993.2,230.8
+B000003049,인천축현초등학교,exclude_playground_like,청룡공원,mid_activity_park,5000.0,344.3
+B000003049,인천축현초등학교,exclude_playground_and_small_child,청룡공원,mid_activity_park,5000.0,344.3
+B000002998,백령초등학교,baseline_all_classes,인스파이어호텔 패밀리파크 어린이놀이터,playground_like,,156952.0
+B000002998,백령초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,157466.9
+B000002998,백령초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,157466.9
+B000003180,합일초등학교,baseline_all_classes,남산근린공원,neighborhood_park_scale,103240.0,331.3
+B000003180,합일초등학교,exclude_playground_like,남산근린공원,neighborhood_park_scale,103240.0,331.3
+B000003180,합일초등학교,exclude_playground_and_small_child,남산근린공원,neighborhood_park_scale,103240.0,331.3
+B000002949,인천신흥초등학교,baseline_all_classes,답동로얄맨션 놀이터,playground_like,,143.6
+B000002949,인천신흥초등학교,exclude_playground_like,율목공원,mid_activity_park,9785.0,409.0
+B000002949,인천신흥초등학교,exclude_playground_and_small_child,율목공원,mid_activity_park,9785.0,409.0
+B000002983,인천남부초등학교,baseline_all_classes,사미공원,small_child_park,1652.0,281.5
+B000002983,인천남부초등학교,exclude_playground_like,사미공원,small_child_park,1652.0,281.5
+B000002983,인천남부초등학교,exclude_playground_and_small_child,승기어린이공원,mid_activity_park,8785.3,387.5
+B000003061,인천서면초등학교,baseline_all_classes,동남공원,mid_activity_park,3000.1,178.7
+B000003061,인천서면초등학교,exclude_playground_like,동남공원,mid_activity_park,3000.1,178.7
+B000003061,인천서면초등학교,exclude_playground_and_small_child,동남공원,mid_activity_park,3000.1,178.7
+B000003129,인천작동초등학교,baseline_all_classes,도두리공원,mid_activity_park,3000.2,319.8
+B000003129,인천작동초등학교,exclude_playground_like,도두리공원,mid_activity_park,3000.2,319.8
+B000003129,인천작동초등학교,exclude_playground_and_small_child,도두리공원,mid_activity_park,3000.2,319.8
+B000002951,인천신선초등학교,baseline_all_classes,인천유림노르웨이숲 에듀오션 103동부 놀이터,playground_like,,375.2
+B000002951,인천신선초등학교,exclude_playground_like,용정공원,neighborhood_park_scale,29552.0,1275.3
+B000002951,인천신선초등학교,exclude_playground_and_small_child,용정공원,neighborhood_park_scale,29552.0,1275.3
+B000002952,인천송월초등학교,baseline_all_classes,송월어린이집놀이터,playground_like,,107.5
+B000002952,인천송월초등학교,exclude_playground_like,화도진공원,neighborhood_park_scale,20830.0,434.4
+B000002952,인천송월초등학교,exclude_playground_and_small_child,화도진공원,neighborhood_park_scale,20830.0,434.4
+B000003086,인천동방초등학교,baseline_all_classes,논현공원(논현2택지),small_child_park,1711.0,101.6
+B000003086,인천동방초등학교,exclude_playground_like,논현공원(논현2택지),small_child_park,1711.0,101.6
+B000003086,인천동방초등학교,exclude_playground_and_small_child,호구포공원,neighborhood_park_scale,32149.0,459.1
+B000003010,인천청천초등학교,baseline_all_classes,어울림어린이공원,mid_activity_park,7291.0,86.3
+B000003010,인천청천초등학교,exclude_playground_like,어울림어린이공원,mid_activity_park,7291.0,86.3
+B000003010,인천청천초등학교,exclude_playground_and_small_child,어울림어린이공원,mid_activity_park,7291.0,86.3
+B000003006,인천부평서초등학교,baseline_all_classes,서부동놀이공원,playground_like,1200.0,202.8
+B000003006,인천부평서초등학교,exclude_playground_like,부흥놀이공원,mid_activity_park,3756.0,814.6
+B000003006,인천부평서초등학교,exclude_playground_and_small_child,부흥놀이공원,mid_activity_park,3756.0,814.6
+B000002999,인천공항초등학교신도분교장,baseline_all_classes,유수지공원,neighborhood_park_scale,58961.0,4028.8
+B000002999,인천공항초등학교신도분교장,exclude_playground_like,유수지공원,neighborhood_park_scale,58961.0,4028.8
+B000002999,인천공항초등학교신도분교장,exclude_playground_and_small_child,유수지공원,neighborhood_park_scale,58961.0,4028.8
+B000003031,인천산곡북초등학교,baseline_all_classes,성벽어린이공원,small_child_park,1917.0,337.1
+B000003031,인천산곡북초등학교,exclude_playground_like,성벽어린이공원,small_child_park,1917.0,337.1
+B000003031,인천산곡북초등학교,exclude_playground_and_small_child,산곡어린이공원,mid_activity_park,3080.0,467.4
+B000003126,인천부현초등학교,baseline_all_classes,계산4공원,small_child_park,2143.4,215.2
+B000003126,인천부현초등학교,exclude_playground_like,계산4공원,small_child_park,2143.4,215.2
+B000003126,인천부현초등학교,exclude_playground_and_small_child,된밭공원,neighborhood_park_scale,11655.0,487.1
+B000003050,인천송도초등학교,baseline_all_classes,물푸레공원(청학6호),playground_like,309.1,252.8
+B000003050,인천송도초등학교,exclude_playground_like,청룡공원,mid_activity_park,5000.0,367.7
+B000003050,인천송도초등학교,exclude_playground_and_small_child,청룡공원,mid_activity_park,5000.0,367.7
+B000003053,인천중앙초등학교,baseline_all_classes,샘말어린이공원 놀이터,playground_like,,230.9
+B000003053,인천중앙초등학교,exclude_playground_like,솔밭공원,neighborhood_park_scale,28549.3,287.4
+B000003053,인천중앙초등학교,exclude_playground_and_small_child,솔밭공원,neighborhood_park_scale,28549.3,287.4
+B000002985,인천서화초등학교,baseline_all_classes,서화어린이공원,mid_activity_park,5813.7,138.2
+B000002985,인천서화초등학교,exclude_playground_like,서화어린이공원,mid_activity_park,5813.7,138.2
+B000002985,인천서화초등학교,exclude_playground_and_small_child,서화어린이공원,mid_activity_park,5813.7,138.2
+B000003125,인천부평초등학교,baseline_all_classes,계산1호공원,playground_like,1197.4,96.7
+B000003125,인천부평초등학교,exclude_playground_like,갈개공원,mid_activity_park,7437.0,762.3
+B000003125,인천부평초등학교,exclude_playground_and_small_child,갈개공원,mid_activity_park,7437.0,762.3
+B000003121,인천귤현초등학교,baseline_all_classes,귤현공원,playground_like,33.003,139.5
+B000003121,인천귤현초등학교,exclude_playground_like,안골공원,small_child_park,2089.8,141.9
+B000003121,인천귤현초등학교,exclude_playground_and_small_child,들놀이공원,mid_activity_park,6285.0,518.2
+B000003147,인천신현북초등학교,baseline_all_classes,원신공원,neighborhood_park_scale,57685.0,431.6
+B000003147,인천신현북초등학교,exclude_playground_like,원신공원,neighborhood_park_scale,57685.0,431.6
+B000003147,인천신현북초등학교,exclude_playground_and_small_child,원신공원,neighborhood_park_scale,57685.0,431.6
+B000003116,인천길주초등학교,baseline_all_classes,용종5공원,playground_like,360.3,98.7
+B000003116,인천길주초등학교,exclude_playground_like,초정공원,small_child_park,2368.1,149.1
+B000003116,인천길주초등학교,exclude_playground_and_small_child,학마을공원,mid_activity_park,6634.0,245.7
+B000002981,인천경원초등학교,baseline_all_classes,다솔공원,small_child_park,2370.2,84.2
+B000002981,인천경원초등학교,exclude_playground_like,다솔공원,small_child_park,2370.2,84.2
+B000002981,인천경원초등학교,exclude_playground_and_small_child,하늘새어린이공원,mid_activity_park,6703.6,627.5
+B000003172,인천은지초등학교,baseline_all_classes,허암공원,small_child_park,2978.0,122.0
+B000003172,인천은지초등학교,exclude_playground_like,허암공원,small_child_park,2978.0,122.0
+B000003172,인천은지초등학교,exclude_playground_and_small_child,상동공원,neighborhood_park_scale,12475.0,647.1
+B000003021,인천금마초등학교,baseline_all_classes,거북 1 공원,playground_like,1297.0,311.4
+B000003021,인천금마초등학교,exclude_playground_like,구산어린이공원,mid_activity_park,5473.0,321.5
+B000003021,인천금마초등학교,exclude_playground_and_small_child,구산어린이공원,mid_activity_park,5473.0,321.5
+B000003008,인천마곡초등학교,baseline_all_classes,성벽어린이공원,small_child_park,1917.0,66.8
+B000003008,인천마곡초등학교,exclude_playground_like,성벽어린이공원,small_child_park,1917.0,66.8
+B000003008,인천마곡초등학교,exclude_playground_and_small_child,푸른내어린이공원,mid_activity_park,4009.0,345.7
+B000003071,인천성리초등학교,baseline_all_classes,성리공원,small_child_park,1505.0,215.7
+B000003071,인천성리초등학교,exclude_playground_like,성리공원,small_child_park,1505.0,215.7
+B000003071,인천성리초등학교,exclude_playground_and_small_child,전재울공원,neighborhood_park_scale,122963.0,531.0
+B000003163,인천가좌초등학교,baseline_all_classes,여우재공원(이름변경),small_child_park,1501.0,172.9
+B000003163,인천가좌초등학교,exclude_playground_like,여우재공원(이름변경),small_child_park,1501.0,172.9
+B000003163,인천가좌초등학교,exclude_playground_and_small_child,가좌공원,mid_activity_park,7280.0,254.0
+B000002970,영화초등학교,baseline_all_classes,창영공원,playground_like,1028.8,133.2
+B000002970,영화초등학교,exclude_playground_like,율목공원,mid_activity_park,9785.0,678.6
+B000002970,영화초등학교,exclude_playground_and_small_child,율목공원,mid_activity_park,9785.0,678.6
+B000003026,인천동수초등학교,baseline_all_classes,밤골공원,neighborhood_park_scale,10111.0,242.7
+B000003026,인천동수초등학교,exclude_playground_like,밤골공원,neighborhood_park_scale,10111.0,242.7
+B000003026,인천동수초등학교,exclude_playground_and_small_child,밤골공원,neighborhood_park_scale,10111.0,242.7
+B000003149,인천봉화초등학교,baseline_all_classes,감중공원,mid_activity_park,5572.0,391.0
+B000003149,인천봉화초등학교,exclude_playground_like,감중공원,mid_activity_park,5572.0,391.0
+B000003149,인천봉화초등학교,exclude_playground_and_small_child,감중공원,mid_activity_park,5572.0,391.0
+B000003039,인천백운초등학교,baseline_all_classes,십정공원,neighborhood_park_scale,110051.0,126.6
+B000003039,인천백운초등학교,exclude_playground_like,십정공원,neighborhood_park_scale,110051.0,126.6
+B000003039,인천백운초등학교,exclude_playground_and_small_child,십정공원,neighborhood_park_scale,110051.0,126.6
+B000003081,인천인수초등학교,baseline_all_classes,만수천어린이공원,playground_like,,135.2
+B000003081,인천인수초등학교,exclude_playground_like,인수공원,small_child_park,1816.0,223.7
+B000003081,인천인수초등학교,exclude_playground_and_small_child,아단공원,mid_activity_park,4764.0,319.4
+B000003078,인천석정초등학교,baseline_all_classes,석정공원,small_child_park,1941.0,157.8
+B000003078,인천석정초등학교,exclude_playground_like,석정공원,small_child_park,1941.0,157.8
+B000003078,인천석정초등학교,exclude_playground_and_small_child,돌샘어린이공원,mid_activity_park,5853.5,812.8
+B000003162,인천가석초등학교,baseline_all_classes,석남체육공원,neighborhood_park_scale,10880.0,601.5
+B000003162,인천가석초등학교,exclude_playground_like,석남체육공원,neighborhood_park_scale,10880.0,601.5
+B000003162,인천가석초등학교,exclude_playground_and_small_child,석남체육공원,neighborhood_park_scale,10880.0,601.5
+B000025225,인천송빛초등학교,baseline_all_classes,랜드마크시티 3호 수변공원,neighborhood_park_scale,60158.0,537.0
+B000025225,인천송빛초등학교,exclude_playground_like,랜드마크시티 3호 수변공원,neighborhood_park_scale,60158.0,537.0
+B000025225,인천송빛초등학교,exclude_playground_and_small_child,랜드마크시티 3호 수변공원,neighborhood_park_scale,60158.0,537.0
+B000003165,인천당하초등학교,baseline_all_classes,당하지구4호 어린이공원,small_child_park,2456.0,99.4
+B000003165,인천당하초등학교,exclude_playground_like,당하지구4호 어린이공원,small_child_park,2456.0,99.4
+B000003165,인천당하초등학교,exclude_playground_and_small_child,당하지구 1호공원,neighborhood_park_scale,28761.0,373.1
+B000003108,인천효성남초등학교,baseline_all_classes,쑥쑥공원,small_child_park,1532.0,43.1
+B000003108,인천효성남초등학교,exclude_playground_like,쑥쑥공원,small_child_park,1532.0,43.1
+B000003108,인천효성남초등학교,exclude_playground_and_small_child,효성공원,neighborhood_park_scale,10877.0,159.6
+B000003118,인천양촌초등학교,baseline_all_classes,양촌공원,mid_activity_park,4285.0,246.7
+B000003118,인천양촌초등학교,exclude_playground_like,양촌공원,mid_activity_park,4285.0,246.7
+B000003118,인천양촌초등학교,exclude_playground_and_small_child,양촌공원,mid_activity_park,4285.0,246.7
+B000025751,인천경연초등학교,baseline_all_classes,황소자리공원,playground_like,,40.0
+B000025751,인천경연초등학교,exclude_playground_like,황소자리공원,mid_activity_park,6083.7,136.0
+B000025751,인천경연초등학교,exclude_playground_and_small_child,황소자리공원,mid_activity_park,6083.7,136.0
+B000003037,인천하정초등학교,baseline_all_classes,수정놀이공원,playground_like,1498.0,148.7
+B000003037,인천하정초등학교,exclude_playground_like,하정놀이공원,small_child_park,1500.0,168.2
+B000003037,인천하정초등학교,exclude_playground_and_small_child,한마음어린이공원,mid_activity_park,8114.0,330.2
