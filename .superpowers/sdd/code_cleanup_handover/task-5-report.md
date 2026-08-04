@@ -8,7 +8,7 @@
 
 ## 작업 요약
 
-전체 61개 파일을 5개 범주로 기계적 분류하여 `_attic/2026-08/` 하위로 `git mv` 이동 완료.  
+전체 59개 파일을 5개 범주(A:4, B:2, C:4, D:49)로 기계적 분류하여 `_attic/2026-08/` 하위로 `git mv` 이동 완료.  
 이동 후 잔류 파일 import 참조 전수 확인 (0건), 보호 경로 변경 없음 확인.
 
 ---
@@ -44,10 +44,10 @@
 
 ---
 
-## D. scripts/** 구경로 사본 (47개) → `_attic/2026-08/scripts_stale/<원래 경로 유지>/`
+## D. scripts/** 구경로 사본 (49개) → `_attic/2026-08/scripts_stale/<원래 경로 유지>/`
 
 각 파일은 내용에 `data/processed` 또는 `data/raw` 문자열 존재 여부로 grep 개별 검증 후 이동.
-(수정: 원래 45개 + rebuild_priority_with_redev 1개 + run_school_similarity_v3 1개 = 47개)
+(D-1:12 + D-2:10 + D-3:11(E 포함) + D-4:6 + D-5:3 + D-6:5 + D-7:2 = 49개)
 
 ### D-1. accessibility/ (12개)
 
@@ -66,7 +66,7 @@
 | `recalc_park_playground_counts_valhalla.py` | 9: `DATA = ROOT / "data/processed"` |
 | `update_playground_mirage.py` | 25: `DATA = ROOT / "data/processed"` |
 
-### D-2. candidate_generation/ (11개)
+### D-2. candidate_generation/ (10개)
 
 | 파일 | 첫 매치 라인 |
 |------|------------|
@@ -81,7 +81,7 @@
 | `rebuild_candidate_population_demand.py` | 19: `DATA = BASE / "data/processed"` |
 | `refresh_candidate_simulation_metrics.py` | 15: `GRAPH_PATH = BASE / "data/processed"` |
 
-### D-3. classification/ (10개, 특별 주의 1건)
+### D-3. classification/ (11개, E 유사도 구버전 포함)
 
 | 파일 | 첫 매치 라인 | 비고 |
 |------|------------|------|
@@ -149,9 +149,9 @@ git status --porcelain | grep -E "^. (data_processed|output|outputs|data_quality
 - **결과**: ✅ 변경 없음
 
 ### 3. 파일 존재 확인
-- **이동 파일 총수**: 63개 (A:4 + B:2 + C:4 + D:47 + E:포함)
-- **D 세부**: D-1:12 + D-2:11 + D-3:10 + D-4:6 + D-5:3 + D-6:5 + D-7:2 = 49개
-- **배치 이동 명령**: `git mv` 12회 (최초 10회 + rebuild_priority_with_redev 1회 + run_school_similarity_v3 1회)
+- **이동 파일 총수**: 59개 (A:4 + B:2 + C:4 + D:49)
+- **D 세부**: D-1:12 + D-2:10 + D-3:11(E 포함) + D-4:6 + D-5:3 + D-6:5 + D-7:2 = 49개
+- **배치 이동 명령**: `git mv` 다중 배치로 진행
 - **결과**: ✅ 모든 파일 성공
 
 ---

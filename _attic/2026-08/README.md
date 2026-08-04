@@ -32,7 +32,7 @@
 - `recalc_park_playground_counts_valhalla.py` — 놀이터 개수 재계산 구경로 사본
 - `update_playground_mirage.py` — 놀이터 마이라주 업데이트 구경로 사본
 
-### candidate_generation/ (11개)
+### candidate_generation/ (10개)
 - `build_candidate_barrier_routes.py` — 후보지 장애물 경로 구축 구경로 사본
 - `build_mixed_demand_model.py` — 혼합 수요 모델 구축 구경로 사본
 - `enrich_candidate_grid.py` — 후보지 그리드 보강 구경로 사본
@@ -44,7 +44,7 @@
 - `rebuild_candidate_population_demand.py` — 후보지 인구 수요 재구축 구경로 사본
 - `refresh_candidate_simulation_metrics.py` — 후보지 시뮬레이션 메트릭 갱신 구경로 사본
 
-### classification/ (10개, 특별 표기 2건)
+### classification/ (11개, E 유사도 구버전 3개 포함)
 - `analysis_clustering.py` — 클러스터링 분석 구경로 사본
 - `analysis_ml_models.py` — ML 모델 분석 구경로 사본
 - **`apply_case_system_20260411.py`** — 케이스 시스템 적용 (루트판에 없는 `deduplicate_public_parks()` 함수 추가분 있음 → **로직 병합 검토 필요**)
@@ -53,9 +53,9 @@
 - `incheon_vulnerable_green_correlation_20260423.py` — 인천 취약층-녹지 상관 구경로 사본
 - `michuhol_vulnerable_green_correlation_20260422.py` — 미추홀 취약층-녹지 상관 구경로 사본
 - `reclassify_case_public_only.py` — 공용 공원만 케이스 재분류 구경로 사본
-- `run_school_similarity.py` — 학교 유사도 계산 v1 (규칙 D: data/processed 매치)
-- `run_school_similarity_v2.py` — 학교 유사도 계산 v2 (규칙 D: data/processed 매치)
-- `run_school_similarity_v3.py` — 학교 유사도 계산 v3 (규칙 D: data/processed 매치 → 운영판도 이동)
+- `run_school_similarity.py` — 학교 유사도 계산 v1 (E: 규칙 D와 무관 무조건 이동)
+- `run_school_similarity_v2.py` — 학교 유사도 계산 v2 (E: 규칙 D와 무관 무조건 이동)
+- `run_school_similarity_v3.py` — 학교 유사도 계산 v3 (규칙 D: data/processed 매치)
 
 ### export/ (6개)
 - `build_submission_package.py` — 제출 패키지 구축 구경로 사본
@@ -79,11 +79,11 @@
 
 ### recommendation/ (2개)
 - `run_valhalla_priority_refresh.py` — Valhalla 우선순위 갱신 구경로 사본
-- `rebuild_priority_with_redev.py` — 재개발 포함 우선순위 재구축 (규칙 D: data/processed 매치 없음 but 명시적 이동 필요)
+- `rebuild_priority_with_redev.py` — 재개발 포함 우선순위 재구축 (루트판 동일 사본)
 
 ---
 
-**총 이동 파일 수: 63개** (A:4 + B:2 + C:4 + D:48 + E:포함)
-**D-1:12 + D-2:11 + D-3:10 + D-4:6 + D-5:3 + D-6:5 + D-7:2 = 49개**
+**총 이동 파일 수: 59개** (A:4 + B:2 + C:4 + D:49)
+**D 세부: D-1:12 + D-2:10 + D-3:11(E 포함) + D-4:6 + D-5:3 + D-6:5 + D-7:2 = 49개**
 **이동 전 안전 검증: 잔류 파일 import 참조 0건**
 **특별 주의: D-3 scripts/classification/apply_case_system_20260411.py 로직 병합 검토 권장**
