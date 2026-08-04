@@ -44,7 +44,7 @@
 - `rebuild_candidate_population_demand.py` — 후보지 인구 수요 재구축 구경로 사본
 - `refresh_candidate_simulation_metrics.py` — 후보지 시뮬레이션 메트릭 갱신 구경로 사본
 
-### classification/ (8개, 특별 표기 2건)
+### classification/ (10개, 특별 표기 2건)
 - `analysis_clustering.py` — 클러스터링 분석 구경로 사본
 - `analysis_ml_models.py` — ML 모델 분석 구경로 사본
 - **`apply_case_system_20260411.py`** — 케이스 시스템 적용 (루트판에 없는 `deduplicate_public_parks()` 함수 추가분 있음 → **로직 병합 검토 필요**)
@@ -53,7 +53,9 @@
 - `incheon_vulnerable_green_correlation_20260423.py` — 인천 취약층-녹지 상관 구경로 사본
 - `michuhol_vulnerable_green_correlation_20260422.py` — 미추홀 취약층-녹지 상관 구경로 사본
 - `reclassify_case_public_only.py` — 공용 공원만 케이스 재분류 구경로 사본
-- **`rebuild_priority_with_redev.py`** — 재개발 포함 우선순위 재구축 (루트판과 완전 동일 사본)
+- `run_school_similarity.py` — 학교 유사도 계산 v1 (규칙 D: data/processed 매치)
+- `run_school_similarity_v2.py` — 학교 유사도 계산 v2 (규칙 D: data/processed 매치)
+- `run_school_similarity_v3.py` — 학교 유사도 계산 v3 (규칙 D: data/processed 매치 → 운영판도 이동)
 
 ### export/ (6개)
 - `build_submission_package.py` — 제출 패키지 구축 구경로 사본
@@ -75,15 +77,13 @@
 - `preprocess_step2_childcare.py` — 전처리 Step2 보육시설 구경로 사본
 - `preprocess_step2_parks.py` — 전처리 Step2 공원 구경로 사본
 
-### recommendation/ (1개)
+### recommendation/ (2개)
 - `run_valhalla_priority_refresh.py` — Valhalla 우선순위 갱신 구경로 사본
-
-## E. scripts/ 유사도 구버전 (classification/)
-- `run_school_similarity.py` — 학교 유사도 계산 v1 (v3이 최종본)
-- `run_school_similarity_v2.py` — 학교 유사도 계산 v2 (v3이 최종본)
+- `rebuild_priority_with_redev.py` — 재개발 포함 우선순위 재구축 (규칙 D: data/processed 매치 없음 but 명시적 이동 필요)
 
 ---
 
-**총 이동 파일 수: 61개** (A:4 + B:2 + C:4 + D:45 + E:2 + E분류:2)
+**총 이동 파일 수: 63개** (A:4 + B:2 + C:4 + D:48 + E:포함)
+**D-1:12 + D-2:11 + D-3:10 + D-4:6 + D-5:3 + D-6:5 + D-7:2 = 49개**
 **이동 전 안전 검증: 잔류 파일 import 참조 0건**
-**특별 주의: D범주 scripts/classification/apply_case_system_20260411.py와 rebuild_priority_with_redev.py 검토 권장**
+**특별 주의: D-3 scripts/classification/apply_case_system_20260411.py 로직 병합 검토 권장**
