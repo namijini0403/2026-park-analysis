@@ -1,0 +1,414 @@
+# 공공데이터 업데이트 센터용 데이터 매니페스트 초안 (2026-08-04, task-2 인벤토리 기반)
+#
+# 근거: .superpowers/sdd/code_cleanup_handover/task-2-report.md 표 A (data_processed 72개 파일 전량)
+#
+# 한계:
+# - generators는 파일명 grep 기반으로 읽기/쓰기를 구분하지 않음. 확정판은 W3 업데이트 센터 구현 시 정밀화.
+# - operating: true는 표 A에서 앱 참조가 index.html로 확인된 파일 전부 (OPERATING_PATHS.md 고정 목록 +
+#   index.html이 추가로 로딩하는 candidate_grid_final.geojson, robust_candidate_recommendations.json,
+#   school_priority_with_functional_park_layer.csv, school_isochrone_500m.geojson 등).
+# - sealed: true는 표 A에서 ⚠️봉인 표시가 된 파일. 봉인값은 CONTEXT.md 159행 이후 섹션 참고.
+# - 일부 파일은 생성 스크립트가 grep으로 확인되지 않아 generators: [] + note로 표시함 (표 A "불확실 항목" 참고).
+# - 이 파일은 스켈레톤 단계 산출물이며 코드 이관을 수반하지 않음.
+
+datasets:
+  - file: data_processed/age_ratio_incheon.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py, preprocess_step5_grid1k.py]
+
+  - file: data_processed/ai_recommendation_before_after_functional_layer.csv
+    operating: false
+    sealed: false
+    generators: [add_functional_park_layer_20260506.py]
+
+  - file: data_processed/beneficiary_forecast.csv
+    operating: false
+    sealed: false
+    generators: [generate_candidate_grid.py, generate_candidate_grid_v2.py, generate_statistics_preview_data.py, analysis_ml_models.py, run_beneficiary_models_v2.py, run_model2_ablation_v3.py, run_model2_feature_boost_v2.py, run_model2_feature_boost_v3.py, build_prophet_cohort_change.py, validate_track2_child_demand.py]
+
+  - file: data_processed/beneficiary_forecast_v3.csv
+    operating: false
+    sealed: false
+    generators: [export_school_enrollment_forecast_versioned.py, run_model2_feature_boost_v3.py, validate_track2_child_demand.py]
+
+  - file: data_processed/blocked_parks_by_apt_adjustment_20260504.csv
+    operating: false
+    sealed: false
+    generators: [add_functional_park_layer_20260506.py, build_apartment_permeability_walk_adjustment_20260504.py]
+
+  - file: data_processed/candidate_barrier_routes_by_school.json
+    operating: true
+    sealed: false
+    generators: [analysis/build_candidate_barrier_routes.py, scripts/candidate_generation/build_candidate_barrier_routes.py]
+    app_ref: index.html
+    note: "OPERATING_PATHS 등재. GRAPH_PATH가 구경로(data/processed)를 참조해 실제 재실행 시 동작 여부 불확실(task-2 B-3절)"
+
+  - file: data_processed/candidate_grid_final.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py, add_functional_park_layer_20260506.py, validate_track2_child_demand.py]
+
+  - file: data_processed/candidate_grid_final.geojson
+    operating: true
+    sealed: false
+    generators: [analysis/build_candidate_barrier_routes.py, build_mixed_demand_model.py, analysis/exclude_school_sites.py, add_robust_xai_recommendation.py]
+    app_ref: index.html
+    note: "OPERATING_PATHS 고정 목록엔 없지만 index.html이 fetch(./data_processed/candidate_grid_final.geojson)로 실사용 (5477행)"
+
+  - file: data_processed/candidate_grid_final_v2.csv
+    operating: false
+    sealed: false
+    generators: [analysis/generate_candidate_grid_v2.py]
+
+  - file: data_processed/candidate_grid_final_v3.geojson
+    operating: false
+    sealed: false
+    generators: []
+    note: "생성 스크립트 미상"
+
+  - file: data_processed/candidate_grid_final_v4.geojson
+    operating: false
+    sealed: false
+    generators: [analysis/generate_candidate_grid_v2.py]
+
+  - file: data_processed/candidate_grid_final_v5.geojson
+    operating: false
+    sealed: false
+    generators: [analysis/generate_candidate_grid_v2.py, analysis/predict_grid_demand.py]
+
+  - file: data_processed/candidate_grid_population_alloc_v1.csv
+    operating: false
+    sealed: false
+    generators: [analysis/rebuild_candidate_population_demand.py, build_mixed_demand_model.py, validate_track2_child_demand.py]
+
+  - file: data_processed/candidate_grid_population_alloc_v1.geojson
+    operating: false
+    sealed: false
+    generators: [analysis/rebuild_candidate_population_demand.py, build_mixed_demand_model.py, validate_track2_child_demand.py]
+
+  - file: data_processed/candidate_grid_raw_v2.geojson
+    operating: false
+    sealed: false
+    generators: [analysis/generate_candidate_grid.py]
+
+  - file: data_processed/candidate_grid_raw_v3.geojson
+    operating: false
+    sealed: false
+    generators: [analysis/generate_candidate_grid_v2.py]
+
+  - file: data_processed/candidate_grid_xgb.csv
+    operating: false
+    sealed: false
+    generators: []
+    note: "생성 스크립트 미상"
+
+  - file: data_processed/candidate_grid_xgb.geojson
+    operating: false
+    sealed: false
+    generators: []
+    note: "생성 스크립트 미상"
+
+  - file: data_processed/candidate_grid_xgb_v2.csv
+    operating: false
+    sealed: false
+    generators: []
+    note: "생성 스크립트 미상 (동명 .geojson은 enrich_candidate_grid.py가 생성)"
+
+  - file: data_processed/candidate_grid_xgb_v2.geojson
+    operating: false
+    sealed: false
+    generators: [enrich_candidate_grid.py]
+
+  - file: data_processed/candidate_grid_xgb_v3.csv
+    operating: false
+    sealed: false
+    generators: []
+    note: "생성 스크립트 미상 (동명 .geojson은 build_mixed_demand_model.py가 생성)"
+
+  - file: data_processed/candidate_grid_xgb_v3.geojson
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py]
+
+  - file: data_processed/candidate_grid_xgb_v4.csv
+    operating: false
+    sealed: false
+    generators: [analysis/predict_grid_demand.py, analysis/rebuild_candidate_population_demand.py, fix_candidate_simulation_metrics.py, refresh_candidate_simulation_metrics.py]
+
+  - file: data_processed/candidate_grid_xgb_v4.geojson
+    operating: false
+    sealed: false
+    generators: [analysis/predict_grid_demand.py, analysis/rebuild_candidate_population_demand.py, fix_candidate_simulation_metrics.py, refresh_candidate_simulation_metrics.py]
+
+  - file: data_processed/childcare_coord_missing.csv
+    operating: false
+    sealed: false
+    generators: [preprocess_step2_childcare.py]
+
+  - file: data_processed/childcare_michuhol.csv
+    operating: true
+    sealed: false
+    generators: [preprocess_step2_childcare.py]
+    app_ref: index.html
+
+  - file: data_processed/geocoded_playground.csv
+    operating: false
+    sealed: false
+    generators: [enrich_candidate_grid.py, preprocess_step6_geocoding.py]
+
+  - file: data_processed/grid_1km_cohort_pred.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py, validate_track2_child_demand.py]
+
+  - file: data_processed/grid_1km_final_pred.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py, validate_track2_child_demand.py]
+
+  - file: data_processed/grid_1km_prophet_alloc.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py, validate_track2_child_demand.py]
+
+  - file: data_processed/grid_250m_pred.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py, validate_track2_child_demand.py]
+
+  - file: data_processed/grid_shp_attributes_sample.csv
+    operating: false
+    sealed: false
+    generators: [preprocess_step4_grid.py]
+
+  - file: data_processed/gu_cohort_ratios.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py]
+
+  - file: data_processed/gu_summary.csv
+    operating: true
+    sealed: false
+    generators: [analysis_ml_models.py, apply_public_park_case_rules_20260422.py, fix_walk_green_ratio_intersection_20260504.py]
+    app_ref: index.html
+
+  - file: data_processed/has_large_apt_diff.csv
+    operating: false
+    sealed: false
+    generators: [analysis_large_apt_exact.py, analysis_large_apt_kakao.py, fix_has_large_apt_500m.py, run_school_similarity_v2.py]
+
+  - file: data_processed/incheon_grid_codes.csv
+    operating: false
+    sealed: false
+    generators: [preprocess_step4_grid.py, preprocess_step4_final.py, preprocess_step4b_grid.py, preprocess_step4c_grid_combined.py]
+    note: "생성 스크립트는 preprocess_step4*.py 계열로만 특정(개별 스크립트 확정 안 됨)"
+
+  - file: data_processed/incheon_grid_codes_dasa.csv
+    operating: false
+    sealed: false
+    generators: [preprocess_step4_grid.py, preprocess_step4_final.py, preprocess_step4b_grid.py, preprocess_step4c_grid_combined.py]
+    note: "생성 스크립트는 preprocess_step4*.py 계열로만 특정(개별 스크립트 확정 안 됨)"
+
+  - file: data_processed/incheon_residential_osm.geojson
+    operating: false
+    sealed: false
+    generators: [build_apartment_permeability_walk_adjustment_20260504.py, generate_word_doc.py, make_apartment_permeability_isochrone_compare.py]
+
+  - file: data_processed/isochrone_valhalla.geojson
+    operating: true
+    sealed: true
+    generators: [rebuild_priority_with_redev.py, recalc_park_playground_counts_valhalla.py, analysis_isochrone_valhalla.py, build_green_ratio_display_guardrail_20260506.py, reclassify_case_public_only.py, generate_word_doc.py]
+    app_ref: index.html
+    note: "⚠️봉인(도보경로 보행부담 근거) — 재실행 금지"
+
+  - file: data_processed/kindergartens.csv
+    operating: false
+    sealed: false
+    generators: []
+    note: "생성 스크립트 미상"
+
+  - file: data_processed/large_apt_complexes_2025.csv
+    operating: true
+    sealed: false
+    generators: [analysis_large_apt_exact.py, analysis_large_apt_kakao.py, fix_has_large_apt_500m.py, run_school_similarity_v3.py, audit_knn_k_choice.py, enrich_candidate_grid.py]
+    app_ref: index.html
+
+  - file: data_processed/lightgbm_case_type_best.pkl
+    operating: false
+    sealed: false
+    generators: [analysis_ml_models.py]
+
+  - file: data_processed/osm_school_polygons_incheon.geojson
+    operating: false
+    sealed: false
+    generators: [exclude_school_sites.py, make_apartment_permeability_isochrone_compare.py]
+
+  - file: data_processed/parks.csv
+    operating: true
+    sealed: true
+    generators: [analysis_nearest_park.py, apply_case_system_20260411.py, recalc_nearest_park_public_only.py, preprocess_step2_parks.py, preprocess_step3_parks_gu.py]
+    app_ref: index.html
+    note: "⚠️봉인(석남도시숲/석곶체육공원 등 실측 근접공원 반영) — 재실행 금지. 실제 참조 스크립트는 약 30개(task-2 표 A)이며 위 목록은 핵심만 발췌"
+
+  - file: data_processed/parks_with_function_class.csv
+    operating: false
+    sealed: false
+    generators: [add_functional_park_layer_20260506.py, export_park_area_exclusion_reclassification.py]
+
+  - file: data_processed/parks_with_nearest_school.csv
+    operating: false
+    sealed: false
+    generators: [add_functional_park_layer_20260506.py, add_nearest_school_to_parks.py]
+
+  - file: data_processed/population_grid.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py, rebuild_candidate_population_demand.py, preprocess_step4_grid.py, preprocess_step5_grid1k.py, analysis_ml_models.py, analysis_school_priority.py]
+
+  - file: data_processed/population_grid_1k.csv
+    operating: false
+    sealed: false
+    generators: [build_mixed_demand_model.py, rebuild_candidate_population_demand.py, preprocess_step4_grid.py, preprocess_step5_grid1k.py, analysis_ml_models.py, analysis_school_priority.py]
+
+  - file: data_processed/priority_ml.csv
+    operating: false
+    sealed: false
+    generators: [analysis_ml_models.py]
+
+  - file: data_processed/redevelopment.csv
+    operating: false
+    sealed: false
+    generators: [rebuild_priority_with_redev.py, analysis_redev_isochrone.py, analysis_redev_proximity.py, preprocess_step1_redevelopment.py]
+
+  - file: data_processed/redevelopment_geocoded.csv
+    operating: true
+    sealed: false
+    generators: [build_mixed_demand_model.py, analysis_redev_isochrone.py, analysis_redev_proximity.py]
+    app_ref: index.html
+
+  - file: data_processed/robust_candidate_recommendations.json
+    operating: true
+    sealed: false
+    generators: [add_robust_xai_recommendation.py]
+    app_ref: index.html
+    note: "OPERATING_PATHS 고정 목록 밖이지만 index.html이 실사용"
+
+  - file: data_processed/robust_shap_candidate_explanations.json
+    operating: false
+    sealed: false
+    generators: [add_robust_xai_recommendation.py]
+
+  - file: data_processed/school_buffer_500m.geojson
+    operating: true
+    sealed: false
+    generators: [analysis_school_priority.py, recalc_park_playground_counts_valhalla.py, add_functional_park_layer_20260506.py, analysis_step1_osmnx.py]
+    app_ref: index.html
+
+  - file: data_processed/school_enrollment_forecast_20260418_model1.csv
+    operating: true
+    sealed: false
+    generators: [export_school_enrollment_forecast_versioned.py, generate_statistics_preview_data_safe.py, fix_candidate_simulation_metrics.py, refresh_candidate_simulation_metrics.py]
+    app_ref: index.html
+
+  - file: data_processed/school_exclusion_log.csv
+    operating: false
+    sealed: false
+    generators: [exclude_school_sites.py]
+
+  - file: data_processed/school_green_ratio_display_guardrail_20260506.csv
+    operating: false
+    sealed: true
+    generators: [add_functional_park_layer_20260506.py, build_green_ratio_display_guardrail_20260506.py]
+    note: "⚠️봉인(표시용 녹지비율에 봉인 검증값 반영, CONTEXT.md 95행) — 재실행 금지"
+
+  - file: data_processed/school_isochrone_500m.geojson
+    operating: true
+    sealed: false
+    generators: [analysis_step3_isochrone.py]
+    app_ref: index.html
+    note: "OPERATING_PATHS 고정 목록 밖이지만 index.html이 실사용. analysis_step3_isochrone.py가 원본 생성, 이후 다수 스크립트가 읽기만 함"
+
+  - file: data_processed/school_isochrone_500m_apt_adjusted_20260504.geojson
+    operating: false
+    sealed: false
+    generators: [build_apartment_permeability_walk_adjustment_20260504.py, build_green_ratio_display_guardrail_20260506.py]
+
+  - file: data_processed/school_nearest_park.csv
+    operating: true
+    sealed: true
+    generators: [analysis_nearest_park.py, apply_case_system_20260411.py, recalc_nearest_park_public_only.py, update_manual_verified_nearest_parks.py]
+    app_ref: index.html
+    note: "⚠️봉인 — 재실행 금지"
+
+  - file: data_processed/school_nearest_park_20260411_before_case_system.csv
+    operating: false
+    sealed: false
+    generators: [apply_case_system_20260411.py]
+    note: "apply_case_system_20260411.py가 자체 생성한 백업본"
+
+  - file: data_processed/school_nearest_park_case_system_20260411.csv
+    operating: false
+    sealed: false
+    generators: [apply_case_system_20260411.py]
+
+  - file: data_processed/school_priority.csv
+    operating: true
+    sealed: true
+    generators: [analysis_school_priority.py, apply_case_system_20260411.py, rebuild_priority_with_redev.py]
+    app_ref: index.html
+    note: "⚠️봉인(실측 case/거리 반영) — 재실행 금지. 실제 참조 스크립트는 40개 이상(task-2 표 A)이며 위 목록은 핵심만 발췌"
+
+  - file: data_processed/school_priority_20260411_before_case_system.csv
+    operating: false
+    sealed: false
+    generators: [apply_case_system_20260411.py]
+    note: "apply_case_system_20260411.py가 자체 생성한 백업본"
+
+  - file: data_processed/school_priority_case_system_20260411.csv
+    operating: false
+    sealed: false
+    generators: [apply_case_system_20260411.py]
+    note: "apply_case_system_20260411.py가 생성, 이후 generate_candidate_grid*.py 등 여러 스크립트가 입력으로 사용"
+
+  - file: data_processed/school_priority_with_functional_park_layer.csv
+    operating: true
+    sealed: true
+    generators: [add_functional_park_layer_20260506.py, apply_physical_barrier_tag_20260526.py]
+    app_ref: index.html
+    note: "⚠️봉인. OPERATING_PATHS 고정 목록 밖이지만 index.html이 실사용"
+
+  - file: data_processed/school_similar_schools_top5.csv
+    operating: true
+    sealed: false
+    generators: [run_school_similarity_v3.py]
+    app_ref: index.html
+    note: "v1/v2(scripts/classification/)는 실험본, v3가 최종 운영판"
+
+  - file: data_processed/school_walk_500m_apartment_adjustment_20260504.csv
+    operating: false
+    sealed: false
+    generators: [build_apartment_permeability_walk_adjustment_20260504.py]
+
+  - file: data_processed/schools.csv
+    operating: true
+    sealed: false
+    generators: [preprocess_step1_schools.py]
+    app_ref: index.html
+    note: "preprocess_step1_schools.py가 원본 생성, 이후 매우 다수 스크립트가 읽기만 함"
+
+  - file: data_processed/schools_michuhol.csv
+    operating: false
+    sealed: false
+    generators: [extract_schools_michuhol.py, michuhol_vulnerable_green_correlation_20260422.py]
+
+  - file: data_processed/shap_summary.png
+    operating: false
+    sealed: false
+    generators: [analysis_ml_models.py, add_robust_xai_recommendation.py]
+
+  - file: data_processed/student_trend.csv
+    operating: true
+    sealed: false
+    generators: [compare_school_enrollment_models.py, run_school_similarity_v3.py, incheon_student_green_correlation_20260424.py]
+    app_ref: index.html
