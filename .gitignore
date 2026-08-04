@@ -14,6 +14,7 @@
 # Python cache / env
 __pycache__/
 *.py[cod]
+*.pyc
 *.pyo
 *.pyd
 .venv/
