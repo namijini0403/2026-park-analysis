@@ -5227,12 +5227,12 @@
     }
 
     function getAiExplainerEndpoints() {
-      const isProductionHost = window.location.hostname === "2026-park-analysis.vercel.app";
       const sameOriginEndpoint = "/api/ai-explainer-v2";
-      if (window.location.protocol === "file:" || !isProductionHost) {
+      if (window.location.protocol === "file:") {
         return [PRODUCTION_AI_EXPLAINER_V2_URL, sameOriginEndpoint];
       }
-      return [sameOriginEndpoint];
+      // http(s)로 서빙되는 모든 호스트(Vercel, Railway, localhost)는 same-origin API를 우선 사용한다.
+      return [sameOriginEndpoint, PRODUCTION_AI_EXPLAINER_V2_URL];
     }
 
     async function postAiExplainer(payload) {
