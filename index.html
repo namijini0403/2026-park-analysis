@@ -3855,7 +3855,7 @@
 
     function focusSchool(row) {
       if (!row || !state.map) return;
-      const latLng = toLatLng(row, row["?꾨룄"] !== undefined ? "?꾨룄" : "lat", row["寃쎈룄"] !== undefined ? "寃쎈룄" : "lng");
+      const latLng = toLatLng(row, row["위도"] !== undefined ? "위도" : "lat", row["경도"] !== undefined ? "경도" : "lng");
       if (!latLng) return;
 
       highlightIsochroneForSchool(row);
@@ -4688,8 +4688,8 @@
     }
 
     function getNearbyLargeAptComplexes(row, radiusMeters = 500, minHouseholds = 500) {
-      const schoolLat = Number(row["위도"] ?? row["?꾨룄"]);
-      const schoolLng = Number(row["경도"] ?? row["寃쎈룄"]);
+      const schoolLat = Number(row["위도"]);
+      const schoolLng = Number(row["경도"]);
       if (!Number.isFinite(schoolLat) || !Number.isFinite(schoolLng)) return [];
 
       return state.datasets.largeApt
@@ -5453,8 +5453,8 @@
         if (!schoolRow) return null;
         return toLatLng(
           schoolRow,
-          schoolRow["?꾨룄"] !== undefined ? "?꾨룄" : "lat",
-          schoolRow["寃쎈룄"] !== undefined ? "寃쎈룄" : "lng"
+          schoolRow["위도"] !== undefined ? "위도" : "lat",
+          schoolRow["경도"] !== undefined ? "경도" : "lng"
         );
       }
 
