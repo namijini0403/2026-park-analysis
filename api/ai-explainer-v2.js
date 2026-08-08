@@ -13,6 +13,8 @@ const ALLOWED_ORIGIN_PATTERNS = [
   /^https:\/\/2026-park-analysis-[a-z0-9-]+-namijini0403s-projects\.vercel\.app$/,
   /^http:\/\/localhost:\d+$/,
   /^http:\/\/127\.0\.0\.1:\d+$/,
+  /^https:\/\/park-analysis-web-production\.up\.railway\.app$/,
+  /^https:\/\/[a-z0-9-]+\.up\.railway\.app$/,
 ];
 
 loadLocalEnvForDevelopment();
