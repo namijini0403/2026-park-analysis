@@ -142,13 +142,13 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/95 p-1.5 shadow-soft">
-              <img src={logoSrc} alt="ParkLens" className="h-full w-full object-contain" />
+              <img src={logoSrc} alt="반경 너머, 정책 도달성으로" className="h-full w-full object-contain" />
             </div>
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-forest-300">
                 Interactive System Flowmap
               </p>
-              <p className="text-base font-bold text-white">반경 너머, 도달 가능성으로</p>
+              <p className="text-base font-bold text-white">반경 너머, 정책 도달성으로</p>
             </div>
           </div>
           <div className="hidden flex-wrap gap-2 sm:flex">
@@ -170,10 +170,10 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <span className="eyebrow">Policy Decision Support</span>
               <h1 className="mt-4 text-4xl font-black leading-[1.14] tracking-tight text-white sm:text-[46px] lg:text-[50px]">
                 <span className="block">반경 너머,</span>
-                <span className="block">도달 가능성으로</span>
+                <span className="block">정책 도달성으로</span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 진단하고,
+                도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 정책 도달성 관점에서 진단하고,
                 <span className="font-semibold text-forest-300"> 견고한 후보지와 SHAP 후보 진단</span>을 제안합니다.
               </p>
             </div>
