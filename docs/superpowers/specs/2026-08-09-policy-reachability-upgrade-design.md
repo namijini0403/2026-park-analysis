@@ -40,7 +40,7 @@
 **잠복 버그 수정**:
 - mojibake 4곳: `index.html:3853, 4686-4687, 5451-5452`의 `"?꾨룄"/"寃쎈룄"` → `"위도"/"경도"` 정상 키 + 폴백 정리
 - 깨진 경로: `index.html:3223` `candidatePanelExamples` → `./data_processed/candidate_panel_examples.json`으로 경로 변경 + 파일을 `data/app_examples/`에서 복사 + `build_vercel_static.mjs` requiredDataFiles에 추가 (또는 fallback 유지 결정 시 경로 제거)
-- CORS: `api/ai-explainer-v2.js:11-16` ALLOWED_ORIGIN_PATTERNS에 `park-analysis-web-production.up.railway.app` + `*.up.railway.app` 추가
+- CORS: `api/ai-explainer-v2.js:11-16` ALLOWED_ORIGIN_PATTERNS에 `park-analysis-web-production.up.railway.app`만 정확히 추가 (광역 와일드카드 *.up.railway.app은 보안 결함으로 배제 — 타 Railway 사용자 도메인 전부에 무인증 API가 열림)
 - Vercel 하드코딩 URL 폴백은 유지하되(무해), 주석으로 역할 명시
 
 **검증**: 로컬 `node server.js` 기동 → 커버/패널/가이드/랜딩(iframe) 제목 확인, 콘솔 에러 0, 학교 마커·후보지 렌더 정상. `npm run build:ui-preview` 후 dist 커밋.

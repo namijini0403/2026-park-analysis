@@ -186,11 +186,11 @@ export default function PreviewWorkspaceSafe() {
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/95 p-1.5 shadow-soft transition hover:scale-105"
               aria-label="홈으로"
             >
-              <img src={logoSrc} alt="ParkLens" className="h-full w-full object-contain" />
+              <img src={logoSrc} alt="반경 너머, 정책 도달성으로" className="h-full w-full object-contain" />
             </button>
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-forest-300">
-                ParkLens · Incheon
+                Policy Reachability · Incheon
               </p>
               <p className="text-sm font-bold text-white">
                 {schoolRow ? detailProps.schoolName : "UI Preview"}
