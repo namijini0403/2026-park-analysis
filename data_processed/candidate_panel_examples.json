@@ -1,0 +1,139 @@
+[
+  {
+    "candidate_meta": {
+      "candidate_id": "ext_grid_gyeyang_00017",
+      "candidate_type": "external_grid",
+      "center_x": 126.70521,
+      "center_y": 37.53482,
+      "gu": "계양구",
+      "dong": "작전동"
+    },
+    "demand_summary": {
+      "nearby_child_total": 1460,
+      "predicted_2029": 1820.4,
+      "predicted_2031": 1762.8,
+      "demand_label": "잠재 수요 추정",
+      "demand_note": "정밀 예측이 아닌 비교용 잠재 수요 추정값"
+    },
+    "accessibility_summary": {
+      "nearest_park_dist_m": 710.2,
+      "nearby_park_count": 0,
+      "nearby_playground_count": 1,
+      "has_large_apt": true,
+      "redev_status_simple": "계획·진행",
+      "land_feasibility_level": "medium",
+      "land_feasibility_note": "공개데이터 기준으로는 토지 성격이 불명확해 현장 검토가 필요함"
+    },
+    "strategy_recommendation": {
+      "primary_recommendation": "외부 검토",
+      "secondary_option": "내부 병행 검토"
+    },
+    "explanation": {
+      "recommendation_reason_summary": "500m 내 공원 부족과 아동 밀집이 확인되며 외부 설치는 현장 검토가 필요합니다.",
+      "explanation_tags": [
+        "공원부족",
+        "아동밀집",
+        "대단지주거",
+        "현장검토필요"
+      ]
+    },
+    "linked_schools": {
+      "linked_school_count": 2,
+      "linked_school_ids": [
+        "B000003077",
+        "B000003026"
+      ],
+      "linked_school_names": [
+        "상인천초등학교",
+        "인천동수초등학교"
+      ],
+      "schools": [
+        {
+          "school_id": "B000003077",
+          "school_name": "상인천초등학교",
+          "case_label": "접근 가능, 중간 수준",
+          "predicted_2029": 396.8,
+          "predicted_2031": 216.5
+        },
+        {
+          "school_id": "B000003026",
+          "school_name": "인천동수초등학교",
+          "case_label": "접근 가능하나 녹지 부족",
+          "predicted_2029": 422.1,
+          "predicted_2031": 401.7
+        }
+      ]
+    },
+    "ui_flags": {
+      "requires_field_review": true,
+      "show_demand_cards": true,
+      "show_accessibility_metrics": true,
+      "show_linked_schools": true,
+      "show_coordinates": true,
+      "show_land_feasibility_badge": true,
+      "show_internal_note": false
+    }
+  },
+  {
+    "candidate_meta": {
+      "candidate_id": "internal_B000002962_play_01",
+      "candidate_type": "school_internal",
+      "school_id": "B000002962",
+      "school_name": "인천영종초등학교금산분교장",
+      "gu": "중구",
+      "dong": null
+    },
+    "demand_summary": {
+      "predicted_2029": 3.16,
+      "predicted_2031": 2.92,
+      "demand_label": "잠재 수요 추정",
+      "demand_note": "학교권 기준 비교용 잠재 수요 추정값"
+    },
+    "accessibility_summary": {
+      "install_option": "학교 내부 놀이공간 검토",
+      "space_constraint_level": "medium",
+      "expected_benefit_scope": "교내 중심",
+      "land_feasibility_note": "학교 내부 유휴공간 여부는 현장 확인 전 확정할 수 없음",
+      "external_candidate_available": false
+    },
+    "strategy_recommendation": {
+      "primary_recommendation": "학교 내부 설치",
+      "secondary_option": "인접 학교/공공시설 연계"
+    },
+    "explanation": {
+      "recommendation_reason_summary": "외부 설치가 어려워 보여 학교 내부 대안 검토가 우선입니다.",
+      "explanation_tags": [
+        "외부설치애매",
+        "내부대안",
+        "현장검토필요"
+      ]
+    },
+    "linked_schools": {
+      "linked_school_count": 1,
+      "linked_school_ids": [
+        "B000002962"
+      ],
+      "linked_school_names": [
+        "인천영종초등학교금산분교장"
+      ],
+      "schools": [
+        {
+          "school_id": "B000002962",
+          "school_name": "인천영종초등학교금산분교장",
+          "case_label": "별도 묶음",
+          "predicted_2029": 3.16,
+          "predicted_2031": 2.92
+        }
+      ]
+    },
+    "ui_flags": {
+      "requires_field_review": true,
+      "show_demand_cards": true,
+      "show_accessibility_metrics": false,
+      "show_linked_schools": true,
+      "show_coordinates": false,
+      "show_land_feasibility_badge": false,
+      "show_internal_note": true
+    }
+  }
+]
