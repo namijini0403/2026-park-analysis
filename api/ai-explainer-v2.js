@@ -14,7 +14,6 @@ const ALLOWED_ORIGIN_PATTERNS = [
   /^http:\/\/localhost:\d+$/,
   /^http:\/\/127\.0\.0\.1:\d+$/,
   /^https:\/\/park-analysis-web-production\.up\.railway\.app$/,
-  /^https:\/\/[a-z0-9-]+\.up\.railway\.app$/,
 ];
 
 loadLocalEnvForDevelopment();
