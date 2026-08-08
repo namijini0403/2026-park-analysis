@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>반경 너머, 도달 가능성으로</title>
+  <title>반경 너머, 정책 도달성으로</title>
+  <meta property="og:title" content="반경 너머, 정책 도달성으로" />
+  <meta property="og:description" content="학교별 교육자원 격차를 줄이는 AI 기반 정책 의사결정 지원 시스템" />
+  <meta property="og:image" content="https://park-analysis-web-production.up.railway.app/logo.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
   <!-- Vercel Web Analytics: 익명 방문자 집계 (시간대별 방문자 수/페이지뷰). 개인정보 미수집. -->
   <script defer src="/_vercel/insights/script.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -2879,7 +2884,7 @@
         z-index: 130;
       }
 
-      /* #controlPanel ("반경 너머, 도달 가능성으로" intro/detail panel): fully hidden by default
+      /* #controlPanel ("반경 너머, 정책 도달성으로" intro/detail panel): fully hidden by default
          (no more 118px sliver colliding with the floating button), real bottom sheet only when opened */
       .panel {
         transform: translateY(100%);
@@ -3014,12 +3019,12 @@
     <section class="app-cover" id="appCover" role="dialog" aria-modal="true" aria-labelledby="appCoverTitle">
       <div class="app-cover-shell">
         <div class="app-cover-main">
-          <p class="app-cover-kicker">Incheon Outdoor Equity</p>
-          <h1 class="app-cover-title" id="appCoverTitle"><span>반경 너머,</span><span>도달 가능성으로</span></h1>
-          <p class="app-cover-statement">도보 네트워크·보행 부담·활동규모 기준을 함께 봅니다.</p>
+          <p class="app-cover-kicker">Policy Reachability</p>
+          <h1 class="app-cover-title" id="appCoverTitle"><span>반경 너머,</span><span>정책 도달성으로</span></h1>
+          <p class="app-cover-statement">외부 접근성·내부 공급·미래 수요를 함께 봅니다.</p>
           <p class="app-cover-copy">
-            초등학교 야외활동 환경을 공식 공원 존재, 실제 도달 가능성, 보행 부담, 활동규모 기준으로 나누어 진단하고
-            XAI 우선지원 의사결정을 지원합니다.
+            교육자원이 학생에게 실제로 도달하는 구조적 조건 — 외부 접근성, 내부 공급, 현재·미래 수요 — 을 진단하고
+            XAI 기반 정책 의사결정을 지원합니다.
           </p>
           <div class="app-cover-tags" aria-label="핵심 분석 기준">
             <span class="app-cover-tag">실제 도보생활권</span>
@@ -3035,7 +3040,7 @@
           </div>
         </div>
         <div class="app-cover-visual" aria-label="앱 로고">
-          <img class="app-cover-logo" src="./logo.png" alt="반경 너머, 도달 가능성으로 로고" />
+          <img class="app-cover-logo" src="./logo.png" alt="반경 너머, 정책 도달성으로 로고" />
           <p class="app-cover-caption">도보 접근성, 환경 격차, 미래 수요를 하나의 판단 흐름으로 연결합니다.</p>
         </div>
       </div>
@@ -3110,9 +3115,9 @@
     <aside class="panel" id="controlPanel">
       <div class="panel-header">
         <div class="mobile-handle"></div>
-        <p class="eyebrow">Incheon Outdoor Equity</p>
-        <h1 class="panel-title">반경 너머, 도달 가능성으로</h1>
-        <p class="panel-subtitle">도보 네트워크·보행 부담·활동규모 기준을 반영해 학교별 야외활동 환경을 진단합니다.</p>
+        <p class="eyebrow">Policy Reachability</p>
+        <h1 class="panel-title">반경 너머, 정책 도달성으로</h1>
+        <p class="panel-subtitle">도보 네트워크·보행 부담·활동규모 기준으로 학교별 교육자원의 정책 도달성을 진단합니다.</p>
       </div>
 
       <div class="panel-body">
@@ -3413,12 +3418,12 @@
 
     const GUIDE_CONTENT = {
       hero: {
-        title: "반경 너머, 도달 가능성으로",
+        title: "반경 너머, 정책 도달성으로",
         subtitle:
-          "도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 진단하고 견고한 후보지와 SHAP 진단을 제안합니다.",
+          "도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 정책 도달성 관점에서 진단하고 견고한 후보지와 SHAP 진단을 제안합니다.",
         badges: ["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "견고 후보 추천", "SHAP 후보 진단", "Human-in-the-loop"],
         thesis:
-          "단순 지도앱이 아니라,\n학교 주변 환경을 도달 가능성 기준으로 분석하고\n정책 판단의 근거를 연결하는 의사결정 시스템입니다."
+          "단순 지도앱이 아니라,\n교육자원의 정책 도달성을 진단하고\n정책 판단의 근거를 연결하는 AI 기반 의사결정 시스템입니다."
       },
       flowSteps: [
         {
@@ -3438,7 +3443,7 @@
           short: "직선거리가 아니라 실제 보행 가능한 범위를 계산합니다.",
           headline: "case2처럼 겉으로는 접근 가능해 보여도\n활동 규모와 경로 조건을 함께 확인해야 합니다.",
           items: ["실제 보행 가능 범위", "도보생활권 내 공원 수", "최근접 공원까지의 실제 거리", "도로·보행부담 요소를 고려한 접근성"],
-          principle: "반경 너머의 도달 가능성을 기준으로 판단합니다.",
+          principle: "반경 너머의 정책 도달성을 기준으로 판단합니다.",
           actionText: "봉화초 단일 사례가 아니라, case2 전형 학교의 지도 레이어 흐름으로 확인합니다.",
           image: "./assets/guide-bright-map-layers.png",
           imageAlt: "case2 전형 학교의 도보생활권과 지도 레이어 화면"
@@ -3490,7 +3495,7 @@
       ],
       principles: [
         {
-          title: "반경 너머 도달 가능성",
+          title: "반경 너머 정책 도달성",
           detail: "직선거리가 아닌 실제 보행 가능 범위를 기준으로 접근성을 봅니다."
         },
         {
@@ -6036,7 +6041,7 @@
         document.title = previousTitle;
         window.removeEventListener("afterprint", restorePrintState);
       };
-      document.title = "ParkLens - 활용 가이드";
+      document.title = "반경 너머, 정책 도달성으로 - 활용 가이드";
       document.body.classList.add("print-guide-active");
       window.addEventListener("afterprint", restorePrintState);
       window.print();
@@ -7401,9 +7406,9 @@
     function getStoredPrintSchoolName() {
       try {
         const row = JSON.parse(localStorage.getItem("parkAnalysis_school") || "{}");
-        return row.학교명 || row.schoolName || row.school_name || "ParkLens";
+        return row.학교명 || row.schoolName || row.school_name || "반경 너머";
       } catch {
-        return "ParkLens";
+        return "반경 너머";
       }
     }
 
