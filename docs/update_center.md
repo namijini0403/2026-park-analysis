@@ -62,22 +62,31 @@ scripts/update_center/reanalyze.mjs (경량 재분석)
 
 | # | Method | Path | 요청 필드 | 응답 필드(주요) | 설명 |
 | - | --- | --- | --- | --- | --- |
-| 1 | GET | `/api/update-center/sources` | (없음) | `sources[]` — `data_sources.yaml` 전체 + `last_state`(마지막 스캔 상태, 없으면 null) | 데이터소스 메타 목록 |
-| 2 | GET | `/api/update-center/events` | `?limit=` (기본 50) | `events[]` — `id,dataset,detected_at,kind,risk,status,summary,diff_json,ai_note` | CDC 이벤트 목록(최신순) |
-| 3 | GET | `/api/update-center/audit` | `?limit=` (기본 100) | `audit[]` — `id,at,actor,action,dataset,event_id,detail` | 감사 로그(최신순) |
-| 4 | GET | `/api/update-center/versions` | `?dataset=` (선택) | `versions[]` — `id,dataset,created_at,content_hash,row_count,snapshot(base64),applied,rolled_back` | 버전/스냅샷 이력 |
-| 5 | POST | `/api/update-center/scan` | `dataset`(선택, 생략시 전체), `simulate_change_b64`(선택, base64 CSV — 시뮬레이션 모드) | `mode:"scan"\|"simulate"`, `summary`, `events[]`(ai_note 포함), `log[]` | 실 스캔 또는 시뮬레이션 트리거, 이벤트마다 AI 해설 자동 생성 |
-| 6 | POST | `/api/update-center/approve` | `event_id` | 성공 200: `event,versionId,diff{affected_school_count,external_shortage_before/after,changed_schools}` / 실패: 409(red·moved·error·이미처리) 또는 501(시뮬레이션 페이로드 없음·미지원 데이터셋) | 이벤트 승인 → 재분석 → 적용(파일 반영) |
-| 7 | POST | `/api/update-center/hold` | `event_id` | `event`(status:"held") | 이벤트 보류 처리 |
-| 8 | POST | `/api/update-center/rollback` | `version_id` | `versionId, restoredFiles[], version` | 스냅샷 sha256 무결성 검증 후 파일 복원 |
+| 1 | GET | `/api/update-center/sources` | (없음) | `sources[]` — `data_sources.yaml` 전체 + `last_state`(마지막 스캔 상태, 없으면 null; `lastCheckedAt`/`lastStatus` 포함) | 데이터소스 메타 목록 |
+| 2 | GET | `/api/update-center/events` | `?limit=` (기본 50, 최대 500) | `events[]` — `id,dataset,detected_at,kind,risk,status,summary,diff_json,ai_note,actor,updated_at` | CDC 이벤트 목록(최신순). `actor`/`updated_at`은 마지막으로 상태를 바꾼 주체·시각(hold/approve/rollback 등) |
+| 3 | GET | `/api/update-center/audit` | `?limit=` (기본 100, 최대 500) | `audit[]` — `id,at,actor,action,dataset,event_id,detail` | 감사 로그(최신순) |
+| 4 | GET | `/api/update-center/versions` | `?dataset=` (선택), `?limit=` (기본 20, 최대 100) | `versions[]` — `id,dataset,created_at,content_hash,row_count,source_event_id,applied,rolled_back` (목록 응답에는 `snapshot` 제외 — 용량 절감. 롤백은 서버가 `getVersion()`으로 전체 행을 별도 조회) | 버전/스냅샷 이력 |
+| 5 | POST | `/api/update-center/scan` | `dataset`(선택, 생략시 전체), `simulate_change_b64`(선택, base64 CSV — 시뮬레이션 모드) | `mode:"scan"\|"simulate"`, `summary`, `events[]`(ai_note 포함), `log[]` | 실 스캔 또는 시뮬레이션 트리거, 이벤트마다 AI 해설 자동 생성(`ai_note_generated` 감사 기록, source=openai\|fallback) |
+| 6 | POST | `/api/update-center/approve` | `event_id` | 성공 200: `event,versionId,diff{affected_school_count,external_shortage_before/after,changed_schools}` / 실패: 400(`event_id` 누락) · 404(이벤트 없음) · 409(red·moved·error·이미처리) · 501(시뮬레이션 페이로드 없음·미지원 데이터셋) | 이벤트 승인 → 재분석 → 적용(파일 반영) |
+| 7 | POST | `/api/update-center/hold` | `event_id` | 성공 200: `event`(status:"held") / 실패: 400(`event_id` 누락) · 404(이벤트 없음) · 409(이미 처리됨) | 이벤트 보류 처리 |
+| 8 | POST | `/api/update-center/rollback` | `version_id` | 성공 200: `versionId, restoredFiles[], version` / 실패: 400(`version_id` 누락 또는 무결성 검증 실패) · 404(버전 없음) · 409(이미 롤백됨) | 스냅샷 sha256 무결성 검증 후 파일 복원, 소스 이벤트(`source_event_id`)가 있으면 이벤트 상태도 `rolled_back`으로 갱신 |
 
 **공통 정책 (Global Constraints)**
 - `risk="red"` 또는 `kind∈{"moved","error"}` 이벤트는 승인(자동 반영) 불가 — 409로 거부하고 `approve_rejected` 감사 기록.
 - 시뮬레이션 페이로드(`simulateCsvB64`)가 없는 이벤트(실제 원격 변경 감지분)는 승인 시 501 — "시제품 범위 밖" 명시.
 - `libraries` 이외 데이터셋은 재분석 모듈이 없어 승인 시 501.
+- 이미 롤백된 버전에 다시 `POST /rollback`을 호출하면 409로 거부된다(idempotency guard).
 - 모든 mutating 액션(scan/approve/hold/rollback)은 `audit_log`에 기록되며 actor는 웹 UI/API 호출 시 `"web-admin"`.
 
 ## 3. 데모 시나리오 (판정 기준 2 — 변경 감지 → 재분석 → 승인 반영 전 과정)
+
+> 아래 시나리오는 `POST /api/update-center/scan`에 `simulate_change_b64`를 curl로
+> 직접 넣어 실행한다. 관리 화면(`update-center.html`)에는 시뮬레이션 CSV를 넣는
+> 입력창이 의도적으로 없다 — "④ 데이터 소스 현황"의 "검사" 버튼은 항상 실 스캔
+> (payload 없는 `POST /scan`)만 트리거한다. 시뮬레이션 경로는 실제 원격
+> 콘텐츠가 봇 게이트로 막혀 있는 상황(§4 첫 항목)에서 승인→적용 흐름을 시연하기
+> 위한 개발자용 훅으로 설계되었으며, 시연 심사에서는 이 문서의 curl 시퀀스로
+> 재현한다.
 
 아래는 2026-08-09에 로컬 서버(`UPDATE_CENTER_TOKEN=testtoken PORT=3921`, 파일 백엔드)에
 대해 실제로 실행한 curl 시퀀스와 응답 요약입니다. 대상 데이터셋은 `libraries`(도서관
@@ -236,6 +245,21 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 - **`libraries` 이외 데이터셋(parks/schools/redevelopment)은 재분석 모듈이
   없습니다.** `check.type: manual`로 등록만 되어 있고(스캔 시 skip, 이벤트
   없음), 승인 시도 시 501로 명시적으로 거부됩니다.
+- **적용된 변경이 지도 앱에 즉시 반영되지 않습니다.** 승인이 적용하는 변경은
+  리포의 `data_processed/`에 씁니다. 하지만 지도 앱(Vercel 정적 서빙 경로)이
+  실제로 서빙하는 사본은 빌드 시점에 스냅샷된 `vercel_public/data_processed/`
+  입니다 — 따라서 지도 앱에 실제 반영되는 시점은 다음 빌드/배포부터입니다.
+  시연 시 로컬에서는 `npm run build:vercel`을 재실행하면 즉시 반영된 결과를
+  확인할 수 있습니다.
+- **Railway 파일시스템은 재배포 시 초기화됩니다.** `DATABASE_URL` 미설정 시
+  쓰는 파일 백엔드 store(`data/update_center_store.json`,
+  `data/update_center_state.json`)와, 승인으로 적용된
+  `data_processed/*.csv`는 Railway의 컨테이너 파일시스템에 저장되므로
+  재배포(redeploy)마다 초기화되어 휘발됩니다 — 이벤트/버전/감사 로그와 적용된
+  데이터를 영구적으로 남기려면 `DATABASE_URL`(Postgres)을 설정해야 합니다
+  (store.mjs는 설정 여부에 따라 두 백엔드를 자동 전환하지만, `data_processed/`
+  파일 자체의 영속성은 store 백엔드와 별개로 컨테이너 파일시스템에 의존하므로
+  Postgres를 쓰더라도 적용된 CSV 파일은 여전히 휘발될 수 있습니다).
 
 ## 5. 운영 — 환경 변수
 
@@ -243,9 +267,10 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 | --- | --- | --- | --- |
 | `DATABASE_URL` | 선택 | (없음 → 파일 백엔드) | 설정 시 Railway Postgres 백엔드 사용. `pg` Pool, TLS 기본 검증 ON |
 | `PGSSL_NO_VERIFY` | 선택 | (없음 = 검증 ON) | `"1"`로 설정 시 pg 연결의 TLS 인증서 검증을 끔(`rejectUnauthorized:false`). 자가서명 인증서를 쓰는 Railway 관리형 Postgres 등에서 필요할 수 있음 — 명시적 opt-in 필요, 기본은 안전(검증 ON) |
-| `UPDATE_CENTER_TOKEN` | 권장 | `"2026"` | `/api/update-center/*` 모든 요청에 필요한 `x-update-center-token` 헤더 값. 데모 등급 게이트(앱의 기존 `ACCESS_CODE`와 동일한 신뢰 수준) — 운영 배포 시 반드시 재설정 |
+| `UPDATE_CENTER_TOKEN` | 권장 | `"2026"` | `/api/update-center/*` 모든 요청에 필요한 `x-update-center-token` 헤더 값. 데모 등급 게이트(앱의 기존 `ACCESS_CODE`와 동일한 신뢰 수준) — 운영 배포 시 반드시 재설정. 미설정 시 서버가 기동할 때 `console.warn`으로 기본 토큰("2026") 사용 중임을 명시적으로 경고한다 |
 | `OPENAI_API_KEY` | 선택 | (없음 → 결정론적 요약 폴백) | 설정 시 이벤트 AI 해설(`ai_note`)을 OpenAI Responses API로 생성. 미설정/호출 실패 시 diff_json 기반 결정론적 요약으로 자동 대체, 두 경우 모두 "해설은 참고용입니다" 명시 |
 | `AI_EXPLAINER_MODEL` | 선택 | `gpt-5.4-mini` | AI 해설 생성에 사용할 모델명 override |
+| `PORT` | 선택 | `3000` | `server.js`(update-center의 API/관리 화면을 함께 서빙하는 로컬/Railway 서버)가 리스닝할 포트. Railway 배포 시 플랫폼이 자동 주입 |
 
 ## 6. 검증 이력
 

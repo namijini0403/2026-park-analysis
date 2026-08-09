@@ -4,7 +4,7 @@
 //
 // Both backends expose the same 11-method async interface:
 //   recordEvent(e), listEvents(limit), getEvent(id), updateEventStatus(id, status, actor),
-//   setEventAiNote(id, note), saveVersion(v), listVersions(dataset), getVersion(id),
+//   setEventAiNote(id, note), saveVersion(v), listVersions(dataset, limit), getVersion(id),
 //   markVersionRolledBack(id), appendAudit(a), listAudit(limit)
 //
 // markVersionRolledBack(id) is the one mutation allowed on a data_versions row
@@ -162,10 +162,11 @@ function createFileStore() {
       return version;
     },
 
-    async listVersions(dataset) {
+    async listVersions(dataset, limit) {
       const db = loadDb();
       const filtered = dataset ? db.versions.filter((v) => v.dataset === dataset) : db.versions;
-      return [...filtered].sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+      const sorted = [...filtered].sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+      return typeof limit === "number" ? sorted.slice(0, limit) : sorted;
     },
 
     async getVersion(id) {
@@ -354,13 +355,17 @@ async function createPgStore() {
       return mapVersionRow(rows[0]);
     },
 
-    async listVersions(dataset) {
-      const { rows } = await pool.query(
-        dataset
-          ? `SELECT * FROM data_versions WHERE dataset = $1 ORDER BY created_at DESC`
-          : `SELECT * FROM data_versions ORDER BY created_at DESC`,
-        dataset ? [dataset] : []
-      );
+    async listVersions(dataset, limit) {
+      const useLimit = typeof limit === "number";
+      const params = [];
+      if (dataset) params.push(dataset);
+      let sql = dataset ? `SELECT * FROM data_versions WHERE dataset = $1` : `SELECT * FROM data_versions`;
+      sql += ` ORDER BY created_at DESC`;
+      if (useLimit) {
+        params.push(limit);
+        sql += ` LIMIT $${params.length}`;
+      }
+      const { rows } = await pool.query(sql, params);
       return rows.map(mapVersionRow);
     },
 
@@ -483,6 +488,22 @@ async function selfTest() {
     }
     const versions = await store.listVersions("libraries");
     if (!versions.find((v) => v.id === version.id)) throw new Error("listVersions missing saved version");
+
+    const secondVersion = await store.saveVersion({
+      dataset: "libraries",
+      created_at: new Date(Date.now() + 60000).toISOString(), // force strictly later than `version` for a deterministic sort order
+      content_hash: crypto.createHash("sha256").update("second").digest("hex"),
+      row_count: 2,
+      snapshot: Buffer.from("second").toString("base64"),
+      source_event_id: ev1.id,
+    });
+    const limitedVersions = await store.listVersions("libraries", 1);
+    if (limitedVersions.length !== 1) {
+      throw new Error(`listVersions with limit=1 should return exactly 1 row, got ${limitedVersions.length}`);
+    }
+    if (limitedVersions[0].id !== secondVersion.id) {
+      throw new Error("listVersions with limit should return the most recently created version first");
+    }
 
     if (version.rolled_back !== false) throw new Error("saved version should start with rolled_back=false");
     const rolledBack = await store.markVersionRolledBack(version.id);

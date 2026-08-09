@@ -34,6 +34,10 @@ const STATE_PATH = path.join(REPO_ROOT, "data", "update_center_state.json");
 const TOKEN_HEADER = "x-update-center-token";
 const ACTOR = "web-admin";
 
+if (!process.env.UPDATE_CENTER_TOKEN) {
+  console.warn("[update-center] UPDATE_CENTER_TOKEN 미설정 — 시연용 기본 토큰 '2026' 사용 중");
+}
+
 const AI_MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.4-mini";
 const AI_TIMEOUT_MS = 10000;
 const AI_MAX_OUTPUT_TOKENS = 300;
@@ -74,9 +78,10 @@ function json(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
-function parseLimit(raw, fallback) {
+function parseLimit(raw, fallback, max = 500) {
   const n = Number(raw);
-  return Number.isFinite(n) && n > 0 ? Math.floor(n) : fallback;
+  if (!Number.isFinite(n) || n <= 0) return fallback;
+  return Math.min(Math.floor(n), max);
 }
 
 // ---------------------------------------------------------------------------
@@ -167,9 +172,11 @@ function deterministicNote(event) {
 }
 
 // event: needs at minimum { dataset, kind, risk, status, summary, diff_json }.
-// Never throws — always resolves to a usable note string.
+// Never throws — always resolves to { note, source } where source is
+// "openai" (a real Responses API call produced text) or "fallback"
+// (no API key, a failed/empty call, or an exception — deterministicNote()).
 async function buildAiNote(event) {
-  if (!process.env.OPENAI_API_KEY) return deterministicNote(event);
+  if (!process.env.OPENAI_API_KEY) return { note: deterministicNote(event), source: "fallback" };
   try {
     const diffText = JSON.stringify(event.diff_json || {}).slice(0, 4000);
     const requestBody = {
@@ -196,13 +203,13 @@ async function buildAiNote(event) {
       parallel_tool_calls: false,
     };
     const response = await fetchOpenAiResponse(requestBody);
-    if (!response.ok) return deterministicNote(event);
+    if (!response.ok) return { note: deterministicNote(event), source: "fallback" };
     const data = await response.json();
     const text = extractText(data).trim();
-    if (!text) return deterministicNote(event);
-    return `${text} (해설은 참고용입니다)`;
+    if (!text) return { note: deterministicNote(event), source: "fallback" };
+    return { note: `${text} (해설은 참고용입니다)`, source: "openai" };
   } catch {
-    return deterministicNote(event);
+    return { note: deterministicNote(event), source: "fallback" };
   }
 }
 
@@ -245,8 +252,13 @@ async function handleGetAudit(res, url) {
 async function handleGetVersions(res, url) {
   const store = await getStore();
   const dataset = url.searchParams.get("dataset") || undefined;
-  const versions = await store.listVersions(dataset);
-  return json(res, 200, { versions });
+  const limit = parseLimit(url.searchParams.get("limit"), 20, 100);
+  const versions = await store.listVersions(dataset, limit);
+  // snapshot is a full base64 file blob (can be large) — the list view only
+  // needs content_hash/row_count/flags. Rollback (handlePostRollback) fetches
+  // the full row separately via store.getVersion(), unaffected by this.
+  const trimmed = versions.map(({ snapshot, ...rest }) => rest);
+  return json(res, 200, { versions: trimmed });
 }
 
 // ---------------------------------------------------------------------------
@@ -274,8 +286,15 @@ async function handlePostScan(req, res) {
   const rawEvents = result.mode === "simulate" ? [result.event] : result.events;
   const events = [];
   for (const ev of rawEvents) {
-    const note = await buildAiNote(ev);
+    const { note, source } = await buildAiNote(ev);
     const updated = await store.setEventAiNote(ev.id, note);
+    await store.appendAudit({
+      actor: ACTOR,
+      action: "ai_note_generated",
+      dataset: ev.dataset,
+      event_id: ev.id,
+      detail: `AI 해설 생성 — source=${source}`,
+    });
     events.push(updated || { ...ev, ai_note: note });
   }
 
@@ -380,7 +399,7 @@ async function handlePostApprove(req, res) {
     detail: `적용 완료 — versionId=${applyResult.versionId}, 영향 학교 ${applyResult.diff.affected_school_count}건`,
   });
 
-  const note = await buildAiNote({
+  const { note, source } = await buildAiNote({
     dataset: event.dataset,
     kind: event.kind,
     risk: event.risk,
@@ -389,6 +408,13 @@ async function handlePostApprove(req, res) {
     diff_json: { ...diff, applied: true, applyDiff: applyResult.diff },
   });
   const finalEvent = await store.setEventAiNote(event.id, note);
+  await store.appendAudit({
+    actor: ACTOR,
+    action: "ai_note_generated",
+    dataset: event.dataset,
+    event_id: event.id,
+    detail: `AI 해설 생성(적용 후) — source=${source}`,
+  });
 
   return json(res, 200, { event: finalEvent, versionId: applyResult.versionId, diff: applyResult.diff });
 }
@@ -422,9 +448,18 @@ async function handlePostRollback(req, res) {
   if (!versionId || typeof versionId !== "string") return json(res, 400, { error: "version_id가 필요합니다." });
 
   const store = await getStore();
+  const existingVersion = await store.getVersion(versionId);
+  if (!existingVersion) return json(res, 404, { error: `버전을 찾을 수 없습니다: ${versionId}` });
+  if (existingVersion.rolled_back) {
+    return json(res, 409, { error: "이미 롤백된 버전입니다.", version: existingVersion });
+  }
+
   const { reanalyzeMod } = await loadModules();
   try {
     const result = await reanalyzeMod.rollbackVersion(versionId, store, ACTOR);
+    if (existingVersion.source_event_id) {
+      await store.updateEventStatus(existingVersion.source_event_id, "rolled_back", ACTOR);
+    }
     const version = await store.getVersion(versionId);
     return json(res, 200, { versionId: result.versionId, restoredFiles: result.restoredFiles, version });
   } catch (err) {

@@ -26,7 +26,7 @@
 // calls -- {files: {"data_processed/libraries.csv": base64, "data_processed/school_library_access.csv": base64}},
 // itself base64-encoded into data_versions.snapshot. Chosen over two separate
 // saveVersion calls so one version id == one atomic restore point for rollback,
-// and so the store's 9-method interface (no "link these two versions together"
+// and so the store's 11-method interface (no "link these two versions together"
 // method) doesn't need to be extended. Documented here per the Task 4 brief's
 // "choose one, document" instruction.
 //

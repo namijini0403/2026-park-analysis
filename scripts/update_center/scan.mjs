@@ -707,6 +707,14 @@ export async function runScan(opts = {}) {
   const summary = { baseline: 0, unchanged: 0, green: 0, yellow: 0, red: 0, moved: 0, error: 0, skipped: 0 };
   const events = [];
 
+  const targetDatasetNames = targetEntries.map((e) => e.dataset);
+  await store.appendAudit({
+    actor: effectiveActor,
+    action: "scan_started",
+    dataset: dataset || null,
+    detail: `스캔 시작 — 대상 데이터셋: ${targetDatasetNames.join(", ") || "(없음)"}`,
+  });
+
   for (const entry of targetEntries) {
     const type = entry.check?.type;
     let result;
@@ -730,6 +738,15 @@ export async function runScan(opts = {}) {
   }
 
   saveState(state);
+
+  await store.appendAudit({
+    actor: effectiveActor,
+    action: "scan_completed",
+    dataset: dataset || null,
+    detail:
+      `스캔 완료 — 이벤트 생성 ${events.length}건, 무변경 ${summary.unchanged}건, skip ${summary.skipped}건 ` +
+      `(전체: ${JSON.stringify(summary)})`,
+  });
 
   return { mode: "scan", summary, events };
 }

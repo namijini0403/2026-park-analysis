@@ -651,7 +651,11 @@
     tbody.innerHTML = state.sources
       .map(function (s) {
         var lastState = s.last_state || {};
-        var lastScan = lastState.last_checked_at || lastState.checked_at || lastState.last_scan_at || null;
+        var lastScan = lastState.lastCheckedAt || null;
+        var lastScanCell = fmtTime(lastScan);
+        if (lastScan && lastState.lastStatus) {
+          lastScanCell += " (" + esc(lastState.lastStatus === "ok" ? "unchanged" : lastState.lastStatus) + ")";
+        }
         var checkType = (s.check && s.check.type) || "-";
         var sourceUrl = s.source_url || "-";
         var urlCell =
@@ -665,7 +669,7 @@
           "<td>" + esc(s.update_cycle || "-") + "</td>" +
           "<td>" + esc(checkType) + "</td>" +
           "<td>" + urlCell + "</td>" +
-          "<td>" + fmtTime(lastScan) + "</td>" +
+          "<td>" + lastScanCell + "</td>" +
           '<td><button class="small-btn scan-one-btn" data-dataset="' + esc(s.dataset) + '">검사</button></td>' +
           "</tr>"
         );
@@ -744,7 +748,6 @@
     if (ev.kind === "error") return "error 이벤트는 승인할 수 없습니다.";
     if (ev.status === "applied") return "이미 적용된 이벤트입니다.";
     if (ev.status === "rolled_back") return "롤백된 이벤트입니다.";
-    if (ev.status === "held") return "보류 상태입니다 — 재검사 후 승인하세요.";
     return null;
   }
 
