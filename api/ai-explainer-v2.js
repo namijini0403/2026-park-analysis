@@ -100,6 +100,10 @@ function detectTopic(payload) {
   if (/shap|기여|예측근거/.test(question)) return "shap";
   if (/knn|유사학교|유사조건|비교군|벤치마크|활동규모|공원 ?기능|기능 ?등급|등시권|등시선|hitl|human ?in/.test(question)) return "glossary";
   if (/도서관|독서|장서|사서|열람|독서교육/.test(question)) return "reading";
+  // 정책 행동 카드(policy-cards) 어휘는 'decision' 주제(후보지·격자 추천, 안정성/가중치 슬라이더)와
+  // 겹치는 단어를 피해 카드 전용 표현으로 좁힌다: 바로 "안정성" 대신 "권고 안정성", 바로 "우선"
+  // 대신 "우선 검토안"(카드의 기본 행동 표기)만 매칭해 case 라벨("우선 검토 대상")과도 구분한다.
+  if (/행동 ?카드|정책 ?카드|우선 ?검토안|조건부 ?대안|전환 ?조건|시나리오|기관 ?역할|권고 ?안정성/.test(question)) return "policy";
   if (/후보지|후보군|격자|추천|pareto|파레토|top ?5|안정성|가중치|슬라이더|필터|견고|우선순위/.test(question)) return "decision";
   if (/놀이터|녹지비율|최근접|미래 ?수요|잠재 ?수요|지표/.test(question)) return "metrics";
 
@@ -127,6 +131,7 @@ function topicForChunk(chunk) {
   if (source.includes("05_shap")) return "shap";
   if (source.includes("06_limitations") || id.includes("answer-guard") || id.includes("mode-split")) return "limitation";
   if (source.includes("07_reading_module") || id.includes("#reading_")) return "reading";
+  if (source.includes("08_policy_cards") || id.includes("#policy_")) return "policy";
   return "glossary";
 }
 
@@ -317,6 +322,7 @@ const DOMAIN_SIGNAL_PATTERN = new RegExp(
     "지표|비율|수치|통계|분포|데이터|산출|계산|기준|임계|봉인",
     "재개발|대단지|아파트|도로|횡단|안전|사고",
     "정책|예산|설치|개선|지원|담당자|확인사항|체크리스트",
+    "행동 ?카드|카드|시나리오|대안|전환 ?조건|기관 ?역할|조건부|안정성",
     "한계|주의|비식별|익명|근거|출처|문서|chunk|모델|ai|인공지능|챗봇|해설|설명|rag|hitl|xai",
     "인천|미추홀|부평|계양|연수|남동|서구|중구|동구|강화|옹진|도서",
   ].join("|"),

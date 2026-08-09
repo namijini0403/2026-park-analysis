@@ -15,6 +15,7 @@ const requiredDocs = [
   "05_shap_explanation.md",
   "06_limitations.md",
   "07_reading_module.md",
+  "08_policy_cards.md",
 ];
 const optionalDocs = ["README.md"];
 
