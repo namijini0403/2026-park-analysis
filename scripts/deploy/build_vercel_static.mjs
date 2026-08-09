@@ -29,7 +29,8 @@ const requiredDataFiles = [
   "large_apt_complexes_2025.csv",
   "candidate_grid_final.geojson",
   "libraries.csv",
-  "school_library_access.csv"
+  "school_library_access.csv",
+  "policy_action_cards.json"
 ];
 
 function assertExists(targetPath) {

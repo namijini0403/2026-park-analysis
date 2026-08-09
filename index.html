@@ -560,6 +560,58 @@
       font-weight: 700;
     }
 
+    .scenario-toggle-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--surface-muted);
+      border: 1px solid var(--line);
+    }
+
+    .scenario-toggle-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .scenario-toggle-label {
+      min-width: 70px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .scenario-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--panel-border);
+      background: rgba(16, 27, 45, 0.96);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .scenario-toggle-btn:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .scenario-toggle-btn.is-on {
+      background: var(--accent-hover);
+      border-color: rgba(16, 185, 129, 0.42);
+      color: #ffffff;
+    }
+
     .trend-card {
       padding: 12px;
       border-radius: 14px;
@@ -3219,7 +3271,8 @@
       isochrone: "./data_processed/school_isochrone_500m.geojson",
       buffer: "./data_processed/school_buffer_500m.geojson",
       redevelopment: "./data_processed/redevelopment_geocoded.csv",
-      largeApt: "./data_processed/large_apt_complexes_2025.csv"
+      largeApt: "./data_processed/large_apt_complexes_2025.csv",
+      policyActionCards: "./data_processed/policy_action_cards.json"
     };
 
     // ── 레이어 레지스트리: 지도 레이어의 단일 정의처 ─────────────────────
@@ -3470,6 +3523,7 @@
       selectedCandidateData: null,
       suppressNextMapClick: false,
       schoolMarkerIndex: new Map(),
+      scenarioSelection: { budget: "sufficient", site: "available", access: "feasible" },
       overlays: {
         schoolMarkers: [],
         ...Object.fromEntries(LAYER_REGISTRY.map((def) => [def.overlayKey, []]))
@@ -3494,7 +3548,8 @@
         candidateFeatures: [],
         candidateBarrierRoutes: {},
         robustRecommendations: [],
-        robustRecommendationMap: {}
+        robustRecommendationMap: {},
+        policyActionCards: { schools: {}, scenario_axes: {} }
       }
     };
 
@@ -3525,6 +3580,39 @@
     function getReadingGapMeta(readingGapType) {
       return READING_GAP_META[readingGapType] || READING_GAP_FALLBACK_META;
     }
+
+    // 정책 행동 카드 액션 → 한국어 라벨/색 (P3)
+    const POLICY_ACTION_META = {
+      internal_investment: { label: "학교 내부 직접투자", color: "#E53935", textColor: "#ffffff" },
+      external_supply_new: { label: "외부 신규 공급", color: "#FB8C00", textColor: "#ffffff" },
+      institution_link: { label: "기관 연계", color: "#0288D1", textColor: "#ffffff" },
+      mobile_service: { label: "이동형·순회 서비스", color: "#7C3AED", textColor: "#ffffff" },
+      access_route_improvement: { label: "접근경로·안전 개선", color: "#F59E0B", textColor: "#1F2937" },
+      shared_hub: { label: "권역 공동활용·거점화", color: "#00897B", textColor: "#ffffff" },
+      maintain_monitor: { label: "유지·모니터링", color: "#43A047", textColor: "#ffffff" }
+    };
+    const POLICY_ACTION_FALLBACK_META = { label: "추가 확인 필요", color: "#6B7280", textColor: "#ffffff" };
+
+    function getPolicyActionMeta(actionKey) {
+      return POLICY_ACTION_META[actionKey] || POLICY_ACTION_FALLBACK_META;
+    }
+
+    const SCENARIO_AXIS_OPTIONS = {
+      budget: [
+        { value: "sufficient", label: "충분" },
+        { value: "moderate", label: "보통" },
+        { value: "constrained", label: "제약" }
+      ],
+      site: [
+        { value: "available", label: "확보 가능" },
+        { value: "unavailable", label: "확보 불가" }
+      ],
+      access: [
+        { value: "feasible", label: "가능" },
+        { value: "infeasible", label: "불가" }
+      ]
+    };
+    const SCENARIO_AXIS_LABELS = { budget: "예산", site: "부지", access: "접근성 개선" };
 
     const GUIDE_CONTENT = {
       hero: {
@@ -5820,7 +5908,8 @@
         isochrone: () => loadGeoJSON(PATHS.isochrone),
         buffer: () => loadGeoJSON(PATHS.buffer),
         redevelopment: () => loadCSV(PATHS.redevelopment),
-        largeApt: () => loadCSV(PATHS.largeApt)
+        largeApt: () => loadCSV(PATHS.largeApt),
+        policyActionCards: () => loadJSON(PATHS.policyActionCards)
       };
       const loadedEntries = await Promise.all(
         Object.entries(datasetLoaders).map(async ([key, loader]) => [key, await loader()])
@@ -5842,7 +5931,8 @@
         isochrone,
         buffer,
         redevelopment,
-        largeApt
+        largeApt,
+        policyActionCards
       } = Object.fromEntries(loadedEntries);
 
       state.datasets.studentTrend = studentTrend;
@@ -5871,6 +5961,7 @@
       state.datasets.buffer = buffer;
       state.datasets.redevelopment = redevelopment;
       state.datasets.largeApt = largeApt;
+      state.datasets.policyActionCards = policyActionCards || { schools: {}, scenario_axes: {} };
       populateSchoolSearchOptions();
 
       rerenderAll();
@@ -7016,6 +7107,120 @@
       `;
     }
 
+    // 시나리오 조건 토글(예산/부지/접근성 개선) — 정책 행동 카드 상단에 렌더 (P3)
+    function renderPolicyScenarioToggles() {
+      const sel = state.scenarioSelection;
+      const groups = Object.keys(SCENARIO_AXIS_OPTIONS)
+        .map((axis) => {
+          const buttons = SCENARIO_AXIS_OPTIONS[axis]
+            .map((opt) => {
+              const isOn = sel[axis] === opt.value;
+              return `<button type="button" class="scenario-toggle-btn${isOn ? " is-on" : ""}" aria-pressed="${isOn}" onclick="setPolicyScenario('${axis}','${opt.value}')">${escapeHtml(opt.label)}</button>`;
+            })
+            .join("");
+          return `
+            <div class="scenario-toggle-group">
+              <span class="scenario-toggle-label">${escapeHtml(SCENARIO_AXIS_LABELS[axis])}</span>
+              ${buttons}
+            </div>
+          `;
+        })
+        .join("");
+      return `<div class="scenario-toggle-row">${groups}</div>`;
+    }
+
+    function setPolicyScenario(axis, value) {
+      if (!SCENARIO_AXIS_OPTIONS[axis]) return;
+      if (state.scenarioSelection[axis] === value) return;
+      state.scenarioSelection[axis] = value;
+      const selectedRow = state.datasets.schools.find((row) => getSchoolId(row) === state.selectedSchoolId);
+      if (selectedRow) renderSchoolDetail(selectedRow);
+    }
+    window.setPolicyScenario = setPolicyScenario;
+
+    function renderSchoolPolicyCardSection(row = {}) {
+      const schoolId = getSchoolId(row);
+      const card = (state.datasets.policyActionCards?.schools || {})[schoolId];
+
+      if (!card) {
+        return `
+          <div class="detail-section">
+            <div class="detail-section-title">🏛 정책 행동 카드</div>
+            <div class="metric-list">
+              <div class="metric-item muted">추가 확인 필요 (정책 행동 카드 데이터 없음)</div>
+            </div>
+          </div>
+        `;
+      }
+
+      const sel = state.scenarioSelection;
+      const scenarioKey = `${sel.budget}|${sel.site}|${sel.access}`;
+      const currentAction = (card.scenarios && card.scenarios[scenarioKey]) || card.base.primary_action;
+      const baseMeta = getPolicyActionMeta(card.base.primary_action);
+      const currentMeta = getPolicyActionMeta(currentAction);
+      const changed = currentAction !== card.base.primary_action;
+      const currentBadgeStyle = `background:${currentMeta.color}; border:1px solid ${currentMeta.color}; color:${currentMeta.textColor || "#ffffff"};`;
+
+      const altAction = card.base.alternative;
+      const altText = altAction
+        ? escapeHtml(getPolicyActionMeta(altAction).label)
+        : "해당 없음 — 정기 재진단";
+
+      const evidenceItems = (card.evidence || [])
+        .map((item) => `<div class="metric-item">${escapeHtml(item)}</div>`)
+        .join("") || `<div class="metric-item muted">근거 자료 없음</div>`;
+
+      const stabilityRatio = Number(card.stability);
+      const stableCount = Number.isFinite(stabilityRatio) ? Math.round(stabilityRatio * 12) : null;
+      const stabilityPct = Number.isFinite(stabilityRatio) ? Math.round(stabilityRatio * 1000) / 10 : null;
+      const stabilityText = stableCount !== null
+        ? `12개 조건 조합 중 ${stableCount}개 유지 (${stabilityPct}%)`
+        : "자료 없음";
+
+      const transitionItems = (card.transition_conditions && card.transition_conditions.length)
+        ? card.transition_conditions.map((item) => `<div class="metric-item muted">${escapeHtml(item)}</div>`).join("")
+        : `<div class="metric-item muted">조건 변화에 따른 전환 없음</div>`;
+
+      const roles = card.roles || {};
+      const roleRows = ["교육청", "지자체", "학교"]
+        .map((org) => `<div class="metric-item">${escapeHtml(org)}: ${escapeHtml(roles[org] || "—")}</div>`)
+        .join("");
+
+      const badges = [];
+      if (card.separate_track) {
+        badges.push(`<div class="detail-badge" style="background:#6B7280; border:1px solid #6B7280; color:#ffffff;">도서 지역 별도 정책 트랙</div>`);
+      }
+      if (card.data_gap) {
+        badges.push(`<div class="detail-badge" style="background:#F59E0B; border:1px solid #F59E0B; color:#1F2937;">독서 데이터 보완 필요</div>`);
+      }
+      const badgeRow = badges.length ? `<div class="detail-badge-row">${badges.join("")}</div>` : "";
+
+      const changeNote = changed
+        ? `<div class="metric-item warning">조건 변경으로 권고 전환됨: ${escapeHtml(baseMeta.label)} → ${escapeHtml(currentMeta.label)}</div>`
+        : "";
+
+      return `
+        <div class="detail-section">
+          <div class="detail-section-title">🏛 정책 행동 카드</div>
+          ${renderPolicyScenarioToggles()}
+          <div class="metric-list" style="margin-top:10px;">
+            <div class="metric-item">우선 검토안: <span class="detail-badge" style="${currentBadgeStyle}">${escapeHtml(currentMeta.label)}</span></div>
+            ${changeNote}
+            <div class="metric-item muted">조건부 대안: ${altText}</div>
+          </div>
+          ${badgeRow}
+          <div class="detail-section-title" style="margin-top:14px;">근거</div>
+          <div class="metric-list">${evidenceItems}</div>
+          <div class="detail-section-title" style="margin-top:14px;">안정성</div>
+          <div class="metric-list"><div class="metric-item">${stabilityText}</div></div>
+          <div class="detail-section-title" style="margin-top:14px;">전환 조건</div>
+          <div class="metric-list">${transitionItems}</div>
+          <div class="detail-section-title" style="margin-top:14px;">기관별 역할</div>
+          <div class="metric-list">${roleRows}</div>
+        </div>
+      `;
+    }
+
     function renderDetailPanel(payload = null) {
       if (isCandidatePanelResponse(payload)) {
         renderCandidatePanel(payload);
@@ -7132,6 +7337,7 @@
           상세 수치와 후보지 비교는 아래 리포트 화면에서 확인합니다.
         </div>
         ${renderSchoolReadingSection(row)}
+        ${renderSchoolPolicyCardSection(row)}
         <button
           onclick="openSimulationOverlay()"
           style="
