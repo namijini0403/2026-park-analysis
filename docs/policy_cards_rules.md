@@ -179,6 +179,8 @@
 
 카드에 "도서 지역(강화군/옹진군) — 별도 정책 트랙" 표기.
 
+도서 지역 학교 중 22곳은 reading_need=3(직접투자 우선급)이나 별도 트랙 정책으로 카드에는 유지·모니터링과 공원 근거만 표시되며, 독서 결핍은 school_library_access.csv에서 별도 확인 가능.
+
 ### reading_gap_type의 3값 처리
 
 `reading_gap_type` 컬럼은 다음 5가지 값을 가진다:
@@ -191,7 +193,7 @@
 **"추가 확인 필요" 처리**:
 - reading_need = null로 설정 (숫자 0이 아님, truthy 체크 금지)
 - `data_gap = "reading"` 표기
-- 근거 3의 2번째 슬롯에 "독서환경 데이터 추가 확인 필요(KESS 학교도서관현황 미매칭)" 표시
+- 근거 3의 3번째 슬롯에 "독서환경 데이터 추가 확인 필요(KESS 학교도서관현황 미매칭)" 표시
 - primary_module은 park으로 강제 (park 기준만으로 산출)
 
 ### gap_type_actions 매핑 로드
@@ -228,7 +230,7 @@
 
 **주목:**
 - `access_route_improvement`는 기본 행동으로 나타나지 않음 (case3+barrier인 7개교 모두 reading_need가 park_need를 초과하여 reading 모듈 우선).
-- 그러나 시나리오 전환 시 (external_supply_new + 예산제약 + 보행부담) 또는 (access_route_improvement 기본 시 접근성 불가) 등에서 경로 개선 액션이 중간 단계에서 나타남.
+- 규칙상 도달 가능하지만 현재 데이터에서는 산출 0건 (외부 신규 공급 학교 60곳 모두 보행부담 플래그 없음 — 보행부담 학교 15곳은 전부 독서 모듈이 기본 모듈로 선택됨).
 - `shared_hub`도 기본 행동으로 나타나지 않음 (부지/예산 제약 없는 기본 시나리오에서는 external_supply_new가 더 우선).
 
 ### 안정성(Stability) 분포
@@ -286,10 +288,13 @@
 
 ### 규칙 엔진 재실행
 
-다음 명령으로 272개교의 정책 행동 카드를 재계산할 수 있다:
+정책 행동 카드는 독립 실행 스크립트가 아니라, 다음의 파이프라인 순서를 전제로 한다. 3)이 4)보다 먼저 실행되어야 하며, 그렇지 않으면 school_library_access.csv에 reading_gap_type/demand_high 컬럼이 없어 4)에서 즉시 실패한다:
 
 ```bash
-python scripts/policy_cards/build_policy_cards.py
+python scripts/reading_module/geocode_missing_libraries.py   # 1) 선택
+python scripts/reading_module/build_library_layer.py         # 2)
+python scripts/reading_module/apply_reading_gap_types.py     # 3) — 4)보다 먼저 실행 필수
+python scripts/policy_cards/build_policy_cards.py             # 4) 272개교의 정책 행동 카드 재계산
 ```
 
 **출력:**

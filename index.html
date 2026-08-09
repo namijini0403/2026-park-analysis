@@ -7162,6 +7162,7 @@
       const currentBadgeStyle = `background:${currentMeta.color}; border:1px solid ${currentMeta.color}; color:${currentMeta.textColor || "#ffffff"};`;
 
       const altAction = card.base.alternative;
+      const altIsCurrentAction = changed && !!altAction && currentAction === altAction;
       const altText = altAction
         ? escapeHtml(getPolicyActionMeta(altAction).label)
         : "해당 없음 — 정기 재진단";
@@ -7206,7 +7207,9 @@
           <div class="metric-list" style="margin-top:10px;">
             <div class="metric-item">우선 검토안: <span class="detail-badge" style="${currentBadgeStyle}">${escapeHtml(currentMeta.label)}</span></div>
             ${changeNote}
-            <div class="metric-item muted">조건부 대안: ${altText}</div>
+            ${altIsCurrentAction
+              ? `<div class="metric-item muted">기본 조건에서의 우선 검토안: ${escapeHtml(baseMeta.label)}</div>`
+              : `<div class="metric-item muted">조건부 대안: ${altText}</div>`}
           </div>
           ${badgeRow}
           <div class="detail-section-title" style="margin-top:14px;">근거</div>

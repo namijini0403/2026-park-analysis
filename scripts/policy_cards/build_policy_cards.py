@@ -10,6 +10,14 @@ combinations. No LLM, no weighted-sum scoring, no ML classification is used
 anywhere in this file -- every action comes from the decision table in
 docs/superpowers/plans/2026-08-09-p3-policy-cards.md (Tables A-F).
 
+Canonical pipeline order (this script is step 4 and depends on steps 2-3
+having already populated school_library_access.csv with the
+reading_gap_type/demand_high columns it reads):
+    1) scripts/reading_module/geocode_missing_libraries.py (선택)
+    2) scripts/reading_module/build_library_layer.py
+    3) scripts/reading_module/apply_reading_gap_types.py  -- must precede 4)
+    4) scripts/policy_cards/build_policy_cards.py (this script)
+
 Output: data_processed/policy_action_cards.json
 
 Usage:
@@ -273,6 +281,15 @@ def main() -> None:
     park_rows = {row["학교ID"]: row for row in read_csv_utf8sig(PARK_CSV)}
     lib_rows = {row["학교ID"]: row for row in read_csv_utf8sig(LIBRARY_CSV)}
     forecast_rows = {row["학교ID"]: row for row in read_csv_utf8sig(FORECAST_CSV)}
+
+    if lib_rows:
+        lib_columns = set(next(iter(lib_rows.values())).keys())
+        missing_cols = {"reading_gap_type", "demand_high"} - lib_columns
+        if missing_cols:
+            raise SystemExit(
+                "school_library_access.csv에 reading_gap_type/demand_high 컬럼이 없습니다 "
+                "— apply_reading_gap_types.py를 먼저 실행하세요"
+            )
 
     assert len(park_rows) == 272, f"park csv row count != 272 ({len(park_rows)})"
     assert set(park_rows) == set(lib_rows) == set(forecast_rows), "school_id sets differ across inputs"
