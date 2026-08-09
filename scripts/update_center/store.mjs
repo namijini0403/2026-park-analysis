@@ -2,10 +2,16 @@
 // scripts/update_center/store.mjs
 // Storage layer for the P4 update-center: dual backend (Postgres via `pg`, or a local JSON file).
 //
-// Both backends expose the same 9-method async interface:
+// Both backends expose the same 10-method async interface:
 //   recordEvent(e), listEvents(limit), getEvent(id), updateEventStatus(id, status, actor),
-//   saveVersion(v), listVersions(dataset), getVersion(id),
+//   saveVersion(v), listVersions(dataset), getVersion(id), markVersionRolledBack(id),
 //   appendAudit(a), listAudit(limit)
+//
+// markVersionRolledBack(id) is the one mutation allowed on a data_versions row
+// after creation: it flips rolled_back to true (idempotently) and returns the
+// updated row, or null if no row with that id exists. Added for P4 Task 4's
+// rollbackVersion() so the stored version reflects rollback state, not just
+// the audit_log entry.
 //
 // Backend selection: if process.env.DATABASE_URL is set, use the Postgres backend
 // (pg Pool, TLS verification ON by default; schema.sql applied on init).
@@ -149,6 +155,15 @@ function createFileStore() {
     async getVersion(id) {
       const db = loadDb();
       return db.versions.find((v) => v.id === id) ?? null;
+    },
+
+    async markVersionRolledBack(id) {
+      const db = loadDb();
+      const version = db.versions.find((v) => v.id === id);
+      if (!version) return null;
+      version.rolled_back = true;
+      saveDb(db);
+      return version;
     },
 
     async appendAudit(a) {
@@ -330,6 +345,14 @@ async function createPgStore() {
       return mapVersionRow(rows[0]) ?? null;
     },
 
+    async markVersionRolledBack(id) {
+      const { rows } = await pool.query(
+        `UPDATE data_versions SET rolled_back = TRUE WHERE id = $1 RETURNING *`,
+        [id]
+      );
+      return mapVersionRow(rows[0]) ?? null;
+    },
+
     async appendAudit(a) {
       const id = crypto.randomUUID();
       const at = a.at || nowIso();
@@ -424,6 +447,18 @@ async function selfTest() {
     }
     const versions = await store.listVersions("libraries");
     if (!versions.find((v) => v.id === version.id)) throw new Error("listVersions missing saved version");
+
+    if (version.rolled_back !== false) throw new Error("saved version should start with rolled_back=false");
+    const rolledBack = await store.markVersionRolledBack(version.id);
+    if (!rolledBack || rolledBack.rolled_back !== true) {
+      throw new Error("markVersionRolledBack did not persist rolled_back=true");
+    }
+    const refetched = await store.getVersion(version.id);
+    if (!refetched || refetched.rolled_back !== true) {
+      throw new Error("getVersion after markVersionRolledBack did not reflect rolled_back=true");
+    }
+    const missingMark = await store.markVersionRolledBack("nonexistent-version-id");
+    if (missingMark !== null) throw new Error("markVersionRolledBack should return null for an unknown id");
 
     await store.appendAudit({
       actor: "selftest",

@@ -30,9 +30,9 @@
 // method) doesn't need to be extended. Documented here per the Task 4 brief's
 // "choose one, document" instruction.
 //
-// SEALED VALUE GUARD: output/sealed_nearest_park_dist.json holds the 53
-// hand-verified nearest-park distances that must never be silently overwritten
-// by automated recalculation (Global Constraints). sealedGuard() is called from
+// SEALED VALUE GUARD: output/sealed_nearest_park_dist.json holds the
+// manually-verified nearest-park distances (수동 검증 실측값) that must never be
+// silently overwritten by automated recalculation (Global Constraints). sealedGuard() is called from
 // applyLibrariesUpdate() on every apply, unconditionally -- even though the
 // libraries dataset has nothing to do with parks -- so the guard is structurally
 // present on the code path rather than assumed absent, and the audit log always
@@ -462,10 +462,8 @@ export async function applyLibrariesUpdate(newCsvText, store, eventId, actor) {
     detail: `적용 전 스냅샷 저장 (version=${version.id}, libraries.csv+school_library_access.csv 결합 스냅샷, sha256=${contentHash}, row_count=${accessRowsBefore.length})`,
   });
 
-  // --- write new libraries.csv verbatim (as provided) ---
-  fs.writeFileSync(LIBRARIES_PATH, newCsvText, "utf-8");
-
-  // --- patch ONLY iso_/nearest_ columns in school_library_access.csv ---
+  // --- patch ONLY iso_/nearest_ columns in school_library_access.csv (built
+  // up-front, in memory, so the write below is the only thing that can fail) ---
   const idxSid = accessHeader.indexOf("학교ID");
   const fieldColIdx = ISO_NEAREST_COLUMNS.map((f) => accessHeader.indexOf(f));
   const newRows = accessRowsBefore.map((row) => {
@@ -482,7 +480,66 @@ export async function applyLibrariesUpdate(newCsvText, store, eventId, actor) {
     return newRow;
   });
   const newAccessCsv = serializeCsv(accessHeader, newRows);
-  fs.writeFileSync(ACCESS_PATH, newAccessCsv, "utf-8");
+
+  // --- write both files. Not a real transaction (plain fs writes, no atomic
+  // rename-swap in this prototype) -- if the second write fails after the
+  // first succeeded, the two files would be left inconsistent (new
+  // libraries.csv paired with the OLD school_library_access.csv). Guard
+  // against that: on any write failure, audit exactly which file(s) made it
+  // to disk plus the versionId needed for manual recovery, best-effort
+  // auto-restore libraries.csv from the in-memory pre-apply snapshot, audit
+  // that attempt's outcome, then rethrow a clean error. This does not
+  // guarantee atomicity, but it guarantees the failure is never silent and a
+  // human always has what they need (versionId + which files to check) to
+  // finish the recovery via rollbackVersion() if the auto-restore itself fails.
+  let librariesWritten = false;
+  let accessWritten = false;
+  try {
+    fs.writeFileSync(LIBRARIES_PATH, newCsvText, "utf-8");
+    librariesWritten = true;
+    fs.writeFileSync(ACCESS_PATH, newAccessCsv, "utf-8");
+    accessWritten = true;
+  } catch (err) {
+    const writtenFiles = [];
+    if (librariesWritten) writtenFiles.push(LIBRARIES_REL);
+    if (accessWritten) writtenFiles.push(ACCESS_REL);
+    await store.appendAudit({
+      actor,
+      action: "apply_failed_partial",
+      dataset: "libraries",
+      event_id: eventId,
+      detail:
+        `apply 중 오류 발생 — 실제로 기록된 파일: ${writtenFiles.join(", ") || "(없음)"} / ` +
+        `복구용 versionId=${version.id} (rollbackVersion으로 수동 복구 가능) / 오류: ${err.message}`,
+    });
+
+    if (librariesWritten && !accessWritten) {
+      // libraries.csv was overwritten but school_library_access.csv wasn't
+      // touched yet -- the two files are now inconsistent. Best-effort put
+      // libraries.csv back so at least that inconsistency window closes
+      // without requiring a manual rollback for the common case.
+      try {
+        fs.writeFileSync(LIBRARIES_PATH, librariesBefore);
+        await store.appendAudit({
+          actor,
+          action: "auto_restore_attempted",
+          dataset: "libraries",
+          event_id: eventId,
+          detail: `libraries.csv 자동 복구 성공 (version=${version.id} 스냅샷 사용)`,
+        });
+      } catch (restoreErr) {
+        await store.appendAudit({
+          actor,
+          action: "auto_restore_attempted",
+          dataset: "libraries",
+          event_id: eventId,
+          detail: `libraries.csv 자동 복구 실패: ${restoreErr.message} — 수동 복구 필요 (rollbackVersion, versionId=${version.id})`,
+        });
+      }
+    }
+
+    throw new Error(`applyLibrariesUpdate: 파일 적용 중 오류 발생 (versionId=${version.id}): ${err.message}`);
+  }
 
   await store.appendAudit({
     actor,
@@ -500,14 +557,15 @@ export async function applyLibrariesUpdate(newCsvText, store, eventId, actor) {
 }
 
 /**
- * rollback: restore the snapshot's files from a version saved by
- * applyLibrariesUpdate(), and audit the action.
+ * rollback: verify the snapshot's integrity, restore its files, mark the
+ * version rolled_back in the store, and audit the action.
  *
- * Note: the store's interface (Task 1) has no updateVersion/setVersionStatus
- * method -- saveVersion/listVersions/getVersion only -- so this does not (and
- * structurally cannot) flip data_versions.rolled_back on the stored row. The
- * rollback is recorded as its own audit_log entry instead, which is the
- * canonical "전 과정 로그" (판정 기준 2) for this prototype.
+ * Integrity check: the snapshot's decoded JSON text is re-hashed (sha256) and
+ * compared against the version row's stored content_hash *before* any file
+ * is touched. A mismatch means the stored snapshot is not what was recorded
+ * at apply time (corruption, manual tampering, a bug elsewhere) -- restoring
+ * it would silently apply unknown content, so this aborts with no writes
+ * instead.
  */
 export async function rollbackVersion(versionId, store, actor) {
   const version = await store.getVersion(versionId);
@@ -518,7 +576,24 @@ export async function rollbackVersion(versionId, store, actor) {
     throw new Error(`rollbackVersion: reanalyze.mjs는 dataset="libraries" 버전만 처리합니다 (received "${version.dataset}")`);
   }
 
-  const snapshotJson = JSON.parse(Buffer.from(version.snapshot, "base64").toString("utf-8"));
+  const snapshotJsonText = Buffer.from(version.snapshot, "base64").toString("utf-8");
+  const recomputedHash = sha256(snapshotJsonText);
+  if (version.content_hash && recomputedHash !== version.content_hash) {
+    await store.appendAudit({
+      actor,
+      action: "rollback_integrity_failed",
+      dataset: "libraries",
+      event_id: version.source_event_id,
+      detail:
+        `버전 ${versionId} 롤백 중단 — 저장된 content_hash(${version.content_hash})와 ` +
+        `스냅샷 재해시(${recomputedHash})가 일치하지 않습니다. 파일에 아무것도 쓰지 않았습니다.`,
+    });
+    throw new Error(
+      `rollbackVersion: 버전 ${versionId}의 스냅샷 무결성 검증 실패 (content_hash 불일치) — 복원 중단`
+    );
+  }
+
+  const snapshotJson = JSON.parse(snapshotJsonText);
   const files = snapshotJson.files || {};
   const restored = [];
   for (const [relPath, contentB64] of Object.entries(files)) {
@@ -527,12 +602,14 @@ export async function rollbackVersion(versionId, store, actor) {
     restored.push(relPath);
   }
 
+  await store.markVersionRolledBack(versionId);
+
   await store.appendAudit({
     actor,
     action: "rollback",
     dataset: "libraries",
     event_id: version.source_event_id,
-    detail: `버전 ${versionId} 롤백 완료 — 복원 파일: ${restored.join(", ") || "(없음)"}`,
+    detail: `버전 ${versionId} 롤백 완료 (무결성 검증 통과, sha256=${recomputedHash}) — 복원 파일: ${restored.join(", ") || "(없음)"}`,
   });
 
   return { versionId, restoredFiles: restored };
