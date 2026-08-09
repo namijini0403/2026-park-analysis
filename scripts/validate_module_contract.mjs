@@ -55,6 +55,28 @@ for (const file of files) {
       if (!row?.metric || !row?.source) fail(file, `external_supply[${i}]에 metric/source 누락`);
     });
   }
+  if (doc?.gap_type_actions !== undefined) {
+    if (typeof doc.gap_type_actions !== "object" || Array.isArray(doc.gap_type_actions) || doc.gap_type_actions === null) {
+      fail(file, "gap_type_actions가 객체가 아님");
+    } else {
+      const values = Object.values(doc.gap_type_actions);
+      for (const [gapType, action] of Object.entries(doc.gap_type_actions)) {
+        if (!POLICY_ACTION_ENUM.has(action)) fail(file, `gap_type_actions.${gapType}에 enum 밖 값: ${action}`);
+      }
+      if (Array.isArray(doc.policy_actions)) {
+        const actionSet = new Set(values);
+        const policySet = new Set(doc.policy_actions);
+        const missingFromActions = [...policySet].filter((a) => !actionSet.has(a));
+        const extraInActions = [...actionSet].filter((a) => !policySet.has(a));
+        if (missingFromActions.length || extraInActions.length) {
+          fail(
+            file,
+            `gap_type_actions 값 집합이 policy_actions와 불일치 (policy_actions에만 있음: ${missingFromActions.join(", ") || "없음"}; gap_type_actions에만 있음: ${extraInActions.join(", ") || "없음"})`
+          );
+        }
+      }
+    }
+  }
   if (doc?.source !== undefined && !Array.isArray(doc.source)) {
     fail(file, "source가 배열이 아님");
   } else if (Array.isArray(doc?.source)) {

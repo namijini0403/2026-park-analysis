@@ -14,6 +14,17 @@ P2 Task 1: 도서관 데이터 전처리
 
 주의: 등시선(네트워크 isochrone) 교차 여부가 "도보 접근성"의 근거이며,
 직선거리(euclid)는 참고치일 뿐 접근성으로 제시하지 않는다.
+
+실행 순서 (반드시 이 순서로):
+  1) scripts/reading_module/geocode_missing_libraries.py
+     (data/raw_library/geocoded_missing_libraries.csv 생성/갱신)
+  2) scripts/reading_module/build_library_layer.py (본 스크립트)
+     (libraries.csv, school_library_access.csv 생성)
+  3) scripts/reading_module/apply_reading_gap_types.py
+     (school_library_access.csv에 격차 유형 5개 컬럼 append)
+본 스크립트(2단계)를 재실행하면 school_library_access.csv가 격차 유형 컬럼 없이
+16개 컬럼으로 덮어써지므로, apply_reading_gap_types.py(3단계)는 build_library_layer.py
+실행 직후 항상 다시 실행해야 한다.
 """
 from __future__ import annotations
 
@@ -189,6 +200,21 @@ def main():
             p(f"WARNING: 결측 좌표 행수({len(missing_positions)})와 "
               f"geocoded_missing_libraries.csv 행수({len(geo_df)})가 다름 → 지오코딩 병합 생략")
         else:
+            missing_names = list(lib_raw.loc[missing_positions, "LBRRY_NM"])
+            geo_names = list(geo_df["도서관명"])
+            if missing_names != geo_names:
+                mismatch_at = next(
+                    (i for i, (a, b) in enumerate(zip(missing_names, geo_names)) if a != b),
+                    None,
+                )
+                raise SystemExit(
+                    "FATAL: 결측 좌표 행의 LBRRY_NM 순서와 geocoded_missing_libraries.csv의 "
+                    "도서관명 순서가 일치하지 않음 (위치 기반 병합은 두 순서가 동일할 때만 "
+                    f"안전함). 첫 불일치 위치: {mismatch_at} "
+                    f"(원본={missing_names[mismatch_at] if mismatch_at is not None else None!r}, "
+                    f"지오코딩={geo_names[mismatch_at] if mismatch_at is not None else None!r}). "
+                    "geocode_missing_libraries.py를 원본 CSV와 같은 순서로 재실행했는지 확인할 것."
+                )
             for pos, orig_idx in enumerate(missing_positions):
                 geo_row = geo_df.iloc[pos]
                 if geo_row["geocode_status"] == "resolved":
@@ -225,7 +251,7 @@ def main():
     })
     libraries_out = libraries_out.sort_values(["구", "도서관명"]).reset_index(drop=True)
 
-    libraries_out.to_csv(LIBRARIES_OUT, index=False, encoding="utf-8")
+    libraries_out.to_csv(LIBRARIES_OUT, index=False, encoding="utf-8", lineterminator="\r\n")
 
     p(f"원천 도서관 총 {total_lib}행, 좌표 결측 {missing_coord_count}행 중 지오코딩으로 "
       f"{geocoded_filled}행 보완 → 잔여 결측 {still_missing_count}행 제외 → 레이어 포함 {len(libraries_out)}행")
@@ -280,6 +306,8 @@ def main():
     iso_public_counts = []
     nearest_names = []
     nearest_dists = []
+    nearest_types = []
+    nearest_coord_sources = []
 
     schools_without_iso = 0
     for _, srow in schools_df.iterrows():
@@ -293,6 +321,8 @@ def main():
         count_public = 0
         best_name = None
         best_dist = None
+        best_type = None
+        best_coord_source = None
         for lib in lib_records:
             l_lat, l_lon = lib["위도"], lib["경도"]
             if school_contains_point(sid, l_lon, l_lat):
@@ -303,11 +333,15 @@ def main():
             if best_dist is None or d < best_dist:
                 best_dist = d
                 best_name = lib["도서관명"]
+                best_type = lib["유형"]
+                best_coord_source = lib["좌표출처"]
 
         iso_counts.append(count_all)
         iso_public_counts.append(count_public)
         nearest_names.append(best_name)
         nearest_dists.append(int(round(best_dist)) if best_dist is not None else None)
+        nearest_types.append(best_type)
+        nearest_coord_sources.append(best_coord_source)
 
     p(f"등시선 폴리곤이 없는 학교 수: {schools_without_iso}")
 
@@ -404,6 +438,8 @@ def main():
             "iso_public_library_count": iso_public_counts[i],
             "nearest_library_name": nearest_names[i],
             "nearest_library_euclid_m": nearest_dists[i],
+            "nearest_library_type": nearest_types[i],
+            "nearest_library_coord_source": nearest_coord_sources[i],
             "장서수": libbook,
             "좌석수": seats,
             "사서교사수": teacher_librarians,
@@ -417,7 +453,7 @@ def main():
         })
 
     access_out = pd.DataFrame(out_rows)
-    access_out.to_csv(ACCESS_OUT, index=False, encoding="utf-8")
+    access_out.to_csv(ACCESS_OUT, index=False, encoding="utf-8", lineterminator="\r\n")
     p(f"school_library_access.csv 행수: {len(access_out)}")
 
     # -----------------------------------------------------------------

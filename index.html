@@ -3515,10 +3515,10 @@
 
     // 학교-도서관 접근성 격차 유형 → 라벨/색상 (색은 CASE_META 톤과 일관)
     const READING_GAP_META = {
-      direct_investment_first: { label: "학교도서관 직접투자 우선", color: "#E53935" },
-      school_hub_mobile: { label: "학교 거점·이동형 지원", color: "#FB8C00" },
-      public_link: { label: "공공도서관 연계", color: "#FDD835" },
-      maintain_monitor: { label: "유지·모니터링", color: "#43A047" }
+      direct_investment_first: { label: "학교도서관 직접투자 우선", color: "#E53935", textColor: "#ffffff" },
+      school_hub_mobile: { label: "학교 거점·이동형 지원", color: "#FB8C00", textColor: "#ffffff" },
+      public_link: { label: "공공도서관 연계", color: "#FDD835", textColor: "#1F2937" },
+      maintain_monitor: { label: "유지·모니터링", color: "#43A047", textColor: "#ffffff" }
     };
     const READING_GAP_FALLBACK_META = { label: "추가 확인 필요", color: "#6B7280" };
 
@@ -6980,8 +6980,10 @@
       const isoPublicCount = formatCount(rec.iso_public_library_count);
       const nearestName = rec.nearest_library_name ? escapeHtml(rec.nearest_library_name) : "자료 없음";
       const nearestDistNumeric = Number(rec.nearest_library_euclid_m);
+      const nearestType = rec.nearest_library_type ? escapeHtml(rec.nearest_library_type) : "";
+      const nearestCoordNote = rec.nearest_library_coord_source === "지오코딩" ? ", 좌표 근사" : "";
       const nearestDistText = Number.isFinite(nearestDistNumeric)
-        ? `${formatCount(nearestDistNumeric)}m (직선 참고치)`
+        ? `${nearestType ? `${nearestType}, ` : ""}${formatCount(nearestDistNumeric)}m (직선 참고치)${nearestCoordNote}`
         : "자료 없음";
 
       const bookCount = formatCount(rec.장서수);
@@ -6995,7 +6997,7 @@
         : Number.isFinite(librarianTotal) ? `사서 ${formatCount(librarianTotal)}명` : "사서 자료 없음";
 
       const gapMeta = getReadingGapMeta(rec.reading_gap_type);
-      const badgeStyle = `background:${gapMeta.color}; border-color:${gapMeta.color}; color:#ffffff;`;
+      const badgeStyle = `background:${gapMeta.color}; border:1px solid ${gapMeta.color}; color:${gapMeta.textColor || "#ffffff"};`;
 
       return `
         <div class="detail-section">

@@ -46,6 +46,8 @@ BASE_COLUMNS = [
     "iso_public_library_count",
     "nearest_library_name",
     "nearest_library_euclid_m",
+    "nearest_library_type",
+    "nearest_library_coord_source",
     "장서수",
     "좌석수",
     "사서교사수",

@@ -31,7 +31,12 @@ policy_actions:
   - mobile_service
   - institution_link
   - maintain_monitor
-reference_date: 2026-05-11
+gap_type_actions:
+  direct_investment_first: internal_investment
+  school_hub_mobile: mobile_service
+  public_link: institution_link
+  maintain_monitor: maintain_monitor
+reference_date: 2026-05-11  # 데이터셋 배포(수정) 기준일. 개별 도서관 행의 REFERENCE_DATE는 2024-08~2026-05로 상이함
 source:
   - name: 전국도서관표준데이터
     provider: 문화체육관광부

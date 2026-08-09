@@ -99,7 +99,7 @@ function detectTopic(payload) {
   if (/case ?[1-4]|케이스 ?[1-4]/.test(question) || isCaseOverviewQuestion(payload) || isCaseDistanceCheckQuestion(payload)) return "case";
   if (/shap|기여|예측근거/.test(question)) return "shap";
   if (/knn|유사학교|유사조건|비교군|벤치마크|활동규모|공원 ?기능|기능 ?등급|등시권|등시선|hitl|human ?in/.test(question)) return "glossary";
-  if (/도서관|독서|장서|사서|열람좌석|독서교육/.test(question)) return "reading";
+  if (/도서관|독서|장서|사서|열람|독서교육/.test(question)) return "reading";
   if (/후보지|후보군|격자|추천|pareto|파레토|top ?5|안정성|가중치|슬라이더|필터|견고|우선순위/.test(question)) return "decision";
   if (/놀이터|녹지비율|최근접|미래 ?수요|잠재 ?수요|지표/.test(question)) return "metrics";
 
