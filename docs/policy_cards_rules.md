@@ -220,17 +220,21 @@
 
 | 행동 유형 | 개수 | 비율 |
 |---|---|---|
-| external_supply_new | 60 | 22.1% |
-| internal_investment | 81 | 29.8% |
-| mobile_service | 83 | 30.5% |
-| maintain_monitor | 45 | 16.5% |
-| institution_link | 3 | 1.1% |
+| external_supply_new | 58 | 21.3% |
+| internal_investment | 83 | 30.5% |
+| mobile_service | 85 | 31.3% |
+| maintain_monitor | 42 | 15.4% |
+| institution_link | 4 | 1.5% |
 | access_route_improvement | 0 | 0% |
 | shared_hub | 0 | 0% |
 
+(P5 Kakao 지오코딩 정밀화로 school_library_access.csv의 reading_gap_type 분포가
+바뀌면서 위 표는 2026-08-09 최초 산출값에서 갱신됐다. access_route_improvement=0건은
+재검증 후에도 동일하다.)
+
 **주목:**
 - `access_route_improvement`는 기본 행동으로 나타나지 않음 (case3+barrier인 7개교 모두 reading_need가 park_need를 초과하여 reading 모듈 우선).
-- 규칙상 도달 가능하지만 현재 데이터에서는 산출 0건 (외부 신규 공급 학교 60곳 모두 보행부담 플래그 없음 — 보행부담 학교 15곳은 전부 독서 모듈이 기본 모듈로 선택됨).
+- 규칙상 도달 가능하지만 현재 데이터에서는 산출 0건 (외부 신규 공급 학교 58곳 모두 보행부담 플래그 없음 — 보행부담 학교 15곳은 전부 독서 모듈이 기본 모듈로 선택됨).
 - `shared_hub`도 기본 행동으로 나타나지 않음 (부지/예산 제약 없는 기본 시나리오에서는 external_supply_new가 더 우선).
 
 ### 안정성(Stability) 분포
@@ -238,7 +242,7 @@
 | Stability | 개수 | 기본 행동 |
 |---|---|---|
 | 0.3333 (4/12 조합 안정) | 141 | external_supply_new, internal_investment |
-| 1.0 (12/12 조합 안정) | 131 | mobile_service(83), institution_link(3), maintain_monitor(45 — 이 중 30개교는 도서 지역 별도 트랙) |
+| 1.0 (12/12 조합 안정) | 131 | mobile_service(85), institution_link(4), maintain_monitor(42 — 이 중 30개교는 도서 지역 별도 트랙) |
 
 ### 특수 분류
 
