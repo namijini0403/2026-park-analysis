@@ -25,6 +25,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const yaml = require("js-yaml");
 
 const REPO_ROOT = path.join(__dirname, "..");
@@ -54,7 +55,11 @@ function loadModules() {
       import("../scripts/update_center/store.mjs"),
       import("../scripts/update_center/scan.mjs"),
       import("../scripts/update_center/reanalyze.mjs"),
-    ]).then(([storeMod, scanMod, reanalyzeMod]) => ({ storeMod, scanMod, reanalyzeMod }));
+      // P5 Task 1: reuse the single-source-of-truth module contract checker
+      // (checkModuleDoc/POLICY_ACTION_ENUM) for the onboarding endpoint below,
+      // instead of duplicating the 7-action enum / required-field list here.
+      import("../scripts/validate_module_contract.mjs"),
+    ]).then(([storeMod, scanMod, reanalyzeMod, contractMod]) => ({ storeMod, scanMod, reanalyzeMod, contractMod }));
   }
   return modulesPromise;
 }
@@ -211,6 +216,301 @@ async function buildAiNote(event) {
   } catch {
     return { note: deterministicNote(event), source: "fallback" };
   }
+}
+
+// ---------------------------------------------------------------------------
+// 온보딩 에이전트 (P5 Task 1)
+//
+// POST /api/update-center/onboarding — 담당자 자연어 요청 -> 설계안 + 모듈 YAML
+// 초안(yaml_draft) 생성 -> scripts/validate_module_contract.mjs의
+// checkModuleDoc()으로 기계 검사(등록되지 않은 신규 모듈이므로 registryBlock은
+// 생략해 LAYER_REGISTRY parity 검사는 건너뜀) -> data_events(kind=
+// onboarding_proposal, risk=yellow)에 제안으로만 저장. modules/ 디렉토리나
+// data_processed/에는 이 경로에서 절대 쓰지 않는다 — 승인 전 운영 미반영 원칙.
+// ---------------------------------------------------------------------------
+
+const ONBOARDING_TEXT_MIN = 10;
+const ONBOARDING_TEXT_MAX = 2000;
+const ONBOARDING_MODEL = AI_MODEL; // same AI_EXPLAINER_MODEL env var as the ai_note pattern above
+const ONBOARDING_MAX_OUTPUT_TOKENS = 1600;
+
+// 철학 체크리스트: 항상 고정 3항목, 항상 "human 검토 필요" — AI가 자체 통과를
+// 선언할 수 없다(Global Constraints). LLM의 참고 의견은 philosophy_notes로
+// 별도 반환.
+const PHILOSOPHY_CHECKLIST = [
+  { id: "walk_network", text: "도달성 지표는 직선이 아닌 도보 네트워크 기준인가" },
+  { id: "target_leakage", text: "격차 유형·권고에 target leakage 요소가 없는가" },
+  { id: "stigma", text: "학교 서열화·낙인 효과를 유발하는 표시가 없는가" },
+];
+
+function onboardingSlug(requestText) {
+  // ASCII-safe placeholder id derived from the request text — deterministic
+  // (same request -> same slug) but not a real registry id. Registry parity
+  // is skipped for onboarding proposals (registryBlock omitted below), so a
+  // placeholder is fine; a human picks the real layer.id before merging.
+  const hash = crypto.createHash("sha1").update(requestText).digest("hex").slice(0, 8);
+  return `new_module_${hash}`;
+}
+
+const ONBOARDING_STOPWORDS = new Set([
+  "그리고", "합니다", "싶어요", "분석", "하고", "위한", "관련", "대한", "것을", "해서",
+  "하는", "있는", "위해", "에서", "으로", "해주세요", "해줘", "같아요", "대해", "대해서",
+]);
+
+// Deterministic keyword extraction for the fallback path's suggested_datasets
+// (no network call — just tokenizes the request text). Real portal search is
+// out of scope for this prototype either way (see docs/update_center.md 한계).
+function extractKeywords(requestText, max = 5) {
+  const tokens = requestText
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .split(/\s+/)
+    .map((t) => t.trim())
+    .filter((t) => t.length >= 2 && !ONBOARDING_STOPWORDS.has(t));
+  const seen = new Set();
+  const out = [];
+  for (const t of tokens) {
+    if (seen.has(t)) continue;
+    seen.add(t);
+    out.push(t);
+    if (out.length >= max) break;
+  }
+  return out;
+}
+
+// Fallback yaml_draft: every REQUIRED field from validate_module_contract.mjs
+// present, policy_actions a valid non-empty subset of POLICY_ACTION_ENUM,
+// location.file exactly "추가 확인 필요" (the sentinel checkModuleDoc's
+// existsSync check skips), layer.id the ASCII placeholder slug. Built via
+// yaml.dump (not string concatenation) so Korean text with colons/quotes is
+// always emitted as syntactically valid YAML.
+function buildFallbackYamlDraft(requestText, slug) {
+  const doc = {
+    module: slug,
+    resource_type: `추가 확인 필요 — 요청 원문: ${requestText}`,
+    location: {
+      file: "추가 확인 필요",
+      lat_key: "추가 확인 필요",
+      lng_key: "추가 확인 필요",
+      name_key: "추가 확인 필요",
+    },
+    external_supply: [{ metric: "추가 확인 필요", source: "추가 확인 필요" }],
+    demand_unit: "추가 확인 필요",
+    policy_actions: ["access_route_improvement", "maintain_monitor"],
+    reference_date: new Date().toISOString().slice(0, 10),
+    source: [{ name: "추가 확인 필요", provider: "추가 확인 필요" }],
+    layer: {
+      id: slug,
+      button_label: "추가 확인 필요",
+      panel_label: "추가 확인 필요",
+      color: "#6B7280",
+    },
+  };
+  return yaml.dump(doc, { schema: yaml.CORE_SCHEMA, lineWidth: -1 });
+}
+
+function buildFallbackProposal(requestText) {
+  const slug = onboardingSlug(requestText);
+  const snippet = requestText.length > 60 ? `${requestText.slice(0, 60)}...` : requestText;
+  return {
+    design_summary:
+      `[AI 미사용 폴백] "${snippet}" 요청에 대한 자동 초안입니다. 자원 종류·데이터 출처·지표는 ` +
+      `모두 "추가 확인 필요"로 채워졌으며, 담당자가 실제 값으로 채워 넣어야 합니다. ` +
+      `policy_actions는 임시로 access_route_improvement·maintain_monitor를 지정했으니 ` +
+      `실제 정책 방향에 맞게 재검토가 필요합니다. layer.id도 임시 slug(${slug})이므로 ` +
+      `실제 등록 시 사람이 최종 id를 정해야 합니다.`,
+    yaml_draft: buildFallbackYamlDraft(requestText, slug),
+    suggested_datasets: extractKeywords(requestText),
+    philosophy_notes: [
+      "[AI 미사용 폴백] 도보 네트워크 기준 도달성 지표를 확보할 수 있는 원천 데이터인지 사람이 직접 확인해야 합니다.",
+      "[AI 미사용 폴백] 격차 유형·권고 로직에 결과를 미리 아는 변수(target leakage)가 섞이지 않는지 사람이 직접 확인해야 합니다.",
+    ],
+    ai_source: "fallback",
+    slug,
+  };
+}
+
+function buildOnboardingSchema() {
+  return {
+    type: "object",
+    additionalProperties: false,
+    required: ["design_summary", "yaml_draft", "suggested_datasets", "philosophy_notes"],
+    properties: {
+      design_summary: { type: "string" },
+      yaml_draft: { type: "string" },
+      suggested_datasets: { type: "array", items: { type: "string" } },
+      philosophy_notes: { type: "array", items: { type: "string" } },
+    },
+  };
+}
+
+function buildOnboardingInput(requestText, slug, policyActionList) {
+  const systemPrompt =
+    "너는 공원·학교 접근성 분석 앱의 '신규 모듈 온보딩' 설계 보조자다. 담당자의 자연어 요청을 읽고 " +
+    "이 앱의 표준 데이터 계약(모듈 YAML)을 따르는 설계안과 YAML 초안을 만든다. 너는 제안만 한다 — " +
+    "최종 승인, 실제 데이터 검증, 정책 판단은 사람이 한다. yaml_draft가 계약을 통과했다고 스스로 " +
+    "선언하지 않는다(별도 기계 검사가 판정한다).\n\n" +
+    "표준 모듈 YAML 필수 필드: module(영문 slug), resource_type(자원 종류 설명), " +
+    "location{file,lat_key,lng_key,name_key}(원천 CSV 경로 및 좌표/이름 컬럼명 — 실제 파일을 모르면 " +
+    "각 값에 정확히 문자열 \"추가 확인 필요\"를 넣는다), external_supply(배열, 각 항목 {metric,source}), " +
+    "demand_unit(수요 단위 설명), policy_actions(배열, 아래 7-action enum 중에서만 선택, 최소 1개), " +
+    "reference_date(YYYY-MM-DD), source(배열, 각 항목 {name,provider}), " +
+    `layer{id(영문 slug — 이 제안은 아직 등록되지 않은 신규 모듈이므로 반드시 "${slug}"를 그대로 사용),` +
+    "button_label,panel_label,color}.\n" +
+    "선택 필드: internal_supply, capacity, target_users, operating_hours, constraints(배열), " +
+    "gap_type_actions(객체, 값은 policy_actions와 동일한 값 집합).\n\n" +
+    `policy_actions/gap_type_actions에 쓸 수 있는 7-action enum: ${policyActionList.join(", ")}\n\n` +
+    "예시 구조 — park.yaml(공원·놀이터): location.file=data_processed/parks.csv, external_supply는 " +
+    "등시권 공원 수·최근접 거리·표시용 녹지비율 3개 지표, policy_actions=[external_supply_new, " +
+    "access_route_improvement, maintain_monitor], layer.id=parks. reading.yaml(도서관·독서교육): " +
+    "external_supply(등시권 공공도서관 수 등)와 internal_supply(장서수·좌석수·사서합계 등)를 모두 갖고, " +
+    "gap_type_actions로 격차 유형별 정책 행동을 policy_actions와 동일 값 집합으로 매핑한다. layer.id=library.\n\n" +
+    "yaml_draft는 위 구조를 그대로 따르는 진짜 YAML 문서 '문자열'이어야 한다(마크다운 코드블록 표시 없이). " +
+    "실제 원천 데이터·컬럼명·수치를 모르면 절대 지어내지 말고 정확히 \"추가 확인 필요\"라고 쓴다. " +
+    "philosophy_notes에는 이 제안이 (1)도보 네트워크 기준 도달성 지표를 쓰는지, (2)격차 유형·권고 로직에 " +
+    "결과를 미리 아는 변수(target leakage)가 섞일 위험이 있는지, (3)학교 서열화나 낙인 효과로 이어질 " +
+    "표시 요소가 있는지에 대한 검토 의견을 한국어 문장 배열로 적는다. 이 노트는 참고 의견이며 최종 " +
+    "판정이 아니다(최종 판정은 별도 체크리스트로 사람이 한다).";
+
+  return [
+    { role: "system", content: systemPrompt },
+    {
+      role: "user",
+      content: JSON.stringify({ request_text: requestText, placeholder_layer_id: slug }),
+    },
+  ];
+}
+
+async function buildOpenAiOnboardingProposal(requestText, slug, policyActionList) {
+  const requestBody = {
+    model: ONBOARDING_MODEL,
+    input: buildOnboardingInput(requestText, slug, policyActionList),
+    store: false,
+    max_output_tokens: ONBOARDING_MAX_OUTPUT_TOKENS,
+    reasoning: { effort: "none" },
+    tools: [],
+    tool_choice: "none",
+    parallel_tool_calls: false,
+    text: {
+      format: {
+        type: "json_schema",
+        name: "onboarding_proposal",
+        strict: true,
+        schema: buildOnboardingSchema(),
+      },
+    },
+  };
+  const response = await fetchOpenAiResponse(requestBody);
+  if (!response.ok) return null;
+  const data = await response.json();
+  const text = extractText(data).trim();
+  if (!text) return null;
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return null;
+  }
+  if (!parsed || typeof parsed !== "object") return null;
+  if (typeof parsed.design_summary !== "string" || typeof parsed.yaml_draft !== "string") return null;
+  if (!Array.isArray(parsed.suggested_datasets) || !Array.isArray(parsed.philosophy_notes)) return null;
+  return { ...parsed, ai_source: "openai", slug };
+}
+
+// Never throws — always resolves to a proposal object with ai_source
+// "openai" or "fallback". Mirrors buildAiNote()'s never-throw contract.
+async function buildOnboardingProposal(requestText, contractMod) {
+  const slug = onboardingSlug(requestText);
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      const proposal = await buildOpenAiOnboardingProposal(requestText, slug, [...contractMod.POLICY_ACTION_ENUM]);
+      if (proposal) return proposal;
+    } catch {
+      // fall through to deterministic fallback below
+    }
+  }
+  return buildFallbackProposal(requestText);
+}
+
+// Machine check: parse yaml_draft with js-yaml CORE_SCHEMA (parse failure is
+// itself reported, not thrown), then run checkModuleDoc() with registryBlock
+// omitted — registry parity has no meaning for a module that isn't in
+// LAYER_REGISTRY yet.
+function checkYamlDraft(yamlDraft, contractMod) {
+  let doc = null;
+  let parseError = null;
+  try {
+    doc = yaml.load(yamlDraft, { schema: yaml.CORE_SCHEMA });
+  } catch (err) {
+    parseError = err.message;
+  }
+  if (parseError || doc === null || typeof doc !== "object" || Array.isArray(doc)) {
+    return {
+      yaml_parsed: false,
+      parse_error: parseError || "yaml_draft가 YAML 객체로 파싱되지 않았습니다.",
+      failures: [],
+      warnings: [],
+      passed: false,
+    };
+  }
+  const { failures, warnings } = contractMod.checkModuleDoc(doc);
+  return { yaml_parsed: true, parse_error: null, failures, warnings, passed: failures.length === 0 };
+}
+
+async function handlePostOnboarding(req, res) {
+  const body = req.body || {};
+  const requestText = typeof body.request_text === "string" ? body.request_text.trim() : "";
+  if (requestText.length < ONBOARDING_TEXT_MIN || requestText.length > ONBOARDING_TEXT_MAX) {
+    return json(res, 400, {
+      error: `request_text는 ${ONBOARDING_TEXT_MIN}~${ONBOARDING_TEXT_MAX}자여야 합니다 (현재 ${requestText.length}자).`,
+    });
+  }
+
+  const { contractMod } = await loadModules();
+  const proposal = await buildOnboardingProposal(requestText, contractMod);
+  const contractCheck = checkYamlDraft(proposal.yaml_draft, contractMod);
+  const philosophyChecklist = PHILOSOPHY_CHECKLIST.map((item) => ({ ...item, status: "human 검토 필요" }));
+  const summarySnippet = requestText.length > 80 ? `${requestText.slice(0, 80)}...` : requestText;
+  const summary = `신규 모듈 온보딩 제안 — "${summarySnippet}"`;
+  const dataset = `onboarding:${proposal.slug || onboardingSlug(requestText)}`;
+
+  const store = await getStore();
+  const event = await store.recordEvent({
+    dataset,
+    kind: "onboarding_proposal",
+    risk: "yellow",
+    status: "pending",
+    summary,
+    diff_json: {
+      request_text: requestText,
+      design_summary: proposal.design_summary,
+      yaml_draft: proposal.yaml_draft,
+      contract_check: contractCheck,
+      philosophy_notes: proposal.philosophy_notes,
+      ai_source: proposal.ai_source,
+    },
+    actor: ACTOR,
+  });
+  await store.appendAudit({
+    actor: ACTOR,
+    action: "onboarding_proposal_created",
+    dataset,
+    event_id: event.id,
+    detail: `온보딩 제안 생성 — source=${proposal.ai_source}`,
+  });
+
+  return json(res, 200, {
+    event_id: event.id,
+    dataset,
+    request_text: requestText,
+    design_summary: proposal.design_summary,
+    yaml_draft: proposal.yaml_draft,
+    suggested_datasets: proposal.suggested_datasets,
+    philosophy_notes: proposal.philosophy_notes,
+    philosophy_checklist: philosophyChecklist,
+    contract_check: contractCheck,
+    ai_source: proposal.ai_source,
+    notice: "이 제안은 저장만 되며 승인·파일 생성 전까지 운영에 반영되지 않습니다.",
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -495,6 +795,7 @@ module.exports = async function handler(req, res) {
     if (req.method === "POST" && subPath === "/approve") return await handlePostApprove(req, res);
     if (req.method === "POST" && subPath === "/hold") return await handlePostHold(req, res);
     if (req.method === "POST" && subPath === "/rollback") return await handlePostRollback(req, res);
+    if (req.method === "POST" && subPath === "/onboarding") return await handlePostOnboarding(req, res);
     return json(res, 404, { error: `알 수 없는 엔드포인트: ${req.method} ${subPath}` });
   } catch (err) {
     console.error("[update-center] handler error:", err);
