@@ -1074,6 +1074,17 @@
       color: #FDA4AF;
     }
 
+    /* 신규 레이어(LAYER_REGISTRY에서 cssColor 지정)용 generic 색상 — 기존 5개 레이어는 위의 전용 규칙 사용 */
+    .layer-toggle-btn[style*="--layer-color"] {
+      border-color: var(--layer-color);
+      color: var(--layer-color);
+    }
+    .layer-toggle-btn.is-on[style*="--layer-color"] {
+      background: var(--layer-color);
+      border-color: var(--layer-color);
+      color: #ffffff;
+    }
+
     .case-filter-group,
     .access-filter-group {
       display: flex;
@@ -5699,43 +5710,28 @@
     }
 
     function updateOverlayVisibility() {
-      state.overlays.candidateMarkers.forEach((marker) => {
-        marker.setMap(ui.toggles.candidate && ui.toggles.candidate.checked ? state.map : null);
+      LAYER_REGISTRY.forEach((def) => {
+        const on = isLayerOn(def);
+        (state.overlays[def.overlayKey] || []).forEach((overlay) => overlay.setMap(on ? state.map : null));
       });
-      state.overlays.parkMarkers.forEach((marker) => marker.setMap(ui.toggles.parks.checked ? state.map : null));
-      state.overlays.redevelopmentMarkers.forEach((marker) => marker.setMap(ui.toggles.redevelopment.checked ? state.map : null));
-      state.overlays.isochronePolygons.forEach((polygon) => polygon.setMap(ui.toggles.isochrone.checked ? state.map : null));
-      state.overlays.bufferPolygons.forEach((polygon) => polygon.setMap(ui.toggles.buffer.checked ? state.map : null));
       syncLayerToggleButtons();
     }
 
     function rerenderAll() {
       renderSchoolMarkers();
       renderCandidateMarkers();
-      renderPointMarkers("parkMarkers", state.datasets.parks, {
-        latKey: "위도",
-        lngKey: "경도",
-        titleKey: "공원명",
-        fallbackTitle: "공원",
-        color: "#2B6CB0",
-        visible: ui.toggles.parks.checked
+      LAYER_REGISTRY.forEach((def) => {
+        if (def.kind === "point") {
+          renderPointMarkers(def.overlayKey, state.datasets[def.datasetKey] || [], {
+            ...def.point,
+            visible: isLayerOn(def)
+          });
+        } else if (def.kind === "geojson") {
+          renderGeoJsonLayer(def.overlayKey, state.datasets[def.datasetKey], def.style, isLayerOn(def));
+        } else if (def.kind === "custom" && def.renderFnName && typeof window[def.renderFnName] === "function") {
+          window[def.renderFnName]();
+        }
       });
-      renderRedevelopmentLayer();
-      renderGeoJsonLayer("isochronePolygons", state.datasets.isochrone, {
-        strokeWeight: 2,
-        strokeColor: "#2B6CB0",
-        strokeOpacity: 0.9,
-        fillColor: "#90CDF4",
-        fillOpacity: 0.22
-      }, ui.toggles.isochrone.checked);
-      renderGeoJsonLayer("bufferPolygons", state.datasets.buffer, {
-        strokeWeight: 2,
-        strokeColor: "#ED8936",
-        strokeOpacity: 0.9,
-        strokeStyle: "dash",
-        fillColor: "#FBD38D",
-        fillOpacity: 0.12
-      }, ui.toggles.buffer.checked);
       updateOverlayVisibility();
       renderGuSummary();
       const selectedRow = state.datasets.schools.find((row) => getSchoolId(row) === state.selectedSchoolId);
