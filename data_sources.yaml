@@ -1,0 +1,114 @@
+# P4 update-center: data source manifest
+#
+# Consumed by scripts/update_center/scan.mjs (CDC scanner). Each entry describes
+# where a processed dataset's upstream source lives, how to poll it for change
+# detection, and — for entries whose source URL isn't pinned down yet — the
+# search keywords used for the "moved/location tracking" fallback so an operator
+# (or the scanner's portal-search step) can relocate the dataset on data.go.kr.
+#
+# check.type:
+#   json_api  - poll a keyless data.go.kr JSON API (columList schema + standard.json content)
+#   file_head - HTTP HEAD against a source page/file, compare ETag/Last-Modified/Content-Length
+#   manual    - no automated polling; scan.mjs counts it as skipped, no event/audit written
+#
+# last_known_hash / schema snapshots are NOT stored here — scan.mjs persists those
+# in the gitignored data/update_center_state.json so this manifest stays static.
+
+version: 1
+sources:
+  - dataset: libraries
+    local_file: data_processed/libraries.csv
+    portal_pk: "15013109"
+    uddi: "uddi:b385489f-f5a7-4668-a067-ab2124d7963d"
+    provider: 문화체육관광부(제공 지자체·교육청)
+    license: 공공데이터포털 표준 이용허락
+    update_cycle: 연간
+    source_url: https://www.data.go.kr/data/15013109/standard.do
+    check:
+      type: json_api
+      urls:
+        columList: https://www.data.go.kr/download/columList.json?pk=15013109&ext=csv
+        data: https://www.data.go.kr/download/standard.json?publicDataPk=15013109&svcTableNm=tn_pubr_public_lbrry_svc&perPage=10000&page=1
+    search_keywords:
+      - 전국도서관표준데이터
+      - 도서관 표준데이터
+    notes: >-
+      데모 대상 1종(P2에서 확보한 keyless JSON API). columList.json으로 원격 스키마,
+      standard.json 1페이지로 totalCount·내용 해시를 추적한다. 응답이 바뀌면(404 포함)
+      moved-detection이 search_keywords로 포털 재검색을 시도한다.
+
+  - dataset: school_library
+    local_file: data_processed/school_library_access.csv
+    portal_pk: "15040972"
+    uddi: "uddi:8c403b97-69c0-44a4-a0cc-9b021d9bf597"
+    provider: 교육부/한국교육개발원(KEDI)
+    license: 이용제한 없음(KEDI 출처표시)
+    update_cycle: 수시
+    source_url: https://kess.kedi.re.kr/post/6670396
+    check:
+      type: file_head
+      urls:
+        head: https://kess.kedi.re.kr/post/6670396
+    search_keywords:
+      - 학교도서관 현황 학교별
+      - 초중고 학교도서관
+    notes: >-
+      KESS(학교도서관 현황 학교별) 게시물 페이지. 첨부파일 다운로드 링크는 세션/토큰이
+      필요해 리포에 직접 URL을 고정하지 않았고, 게시물 페이지 자체의 HTTP 헤더
+      (ETag/Last-Modified/Content-Length)를 변경 감지용 대리 신호로 사용한다.
+      data.go.kr 15040972는 동일 데이터의 포털 등록 ID(교차 확인용).
+
+  - dataset: parks
+    local_file: data_processed/parks.csv
+    portal_pk: null
+    uddi: null
+    provider: 추가 확인 필요
+    license: 추가 확인 필요
+    update_cycle: 추가 확인 필요
+    source_url: 추가 확인 필요
+    check:
+      type: manual
+    search_keywords:
+      - 인천 도시공원 현황
+      - 인천광역시 공원 정보표준데이터
+      - 인천 도시공원 조성 현황
+    notes: >-
+      위치 추적 대상. data_processed/parks.csv는 확보되어 있으나 원천 포털 URL이
+      리포에 기록되어 있지 않다. 자동 폴링 없이(check.type=manual) search_keywords로
+      포털에서 재확인/재검색할 수 있도록 등록만 해 둔다.
+
+  - dataset: schools
+    local_file: data_processed/schools.csv
+    portal_pk: null
+    uddi: null
+    provider: 추가 확인 필요
+    license: 추가 확인 필요
+    update_cycle: 추가 확인 필요
+    source_url: 추가 확인 필요
+    check:
+      type: manual
+    search_keywords:
+      - 인천 초등학교 현황
+      - 인천광역시교육청 학교기본정보
+      - 전국초중등학교위치표준데이터 인천
+    notes: >-
+      위치 추적 대상. schools.csv(학교 위치/기본정보)의 원천 포털 URL 미확정.
+      manual 체크로 등록하고 search_keywords만 유지한다.
+
+  - dataset: redevelopment
+    local_file: data_processed/redevelopment.csv
+    portal_pk: null
+    uddi: null
+    provider: 추가 확인 필요
+    license: 추가 확인 필요
+    update_cycle: 추가 확인 필요
+    source_url: 추가 확인 필요
+    check:
+      type: manual
+    search_keywords:
+      - 인천 재개발 구역 현황
+      - 인천광역시 정비사업 현황
+      - 인천 재개발구역 지정 현황
+    notes: >-
+      위치 추적 대상. redevelopment.csv(재개발 구역 현황)의 원천 포털 URL 미확정.
+      manual 체크로 등록하고 search_keywords만 유지한다.
