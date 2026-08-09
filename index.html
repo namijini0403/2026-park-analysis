@@ -3091,11 +3091,6 @@
     <button class="floating-button" id="panelToggleButton" type="button">필터 열기</button>
 
     <div class="layer-toggle-bar" id="layerToggleBar" aria-label="지도 레이어 토글">
-      <button class="layer-toggle-btn" type="button" data-layer="isochrone">🚶 실제 도보이동 500m</button>
-      <button class="layer-toggle-btn" type="button" data-layer="buffer">⭕ 직선거리 500m</button>
-      <button class="layer-toggle-btn" type="button" data-layer="parks">🌳 공원·놀이터</button>
-      <button class="layer-toggle-btn" type="button" data-layer="redevelopment">🏗️ 재개발</button>
-      <button class="layer-toggle-btn" type="button" data-layer="candidate">📍 후보지</button>
       <div class="case-filter-group" aria-label="학교 마커 분류 필터">
         <button class="case-filter-btn is-on" type="button" data-case-filter="all">전체 학교</button>
         <button class="case-filter-btn" type="button" data-case-filter="case1">즉시 개선 대상</button>
@@ -3152,28 +3147,7 @@
 
         <div class="panel-util" aria-hidden="true">
           <section class="section">
-            <div class="toggle-list">
-              <div class="toggle-row">
-                <input type="checkbox" id="toggleIsochrone" />
-                <label for="toggleIsochrone">도보 등시선</label>
-              </div>
-              <div class="toggle-row">
-                <input type="checkbox" id="toggleBuffer" />
-                <label for="toggleBuffer">직선 버퍼</label>
-              </div>
-              <div class="toggle-row">
-                <input type="checkbox" id="toggleParks" />
-                <label for="toggleParks">공원·놀이터</label>
-              </div>
-              <div class="toggle-row">
-                <input type="checkbox" id="toggleRedevelopment" />
-                <label for="toggleRedevelopment">재개발 구역</label>
-              </div>
-              <div class="toggle-row">
-                <input type="checkbox" id="toggleCandidate" />
-                <label for="toggleCandidate">후보지</label>
-              </div>
-            </div>
+            <div class="toggle-list"></div>
           </section>
           <section class="section">
             <div class="legend">
@@ -3234,6 +3208,85 @@
       redevelopment: "./data_processed/redevelopment_geocoded.csv",
       largeApt: "./data_processed/large_apt_complexes_2025.csv"
     };
+
+    // ── 레이어 레지스트리: 지도 레이어의 단일 정의처 ─────────────────────
+    // 새 레이어 추가 = 이 배열에 1항목 추가 (+ 데이터 파일을 build_vercel_static.mjs whitelist에 등록)
+    // kind: "point"(renderPointMarkers) | "geojson"(renderGeoJsonLayer) | "custom"(renderFnName의 전역 함수가 렌더)
+    const LAYER_REGISTRY = [
+      {
+        id: "isochrone", buttonLabel: "🚶 실제 도보이동 500m", panelLabel: "도보 등시선",
+        toggleId: "toggleIsochrone", overlayKey: "isochronePolygons",
+        kind: "geojson", datasetKey: "isochrone", defaultOn: false,
+        style: { strokeWeight: 2, strokeColor: "#2B6CB0", strokeOpacity: 0.9, fillColor: "#90CDF4", fillOpacity: 0.22 }
+      },
+      {
+        id: "buffer", buttonLabel: "⭕ 직선거리 500m", panelLabel: "직선 버퍼",
+        toggleId: "toggleBuffer", overlayKey: "bufferPolygons",
+        kind: "geojson", datasetKey: "buffer", defaultOn: false,
+        style: { strokeWeight: 2, strokeColor: "#ED8936", strokeOpacity: 0.9, strokeStyle: "dash", fillColor: "#FBD38D", fillOpacity: 0.12 }
+      },
+      {
+        id: "parks", buttonLabel: "🌳 공원·놀이터", panelLabel: "공원·놀이터",
+        toggleId: "toggleParks", overlayKey: "parkMarkers",
+        kind: "point", datasetKey: "parks", defaultOn: false,
+        point: { latKey: "위도", lngKey: "경도", titleKey: "공원명", fallbackTitle: "공원", color: "#2B6CB0" }
+      },
+      {
+        id: "redevelopment", buttonLabel: "🏗️ 재개발", panelLabel: "재개발 구역",
+        toggleId: "toggleRedevelopment", overlayKey: "redevelopmentMarkers",
+        kind: "custom", renderFnName: "renderRedevelopmentLayer", defaultOn: false
+      },
+      {
+        id: "candidate", buttonLabel: "📍 후보지", panelLabel: "후보지",
+        toggleId: "toggleCandidate", overlayKey: "candidateMarkers",
+        kind: "custom", renderFnName: null, defaultOn: false
+        // 후보지 마커는 rerenderAll()의 renderCandidateMarkers()가 그림 — registry는 가시성만 담당
+      }
+    ];
+
+    function buildLayerControls() {
+      const bar = document.getElementById("layerToggleBar");
+      if (bar) {
+        // 주의: #layerToggleBar 안에는 레이어 버튼 외에 case-filter-group/access-filter-group도
+        // 자식으로 들어있으므로 innerHTML="" 대신 기존 .layer-toggle-btn만 제거하고
+        // 나머지 자식(anchor) 앞에 새 버튼을 순서대로 삽입한다.
+        bar.querySelectorAll(".layer-toggle-btn").forEach((btn) => btn.remove());
+        const anchor = bar.firstChild;
+        LAYER_REGISTRY.forEach((def) => {
+          const btn = document.createElement("button");
+          btn.className = "layer-toggle-btn";
+          btn.type = "button";
+          btn.dataset.layer = def.id;
+          btn.textContent = def.buttonLabel;
+          if (def.cssColor) btn.style.setProperty("--layer-color", def.cssColor);
+          bar.insertBefore(btn, anchor);
+        });
+      }
+      const list = document.querySelector(".panel-util .toggle-list");
+      if (list) {
+        list.innerHTML = "";
+        LAYER_REGISTRY.forEach((def) => {
+          const row = document.createElement("div");
+          row.className = "toggle-row";
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.id = def.toggleId;
+          input.checked = Boolean(def.defaultOn);
+          const label = document.createElement("label");
+          label.htmlFor = def.toggleId;
+          label.textContent = def.panelLabel;
+          row.appendChild(input);
+          row.appendChild(label);
+          list.appendChild(row);
+        });
+      }
+    }
+    buildLayerControls();
+
+    function isLayerOn(def) {
+      const input = document.getElementById(def.toggleId);
+      return Boolean(input && input.checked);
+    }
 
     const INCHEON_CENTER = { lat: 37.4563, lng: 126.7052 };
     const DEFAULT_LEVEL = 8;
@@ -3375,11 +3428,7 @@
       schoolMarkerIndex: new Map(),
       overlays: {
         schoolMarkers: [],
-        candidateMarkers: [],
-        parkMarkers: [],
-        redevelopmentMarkers: [],
-        isochronePolygons: [],
-        bufferPolygons: []
+        ...Object.fromEntries(LAYER_REGISTRY.map((def) => [def.overlayKey, []]))
       },
       datasets: {
         schools: [],
@@ -3558,13 +3607,9 @@
       aiChatAnswer: document.getElementById("aiChatAnswer"),
       aiChatContextText: document.getElementById("aiChatContextText"),
       layerToggleBar: document.getElementById("layerToggleBar"),
-      toggles: {
-        isochrone: document.getElementById("toggleIsochrone"),
-        buffer: document.getElementById("toggleBuffer"),
-        parks: document.getElementById("toggleParks"),
-        redevelopment: document.getElementById("toggleRedevelopment"),
-        candidate: document.getElementById("toggleCandidate") || false
-      },
+      toggles: Object.fromEntries(
+        LAYER_REGISTRY.map((def) => [def.id, document.getElementById(def.toggleId)])
+      ),
       layerButtons: Array.from(document.querySelectorAll(".layer-toggle-btn[data-layer]")),
       caseFilterButtons: Array.from(document.querySelectorAll(".case-filter-btn")),
       accessFilterButtons: Array.from(document.querySelectorAll(".access-filter-btn"))
