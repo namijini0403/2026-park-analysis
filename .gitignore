@@ -45,6 +45,10 @@ models/
 *.joblib
 *.graphml
 
+# P4 update-center local store/state (file backend, dev-only)
+data/update_center_store.json
+data/update_center_state.json
+
 # Submission/export packages
 submission_package*/
 
