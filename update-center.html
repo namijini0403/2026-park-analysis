@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>공공데이터 업데이트 센터</title>
+<meta name="description" content="반경 너머, 정책 도달성으로 — 공공데이터 업데이트 센터 관리자 화면" />
+<meta name="robots" content="noindex, nofollow" />
+<style>
+  :root {
+    --bg: #050B14;
+    --panel: #101B2D;
+    --panel-border: rgba(255, 255, 255, 0.10);
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --accent: #10B981;
+    --accent-hover: #047857;
+    --accent-soft: rgba(16, 185, 129, 0.12);
+    --surface: #101B2D;
+    --surface-muted: #081421;
+    --line: rgba(255, 255, 255, 0.10);
+    --danger: #F43F5E;
+    --warning: #F59E0B;
+    --success: #10B981;
+    --moved: #A855F7;
+    --moved-soft: rgba(168, 85, 247, 0.14);
+    --danger-soft: rgba(244, 63, 94, 0.14);
+    --warning-soft: rgba(245, 158, 11, 0.14);
+    --success-soft: rgba(16, 185, 129, 0.14);
+    --radius: 14px;
+    --shadow: 0 18px 42px rgba(2, 6, 23, 0.30);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "Pretendard", "Noto Sans KR", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  body {
+    padding: 24px 20px 64px;
+  }
+
+  a { color: var(--accent); }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  header.top {
+    background: linear-gradient(180deg, var(--surface) 0%, var(--surface-muted) 100%);
+    border: 1px solid var(--panel-border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  header.top h1 {
+    margin: 0 0 4px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  header.top .sub {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .token-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .token-box label {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  input[type="text"], input[type="password"] {
+    background: var(--surface-muted);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 8px 10px;
+    font-size: 13px;
+    outline: none;
+  }
+
+  input.token-input {
+    width: 200px;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+
+  input.token-input.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px var(--danger-soft);
+  }
+
+  button {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid var(--panel-border);
+    background: var(--surface-muted);
+    color: var(--text);
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+  }
+
+  button:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
+
+  button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #04120C;
+  }
+
+  button.primary:hover:not(:disabled) {
+    background: var(--accent-hover);
+    color: var(--text);
+  }
+
+  button.danger-outline {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: transparent;
+  }
+
+  button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  section.panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+
+  section.panel > .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  section.panel h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  section.panel .panel-head .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .status-line {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  th {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  .empty {
+    color: var(--muted);
+    font-size: 13px;
+    padding: 16px 4px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .badge-green { background: var(--success-soft); color: var(--success); }
+  .badge-yellow { background: var(--warning-soft); color: var(--warning); }
+  .badge-red { background: var(--danger-soft); color: var(--danger); }
+  .badge-moved { background: var(--moved-soft); color: var(--moved); }
+  .badge-neutral { background: rgba(255,255,255,0.08); color: var(--muted); }
+
+  .sim-tag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.10);
+    color: var(--muted);
+  }
+
+  .event-row { cursor: pointer; }
+  .event-row.selected { background: var(--accent-soft); }
+
+  .detail-box {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    background: var(--surface-muted);
+    font-size: 13px;
+  }
+
+  .detail-box h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .detail-box pre {
+    white-space: pre-wrap;
+    word-break: break-all;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12px;
+    max-height: 320px;
+    overflow: auto;
+  }
+
+  .ai-note {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px dashed var(--panel-border);
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .row-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .tooltip-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip-wrap .tip {
+    display: none;
+    position: absolute;
+    bottom: 120%;
+    left: 0;
+    background: #000;
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 5;
+    border: 1px solid var(--panel-border);
+  }
+
+  .tooltip-wrap:hover .tip { display: block; }
+
+  .compare-box {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+
+  .compare-cell {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+
+  .compare-cell .label {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .compare-cell .value {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .compare-cell .value .arrow { color: var(--muted); font-weight: 400; margin: 0 4px; }
+
+  .details-toggle {
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 12px;
+    user-select: none;
+  }
+
+  .audit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+
+  .audit-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
+  }
+
+  .audit-item:last-child { border-bottom: none; }
+
+  .audit-item .at {
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 148px;
+  }
+
+  .audit-item .action {
+    font-weight: 700;
+  }
+
+  .audit-item .detail {
+    color: var(--muted);
+  }
+
+  .msg-banner {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .msg-banner.error { background: var(--danger-soft); color: var(--danger); border: 1px solid rgba(244,63,94,0.4); }
+  .msg-banner.info { background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(16,185,129,0.4); }
+
+  footer.bottom {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 8px 0 0;
+  }
+
+  .small-btn { padding: 4px 10px; font-size: 12px; }
+
+  @media (max-width: 640px) {
+    .audit-item { flex-direction: column; gap: 2px; }
+    .audit-item .at { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1>공공데이터 업데이트 센터</h1>
+      <p class="sub">반경 너머, 정책 도달성으로</p>
+    </div>
+    <div class="token-box">
+      <label for="token-input">토큰</label>
+      <input id="token-input" class="token-input" type="password" placeholder="심사용 2026" autocomplete="off" />
+      <button id="save-token-btn" class="small-btn">저장</button>
+      <button id="refresh-all-btn" class="primary small-btn">새로고침</button>
+    </div>
+  </header>
+
+  <div id="global-msg"></div>
+
+  <section class="panel" id="sources-panel">
+    <div class="panel-head">
+      <h2>① 데이터 소스 현황</h2>
+      <div class="actions">
+        <span class="status-line" id="sources-status"></span>
+        <button id="scan-all-btn" class="primary small-btn">전체 검사</button>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>데이터셋</th>
+            <th>제공기관</th>
+            <th>갱신주기</th>
+            <th>확인방식</th>
+            <th>원본 URL</th>
+            <th>마지막 스캔</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="sources-tbody">
+          <tr><td colspan="7" class="empty">로딩 중...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="events-panel">
+    <div class="panel-head">
+      <h2>③ 이벤트 목록</h2>
+      <span class="status-line" id="events-status"></span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>시간</th>
+            <th>데이터셋</th>
+            <th>종류</th>
+            <th>등급</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody id="events-tbody">
+          <tr><td colspan="5" class="empty">로딩 중...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="event-detail"></div>
+  </section>
+
+  <section class="panel" id="versions-panel">
+    <div class="panel-head">
+      <h2>④ 버전 기록</h2>
+      <span class="status-line" id="versions-status"></span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>생성 시각</th>
+            <th>데이터셋</th>
+            <th>행 수</th>
+            <th>content_hash</th>
+            <th>적용됨</th>
+            <th>롤백됨</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="versions-tbody">
+          <tr><td colspan="7" class="empty">로딩 중...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="audit-panel">
+    <div class="panel-head">
+      <h2>⑤ 감사 로그</h2>
+      <span class="status-line" id="audit-status"></span>
+    </div>
+    <div class="audit-list" id="audit-list">
+      <div class="empty">로딩 중...</div>
+    </div>
+  </section>
+
+  <footer class="bottom" id="last-refreshed">마지막 갱신: -</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var TOKEN_HEADER = "x-update-center-token";
+  var TOKEN_STORAGE_KEY = "update_center_token";
+  var API_BASE = "/api/update-center";
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function esc(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function fmtTime(iso) {
+    if (!iso) return "-";
+    try {
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return esc(iso);
+      return d.toLocaleString("ko-KR", { hour12: false });
+    } catch (e) {
+      return esc(iso);
+    }
+  }
+
+  function getToken() {
+    return localStorage.getItem(TOKEN_STORAGE_KEY) || "";
+  }
+
+  function setToken(value) {
+    localStorage.setItem(TOKEN_STORAGE_KEY, value);
+  }
+
+  function showGlobalMsg(text, kind) {
+    var box = $("global-msg");
+    box.innerHTML =
+      '<div class="msg-banner ' + (kind === "error" ? "error" : "info") + '">' + esc(text) + "</div>";
+    if (kind !== "error") {
+      setTimeout(function () {
+        if (box.firstChild) box.innerHTML = "";
+      }, 4000);
+    }
+  }
+
+  function markTokenError() {
+    var input = $("token-input");
+    input.classList.add("error");
+    input.focus();
+    showGlobalMsg("인증 실패 — 토큰(" + TOKEN_HEADER + ")을 확인하세요.", "error");
+  }
+
+  function clearTokenError() {
+    $("token-input").classList.remove("error");
+  }
+
+  // ---------------------------------------------------------------------
+  // fetch helper
+  // ---------------------------------------------------------------------
+
+  function apiFetch(path, options) {
+    options = options || {};
+    var headers = options.headers || {};
+    headers[TOKEN_HEADER] = getToken();
+    if (options.body) headers["Content-Type"] = "application/json; charset=utf-8";
+    return fetch(API_BASE + path, {
+      method: options.method || "GET",
+      headers: headers,
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    }).then(function (res) {
+      return res
+        .json()
+        .catch(function () {
+          return {};
+        })
+        .then(function (data) {
+          if (res.status === 401) {
+            markTokenError();
+          } else {
+            clearTokenError();
+          }
+          return { ok: res.ok, status: res.status, data: data };
+        });
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // state
+  // ---------------------------------------------------------------------
+
+  var state = {
+    sources: [],
+    events: [],
+    versions: [],
+    audit: [],
+    selectedEventId: null,
+  };
+
+  // ---------------------------------------------------------------------
+  // sources
+  // ---------------------------------------------------------------------
+
+  function riskBadge(kind, risk) {
+    var cls = "badge-neutral";
+    var label = esc(risk || kind || "-");
+    if (kind === "moved") {
+      cls = "badge-moved";
+      label = "moved";
+    } else if (risk === "green") {
+      cls = "badge-green";
+      label = "green";
+    } else if (risk === "yellow") {
+      cls = "badge-yellow";
+      label = "yellow";
+    } else if (risk === "red") {
+      cls = "badge-red";
+      label = "red";
+    }
+    return '<span class="badge ' + cls + '">' + label + "</span>";
+  }
+
+  function renderSources() {
+    var tbody = $("sources-tbody");
+    if (!state.sources.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">데이터 소스가 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = state.sources
+      .map(function (s) {
+        var lastState = s.last_state || {};
+        var lastScan = lastState.last_checked_at || lastState.checked_at || lastState.last_scan_at || null;
+        var checkType = (s.check && s.check.type) || "-";
+        var sourceUrl = s.source_url || "-";
+        var urlCell =
+          sourceUrl && sourceUrl.indexOf("http") === 0
+            ? '<a href="' + esc(sourceUrl) + '" target="_blank" rel="noopener">' + esc(sourceUrl) + "</a>"
+            : esc(sourceUrl);
+        return (
+          "<tr>" +
+          "<td>" + esc(s.dataset) + "</td>" +
+          "<td>" + esc(s.provider || "-") + "</td>" +
+          "<td>" + esc(s.update_cycle || "-") + "</td>" +
+          "<td>" + esc(checkType) + "</td>" +
+          "<td>" + urlCell + "</td>" +
+          "<td>" + fmtTime(lastScan) + "</td>" +
+          '<td><button class="small-btn scan-one-btn" data-dataset="' + esc(s.dataset) + '">검사</button></td>' +
+          "</tr>"
+        );
+      })
+      .join("");
+
+    Array.prototype.forEach.call(document.querySelectorAll(".scan-one-btn"), function (btn) {
+      btn.addEventListener("click", function () {
+        runScan(btn.getAttribute("data-dataset"));
+      });
+    });
+  }
+
+  function loadSources() {
+    $("sources-status").textContent = "로딩 중...";
+    return apiFetch("/sources").then(function (res) {
+      if (!res.ok) {
+        $("sources-status").textContent = "로드 실패";
+        $("sources-tbody").innerHTML =
+          '<tr><td colspan="7" class="empty">' + esc((res.data && res.data.error) || "로드 실패") + "</td></tr>";
+        return;
+      }
+      state.sources = res.data.sources || [];
+      $("sources-status").textContent = state.sources.length + "개 소스";
+      renderSources();
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // events
+  // ---------------------------------------------------------------------
+
+  function renderEvents() {
+    var tbody = $("events-tbody");
+    if (!state.events.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty">이벤트가 없습니다.</td></tr>';
+      $("event-detail").innerHTML = "";
+      return;
+    }
+    tbody.innerHTML = state.events
+      .map(function (ev) {
+        var simTag = ev.diff_json && ev.diff_json.simulated ? '<span class="sim-tag">시뮬레이션</span>' : "";
+        var selected = ev.id === state.selectedEventId ? " selected" : "";
+        return (
+          '<tr class="event-row' + selected + '" data-event-id="' + esc(ev.id) + '">' +
+          "<td>" + fmtTime(ev.detected_at) + "</td>" +
+          "<td>" + esc(ev.dataset) + simTag + "</td>" +
+          "<td>" + esc(ev.kind) + "</td>" +
+          "<td>" + riskBadge(ev.kind, ev.risk) + "</td>" +
+          "<td>" + esc(ev.status) + "</td>" +
+          "</tr>"
+        );
+      })
+      .join("");
+
+    Array.prototype.forEach.call(document.querySelectorAll(".event-row"), function (row) {
+      row.addEventListener("click", function () {
+        var id = row.getAttribute("data-event-id");
+        state.selectedEventId = state.selectedEventId === id ? null : id;
+        renderEvents();
+        renderEventDetail();
+      });
+    });
+  }
+
+  function findEvent(id) {
+    for (var i = 0; i < state.events.length; i += 1) {
+      if (state.events[i].id === id) return state.events[i];
+    }
+    return null;
+  }
+
+  function approveDisabledReason(ev) {
+    if (ev.risk === "red") return "red 등급은 자동 반영이 금지됩니다.";
+    if (ev.kind === "moved") return "moved 이벤트는 승인할 수 없습니다 (위치 재확인 필요).";
+    if (ev.kind === "error") return "error 이벤트는 승인할 수 없습니다.";
+    if (ev.status === "applied") return "이미 적용된 이벤트입니다.";
+    if (ev.status === "rolled_back") return "롤백된 이벤트입니다.";
+    if (ev.status === "held") return "보류 상태입니다 — 재검사 후 승인하세요.";
+    return null;
+  }
+
+  function renderEventDetail() {
+    var box = $("event-detail");
+    if (!state.selectedEventId) {
+      box.innerHTML = "";
+      return;
+    }
+    var ev = findEvent(state.selectedEventId);
+    if (!ev) {
+      box.innerHTML = "";
+      return;
+    }
+
+    var diffText = "";
+    try {
+      diffText = JSON.stringify(ev.diff_json || {}, null, 2);
+    } catch (e) {
+      diffText = String(ev.diff_json);
+    }
+
+    var disabledReason = approveDisabledReason(ev);
+    var approveAttrs = disabledReason ? "disabled" : "";
+    var approveBtn = disabledReason
+      ? '<span class="tooltip-wrap"><button class="primary" id="approve-btn" ' +
+        approveAttrs +
+        ">승인</button><span class=\"tip\">" +
+        esc(disabledReason) +
+        "</span></span>"
+      : '<button class="primary" id="approve-btn">승인</button>';
+
+    var holdDisabled = ev.status === "applied" || ev.status === "rolled_back" ? "disabled" : "";
+
+    var aiNoteHtml = ev.ai_note
+      ? '<div class="ai-note">' + esc(ev.ai_note) + "</div>"
+      : "";
+
+    var applyDiff = ev.diff_json && ev.diff_json.applyDiff;
+    var compareHtml = "";
+    if (applyDiff) {
+      compareHtml =
+        '<div class="compare-box">' +
+        '<div class="compare-cell"><div class="label">영향 학교 수</div><div class="value">' +
+        esc(applyDiff.affected_school_count) +
+        "</div></div>" +
+        '<div class="compare-cell"><div class="label">external_shortage</div><div class="value">' +
+        esc(applyDiff.external_shortage_before) +
+        '<span class="arrow">→</span>' +
+        esc(applyDiff.external_shortage_after) +
+        "</div></div>" +
+        "</div>";
+    }
+
+    box.innerHTML =
+      '<div class="detail-box">' +
+      "<h3>이벤트 상세 — " + esc(ev.dataset) + " / " + esc(ev.kind) + "</h3>" +
+      "<p>" + esc(ev.summary || "(요약 없음)") + "</p>" +
+      '<div class="details-toggle" id="diff-toggle">diff_json 펼치기 ▾</div>' +
+      '<pre id="diff-pre" style="display:none;">' + esc(diffText) + "</pre>" +
+      aiNoteHtml +
+      (ev.ai_note ? '<p class="status-line">AI 해설은 참고용입니다 — 판단/반영 여부는 사람이 결정합니다.</p>' : "") +
+      compareHtml +
+      '<div class="row-actions">' +
+      approveBtn +
+      '<button id="hold-btn" ' + holdDisabled + ">보류</button>" +
+      "</div>" +
+      '<div id="approve-result"></div>' +
+      "</div>";
+
+    var toggle = $("diff-toggle");
+    var pre = $("diff-pre");
+    toggle.addEventListener("click", function () {
+      var isHidden = pre.style.display === "none";
+      pre.style.display = isHidden ? "block" : "none";
+      toggle.textContent = isHidden ? "diff_json 접기 ▴" : "diff_json 펼치기 ▾";
+    });
+
+    var approveBtnEl = $("approve-btn");
+    if (approveBtnEl && !disabledReason) {
+      approveBtnEl.addEventListener("click", function () {
+        approveEvent(ev.id);
+      });
+    }
+    var holdBtnEl = $("hold-btn");
+    if (holdBtnEl && !holdDisabled) {
+      holdBtnEl.addEventListener("click", function () {
+        holdEvent(ev.id);
+      });
+    }
+  }
+
+  function loadEvents() {
+    $("events-status").textContent = "로딩 중...";
+    return apiFetch("/events?limit=100").then(function (res) {
+      if (!res.ok) {
+        $("events-status").textContent = "로드 실패";
+        $("events-tbody").innerHTML =
+          '<tr><td colspan="5" class="empty">' + esc((res.data && res.data.error) || "로드 실패") + "</td></tr>";
+        return;
+      }
+      state.events = res.data.events || [];
+      $("events-status").textContent = state.events.length + "건";
+      renderEvents();
+      renderEventDetail();
+    });
+  }
+
+  function runScan(dataset) {
+    showGlobalMsg((dataset ? dataset + " " : "전체 ") + "검사를 시작합니다...", "info");
+    return apiFetch("/scan", { method: "POST", body: dataset ? { dataset: dataset } : {} }).then(function (res) {
+      if (!res.ok) {
+        showGlobalMsg((res.data && res.data.error) || "검사 실패", "error");
+        return;
+      }
+      showGlobalMsg("검사 완료 — 이벤트 " + (res.data.events || []).length + "건 감지", "info");
+      return Promise.all([loadEvents(), loadSources(), loadAudit()]);
+    });
+  }
+
+  function approveEvent(eventId) {
+    var resultBox = $("approve-result");
+    return apiFetch("/approve", { method: "POST", body: { event_id: eventId } }).then(function (res) {
+      if (!res.ok) {
+        if (resultBox) {
+          resultBox.innerHTML =
+            '<div class="msg-banner error">' + esc((res.data && res.data.error) || "승인 실패") + "</div>";
+        }
+        showGlobalMsg((res.data && res.data.error) || "승인 실패", "error");
+        return loadEvents();
+      }
+      showGlobalMsg("승인 및 적용 완료.", "info");
+      return Promise.all([loadEvents(), loadVersions(), loadAudit()]).then(function () {
+        state.selectedEventId = eventId;
+        renderEvents();
+        renderEventDetail();
+      });
+    });
+  }
+
+  function holdEvent(eventId) {
+    return apiFetch("/hold", { method: "POST", body: { event_id: eventId } }).then(function (res) {
+      if (!res.ok) {
+        showGlobalMsg((res.data && res.data.error) || "보류 실패", "error");
+        return;
+      }
+      showGlobalMsg("보류 처리되었습니다.", "info");
+      return Promise.all([loadEvents(), loadAudit()]).then(function () {
+        state.selectedEventId = eventId;
+        renderEvents();
+        renderEventDetail();
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // versions
+  // ---------------------------------------------------------------------
+
+  function renderVersions() {
+    var tbody = $("versions-tbody");
+    if (!state.versions.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">버전 기록이 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = state.versions
+      .map(function (v) {
+        var hashShort = v.content_hash ? esc(String(v.content_hash).slice(0, 12)) + "..." : "-";
+        var rollbackBtn = v.rolled_back
+          ? '<span class="status-line">롤백됨</span>'
+          : '<button class="small-btn danger-outline rollback-btn" data-version-id="' + esc(v.id) + '">롤백</button>';
+        return (
+          "<tr>" +
+          "<td>" + fmtTime(v.created_at) + "</td>" +
+          "<td>" + esc(v.dataset) + "</td>" +
+          "<td>" + esc(v.row_count === null || v.row_count === undefined ? "-" : v.row_count) + "</td>" +
+          "<td>" + hashShort + "</td>" +
+          "<td>" + (v.applied ? "예" : "아니오") + "</td>" +
+          "<td>" + (v.rolled_back ? "예" : "아니오") + "</td>" +
+          "<td>" + rollbackBtn + "</td>" +
+          "</tr>"
+        );
+      })
+      .join("");
+
+    Array.prototype.forEach.call(document.querySelectorAll(".rollback-btn"), function (btn) {
+      btn.addEventListener("click", function () {
+        var versionId = btn.getAttribute("data-version-id");
+        if (!window.confirm("이 버전으로 롤백하시겠습니까? 현재 반영된 내용이 되돌려집니다.")) return;
+        rollbackVersion(versionId);
+      });
+    });
+  }
+
+  function loadVersions() {
+    $("versions-status").textContent = "로딩 중...";
+    return apiFetch("/versions").then(function (res) {
+      if (!res.ok) {
+        $("versions-status").textContent = "로드 실패";
+        $("versions-tbody").innerHTML =
+          '<tr><td colspan="7" class="empty">' + esc((res.data && res.data.error) || "로드 실패") + "</td></tr>";
+        return;
+      }
+      state.versions = res.data.versions || [];
+      $("versions-status").textContent = state.versions.length + "건";
+      renderVersions();
+    });
+  }
+
+  function rollbackVersion(versionId) {
+    return apiFetch("/rollback", { method: "POST", body: { version_id: versionId } }).then(function (res) {
+      if (!res.ok) {
+        showGlobalMsg((res.data && res.data.error) || "롤백 실패", "error");
+        return;
+      }
+      showGlobalMsg("롤백 완료.", "info");
+      return Promise.all([loadVersions(), loadEvents(), loadAudit()]);
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // audit
+  // ---------------------------------------------------------------------
+
+  function renderAudit() {
+    var list = $("audit-list");
+    if (!state.audit.length) {
+      list.innerHTML = '<div class="empty">감사 로그가 없습니다.</div>';
+      return;
+    }
+    list.innerHTML = state.audit
+      .map(function (a) {
+        return (
+          '<div class="audit-item">' +
+          '<div class="at">' + fmtTime(a.at) + "</div>" +
+          '<div class="body">' +
+          '<span class="action">' + esc(a.action) + "</span>" +
+          (a.dataset ? " · " + esc(a.dataset) : "") +
+          (a.actor ? " · " + esc(a.actor) : "") +
+          '<div class="detail">' + esc(a.detail || "") + "</div>" +
+          "</div>" +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function loadAudit() {
+    $("audit-status").textContent = "로딩 중...";
+    return apiFetch("/audit?limit=200").then(function (res) {
+      if (!res.ok) {
+        $("audit-status").textContent = "로드 실패";
+        $("audit-list").innerHTML =
+          '<div class="empty">' + esc((res.data && res.data.error) || "로드 실패") + "</div>";
+        return;
+      }
+      state.audit = res.data.audit || [];
+      $("audit-status").textContent = state.audit.length + "건";
+      renderAudit();
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // refresh / init
+  // ---------------------------------------------------------------------
+
+  function refreshAll() {
+    return Promise.all([loadSources(), loadEvents(), loadVersions(), loadAudit()]).then(function () {
+      $("last-refreshed").textContent = "마지막 갱신: " + new Date().toLocaleString("ko-KR", { hour12: false });
+    });
+  }
+
+  $("save-token-btn").addEventListener("click", function () {
+    setToken($("token-input").value);
+    clearTokenError();
+    showGlobalMsg("토큰이 저장되었습니다.", "info");
+    refreshAll();
+  });
+
+  $("token-input").addEventListener("keydown", function (evt) {
+    if (evt.key === "Enter") {
+      setToken($("token-input").value);
+      clearTokenError();
+      refreshAll();
+    }
+  });
+
+  $("refresh-all-btn").addEventListener("click", refreshAll);
+  $("scan-all-btn").addEventListener("click", function () {
+    runScan(null);
+  });
+
+  $("token-input").value = getToken();
+  refreshAll();
+})();
+</script>
+</body>
+</html>

@@ -5,6 +5,9 @@
  *   in api/ai-explainer-v2.js (JSON body pre-parsed into req.body, UTF-8).
  * - /api/update-center/*               -> delegates to api/update-center.js
  *   (P4 update-center admin API: events/audit/versions/scan/approve/hold/rollback).
+ * - GET/HEAD /update-center            -> serves update-center.html from the repo
+ *   root directly (no-cache), so the admin page works in dev without a build step
+ *   too; also copied into vercel_public/ by build_vercel_static.mjs for prod.
  * - Everything else                    -> static files from vercel_public/
  *   (built by `npm run build:vercel`), index.html as directory default.
  *
@@ -198,6 +201,39 @@ function serveStatic(req, res) {
   stream.pipe(res);
 }
 
+function serveUpdateCenterPage(req, res) {
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    res.statusCode = 405;
+    res.setHeader("Allow", "GET, HEAD");
+    res.end("Method Not Allowed");
+    return;
+  }
+  const filePath = path.join(__dirname, "update-center.html");
+  let stats;
+  try {
+    stats = fs.statSync(filePath);
+  } catch {
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.end("Not Found");
+    return;
+  }
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.setHeader("Content-Length", stats.size);
+  if (req.method === "HEAD") {
+    res.end();
+    return;
+  }
+  const stream = fs.createReadStream(filePath);
+  stream.on("error", () => {
+    if (!res.headersSent) res.statusCode = 500;
+    res.end();
+  });
+  stream.pipe(res);
+}
+
 const server = http.createServer((req, res) => {
   const pathname = new URL(req.url, "http://localhost").pathname;
   if (pathname === "/api/ai-explainer-v2") {
@@ -206,6 +242,10 @@ const server = http.createServer((req, res) => {
   }
   if (pathname.startsWith("/api/update-center/")) {
     handleUpdateCenter(req, res);
+    return;
+  }
+  if (pathname === "/update-center") {
+    serveUpdateCenterPage(req, res);
     return;
   }
   serveStatic(req, res);

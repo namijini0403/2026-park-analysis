@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, "..", "..");
 const outputDir = path.join(root, "vercel_public");
 const uiPreviewDir = path.join(root, "ui-preview");
 
-const requiredRootFiles = ["index.html", "logo.png"];
+const requiredRootFiles = ["index.html", "logo.png", "update-center.html"];
 const requiredDataFiles = [
   "school_priority_with_functional_park_layer.csv",
   "schools.csv",
