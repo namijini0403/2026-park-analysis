@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS data_events (
   id TEXT PRIMARY KEY,
   dataset TEXT NOT NULL,
   detected_at TIMESTAMPTZ NOT NULL,
-  kind TEXT NOT NULL,            -- content | schema | moved | error
+  kind TEXT NOT NULL,            -- content | schema | moved | error | onboarding_proposal
   risk TEXT NOT NULL,            -- green | yellow | red
   summary TEXT,
   diff_json JSONB,

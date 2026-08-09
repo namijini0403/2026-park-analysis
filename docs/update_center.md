@@ -267,164 +267,224 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 | --- | --- | --- | --- |
 | `DATABASE_URL` | 선택 | (없음 → 파일 백엔드) | 설정 시 Railway Postgres 백엔드 사용. `pg` Pool, TLS 기본 검증 ON |
 | `PGSSL_NO_VERIFY` | 선택 | (없음 = 검증 ON) | `"1"`로 설정 시 pg 연결의 TLS 인증서 검증을 끔(`rejectUnauthorized:false`). 자가서명 인증서를 쓰는 Railway 관리형 Postgres 등에서 필요할 수 있음 — 명시적 opt-in 필요, 기본은 안전(검증 ON) |
-| `UPDATE_CENTER_TOKEN` | 권장 | `"2026"` | `/api/update-center/*` 모든 요청에 필요한 `x-update-center-token` 헤더 값. 데모 등급 게이트(앱의 기존 `ACCESS_CODE`와 동일한 신뢰 수준) — 운영 배포 시 반드시 재설정. 미설정 시 서버가 기동할 때 `console.warn`으로 기본 토큰("2026") 사용 중임을 명시적으로 경고한다 |
+| `UPDATE_CENTER_TOKEN` | 권장 | `"2026"` | `/api/update-center/*` 모든 요청(온보딩 포함)에 필요한 `x-update-center-token` 헤더 값. 데모 등급 게이트(앱의 기존 `ACCESS_CODE`와 동일한 신뢰 수준) — 운영 배포 시 반드시 재설정. 미설정 시 서버가 기동할 때 `console.warn`으로 기본 토큰("2026") 사용 중임을 명시적으로 경고한다. 이 토큰 게이트가 모든 `/api/update-center/*` 엔드포인트(온보딩 포함)의 유일한 방어선이다 — 별도 rate limit은 없음 |
 | `OPENAI_API_KEY` | 선택 | (없음 → 결정론적 요약 폴백) | 설정 시 이벤트 AI 해설(`ai_note`)을 OpenAI Responses API로 생성. 미설정/호출 실패 시 diff_json 기반 결정론적 요약으로 자동 대체, 두 경우 모두 "해설은 참고용입니다" 명시 |
 | `AI_EXPLAINER_MODEL` | 선택 | `gpt-5.4-mini` | AI 해설 생성에 사용할 모델명 override |
 | `PORT` | 선택 | `3000` | `server.js`(update-center의 API/관리 화면을 함께 서빙하는 로컬/Railway 서버)가 리스닝할 포트. Railway 배포 시 플랫폼이 자동 주입 |
 
-## 6. § 온보딩 에이전트 (Onboarding Agent) — P5 시제품
+## 6. 온보딩 에이전트 (Onboarding Agent) — P5 시제품
 
-> 검증 완료 2026-08-09 — 게이트 일괄(check_inline_script, validate:modules,
-> build:vercel, node --check, store selftest, 서버 스모크) + 온보딩 왕복
-> 시뮬레이션을 로컬 서버(`server.js`, 파일 백엔드)에 대해 실제로 실행하고 결과를
-> 이 문서와 `.superpowers/sdd/2026-08-09-p5-onboarding-agent/task-3-report.md`에
-> raw 출력으로 남겼다.
+> 검증 완료 2026-08-09 — 이 섹션은 실제 코드(`api/update-center.js`의
+> `handlePostOnboarding`/`buildOnboardingProposal`/`checkYamlDraft`,
+> `PHILOSOPHY_CHECKLIST`, `update-center.html`의 "⑦ 신규 모듈 제안" 패널)를
+> 직접 읽고 처음부터 다시 쓴 것이다 — 이전 버전은 실제 구현과 다른 요청/응답
+> 스키마(`natural_language_request`, `onboarding_id`, `checklist_all_approved`,
+> `suggested_schema`, `POST /onboarding/approve` 등 실제로는 존재하지 않는
+> 필드/엔드포인트)를 서술하고 있었다. 로컬 서버(`server.js`, 파일 백엔드,
+> `UPDATE_CENTER_TOKEN=testtoken`, `PORT=3931`)에 대해 `POST /onboarding` →
+> `GET /events`(risk 확인) → `POST /approve`(409 거부 확인) →
+> `GET /audit`(감사 기록 확인) 왕복을 실제로 실행했다 — raw 응답은 6.5절.
 
 ### 6.1 동작 흐름
 
-온보딩 에이전트는 자연어 요청(예: "서울시 주차장 정보를 데이터셋으로 추가하고 싶음")을 받아
-YAML 초안을 자동으로 생성하는 assistant-level의 AI 기능입니다. 전체 흐름은 다음과 같습니다:
-
 ```
-자연어 요청 (사용자)
+자연어 요청 (요청자)
         │
         ▼
-AI 에이전트 (OpenAI Responses API 또는 결정론적 폴백)
-        │
-        ├─ OpenAI 성공 → AI가 설계안 + YAML 초안 생성
-        │   (요청한 데이터셋의 의도, 원천 URL 후보, 검색 키워드 제안, schema.json 초안)
-        │
-        └─ OpenAI 실패/키 없음 → 결정론적 폴백 "[AI 미사용 폴백]"
-            (사용자 입력 요약만 반환, YAML 구조 미생성)
-        ▼
-계약 검사 (validateModuleContract 재사용)
-        │  checkModuleDoc() 함수로 YAML 초안의 필드 유형·enum 위반 검증
-        │  LLM이 enum 형식을 어길 수 있으나 이 단계에서 모두 걸러냄
-        ▼
-철학 체크리스트 (3항목 — 항상 "human 검토 필수")
-        │  1. 데이터 출처 공공성·권리 확인(라이선스, 저작권)
-        │  2. 스키마 적절성(컬럼명·타입이 표준화되어 있는가)
-        │  3. 검색 키워드 대표성(사용자 실제 찾는 방식과 일치하는가)
-        ├─ 모든 3항목은 체크박스 형태로 제시되며, 승인 전 운영팀이 반드시 수동으로 검토·확인
+POST /api/update-center/onboarding { request_text }
         │
         ▼
-이벤트 기록 (kind=onboarding_proposal, risk=yellow)
-        │  POST /api/update-center/onboarding 응답에 onboarding_id 발급
-        │  이벤트 저장: id, dataset_name, description, suggested_schema, ai_note,
-        │           detected_at, status="pending", kind="onboarding_proposal", risk="yellow"
+AI 설계안 + YAML 초안 생성 (buildOnboardingProposal)
         │
+        ├─ OPENAI_API_KEY 있음 → OpenAI Responses API 호출
+        │   (json_schema로 design_summary/yaml_draft/suggested_datasets[]/
+        │   philosophy_notes[] 형식 강제) — 파싱 실패·HTTP 실패·필드 형식
+        │   불일치 시 아래 폴백으로 전환
+        │
+        └─ OPENAI_API_KEY 없음 또는 위 호출 실패
+            → 결정론적 폴백 (buildFallbackProposal): 모듈 YAML의 모든 필수
+              필드가 채워진 완전한 초안을 생성한다("추가 확인 필요" 자리
+              표시자 값 포함, design_summary/philosophy_notes 앞에
+              "[AI 미사용 폴백]" 표기) — 이 초안은 항상 계약 검사를
+              통과하므로 OPENAI_API_KEY 없이도 데모가 성립한다.
         ▼
-감사 로그 기록
-        │  actor="web-admin", action="onboarding_proposal",
-        │  detail에 AI 소스(openai/fallback) 및 체크리스트 상태 기록
+계약 검사 (checkModuleDoc, scripts/validate_module_contract.mjs 재사용)
+        │  yaml_draft를 js-yaml CORE_SCHEMA로 파싱 → 성공 시 checkModuleDoc(doc)로
+        │  필수 필드·policy_actions/gap_type_actions enum·타입 검사
+        │  (신규 미등록 모듈이므로 LAYER_REGISTRY parity 검사는 생략)
+        │  결과: { yaml_parsed, parse_error, failures[], warnings[], passed }
+        ▼
+철학 체크리스트 (3항목 고정 — 항상 "human 검토 필요")
+        │  1. walk_network  — 도달성 지표는 직선이 아닌 도보 네트워크 기준인가
+        │  2. target_leakage — 격차 유형·권고에 target leakage 요소가 없는가
+        │  3. stigma        — 학교 서열화·낙인 효과를 유발하는 표시가 없는가
+        │  AI가 스스로 통과를 선언할 수 없다 — 이 상태를 바꾸는 API는 없다.
+        │  AI의 참고 의견은 philosophy_notes로 별도 반환("AI 참고 의견 —
+        │  검증되지 않음"으로 UI 표시, 체크리스트 판정과는 무관)
+        ▼
+이벤트 저장 (kind=onboarding_proposal, risk=계약 검사 결과 기반)
+        │  risk = contract_check.passed ? "yellow" : "red"
+        │  diff_json = { request_text, design_summary, yaml_draft,
+        │                contract_check, philosophy_notes, ai_source }
+        ▼
+감사 로그 기록 (action=onboarding_proposal_created, detail: source=openai|fallback)
 ```
 
 ### 6.2 API 명세 (POST /api/update-center/onboarding)
 
+다른 모든 `/api/update-center/*` 엔드포인트와 동일하게 헤더
+`x-update-center-token: <UPDATE_CENTER_TOKEN>`이 필요하다.
+
 #### 요청
 
 ```json
-{
-  "natural_language_request": "string (필수)",
-  "suggested_dataset_name": "string (선택)",
-  "suggested_portal_url": "string (선택)"
-}
+{ "request_text": "string (필수, 10~2000자)" }
 ```
 
-**필드 설명:**
-- `natural_language_request`: 사용자의 자연어 요청 (예: "서울시 공공 주차장 정보를 추가해주세요")
-- `suggested_dataset_name`: 사용자가 제안하는 데이터셋명 (없으면 AI가 제안)
-- `suggested_portal_url`: 사용자가 알고 있는 공공데이터포털 URL (있으면 참고)
+`request_text` 외 다른 요청 필드는 없다. 10자 미만이거나 2000자 초과면 400.
 
-#### 응답 (200 OK)
+#### 응답 (200 OK) — 실제 응답 필드
 
 ```json
 {
-  "onboarding_id": "uuid",
-  "dataset_name": "string (AI 또는 사용자 제안)",
-  "description": "string (자연어 요청 기반 AI 요약)",
-  "suggested_schema": {
-    "fields": [
-      {
-        "name": "column_name",
-        "type": "string|integer|number|boolean|date",
-        "description": "설명"
-      }
-    ]
-  },
-  "suggested_datasets": ["keyword1", "keyword2", "keyword3"],
-  "ai_note": "string (OpenAI 생성 또는 '[AI 미사용 폴백]')",
+  "event_id": "uuid",
+  "dataset": "onboarding:<slug>",
+  "request_text": "string (요청 에코)",
+  "design_summary": "string",
+  "yaml_draft": "string — 표준 모듈 YAML 계약 필드를 갖춘 YAML 초안 텍스트",
+  "suggested_datasets": ["string", "..."],
+  "philosophy_notes": ["string", "..."],
   "philosophy_checklist": [
-    {
-      "id": 1,
-      "item": "데이터 출처 공공성·권리 확인(라이선스, 저작권)",
-      "status": "pending"
-    },
-    {
-      "id": 2,
-      "item": "스키마 적절성(컬럼명·타입이 표준화되어 있는가)",
-      "status": "pending"
-    },
-    {
-      "id": 3,
-      "item": "검색 키워드 대표성(사용자 실제 찾는 방식과 일치하는가)",
-      "status": "pending"
-    }
+    { "id": "walk_network", "text": "도달성 지표는 직선이 아닌 도보 네트워크 기준인가", "status": "human 검토 필요" },
+    { "id": "target_leakage", "text": "격차 유형·권고에 target leakage 요소가 없는가", "status": "human 검토 필요" },
+    { "id": "stigma", "text": "학교 서열화·낙인 효과를 유발하는 표시가 없는가", "status": "human 검토 필요" }
   ],
-  "checklist_all_approved": false,
-  "detected_at": "ISO8601 timestamp",
-  "status": "pending",
-  "kind": "onboarding_proposal",
-  "risk": "yellow"
+  "contract_check": {
+    "yaml_parsed": true,
+    "parse_error": null,
+    "failures": [],
+    "warnings": [],
+    "passed": true
+  },
+  "ai_source": "openai",
+  "notice": "이 제안은 저장만 되며 승인·파일 생성 전까지 운영에 반영되지 않습니다."
 }
 ```
 
 **필드 설명:**
-- `onboarding_id`: 온보딩 제안의 고유 ID (감사/추적용)
-- `dataset_name`: AI 또는 사용자 제안 데이터셋명
-- `description`: 자연어 요청 기반 요약
-- `suggested_schema`: AI가 생성한 스키마 초안 (validateModuleContract로 검증됨)
-- `suggested_datasets`: 포털에서 검색할 키워드 제안 (실제 포털 검색은 미연동 — 로드맵)
-- `ai_note`: OpenAI 응답 또는 폴백 메시지
-- `philosophy_checklist`: 운영 검토용 3항목 체크리스트 (항상 "pending" 상태로 반환)
-- `checklist_all_approved`: 체크리스트 전체 승인 여부 (초기값 false — POST /api/update-center/onboarding/approve 호출로 갱신)
-- `status`: "pending" (처음 생성 시), "approved"/"rejected"로 후속 갱신
-- `kind`: "onboarding_proposal" (고정)
-- `risk`: "yellow" (고정 — human 검토 필수)
+- `event_id`: 저장된 `data_events` 행의 id(`GET /events`·`GET /audit`으로 조회 가능)
+- `dataset`: `onboarding:<slug>` 형태. `slug`는 `request_text`의 sha1 해시 앞 8자리(`onboardingSlug()`) — 아직 등록되지 않은 신규 모듈이므로 실제 데이터셋 키가 아니라 추적용 placeholder
+- `design_summary`: 설계 요약(AI 생성 또는 폴백)
+- `yaml_draft`: 표준 모듈 YAML 문서 텍스트. `module`/`resource_type`/`location{file,lat_key,lng_key,name_key}`/`external_supply[]`/`demand_unit`/`policy_actions[]`/`reference_date`/`source[]`/`layer{id,button_label,panel_label,color}`를 채우며, 실값을 모르면 정확히 `"추가 확인 필요"` 문자열을 쓴다. 사람이 검토 후 `modules/*.yaml`로 복사한다.
+- `suggested_datasets`: 포털에서 검색할 키워드 제안(실제 포털 검색 API 미연동). 폴백 경로는 `request_text` 토큰화(불용어 제거, 최대 5개) 결과, OpenAI 경로는 모델이 직접 제안. 서버가 문자열이 아닌 원소는 걸러낸다.
+- `philosophy_notes`: **AI 참고 의견 — 검증되지 않음**. `philosophy_checklist`의 최종 판정이 아니다. 서버가 문자열이 아닌 원소는 걸러낸다.
+- `philosophy_checklist`: 3항목 고정, `status`는 항상 `"human 검토 필요"`(이 상태를 바꾸는 엔드포인트는 없다 — 6.3 참고)
+- `contract_check`: `checkModuleDoc()` 기계 검사 결과. `yaml_parsed=false`면 `parse_error`에 파싱 오류 메시지, 그 외에는 `contract_check.failures`(치명적 위반, 문자열 배열)·`warnings`·`passed`(`failures`가 비어 있으면 true)
+- `ai_source`: `"openai"`(OpenAI Responses API 호출 성공) 또는 `"fallback"`(키 없음, 또는 호출/파싱/필드 검증 실패)
+- `notice`: 고정 문구 — 승인·파일 생성 전까지 운영 미반영
 
 #### 에러 응답
 
-**400 Bad Request** — 필수 필드 누락 또는 형식 오류
+**400 Bad Request** — `request_text` 길이 위반
 ```json
-{
-  "error": "Missing required field: natural_language_request"
-}
+{ "error": "request_text는 10~2000자여야 합니다 (현재 <n>자)." }
 ```
 
-**401 Unauthorized** — 토큰 미설정 또는 불일치
+**401 Unauthorized** — 토큰 불일치(다른 모든 엔드포인트와 동일한 게이트)
 ```json
-{
-  "error": "Missing or invalid x-update-center-token header"
-}
+{ "error": "인증 실패 — x-update-center-token 헤더가 올바르지 않습니다." }
 ```
 
 ### 6.3 원칙 (Principles)
 
-1. **승인 전 운영 미반영** — `POST /api/update-center/onboarding` 호출 시점에 데이터셋이 `data_sources.yaml`에 추가되지 않습니다. AI가 생성한 YAML 초안은 응답에 포함되지만, 실제 적용은 운영팀이 초안을 복사하여 수동으로 파일에 병합하는 방식입니다.
+1. **승인 전 운영 미반영, 그리고 애초에 승인 대상이 아니다.** `POST /onboarding`은 `data_events`에 `status="pending"`으로 저장만 한다. 이 이벤트의 `event_id`로 `POST /api/update-center/approve`를 호출하면 **`kind`가 `onboarding_proposal`이라는 이유만으로 항상 409**로 거부된다(risk가 yellow든 red든 무관): `{"error":"온보딩 제안은 승인 대상이 아닙니다 — YAML 초안을 복사해 사람이 modules/ 파일을 생성합니다"}`, 감사 로그에 `action=approve_rejected_onboarding` 기록. 관리 화면(⑦ 패널이 아니라 ② 이벤트 목록 쪽)에서도 온보딩 행을 선택하면 승인 버튼이 항상 비활성이고(같은 문구가 툴팁으로 뜬다), risk 배지 옆에 별도 "온보딩" 배지(indigo)가 함께 표시된다. 실제 파일 생성은 사람이 `yaml_draft`를 복사해 `modules/*.yaml`에 붙여넣는 수작업이다 — `POST /onboarding`은 `modules/`, `data_processed/`, `data_sources.yaml` 중 어느 것도 쓰지 않는다.
 
-2. **철학 체크리스트 항상 human 검토 필수** — 세 항목(공공성·권리, 스키마 표준성, 검색 키워드 대표성)은 모두 "pending" 상태로 생성되며, 별도의 approve 엔드포인트 호출 전까지는 상태가 바뀌지 않습니다.
+2. **철학 체크리스트는 절대 "통과"로 바뀌지 않는다.** 세 항목은 응답마다 매번 새로 `status: "human 검토 필요"`로 생성되며, 이를 다른 상태로 바꾸는 API는 존재하지 않는다(`POST /api/update-center/onboarding/approve`, `checklist_all_approved` 필드는 실제로 구현되어 있지 않다). AI가 스스로 체크리스트를 통과시켰다고 선언할 수 없다는 원칙을 코드 구조로 강제한 것이다.
 
-3. **계약 검사는 LLM enum 위반을 사후에 포착** — OpenAI가 enum 형식(check.type, 등)을 어기면 validateModuleContract에서 에러를 발생시킵니다. 이 경우 응답 상태는 200이지만 `schema_validation_errors` 필드에 위반 내용을 명시합니다.
+3. **리스크 등급은 계약 검사 결과를 그대로 반영한다.** 저장되는 이벤트의 `risk`는 고정 `yellow`가 아니라 `contract_check.passed`가 참이면 `yellow`, 거짓이면 `red`다 — 계약 검사를 통과하지 못한 초안이 목록에서 실제보다 낮은 리스크로 보이지 않도록 하기 위함이다.
+
+4. **계약 검사는 `checkModuleDoc()`을 그대로 재사용한다.** `scripts/validate_module_contract.mjs`가 `modules/*.yaml`을 검사할 때 쓰는 것과 동일한 함수다 — 필수 필드 누락, `policy_actions`/`gap_type_actions` 값이 7-action enum(`internal_investment`/`external_supply_new`/`institution_link`/`mobile_service`/`access_route_improvement`/`shared_hub`/`maintain_monitor`) 밖인 경우, `external_supply[]`/`source[]` 항목의 `metric`/`source`/`name`/`provider` 누락 등을 잡는다. 위반은 모두 `contract_check.failures`에 문자열로 담긴다(신규 모듈이라 LAYER_REGISTRY parity 검사는 생략).
 
 ### 6.4 한계 (Limitations)
 
-- **`suggested_datasets`는 검색 키워드 제안일 뿐** — 공공데이터포털의 검색 API와 미연동되어 있습니다. 사용자 또는 운영팀이 직접 포털에 로그인하여 키워드로 검색한 후 URL을 찾아야 합니다 (로드맵에 포함).
+- **`suggested_datasets`는 검색 키워드 제안일 뿐** — 공공데이터포털 검색 API와 미연동. 사용자 또는 운영팀이 직접 포털에서 키워드로 검색해 URL을 찾아야 한다.
+- **`yaml_draft`는 human 검토가 필수** — `checkModuleDoc()`은 필드 유형·enum·필수값 존재 여부만 기계적으로 검사한다. 실제 원천 데이터가 존재하는지, 컬럼명이 진짜인지는 검증하지 않는다(`location.file`이 `"추가 확인 필요"`가 아닌 실제 경로면 `existsSync`로 파일 존재만 확인).
+- **rate limit이 없다** — `/onboarding`을 포함한 모든 `/api/update-center/*` 엔드포인트는 `x-update-center-token` 토큰 게이트가 유일한 방어선이다(§5 환경변수 표 참고). 반복 호출을 막는 별도 제한은 없다(데모 등급).
+- **파일 생성은 자동화되지 않음** — 사람이 `yaml_draft`를 복사해 `modules/*.yaml`을 만들고 `data_sources.yaml`에 필요한 항목을 직접 추가해야 한다.
 
-- **YAML 초안은 human 검토 필수** — AI가 생성한 스키마나 체크 타입이 데이터의 실제 특성과 맞지 않을 수 있습니다. 운영팀은 응답의 `suggested_schema`를 반드시 검토하고, 필요하면 수정한 후 `data_sources.yaml`에 수동으로 추가해야 합니다.
+### 6.5 실측 응답 예시(2026-08-09)
 
-- **LLM enum 형식 위반 가능성** — OpenAI가 반환한 초안이 정의된 enum(예: `check.type ∈ {"json_api", "file_head", "manual"}`)을 어길 수 있습니다. 이 경우 API 응답은 여전히 200이지만 `schema_validation_errors` 필드에 위반 사항을 명시합니다 — 계약 검사(validateModuleContract)가 모든 위반을 사후에 포착하므로, 운영팀은 이 필드를 보고 수정 후 추가할 수 있습니다.
+로컬 서버(`server.js`, 파일 백엔드, `UPDATE_CENTER_TOKEN=testtoken`, `PORT=3931`)에 대해
+실제로 실행한 raw 왕복. 시크릿(토큰/API 키) 미포함 확인 완료.
 
-- **파일 생성은 자동화되지 않음** — 온보딩 에이전트는 YAML 초안만 제공하므로, 실제 파일 생성 및 커밋은 사람이 합니다. 이를 통해 수동 게이트의 신뢰성을 유지합니다.
+**폴백 경로를 강제한 방법** — `OPENAI_API_KEY`를 빈 문자열로 설정하는 것만으로는 폴백이
+강제되지 않는다: `server.js`가 먼저 require하는 `api/ai-explainer-v2.js`의
+`loadLocalEnvForDevelopment()`가 require 시점에 `process.env.OPENAI_API_KEY`가
+falsy면 리포 상위 폴더의 `.env` 파일을 찾아 다시 채워 넣기 때문이다(개발 편의
+기능). `.env` 파일은 건드리지 않고, `OPENAI_API_KEY`를 의도적으로 무효한 값
+(`sk-forced-invalid-for-fallback-verification-...`)으로 설정해 OpenAI 호출이
+실제로 401로 실패하는 경로를 재현했다 — `loadLocalEnvForDevelopment()`의
+`if (process.env.OPENAI_API_KEY) return;` 가드가 이미 값이 있다고 보고 `.env`
+재적재를 건너뛰므로 무효값이 그대로 살아남는다. 이는 "OPENAI_API_KEY 없거나
+실패 시" 중 "호출 실패" 분기를 코드 그대로 재현한 것이다.
+
+#### Step 1 — POST /onboarding (실제로 실패한 OpenAI 호출 → 폴백)
+
+```
+$ curl -s -X POST http://127.0.0.1:3931/api/update-center/onboarding \
+    -H "x-update-center-token: testtoken" -H "Content-Type: application/json; charset=utf-8" \
+    -d '{"request_text":"관내 체육시설(공공 체육관·운동장) 접근 격차도 분석하고 싶어요. 도보로 얼마나 걸리는지 기준으로 부족 지역을 찾고 싶습니다."}'
+```
+
+응답 (200, 전체 raw):
+```json
+{
+  "event_id": "46c9cd5a-3e12-42dc-9443-f4f2aee41fd2",
+  "dataset": "onboarding:new_module_59c71b4e",
+  "request_text": "관내 체육시설(공공 체육관·운동장) 접근 격차도 분석하고 싶어요. 도보로 얼마나 걸리는지 기준으로 부족 지역을 찾고 싶습니다.",
+  "design_summary": "[AI 미사용 폴백] \"관내 체육시설(공공 체육관·운동장) 접근 격차도 분석하고 싶어요. 도보로 얼마나 걸리는지 기준으로 부족 지역...\" 요청에 대한 자동 초안입니다. 자원 종류·데이터 출처·지표는 모두 \"추가 확인 필요\"로 채워졌으며, 담당자가 실제 값으로 채워 넣어야 합니다. policy_actions는 임시로 access_route_improvement·maintain_monitor를 지정했으니 실제 정책 방향에 맞게 재검토가 필요합니다. layer.id도 임시 slug(new_module_59c71b4e)이므로 실제 등록 시 사람이 최종 id를 정해야 합니다.",
+  "yaml_draft": "module: new_module_59c71b4e\nresource_type: '추가 확인 필요 — 요청 원문: 관내 체육시설(공공 체육관·운동장) 접근 격차도 분석하고 싶어요. 도보로 얼마나 걸리는지 기준으로 부족 지역을 찾고 싶습니다.'\nlocation:\n  file: 추가 확인 필요\n  lat_key: 추가 확인 필요\n  lng_key: 추가 확인 필요\n  name_key: 추가 확인 필요\nexternal_supply:\n  - metric: 추가 확인 필요\n    source: 추가 확인 필요\ndemand_unit: 추가 확인 필요\npolicy_actions:\n  - access_route_improvement\n  - maintain_monitor\nreference_date: 2026-08-09\nsource:\n  - name: 추가 확인 필요\n    provider: 추가 확인 필요\nlayer:\n  id: new_module_59c71b4e\n  button_label: 추가 확인 필요\n  panel_label: 추가 확인 필요\n  color: '#6B7280'\n",
+  "suggested_datasets": ["관내", "체육시설", "공공", "체육관", "운동장"],
+  "philosophy_notes": [
+    "[AI 미사용 폴백] 도보 네트워크 기준 도달성 지표를 확보할 수 있는 원천 데이터인지 사람이 직접 확인해야 합니다.",
+    "[AI 미사용 폴백] 격차 유형·권고 로직에 결과를 미리 아는 변수(target leakage)가 섞이지 않는지 사람이 직접 확인해야 합니다.",
+    "[AI 미사용 폴백] 이 제안의 표시 방식이 학교 서열화나 낙인 효과로 이어지지 않는지 사람이 직접 확인해야 합니다."
+  ],
+  "philosophy_checklist": [
+    { "id": "walk_network", "text": "도달성 지표는 직선이 아닌 도보 네트워크 기준인가", "status": "human 검토 필요" },
+    { "id": "target_leakage", "text": "격차 유형·권고에 target leakage 요소가 없는가", "status": "human 검토 필요" },
+    { "id": "stigma", "text": "학교 서열화·낙인 효과를 유발하는 표시가 없는가", "status": "human 검토 필요" }
+  ],
+  "contract_check": { "yaml_parsed": true, "parse_error": null, "failures": [], "warnings": [], "passed": true },
+  "ai_source": "fallback",
+  "notice": "이 제안은 저장만 되며 승인·파일 생성 전까지 운영에 반영되지 않습니다."
+}
+```
+
+폴백임에도 `contract_check.passed=true`(계약 검사 통과) → 이벤트는 `risk="yellow"`로
+저장됨(`GET /events`로 확인).
+
+#### Step 2 — 승인 시도 → 409 거부 확인 (POST /approve)
+
+```
+$ curl -s -X POST http://127.0.0.1:3931/api/update-center/approve \
+    -H "x-update-center-token: testtoken" -H "Content-Type: application/json; charset=utf-8" \
+    -d '{"event_id":"46c9cd5a-3e12-42dc-9443-f4f2aee41fd2"}'
+```
+응답 (409):
+```json
+{
+  "error": "온보딩 제안은 승인 대상이 아닙니다 — YAML 초안을 복사해 사람이 modules/ 파일을 생성합니다",
+  "event": { "id": "46c9cd5a-3e12-42dc-9443-f4f2aee41fd2", "kind": "onboarding_proposal", "risk": "yellow", "status": "pending" }
+}
+```
+
+#### Step 3 — 감사 로그 확인 (GET /audit)
+
+```
+onboarding_proposal_created  | 온보딩 제안 생성 — source=fallback
+approve_rejected_onboarding  | 승인 거부 — 온보딩 제안은 승인 대상이 아님(YAML 초안을 복사해 사람이 modules/ 파일을 생성)
+```
 
 ## 7. 검증 이력
 
@@ -436,3 +496,12 @@ AI 에이전트 (OpenAI Responses API 또는 결정론적 폴백)
   롤백 → 감사 로그) 전 과정을 실제로 실행하고 raw 출력을 확보. 상세 로그는
   `.superpowers/sdd/2026-08-09-p4-update-center/task-6-report.md`.
 - 2026-08-09: P5 Task 3 (본 섹션 추가) — 온보딩 에이전트 문서 + 게이트 일괄 + 서버 스모크(온보딩 왕복 포함).
+- 2026-08-09: P5 최종 전체 브랜치 리뷰 후속 조치 — §6 온보딩 문서를 실제 코드
+  (`api/update-center.js`, `update-center.html`)를 처음부터 다시 읽고 전면
+  재작성(구버전은 실제와 다른 요청/응답 스키마를 서술하고 있었음). 승인 경로에
+  온보딩 전용 409 거부 분기, risk 등급을 계약 검사 결과 기반(yellow/red)으로
+  전환, 리스크 배지와 온보딩 배지를 함께 표시하도록 UI 수정, AI 참고 의견
+  라벨링, 문자열 배열 방어 필터 추가. 게이트 일괄(`node --check` ×2, 인라인
+  스크립트 vm 파싱, `validate:modules`, `build:vercel`, `store.mjs
+  --selftest`) + 실제 서버 왕복(온보딩 폴백 강제 → risk 확인 → 승인 시도 409 →
+  감사 로그 확인)을 실행하고 raw 출력을 위 6.5절에 남겼다.

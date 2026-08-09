@@ -323,10 +323,20 @@ function buildFallbackProposal(requestText) {
     philosophy_notes: [
       "[AI 미사용 폴백] 도보 네트워크 기준 도달성 지표를 확보할 수 있는 원천 데이터인지 사람이 직접 확인해야 합니다.",
       "[AI 미사용 폴백] 격차 유형·권고 로직에 결과를 미리 아는 변수(target leakage)가 섞이지 않는지 사람이 직접 확인해야 합니다.",
+      "[AI 미사용 폴백] 이 제안의 표시 방식이 학교 서열화나 낙인 효과로 이어지지 않는지 사람이 직접 확인해야 합니다.",
     ],
     ai_source: "fallback",
     slug,
   };
+}
+
+// Defense-in-depth: keep only string elements in arrays that end up in the
+// stored event / API response. buildFallbackProposal() always emits clean
+// string arrays; this guards the OpenAI path, where the model returns JSON
+// validated by json_schema (items:{type:"string"}) but is still an external
+// input we don't fully trust.
+function filterStringArray(arr) {
+  return Array.isArray(arr) ? arr.filter((item) => typeof item === "string") : [];
 }
 
 function buildOnboardingSchema() {
@@ -467,6 +477,8 @@ async function handlePostOnboarding(req, res) {
 
   const { contractMod } = await loadModules();
   const proposal = await buildOnboardingProposal(requestText, contractMod);
+  proposal.suggested_datasets = filterStringArray(proposal.suggested_datasets);
+  proposal.philosophy_notes = filterStringArray(proposal.philosophy_notes);
   const contractCheck = checkYamlDraft(proposal.yaml_draft, contractMod);
   const philosophyChecklist = PHILOSOPHY_CHECKLIST.map((item) => ({ ...item, status: "human 검토 필요" }));
   const summarySnippet = requestText.length > 80 ? `${requestText.slice(0, 80)}...` : requestText;
@@ -477,7 +489,10 @@ async function handlePostOnboarding(req, res) {
   const event = await store.recordEvent({
     dataset,
     kind: "onboarding_proposal",
-    risk: "yellow",
+    // 계약 검사(contract_check)를 통과한 초안만 yellow — 실패한 초안은 red로
+    // 강등해 승인 UI에서 무심코 신뢰받지 않도록 한다(어차피 온보딩은 승인
+    // 대상이 아니지만 — 목록/배지에서 리스크가 정직하게 보이도록).
+    risk: contractCheck.passed ? "yellow" : "red",
     status: "pending",
     summary,
     diff_json: {
@@ -614,6 +629,24 @@ async function handlePostApprove(req, res) {
   const store = await getStore();
   const event = await store.getEvent(eventId);
   if (!event) return json(res, 404, { error: `이벤트를 찾을 수 없습니다: ${eventId}` });
+
+  // 온보딩 제안(kind=onboarding_proposal)은 승인 대상이 아니다 — 이 경로는
+  // "파일 반영"까지 하는 approve/reanalyze/apply 파이프라인이고, 온보딩은
+  // 저장만 되는 제안이다(§6 원칙: 파일 생성은 사람이 YAML 초안을 복사해서
+  // 한다). risk가 red든 yellow든 관계없이 항상 거부.
+  if (event.kind === "onboarding_proposal") {
+    await store.appendAudit({
+      actor: ACTOR,
+      action: "approve_rejected_onboarding",
+      dataset: event.dataset,
+      event_id: event.id,
+      detail: "승인 거부 — 온보딩 제안은 승인 대상이 아님(YAML 초안을 복사해 사람이 modules/ 파일을 생성)",
+    });
+    return json(res, 409, {
+      error: "온보딩 제안은 승인 대상이 아닙니다 — YAML 초안을 복사해 사람이 modules/ 파일을 생성합니다",
+      event,
+    });
+  }
 
   // Global Constraints: red 등급은 자동 반영 금지 · 승인 버튼 비활성. moved/error
   // kinds are always risk=red already, but checked explicitly here too.
