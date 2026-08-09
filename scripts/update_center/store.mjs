@@ -8,9 +8,15 @@
 //   appendAudit(a), listAudit(limit)
 //
 // Backend selection: if process.env.DATABASE_URL is set, use the Postgres backend
-// (pg Pool, ssl: { rejectUnauthorized: false } for Railway, schema.sql applied on init).
+// (pg Pool, TLS verification ON by default; schema.sql applied on init).
 // Otherwise fall back to a JSON file at data/update_center_store.json (directory and
 // file created on first use).
+//
+// TLS: Railway managed Postgres normally presents a certificate that verifies fine.
+// If a given Railway deployment uses a self-signed chain (e.g. private-network
+// *.railway.internal routing) and connections fail with a cert-verification error,
+// set PGSSL_NO_VERIFY=1 on the service's environment variables to explicitly opt
+// into `rejectUnauthorized: false`. The default is verification ON.
 //
 // snapshot handling: callers always pass/receive `snapshot` as a base64 string.
 // The Postgres backend converts base64 <-> Buffer (BYTEA) at the interface boundary;
@@ -174,9 +180,15 @@ function createFileStore() {
 // ---------------------------------------------------------------------------
 
 async function createPgStore() {
+  // Railway Postgres는 자가서명 인증서를 쓰므로 PGSSL_NO_VERIFY=1을 명시적으로 설정한 경우에만 검증을 끈다.
+  // 기본값은 TLS 검증 활성. 사설망(*.railway.internal) 접속이면 그대로 검증 없이도 연결이 되는지 여부와 무관하게
+  // 보안 기본값을 유지한다. Railway 배포 시 자가서명 체인으로 연결이 실패하면 서비스 환경변수에
+  // PGSSL_NO_VERIFY=1을 설정해야 할 수 있음.
+  const ssl =
+    process.env.PGSSL_NO_VERIFY === "1" ? { rejectUnauthorized: false } : { rejectUnauthorized: true };
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    ssl,
   });
   // Surface pool-level connection errors (e.g. idle client errors) as a clean
   // message instead of an unhandled 'error' event crash.
