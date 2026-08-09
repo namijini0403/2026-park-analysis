@@ -280,12 +280,27 @@ async function checkJsonApi(entry, state, store, opts, log) {
     ? columListJson.columList.map((c) => c.columNm || c.columCode).filter(Boolean).sort()
     : [];
 
+  // Evaluate the schema diff now (columList already succeeded) so a subsequent
+  // standard.json failure doesn't silently swallow a real schema change under
+  // the generic error event — surfaced via recordFailure's extraDiff param.
+  const schemaDiff = prev && prev.schema ? diffSchema(prev.schema, remoteSchema) : null;
+
   // 2. standard.json (first page) -> totalCount + content hash
   let dataRes;
   try {
     dataRes = await fetchWithTimeout(dataUrl);
   } catch (err) {
-    return await recordFailure(dataset, "standard.json 요청 실패(네트워크/타임아웃)", err.message, null, entry, state, store, log);
+    return await recordFailure(
+      dataset,
+      "standard.json 요청 실패(네트워크/타임아웃)",
+      err.message,
+      null,
+      entry,
+      state,
+      store,
+      log,
+      { schemaDiff }
+    );
   }
   if (!dataRes.ok) {
     if (dataRes.status === 404) {
@@ -299,14 +314,25 @@ async function checkJsonApi(entry, state, store, opts, log) {
       entry,
       state,
       store,
-      log
+      log,
+      { schemaDiff }
     );
   }
   let dataJson;
   try {
     dataJson = await dataRes.json();
   } catch (err) {
-    return await recordFailure(dataset, "standard.json 파싱 실패", err.message, null, entry, state, store, log);
+    return await recordFailure(
+      dataset,
+      "standard.json 파싱 실패",
+      err.message,
+      null,
+      entry,
+      state,
+      store,
+      log,
+      { schemaDiff }
+    );
   }
   const rows = Array.isArray(dataJson.data)
     ? dataJson.data
@@ -388,19 +414,22 @@ async function checkJsonApi(entry, state, store, opts, log) {
   return { outcome: "green", event };
 }
 
-async function recordFailure(dataset, summary, errMessage, httpStatus, entry, state, store, log) {
+async function recordFailure(dataset, summary, errMessage, httpStatus, entry, state, store, log, extraDiff = {}) {
   const prev = state[dataset] || null;
   const signature = sha256(`error:${summary}:${errMessage || ""}:${httpStatus ?? ""}`);
   if (prev && prev.lastStatus === "error" && prev.lastErrorSignature === signature) {
     log(`[${dataset}] error persists (no new event): ${summary}`);
     return { outcome: "error-unchanged" };
   }
+  // extraDiff carries context gathered before the failing step (e.g. a schema
+  // diff already computed from a successful columList.json call) so it isn't
+  // lost when a later step in the same check fails.
   const event = await store.recordEvent({
     dataset,
     kind: "error",
     risk: "red",
     summary,
-    diff_json: { errMessage: errMessage || null, httpStatus: httpStatus ?? null },
+    diff_json: { errMessage: errMessage || null, httpStatus: httpStatus ?? null, ...extraDiff },
     status: "pending",
   });
   await store.appendAudit({ actor: "scan.mjs", action: "record_event", dataset, event_id: event.id, detail: summary });
@@ -477,7 +506,15 @@ async function checkFileHead(entry, state, store, opts, log) {
   };
   const nextState = { ...headers, lastCheckedAt: nowIso(), lastStatus: "ok" };
 
-  if (!prev || prev.lastStatus === undefined) {
+  // Baseline when no real header fields were ever recorded yet. Presence-based
+  // (mirrors checkJsonApi's `!prev || !prev.schema` pattern) rather than
+  // `prev.lastStatus === undefined`: a prior transient failure (recordFailure)
+  // writes lastStatus:"error" with no etag/lastModified/contentLength keys at
+  // all, so a status-based check would wrongly skip the baseline branch on the
+  // first successful HEAD after an error and diff real headers against
+  // undefined, producing a spurious "content changed" event.
+  const hasPriorHeaders = prev && (prev.etag !== undefined || prev.lastModified !== undefined || prev.contentLength !== undefined);
+  if (!hasPriorHeaders) {
     state[dataset] = nextState;
     await store.appendAudit({
       actor: "scan.mjs",
