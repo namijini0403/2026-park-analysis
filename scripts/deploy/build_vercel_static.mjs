@@ -27,7 +27,9 @@ const requiredDataFiles = [
   "school_buffer_500m.geojson",
   "redevelopment_geocoded.csv",
   "large_apt_complexes_2025.csv",
-  "candidate_grid_final.geojson"
+  "candidate_grid_final.geojson",
+  "libraries.csv",
+  "school_library_access.csv"
 ];
 
 function assertExists(targetPath) {

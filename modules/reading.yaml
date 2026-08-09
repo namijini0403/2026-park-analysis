@@ -1,0 +1,51 @@
+module: reading
+resource_type: 도서관·독서교육 (문해력·독서환경)
+location:
+  file: data_processed/libraries.csv
+  lat_key: 위도
+  lng_key: 경도
+  name_key: 도서관명
+external_supply:
+  - metric: iso_public_library_count
+    source: data_processed/school_library_access.csv
+  - metric: nearest_library_euclid_m
+    source: data_processed/school_library_access.csv
+internal_supply:
+  - metric: 장서수
+    source: data_processed/school_library_access.csv
+  - metric: 좌석수
+    source: data_processed/school_library_access.csv
+  - metric: 사서합계
+    source: data_processed/school_library_access.csv
+  - metric: 인당장서수
+    source: data_processed/school_library_access.csv
+capacity: 장서수 / 열람좌석수 (도서관 유형별 상이)
+target_users: 초등학생 (인천 272개교)
+operating_hours: 평일운영 / 휴관일 (도서관별 상이)
+demand_unit: "학생수 (demand_high = 2029년 예측 학생수 상위 25% 여부)"
+constraints:
+  - nearest_library_euclid_m은 직선거리 참고치이며 도달성 판단은 iso_public_library_count(도보 500m 등시선 실측)만 사용
+  - KESS 학교도서관현황 미매칭 학교(matched=0)는 전 항목 "추가 확인 필요"
+policy_actions:
+  - internal_investment
+  - mobile_service
+  - institution_link
+  - maintain_monitor
+reference_date: 2026-05-11
+source:
+  - name: 전국도서관표준데이터
+    provider: 문화체육관광부
+    license: 공공누리
+    update_cycle: 연간
+    uddi: uddi:b385489f-f5a7-4668-a067-ab2124d7963d
+  - name: KESS 학교도서관현황 (15040972)
+    provider: 교육부/한국교육개발원(KEDI)
+    license: KEDI 출처표시
+    update_cycle: 수시
+    reference_date: 2026-04-01
+    uddi: uddi:8c403b97-69c0-44a4-a0cc-9b021d9bf597
+layer:
+  id: library
+  button_label: "📚 도서관"
+  panel_label: 도서관
+  color: "#7C3AED"
