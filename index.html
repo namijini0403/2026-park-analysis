@@ -5749,7 +5749,27 @@
     async function loadData() {
       setStatus("데이터를 불러오는 중입니다.");
 
-      const [
+      const datasetLoaders = {
+        schoolPriority: () => loadCSV(PATHS.schools),
+        schoolCoords: () => loadCSV(PATHS.schoolCoords),
+        studentTrend: () => loadCSV(PATHS.studentTrend),
+        nearestPark: () => loadCSV(PATHS.nearestPark),
+        beneficiaryForecast: () => loadCSV(PATHS.beneficiaryForecast),
+        similarSchools: () => loadCSV(PATHS.similarSchools),
+        candidateBarrierRoutes: () => loadJSON(PATHS.candidateBarrierRoutes),
+        robustRecommendations: () => loadJSON(PATHS.robustRecommendations),
+        candidatePanelExamples: () => loadCandidateExamples(),
+        guSummary: () => loadCSV(PATHS.guSummary),
+        parks: () => loadCSV(PATHS.parks),
+        isochrone: () => loadGeoJSON(PATHS.isochrone),
+        buffer: () => loadGeoJSON(PATHS.buffer),
+        redevelopment: () => loadCSV(PATHS.redevelopment),
+        largeApt: () => loadCSV(PATHS.largeApt)
+      };
+      const loadedEntries = await Promise.all(
+        Object.entries(datasetLoaders).map(async ([key, loader]) => [key, await loader()])
+      );
+      const {
         schoolPriority,
         schoolCoords,
         studentTrend,
@@ -5765,23 +5785,7 @@
         buffer,
         redevelopment,
         largeApt
-      ] = await Promise.all([
-        loadCSV(PATHS.schools),
-        loadCSV(PATHS.schoolCoords),
-        loadCSV(PATHS.studentTrend),
-        loadCSV(PATHS.nearestPark),
-        loadCSV(PATHS.beneficiaryForecast),
-        loadCSV(PATHS.similarSchools),
-        loadJSON(PATHS.candidateBarrierRoutes),
-        loadJSON(PATHS.robustRecommendations),
-        loadCandidateExamples(),
-        loadCSV(PATHS.guSummary),
-        loadCSV(PATHS.parks),
-        loadGeoJSON(PATHS.isochrone),
-        loadGeoJSON(PATHS.buffer),
-        loadCSV(PATHS.redevelopment),
-        loadCSV(PATHS.largeApt)
-      ]);
+      } = Object.fromEntries(loadedEntries);
 
       state.datasets.studentTrend = studentTrend;
       state.datasets.nearestPark = nearestPark;
