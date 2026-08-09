@@ -27,6 +27,8 @@
     --danger-soft: rgba(244, 63, 94, 0.14);
     --warning-soft: rgba(245, 158, 11, 0.14);
     --success-soft: rgba(16, 185, 129, 0.14);
+    --indigo: #6366F1;
+    --indigo-soft: rgba(99, 102, 241, 0.16);
     --radius: 14px;
     --shadow: 0 18px 42px rgba(2, 6, 23, 0.30);
   }
@@ -233,6 +235,7 @@
   .badge-yellow { background: var(--warning-soft); color: var(--warning); }
   .badge-red { background: var(--danger-soft); color: var(--danger); }
   .badge-moved { background: var(--moved-soft); color: var(--moved); }
+  .badge-indigo { background: var(--indigo-soft); color: var(--indigo); }
   .badge-neutral { background: rgba(255,255,255,0.08); color: var(--muted); }
 
   .sim-tag {
@@ -402,6 +405,85 @@
 
   .small-btn { padding: 4px 10px; font-size: 12px; }
 
+  textarea.onboarding-input {
+    width: 100%;
+    min-height: 76px;
+    resize: vertical;
+    background: var(--surface-muted);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+  }
+
+  textarea.onboarding-input:focus {
+    border-color: var(--accent);
+  }
+
+  .detail-box.fallback {
+    border-left: 3px solid var(--warning);
+  }
+
+  .chip {
+    display: inline-block;
+    margin: 0 6px 6px 0;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    border: 1px solid var(--panel-border);
+  }
+
+  .philosophy-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .philosophy-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .philosophy-list li:last-child { border-bottom: none; }
+
+  .muted-list {
+    margin: 6px 0 0;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 12.5px;
+  }
+
+  .fail-list, .warn-list {
+    margin: 6px 0 0;
+    padding-left: 18px;
+    font-size: 12.5px;
+  }
+
+  .fail-list { color: var(--danger); }
+  .warn-list { color: var(--warning); }
+
+  .onboarding-notice {
+    margin-top: 14px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px dashed var(--panel-border);
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
   @media (max-width: 640px) {
     .audit-item { flex-direction: column; gap: 2px; }
     .audit-item .at { min-width: 0; }
@@ -511,6 +593,26 @@
     <div class="audit-list" id="audit-list">
       <div class="empty">로딩 중...</div>
     </div>
+  </section>
+
+  <section class="panel" id="onboarding-panel">
+    <div class="panel-head">
+      <h2>⑦ 신규 모듈 제안 (온보딩 에이전트)</h2>
+    </div>
+    <p class="status-line" style="margin:-8px 0 14px;">
+      자연어 요청 → AI 설계안 + YAML 초안 → 계약 검사 — 승인·파일 생성 전까지 운영에 반영되지 않습니다
+    </p>
+    <textarea
+      id="onboarding-input"
+      class="onboarding-input"
+      rows="3"
+      placeholder="예: 관내 체육시설 접근 격차도 분석하고 싶어요"
+    ></textarea>
+    <div id="onboarding-error"></div>
+    <div class="row-actions">
+      <button id="onboarding-submit-btn" class="primary">제안 생성</button>
+    </div>
+    <div id="onboarding-result"></div>
   </section>
 
   <footer class="bottom" id="last-refreshed">마지막 갱신: -</footer>
@@ -626,7 +728,10 @@
   function riskBadge(kind, risk) {
     var cls = "badge-neutral";
     var label = esc(risk || kind || "-");
-    if (kind === "moved") {
+    if (kind === "onboarding_proposal") {
+      cls = "badge-indigo";
+      label = "온보딩";
+    } else if (kind === "moved") {
       cls = "badge-moved";
       label = "moved";
     } else if (risk === "green") {
@@ -1009,6 +1114,184 @@
       renderAudit();
     });
   }
+
+  // ---------------------------------------------------------------------
+  // onboarding agent (⑦)
+  // ---------------------------------------------------------------------
+
+  var onboardingSubmitting = false;
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (ok) {
+          resolve();
+        } else {
+          reject(new Error("copy failed"));
+        }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  function renderOnboardingResult(data) {
+    var box = $("onboarding-result");
+    if (!data) {
+      box.innerHTML = "";
+      return;
+    }
+
+    var isFallback = data.ai_source === "fallback";
+    var sourceBadge = isFallback
+      ? '<span class="badge badge-yellow">[AI 미사용 폴백]</span>'
+      : '<span class="badge badge-green">AI 생성 (openai)</span>';
+
+    var summaryHtml =
+      '<div class="detail-box' + (isFallback ? " fallback" : "") + '">' +
+      '<h3>설계 요약 ' + sourceBadge + "</h3>" +
+      "<p>" + esc(data.design_summary || "") + "</p>" +
+      "</div>";
+
+    var yamlHtml =
+      '<div class="detail-box">' +
+      '<h3 style="display:flex; align-items:center; justify-content:space-between;">' +
+      "<span>YAML 초안</span>" +
+      '<button class="small-btn" id="onboarding-copy-btn" type="button">복사</button>' +
+      "</h3>" +
+      '<pre id="onboarding-yaml-pre">' + esc(data.yaml_draft || "") + "</pre>" +
+      "</div>";
+
+    var cc = data.contract_check || {};
+    var contractInnerHtml;
+    if (cc.yaml_parsed === false) {
+      contractInnerHtml =
+        '<div class="msg-banner error">❌ YAML 파싱 실패 — ' + esc(cc.parse_error || "알 수 없는 오류") + "</div>";
+    } else if (cc.passed) {
+      contractInnerHtml = '<div class="msg-banner info">✅ 계약 검사 통과</div>';
+    } else {
+      var failures = Array.isArray(cc.failures) ? cc.failures : [];
+      contractInnerHtml =
+        '<div class="msg-banner error">❌ 계약 검사 실패 (' + failures.length + "건)</div>" +
+        '<ul class="fail-list">' +
+        failures.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") +
+        "</ul>";
+    }
+    var warnings = Array.isArray(cc.warnings) ? cc.warnings : [];
+    if (warnings.length) {
+      contractInnerHtml +=
+        '<ul class="warn-list">' +
+        warnings.map(function (w) { return "<li>⚠ " + esc(w) + "</li>"; }).join("") +
+        "</ul>";
+    }
+    var contractHtml = '<div class="detail-box"><h3>계약 검사</h3>' + contractInnerHtml + "</div>";
+
+    var checklist = Array.isArray(data.philosophy_checklist) ? data.philosophy_checklist : [];
+    var checklistHtml =
+      '<div class="detail-box"><h3>철학 체크리스트</h3><ul class="philosophy-list">' +
+      checklist
+        .map(function (item) {
+          return (
+            "<li><span>" + esc(item.text || item.item || "") + "</span>" +
+            '<span class="badge badge-yellow">' + esc(item.status || "human 검토 필요") + "</span></li>"
+          );
+        })
+        .join("") +
+      "</ul>";
+    var notes = Array.isArray(data.philosophy_notes) ? data.philosophy_notes : [];
+    if (notes.length) {
+      checklistHtml +=
+        '<ul class="muted-list">' +
+        notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") +
+        "</ul>";
+    }
+    checklistHtml += "</div>";
+
+    var datasets = Array.isArray(data.suggested_datasets) ? data.suggested_datasets : [];
+    var datasetsHtml = datasets.length
+      ? '<div class="detail-box"><h3>제안 데이터셋 키워드</h3>' +
+        datasets.map(function (d) { return '<span class="chip">' + esc(d) + "</span>"; }).join("") +
+        "</div>"
+      : "";
+
+    var noticeHtml =
+      '<div class="onboarding-notice">' +
+      esc(data.notice || "이 제안은 이벤트로 저장만 되며 승인·파일 생성 전까지 운영에 반영되지 않습니다.") +
+      "</div>";
+
+    box.innerHTML = summaryHtml + yamlHtml + contractHtml + checklistHtml + datasetsHtml + noticeHtml;
+
+    var copyBtn = $("onboarding-copy-btn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        copyToClipboard(data.yaml_draft || "")
+          .then(function () {
+            copyBtn.textContent = "복사됨!";
+            setTimeout(function () { copyBtn.textContent = "복사"; }, 1500);
+          })
+          .catch(function () {
+            copyBtn.textContent = "복사 실패";
+            setTimeout(function () { copyBtn.textContent = "복사"; }, 1500);
+          });
+      });
+    }
+  }
+
+  function submitOnboarding() {
+    if (onboardingSubmitting) return;
+    var input = $("onboarding-input");
+    var errorBox = $("onboarding-error");
+    var submitBtn = $("onboarding-submit-btn");
+    var requestText = (input.value || "").trim();
+
+    errorBox.innerHTML = "";
+
+    if (requestText.length < 10 || requestText.length > 2000) {
+      errorBox.innerHTML =
+        '<div class="msg-banner error">요청 내용은 10~2000자여야 합니다 (현재 ' + requestText.length + "자).</div>";
+      return;
+    }
+
+    onboardingSubmitting = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "생성 중...";
+
+    apiFetch("/onboarding", { method: "POST", body: { request_text: requestText } })
+      .then(function (res) {
+        if (!res.ok) {
+          if (res.status !== 401) {
+            errorBox.innerHTML =
+              '<div class="msg-banner error">' + esc((res.data && res.data.error) || "제안 생성 실패") + "</div>";
+          }
+          return;
+        }
+        renderOnboardingResult(res.data);
+        showGlobalMsg("온보딩 제안이 생성되어 이벤트로 저장되었습니다.", "info");
+        return loadEvents();
+      })
+      .catch(function () {
+        errorBox.innerHTML = '<div class="msg-banner error">네트워크 오류로 제안 생성에 실패했습니다.</div>';
+      })
+      .then(function () {
+        onboardingSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "제안 생성";
+      });
+  }
+
+  $("onboarding-submit-btn").addEventListener("click", submitOnboarding);
 
   // ---------------------------------------------------------------------
   // refresh / init
