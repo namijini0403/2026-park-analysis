@@ -38,6 +38,7 @@ RAW_LIB_DIR = ROOT / "data" / "raw_library"
 DATA_PROCESSED = ROOT / "data_processed"
 
 LIBRARY_SRC = RAW_LIB_DIR / "전국도서관표준데이터_인천.csv"
+GEOCODED_MISSING_SRC = RAW_LIB_DIR / "geocoded_missing_libraries.csv"
 SCHOOL_LIB_SRC = RAW_LIB_DIR / "학교도서관현황_인천초등_2025.csv"
 SCHOOLS_FILE = DATA_PROCESSED / "schools.csv"
 ISOCHRONE_FILE = DATA_PROCESSED / "school_isochrone_500m.geojson"
@@ -174,7 +175,34 @@ def main():
     total_lib = len(lib_raw)
     missing_coord_mask = lib_raw["LATITUDE"].isna() | lib_raw["LONGITUDE"].isna()
     missing_coord_count = int(missing_coord_mask.sum())
-    lib_geo = lib_raw.loc[~missing_coord_mask].copy()
+
+    # P2 Task 4.5: 결측 좌표를 geocode_missing_libraries.py 산출물로 보완.
+    # missing_coord_mask로 걸러낸 순서(=lib_raw.loc[missing_coord_mask]의 행 순서)와
+    # geocode_missing_libraries.py가 동일 원본 CSV를 동일 방식으로 순회해 만든
+    # geocoded_missing_libraries.csv의 행 순서가 일치하므로 위치 기반으로 매칭한다.
+    lib_raw["좌표출처"] = "원본"
+    geocoded_filled = 0
+    if GEOCODED_MISSING_SRC.exists():
+        geo_df = pd.read_csv(GEOCODED_MISSING_SRC, encoding="utf-8")
+        missing_positions = lib_raw.index[missing_coord_mask]
+        if len(missing_positions) != len(geo_df):
+            p(f"WARNING: 결측 좌표 행수({len(missing_positions)})와 "
+              f"geocoded_missing_libraries.csv 행수({len(geo_df)})가 다름 → 지오코딩 병합 생략")
+        else:
+            for pos, orig_idx in enumerate(missing_positions):
+                geo_row = geo_df.iloc[pos]
+                if geo_row["geocode_status"] == "resolved":
+                    lib_raw.loc[orig_idx, "LATITUDE"] = float(geo_row["위도"])
+                    lib_raw.loc[orig_idx, "LONGITUDE"] = float(geo_row["경도"])
+                    lib_raw.loc[orig_idx, "좌표출처"] = "지오코딩"
+                    geocoded_filled += 1
+    else:
+        p("WARNING: geocoded_missing_libraries.csv 없음 → 지오코딩 병합 생략")
+
+    # 지오코딩 반영 후에도 좌표가 없는 행은 기존과 동일하게 레이어에서 제외.
+    still_missing_mask = lib_raw["LATITUDE"].isna() | lib_raw["LONGITUDE"].isna()
+    still_missing_count = int(still_missing_mask.sum())
+    lib_geo = lib_raw.loc[~still_missing_mask].copy()
 
     lib_geo["유형"] = lib_geo["LBRRY_SE"].map(TYPE_MAP).fillna(lib_geo["LBRRY_SE"])
     lib_geo["구"] = lib_geo["SIGNGU_NM"].apply(extract_gu)
@@ -193,12 +221,14 @@ def main():
         ],
         "휴관일": lib_geo["CLOSE_DAY"].fillna(""),
         "기준일": lib_geo["REFERENCE_DATE"],
+        "좌표출처": lib_geo["좌표출처"],
     })
     libraries_out = libraries_out.sort_values(["구", "도서관명"]).reset_index(drop=True)
 
     libraries_out.to_csv(LIBRARIES_OUT, index=False, encoding="utf-8")
 
-    p(f"원천 도서관 총 {total_lib}행, 좌표 결측 {missing_coord_count}행 제외 → 레이어 포함 {len(libraries_out)}행")
+    p(f"원천 도서관 총 {total_lib}행, 좌표 결측 {missing_coord_count}행 중 지오코딩으로 "
+      f"{geocoded_filled}행 보완 → 잔여 결측 {still_missing_count}행 제외 → 레이어 포함 {len(libraries_out)}행")
     p("유형별 분포:")
     for t, c in libraries_out["유형"].value_counts().items():
         p(f"  - {t}: {c}")
@@ -421,7 +451,10 @@ def main():
     report_lines = []
     report_lines.append("# 도서관-학교 매칭 리포트 (P2 Task 1)")
     report_lines.append("")
-    report_lines.append(f"- 도서관 원천 행수: {total_lib} (좌표 결측 {missing_coord_count}행 제외 → 레이어 {len(libraries_out)}행)")
+    report_lines.append(
+        f"- 도서관 원천 행수: {total_lib} (좌표 결측 {missing_coord_count}행 중 지오코딩으로 "
+        f"{geocoded_filled}행 보완, 잔여 결측 {still_missing_count}행 제외 → 레이어 {len(libraries_out)}행)"
+    )
     report_lines.append(f"- 앱 학교 수(schools.csv): {len(schools_df)}")
     report_lines.append(f"- KESS 학교도서관현황 원천 행수: {len(kess_df)}")
     report_lines.append("")
