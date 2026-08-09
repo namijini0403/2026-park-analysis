@@ -93,6 +93,13 @@ scripts/update_center/reanalyze.mjs (경량 재분석)
 표준데이터) 1종, 변경 내용은 강화도서관 장서수 `85849 → 85850` (내용 변경, 스키마/행수
 동일 → green 등급).
 
+> **참고 (2026-08-10, P5 갱신):** 아래 transcript는 2026-08-09 시점에 캡처된 세션
+> 그대로이며(실측 sha256 해시 포함), 당시 baseline `external_shortage=245`를 반영한다.
+> Kakao REST 지오코딩 정밀화와 후속 중복 도서관 행 제거를 거친 현재 baseline은
+> `external_shortage=251`이다 — 최신 수치와 산출 근거는
+> `docs/reading_module_thresholds.md`를 참조할 것. transcript 자체(curl 출력, 해시값)는
+> 과거 실행 기록이므로 고치지 않는다.
+
 ### 준비 — 적용 전 파일 해시 기록
 
 ```

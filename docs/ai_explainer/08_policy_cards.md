@@ -76,19 +76,19 @@ external_supply_new는 교육청이 수요 근거를 제공하고 지자체가 �
 카드에 표시된 기관 역할을 이미 체결된 협약이나 확정된 예산 배정으로 설명하면 안 된다. 이는 행동 유형별로 사전 정의된 역할 분담 기준일 뿐이다.
 
 ### [chunk: 08_policy_cards#policy_output_distribution]
-tags: 산출분포, 기본시나리오행동분포, external_supply_new58, internal_investment83, mobile_service85, maintain_monitor42, institution_link4, 272개교, 3264개행동
+tags: 산출분포, 기본시나리오행동분포, external_supply_new58, internal_investment83, mobile_service87, maintain_monitor40, institution_link4, 272개교, 3264개행동
 
 정의:
-기본 시나리오(sufficient|available|feasible) 기준 272개교의 우선 검토안 분포는 external_supply_new 58개교(21.3%), internal_investment 83개교(30.5%), mobile_service 85개교(31.3%), maintain_monitor 42개교(15.4%), institution_link 4개교(1.5%)이며, access_route_improvement와 shared_hub는 기본 행동으로는 0개교다.
+기본 시나리오(sufficient|available|feasible) 기준 272개교의 우선 검토안 분포는 external_supply_new 58개교(21.3%), internal_investment 83개교(30.5%), mobile_service 87개교(32.0%), maintain_monitor 40개교(14.7%), institution_link 4개교(1.5%)이며, access_route_improvement와 shared_hub는 기본 행동으로는 0개교다.
 
 해석:
 272개교 × 12개 시나리오 조합 = 총 3,264개 행동이 계산된다. access_route_improvement가 기본 행동으로 나타나지 않는 이유는 저 결핍(Case 3)이면서 보행부담이 있는 7개교 모두 독서 필요도(reading_need)가 공원 필요도(park_need)보다 높아 독서 모듈이 주 모듈로 선택되기 때문이다. shared_hub도 기본 행동으로는 나타나지 않는데, 부지·예산 제약이 없는 기본 시나리오에서는 external_supply_new가 더 우선하기 때문이다. shared_hub는 시나리오 전환 단계(부지 불가, 예산 제약 등)에서 실제로 나타나지만, access_route_improvement는 규칙상 시나리오 전환으로 도달 가능한 경로가 있음에도 현재 데이터에서는 3,264건 중 0건이다 — 외부 신규 공급(external_supply_new) 기본 학교 58곳 전부가 보행부담 플래그를 갖지 않아 예산 제약 전환이 shared_hub로만 흐르고, 보행부담이 있는 15개교는 전부 독서 모듈이 기본 모듈로 선택되어 애초에 access_route_improvement가 기본 행동이 되지 않기 때문이다.
 
 주의:
-maintain_monitor 42개교 중 30개교는 도서 지역(강화군·옹진군) 별도 정책 트랙에 속한 학교이며, 나머지 12개교는 공원·독서 모두 양호(Case 4 또는 reading_gap_type=maintain_monitor)로 판정된 일반 학교다. 이 둘을 같은 근거로 설명하면 안 되며, 도서 지역은 case_type 자체가 없다는 점을 구분해야 한다.
+maintain_monitor 40개교 중 30개교는 도서 지역(강화군·옹진군) 별도 정책 트랙에 속한 학교이며, 나머지 10개교는 공원·독서 모두 양호(Case 4 또는 reading_gap_type=maintain_monitor)로 판정된 일반 학교다. 이 둘을 같은 근거로 설명하면 안 되며, 도서 지역은 case_type 자체가 없다는 점을 구분해야 한다.
 
 잘못된 해석:
-access_route_improvement·shared_hub가 기본 행동 분포에 0개로 나온다고 해서 이 두 행동이 규칙 자체에서 배제되어 있다고 설명하면 안 된다. 다만 access_route_improvement는 현재 272개교 데이터에서는 3,264개 행동(기본+시나리오 전환 전체) 중 실제로 0건이라는 사실을 숨기고 "시나리오 전환 단계에서는 나타난다"고 설명해서도 안 된다. shared_hub만 시나리오 전환 단계(464건)에서 실제로 나타난다. (P5 Kakao 지오코딩 정밀화로 reading_gap_type 분포가 바뀌면서 이 절의 수치는 갱신됐으나, access_route_improvement=0건이라는 결론 자체는 재검증 후에도 변하지 않았다.)
+access_route_improvement·shared_hub가 기본 행동 분포에 0개로 나온다고 해서 이 두 행동이 규칙 자체에서 배제되어 있다고 설명하면 안 된다. 다만 access_route_improvement는 현재 272개교 데이터에서는 3,264개 행동(기본+시나리오 전환 전체) 중 실제로 0건이라는 사실을 숨기고 "시나리오 전환 단계에서는 나타난다"고 설명해서도 안 된다. shared_hub만 시나리오 전환 단계(464건)에서 실제로 나타난다. (P5 Kakao 지오코딩 정밀화 및 후속 중복 도서관 행 제거로 reading_gap_type 분포가 두 차례 바뀌면서 이 절의 수치는 갱신됐으나, access_route_improvement=0건이라는 결론 자체는 두 차례 재검증 후에도 변하지 않았다.)
 
 ### [chunk: 08_policy_cards#policy_limitations]
 tags: 한계, 예산산정불가, 규칙기반사전계산, 생성형AI, 정책결정, 담당자승인, HITL, 잘못된해석

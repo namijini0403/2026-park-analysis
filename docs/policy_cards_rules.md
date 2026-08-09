@@ -222,15 +222,17 @@
 |---|---|---|
 | external_supply_new | 58 | 21.3% |
 | internal_investment | 83 | 30.5% |
-| mobile_service | 85 | 31.3% |
-| maintain_monitor | 42 | 15.4% |
+| mobile_service | 87 | 32.0% |
+| maintain_monitor | 40 | 14.7% |
 | institution_link | 4 | 1.5% |
 | access_route_improvement | 0 | 0% |
 | shared_hub | 0 | 0% |
 
 (P5 Kakao 지오코딩 정밀화로 school_library_access.csv의 reading_gap_type 분포가
-바뀌면서 위 표는 2026-08-09 최초 산출값에서 갱신됐다. access_route_improvement=0건은
-재검증 후에도 동일하다.)
+바뀌면서 위 표는 2026-08-09 최초 산출값에서 갱신됐고, 곧이어 원천 데이터의 도서관
+중복 등록 행 제거(43쌍/86행 → 43행 제거, `build_library_layer.py` dedupe) 이후
+다시 한 번 갱신됐다(mobile_service 85→87, maintain_monitor 42→40; 나머지 행동은
+불변). access_route_improvement=0건은 두 차례 재검증 후에도 동일하다.)
 
 **주목:**
 - `access_route_improvement`는 기본 행동으로 나타나지 않음 (case3+barrier인 7개교 모두 reading_need가 park_need를 초과하여 reading 모듈 우선).
@@ -242,7 +244,7 @@
 | Stability | 개수 | 기본 행동 |
 |---|---|---|
 | 0.3333 (4/12 조합 안정) | 141 | external_supply_new, internal_investment |
-| 1.0 (12/12 조합 안정) | 131 | mobile_service(85), institution_link(4), maintain_monitor(42 — 이 중 30개교는 도서 지역 별도 트랙) |
+| 1.0 (12/12 조합 안정) | 131 | mobile_service(87), institution_link(4), maintain_monitor(40 — 이 중 30개교는 도서 지역 별도 트랙) |
 
 ### 특수 분류
 

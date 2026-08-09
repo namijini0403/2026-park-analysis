@@ -1,6 +1,6 @@
 # 도서관-학교 매칭 리포트 (P2 Task 1)
 
-- 도서관 원천 행수: 296 (좌표 결측 68행 중 지오코딩으로 67행 보완, 잔여 결측 1행 제외 → 레이어 295행)
+- 도서관 원천 행수: 296 (좌표 결측 68행 중 지오코딩으로 67행 보완, 잔여 결측 1행 제외 → 좌표 확보 295행 → 동일 도서관 중복 43행 제거 → 레이어 252행)
 - 앱 학교 수(schools.csv): 272
 - KESS 학교도서관현황 원천 행수: 273
 
@@ -30,8 +30,8 @@ KESS에만 존재(앱 미포함):
 ## 검증 요약
 
 - 전체 학교 수 일치: True (272행)
-- iso_library_count == 0 인 학교: 209개
-- iso_public_library_count == 0 인 학교: 249개
+- iso_library_count == 0 인 학교: 211개
+- iso_public_library_count == 0 인 학교: 251개
 - libraries.csv BOM 없음: True
 - school_library_access.csv BOM 없음: True
 

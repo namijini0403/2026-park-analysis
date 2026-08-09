@@ -249,12 +249,43 @@ def main():
         "기준일": lib_geo["REFERENCE_DATE"],
         "좌표출처": lib_geo["좌표출처"],
     })
+
+    # 원천 데이터에 동일 물리 도서관이 두 행(좌표 있는 행 + 좌표 없는 행)으로 중복
+    # 등록된 경우가 있다. 좌표 없는 쪽이 지오코딩으로 채워지면 (도서관명, 구) 기준
+    # 완전 동일한 두 행이 레이어에 함께 들어가 iso_library_count 등을 이중 집계한다.
+    # 우선순위: 좌표출처=원본 > 지오코딩, 동률이면 기준일이 더 최신인 행을 채택.
+    pre_dedupe_count = len(libraries_out)
+
+    def normalize_lib_name(name: str) -> str:
+        return re.sub(r"\s+", "", str(name).strip())
+
+    libraries_out["_dedupe_key"] = (
+        libraries_out["도서관명"].apply(normalize_lib_name) + "|" + libraries_out["구"]
+    )
+    libraries_out["_coord_rank"] = libraries_out["좌표출처"].map({"원본": 0, "지오코딩": 1}).fillna(2)
+    libraries_out["_ref_date_parsed"] = pd.to_datetime(libraries_out["기준일"], errors="coerce")
+    libraries_out = libraries_out.sort_values(
+        ["_dedupe_key", "_coord_rank", "_ref_date_parsed"],
+        ascending=[True, True, False],
+        kind="mergesort",  # stable: 동률(원본/원본 등)일 때 원 순서 보존
+    )
+    dup_mask = libraries_out.duplicated(subset="_dedupe_key", keep="first")
+    dedupe_removed = int(dup_mask.sum())
+    dedupe_removed_names = sorted(libraries_out.loc[dup_mask, "도서관명"].unique().tolist())
+    libraries_out = libraries_out.loc[~dup_mask].drop(
+        columns=["_dedupe_key", "_coord_rank", "_ref_date_parsed"]
+    )
+
     libraries_out = libraries_out.sort_values(["구", "도서관명"]).reset_index(drop=True)
 
     libraries_out.to_csv(LIBRARIES_OUT, index=False, encoding="utf-8", lineterminator="\r\n")
 
     p(f"원천 도서관 총 {total_lib}행, 좌표 결측 {missing_coord_count}행 중 지오코딩으로 "
-      f"{geocoded_filled}행 보완 → 잔여 결측 {still_missing_count}행 제외 → 레이어 포함 {len(libraries_out)}행")
+      f"{geocoded_filled}행 보완 → 잔여 결측 {still_missing_count}행 제외 → 좌표 확보 {pre_dedupe_count}행")
+    p(f"중복 도서관 행 제거(동일 도서관명+구, 좌표출처=원본>지오코딩 우선, 동률 시 최신 기준일 우선): "
+      f"{dedupe_removed}건 제거 → 레이어 최종 {len(libraries_out)}행")
+    if dedupe_removed_names:
+        p(f"  제거 대상 도서관명({len(dedupe_removed_names)}종): {dedupe_removed_names}")
     p("유형별 분포:")
     for t, c in libraries_out["유형"].value_counts().items():
         p(f"  - {t}: {c}")
@@ -489,7 +520,8 @@ def main():
     report_lines.append("")
     report_lines.append(
         f"- 도서관 원천 행수: {total_lib} (좌표 결측 {missing_coord_count}행 중 지오코딩으로 "
-        f"{geocoded_filled}행 보완, 잔여 결측 {still_missing_count}행 제외 → 레이어 {len(libraries_out)}행)"
+        f"{geocoded_filled}행 보완, 잔여 결측 {still_missing_count}행 제외 → 좌표 확보 {pre_dedupe_count}행 → "
+        f"동일 도서관 중복 {dedupe_removed}행 제거 → 레이어 {len(libraries_out)}행)"
     )
     report_lines.append(f"- 앱 학교 수(schools.csv): {len(schools_df)}")
     report_lines.append(f"- KESS 학교도서관현황 원천 행수: {len(kess_df)}")
