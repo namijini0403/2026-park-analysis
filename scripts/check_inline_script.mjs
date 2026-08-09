@@ -9,4 +9,8 @@ for (const [, code] of blocks) {
   new vm.Script(code, { filename: `inline-script-${checked}` });
   checked += 1;
 }
+if (checked === 0) {
+  console.error("FAIL: no inline script blocks matched — the gate is blind");
+  process.exit(1);
+}
 console.log(`OK: ${checked} inline script block(s) parsed without syntax errors`);

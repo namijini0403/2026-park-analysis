@@ -1076,11 +1076,10 @@
     }
 
     /* 신규 레이어(LAYER_REGISTRY에서 cssColor 지정)용 generic 색상 — 기존 5개 레이어는 위의 전용 규칙 사용 */
-    .layer-toggle-btn[style*="--layer-color"] {
+    .layer-toggle-btn[data-has-color] {
       border-color: var(--layer-color);
-      color: var(--layer-color);
     }
-    .layer-toggle-btn.is-on[style*="--layer-color"] {
+    .layer-toggle-btn.is-on[data-has-color] {
       background: var(--layer-color);
       border-color: var(--layer-color);
       color: #ffffff;
@@ -3223,7 +3222,7 @@
 
     // ── 레이어 레지스트리: 지도 레이어의 단일 정의처 ─────────────────────
     // 새 레이어 추가 = 이 배열에 1항목 추가 (+ 데이터 파일을 build_vercel_static.mjs whitelist에 등록)
-    // kind: "point"(renderPointMarkers) | "geojson"(renderGeoJsonLayer) | "custom"(renderFnName의 전역 함수가 렌더)
+    // kind: "point" | "geojson" | "custom"(render 함수가 그림) | "external"(다른 코드가 그림, 가시성만 관리)
     const LAYER_REGISTRY = [
       {
         id: "isochrone", buttonLabel: "🚶 실제 도보이동 500m", panelLabel: "도보 등시선",
@@ -3246,15 +3245,25 @@
       {
         id: "redevelopment", buttonLabel: "🏗️ 재개발", panelLabel: "재개발 구역",
         toggleId: "toggleRedevelopment", overlayKey: "redevelopmentMarkers",
-        kind: "custom", renderFnName: "renderRedevelopmentLayer", defaultOn: false
+        kind: "custom", render: renderRedevelopmentLayer, defaultOn: false
       },
       {
         id: "candidate", buttonLabel: "📍 후보지", panelLabel: "후보지",
         toggleId: "toggleCandidate", overlayKey: "candidateMarkers",
-        kind: "custom", renderFnName: null, defaultOn: false
+        kind: "external", defaultOn: false
         // 후보지 마커는 rerenderAll()의 renderCandidateMarkers()가 그림 — registry는 가시성만 담당
       }
     ];
+
+    (function assertRegistryUnique() {
+      const seen = new Set();
+      for (const def of LAYER_REGISTRY) {
+        for (const key of [def.id, def.toggleId, def.overlayKey]) {
+          if (seen.has(key)) throw new Error(`LAYER_REGISTRY 중복 키: ${key}`);
+          seen.add(key);
+        }
+      }
+    })();
 
     function buildLayerControls() {
       const bar = document.getElementById("layerToggleBar");
@@ -3270,7 +3279,10 @@
           btn.type = "button";
           btn.dataset.layer = def.id;
           btn.textContent = def.buttonLabel;
-          if (def.cssColor) btn.style.setProperty("--layer-color", def.cssColor);
+          if (def.cssColor) {
+            btn.style.setProperty("--layer-color", def.cssColor);
+            btn.dataset.hasColor = "";
+          }
           bar.insertBefore(btn, anchor);
         });
       }
@@ -3293,6 +3305,17 @@
         });
       }
     }
+
+    function refreshLayerControls() {
+      buildLayerControls();
+      if (typeof window.__uiReady === "undefined") return;
+      ui.toggles = Object.fromEntries(
+        LAYER_REGISTRY.map((def) => [def.id, document.getElementById(def.toggleId)])
+      );
+      ui.layerButtons = Array.from(document.querySelectorAll(".layer-toggle-btn[data-layer]"));
+      syncLayerToggleButtons();
+    }
+
     buildLayerControls();
 
     function isLayerOn(def) {
@@ -3443,6 +3466,9 @@
         ...Object.fromEntries(LAYER_REGISTRY.map((def) => [def.overlayKey, []]))
       },
       datasets: {
+        ...Object.fromEntries(
+          LAYER_REGISTRY.filter((def) => def.datasetKey).map((def) => [def.datasetKey, []])
+        ),
         schools: [],
         schoolCoords: [],
         studentTrend: [],
@@ -3626,6 +3652,7 @@
       caseFilterButtons: Array.from(document.querySelectorAll(".case-filter-btn")),
       accessFilterButtons: Array.from(document.querySelectorAll(".access-filter-btn"))
     };
+    window.__uiReady = true;
 
     function refreshCaseFilterButtons() {
       ui.caseFilterButtons = Array.from(document.querySelectorAll(".case-filter-btn"));
@@ -5729,8 +5756,12 @@
           });
         } else if (def.kind === "geojson") {
           renderGeoJsonLayer(def.overlayKey, state.datasets[def.datasetKey], def.style, isLayerOn(def));
-        } else if (def.kind === "custom" && def.renderFnName && typeof window[def.renderFnName] === "function") {
-          window[def.renderFnName]();
+        } else if (def.kind === "custom") {
+          if (typeof def.render === "function") {
+            def.render();
+          } else {
+            console.warn(`LAYER_REGISTRY: custom layer "${def.id}"에 render 함수가 없습니다`);
+          }
         }
       });
       updateOverlayVisibility();
