@@ -2,16 +2,23 @@
 // scripts/update_center/store.mjs
 // Storage layer for the P4 update-center: dual backend (Postgres via `pg`, or a local JSON file).
 //
-// Both backends expose the same 10-method async interface:
+// Both backends expose the same 11-method async interface:
 //   recordEvent(e), listEvents(limit), getEvent(id), updateEventStatus(id, status, actor),
-//   saveVersion(v), listVersions(dataset), getVersion(id), markVersionRolledBack(id),
-//   appendAudit(a), listAudit(limit)
+//   setEventAiNote(id, note), saveVersion(v), listVersions(dataset), getVersion(id),
+//   markVersionRolledBack(id), appendAudit(a), listAudit(limit)
 //
 // markVersionRolledBack(id) is the one mutation allowed on a data_versions row
 // after creation: it flips rolled_back to true (idempotently) and returns the
 // updated row, or null if no row with that id exists. Added for P4 Task 4's
 // rollbackVersion() so the stored version reflects rollback state, not just
 // the audit_log entry.
+//
+// setEventAiNote(id, note) is the one mutation allowed on a data_events row's
+// ai_note column outside of recordEvent's initial value: it overwrites ai_note
+// (does NOT touch status/actor/updated_at) and returns the updated row, or null
+// if no row with that id exists. Added for P4 Task 3 so api/update-center.js can
+// attach an AI-generated (or deterministic fallback) change annotation both when
+// scan.mjs detects an event and again after approve applies it.
 //
 // Backend selection: if process.env.DATABASE_URL is set, use the Postgres backend
 // (pg Pool, TLS verification ON by default; schema.sql applied on init).
@@ -124,6 +131,15 @@ function createFileStore() {
       event.status = status;
       if (actor !== undefined && actor !== null) event.actor = actor;
       event.updated_at = nowIso();
+      saveDb(db);
+      return event;
+    },
+
+    async setEventAiNote(id, note) {
+      const db = loadDb();
+      const event = db.events.find((ev) => ev.id === id);
+      if (!event) return null;
+      event.ai_note = note ?? null;
       saveDb(db);
       return event;
     },
@@ -309,6 +325,14 @@ async function createPgStore() {
       return mapEventRow(rows[0]) ?? null;
     },
 
+    async setEventAiNote(id, note) {
+      const { rows } = await pool.query(
+        `UPDATE data_events SET ai_note = $2 WHERE id = $1 RETURNING *`,
+        [id, note ?? null]
+      );
+      return mapEventRow(rows[0]) ?? null;
+    },
+
     async saveVersion(v) {
       const id = crypto.randomUUID();
       const createdAt = v.created_at || nowIso();
@@ -423,6 +447,18 @@ async function selfTest() {
     }
     const fetchedEvent = await store.getEvent(ev1.id);
     if (!fetchedEvent || fetchedEvent.id !== ev1.id) throw new Error("getEvent failed");
+
+    const noted = await store.setEventAiNote(ev1.id, "selftest ai note");
+    if (!noted || noted.ai_note !== "selftest ai note") {
+      throw new Error("setEventAiNote did not persist ai_note");
+    }
+    if (noted.status !== ev1.status) throw new Error("setEventAiNote should not change status");
+    const refetchedNote = await store.getEvent(ev1.id);
+    if (!refetchedNote || refetchedNote.ai_note !== "selftest ai note") {
+      throw new Error("getEvent after setEventAiNote did not reflect ai_note");
+    }
+    const missingNote = await store.setEventAiNote("nonexistent-event-id", "x");
+    if (missingNote !== null) throw new Error("setEventAiNote should return null for an unknown id");
 
     const snapshotBytes = crypto.randomBytes(64);
     const snapshotB64 = snapshotBytes.toString("base64");

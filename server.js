@@ -3,6 +3,8 @@
  *
  * - POST/OPTIONS /api/ai-explainer-v2  -> delegates to the Vercel-style handler
  *   in api/ai-explainer-v2.js (JSON body pre-parsed into req.body, UTF-8).
+ * - /api/update-center/*               -> delegates to api/update-center.js
+ *   (P4 update-center admin API: events/audit/versions/scan/approve/hold/rollback).
  * - Everything else                    -> static files from vercel_public/
  *   (built by `npm run build:vercel`), index.html as directory default.
  *
@@ -14,6 +16,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const aiExplainerHandler = require("./api/ai-explainer-v2.js");
+const updateCenterHandler = require("./api/update-center.js");
 
 const PORT = Number(process.env.PORT || 3000);
 const HOST = "0.0.0.0";
@@ -102,6 +105,30 @@ async function handleApi(req, res) {
   }
 }
 
+async function handleUpdateCenter(req, res) {
+  try {
+    if (req.method === "POST") {
+      req.body = await readJsonBody(req);
+    }
+    await updateCenterHandler(req, res);
+  } catch (error) {
+    const statusCode = error && error.statusCode ? error.statusCode : 500;
+    if (!res.headersSent) {
+      sendJson(res, statusCode, {
+        error:
+          statusCode === 400
+            ? "요청 본문(JSON)을 해석할 수 없습니다."
+            : statusCode === 413
+              ? "요청 본문이 너무 큽니다."
+              : "서버 내부 오류가 발생했습니다.",
+      });
+    } else {
+      res.end();
+    }
+    if (statusCode >= 500) console.error("[api] update-center handler error:", error);
+  }
+}
+
 function cacheControlFor(urlPath) {
   // Mirror vercel.json header rules.
   if (/^\/ui-preview\/dist\/assets\//.test(urlPath)) {
@@ -175,6 +202,10 @@ const server = http.createServer((req, res) => {
   const pathname = new URL(req.url, "http://localhost").pathname;
   if (pathname === "/api/ai-explainer-v2") {
     handleApi(req, res);
+    return;
+  }
+  if (pathname.startsWith("/api/update-center/")) {
+    handleUpdateCenter(req, res);
     return;
   }
   serveStatic(req, res);

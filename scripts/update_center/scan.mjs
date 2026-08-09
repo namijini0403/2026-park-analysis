@@ -247,17 +247,18 @@ async function checkJsonApi(entry, state, store, opts, log) {
   const columListUrl = entry.check.urls.columList;
   const dataUrl = opts.forceUrl || entry.check.urls.data;
   const prev = state[dataset] || null;
+  const actor = opts.actor || "scan.mjs";
 
   // 1. columList.json -> remote schema
   let columListRes;
   try {
     columListRes = await fetchWithTimeout(columListUrl);
   } catch (err) {
-    return await recordFailure(dataset, "columList.json 요청 실패(네트워크/타임아웃)", err.message, null, entry, state, store, log);
+    return await recordFailure(dataset, "columList.json 요청 실패(네트워크/타임아웃)", err.message, null, entry, state, store, log, {}, actor);
   }
   if (!columListRes.ok) {
     if (columListRes.status === 404) {
-      return await recordMoved(dataset, columListUrl, entry, state, store, log, "columList.json 404");
+      return await recordMoved(dataset, columListUrl, entry, state, store, log, "columList.json 404", actor);
     }
     return await recordFailure(
       dataset,
@@ -267,14 +268,16 @@ async function checkJsonApi(entry, state, store, opts, log) {
       entry,
       state,
       store,
-      log
+      log,
+      {},
+      actor
     );
   }
   let columListJson;
   try {
     columListJson = await columListRes.json();
   } catch (err) {
-    return await recordFailure(dataset, "columList.json 파싱 실패", err.message, null, entry, state, store, log);
+    return await recordFailure(dataset, "columList.json 파싱 실패", err.message, null, entry, state, store, log, {}, actor);
   }
   const remoteSchema = Array.isArray(columListJson.columList)
     ? columListJson.columList.map((c) => c.columNm || c.columCode).filter(Boolean).sort()
@@ -299,12 +302,13 @@ async function checkJsonApi(entry, state, store, opts, log) {
       state,
       store,
       log,
-      { schemaDiff }
+      { schemaDiff },
+      actor
     );
   }
   if (!dataRes.ok) {
     if (dataRes.status === 404) {
-      return await recordMoved(dataset, dataUrl, entry, state, store, log, "standard.json 404");
+      return await recordMoved(dataset, dataUrl, entry, state, store, log, "standard.json 404", actor);
     }
     return await recordFailure(
       dataset,
@@ -315,7 +319,8 @@ async function checkJsonApi(entry, state, store, opts, log) {
       state,
       store,
       log,
-      { schemaDiff }
+      { schemaDiff },
+      actor
     );
   }
   let dataJson;
@@ -331,7 +336,8 @@ async function checkJsonApi(entry, state, store, opts, log) {
       state,
       store,
       log,
-      { schemaDiff }
+      { schemaDiff },
+      actor
     );
   }
   const rows = Array.isArray(dataJson.data)
@@ -355,7 +361,7 @@ async function checkJsonApi(entry, state, store, opts, log) {
   if (!prev || !prev.schema) {
     state[dataset] = nextState;
     await store.appendAudit({
-      actor: "scan.mjs",
+      actor,
       action: "baseline_recorded",
       dataset,
       detail: `baseline recorded: schema ${remoteSchema.length}cols, totalCount=${totalCount}`,
@@ -374,7 +380,7 @@ async function checkJsonApi(entry, state, store, opts, log) {
       diff_json: { added, removed, prevTotalCount: prev.totalCount, totalCount },
       status: "pending",
     });
-    await store.appendAudit({ actor: "scan.mjs", action: "record_event", dataset, event_id: event.id, detail: event.summary });
+    await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: event.summary });
     state[dataset] = nextState;
     log(`[${dataset}] RED schema event: ${event.summary}`);
     return { outcome: "red", event };
@@ -388,7 +394,7 @@ async function checkJsonApi(entry, state, store, opts, log) {
       diff_json: { added, removed, prevTotalCount: prev.totalCount, totalCount },
       status: "pending",
     });
-    await store.appendAudit({ actor: "scan.mjs", action: "record_event", dataset, event_id: event.id, detail: event.summary });
+    await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: event.summary });
     state[dataset] = nextState;
     log(`[${dataset}] YELLOW schema event: ${event.summary}`);
     return { outcome: "yellow", event };
@@ -408,13 +414,13 @@ async function checkJsonApi(entry, state, store, opts, log) {
     diff_json: { prevTotalCount: prev.totalCount, totalCount, prevContentHash: prev.contentHash, contentHash },
     status: "pending",
   });
-  await store.appendAudit({ actor: "scan.mjs", action: "record_event", dataset, event_id: event.id, detail: event.summary });
+  await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: event.summary });
   state[dataset] = nextState;
   log(`[${dataset}] GREEN content event: ${event.summary}`);
   return { outcome: "green", event };
 }
 
-async function recordFailure(dataset, summary, errMessage, httpStatus, entry, state, store, log, extraDiff = {}) {
+async function recordFailure(dataset, summary, errMessage, httpStatus, entry, state, store, log, extraDiff = {}, actor = "scan.mjs") {
   const prev = state[dataset] || null;
   const signature = sha256(`error:${summary}:${errMessage || ""}:${httpStatus ?? ""}`);
   if (prev && prev.lastStatus === "error" && prev.lastErrorSignature === signature) {
@@ -432,7 +438,7 @@ async function recordFailure(dataset, summary, errMessage, httpStatus, entry, st
     diff_json: { errMessage: errMessage || null, httpStatus: httpStatus ?? null, ...extraDiff },
     status: "pending",
   });
-  await store.appendAudit({ actor: "scan.mjs", action: "record_event", dataset, event_id: event.id, detail: summary });
+  await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: summary });
   state[dataset] = {
     ...(prev || {}),
     lastCheckedAt: nowIso(),
@@ -443,7 +449,7 @@ async function recordFailure(dataset, summary, errMessage, httpStatus, entry, st
   return { outcome: "error", event };
 }
 
-async function recordMoved(dataset, attemptedUrl, entry, state, store, log, reason) {
+async function recordMoved(dataset, attemptedUrl, entry, state, store, log, reason, actor = "scan.mjs") {
   const prev = state[dataset] || null;
   const search = await searchPortal(entry.search_keywords || []);
   const signature = sha256(`moved:${attemptedUrl}:${JSON.stringify(search.candidates)}`);
@@ -466,7 +472,7 @@ async function recordMoved(dataset, attemptedUrl, entry, state, store, log, reas
     },
     status: "pending",
   });
-  await store.appendAudit({ actor: "scan.mjs", action: "record_event", dataset, event_id: event.id, detail: event.summary });
+  await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: event.summary });
   state[dataset] = {
     ...(prev || {}),
     lastCheckedAt: nowIso(),
@@ -485,18 +491,19 @@ async function checkFileHead(entry, state, store, opts, log) {
   const dataset = entry.dataset;
   const url = opts.forceUrl || entry.check.urls.head;
   const prev = state[dataset] || null;
+  const actor = opts.actor || "scan.mjs";
 
   let res;
   try {
     res = await fetchWithTimeout(url, { method: "HEAD" });
   } catch (err) {
-    return await recordFailure(dataset, "HEAD 요청 실패(네트워크/타임아웃)", err.message, null, entry, state, store, log);
+    return await recordFailure(dataset, "HEAD 요청 실패(네트워크/타임아웃)", err.message, null, entry, state, store, log, {}, actor);
   }
   if (!res.ok) {
     if (res.status === 404) {
-      return await recordMoved(dataset, url, entry, state, store, log, "HEAD 404");
+      return await recordMoved(dataset, url, entry, state, store, log, "HEAD 404", actor);
     }
-    return await recordFailure(dataset, `HEAD 요청 실패: HTTP ${res.status}`, null, res.status, entry, state, store, log);
+    return await recordFailure(dataset, `HEAD 요청 실패: HTTP ${res.status}`, null, res.status, entry, state, store, log, {}, actor);
   }
 
   const headers = {
@@ -517,7 +524,7 @@ async function checkFileHead(entry, state, store, opts, log) {
   if (!hasPriorHeaders) {
     state[dataset] = nextState;
     await store.appendAudit({
-      actor: "scan.mjs",
+      actor,
       action: "baseline_recorded",
       dataset,
       detail: `baseline recorded: etag=${headers.etag} lastModified=${headers.lastModified} contentLength=${headers.contentLength}`,
@@ -543,7 +550,7 @@ async function checkFileHead(entry, state, store, opts, log) {
     diff_json: { prev: { etag: prev.etag, lastModified: prev.lastModified, contentLength: prev.contentLength }, next: headers },
     status: "pending",
   });
-  await store.appendAudit({ actor: "scan.mjs", action: "record_event", dataset, event_id: event.id, detail: event.summary });
+  await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: event.summary });
   state[dataset] = nextState;
   log(`[${dataset}] GREEN content event: ${event.summary}`);
   return { outcome: "green", event };
@@ -553,13 +560,26 @@ async function checkFileHead(entry, state, store, opts, log) {
 // --simulate-change (local CSV treated as "new version" of a dataset's local_file)
 // ---------------------------------------------------------------------------
 
-async function runSimulateChange(entry, simulatePath, store, log) {
+// File-path entry point (CLI: --simulate-change <path>). Reads the file and
+// delegates to the text-based core below, which is also what the API's
+// simulate_change_b64 path calls directly (no temp file needed).
+async function runSimulateChange(entry, simulatePath, store, log, actor) {
+  const absoluteSimulatePath = path.isAbsolute(simulatePath) ? simulatePath : path.join(process.cwd(), simulatePath);
+  const simulatedCsvText = fs.readFileSync(absoluteSimulatePath, "utf-8");
+  return runSimulateChangeText(entry, simulatedCsvText, simulatePath, store, log, actor);
+}
+
+// Core: dataset's current local_file vs. an arbitrary candidate CSV text (from
+// a CLI-supplied file or an API-supplied base64 payload). Always embeds the
+// candidate CSV as base64 in diff_json.simulateCsvB64 so a later approve step
+// (api/update-center.js) can hand it straight to reanalyzeLibraries/
+// applyLibrariesUpdate without needing the original file to still exist on disk.
+async function runSimulateChangeText(entry, simulatedCsvText, sourceLabel, store, log, actor = "scan.mjs --simulate-change") {
   const dataset = entry.dataset;
   const currentPath = path.join(REPO_ROOT, entry.local_file);
-  const absoluteSimulatePath = path.isAbsolute(simulatePath) ? simulatePath : path.join(process.cwd(), simulatePath);
 
   const current = parseCsvFile(currentPath);
-  const simulated = parseCsvFile(absoluteSimulatePath);
+  const simulated = parseCsv(simulatedCsvText);
 
   const { added, removed } = diffSchema(current.header, simulated.header);
   const currentHash = hashRows(current.rows);
@@ -593,7 +613,8 @@ async function runSimulateChange(entry, simulatePath, store, log) {
     summary,
     diff_json: {
       simulated: true,
-      simulateSourcePath: simulatePath,
+      simulateSourcePath: sourceLabel,
+      simulateCsvB64: Buffer.from(simulatedCsvText, "utf-8").toString("base64"),
       addedColumns: added,
       removedColumns: removed,
       currentRowCount: current.rows.length,
@@ -604,7 +625,7 @@ async function runSimulateChange(entry, simulatePath, store, log) {
     status: "pending",
   });
   await store.appendAudit({
-    actor: "scan.mjs --simulate-change",
+    actor,
     action: "simulate_scan",
     dataset,
     event_id: event.id,
@@ -617,35 +638,74 @@ async function runSimulateChange(entry, simulatePath, store, log) {
 }
 
 // ---------------------------------------------------------------------------
-// main
+// runScan: the programmatic entry point. Used by the CLI's main() below and
+// by api/update-center.js (via dynamic import()) for POST /api/update-center/scan.
+//
+// Importing this module must NOT trigger a scan as a side effect (that would
+// fire on every dynamic import() from the API handler) -- so, unlike the
+// module's original shape, actual execution only happens when this function is
+// called, and the CLI-only bits (process.argv parsing, process.exitCode) stay
+// out of it entirely.
+//
+// opts:
+//   dataset            - filter to one dataset (string) or null for all
+//   simulateChange      - CLI path: local file path to treat as the new CSV
+//   simulateChangeB64   - API path: base64-encoded new CSV text (no temp file)
+//   forceUrl            - test hook, forces the primary check URL (see file header)
+//   log                 - line logger, defaults to a no-op (CLI passes console.log)
+//   actor               - audit actor recorded on every appendAudit call this run
+//                          triggers; defaults to "scan.mjs" (or
+//                          "scan.mjs --simulate-change" for a simulate run) so
+//                          CLI-triggered audit entries are unaffected by this
+//                          refactor. The API passes actor: "web-admin".
+//
+// Returns:
+//   { mode: "simulate", event }                 for a simulate-change run
+//   { mode: "scan", summary, events }            for a normal scan run
 // ---------------------------------------------------------------------------
 
-async function main() {
-  const args = parseArgs(process.argv.slice(2));
-  const log = (...a) => console.log(...a);
+export async function runScan(opts = {}) {
+  const {
+    dataset = null,
+    simulateChange = null,
+    simulateChangeB64 = null,
+    forceUrl = null,
+    log = () => {},
+    actor = null,
+  } = opts;
 
   const sources = loadSources();
-  const targetEntries = args.dataset ? sources.filter((s) => s.dataset === args.dataset) : sources;
-  if (args.dataset && targetEntries.length === 0) {
-    console.error(`scan.mjs: unknown --dataset "${args.dataset}" (not found in data_sources.yaml)`);
-    process.exitCode = 1;
-    return;
+  const targetEntries = dataset ? sources.filter((s) => s.dataset === dataset) : sources;
+  if (dataset && targetEntries.length === 0) {
+    throw new Error(`unknown dataset "${dataset}" (not found in data_sources.yaml)`);
   }
 
   const store = await createStore();
 
-  if (args.simulateChange) {
-    if (!args.dataset) {
-      console.error("scan.mjs: --simulate-change requires --dataset <name>");
-      process.exitCode = 1;
-      return;
-    }
-    await runSimulateChange(targetEntries[0], args.simulateChange, store, log);
-    return;
+  if (simulateChangeB64) {
+    if (!dataset) throw new Error("simulateChangeB64 requires dataset");
+    const simulatedCsvText = Buffer.from(simulateChangeB64, "base64").toString("utf-8");
+    const event = await runSimulateChangeText(
+      targetEntries[0],
+      simulatedCsvText,
+      "[base64 payload]",
+      store,
+      log,
+      actor || "scan.mjs --simulate-change"
+    );
+    return { mode: "simulate", event };
   }
 
+  if (simulateChange) {
+    if (!dataset) throw new Error("simulateChange requires dataset");
+    const event = await runSimulateChange(targetEntries[0], simulateChange, store, log, actor || "scan.mjs --simulate-change");
+    return { mode: "simulate", event };
+  }
+
+  const effectiveActor = actor || "scan.mjs";
   const state = loadState();
   const summary = { baseline: 0, unchanged: 0, green: 0, yellow: 0, red: 0, moved: 0, error: 0, skipped: 0 };
+  const events = [];
 
   for (const entry of targetEntries) {
     const type = entry.check?.type;
@@ -655,9 +715,9 @@ async function main() {
       log(`[${entry.dataset}] manual check.type — skip (수동 확인 필요, 이벤트 없음)`);
       continue;
     } else if (type === "json_api") {
-      result = await checkJsonApi(entry, state, store, args, log);
+      result = await checkJsonApi(entry, state, store, { forceUrl, actor: effectiveActor }, log);
     } else if (type === "file_head") {
-      result = await checkFileHead(entry, state, store, args, log);
+      result = await checkFileHead(entry, state, store, { forceUrl, actor: effectiveActor }, log);
     } else {
       log(`[${entry.dataset}] unknown check.type "${type}" — skipping`);
       continue;
@@ -666,15 +726,54 @@ async function main() {
     const bucketKey = outcome.replace("-unchanged", "");
     if (outcome === "unchanged" || outcome.endsWith("-unchanged")) summary.unchanged++;
     else if (summary[bucketKey] !== undefined) summary[bucketKey]++;
+    if (result?.event) events.push(result.event);
   }
 
   saveState(state);
 
-  log("---");
-  log(`scan summary: ${JSON.stringify(summary)}`);
+  return { mode: "scan", summary, events };
 }
 
-main().catch((err) => {
-  console.error(`scan.mjs failed: ${err.stack || err.message}`);
-  process.exitCode = 1;
-});
+// ---------------------------------------------------------------------------
+// main (CLI only) -- thin wrapper around runScan() that reproduces the
+// original script's argv parsing, exit codes, and console output.
+// ---------------------------------------------------------------------------
+
+async function main() {
+  const args = parseArgs(process.argv.slice(2));
+  const log = (...a) => console.log(...a);
+
+  if (args.simulateChange && !args.dataset) {
+    console.error("scan.mjs: --simulate-change requires --dataset <name>");
+    process.exitCode = 1;
+    return;
+  }
+
+  let result;
+  try {
+    result = await runScan({
+      dataset: args.dataset,
+      simulateChange: args.simulateChange,
+      forceUrl: args.forceUrl,
+      log,
+    });
+  } catch (err) {
+    console.error(`scan.mjs: ${err.message}`);
+    process.exitCode = 1;
+    return;
+  }
+
+  if (result.mode === "scan") {
+    log("---");
+    log(`scan summary: ${JSON.stringify(result.summary)}`);
+  }
+}
+
+const isMainModule = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+
+if (isMainModule) {
+  main().catch((err) => {
+    console.error(`scan.mjs failed: ${err.stack || err.message}`);
+    process.exitCode = 1;
+  });
+}
