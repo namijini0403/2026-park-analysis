@@ -1,0 +1,36 @@
+module: park
+resource_type: 도시공원·놀이터 (야외활동 환경)
+location:
+  file: data_processed/parks.csv
+  lat_key: 위도
+  lng_key: 경도
+  name_key: 공원명
+external_supply:
+  - metric: iso_functional_park_count
+    source: data_processed/school_priority_with_functional_park_layer.csv
+  - metric: nearest_functional_park_dist_m
+    source: data_processed/school_nearest_park.csv
+  - metric: display_green_ratio
+    source: data_processed/school_priority_with_functional_park_layer.csv
+internal_supply: 추가 확인 필요
+capacity: park_function_class (playground_like <1,500㎡ / small_child_park / mid_activity_park / neighborhood_park_scale ≥10,000㎡)
+target_users: 초등학생 (인천 272개교)
+operating_hours: 상시 개방
+demand_unit: 예측 수혜 학생 수 (predicted_beneficiaries)
+constraints:
+  - 보행부담(주요도로 횡단·대형 교차로)은 점수 흡수 금지 — 필터·태그로만 표시
+  - 재개발 구역은 필터로만 처리
+policy_actions:
+  - external_supply_new
+  - access_route_improvement
+  - maintain_monitor
+reference_date: 2026-04
+source:
+  - name: 인천광역시 도시공원 현황
+    provider: 인천광역시
+    license: 공공누리 (확인 필요 시 "추가 확인 필요")
+layer:
+  id: parks
+  button_label: "🌳 공원·놀이터"
+  panel_label: 공원·놀이터
+  color: "#2B6CB0"

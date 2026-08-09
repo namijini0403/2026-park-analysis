@@ -5,9 +5,13 @@
     "smoke:ai-explainer-v2": "node scripts/smoke_ai_explainer_v2.mjs",
     "qa:ai-explainer-v2": "node scripts/qa_ai_explainer_v2.mjs",
     "build:ui-preview": "npm --prefix ui-preview run build",
-    "build:vercel": "node scripts/deploy/build_vercel_static.mjs"
+    "build:vercel": "node scripts/deploy/build_vercel_static.mjs",
+    "validate:modules": "node scripts/validate_module_contract.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "js-yaml": "^4.3.1"
   }
 }
