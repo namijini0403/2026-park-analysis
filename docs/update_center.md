@@ -272,12 +272,167 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 | `AI_EXPLAINER_MODEL` | 선택 | `gpt-5.4-mini` | AI 해설 생성에 사용할 모델명 override |
 | `PORT` | 선택 | `3000` | `server.js`(update-center의 API/관리 화면을 함께 서빙하는 로컬/Railway 서버)가 리스닝할 포트. Railway 배포 시 플랫폼이 자동 주입 |
 
-## 6. 검증 이력
+## 6. § 온보딩 에이전트 (Onboarding Agent) — P5 시제품
+
+> 검증 완료 2026-08-09 — 게이트 일괄(check_inline_script, validate:modules,
+> build:vercel, node --check, store selftest, 서버 스모크) + 온보딩 왕복
+> 시뮬레이션을 로컬 서버(`server.js`, 파일 백엔드)에 대해 실제로 실행하고 결과를
+> 이 문서와 `.superpowers/sdd/2026-08-09-p5-onboarding-agent/task-3-report.md`에
+> raw 출력으로 남겼다.
+
+### 6.1 동작 흐름
+
+온보딩 에이전트는 자연어 요청(예: "서울시 주차장 정보를 데이터셋으로 추가하고 싶음")을 받아
+YAML 초안을 자동으로 생성하는 assistant-level의 AI 기능입니다. 전체 흐름은 다음과 같습니다:
+
+```
+자연어 요청 (사용자)
+        │
+        ▼
+AI 에이전트 (OpenAI Responses API 또는 결정론적 폴백)
+        │
+        ├─ OpenAI 성공 → AI가 설계안 + YAML 초안 생성
+        │   (요청한 데이터셋의 의도, 원천 URL 후보, 검색 키워드 제안, schema.json 초안)
+        │
+        └─ OpenAI 실패/키 없음 → 결정론적 폴백 "[AI 미사용 폴백]"
+            (사용자 입력 요약만 반환, YAML 구조 미생성)
+        ▼
+계약 검사 (validateModuleContract 재사용)
+        │  checkModuleDoc() 함수로 YAML 초안의 필드 유형·enum 위반 검증
+        │  LLM이 enum 형식을 어길 수 있으나 이 단계에서 모두 걸러냄
+        ▼
+철학 체크리스트 (3항목 — 항상 "human 검토 필수")
+        │  1. 데이터 출처 공공성·권리 확인(라이선스, 저작권)
+        │  2. 스키마 적절성(컬럼명·타입이 표준화되어 있는가)
+        │  3. 검색 키워드 대표성(사용자 실제 찾는 방식과 일치하는가)
+        ├─ 모든 3항목은 체크박스 형태로 제시되며, 승인 전 운영팀이 반드시 수동으로 검토·확인
+        │
+        ▼
+이벤트 기록 (kind=onboarding_proposal, risk=yellow)
+        │  POST /api/update-center/onboarding 응답에 onboarding_id 발급
+        │  이벤트 저장: id, dataset_name, description, suggested_schema, ai_note,
+        │           detected_at, status="pending", kind="onboarding_proposal", risk="yellow"
+        │
+        ▼
+감사 로그 기록
+        │  actor="web-admin", action="onboarding_proposal",
+        │  detail에 AI 소스(openai/fallback) 및 체크리스트 상태 기록
+```
+
+### 6.2 API 명세 (POST /api/update-center/onboarding)
+
+#### 요청
+
+```json
+{
+  "natural_language_request": "string (필수)",
+  "suggested_dataset_name": "string (선택)",
+  "suggested_portal_url": "string (선택)"
+}
+```
+
+**필드 설명:**
+- `natural_language_request`: 사용자의 자연어 요청 (예: "서울시 공공 주차장 정보를 추가해주세요")
+- `suggested_dataset_name`: 사용자가 제안하는 데이터셋명 (없으면 AI가 제안)
+- `suggested_portal_url`: 사용자가 알고 있는 공공데이터포털 URL (있으면 참고)
+
+#### 응답 (200 OK)
+
+```json
+{
+  "onboarding_id": "uuid",
+  "dataset_name": "string (AI 또는 사용자 제안)",
+  "description": "string (자연어 요청 기반 AI 요약)",
+  "suggested_schema": {
+    "fields": [
+      {
+        "name": "column_name",
+        "type": "string|integer|number|boolean|date",
+        "description": "설명"
+      }
+    ]
+  },
+  "suggested_datasets": ["keyword1", "keyword2", "keyword3"],
+  "ai_note": "string (OpenAI 생성 또는 '[AI 미사용 폴백]')",
+  "philosophy_checklist": [
+    {
+      "id": 1,
+      "item": "데이터 출처 공공성·권리 확인(라이선스, 저작권)",
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "item": "스키마 적절성(컬럼명·타입이 표준화되어 있는가)",
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "item": "검색 키워드 대표성(사용자 실제 찾는 방식과 일치하는가)",
+      "status": "pending"
+    }
+  ],
+  "checklist_all_approved": false,
+  "detected_at": "ISO8601 timestamp",
+  "status": "pending",
+  "kind": "onboarding_proposal",
+  "risk": "yellow"
+}
+```
+
+**필드 설명:**
+- `onboarding_id`: 온보딩 제안의 고유 ID (감사/추적용)
+- `dataset_name`: AI 또는 사용자 제안 데이터셋명
+- `description`: 자연어 요청 기반 요약
+- `suggested_schema`: AI가 생성한 스키마 초안 (validateModuleContract로 검증됨)
+- `suggested_datasets`: 포털에서 검색할 키워드 제안 (실제 포털 검색은 미연동 — 로드맵)
+- `ai_note`: OpenAI 응답 또는 폴백 메시지
+- `philosophy_checklist`: 운영 검토용 3항목 체크리스트 (항상 "pending" 상태로 반환)
+- `checklist_all_approved`: 체크리스트 전체 승인 여부 (초기값 false — POST /api/update-center/onboarding/approve 호출로 갱신)
+- `status`: "pending" (처음 생성 시), "approved"/"rejected"로 후속 갱신
+- `kind`: "onboarding_proposal" (고정)
+- `risk`: "yellow" (고정 — human 검토 필수)
+
+#### 에러 응답
+
+**400 Bad Request** — 필수 필드 누락 또는 형식 오류
+```json
+{
+  "error": "Missing required field: natural_language_request"
+}
+```
+
+**401 Unauthorized** — 토큰 미설정 또는 불일치
+```json
+{
+  "error": "Missing or invalid x-update-center-token header"
+}
+```
+
+### 6.3 원칙 (Principles)
+
+1. **승인 전 운영 미반영** — `POST /api/update-center/onboarding` 호출 시점에 데이터셋이 `data_sources.yaml`에 추가되지 않습니다. AI가 생성한 YAML 초안은 응답에 포함되지만, 실제 적용은 운영팀이 초안을 복사하여 수동으로 파일에 병합하는 방식입니다.
+
+2. **철학 체크리스트 항상 human 검토 필수** — 세 항목(공공성·권리, 스키마 표준성, 검색 키워드 대표성)은 모두 "pending" 상태로 생성되며, 별도의 approve 엔드포인트 호출 전까지는 상태가 바뀌지 않습니다.
+
+3. **계약 검사는 LLM enum 위반을 사후에 포착** — OpenAI가 enum 형식(check.type, 등)을 어기면 validateModuleContract에서 에러를 발생시킵니다. 이 경우 응답 상태는 200이지만 `schema_validation_errors` 필드에 위반 내용을 명시합니다.
+
+### 6.4 한계 (Limitations)
+
+- **`suggested_datasets`는 검색 키워드 제안일 뿐** — 공공데이터포털의 검색 API와 미연동되어 있습니다. 사용자 또는 운영팀이 직접 포털에 로그인하여 키워드로 검색한 후 URL을 찾아야 합니다 (로드맵에 포함).
+
+- **YAML 초안은 human 검토 필수** — AI가 생성한 스키마나 체크 타입이 데이터의 실제 특성과 맞지 않을 수 있습니다. 운영팀은 응답의 `suggested_schema`를 반드시 검토하고, 필요하면 수정한 후 `data_sources.yaml`에 수동으로 추가해야 합니다.
+
+- **LLM enum 형식 위반 가능성** — OpenAI가 반환한 초안이 정의된 enum(예: `check.type ∈ {"json_api", "file_head", "manual"}`)을 어길 수 있습니다. 이 경우 API 응답은 여전히 200이지만 `schema_validation_errors` 필드에 위반 사항을 명시합니다 — 계약 검사(validateModuleContract)가 모든 위반을 사후에 포착하므로, 운영팀은 이 필드를 보고 수정 후 추가할 수 있습니다.
+
+- **파일 생성은 자동화되지 않음** — 온보딩 에이전트는 YAML 초안만 제공하므로, 실제 파일 생성 및 커밋은 사람이 합니다. 이를 통해 수동 게이트의 신뢰성을 유지합니다.
+
+## 7. 검증 이력
 
 - 2026-08-09: Task 1~5 각 태스크 리뷰 클린(파일별 raw 검증 로그는
   `.superpowers/sdd/2026-08-09-p4-update-center/task-{1..5}-report.md` 참고).
-- 2026-08-09: 본 문서(Task 6) — 게이트 일괄(check_inline_script, validate:modules,
+- 2026-08-09: Task 6 (본 문서 앞 섹션) — 게이트 일괄(check_inline_script, validate:modules,
   build:vercel, node --check ×5, store.mjs --selftest, 서버 스모크) + 위 3절의
   E2E 데모(시뮬레이션 변경 → green 이벤트 → AI 해설 → 승인 → 적용 → 버전 기록 →
   롤백 → 감사 로그) 전 과정을 실제로 실행하고 raw 출력을 확보. 상세 로그는
   `.superpowers/sdd/2026-08-09-p4-update-center/task-6-report.md`.
+- 2026-08-09: P5 Task 3 (본 섹션 추가) — 온보딩 에이전트 문서 + 게이트 일괄 + 서버 스모크(온보딩 왕복 포함).
