@@ -7224,6 +7224,74 @@
       `;
     }
 
+    function buildReadingContext(row = {}) {
+      const schoolId = getSchoolId(row);
+      const all = state.datasets.schoolLibraryAccess || [];
+      const rec = all.find((r) => r.학교ID === schoolId);
+      if (!rec || !Number(rec.matched)) return { matched: false };
+
+      // 시 전체 참조 통계 (272교 기준, 매칭된 행만)
+      const matchedRows = all.filter((r) => Number(r.matched));
+      const total = matchedRows.length;
+      const externalShortageCount = matchedRows.filter((r) => String(r.external_shortage) === "True").length;
+      const perCapitaValues = matchedRows
+        .map((r) => Number(r.인당장서수))
+        .filter((v) => Number.isFinite(v))
+        .sort((a, b) => a - b);
+      const cityMedianPerCapita = perCapitaValues.length
+        ? (perCapitaValues.length % 2
+            ? perCapitaValues[(perCapitaValues.length - 1) / 2]
+            : (perCapitaValues[perCapitaValues.length / 2 - 1] + perCapitaValues[perCapitaValues.length / 2]) / 2)
+        : null;
+      const noLibrarianCount = matchedRows.filter((r) => Number(r.사서합계) === 0).length;
+
+      const gapMeta = getReadingGapMeta(rec.reading_gap_type);
+      const card = (state.datasets.policyActionCards?.schools || {})[schoolId] || null;
+      const primaryMeta = card ? getPolicyActionMeta(card.base.primary_action) : null;
+      const altMeta = card && card.base.alternative ? getPolicyActionMeta(card.base.alternative) : null;
+
+      const toNum = (v) => (Number.isFinite(Number(v)) ? Number(v) : null);
+      return {
+        matched: true,
+        isoPublicLibraryCount: toNum(rec.iso_public_library_count),
+        nearestLibraryName: rec.nearest_library_name || null,
+        nearestLibraryType: rec.nearest_library_type || null,
+        nearestLibraryDistM: toNum(rec.nearest_library_euclid_m),
+        nearestLibraryCoordApprox: rec.nearest_library_coord_source === "지오코딩",
+        bookCount: toNum(rec.장서수),
+        perCapitaBooks: toNum(rec.인당장서수),
+        seatCount: toNum(rec.좌석수),
+        librarianTotal: toNum(rec.사서합계),
+        studentCount: toNum(rec.학생수),
+        externalShortage: String(rec.external_shortage) === "True",
+        internalShortage: String(rec.internal_shortage),  // "True" | "False" | "추가 확인 필요"
+        demandHigh: String(rec.demand_high) === "True",
+        gapType: rec.reading_gap_type || null,
+        gapLabel: gapMeta.label,
+        gapColor: gapMeta.color,
+        gapTextColor: gapMeta.textColor || "#ffffff",
+        gapReason: rec.reading_gap_reason || null,
+        baseDate: rec.기준일 || null,
+        cityStats: {
+          total,
+          externalShortageCount,
+          cityMedianPerCapita,
+          noLibrarianCount,
+        },
+        policy: card ? {
+          primaryAction: card.base.primary_action,
+          primaryLabel: primaryMeta.label,
+          primaryColor: primaryMeta.color,
+          primaryTextColor: primaryMeta.textColor || "#ffffff",
+          altAction: card.base.alternative || null,
+          altLabel: altMeta ? altMeta.label : null,
+          stability: toNum(card.stability),
+          separateTrack: !!card.separate_track,
+          dataGap: !!card.data_gap,
+        } : null,
+      };
+    }
+
     function renderDetailPanel(payload = null) {
       if (isCandidatePanelResponse(payload)) {
         renderCandidatePanel(payload);
@@ -7642,6 +7710,7 @@
 
       _enrichedRow._redevelopmentProjects = buildRedevelopmentProjectList(row, 500);
       _enrichedRow._largeApartmentComplexes = buildLargeApartmentComplexList(row, 500, 500);
+      _enrichedRow._readingContext = buildReadingContext(row);
 
       if (!(state.datasets.candidateFeatures || []).length) {
         await loadCandidateLayer();
