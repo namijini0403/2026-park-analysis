@@ -19,6 +19,7 @@ export type ReadingContextCityStats = {
 };
 
 export type ReadingContextPolicy = {
+  primaryModule?: string | null;
   primaryAction?: string;
   primaryLabel?: string;
   primaryColor?: string;

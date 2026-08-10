@@ -218,9 +218,9 @@ function formatOptionalCount(value?: number | null) {
 }
 
 // 독서교육 접근성 섹션 전용: 정수로 반올림하지 않고 천단위 구분만 적용 (1인당 장서수 등 소수 값 보존)
-function formatOptionalNumber(value?: number | null) {
+function formatOptionalNumber(value?: number | null, unit = "") {
   if (value == null || !Number.isFinite(Number(value))) return "자료 없음";
-  return formatNumber(Number(value));
+  return `${formatNumber(Number(value))}${unit}`;
 }
 
 function formatBooleanFlag(value?: boolean | null) {
@@ -1157,7 +1157,7 @@ function ReadingAccessSection({ readingContext }: Pick<SchoolDetailReportProps, 
     policy,
   } = readingContext;
 
-  const librarianMissing = (librarianTotal ?? null) === 0;
+  const librarianMissing = librarianTotal === 0;
 
   return (
     <SectionShell kicker="Reading" title="독서교육 접근성">
@@ -1167,22 +1167,22 @@ function ReadingAccessSection({ readingContext }: Pick<SchoolDetailReportProps, 
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="p-5">
-          <p className="text-sm font-medium text-slate-400">도보 500m 공공도서관</p>
-          <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(isoPublicLibraryCount)}개</p>
+          <p className="text-sm font-medium text-slate-400">도보 500m 공공·어린이도서관</p>
+          <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(isoPublicLibraryCount, "개")}</p>
           <p className="mt-2 text-sm text-slate-400">
             인천 {formatOptionalNumber(cityStats?.total)}교 중 {formatOptionalNumber(cityStats?.externalShortageCount)}교가 0개
           </p>
         </Card>
         <Card className="p-5">
           <p className="text-sm font-medium text-slate-400">학교도서관 1인당 장서</p>
-          <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(perCapitaBooks)}권</p>
-          <p className="mt-2 text-sm text-slate-400">시 중앙값 {formatOptionalNumber(cityStats?.cityMedianPerCapita)}권</p>
+          <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(perCapitaBooks, "권")}</p>
+          <p className="mt-2 text-sm text-slate-400">시 중앙값 {formatOptionalNumber(cityStats?.cityMedianPerCapita, "권")}</p>
         </Card>
         <Card className="p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-sm font-medium text-slate-400">사서</p>
-              <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(librarianTotal)}명</p>
+              <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(librarianTotal, "명")}</p>
             </div>
             {librarianMissing ? <Badge tone="danger">사서 미배치</Badge> : null}
           </div>
@@ -1191,28 +1191,33 @@ function ReadingAccessSection({ readingContext }: Pick<SchoolDetailReportProps, 
         <Card className="p-5">
           <p className="text-sm font-medium text-slate-400">열람좌석 / 장서</p>
           <p className="mt-3 text-3xl font-bold tracking-tight text-white">
-            {formatOptionalNumber(seatCount)}석 / {formatOptionalNumber(bookCount)}권
+            {formatOptionalNumber(seatCount, "석")} / {formatOptionalNumber(bookCount, "권")}
           </p>
         </Card>
       </div>
       <Card className="p-4">
         <p className="text-sm text-slate-200">
-          {nearestLibraryName ?? "자료 없음"} ({nearestLibraryType ?? "자료 없음"}, {formatOptionalNumber(nearestLibraryDistM)}m 직선 참고치
+          최근접 도서관 {nearestLibraryName ?? "자료 없음"} ({nearestLibraryType ? `${nearestLibraryType}도서관` : "자료 없음"}, {formatOptionalNumber(nearestLibraryDistM, "m")} 직선 참고치
           {nearestLibraryCoordApprox ? ", 좌표 근사" : ""})
         </p>
       </Card>
       {policy ? (
         <Card className="p-5">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-semibold text-white">우선 검토안: {policy.primaryLabel ?? "자료 없음"}</p>
-            <SectionChip>대안 {policy.altLabel ?? "해당 없음 — 정기 재진단"}</SectionChip>
+            <p className="text-sm font-semibold text-white">통합 우선 검토안(기본 시나리오): {policy.primaryLabel ?? "자료 없음"}</p>
+            <SectionChip>조건부 대안: {policy.altLabel ?? "해당 없음 — 정기 재진단"}</SectionChip>
             <SectionChip>
-              안정성 12개 조건 조합 중 {policy.stability != null ? Math.round(policy.stability * 12) : "자료 없음"}개 유지
+              안정성 12개 조건 조합 중 {formatOptionalNumber(policy.stability != null ? Math.round(policy.stability * 12) : null, "개")} 유지
             </SectionChip>
-            {policy.separateTrack ? <DarkChip>별도 트랙</DarkChip> : null}
-            {policy.dataGap ? <Badge tone="warning">데이터 공백</Badge> : null}
+            {policy.separateTrack ? <DarkChip>도서 지역 별도 정책 트랙</DarkChip> : null}
+            {policy.dataGap ? <Badge tone="warning">독서 데이터 보완 필요</Badge> : null}
           </div>
-          <p className="mt-3 text-xs text-slate-500">세부 시나리오·기관별 역할은 지도 진단 패널의 정책 행동 카드 참고</p>
+          <p className="mt-3 text-xs text-slate-500">
+            {policy.primaryModule === "reading"
+              ? "정책 행동 카드는 공원·독서 필요도를 함께 비교해 산출한 통합 권고이며, 이 학교는 독서 필요도가 더 높아 위 검토안이 독서 기준으로 정해졌습니다."
+              : "정책 행동 카드는 공원·독서 필요도를 함께 비교해 산출한 통합 권고입니다. 이 학교는 공원 필요도가 우선 적용되어 위 검토안은 공원 기준이며, 독서 대응은 위의 격차 유형을 따릅니다."}
+            {" 예산·부지·접근성 조건별 전환 시나리오와 기관별 역할은 지도 진단 패널의 정책 행동 카드를 참고하세요."}
+          </p>
         </Card>
       ) : null}
     </SectionShell>

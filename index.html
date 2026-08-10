@@ -7224,6 +7224,14 @@
       `;
     }
 
+    function toPublicReadingReason(reason) {
+      if (!reason) return null;
+      return String(reason)
+        .replace(/\(edge case:[^)]*\)/g, "(직접투자 필요성은 유지, 우선순위는 수요 상위 25% 학교 다음 순위)")
+        .replace(/도보500m/g, "도보 500m")
+        .trim();
+    }
+
     function buildReadingContext(row = {}) {
       const schoolId = getSchoolId(row);
       const all = state.datasets.schoolLibraryAccess || [];
@@ -7249,10 +7257,10 @@
 
       const gapMeta = getReadingGapMeta(rec.reading_gap_type);
       const card = (state.datasets.policyActionCards?.schools || {})[schoolId] || null;
-      const primaryMeta = card ? getPolicyActionMeta(card.base.primary_action) : null;
-      const altMeta = card && card.base.alternative ? getPolicyActionMeta(card.base.alternative) : null;
+      const primaryMeta = card ? getPolicyActionMeta(card.base?.primary_action) : null;
+      const altMeta = card && card.base?.alternative ? getPolicyActionMeta(card.base.alternative) : null;
 
-      const toNum = (v) => (Number.isFinite(Number(v)) ? Number(v) : null);
+      const toNum = (v) => { const s = String(v ?? "").trim(); return s !== "" && Number.isFinite(Number(s)) ? Number(s) : null; };
       return {
         matched: true,
         isoPublicLibraryCount: toNum(rec.iso_public_library_count),
@@ -7272,7 +7280,7 @@
         gapLabel: gapMeta.label,
         gapColor: gapMeta.color,
         gapTextColor: gapMeta.textColor || "#ffffff",
-        gapReason: rec.reading_gap_reason || null,
+        gapReason: toPublicReadingReason(rec.reading_gap_reason),
         baseDate: rec.기준일 || null,
         cityStats: {
           total,
@@ -7281,11 +7289,12 @@
           noLibrarianCount,
         },
         policy: card ? {
-          primaryAction: card.base.primary_action,
+          primaryModule: card.primary_module || null,
+          primaryAction: card.base?.primary_action,
           primaryLabel: primaryMeta.label,
           primaryColor: primaryMeta.color,
           primaryTextColor: primaryMeta.textColor || "#ffffff",
-          altAction: card.base.alternative || null,
+          altAction: card.base?.alternative || null,
           altLabel: altMeta ? altMeta.label : null,
           stability: toNum(card.stability),
           separateTrack: !!card.separate_track,

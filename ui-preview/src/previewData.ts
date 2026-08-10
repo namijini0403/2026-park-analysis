@@ -1,4 +1,39 @@
 ﻿import type { SchoolDetailReportProps } from "./SchoolDetailReportPagePreview";
+import type { ReadingContext } from "./schoolDataBridge";
+
+// 인천석암초등학교(B000002982) 실측값, data_processed/school_library_access.csv 2025 기준일 기준.
+// gapLabel/gapColor/gapTextColor는 index.html의 READING_GAP_META["direct_investment_first"]와 동일하게 유지.
+const previewReadingContext: ReadingContext = {
+  matched: true,
+  isoPublicLibraryCount: 0,
+  nearestLibraryName: "소금꽃어린이도서관",
+  nearestLibraryType: "어린이",
+  nearestLibraryDistM: 398,
+  nearestLibraryCoordApprox: false,
+  bookCount: 20761,
+  perCapitaBooks: 23.0,
+  seatCount: 28,
+  librarianTotal: 1,
+  studentCount: 902,
+  externalShortage: true,
+  internalShortage: "True",
+  demandHigh: true,
+  gapType: "direct_investment_first",
+  gapLabel: "학교도서관 직접투자 우선",
+  gapColor: "#E53935",
+  gapTextColor: "#ffffff",
+  gapReason:
+    "도보 500m 내 공공도서관 0개·인당장서수 중앙값 50% 미만·수요 상위 25%(2029 예측) → 외부·내부 모두 부족+수요 높음, 직접투자 최우선",
+  baseDate: "2025",
+  cityStats: {
+    total: 272,
+    externalShortageCount: 251,
+    cityMedianPerCapita: 49.1,
+    noLibrarianCount: 93,
+  },
+  // 이 학교의 통합 정책 카드는 primary_module="park"(공원 필요도 우선)이므로 독서 섹션에는 표시하지 않음.
+  policy: null,
+};
 
 export const previewSchoolDetailReport: SchoolDetailReportProps = {
   schoolName: "인천석암초등학교",
@@ -159,4 +194,5 @@ export const previewSchoolDetailReport: SchoolDetailReportProps = {
   onSimulationClick: () => {
     window.alert("프리뷰 환경입니다. 실제 시뮬레이션은 아직 연결되지 않았습니다.");
   },
+  readingContext: previewReadingContext,
 };
