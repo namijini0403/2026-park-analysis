@@ -9,6 +9,52 @@ const CITY_AVG = {
   studentTrendPct: -8.470,
 };
 
+// index.html buildReadingContext()의 반환 형태를 그대로 미러링 (Task 1 스키마).
+// 매칭 실패 시 { matched: false }만 오므로 matched 이외 필드는 전부 optional.
+export type ReadingContextCityStats = {
+  total?: number;
+  externalShortageCount?: number;
+  cityMedianPerCapita?: number | null;
+  noLibrarianCount?: number;
+};
+
+export type ReadingContextPolicy = {
+  primaryAction?: string;
+  primaryLabel?: string;
+  primaryColor?: string;
+  primaryTextColor?: string;
+  altAction?: string | null;
+  altLabel?: string | null;
+  stability?: number | null;
+  separateTrack?: boolean;
+  dataGap?: boolean;
+};
+
+export type ReadingContext = {
+  matched: boolean;
+  isoPublicLibraryCount?: number | null;
+  nearestLibraryName?: string | null;
+  nearestLibraryType?: string | null;
+  nearestLibraryDistM?: number | null;
+  nearestLibraryCoordApprox?: boolean;
+  bookCount?: number | null;
+  perCapitaBooks?: number | null;
+  seatCount?: number | null;
+  librarianTotal?: number | null;
+  studentCount?: number | null;
+  externalShortage?: boolean;
+  internalShortage?: string; // "True" | "False" | "추가 확인 필요"
+  demandHigh?: boolean;
+  gapType?: string | null;
+  gapLabel?: string;
+  gapColor?: string;
+  gapTextColor?: string;
+  gapReason?: string | null;
+  baseDate?: string | null;
+  cityStats?: ReadingContextCityStats;
+  policy?: ReadingContextPolicy | null;
+};
+
 export interface Candidate {
   grid_id: string;
   cx: number;

@@ -10,6 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import AiExplainerPanel from "./AiExplainerPanel";
+import type { ReadingContext } from "./schoolDataBridge";
 
 // 백분위 방향 규칙
 // nearestParkDistance: share_ge 기준 -> 낮을수록 불리 (10% = 상위 10% 불리 = 위험)
@@ -160,6 +161,7 @@ export type SchoolDetailReportProps = {
   districtBestEnvironmentSchool?: BenchmarkSchoolItem;
   redevelopmentProjects?: RedevelopmentProject[];
   onSimulationClick?: () => void;
+  readingContext?: ReadingContext | null;
 };
 
 type MetricCardProps = {
@@ -213,6 +215,12 @@ function formatOptionalRatio(value?: number | null) {
 function formatOptionalCount(value?: number | null) {
   if (value == null || !Number.isFinite(Number(value))) return "자료 없음";
   return formatNumber(Math.round(Number(value)));
+}
+
+// 독서교육 접근성 섹션 전용: 정수로 반올림하지 않고 천단위 구분만 적용 (1인당 장서수 등 소수 값 보존)
+function formatOptionalNumber(value?: number | null) {
+  if (value == null || !Number.isFinite(Number(value))) return "자료 없음";
+  return formatNumber(Number(value));
 }
 
 function formatBooleanFlag(value?: boolean | null) {
@@ -1106,6 +1114,111 @@ function SchoolProfileGrid(props: Pick<SchoolDetailReportProps, "nearestParkDist
   );
 }
 
+function readingGapTone(gapType?: string | null): StatusTone {
+  switch (gapType) {
+    case "direct_investment_first":
+      return "danger";
+    case "school_hub_mobile":
+      return "warning";
+    case "public_link":
+      return "caution";
+    case "maintain_monitor":
+      return "positive";
+    default:
+      return "caution";
+  }
+}
+
+function ReadingAccessSection({ readingContext }: Pick<SchoolDetailReportProps, "readingContext">) {
+  if (!readingContext || readingContext.matched === false) {
+    return (
+      <SectionShell kicker="Reading" title="독서교육 접근성">
+        <Card className="p-5">
+          <p className="text-sm font-medium text-slate-400">추가 확인 필요 (학교-도서관 접근성 데이터 없음)</p>
+        </Card>
+      </SectionShell>
+    );
+  }
+
+  const {
+    isoPublicLibraryCount,
+    perCapitaBooks,
+    librarianTotal,
+    seatCount,
+    bookCount,
+    nearestLibraryName,
+    nearestLibraryType,
+    nearestLibraryDistM,
+    nearestLibraryCoordApprox,
+    gapType,
+    gapLabel,
+    gapReason,
+    cityStats,
+    policy,
+  } = readingContext;
+
+  const librarianMissing = (librarianTotal ?? null) === 0;
+
+  return (
+    <SectionShell kicker="Reading" title="독서교육 접근성">
+      <div className="flex flex-wrap items-center gap-3">
+        <Badge tone={readingGapTone(gapType)}>{gapLabel ?? "자료 없음"}</Badge>
+        {gapReason ? <p className="text-sm text-slate-400">{gapReason}</p> : null}
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Card className="p-5">
+          <p className="text-sm font-medium text-slate-400">도보 500m 공공도서관</p>
+          <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(isoPublicLibraryCount)}개</p>
+          <p className="mt-2 text-sm text-slate-400">
+            인천 {formatOptionalNumber(cityStats?.total)}교 중 {formatOptionalNumber(cityStats?.externalShortageCount)}교가 0개
+          </p>
+        </Card>
+        <Card className="p-5">
+          <p className="text-sm font-medium text-slate-400">학교도서관 1인당 장서</p>
+          <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(perCapitaBooks)}권</p>
+          <p className="mt-2 text-sm text-slate-400">시 중앙값 {formatOptionalNumber(cityStats?.cityMedianPerCapita)}권</p>
+        </Card>
+        <Card className="p-5">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium text-slate-400">사서</p>
+              <p className="mt-3 text-3xl font-bold tracking-tight text-white">{formatOptionalNumber(librarianTotal)}명</p>
+            </div>
+            {librarianMissing ? <Badge tone="danger">사서 미배치</Badge> : null}
+          </div>
+          <p className="mt-2 text-sm text-slate-400">시 전체 미배치 {formatOptionalNumber(cityStats?.noLibrarianCount)}교</p>
+        </Card>
+        <Card className="p-5">
+          <p className="text-sm font-medium text-slate-400">열람좌석 / 장서</p>
+          <p className="mt-3 text-3xl font-bold tracking-tight text-white">
+            {formatOptionalNumber(seatCount)}석 / {formatOptionalNumber(bookCount)}권
+          </p>
+        </Card>
+      </div>
+      <Card className="p-4">
+        <p className="text-sm text-slate-200">
+          {nearestLibraryName ?? "자료 없음"} ({nearestLibraryType ?? "자료 없음"}, {formatOptionalNumber(nearestLibraryDistM)}m 직선 참고치
+          {nearestLibraryCoordApprox ? ", 좌표 근사" : ""})
+        </p>
+      </Card>
+      {policy ? (
+        <Card className="p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm font-semibold text-white">우선 검토안: {policy.primaryLabel ?? "자료 없음"}</p>
+            <SectionChip>대안 {policy.altLabel ?? "해당 없음 — 정기 재진단"}</SectionChip>
+            <SectionChip>
+              안정성 12개 조건 조합 중 {policy.stability != null ? Math.round(policy.stability * 12) : "자료 없음"}개 유지
+            </SectionChip>
+            {policy.separateTrack ? <DarkChip>별도 트랙</DarkChip> : null}
+            {policy.dataGap ? <Badge tone="warning">데이터 공백</Badge> : null}
+          </div>
+          <p className="mt-3 text-xs text-slate-500">세부 시나리오·기관별 역할은 지도 진단 패널의 정책 행동 카드 참고</p>
+        </Card>
+      ) : null}
+    </SectionShell>
+  );
+}
+
 function ProblemSection({
   problemTags,
   studentTrend,
@@ -1544,6 +1657,7 @@ export default function SchoolDetailReportPage(props: SchoolDetailReportProps) {
     <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-4 py-8 lg:px-8">
       <SchoolHeader {...props} />
       <SchoolProfileGrid {...props} />
+      <ReadingAccessSection readingContext={props.readingContext} />
       <ProblemSection {...props} />
       <ContextSection {...props} />
       <SimilarSchoolsSection {...props} />

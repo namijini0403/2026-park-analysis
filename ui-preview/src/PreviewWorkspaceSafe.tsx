@@ -7,6 +7,7 @@ import AiExplainerPanel from "./AiExplainerPanel";
 import { previewSchoolDetailReport } from "./previewData";
 import { cityStatisticsPreviewDataSafe } from "./statisticsPreviewDataSafe";
 import { applyLegacySchoolSnapshot, mapSchoolRowToReportProps, mapCandidateFeatures } from "./schoolDataBridge";
+import type { ReadingContext } from "./schoolDataBridge";
 
 type ViewMode = "landing" | "report" | "simulation" | "statistics";
 
@@ -98,6 +99,14 @@ function readLargeApartmentComplexes(schoolRow: Record<string, any> | null): Lar
     .filter((item: LargeApartmentComplex) => item.name !== "" && Number.isFinite(item.householdCount));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function readReadingContext(schoolRow: Record<string, any> | null): ReadingContext | null {
+  if (!schoolRow) return null;
+  const raw = schoolRow._readingContext;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+  return raw as ReadingContext;
+}
+
 function getPreviewCaseType(schoolRow: Record<string, any> | null): number {
   if (!schoolRow) return 1;
   const caseLabel = String(schoolRow.case_label ?? "").trim();
@@ -136,7 +145,8 @@ export default function PreviewWorkspaceSafe() {
       };
     }
     const mapped = mapSchoolRowToReportProps(schoolRow, () => setView("simulation"));
-    return applyLegacySchoolSnapshot(mapped, schoolRow._legacySnapshot);
+    const withLegacy = applyLegacySchoolSnapshot(mapped, schoolRow._legacySnapshot);
+    return { ...withLegacy, readingContext: readReadingContext(schoolRow) };
   }, [schoolRow]);
 
   const candidates = useMemo(() => {
