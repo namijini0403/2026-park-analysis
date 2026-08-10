@@ -31,8 +31,21 @@ const previewReadingContext: ReadingContext = {
     cityMedianPerCapita: 49.1,
     noLibrarianCount: 93,
   },
-  // 이 학교의 통합 정책 카드는 primary_module="park"(공원 필요도 우선)이므로 독서 섹션에는 표시하지 않음.
-  policy: null,
+  // data_processed/policy_action_cards.json의 B000002982 카드 실값.
+  // primary_module="park"(공원 필요도 우선) 사례이므로 통합 권고 안내문의 공원 기준 분기가 그대로 노출된다.
+  // 라벨/색은 index.html의 POLICY_ACTION_META와 동일하게 유지.
+  policy: {
+    primaryModule: "park",
+    primaryAction: "external_supply_new",
+    primaryLabel: "외부 신규 공급",
+    primaryColor: "#FB8C00",
+    primaryTextColor: "#ffffff",
+    altAction: "shared_hub",
+    altLabel: "권역 공동활용·거점화",
+    stability: 0.3333,
+    separateTrack: false,
+    dataGap: false,
+  },
 };
 
 export const previewSchoolDetailReport: SchoolDetailReportProps = {
