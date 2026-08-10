@@ -7230,10 +7230,12 @@
       const rec = all.find((r) => r.학교ID === schoolId);
       if (!rec || !Number(rec.matched)) return { matched: false };
 
-      // 시 전체 참조 통계 (272교 기준, 매칭된 행만)
+      // 시 전체 참조 통계 (272교 기준)
+      // external_shortage는 iso_public_library_count 기반이라 매칭 여부와 무관 → 전체 행 기준.
+      // 중앙값/사서 통계는 내부 도서관 데이터가 필요하므로 매칭된 행만 사용.
       const matchedRows = all.filter((r) => Number(r.matched));
-      const total = matchedRows.length;
-      const externalShortageCount = matchedRows.filter((r) => String(r.external_shortage) === "True").length;
+      const total = all.length;
+      const externalShortageCount = all.filter((r) => String(r.external_shortage) === "True").length;
       const perCapitaValues = matchedRows
         .map((r) => Number(r.인당장서수))
         .filter((v) => Number.isFinite(v))
