@@ -3,6 +3,7 @@ import type { MouseEvent } from "react";
 import AiExplainerPanel from "./AiExplainerPanel";
 import KakaoMap, { CandidateMarker, CandidateRouteLine } from "./KakaoMap";
 import { useIsNarrow } from "./useIsNarrow";
+import type { ReadingContext } from "./schoolDataBridge";
 
 const LETTERS = "ABCDEFGHIJ".split("");
 const BARRIER_KEYS = ["motorway", "trunk", "primary", "secondary", "tertiary"] as const;
@@ -93,6 +94,7 @@ interface SimulationPageProps {
   candidates: Candidate[];
   redevelopmentProjects?: RedevelopmentProject[];
   largeApartmentComplexes?: LargeApartmentComplex[];
+  readingContext?: ReadingContext | null;
   onBack: () => void;
 }
 
@@ -781,6 +783,7 @@ export default function SimulationPage({
   candidates,
   redevelopmentProjects = [],
   largeApartmentComplexes = [],
+  readingContext,
   onBack,
 }: SimulationPageProps) {
   const isNarrow = useIsNarrow();
@@ -984,10 +987,30 @@ export default function SimulationPage({
           >
             {casePolicyLabel}
           </span>
+          {readingContext?.matched && readingContext.gapType ? (
+            <span
+              style={{
+                display: "inline-flex",
+                padding: "4px 10px",
+                borderRadius: 999,
+                background: readingContext.gapColor ?? SIM_COLORS.panel,
+                color: readingContext.gapTextColor ?? SIM_COLORS.text,
+                fontSize: 12,
+                fontWeight: 700,
+              }}
+            >
+              📚 {readingContext.gapLabel}
+            </span>
+          ) : null}
           <span style={{ fontSize: 12, color: SIM_COLORS.muted }}>
             기준 좌표 {schoolLat.toFixed(5)}, {schoolLng.toFixed(5)}
           </span>
         </div>
+        {readingContext?.matched && readingContext.gapType ? (
+          <div style={{ marginTop: 6, fontSize: 12, color: SIM_COLORS.muted }}>
+            독서 격차는 공원 후보지 점수·가중치에 반영되지 않는 별도 정책 트랙입니다 — 상세는 진단 리포트의 독서교육 접근성 섹션 참고
+          </div>
+        ) : null}
       </div>
 
       <div

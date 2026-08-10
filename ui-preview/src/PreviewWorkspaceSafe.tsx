@@ -300,6 +300,7 @@ export default function PreviewWorkspaceSafe() {
           candidates={candidates}
           redevelopmentProjects={redevelopmentProjects}
           largeApartmentComplexes={largeApartmentComplexes}
+          readingContext={detailProps.readingContext}
           onBack={() => setView("report")}
         />
       ) : view === "statistics" ? (
