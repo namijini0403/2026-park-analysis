@@ -1,0 +1,196 @@
+{
+  "data_as_of": "2026-09-06",
+  "generated_by": "scripts/build_context_layers.py",
+  "layers": {
+    "construction_records": {
+      "coordinate_note_ko": "좌표는 행정 주소 기반 추정 위치이며 실제 공사현장 좌표가 아님.",
+      "coverage_basis_ko": "학교 소재지 주소의 구 기준. 그 외 구 학교는 미수집(unknown)으로 표시. 커버리지는 수집 레코드 주소의 구에서 파생하며 좌표 확보 레코드가 1건 이상인 구만 승격.",
+      "coverage_by_gu": {
+        "계양구": {
+          "located_record_count": 1620,
+          "record_count": 1684
+        },
+        "미추홀구": {
+          "located_record_count": 1851,
+          "record_count": 1971
+        },
+        "연수구": {
+          "located_record_count": 50,
+          "record_count": 74
+        }
+      },
+      "coverage_note_ko": "구별 수집 현황(레코드/좌표): 계양구 1684/1620, 미추홀구 1971/1851, 연수구 74/50. 연수구 15건은 소상공인 상가정보(2026-06-30) 동일 지번 정확일치 추정, 나머지는 Kakao Local API 주소 지오코딩 추정. 번지가 없는 개발지구 표기 등은 좌표 미부여(unresolved)로 남기며 학교별 수치는 하한 관측치.",
+      "coverage_regions": [
+        "계양구",
+        "미추홀구",
+        "연수구"
+      ],
+      "data_files": [
+        "facilities_construction.geojson"
+      ],
+      "distance_basis_ko": "직선거리 기준 (도보 경로 아님)",
+      "label_ko": "공사장(착공신고) 행정기록",
+      "located_record_count": 3521,
+      "record_count": 3729,
+      "record_scope_ko": "착공처리일 또는 사용승인일이 있는 행정기록만 포함(허가만 있고 착공·사용승인 기록이 없는 행은 제외).",
+      "sources": [
+        {
+          "published_date": null,
+          "retrieved_at": "2026-09-06",
+          "source_as_of": "2026-03-09",
+          "title": "인천광역시 연수구 건축물 착공신고 현황",
+          "url": "https://www.data.go.kr/data/15029299/fileData.do"
+        },
+        {
+          "published_date": null,
+          "retrieved_at": "2026-09-06",
+          "source_as_of": "2026-01-19",
+          "title": "인천광역시 계양구 건축착공사용승인현황",
+          "url": "https://www.data.go.kr/data/15038929/fileData.do"
+        },
+        {
+          "published_date": null,
+          "retrieved_at": "2026-09-06",
+          "source_as_of": "2025-09-25",
+          "title": "인천광역시 미추홀구 건축물 착공신고 현황",
+          "url": "https://www.data.go.kr/data/15029300/fileData.do"
+        },
+        {
+          "published_date": null,
+          "retrieved_at": "2026-09-06",
+          "source_as_of": "2026-06-30",
+          "title": "소상공인시장진흥공단 상가(상권)정보 (연수구 15건 좌표 추정 기준)",
+          "url": "https://www.data.go.kr/data/15083033/fileData.do"
+        },
+        {
+          "published_date": null,
+          "retrieved_at": "2026-09-06",
+          "source_as_of": "2026-09-06",
+          "title": "Kakao Local API 주소 검색 (그 외 좌표 추정 기준)",
+          "url": "https://dapi.kakao.com/v2/local/search/address.json"
+        }
+      ],
+      "status": "partial",
+      "status_label_ko": "부분 수집(계양구·미추홀구·연수구, 좌표 일부)",
+      "unlocated_record_count": 208,
+      "usage_note_ko": "착공·사용승인 행정기록이며 현재 공사 진행 여부를 확인한 자료가 아님. 사용승인 완료 기록은 현재 공사 위험이 아님."
+    },
+    "nightlife_permits": {
+      "active_record_count": 1534,
+      "coordinate_note_ko": "official_coordinate는 LOCALDATA 원천 좌표(EPSG:5174→4326 변환), geocoded_kakao_*는 Kakao Local API 주소 지오코딩 추정 위치(현장 실측 좌표 아님), unresolved는 좌표 미확보로 공간 집계에서 제외.",
+      "coordinate_provenance": {
+        "geocoded_kakao_jibun": 3,
+        "geocoded_kakao_keyword": 1,
+        "geocoded_kakao_road": 306,
+        "official_coordinate": 1222,
+        "unresolved": 2
+      },
+      "coverage_note_ko": "영업/정상 1534건 중 좌표 확보 1532건만 공간 집계에 사용. 학교별 수치는 하한 관측치이며 total_count는 null.",
+      "coverage_regions": [
+        "인천광역시 전역(인허가 관할 기준)"
+      ],
+      "data_files": [
+        "facilities_nightlife.geojson"
+      ],
+      "distance_basis_ko": "직선거리 기준 (도보 경로 아님)",
+      "label_ko": "유흥·단란주점 인허가 현황",
+      "located_record_count": 1532,
+      "record_count": 1534,
+      "source_as_of_note_ko": "파일 스냅샷 기준일은 독립 확인되지 않아 null. 레코드별 원천 갱신/수정 시각 보존, 수집일 2026-09-06.",
+      "sources": [
+        {
+          "published_date": null,
+          "retrieved_at": "2026-09-06",
+          "title": "지방행정인허가 유흥주점영업 (LOCALDATA)",
+          "url": "https://www.data.go.kr/data/15045018/fileData.do"
+        },
+        {
+          "published_date": null,
+          "retrieved_at": "2026-09-06",
+          "title": "지방행정인허가 단란주점영업 (LOCALDATA)",
+          "url": "https://www.data.go.kr/data/15045017/fileData.do"
+        },
+        {
+          "published_date": null,
+          "retrieved_at": "2026-09-06",
+          "title": "Kakao Local API 주소 검색 (좌표 미확보 312건 보강 기준)",
+          "url": "https://dapi.kakao.com/v2/local/search/address.json"
+        }
+      ],
+      "status": "partial",
+      "status_label_ko": "부분 수집(좌표 기준)",
+      "unlocated_record_count": 2,
+      "usage_note_ko": "행정 인허가 기록이며 사고위험·불법행위·현장 영업 여부 판정이 아님."
+    },
+    "school_designations": {
+      "data_files": [
+        "school_designations.json"
+      ],
+      "input_files": [
+        "school_designations_2026.csv",
+        "school_ai_focus_2026.csv",
+        "school_digital_tutor_2025.csv",
+        "school_edu_welfare_2026.csv",
+        "school_edu_welfare_2025.csv",
+        "school_multicultural_2026.csv"
+      ],
+      "matched_elementary_count": 176,
+      "period_note_ko": "지정 기간은 학년도 명단 기준 추정(period_basis=school_year_only)이며 확정 지정 시작·종료일이 아님.",
+      "programs_covered": [
+        "2026 AI·디지털 연구학교·선도학교",
+        "2026 AI중점학교",
+        "2025 디지털튜터 운영교(과거 이력)"
+      ],
+      "record_count": 804,
+      "scope_note_ko": "위 프로그램 공식 명단 기준. 그 외 지정·지원 사업은 미수집. 명단 미등재가 미지정 확정은 아님.",
+      "sources": [
+        {
+          "published_date": "2025-03-19",
+          "retrieved_at": "2026-09-06",
+          "source_file": "ice_digital_tutor_2025.pdf",
+          "title": "ice_digital_tutor_2025.pdf",
+          "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3320903"
+        },
+        {
+          "published_date": "2025-12-30",
+          "retrieved_at": "2026-09-06",
+          "source_file": "ice_digital_designations_2026.xlsx",
+          "title": "ice_digital_designations_2026.xlsx",
+          "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3353108"
+        },
+        {
+          "published_date": "2026-02-09",
+          "retrieved_at": "2026-09-06",
+          "source_file": "ice_ai_focus_2026.hwpx",
+          "title": "ice_ai_focus_2026.hwpx",
+          "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3359748"
+        },
+        {
+          "published_date": "2025-03-06",
+          "retrieved_at": "2026-09-06",
+          "source_file": "ice_edu_welfare_2025_school_list.xlsx",
+          "title": "ice_edu_welfare_2025_school_list.xlsx",
+          "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3319291&bbsId=788&mi=11841"
+        },
+        {
+          "published_date": "2026-01-16",
+          "retrieved_at": "2026-09-06",
+          "source_file": "ice_edu_welfare_2026_school_list.xlsx",
+          "title": "ice_edu_welfare_2026_school_list.xlsx",
+          "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3355686&bbsId=788&mi=11841"
+        },
+        {
+          "published_date": "2026-04-27",
+          "retrieved_at": "2026-09-06",
+          "source_file": "ice_multicultural_2026_research_korean_leading_schools.hwpx",
+          "title": "ice_multicultural_2026_research_korean_leading_schools.hwpx",
+          "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3369492&bbsId=720&mi=11841"
+        }
+      ],
+      "status": "available",
+      "status_label_ko": "수집 완료"
+    }
+  },
+  "schema_version": 2,
+  "usage_note_ko": "참고용 맥락 정보입니다. 자동 안전 등급·지원 자격·법령 위반 판정에 사용하지 않습니다."
+}

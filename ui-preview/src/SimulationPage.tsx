@@ -74,7 +74,8 @@ interface RedevelopmentProject {
   stage: string;
   distanceM: number;
   type?: string;
-  area?: number;
+  // 브리지(PreviewWorkspaceSafe)가 원자료 결측을 null로 전달한다. 이 페이지는 area를 읽지 않는다.
+  area?: number | null;
   householdCount?: number | null;
 }
 
@@ -970,7 +971,7 @@ export default function SimulationPage({
 
       <div style={{ marginBottom: 20 }}>
         <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1, color: SIM_COLORS.green, marginBottom: 6 }}>
-          HUMAN-IN-THE-LOOP SIMULATION
+          POLICY REACHABILITY · HUMAN-IN-THE-LOOP SIMULATION
         </div>
         <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, color: SIM_COLORS.text }}>{schoolName}</h1>
         <div style={{ marginTop: 8, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
@@ -1008,7 +1009,7 @@ export default function SimulationPage({
         </div>
         {readingContext?.matched && readingContext.gapType ? (
           <div style={{ marginTop: 6, fontSize: 12, color: SIM_COLORS.muted }}>
-            독서 격차는 공원 후보지 점수·가중치에 반영되지 않는 별도 정책 트랙입니다 — 상세는 진단 리포트의 독서교육 접근성 섹션 참고
+            독서 격차는 공원 후보지 점수·가중치에 반영되지 않는 별도 정책 트랙입니다 — 상세는 진단 리포트의 독서 도달성 섹션 참고
           </div>
         ) : null}
       </div>
@@ -1022,11 +1023,11 @@ export default function SimulationPage({
         }}
       >
         <div style={{ fontSize: 18, fontWeight: 800, color: SIM_COLORS.text, marginBottom: 8 }}>
-          공공시설 입지 선정을 위한 의사결정 인터페이스
+          외부 공급 후보지를 좁히는 정책 도달성 검토 인터페이스
         </div>
         <div style={{ fontSize: 14, color: SIM_COLORS.secondary, lineHeight: 1.75 }}>
-          정보를 많이 보여주는 것이 아니라, 30초 안에 비교 후보를 좁혀 선택할 수 있도록 설계한 화면입니다.
-          지도에서 위치를 먼저 보고, 참고 맥락과 추천 결과를 비교한 뒤 필요한 경우만 상세 정보를 펼쳐 확인합니다.
+          외부 접근성이 부족한 학교에 새 자원을 어디에 두면 아이에게 닿는지 비교하는 화면입니다. 정보를 많이 보여주는 것이 아니라, 30초 안에 비교 후보를 좁혀 선택할 수 있도록 설계했습니다.
+          지도에서 위치를 먼저 보고, 참고 맥락과 추천 결과를 비교한 뒤 필요한 경우만 상세 정보를 펼쳐 확인합니다. 최종 선택과 승인은 담당자가 합니다.
         </div>
       </div>
 
@@ -1201,7 +1202,7 @@ export default function SimulationPage({
         </div>
       ) : (
         <div style={{ marginBottom: 18, padding: "14px 16px", borderRadius: 18, background: "rgba(16, 185, 129, 0.10)", color: SIM_COLORS.greenSoft, fontSize: 13, lineHeight: 1.7 }}>
-          미래 수요 예측, Pareto 후보군, 1,000회 가중치 샘플링 기반 순위 안정성을 결합해 다양한 정책 선호에서도 상위권에 유지되는 후보를 제시합니다.
+          수요 예측, Pareto 후보군, 1,000회 가중치 재추출 기반 순위 안정성을 결합해 다양한 정책 선호에서도 상위권에 유지되는 후보를 제시합니다. 자동 결정이 아니라 비교 시작점입니다.
           <div style={{ marginTop: 6 }}>{aiRecommendations.filterSummary}</div>
         </div>
       )}
@@ -1399,7 +1400,7 @@ export default function SimulationPage({
         <div style={{ marginTop: 18 }}>
           <AiExplainerPanel
             title="선택 후보지 AI 근거 해설"
-            description="선택된 후보지 지표와 봉인된 근거 문서 안에서만 추천 이유와 주의사항을 설명합니다."
+            description="선택된 후보지 지표와 봉인된 근거 문서 안에서만 도달성 근거와 주의사항을 설명합니다."
             schoolContext={{
               school_name: schoolName,
               case_label: casePolicyLabel,

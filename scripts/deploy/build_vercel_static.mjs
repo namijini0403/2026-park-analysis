@@ -116,6 +116,10 @@ for (const file of requiredDataFiles) {
   copyFileToOutput(path.join("data_processed", file));
 }
 
+// 학교 맥락 레이어 (지정·연구학교, 유흥·단란주점 인허가, 공사장 행정기록)
+// — python scripts/build_context_layers.py 산출물
+copyDirectoryToOutput(path.join("data_processed", "context"));
+
 copyDirectoryToOutput(path.join("ui-preview", "dist"));
 copyDirectoryToOutput("assets");
 copyDirectoryToOutput(path.join("outputs", "robust_xai"));

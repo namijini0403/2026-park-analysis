@@ -1,0 +1,32 @@
+{
+  "active_rows": 563,
+  "authentication_required": false,
+  "download_url": "https://file.localdata.go.kr/file/download/singing_bars/info",
+  "encoding": "cp949",
+  "headers": {
+    "Referer": "https://file.localdata.go.kr/file/singing_bars/info",
+    "User-Agent": "Mozilla/5.0"
+  },
+  "https_verification": true,
+  "incheon_all_status_rows": 1669,
+  "incheon_status_counts": {
+    "영업/정상": 563,
+    "폐업": 1106
+  },
+  "kakao_geocoded_rows": 136,
+  "national_rows": 41666,
+  "notes": [
+    "Source snapshot date not independently stated; source_as_of null. Per-record update timestamps preserved.",
+    "Address prefix Incheon used to filter. Missing coordinates retained; no synthetic placement.",
+    "2026-09-06 Kakao Local API 주소 지오코딩으로 좌표 미확보 행 보강 (coordinate_source=kakao_local_api:*, 미해결은 unresolved 유지). 지오코딩 좌표는 주소 기반 추정 위치이며 현장 실측 좌표가 아님."
+  ],
+  "original_crs": "EPSG:5174",
+  "output_crs": "EPSG:4326",
+  "raw_bytes": 12436046,
+  "raw_file": "localdata_singing_national.csv",
+  "retrieved_at": "2026-09-06",
+  "sha256": "352b17bf2a9cebdb55d43b637f55721d550040c93be5b3bd9480aec44734b243",
+  "source_url": "https://www.data.go.kr/data/15045017/fileData.do",
+  "unresolved_coordinate_rows": 1,
+  "valid_coordinate_rows": 562
+}

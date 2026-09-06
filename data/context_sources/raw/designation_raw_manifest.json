@@ -1,0 +1,126 @@
+{
+  "generated_by": "scripts/context/normalize_designations.py",
+  "normalized_sources": [
+    {
+      "amount_source_ko": "원문 '지원액 계' 열(2026.3~2027.2 지원액 계)을 그대로 옮김. 추론 없음.",
+      "authentication": "none",
+      "bytes": 140512,
+      "filename": "ice_edu_welfare_2026_school_list.xlsx",
+      "normalized_to": "data/context_sources/school_edu_welfare_2026.csv",
+      "published_date": "2026-01-16",
+      "record_count": 212,
+      "records_by_level": {
+        "고등학교": 34,
+        "중학교": 79,
+        "초등학교": 99
+      },
+      "retrieved_at": "2026-09-06",
+      "sha256": "dcb8e07d999526f6355bff16e5310006e382fb29e58dde78e9f5fbaf92ba0176",
+      "source_page_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3355686&bbsId=788&mi=11841",
+      "title": "2026년도 교육복지우선지원사업 지원학교 명단(시행)",
+      "url": "https://www.ice.go.kr/upload/ice/na/bbs_788/2026/01/88b0eafcc07d44c175bb5862a3200186.xlsx"
+    },
+    {
+      "amount_source_ko": "원문 '지원액 계' 열(2025.3~2026.2 지원액 계)을 그대로 옮김. 추론 없음.",
+      "authentication": "none",
+      "bytes": 141168,
+      "filename": "ice_edu_welfare_2025_school_list.xlsx",
+      "normalized_to": "data/context_sources/school_edu_welfare_2025.csv",
+      "published_date": "2025-03-06",
+      "record_count": 225,
+      "records_by_level": {
+        "고등학교": 33,
+        "중학교": 74,
+        "초등학교": 118
+      },
+      "retrieved_at": "2026-09-06",
+      "sha256": "d0389a43e486781793eb0be932918e24b90c77a19a017e0b1efff64fe7b58e34",
+      "source_page_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3319291&bbsId=788&mi=11841",
+      "title": "2025년도 교육복지우선지원사업 지원 학교 명단(시행)",
+      "url": "https://www.ice.go.kr/upload/ice/na/bbs_788/2025/03/191133dea6957a52783b36817679640a.xlsx"
+    },
+    {
+      "authentication": "none",
+      "bytes": 54639,
+      "filename": "ice_multicultural_2026_research_korean_leading_schools.hwpx",
+      "normalized_to": "data/context_sources/school_multicultural_2026.csv",
+      "parse_check_ko": "표별 연번이 1..N으로 빠짐없이 이어지는지 검증 후 반영. 금액 정보 없음(전부 null).",
+      "published_date": "2026-04-27",
+      "record_count": 100,
+      "records_by_designation_type": {
+        "다문화교육 선도학교": 38,
+        "다문화교육 연구학교": 5,
+        "다문화교육 한국어학급 운영교": 57
+      },
+      "records_by_level": {
+        "각종·기타": 1,
+        "각종학교": 1,
+        "고등학교": 5,
+        "유치원": 10,
+        "일반고": 1,
+        "중학교": 22,
+        "직업계고": 1,
+        "초등학교": 59
+      },
+      "retrieved_at": "2026-09-06",
+      "sha256": "e1d962d43c56d40e891874c303ad62b6d39bdea970a822e981e1eeb99f371f10",
+      "source_page_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3369492&bbsId=720&mi=11841",
+      "title": "2026 다문화교육 연구학교·한국어학급·선도학교 현황",
+      "url": "https://www.ice.go.kr/upload/ice/na/bbs_720/2026/04/a6ecc357cc4ba89778fbcb66607974bb.hwpx"
+    }
+  ],
+  "note_ko": "원문은 이 폴더에 그대로 보관한다. 정규화된 명단만 빌더의 DESIGNATION_FILES 에 등록되며, 파싱을 신뢰할 수 없는 원문은 정규화하지 않고 백로그에 남긴다.",
+  "retained_but_not_normalized": [
+    {
+      "filename": "ice_autonomous_school_2025_designation.hwpx",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_autonomous_school_2026_designation.extracted.txt",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_autonomous_school_2026_designation.hwp",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_edu_welfare_2026_basic_plan.hwpx",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_gyeoldaero_jaram_2025_operating_schools.hwpx",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_gyeoldaero_jaram_2026_operating_schools.hwpx",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_multicultural_2025_policy_korean_research_schools.hwpx",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_research_school_2025_plan_1.hwpx",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_research_school_2026_plan_1.hwpx",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    },
+    {
+      "filename": "ice_special_education_stats_2025.hwpx",
+      "normalized_to": null,
+      "reason_ko": "표 구조를 신뢰 가능하게 파싱하지 못해 미반영 (designation_sources_backlog.md 참조)"
+    }
+  ],
+  "retrieved_at": "2026-09-06"
+}

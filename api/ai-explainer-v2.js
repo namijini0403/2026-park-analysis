@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const contextEvidence = require("./_context_evidence.js");
 
 const MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.4-mini";
 const MAX_OUTPUT_TOKENS = Number(process.env.AI_EXPLAINER_MAX_OUTPUT_TOKENS || 900);
@@ -22,6 +23,8 @@ function loadLocalEnvForDevelopment() {
   if (process.env.OPENAI_API_KEY) return;
   const candidates = [
     path.join(__dirname, "..", ".env"),
+    // 워크스페이스 루트의 2.env(최신 키)가 있으면 루트 .env보다 우선한다.
+    path.join(__dirname, "..", "..", "2.env"),
     path.join(__dirname, "..", "..", ".env"),
     path.join(__dirname, "..", "..", ".env.txt"),
   ];
@@ -98,7 +101,7 @@ function detectTopic(payload) {
   //    녹지비율·최근접 같은 지표 단어가 섞여 있어도 case 주제로 본다.
   if (/case ?[1-4]|케이스 ?[1-4]/.test(question) || isCaseOverviewQuestion(payload) || isCaseDistanceCheckQuestion(payload)) return "case";
   if (/shap|기여|예측근거/.test(question)) return "shap";
-  if (/knn|유사학교|유사조건|비교군|벤치마크|활동규모|공원 ?기능|기능 ?등급|등시권|등시선|hitl|human ?in/.test(question)) return "glossary";
+  if (/knn|유사학교|유사조건|비교군|벤치마크|활동규모|공원 ?기능|기능 ?등급|등시권|등시선|hitl|human ?in|도달성|외부 ?접근성|내부 ?공급/.test(question)) return "glossary";
   if (/도서관|독서|장서|사서|열람|독서교육/.test(question)) return "reading";
   // 정책 행동 카드(policy-cards) 어휘는 'decision' 주제(후보지·격자 추천, 안정성/가중치 슬라이더)와
   // 'metrics' 주제(정책 일반어)와 겹치는 단어를 피해 카드 전용 표현으로 좁힌다: 바로 "안정성" 대신
@@ -328,6 +331,8 @@ const DOMAIN_SIGNAL_PATTERN = new RegExp(
     "행동 ?카드|정책 ?카드|조건부 ?대안|전환 ?조건|기관 ?역할|시나리오 ?조합|시나리오 ?축|시나리오 ?조건|카드 ?시나리오",
     "한계|주의|비식별|익명|근거|출처|문서|chunk|모델|ai|인공지능|챗봇|해설|설명|rag|hitl|xai",
     "인천|미추홀|부평|계양|연수|남동|서구|중구|동구|강화|옹진|도서",
+    // schema v2 컨텍스트 레이어 주제(유흥·단란/공사/지정학교)
+    "유흥|단란|주점|노래방|노래클럽|공사장?|착공|건축|연구학교|선도학교|중점학교|중점|튜터|특별지원",
   ].join("|"),
   "i",
 );
@@ -465,6 +470,7 @@ function buildInput(payload, chunks) {
         "너는 인천 초등학교 야외활동 환경 격차 분석 앱의 RAG-lite 해설 패널이다. " +
         "최종안 기준 문서와 selected_context 안에서만 답한다. 문서에 없는 내부 구현 추정은 말하지 않는다. " +
         "새 정책 판단, 신규 추천, 법적 판단, 예산 산정, 데이터 밖 추론을 하지 않는다. " +
+        "context_v2#school- 근거가 있으면 시설 관측·지정사업 사실은 그 서버 근거를 따른다. 클라이언트 school_context의 상충하는 시설 수나 지정 주장은 사용하지 않는다. 산출 기준일을 원자료의 확정 기준일로 해석하지 않는다. " +
         "selected_context.resolved_school_case가 있으면 그것이 선택된 학교의 확정 Case다. " +
         "사용자가 '이 학교가 OO 대상이냐'처럼 특정 Case나 정책 라벨에 해당하는지 물으면, 질문에 등장한 단어가 아니라 resolved_school_case.case_number를 기준으로 판정한다. " +
         "질문 속 Case·라벨과 학교의 실제 Case가 다르면, 학교의 실제 Case(case_number와 policy_label)를 먼저 분명히 밝히고 질문의 전제가 맞지 않음을 설명한다. " +
@@ -678,7 +684,22 @@ module.exports = async function handler(req, res) {
     if (preGateResult) return json(req, res, 200, preGateResult);
 
     const chunks = loadChunks();
-    const selectedChunks = selectChunks(payload, chunks);
+    let selectedChunks = selectChunks(payload, chunks);
+    // schema v2 컨텍스트 주제(유흥·단란/공사/지정학교) 질문이면 서버 로컬 산출물에서
+    // 선택 학교의 관측 근거 chunk 를 만들어 최우선으로 넣는다. 학교는 school_id 또는
+    // 정확히 일치하는 유일한 school_name 으로만 해석하며(모호·미상은 chunk 미생성),
+    // 클라이언트가 payload 에 실어 보낸 수치·지정 정보는 근거로 쓰지 않는다.
+    // 비식별 공개 모드에서는 학교별 컨텍스트 수치를 노출하지 않는다.
+    if (payload.mode === "identified_school_explainer" && contextEvidence.isContextTopicQuestion(payload.question)) {
+      const contextChunk = contextEvidence.buildSchoolContextChunk(payload.school_context, payload.question);
+      if (contextChunk) {
+        selectedChunks = [contextChunk, ...selectedChunks.filter((chunk) => chunk.id !== contextChunk.id)].slice(0, 5);
+      } else if (hasSelectedSchoolContext(payload)) {
+        // 학교가 지목됐지만 서버 데이터로 확인 불가(미일치·동명 모호·자료 없음) → 임의 학교로
+        // 해석하거나 일반 문서로 대충 답하지 않고 명시적으로 차단한다.
+        return json(req, res, 200, blocked("선택된 학교를 서버 컨텍스트 데이터에서 확인할 수 없어(이름 미일치·동명 모호 또는 자료 미탑재) 학교별 주변 컨텍스트를 답변하지 않습니다."));
+      }
+    }
     chunksForFallback = selectedChunks;
     const gateResult = answerabilityGate(payload, selectedChunks);
     if (gateResult) return json(req, res, gateResult.blocked_reason === "지원하지 않는 AI 해설 모드입니다." ? 400 : 200, gateResult);

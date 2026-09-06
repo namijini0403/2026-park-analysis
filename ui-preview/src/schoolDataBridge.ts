@@ -1,4 +1,4 @@
-import type { SchoolDetailReportProps } from "./SchoolDetailReportPagePreview";
+import type { SchoolContextLayers, SchoolDetailReportProps } from "./SchoolDetailReportPagePreview";
 import { CASE_LABELS } from "./SchoolDetailReportPagePreview";
 
 // 2026-04-18 갱신: OSMnx v2 + 공원원 합집합 교차 면적 수정 반영 (active schools, N=240)
@@ -233,6 +233,13 @@ const MANUAL_BARRIER_OVERRIDES: Record<string, ManualBarrierOverride> = {
   B000003145: { nearestParkName: "석곶체육공원", note: "공원까지 가려면 주요 도시 간선도로를 1번, 중간급 간선도로를 1번 횡단해야 합니다." },
   B000003029: { note: "공원까지 가려면 중간급 간선도로를 1번 횡단해야 합니다." },
 };
+
+function contextLayersBlock(value: unknown): SchoolContextLayers | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const load = s((value as Record<string, unknown>).load_status);
+  if (load !== "loaded" && load !== "pending" && load !== "failed") return undefined;
+  return value as SchoolContextLayers;
+}
 
 function isSpecialPolicySchool(row: RawRow): boolean {
   const caseLabel = s(row.case_label).trim();
@@ -712,6 +719,7 @@ export function mapSchoolRowToReportProps(
     problemTags: buildProblemTags(row),
     contextTags: buildContextTags(row),
     hasLargeApartmentComplexNearby: Boolean(row.has_large_apt ?? row.large_apt_flag),
+    ...(contextLayersBlock(row._contextLayers) ? { contextLayers: contextLayersBlock(row._contextLayers)! } : {}),
     ...(onSimulationClick ? { onSimulationClick } : {}),
   };
 }

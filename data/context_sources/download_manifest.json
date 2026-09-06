@@ -1,0 +1,47 @@
+[
+  {
+    "filename": "ice_digital_designations_2026.xlsx",
+    "url": "https://www.ice.go.kr/upload/ice/na/bbs_1682/2026/01/8b75def70303cb99a3d799f94f4b6aeb.xlsx",
+    "sha256": "d332e8486edfe350c9417d4a7753e66e5d9ca8d4a23dda264ba96657e669ae4a",
+    "retrieved_at": "2026-09-06",
+    "authentication": "none"
+  },
+  {
+    "filename": "ice_ai_focus_2026.hwpx",
+    "url": "https://www.ice.go.kr/upload/ice/na/bbs_1682/2026/03/2b97ef1d371d09c4c3d8eb5b3a3b6e59.hwpx",
+    "sha256": "391aa62431eeef20db012c0abbed95de3417fb90d46df873c199571443a424db",
+    "retrieved_at": "2026-09-06",
+    "authentication": "none"
+  },
+  {
+    "filename": "ice_digital_tutor_2025.pdf",
+    "url": "https://www.ice.go.kr/upload/ice/na/bbs_1682/2025/03/d812db8db4d017ca812f7ab71760f492.pdf",
+    "sha256": "8262ee21997da173e1fe6b70c811b7e803ba755f7b938d79c9fbb411fe51f137",
+    "retrieved_at": "2026-09-06",
+    "authentication": "none"
+  },
+  {
+    "filename": "construction_15029299.csv",
+    "url": "https://www.data.go.kr/cmm/cmm/fileDownload.do?atchFileId=FILE_000000003645935&fileDetailSn=1&insertDataPrcus=N",
+    "source_url": "https://www.data.go.kr/data/15029299/fileData.do",
+    "retrieved_at": "2026-09-06",
+    "sha256": "626d086015de6a58a33ffe548b5694f17299dae6f37af4ec33fe9c6226c26228",
+    "authentication": "none"
+  },
+  {
+    "filename": "construction_15038929.csv",
+    "url": "https://www.data.go.kr/cmm/cmm/fileDownload.do?atchFileId=FILE_000000003612232&fileDetailSn=1&insertDataPrcus=N",
+    "source_url": "https://www.data.go.kr/data/15038929/fileData.do",
+    "retrieved_at": "2026-09-06",
+    "sha256": "3667d2d410f17e3bc08ab3758ad8c8104693644d53c381371f8a164da1a77c28",
+    "authentication": "none"
+  },
+  {
+    "filename": "construction_15029300.csv",
+    "url": "https://www.data.go.kr/cmm/cmm/fileDownload.do?atchFileId=FILE_000000003513720&fileDetailSn=1&insertDataPrcus=N",
+    "source_url": "https://www.data.go.kr/data/15029300/fileData.do",
+    "retrieved_at": "2026-09-06",
+    "sha256": "4165c25412b15b2ddc18c8646b2b9b9f0370f0e236798f0e33c3313a965a10ed",
+    "authentication": "none"
+  }
+]

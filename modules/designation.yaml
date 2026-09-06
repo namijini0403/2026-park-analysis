@@ -1,0 +1,54 @@
+module: designation
+resource_type: 학교 지정·연구·선도 프로그램 (정책사업 도달 현황)
+location:
+  file: data_processed/context/school_designations.json
+  # 지정 레코드 자체에는 좌표가 없고, 매칭된 학교(school_id) 마커 위에 배지로 표시한다
+  lat_key: 추가 확인 필요
+  lng_key: 추가 확인 필요
+  name_key: school_name
+external_supply:
+  - metric: designations.current
+    source: data_processed/context/school_context_summary.json
+  - metric: designations.historical
+    source: data_processed/context/school_context_summary.json
+  - metric: matched_elementary_count
+    source: data_processed/context/context_layers_manifest.json
+internal_supply: 추가 확인 필요
+capacity: 추가 확인 필요  # 지정 사업별 지원 규모(financial_support_amount)는 원문에 명시된 경우만 보존
+target_users: 초등학생 (인천 272개교 중 명단 매칭 102교)
+operating_hours: 추가 확인 필요
+demand_unit: 학생수 (학교 단위 정책 도달 여부)
+constraints:
+  - 수집된 공식 명단(2026 AI·디지털 연구·선도 / 2026 AI중점 / 2025 디지털튜터) 3종 기준이며 그 외 지정·지원 사업은 미수집
+  - 명단 미등재는 미지정 확정이 아니라 미상(자료 수집 전)
+  - 기간은 학년도만 확인됨(period_basis=school_year_only) — 확정 시작·종료일이 아님
+  - 지정 사실만으로 예산·지원금을 추론하지 않는다
+policy_actions:
+  - institution_link
+  - maintain_monitor
+reference_date: 2026-09-06  # context_layers_manifest.json data_as_of (산출 기준일; 원자료 발행일은 source별 상이)
+source:
+  - name: 2026학년도 인천 AI·디지털 연구학교·선도학교 지정 명단
+    provider: 인천광역시교육청
+    license: 추가 확인 필요
+    url: "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3353108"
+    published_date: 2025-12-30
+    uddi: 추가 확인 필요
+  - name: 2026 인천 AI중점학교 지정 명단
+    provider: 인천광역시교육청
+    license: 추가 확인 필요
+    url: "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3359748"
+    published_date: 2026-02-09
+    uddi: 추가 확인 필요
+  - name: 2025 인천 디지털튜터 배치교 명단 (과거 이력)
+    provider: 인천광역시교육청
+    license: 추가 확인 필요
+    url: "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3320903"
+    published_date: 2025-03-19
+    uddi: 추가 확인 필요
+notes: 정책 도달성 관점의 참고 맥락이며 자동 지원 자격·성과 판정에 사용하지 않는다.
+layer:
+  id: designation
+  button_label: "🎓 지정·연구학교"
+  panel_label: 지정·연구학교
+  color: "#8B5CF6"

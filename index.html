@@ -1137,6 +1137,25 @@
       color: #ffffff;
     }
 
+    /* 학교 맥락 레이어 전용 색상 — generic [data-has-color] 규칙보다 뒤에 두어 우선 적용 */
+    .layer-toggle-btn.is-on[data-layer="designation"] {
+      background: rgba(139, 92, 246, 0.16);
+      border-color: rgba(139, 92, 246, 0.38);
+      color: #DDD6FE;
+    }
+
+    .layer-toggle-btn.is-on[data-layer="nightlife"] {
+      background: rgba(236, 72, 153, 0.16);
+      border-color: rgba(236, 72, 153, 0.38);
+      color: #FBCFE8;
+    }
+
+    .layer-toggle-btn.is-on[data-layer="construction"] {
+      background: rgba(148, 163, 184, 0.18);
+      border-color: rgba(148, 163, 184, 0.4);
+      color: #E2E8F0;
+    }
+
     .case-filter-group,
     .access-filter-group {
       display: flex;
@@ -3066,7 +3085,7 @@
       <div class="auth-card">
         <p class="auth-kicker">Private Preview</p>
         <h1 class="auth-title" id="authGateTitle">인증번호 입력</h1>
-        <p class="auth-copy">공개 전 검토용 화면입니다. 전달받은 인증번호를 입력하면 지도 화면으로 이동합니다.</p>
+        <p class="auth-copy">공개 전 검토용 화면입니다. 전달받은 인증번호를 입력하면 “반경 너머, 정책 도달성으로” 지도 화면으로 이동합니다.</p>
         <form class="auth-form" id="authForm" novalidate>
           <label class="auth-label" for="authCodeInput">인증번호</label>
           <input class="auth-input" id="authCodeInput" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="인증번호" aria-describedby="authMessage" />
@@ -3085,17 +3104,17 @@
         <div class="app-cover-main">
           <p class="app-cover-kicker">Policy Reachability</p>
           <h1 class="app-cover-title" id="appCoverTitle"><span>반경 너머,</span><span>정책 도달성으로</span></h1>
-          <p class="app-cover-statement">외부 접근성·내부 공급·미래 수요를 함께 봅니다.</p>
+          <p class="app-cover-statement">외부 접근성 × 내부 공급 × 수요를 학교 단위로 함께 봅니다.</p>
           <p class="app-cover-copy">
-            교육자원이 학생에게 실제로 도달하는 구조적 조건 — 외부 접근성, 내부 공급, 현재·미래 수요 — 을 진단하고
-            XAI 기반 정책 의사결정을 지원합니다.
+            인천 272개 초등학교를 단위로 외부 접근성(도보 네트워크 기준 도달 가능성), 내부 공급(학교 안 자원), 수요(현재·미래 학생 수)를 함께 보아
+            정책이 실제로 아이에게 닿는지 진단하고 설명 가능한 정책 행동 카드로 연결합니다. 최종 판단과 승인은 담당자가 합니다.
           </p>
           <div class="app-cover-tags" aria-label="핵심 분석 기준">
-            <span class="app-cover-tag">실제 도보생활권</span>
-            <span class="app-cover-tag">활동규모 기준</span>
-            <span class="app-cover-tag">학교별 환경 진단</span>
-            <span class="app-cover-tag">미래 수요 반영</span>
-            <span class="app-cover-tag">설명 가능한 추천</span>
+            <span class="app-cover-tag">외부 접근성</span>
+            <span class="app-cover-tag">내부 공급</span>
+            <span class="app-cover-tag">현재·미래 수요</span>
+            <span class="app-cover-tag">정책 행동 카드</span>
+            <span class="app-cover-tag">Human-in-the-loop</span>
           </div>
           <div class="app-cover-actions">
             <button class="app-cover-button primary" type="button" data-cover-action="start">지도에서 시작하기</button>
@@ -3134,9 +3153,10 @@
         <button class="ai-chat-close" id="aiChatCloseButton" type="button">닫기</button>
       </div>
       <p class="ai-chat-copy" id="aiChatContextText">
-        학교를 선택하면 해당 학교의 Case 기준을, 선택 전에는 전체 Case 분류 기준을 근거 문서 안에서만 설명합니다.
+        학교를 선택하면 해당 학교의 Case 기준을, 선택 전에는 정책 도달성 개념과 전체 Case 분류 기준을 근거 문서 안에서만 설명합니다.
       </p>
       <div class="ai-question-grid">
+        <button class="ai-question-btn" type="button" data-ai-question-type="concept" data-ai-question="정책 도달성이 무엇인가요?">정책 도달성</button>
         <button class="ai-question-btn" type="button" data-ai-question-type="case_rule" data-ai-question="Case 1부터 Case 4까지 분류 기준을 설명해줘">Case 판정 기준</button>
         <button class="ai-question-btn" type="button" data-ai-question-type="policy_check" data-ai-question="정책 담당자가 무엇을 확인해야 하나요?">정책 확인사항</button>
         <button class="ai-question-btn" type="button" data-ai-question-type="limitation" data-ai-question="이 분석의 한계와 주의점을 설명해줘">한계와 주의점</button>
@@ -3176,7 +3196,7 @@
         <div class="mobile-handle"></div>
         <p class="eyebrow">Policy Reachability</p>
         <h1 class="panel-title">반경 너머, 정책 도달성으로</h1>
-        <p class="panel-subtitle">외부 접근성·내부 공급·미래 수요를 도보 네트워크·보행 부담·활동규모 지표로 진단합니다.</p>
+        <p class="panel-subtitle">외부 접근성 × 내부 공급 × 수요를 학교 단위로 함께 보아 정책 도달성을 진단합니다.</p>
       </div>
 
       <div class="panel-body">
@@ -3206,6 +3226,11 @@
         <section class="section">
           <h2 class="section-title">학교 상세</h2>
           <div class="school-detail-box" id="schoolDetailBox">학교 마커를 클릭하면 상세 정보를 표시합니다.</div>
+        </section>
+
+        <section class="section">
+          <a href="/update-center" target="_blank" rel="noreferrer"
+             style="font-size:12px; opacity:0.75; text-decoration:underline;">공공데이터 업데이트 센터</a>
         </section>
 
         <div class="panel-util" aria-hidden="true">
@@ -3272,7 +3297,12 @@
       buffer: "./data_processed/school_buffer_500m.geojson",
       redevelopment: "./data_processed/redevelopment_geocoded.csv",
       largeApt: "./data_processed/large_apt_complexes_2025.csv",
-      policyActionCards: "./data_processed/policy_action_cards.json"
+      policyActionCards: "./data_processed/policy_action_cards.json",
+      contextManifest: "./data_processed/context/context_layers_manifest.json",
+      contextSummary: "./data_processed/context/school_context_summary.json",
+      contextDesignations: "./data_processed/context/school_designations.json",
+      contextFacilitiesNightlife: "./data_processed/context/facilities_nightlife.geojson",
+      contextFacilitiesConstruction: "./data_processed/context/facilities_construction.geojson"
     };
 
     // ── 레이어 레지스트리: 지도 레이어의 단일 정의처 ─────────────────────
@@ -3314,6 +3344,29 @@
         toggleId: "toggleCandidate", overlayKey: "candidateMarkers",
         kind: "external", defaultOn: false
         // 후보지 마커는 rerenderAll()의 renderCandidateMarkers()가 그림 — registry는 가시성만 담당
+      },
+      {
+        id: "designation", buttonLabel: "🎓 지정·연구학교", panelLabel: "지정·연구학교",
+        toggleId: "toggleDesignation", overlayKey: "designationBadges",
+        kind: "custom", render: renderDesignationBadges, defaultOn: false,
+        cssColor: "#8B5CF6"
+        // 요약 JSON은 loadContextLayers()가 비블로킹 지연 로딩 — 별도 ensure 불필요
+      },
+      {
+        id: "nightlife", buttonLabel: "🍸 유흥·단란주점", panelLabel: "유흥·단란주점 인허가",
+        toggleId: "toggleNightlife", overlayKey: "nightlifeMarkers",
+        kind: "custom", render: () => renderContextFacilityMarkers("nightlife"), defaultOn: false,
+        cssColor: "#EC4899",
+        ensure: ensureContextFacilitiesLoaded,
+        isLoaded: () => state.contextFacilitiesLoadState === "loaded"
+      },
+      {
+        id: "construction", buttonLabel: "🚧 공사장 행정기록", panelLabel: "공사장 행정기록",
+        toggleId: "toggleConstruction", overlayKey: "constructionMarkers",
+        kind: "custom", render: () => renderContextFacilityMarkers("construction"), defaultOn: false,
+        cssColor: "#94A3B8",
+        ensure: ensureContextFacilitiesLoaded,
+        isLoaded: () => state.contextFacilitiesLoadState === "loaded"
       }
     ];
 
@@ -3524,6 +3577,12 @@
       suppressNextMapClick: false,
       schoolMarkerIndex: new Map(),
       scenarioSelection: { budget: "sufficient", site: "available", access: "feasible" },
+      // 학교 맥락 레이어(지정·연구학교, 시설 맥락): 지연 로딩. pending → loaded | failed
+      contextLoadState: "pending",
+      // 시설 geojson(무거움)은 토글/리포트 최초 요구 시에만 로딩
+      contextFacilitiesLoadState: "pending",
+      // 진행 중 로딩 Promise 공유: 로딩 중 리포트를 열어도 같은 Promise를 await한다
+      contextFacilitiesPromise: null,
       overlays: {
         schoolMarkers: [],
         ...Object.fromEntries(LAYER_REGISTRY.map((def) => [def.overlayKey, []]))
@@ -3549,7 +3608,11 @@
         candidateBarrierRoutes: {},
         robustRecommendations: [],
         robustRecommendationMap: {},
-        policyActionCards: { schools: {}, scenario_axes: {} }
+        policyActionCards: { schools: {}, scenario_axes: {} },
+        contextManifest: null,
+        contextSummary: null,
+        contextDesignations: null,
+        contextFacilities: { nightlife: null, construction: null }
       }
     };
 
@@ -3618,98 +3681,103 @@
       hero: {
         title: "반경 너머, 정책 도달성으로",
         subtitle:
-          "도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 정책 도달성 관점에서 진단하고 견고한 후보지와 SHAP 진단을 제안합니다.",
-        badges: ["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "견고 후보 추천", "SHAP 후보 진단", "Human-in-the-loop"],
+          "외부 접근성(도보 네트워크 기준 도달권) × 내부 공급(학교 안 자원) × 수요(현재·미래 학생 수)를 학교 단위로 함께 보아 정책이 실제로 아이에게 닿는지 진단하고, 설명 가능한 정책 행동 카드와 견고 후보로 연결합니다.",
+        badges: ["외부 접근성", "내부 공급", "현재·미래 수요", "정책 행동 카드", "SHAP 후보 진단", "Human-in-the-loop"],
         thesis:
           "단순 지도앱이 아니라,\n교육자원의 정책 도달성을 진단하고\n정책 판단의 근거를 연결하는 AI 기반 의사결정 시스템입니다."
       },
       flowSteps: [
         {
           id: 1,
-          title: "학교 선택",
-          short: "분석할 학교를 고르면 주변 환경 정보가 연결됩니다.",
-          headline: "분석의 출발점은 행정구역이 아니라\n학교입니다.",
-          items: ["학교 위치", "학교 주변 공원·녹지·놀이터 데이터", "학생 수와 주변 생활권 정보"],
+          title: "학교 선택(정책 단위)",
+          short: "정책이 닿아야 할 단위인 학교를 먼저 고릅니다.",
+          headline: "진단의 출발점은 행정구역이 아니라\n학교입니다.",
+          items: ["인천 272개 초등학교", "학교 주변 공원·녹지·놀이터·도서관 데이터", "학생 수와 주변 수요 정보"],
           principle: "정책 판단 단위를 학교 중심으로 고정합니다.",
-          actionText: "지도에서 학교를 선택하거나 학교 상세 진단으로 이동합니다.",
+          actionText: "지도에서 학교를 선택하면 도달권·공원·도서관·재개발·후보지 레이어가 같은 기준 좌표로 정렬됩니다.",
           image: "./assets/guide-bright-map-layers.png",
           imageAlt: "학교 선택 후 지도 레이어와 상세 패널이 연결된 화면"
         },
         {
           id: 2,
-          title: "실제 도보생활권",
-          short: "직선거리가 아니라 실제 보행 가능한 범위를 계산합니다.",
-          headline: "case2처럼 겉으로는 접근 가능해 보여도\n활동 규모와 경로 조건을 함께 확인해야 합니다.",
-          items: ["실제 보행 가능 범위", "도보생활권 내 공원 수", "최근접 공원까지의 실제 거리", "도로·보행부담 요소를 고려한 접근성"],
+          title: "실제 도보 도달권(외부 접근성)",
+          short: "직선 반경이 아니라 보행 네트워크로 도달권을 계산합니다.",
+          headline: "직선 반경에서는 닿아 보여도\n실제 보행 경로로는 닿지 않을 수 있습니다.",
+          items: ["OSM 보행 네트워크 기준 도보 500m 도달권", "직선 반경 500m와의 비교", "도달권 안 공원 수와 최근접 공원 거리", "간선도로 횡단 등 보행부담"],
           principle: "반경 너머의 정책 도달성을 기준으로 판단합니다.",
-          actionText: "봉화초 단일 사례가 아니라, case2 전형 학교의 지도 레이어 흐름으로 확인합니다.",
+          actionText: "지도에서 도보 도달권과 직선 반경을 함께 켜고 두 기준의 차이를 먼저 확인합니다.",
           image: "./assets/guide-bright-map-layers.png",
-          imageAlt: "case2 전형 학교의 도보생활권과 지도 레이어 화면"
+          imageAlt: "도보 도달권과 직선 반경을 비교하는 지도 레이어 화면"
         },
         {
           id: 3,
-          title: "환경 격차 진단",
-          short: "공원 거리, 녹지비율, 놀이터, KNN 유사학교 비교를 확인합니다.",
-          headline: "학교별 환경을 하나의 점수가 아니라\n여러 근거로 나누어 봅니다.",
-          items: ["최근접 공식 공원 거리", "활동규모 공원 거리", "도보권 내 공원 수", "녹지비율", "Case 분류", "KNN 유사학교 비교"],
-          principle: "복합 환경을 단일 점수로 뭉개지 않고 설명 가능한 지표로 분리합니다.",
-          actionText: "학교 상세 리포트에서 현재 격차와 비교 기준을 함께 봅니다.",
+          title: "외부 접근성 × 내부 공급 격차 진단",
+          short: "학교 밖 도달 자원과 학교 안 공급을 함께 봅니다.",
+          headline: "학교 밖에서 닿는 자원과\n학교 안에 있는 자원을 나눠 봅니다.",
+          items: ["최근접 공식 공원 거리", "활동규모 공원 거리", "도보권 녹지비율", "공공도서관 252관 도달성", "학교도서관 내부 공급", "Case 분류", "KNN(k=4) 유사학교 비교"],
+          principle: "세 축을 하나로 합산하지 않고 설명 가능한 지표로 분리합니다.",
+          actionText: "학교 상세 리포트에서 외부 접근성·내부 공급 격차와 비교 기준을 함께 봅니다.",
           image: "./assets/guide-bright-report.png",
-          imageAlt: "대표학교 상세 리포트 화면 캡처"
+          imageAlt: "학교별 정책 도달성 리포트 화면 캡처"
         },
         {
           id: 4,
           title: "미래 수요 반영",
-          short: "현재뿐 아니라 2029·2031년 잠재 수요도 함께 봅니다.",
-          headline: "현재 부족한 곳이 앞으로도\n중요한 지원 대상인지 함께 확인합니다.",
-          items: ["2029년 잠재 수요", "2031년 잠재 수요", "수혜 가능 아동 규모", "현재 환경 격차와 미래 수요의 결합"],
-          principle: "현재 격차와 미래 수요를 함께 고려합니다.",
-          actionText: "잠재 수혜학생 규모를 현재 접근성 지표와 나란히 비교합니다.",
+          short: "현재 학생 수와 2029·2031년 수요를 함께 봅니다.",
+          headline: "지금 부족한 곳과\n앞으로 수요가 커질 곳을 나눠 봅니다.",
+          items: ["학교 재학생 전망(가중 추세 + LightGBM 잔차 보정)", "250m 격자 아동 수요(cohort + Prophet + LightGBM)", "2029·2031년 수혜 가능 아동 규모"],
+          principle: "현재 격차와 미래 수요를 분리해 함께 고려합니다.",
+          actionText: "전체 통계에서 구별 도달성 격차와 수요 흐름을 비교합니다.",
           image: "./assets/guide-bright-statistics.png",
-          imageAlt: "구조적 격차 분포와 전체 통계 화면 캡처"
+          imageAlt: "도달성 격차 분포와 전체 통계 화면 캡처"
         },
         {
           id: 5,
-          title: "AI 기반 견고 후보 추천",
-          short: "미래 수요, Pareto 후보군, 순위 안정성을 함께 봅니다.",
-          headline: "추천 후보가 정책 선호 변화에도\n상위권에 남는지 확인합니다.",
-          items: ["Pareto 후보 여부", "Top5 안정성", "평균 순위", "추천 유형", "미래 수혜 아동 수"],
-          principle: "정책 가중치를 하나로 고정하지 않고, 1,000회 샘플링으로 견고성을 확인합니다.",
-          actionText: "AI 기반 견고 후보 추천에서 카드별 안정성 지표와 추천 유형을 확인합니다.",
+          title: "정책 행동 카드와 견고 후보",
+          short: "행동 카드와 견고 후보지를 사람이 확인하고 조정합니다.",
+          headline: "권고는 자동 결정이 아니라\n담당자가 조정하는 비교 시작점입니다.",
+          items: ["7가지 정책 행동 유형", "우선 검토안 1 + 조건부 대안 1", "핵심 근거 3 + 전환조건", "12개 시나리오(예산 3 × 부지 2 × 접근성 2)", "Pareto 후보 여부", "Top5 안정성과 평균 순위"],
+          principle: "정책 가중치를 하나로 고정하지 않고, 1,000회 가중치 재추출로 견고성을 확인합니다.",
+          actionText: "행동 카드에서 조건을 바꿔 보고, 견고 후보 추천에서 카드별 안정성 지표를 확인합니다.",
           image: "./assets/guide-bright-simulation.png",
-          imageAlt: "AI 기반 견고 후보 추천과 지도 중심 화면 캡처"
+          imageAlt: "정책 행동 카드와 견고 후보 추천 화면 캡처"
         },
         {
           id: 6,
-          title: "SHAP 진단과 기준 조정",
-          short: "예측 근거를 열어보고 정책 기준을 조정합니다.",
-          headline: "SHAP은 최종 순위가 아니라\n미래 수요 예측 근거를 설명합니다.",
-          items: ["SHAP 예측 근거 보기", "예측값을 높인 변수", "예측값을 낮춘 변수", "사용자 가중치 조정", "정책 필터 적용"],
+          title: "SHAP 근거와 기준 조정",
+          short: "후보지별 예측 근거를 열어보고 정책 기준을 조정합니다.",
+          headline: "SHAP은 최종 순위가 아니라\n후보지 수요 예측 근거를 설명합니다.",
+          items: ["SHAP 후보 근거 보기", "예측값을 높인 변수", "예측값을 낮춘 변수", "가중치 조정", "정책 필터 적용"],
           principle: "SHAP은 자동추천의 근거가 아니라 Human-in-the-loop 최종 판단을 위한 후보 진단 정보입니다.",
-          actionText: "후보 카드의 SHAP 예측 근거 보기 버튼을 눌러 미래 수혜 아동 수 예측 근거를 펼칩니다.",
+          actionText: "후보 카드의 SHAP 후보 근거 보기 버튼을 눌러 예상 수혜 아동 수의 변수별 근거를 펼칩니다.",
           image: "./assets/guide-bright-simulation.png",
-          imageAlt: "SHAP 예측 근거와 기준 조정 화면 캡처"
+          imageAlt: "SHAP 후보 근거와 기준 조정 화면 캡처"
         }
       ],
       principles: [
         {
           title: "반경 너머 정책 도달성",
-          detail: "직선거리가 아닌 실제 보행 가능 범위를 기준으로 접근성을 봅니다."
+          detail: "직선 반경이 아니라 보행 네트워크 기준 도보 도달권으로 외부 접근성을 봅니다."
         },
         {
           title: "현재와 미래의 결합",
-          detail: "현재 환경 격차와 2029·2031년 잠재 수요를 함께 반영합니다."
+          detail: "외부 접근성·내부 공급 격차와 2029·2031년 수요를 함께 반영합니다."
         },
         {
           title: "점수보다 판단 근거",
-          detail: "하나의 종합점수보다 추천 이유와 지표를 분리해 보여줍니다."
+          detail: "세 축을 하나로 합산한 종합점수 대신 판단 근거와 지표를 분리해 보여줍니다."
         },
         {
-          title: "견고 추천 + SHAP 진단",
-          detail: "Pareto와 순위 안정성으로 후보를 좁히고, SHAP으로 미래 수요 예측 근거를 진단합니다."
+          title: "행동 카드 + 견고 추천 + SHAP",
+          detail: "행동 카드로 무엇을 할지 좁히고, Pareto·순위 안정성으로 후보를 좁힌 뒤 SHAP으로 예측 근거를 진단합니다."
         }
       ],
       faq: [
+        {
+          question: "정책 도달성이 무엇인가요?",
+          answer:
+            "외부 접근성(도보 네트워크 기준 도달 가능성) × 내부 공급(학교 안 자원) × 수요(현재·미래 학생 수)를 학교 단위로 함께 보아, 정책이 실제로 아이에게 닿는지 진단하는 관점입니다. 세 축을 하나로 합친 단일 점수가 아니며, 진단 결과는 정책 행동 카드로 이어집니다."
+        },
         {
           question: "AI 추천은 최종 결론인가요?",
           answer: "아닙니다. AI 기반 견고 후보 추천은 비교 시작점입니다. Pareto 여부와 안정성 점수, SHAP 진단, 정책 필터, 현장 검토를 함께 보고 최종 판단합니다."
@@ -3721,12 +3789,12 @@
         {
           question: "왜 점수 하나로 순위를 정하지 않나요?",
           answer:
-            "학교 주변 환경은 거리, 녹지, 놀이공간, 미래 수요, 보행부담 요소가 함께 작동합니다. 이 시스템은 하나의 점수보다 판단 근거를 분리해 보여주는 방식을 사용합니다."
+            "외부 접근성, 내부 공급, 수요는 서로 성격이 다른 축이고 거리·녹지·놀이공간·보행부담이 함께 작동합니다. 이 시스템은 하나의 점수보다 판단 근거를 분리해 보여주는 방식을 사용합니다."
         },
         {
           question: "이 시스템은 무엇을 도와주나요?",
           answer:
-            "학교 주변 환경 격차를 확인하고, 실제 도보생활권과 미래 수요를 반영해 정책 지원 후보지를 비교하는 데 도움을 줍니다."
+            "학교 밖 도달 자원과 학교 안 공급의 격차를 확인하고, 실제 도보 도달권과 미래 수요를 반영해 정책 행동과 지원 후보지를 비교하는 데 도움을 줍니다. 참고용 학교 맥락 레이어와 공공데이터 업데이트 센터가 근거의 최신성을 함께 관리합니다."
         }
       ],
       ctas: [
@@ -5332,7 +5400,7 @@
       const context = getAiSchoolContext();
       ui.aiChatContextText.textContent = context
         ? `${context.school_name} · ${context.case_label} 기준으로 근거 문서 안에서만 설명합니다.`
-        : "학교를 선택하면 해당 학교의 Case 기준을, 선택 전에는 전체 Case 분류 기준을 근거 문서 안에서만 설명합니다.";
+        : "학교를 선택하면 해당 학교의 Case 기준을, 선택 전에는 정책 도달성 개념과 전체 Case 분류 기준을 근거 문서 안에서만 설명합니다.";
     }
 
     function setAiChatOpen(open) {
@@ -5427,7 +5495,13 @@
     }
 
     function getAiExplainerEndpoints() {
+      const hostname = window.location.hostname;
+      const isLoopbackHost = hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]";
       const sameOriginEndpoint = "/api/ai-explainer-v2";
+      // 로컬(loopback) 시연은 완전 오프라인 보장: 원격 호스팅 API로 절대 폴백하지 않는다.
+      if (isLoopbackHost) {
+        return [sameOriginEndpoint];
+      }
       if (window.location.protocol === "file:") {
         return [PRODUCTION_AI_EXPLAINER_V2_URL, sameOriginEndpoint];
       }
@@ -5847,9 +5921,295 @@
       }
     }
 
+    /* ── 학교 맥락 레이어 (지정·연구학교, 주변 시설 맥락) ──────────
+       정책 도달성 관점의 참고 맥락이며 자동 안전 등급·지원 자격 판정에 쓰지 않는다.
+       미수집 레이어는 절대 0건으로 표기하지 않는다 (자료 수집 전). */
+    function isLayerOnById(layerId) {
+      const def = LAYER_REGISTRY.find((item) => item.id === layerId);
+      return def ? isLayerOn(def) : false;
+    }
+
+    function getSchoolContextEntry(schoolId) {
+      const summary = state.datasets.contextSummary;
+      if (!summary || !summary.schools) return null;
+      return summary.schools[schoolId] || null;
+    }
+
+    function renderDesignationBadges() {
+      clearOverlayGroup("designationBadges");
+      if (state.contextLoadState !== "loaded") return;
+      const visible = isLayerOnById("designation");
+      state.datasets.schools.filter(shouldShowSchoolMarker).forEach((row) => {
+        const entry = getSchoolContextEntry(getSchoolId(row));
+        const current = entry && entry.designations ? entry.designations.current || [] : [];
+        if (!current.length) return;
+        const latLng = toLatLng(row, row.위도 !== undefined ? "위도" : "lat", row.경도 !== undefined ? "경도" : "lng");
+        if (!latLng) return;
+        const labels = current.map((item) => `${item.school_year || ""} ${item.program_name || ""} ${item.designation_type || ""}`.trim());
+        const badge = document.createElement("div");
+        badge.style.cssText = [
+          "display:inline-flex", "align-items:center", "gap:4px",
+          "padding:3px 8px", "border-radius:999px",
+          "background:rgba(91, 33, 182, 0.92)", "border:1px solid rgba(221, 214, 254, 0.85)",
+          "color:#EDE9FE", "font-size:11px", "font-weight:700", "white-space:nowrap",
+          "box-shadow:0 2px 6px rgba(0,0,0,0.35)", "pointer-events:none"
+        ].join(";");
+        badge.textContent = `🎓 ${current.map((item) => item.designation_type).join("·")}`;
+        badge.title = labels.join(", ");
+        const overlay = new kakao.maps.CustomOverlay({
+          position: latLng,
+          content: badge,
+          yAnchor: 2.6,
+          zIndex: 4
+        });
+        overlay.setMap(visible ? state.map : null);
+        state.overlays.designationBadges.push(overlay);
+      });
+    }
+
+    const CONTEXT_FACILITY_LAYERS = [
+      {
+        layerKey: "nightlife",
+        group: "nightlifeMarkers",
+        color: "#EC4899",
+        note: "인허가 기록 기준 · 현장 영업 여부·안전 판정 아님"
+      },
+      {
+        layerKey: "construction",
+        group: "constructionMarkers",
+        color: "#94A3B8",
+        note: "착공·사용승인 행정기록 · 주소 기반 추정 위치 · 현재 공사 여부 미확인"
+      }
+    ];
+
+    function renderContextFacilityMarkers(onlyLayerKey = null) {
+      CONTEXT_FACILITY_LAYERS
+        .filter((config) => !onlyLayerKey || config.layerKey === onlyLayerKey)
+        .forEach((config) => {
+          clearOverlayGroup(config.group);
+          const geojson = state.datasets.contextFacilities[config.layerKey];
+          if (!geojson || !Array.isArray(geojson.features)) return;
+          const visible = isLayerOnById(config.layerKey);
+          geojson.features.forEach((feature) => {
+            // 좌표 미확보 레코드는 geometry:null 로 보존돼 있으므로 지도에서는 건너뛴다
+            const coords = feature && feature.geometry ? feature.geometry.coordinates : null;
+            if (!coords || !Number.isFinite(Number(coords[0])) || !Number.isFinite(Number(coords[1]))) return;
+            const props = feature.properties || {};
+            const marker = new kakao.maps.Marker({
+              position: new kakao.maps.LatLng(Number(coords[1]), Number(coords[0])),
+              title: props.name || "",
+              image: createMarkerImage(config.color)
+            });
+            kakao.maps.event.addListener(marker, "click", () => {
+              state.infoWindow.setContent(`
+                <div style="padding:12px 14px; min-width:180px; max-width:260px; font-family:Pretendard,'Noto Sans KR',sans-serif;">
+                  <div style="font-weight:800; font-size:13px; margin-bottom:4px;">${escapeHtml(props.name || "이름 미상")}</div>
+                  <div style="font-size:12px; color:#374151;">${escapeHtml(props.category || "")}${props.subtype ? " · " + escapeHtml(props.subtype) : ""}</div>
+                  <div style="font-size:11px; color:#6b7280; margin-top:4px;">${escapeHtml(props.address || "")}</div>
+                  <div style="font-size:11px; color:#9ca3af; margin-top:6px;">${escapeHtml(config.note)}</div>
+                </div>
+              `);
+              state.infoWindow.open(state.map, marker);
+            });
+            marker.setMap(visible ? state.map : null);
+            state.overlays[config.group].push(marker);
+          });
+        });
+    }
+
+    function ensureContextFacilitiesLoaded() {
+      if (state.contextFacilitiesLoadState === "loaded") {
+        return Promise.resolve(true);
+      }
+      // 이미 로딩 중이면 진행 중 Promise를 그대로 공유 (중복 fetch·미완 스냅샷 방지)
+      if (state.contextFacilitiesPromise) {
+        return state.contextFacilitiesPromise;
+      }
+      state.contextFacilitiesLoadState = "loading";
+      state.contextFacilitiesPromise = (async () => {
+        try {
+          const [nightlife, construction] = await Promise.all([
+            loadJSON(PATHS.contextFacilitiesNightlife),
+            loadJSON(PATHS.contextFacilitiesConstruction)
+          ]);
+          // loadJSON은 실패 시 throw 대신 null을 돌려주므로 여기서 명시적으로 실패 처리한다
+          if (!nightlife || !construction) {
+            throw new Error("context facility geojson missing");
+          }
+          state.datasets.contextFacilities.nightlife = nightlife;
+          state.datasets.contextFacilities.construction = construction;
+          state.contextFacilitiesLoadState = "loaded";
+          renderContextFacilityMarkers();
+          updateOverlayVisibility();
+          return true;
+        } catch (error) {
+          console.warn("[context-facilities] 로딩 실패", error);
+          state.contextFacilitiesLoadState = "failed";
+          // 실패 시 Promise를 비워 다음 요구(토글/리포트)에서 재시도 가능하게 한다
+          state.contextFacilitiesPromise = null;
+          return false;
+        }
+      })();
+      return state.contextFacilitiesPromise;
+    }
+
+    function contextFacilityCardLine(icon, labelKo, node) {
+      if (!node || node.status === "unknown") {
+        const reason = node && node.label_ko ? node.label_ko : "자료 수집 전";
+        return `${icon} ${labelKo}: <strong>${escapeHtml(reason)}</strong> (0건 의미 아님)`;
+      }
+      if (node.observed_count == null) {
+        return `${icon} ${labelKo}: 좌표 미상으로 집계 불가 (0건 의미 아님)`;
+      }
+      const nearest = node.nearest_observed_m != null ? ` · 최근접 ${Math.round(node.nearest_observed_m)}m` : "";
+      const completed = Number.isFinite(Number(node.observed_completed_count)) && node.observed_completed_count > 0
+        ? ` (사용승인 완료 ${node.observed_completed_count}건 포함)`
+        : "";
+      return `${icon} ${labelKo}: 직선거리 500m 내 관측 <strong>${node.observed_count}건</strong>${completed}${nearest} · 하한값(좌표 확보분 기준)`;
+    }
+
+    function buildSchoolContextCardHtml(schoolId) {
+      if (state.contextLoadState === "failed") {
+        return `<div class="detail-section-title">🧭 참고 맥락</div>
+          <div class="metric-list"><div class="metric-item muted">학교 맥락 정보(지정 현황·주변 시설)를 불러오지 못했습니다.</div></div>`;
+      }
+      if (state.contextLoadState !== "loaded") {
+        return `<div class="detail-section-title">🧭 참고 맥락</div>
+          <div class="metric-list"><div class="metric-item muted">학교 맥락 정보를 불러오는 중입니다…</div></div>`;
+      }
+      const entry = getSchoolContextEntry(schoolId);
+      const current = entry && entry.designations ? entry.designations.current || [] : [];
+      const historicalCount = entry && entry.designations ? (entry.designations.historical || []).length : 0;
+      const designationsKnown = entry && entry.designations && entry.designations.status === "available";
+      const designationText = !designationsKnown
+        ? "자료 수집 전 (0건 의미 아님)"
+        : current.length
+          ? current.map((item) => escapeHtml(`${item.school_year || ""}학년도 ${item.program_name || ""} ${item.designation_type || ""}`.trim())).join(", ")
+          : "수집된 명단 기준 해당 없음";
+      const historicalText = historicalCount ? ` · 과거 이력 ${historicalCount}건` : "";
+      const manifest = state.datasets.contextManifest || {};
+      const asOf = manifest.data_as_of || "";
+      return `
+        <div class="detail-section-title">🧭 참고 맥락 <span style="font-weight:500; opacity:0.7;">(정책 도달성 참고용${asOf ? ` · 산출 기준 ${escapeHtml(asOf)}` : ""})</span></div>
+        <div style="font-size:12px; line-height:1.8; margin-top:6px;">
+          🎓 지정 현황: <strong>${designationText}</strong>${historicalText}<br>
+          <span style="opacity:0.7;">수집된 공식 명단(AI·디지털 연구·선도/AI중점/디지털튜터) 기준 · 학년도 명단 기준 추정 · 그 외 사업 미수집</span><br>
+          ${contextFacilityCardLine("🍸", "유흥·단란주점 인허가", entry ? entry.nightlife : null)}<br>
+          ${contextFacilityCardLine("🚧", "공사장 행정기록", entry ? entry.construction : null)}<br>
+          <span style="opacity:0.7;">시설 수치는 학교 중심점 기준 <strong>직선거리 500m</strong>(도보 경로 아님) 안에서 좌표를 확보한 인허가·행정기록만 센 최소 관측치입니다. 위험도·안전 등급·지원 자격 판정이 아니며, 미수집 항목은 0건이 아니라 미상입니다.</span>
+        </div>`;
+    }
+
+    function findContextFacilityProps(layerKey, facilityId) {
+      const geojson = state.datasets.contextFacilities[layerKey];
+      if (!geojson || !Array.isArray(geojson.features)) return null;
+      const feature = geojson.features.find((f) => f && f.properties && f.properties.facility_id === facilityId);
+      return feature ? feature.properties : null;
+    }
+
+    function buildFacilityDetailRecords(layerKey, summaryNode, limit = 30) {
+      const hits = summaryNode && Array.isArray(summaryNode.records) ? summaryNode.records : [];
+      const detailed = hits.slice(0, limit).map((hit) => {
+        const props = findContextFacilityProps(layerKey, hit.facility_id) || {};
+        return {
+          facility_id: hit.facility_id,
+          distance_m: hit.distance_m,
+          name: props.name || null,
+          category: props.category || null,
+          subtype: props.subtype || null,
+          address: props.address || null,
+          business_status: props.business_status || null,
+          construction_status: props.construction_status || null,
+          construction_type: props.category || null,
+          main_use: props.main_use || null,
+          permit_date: props.permit_date || null,
+          start_date: props.start_date || null,
+          approval_date: props.approval_date || null,
+          use_approved: props.use_approved != null ? props.use_approved : null,
+          coordinate_source: props.coordinate_source || null,
+          source_url: props.source_url || null
+        };
+      });
+      return { records: detailed, truncated_count: Math.max(0, hits.length - detailed.length) };
+    }
+
+    function buildContextLayersPayload(schoolId) {
+      if (state.contextLoadState !== "loaded") {
+        return { load_status: state.contextLoadState === "failed" ? "failed" : "pending" };
+      }
+      const manifest = state.datasets.contextManifest || {};
+      const designations = state.datasets.contextDesignations;
+      const records = ((designations && designations.records) || [])
+        .filter((rec) => rec.match && rec.match.school_id === schoolId);
+      const summary = getSchoolContextEntry(schoolId);
+      // 상세 목록을 만들 수 없을 때도 원인(status)을 payload에 남겨 리포트가 명시적으로 표시하게 한다
+      const facilityDetailsStatus = state.contextFacilitiesLoadState === "loaded"
+        ? "loaded"
+        : state.contextFacilitiesLoadState === "failed" ? "failed" : "pending";
+      const facilityDetails = facilityDetailsStatus === "loaded"
+        ? {
+            status: "loaded",
+            nightlife: buildFacilityDetailRecords("nightlife", summary ? summary.nightlife : null),
+            construction: buildFacilityDetailRecords("construction", summary ? summary.construction : null)
+          }
+        : { status: facilityDetailsStatus, nightlife: null, construction: null };
+      return {
+        load_status: "loaded",
+        data_as_of: manifest.data_as_of || null,
+        usage_note_ko: manifest.usage_note_ko || null,
+        manifest_layers: manifest.layers || {},
+        school_summary: summary,
+        designation_records: records,
+        facility_details: facilityDetails
+      };
+    }
+
+    function refreshSchoolContextCard() {
+      // 배경 로딩 완료 후 상세 패널 전체를 다시 그리면 리포트 오버레이가 자동으로 열리므로
+      // 맥락 카드 영역만 국소 갱신한다.
+      const host = document.getElementById("schoolContextCard");
+      if (!host || state.currentPanelMode !== "school" || !state.selectedSchoolId) return;
+      host.innerHTML = buildSchoolContextCardHtml(state.selectedSchoolId);
+    }
+
+    async function loadContextLayers() {
+      try {
+        const [manifest, summary, designations] = await Promise.all([
+          loadJSON(PATHS.contextManifest),
+          loadJSON(PATHS.contextSummary),
+          loadJSON(PATHS.contextDesignations)
+        ]);
+        if (!manifest || !manifest.layers || !summary || !summary.schools) {
+          throw new Error("context layer payload missing or malformed");
+        }
+        state.datasets.contextManifest = manifest;
+        state.datasets.contextSummary = summary;
+        state.datasets.contextDesignations = designations && Array.isArray(designations.records)
+          ? designations
+          : { records: [] };
+        state.contextLoadState = "loaded";
+        renderDesignationBadges();
+        updateOverlayVisibility();
+        const layer = manifest.layers.school_designations;
+        if (layer && layer.record_count != null) {
+          appendStatus(`지정·연구학교 명단: ${layer.record_count}건 (초등 ${layer.matched_elementary_count}교)`);
+        }
+        refreshSchoolContextCard();
+      } catch (error) {
+        console.warn("[context-layers] 로딩 실패", error);
+        state.contextLoadState = "failed";
+        refreshSchoolContextCard();
+      }
+    }
+
     function updateOverlayVisibility() {
       LAYER_REGISTRY.forEach((def) => {
         const on = isLayerOn(def);
+        // 지연 로딩 레이어: 켜졌는데 아직 데이터가 없으면 여기서 최초 로딩을 건다.
+        // ensure는 진행 중 Promise를 공유하고 실패 시 다음 호출에서 재시도한다.
+        if (on && typeof def.ensure === "function" && !(typeof def.isLoaded === "function" && def.isLoaded())) {
+          def.ensure();
+        }
         (state.overlays[def.overlayKey] || []).forEach((overlay) => overlay.setMap(on ? state.map : null));
       });
       syncLayerToggleButtons();
@@ -6649,6 +7009,18 @@
           <span class="swatch" style="background:#6B7280;"></span>
           <span>🏝️ 별도정책필요</span>
         </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#8B5CF6;"></span>
+          <span>지정·연구학교(수집 명단 기준)</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#EC4899;"></span>
+          <span>유흥·단란주점 인허가(좌표 확보분)</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#94A3B8;"></span>
+          <span>공사장 행정기록(추정 위치)</span>
+        </div>
       `;
     }
 
@@ -7420,6 +7792,7 @@
         </div>
         ${renderSchoolReadingSection(row)}
         ${renderSchoolPolicyCardSection(row)}
+        <div class="detail-section" id="schoolContextCard">${buildSchoolContextCardHtml(getSchoolId(row))}</div>
         <button
           onclick="openSimulationOverlay()"
           style="
@@ -7727,6 +8100,13 @@
         await loadCandidateLayer();
       }
 
+      // 시설 상세 레코드(리포트용)는 geojson 로딩 후에만 첨부 가능.
+      // pending뿐 아니라 이미 "loading" 중이어도 공유 Promise를 await해 미완 스냅샷 고정을 막는다.
+      if (state.contextLoadState === "loaded" && state.contextFacilitiesLoadState !== "loaded") {
+        await ensureContextFacilitiesLoaded();
+      }
+      _enrichedRow._contextLayers = buildContextLayersPayload(getSchoolId(row));
+
       localStorage.setItem("parkAnalysis_school", JSON.stringify(_enrichedRow));
       localStorage.setItem("parkAnalysis_legacySnapshotLog", JSON.stringify(_enrichedRow._legacySnapshotLog));
       const _schoolName = getSchoolName(row);
@@ -7839,6 +8219,8 @@
       wireEvents();
       await loadData();
       await loadCandidateLayer();
+      // 맥락 레이어는 지연 로딩: 초기 렌더를 막지 않고, 실패해도 다른 기능에 영향 없음.
+      loadContextLayers();
     }
 
     initAuthGate();

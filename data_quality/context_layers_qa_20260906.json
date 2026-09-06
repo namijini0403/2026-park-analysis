@@ -1,0 +1,55 @@
+{
+  "construction": {
+    "coverage_by_gu": {
+      "계양구": {
+        "located_record_count": 1620,
+        "record_count": 1684
+      },
+      "미추홀구": {
+        "located_record_count": 1851,
+        "record_count": 1971
+      },
+      "연수구": {
+        "located_record_count": 50,
+        "record_count": 74
+      }
+    },
+    "coverage_regions": [
+      "계양구",
+      "미추홀구",
+      "연수구"
+    ],
+    "dropped_incomplete": 0,
+    "duplicates_collapsed": 0,
+    "input_rows": 3729,
+    "invalid_dates": [],
+    "located_records": 3521,
+    "records": 3729,
+    "records_without_gu": 0,
+    "unlocated_records": 208
+  },
+  "designations": {
+    "ambiguous": [],
+    "dropped_incomplete": 0,
+    "duplicates_collapsed": 0,
+    "input_rows": 804,
+    "matched_elementary": 176,
+    "missing_input_files": [],
+    "out_of_scope_level": 408,
+    "records": 804,
+    "undated_records": [],
+    "unmatched": [],
+    "unsafe_urls_dropped": 0
+  },
+  "nightlife": {
+    "active_located_records": 1532,
+    "active_records": 1534,
+    "dropped_incomplete": 0,
+    "duplicates_collapsed": 0,
+    "input_rows": 1534,
+    "invalid_coordinates": [],
+    "records": 1534,
+    "unknown_status": 0,
+    "unlocated_records": 2
+  }
+}

@@ -1,0 +1,47 @@
+module: nightlife
+resource_type: 유흥·단란주점 인허가 행정기록 (학교 주변 참고 맥락)
+location:
+  file: data_processed/context/facilities_nightlife.geojson
+  lat_key: geometry.coordinates[1]
+  lng_key: geometry.coordinates[0]
+  name_key: properties.name
+external_supply:
+  - metric: nightlife.observed_count
+    source: data_processed/context/school_context_summary.json
+  - metric: nightlife.nearest_observed_m
+    source: data_processed/context/school_context_summary.json
+  - metric: located_record_count
+    source: data_processed/context/context_layers_manifest.json
+internal_supply: 추가 확인 필요
+capacity: 추가 확인 필요
+target_users: 초등학생 (인천 272개교 주변 맥락)
+operating_hours: 추가 확인 필요
+demand_unit: 학생수 (학교 반경 500m 참고 맥락 단위)
+constraints:
+  - 학교별 수치는 좌표 확보 레코드(1,222/1,534)만 센 하한 관측치이며 total_count는 항상 null — 미관측이 0건이 아님
+  - 직선거리 500m 기준(도보 경로 아님) — 학교환경위생정화구역(50m/200m) 등 법정 경계 판단에 사용하지 않는다
+  - 인허가 기록 기준이며 현장 영업 여부·안전 판정이 아니다
+  - LOCALDATA 스냅샷 기준일은 독립 확인 전 null 유지(수집일 2026-09-06과 구분)
+policy_actions:
+  - access_route_improvement
+  - maintain_monitor
+reference_date: 2026-09-06  # context_layers_manifest.json data_as_of (수집·산출 기준일; 원자료 스냅샷 기준일 미확인)
+source:
+  - name: 지방행정인허가 유흥주점영업 (LOCALDATA)
+    provider: 행정안전부
+    license: 추가 확인 필요
+    url: "https://www.data.go.kr/data/15045018/fileData.do"
+    dataset_id: "15045018"
+    uddi: 추가 확인 필요
+  - name: 지방행정인허가 단란주점영업 (LOCALDATA)
+    provider: 행정안전부
+    license: 추가 확인 필요
+    url: "https://www.data.go.kr/data/15045017/fileData.do"
+    dataset_id: "15045017"
+    uddi: 추가 확인 필요
+notes: 참고 맥락 정보이며 위험도 점수·안전 등급 산정에 반영하지 않는다.
+layer:
+  id: nightlife
+  button_label: "🍸 유흥·단란주점"
+  panel_label: 유흥·단란주점 인허가
+  color: "#EC4899"

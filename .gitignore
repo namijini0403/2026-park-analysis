@@ -69,3 +69,6 @@ Thumbs.db
 .vscode/
 .idea/
 .vercel
+
+# update-center runtime state (staging/versions/active pointer)
+data/update_center/

@@ -133,8 +133,13 @@ function getAiExplainerEndpoints() {
   const sameOriginEndpoint = "/api/ai-explainer-v2";
   const productionEndpoint = "https://2026-park-analysis.vercel.app/api/ai-explainer-v2";
   if (typeof window === "undefined") return [sameOriginEndpoint];
+  const hostname = window.location.hostname;
+  // 로컬(loopback) 시연은 완전 오프라인 보장: 원격 호스팅 API로 폴백하지 않는다.
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]") {
+    return [sameOriginEndpoint];
+  }
   if (window.location.protocol === "file:") return [productionEndpoint];
-  if (window.location.hostname === "2026-park-analysis.vercel.app") return [sameOriginEndpoint];
+  if (hostname === "2026-park-analysis.vercel.app") return [sameOriginEndpoint];
   return [sameOriginEndpoint, productionEndpoint];
 }
 

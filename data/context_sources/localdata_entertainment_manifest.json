@@ -1,0 +1,22 @@
+{
+  "bytes": 16532082,
+  "crs": "EPSG:5174",
+  "encoding": "cp949",
+  "filename": "localdata_entertainment_national.csv",
+  "headers": {
+    "Referer": "https://file.localdata.go.kr/file/entertainment_bars/info",
+    "User-Agent": "Mozilla/5.0"
+  },
+  "incheon_active": 971,
+  "incheon_active_valid_coords": 970,
+  "incheon_all_status": 2264,
+  "kakao_geocoded_rows": 174,
+  "national_rows": 53574,
+  "notes": "공식 설명: 매일 2일전 기준 현행화. 개별 레코드 갱신시점과 수집일은 별도이며 정확한 파일 기준일은 소개페이지에서 추가 확인. 2026-09-06 Kakao Local API 주소 지오코딩으로 좌표 미확보 행 보강 (coordinate_source=kakao_local_api:*, 미해결은 unresolved 유지). 지오코딩 좌표는 주소 기반 추정 위치이며 현장 실측 좌표가 아님.",
+  "retrieved_at": "2026-09-06",
+  "sha256": "0b0fa8e51d02e534e5ef7256beafaf921f1ad56f726e644d0ff0f56c068d99a4",
+  "source_url": "https://www.data.go.kr/data/15045018/fileData.do",
+  "status": 200,
+  "unresolved_coordinate_rows": 1,
+  "url": "https://file.localdata.go.kr/file/download/entertainment_bars/info"
+}
