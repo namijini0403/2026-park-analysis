@@ -3293,7 +3293,7 @@
       parks: "./data_processed/parks.csv",
       libraries: "./data_processed/libraries.csv",
       schoolLibraryAccess: "./data_processed/school_library_access.csv",
-      isochrone: "./data_processed/school_isochrone_500m.geojson",
+      isochrone: "./data_processed/school_walkshed_500m_v3.geojson", // v3 exact edge-trim 도달권 (v2 OSMnx: school_isochrone_500m.geojson, 분석 봉인값용으로 보존)
       buffer: "./data_processed/school_buffer_500m.geojson",
       redevelopment: "./data_processed/redevelopment_geocoded.csv",
       largeApt: "./data_processed/large_apt_complexes_2025.csv",
@@ -3310,7 +3310,7 @@
     // kind: "point" | "geojson" | "custom"(render 함수가 그림) | "external"(다른 코드가 그림, 가시성만 관리)
     const LAYER_REGISTRY = [
       {
-        id: "isochrone", buttonLabel: "🚶 실제 도보이동 500m", panelLabel: "도보 등시선",
+        id: "isochrone", buttonLabel: "🚶 실제 도보이동 500m", panelLabel: "도보 도달권(보행 네트워크 v3)",
         toggleId: "toggleIsochrone", overlayKey: "isochronePolygons",
         kind: "geojson", datasetKey: "isochrone", defaultOn: false,
         style: { strokeWeight: 2, strokeColor: "#2B6CB0", strokeOpacity: 0.9, fillColor: "#90CDF4", fillOpacity: 0.22 }

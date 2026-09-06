@@ -25,6 +25,7 @@
 ./data_processed/gu_summary.csv
 ./data_processed/parks.csv
 ./data_processed/isochrone_valhalla.geojson
+./data_processed/school_walkshed_500m_v3.geojson  (지도 표시용 도보 도달권 v3, 2026-09-06)
 ./data_processed/school_buffer_500m.geojson
 ./data_processed/redevelopment_geocoded.csv
 ./data_processed/large_apt_complexes_2025.csv

@@ -24,6 +24,8 @@ const requiredDataFiles = [
   "gu_summary.csv",
   "parks.csv",
   "school_isochrone_500m.geojson",
+  "school_walkshed_500m_v3.geojson",
+  "school_walkshed_500m_v3_report.csv",
   "school_buffer_500m.geojson",
   "redevelopment_geocoded.csv",
   "large_apt_complexes_2025.csv",
