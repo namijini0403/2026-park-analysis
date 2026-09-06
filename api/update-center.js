@@ -71,7 +71,9 @@ function loadModules() {
       import("../scripts/update_center/apply.mjs"),
       import("../scripts/update_center/onboarding.mjs"),
       import("../scripts/update_center/scheduler.mjs"),
-    ]).then(([storeMod, scanMod, reanalyzeMod, contractMod, applyMod, onboardingMod, schedulerMod]) => ({
+      // 2026-09-07: 기동 시 활성 버전 복원(Postgres 보존본 → 컨테이너 디스크).
+      import("../scripts/update_center/restore.mjs"),
+    ]).then(([storeMod, scanMod, reanalyzeMod, contractMod, applyMod, onboardingMod, schedulerMod, restoreMod]) => ({
       storeMod,
       scanMod,
       reanalyzeMod,
@@ -79,6 +81,7 @@ function loadModules() {
       applyMod,
       onboardingMod,
       schedulerMod,
+      restoreMod,
     }));
   }
   return modulesPromise;
@@ -899,11 +902,67 @@ async function handleGetVersions(res, url) {
   const dataset = url.searchParams.get("dataset") || undefined;
   const limit = parseLimit(url.searchParams.get("limit"), 20, 100);
   const versions = await store.listVersions(dataset, limit);
-  // snapshot is a full base64 file blob (can be large) — the list view only
-  // needs content_hash/row_count/flags. Rollback (handlePostRollback) fetches
-  // the full row separately via store.getVersion(), unaffected by this.
-  const trimmed = versions.map(({ snapshot, ...rest }) => rest);
-  return json(res, 200, { versions: trimmed });
+
+  // DB 에 보존된 파일 수(쿼리 1회) — 화면의 "DB 보존" 칩이 쓰는 값.
+  let counts = {};
+  try {
+    if (typeof store.getVersionFileCounts === "function") {
+      counts = await store.getVersionFileCounts(versions.map((v) => v.id));
+    }
+  } catch (err) {
+    console.warn("[update-center] 버전 보존 파일 수 조회 실패:", err.message);
+  }
+
+  // 활성 버전 포인터(데이터셋 → {version_id, version_dir}).
+  let active = {};
+  try {
+    if (typeof store.getActiveVersions === "function") {
+      active = (await store.getActiveVersions()).active || {};
+    }
+  } catch (err) {
+    console.warn("[update-center] 활성 버전 포인터 조회 실패:", err.message);
+  }
+
+  // snapshot/manifest 는 통째로 실으면 커진다(각각 base64 blob · 파일 목록) —
+  // 목록 화면은 content_hash/row_count/플래그만 쓴다. 롤백은 handlePostRollback 이
+  // store.getVersion() 으로 전체 행을 따로 읽으므로 영향 없다.
+  const trimmed = versions.map(({ snapshot, manifest, ...rest }) => ({
+    ...rest,
+    persisted_files: counts[String(rest.id)] || 0,
+    is_active: Boolean(active[rest.dataset] && active[rest.dataset].version_id === rest.id),
+  }));
+  return json(res, 200, { versions: trimmed, active, store_backend: store.backend || "unknown" });
+}
+
+// 버전 하나에 보존된 파일 목록(이름/해시/크기만 — 내용은 싣지 않는다).
+async function handleGetVersionFiles(res, versionId) {
+  const store = await getStore();
+  const version = await store.getVersion(versionId);
+  if (!version) return json(res, 404, { error: `버전을 찾을 수 없습니다: ${versionId}` });
+  if (typeof store.listVersionFileMeta !== "function") {
+    return json(res, 501, { error: "이 store 백엔드는 버전 파일 보존을 지원하지 않습니다." });
+  }
+  const files = await store.listVersionFileMeta(versionId);
+  return json(res, 200, {
+    version_id: versionId,
+    dataset: version.dataset,
+    version_dir: version.version_dir || null,
+    files,
+    total_bytes: files.reduce((sum, f) => sum + (Number(f.size_bytes) || 0), 0),
+  });
+}
+
+// 기동 시 복원 요약(마지막 1회). 화면 ④ 의 "복원 상태" 줄이 쓴다.
+async function handleGetRestoreStatus(res) {
+  const store = await getStore();
+  const { storeMod } = await loadModules();
+  let restore = null;
+  try {
+    if (typeof store.getMeta === "function") restore = await store.getMeta(storeMod.LAST_RESTORE_META_KEY);
+  } catch (err) {
+    return json(res, 200, { store_backend: store.backend || "unknown", restore: null, error: err.message });
+  }
+  return json(res, 200, { store_backend: store.backend || "unknown", restore });
 }
 
 // ---------------------------------------------------------------------------
@@ -1227,7 +1286,7 @@ async function handlePostRollback(req, res) {
   const { reanalyzeMod, applyMod } = await loadModules();
 
   // P6 버전(불변 디렉터리 방식)이면 apply.mjs 의 해시 재검증 롤백을 쓴다.
-  const versionDirName = applyMod.versionDirFromStoreRow(existingVersion);
+  const versionDirName = existingVersion.version_dir || applyMod.versionDirFromStoreRow(existingVersion);
   if (versionDirName) {
     try {
       const entry = loadSourceEntry(existingVersion.dataset);
@@ -1236,6 +1295,8 @@ async function handlePostRollback(req, res) {
         entry,
         store,
         actor: ACTOR,
+        // 로컬 버전 디렉터리가 없으면(재배포로 초기화) 이 id 로 DB 보존본을 되살린다.
+        versionId,
         log: (line) => console.log(`[update-center] ${line}`),
       });
       await store.markVersionRolledBack(versionId);
@@ -1250,6 +1311,7 @@ async function handlePostRollback(req, res) {
         removedFiles: result.removedFiles,
         activeVersion: result.activeVersion,
         rebuild: result.rebuild,
+        restored_from_store: result.restored_from_store === true,
         version,
       });
     } catch (err) {
@@ -1293,6 +1355,9 @@ module.exports = async function handler(req, res) {
     if (req.method === "GET" && subPath === "/events") return await handleGetEvents(res, url);
     if (req.method === "GET" && subPath === "/audit") return await handleGetAudit(res, url);
     if (req.method === "GET" && subPath === "/versions") return await handleGetVersions(res, url);
+    if (req.method === "GET" && subPath === "/restore-status") return await handleGetRestoreStatus(res);
+    const versionFilesMatch = req.method === "GET" && subPath.match(/^\/versions\/([^/]+)\/files$/);
+    if (versionFilesMatch) return await handleGetVersionFiles(res, decodeURIComponent(versionFilesMatch[1]));
     if (req.method === "GET" && subPath === "/schedule") return await handleGetSchedule(res);
     if (req.method === "POST" && subPath === "/schedule") return await handlePostSchedule(req, res);
     if (req.method === "POST" && subPath === "/scan") return await handlePostScan(req, res);
@@ -1312,3 +1377,26 @@ module.exports = async function handler(req, res) {
 // server.js 가 listen 직후 호출하는 자동 감시 기동 훅.
 // (핸들러 함수 객체에 붙여 export — CommonJS 단일 export 형태를 깨지 않기 위해.)
 module.exports.startScheduler = startScheduler;
+
+/**
+ * server.js 가 listen 직후 호출하는 기동 복원 훅.
+ *
+ * 1) 어떤 store 백엔드로 붙었는지 한 줄 남긴다(운영 로그가 지금까지 말해주지 않던 것).
+ * 2) store 에 보존된 활성 버전을 컨테이너 디스크로 복원한다.
+ *
+ * 절대 throw 하지 않는다 — 실패해도 서버는 git 배포본 데이터로 정상 동작한다.
+ */
+async function restoreStartupState() {
+  const store = await getStore();
+  const backend = store && store.backend ? store.backend : "unknown";
+  console.log(
+    `[update-center] store=${backend}` +
+      (backend === "file"
+        ? " (DATABASE_URL 미설정 — 재배포 시 이벤트/버전이 휘발됩니다)"
+        : " (DATABASE_URL 사용 — 버전·후보·활성 포인터가 DB 에 보존됩니다)")
+  );
+  const { restoreMod } = await loadModules();
+  return restoreMod.restoreActiveVersions({ store, log: (line) => console.log(line) });
+}
+
+module.exports.restoreStartupState = restoreStartupState;

@@ -7,7 +7,8 @@
     "build:ui-preview": "npm --prefix ui-preview run build",
     "build:vercel": "node scripts/deploy/build_vercel_static.mjs",
     "validate:modules": "node scripts/validate_module_contract.mjs",
-    "test:update-center": "node scripts/tests/test_update_center_core.cjs",
+    "test:update-center": "node scripts/tests/test_update_center_core.cjs && node scripts/tests/test_update_center_persistence.cjs",
+    "test:update-center-persistence": "node scripts/tests/test_update_center_persistence.cjs",
     "selftest:update-center-store": "node scripts/update_center/store.mjs --selftest"
   },
   "engines": {

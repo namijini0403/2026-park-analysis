@@ -42,7 +42,7 @@ scripts/update_center/quality.mjs (품질 게이트 — 파일검토 MVP 규칙 
         │  비밀문자열, 미지원 계약(unsupported) → fail/unsupported 는 승인 차단
         │  + 현재 적용본 대비 스키마 diff(이름변경 매핑 제안) + 기본키 레코드 diff
         ▼
-scripts/update_center/store.mjs (저장소, 이중 백엔드)
+scripts/update_center/store.mjs (저장소, 이중 백엔드 — DB가 진실, 디스크는 캐시)
         │  DATABASE_URL 있으면 → Railway Postgres
         │    (기본 TLS 인증서 검증 ON, 자가서명 인증서 환경은
         │     PGSSL_NO_VERIFY=1로 명시적 opt-out 필요할 수 있음)
@@ -50,6 +50,10 @@ scripts/update_center/store.mjs (저장소, 이중 백엔드)
         │  11-메서드 공통 인터페이스: recordEvent/listEvents/getEvent/
         │  updateEventStatus/setEventAiNote/saveVersion/listVersions/
         │  getVersion/markVersionRolledBack/appendAudit/listAudit
+        │  + getMeta/setMeta (운영 key/value)
+        │  + 버전 영속화 8종: putVersionFiles/getVersionFiles/listVersionFileMeta/
+        │    getVersionFileCounts/getActiveVersions/setActiveVersion/
+        │    putStagedFiles/getStagedFiles  (§9)
         ▼
 api/update-center.js (서버 API, 13 엔드포인트)
         │  모든 요청에 x-update-center-token 헤더 게이트
@@ -67,6 +71,13 @@ scripts/update_center/apply.mjs (원자적 반영 · 불변 버전 · 롤백)
         │  양쪽 교체(재빌드 없이 지도 앱과 AI 서버가 같은 버전을 읽는다)
         │  data/update_center/versions/vNNN/{files,previous,manifest.json} + active.json
         │  rebuild_command 실행(출력은 감사 로그) · 롤백은 해시 재검증 후에만
+        │  버전 디렉터리 전체(files/previous/manifest)와 활성 포인터를 store 에도 보존
+        ▼
+scripts/update_center/restore.mjs (기동 복원 — 재배포 내구성)
+        │  server.js 가 listen 직후 호출. store 의 활성 포인터를 읽어
+        │  데이터셋별 활성 버전 파일을 각 반영 루트의 현재 파일과 sha256 비교 →
+        │  다르거나 없는 것만 원자적으로 재적용. 버전 디렉터리 캐시/active.json 재구성.
+        │  실패는 절대 치명적이지 않다(로그 + 감사 기록만).
         ▼
 /update-center (관리 화면, update-center.html)
         │  ⑧ 자동 감시 설정(지금 검사 · ON/OFF · 주기 · 마지막/다음 검사),
@@ -92,12 +103,13 @@ scripts/update_center/reanalyze.mjs (경량 재분석)
 | 품질 게이트 | `scripts/update_center/quality.mjs` | 구조·좌표·출처·null 의미론 검사, 스키마 diff, 기본키 레코드 diff, 승인 차단 판정 |
 | 반영/버전/롤백 | `scripts/update_center/apply.mjs` | 원자적 교체(두 경로), 불변 버전 디렉터리, active 포인터, 해시 검증 롤백, rebuild_command |
 | 온보딩 | `scripts/update_center/onboarding.mjs` | 객관식 질문 정의, 결정론적 답변 병합, 모듈 YAML/소스 항목 기록, LAYER_REGISTRY 스니펫 |
-| 저장소 | `scripts/update_center/store.mjs` | `data_events`/`data_versions`/`audit_log`/`update_center_meta` CRUD, pg/파일 이중 백엔드 |
+| 반영 내구성 | `scripts/update_center/restore.mjs` | 기동 시 store 보존본 → 컨테이너 디스크 복원(달라진 파일만 재적용), `active.json`·버전 디렉터리 캐시 재구성 |
+| 저장소 | `scripts/update_center/store.mjs` | `data_events`/`data_versions`/`data_version_files`/`audit_log`/`update_center_meta` CRUD, pg/파일 이중 백엔드, 버전 파일·후보·활성 포인터 영속화(§9) |
 | API | `api/update-center.js` | 토큰 게이트, 13개 엔드포인트, AI 해설 생성, 스케줄러 기동 훅 |
 | 관리 화면 | `update-center.html` (서버 루트에서 `/update-center`로 서빙) | 자동 감시/스캔/승인/보류/롤백/온보딩 UI, localStorage 토큰 입력 |
 | 경량 재분석 | `scripts/update_center/reanalyze.mjs` | libraries 전용 재계산+적용+롤백+봉인값 가드 |
 
-## 2. API 명세 (13 엔드포인트)
+## 2. API 명세 (15 엔드포인트)
 
 모든 요청은 헤더 `x-update-center-token: <UPDATE_CENTER_TOKEN>`이 필요합니다. 불일치 시 `401 {"error":"..."}`.
 
@@ -106,11 +118,14 @@ scripts/update_center/reanalyze.mjs (경량 재분석)
 | 1 | GET | `/api/update-center/sources` | (없음) | `sources[]` — `data_sources.yaml` 전체 + `last_state`(마지막 스캔 상태, 없으면 null; `lastCheckedAt`/`lastStatus` 포함) | 데이터소스 메타 목록 |
 | 2 | GET | `/api/update-center/events` | `?limit=` (기본 50, 최대 500) | `events[]` — `id,dataset,detected_at,kind,risk,status,summary,diff_json,ai_note,actor,updated_at` | CDC 이벤트 목록(최신순). `actor`/`updated_at`은 마지막으로 상태를 바꾼 주체·시각(hold/approve/rollback 등) |
 | 3 | GET | `/api/update-center/audit` | `?limit=` (기본 100, 최대 500) | `audit[]` — `id,at,actor,action,dataset,event_id,detail` | 감사 로그(최신순) |
-| 4 | GET | `/api/update-center/versions` | `?dataset=` (선택), `?limit=` (기본 20, 최대 100) | `versions[]` — `id,dataset,created_at,content_hash,row_count,source_event_id,applied,rolled_back` (목록 응답에는 `snapshot` 제외 — 용량 절감. 롤백은 서버가 `getVersion()`으로 전체 행을 별도 조회) | 버전/스냅샷 이력 |
+| 4 | GET | `/api/update-center/versions` | `?dataset=` (선택), `?limit=` (기본 20, 최대 100) | `versions[]` — `id,dataset,created_at,content_hash,row_count,source_event_id,applied,rolled_back,version_dir,persisted_files,is_active` + `active`(데이터셋별 활성 포인터) + `store_backend`(`postgres`\|`file`). 목록 응답에는 `snapshot`·`manifest` 제외 — 용량 절감(롤백은 서버가 `getVersion()`으로 전체 행을 별도 조회) | 버전 이력 + DB 보존 파일 수 + 활성 버전 |
 | 5 | POST | `/api/update-center/scan` | `dataset`(선택, 생략시 전체), `simulate_change_b64`(선택, base64 CSV — 시뮬레이션 모드) | `mode:"scan"\|"simulate"`, `summary`, `events[]`(ai_note 포함), `log[]` | 실 스캔 또는 시뮬레이션 트리거, 이벤트마다 AI 해설 자동 생성(`ai_note_generated` 감사 기록, source=openai\|fallback) |
 | 6 | POST | `/api/update-center/approve` | `event_id` | 성공 200: `event,versionId,diff{affected_school_count,external_shortage_before/after,changed_schools}` / 실패: 400(`event_id` 누락) · 404(이벤트 없음) · 409(red·moved·error·이미처리) · 501(시뮬레이션 페이로드 없음·미지원 데이터셋) | 이벤트 승인 → 재분석 → 적용(파일 반영) |
 | 7 | POST | `/api/update-center/hold` | `event_id` | 성공 200: `event`(status:"held") / 실패: 400(`event_id` 누락) · 404(이벤트 없음) · 409(이미 처리됨) | 이벤트 보류 처리 |
 | 8 | POST | `/api/update-center/rollback` | `version_id` | 성공 200: `versionId, restoredFiles[], version` / 실패: 400(`version_id` 누락 또는 무결성 검증 실패) · 404(버전 없음) · 409(이미 롤백됨) | 스냅샷 sha256 무결성 검증 후 파일 복원, 소스 이벤트(`source_event_id`)가 있으면 이벤트 상태도 `rolled_back`으로 갱신 |
+
+| 14 | GET | `/api/update-center/versions/:id/files` | (경로 파라미터: 버전 id) | `version_id, dataset, version_dir, files[]`(`rel_path,sha256,size_bytes` — 내용은 싣지 않는다), `total_bytes` / 실패: 404(버전 없음) · 501(보존 미지원 백엔드) | 이 버전이 DB 에 보존한 파일 목록 |
+| 15 | GET | `/api/update-center/restore-status` | (없음) | `store_backend`, `restore` — 마지막 기동 복원 요약(`at,datasets,datasets_checked,files_reapplied,files_unchanged,version_dirs_restored,skipped[],errors[],details[]`) 또는 `null` | 재배포 후 활성 버전이 실제로 복원됐는지 확인 |
 
 | 9 | GET | `/api/update-center/schedule` | (없음) | `schedule` — `enabled,interval_min,source(env\|runtime\|off),env_interval_min,running,timer_armed,last_scan_at,next_scan_at,last_trigger,last_result,last_skipped_at` | 자동 감시 상태 |
 | 10 | POST | `/api/update-center/schedule` | `enabled`(boolean, 필수), `interval_min`(number, 켤 때 1 이상) | `schedule`, `effective` / 실패: 400(`enabled` 누락·주기 없이 ON) | 자동 감시 런타임 on/off·주기 변경(store meta 에 영속화, 환경변수보다 우선) |
@@ -269,6 +284,12 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 
 ## 4. 한계 (정직하게 — 시제품 범위)
 
+> **2026-09-07에서 해소된 항목** — "Railway 파일시스템은 재배포 시 초기화됩니다"(§4.1 마지막
+> 항목)와 "Postgres 를 써도 적용된 데이터 파일 자체는 컨테이너 파일시스템에 있습니다"는 더 이상
+> 한계가 아니다. 승인이 만드는 불변 버전(파일 + 반영 전 원본 + 매니페스트)과 승인 대기 후보,
+> 활성 버전 포인터가 전부 Postgres 에 보존되고, 서버 기동 때 자동 복원된다 — §9 참조.
+> (`DATABASE_URL` 미설정 시 파일 백엔드로 떨어지는 것은 그대로다.)
+
 > **P6에서 해소된 항목** — 아래 원문 목록 중 다음 세 가지는 더 이상 한계가 아니다:
 > ①"스케줄러가 없습니다"(→ §8.1 자동 감시), ②"실원격 반영은 시뮬레이션 페이로드가
 > 필요합니다"(→ §8.2 전 페이지 수집 + 후보 staging. 단 아래 첫 항목에 적은
@@ -293,10 +314,10 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 - **`data/update_center/`(staging·versions·active)가 `.gitignore` 에 없습니다.**
   런타임 산출물이므로 운영자가 `.gitignore` 에 `data/update_center/` 를 추가해야
   한다(이 작업의 편집 허용 범위 밖이라 반영하지 않았다).
-- **Postgres 를 써도 적용된 데이터 파일 자체는 여전히 컨테이너 파일시스템에 있습니다.**
-  이벤트/버전 메타데이터·감사 로그·스케줄 상태는 `DATABASE_URL` 설정 시 영속되지만,
-  `data_processed/*.csv` 와 `data/update_center/versions/` 의 실제 파일은 Railway
-  재배포 시 초기화된다(영구 볼륨 필요).
+- **버전 보존에는 용량 상한이 있습니다.** 단일 파일 25MB, 버전(또는 후보) 한 건 합계 60MB 를
+  넘으면 DB 보존을 거부한다(현재 최대 데이터 파일은 ~4MB). 거부되면 파일 반영 자체는 그대로
+  진행되지만 그 버전은 디스크에만 남아 재배포 시 사라지고, 감사 로그에
+  `version_persist_failed` 로 기록된다 — 조용히 "보존된 척"하지 않는다.
 - **`rebuild_command` 는 동기 실행이며 실행 파일이 allowlist 로 제한됩니다.**
   `python/python3/py/node/npm` 만 허용하고(임의 명령 실행 방지), 기본 타임아웃은
   10분이다. 오래 걸리는 재빌드는 승인 요청을 그만큼 붙잡는다.
@@ -347,7 +368,8 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
   입니다 — 따라서 지도 앱에 실제 반영되는 시점은 다음 빌드/배포부터입니다.
   시연 시 로컬에서는 `npm run build:vercel`을 재실행하면 즉시 반영된 결과를
   확인할 수 있습니다.
-- **Railway 파일시스템은 재배포 시 초기화됩니다.** `DATABASE_URL` 미설정 시
+- **Railway 파일시스템은 재배포 시 초기화됩니다.** *(2026-09-07 해소 — §9. 아래는 당시 기록.)*
+  `DATABASE_URL` 미설정 시
   쓰는 파일 백엔드 store(`data/update_center_store.json`,
   `data/update_center_state.json`)와, 승인으로 적용된
   `data_processed/*.csv`는 Railway의 컨테이너 파일시스템에 저장되므로
@@ -372,6 +394,9 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 | `UPDATE_CENTER_FETCH_TIMEOUT_MS` | 선택 | `15000` | 후보 수집(페이지 요청) 타임아웃. 초과 시 예외가 아니라 이벤트의 `candidate.error` 로 기록된다 |
 | `UPDATE_CENTER_REBUILD_TIMEOUT_MS` | 선택 | `600000` | `rebuild_command` 실행 타임아웃(밀리초) |
 | `UPDATE_CENTER_SKIP_REBUILD` | 선택 | (없음) | `"1"` 이면 `rebuild_command` 를 실행하지 않고 건너뛴 사실만 기록한다(테스트·점검용) |
+| `UPDATE_CENTER_RESTORE_RUN_REBUILD` | 선택 | (없음 = 건너뜀) | `"1"` 이면 기동 복원이 파일을 재적용한 데이터셋에 대해 `rebuild_command` 도 실행한다. 기본은 건너뛴다 — 승인 당시 재빌드 산출물이 그 자체로 반영 대상 파일이면 버전에 포함되어 함께 복원되고, 재빌드는 기동을 수 분간 붙잡기 때문 |
+| `UPDATE_CENTER_MAX_FILE_BYTES` | 선택 | `26214400` (25MB) | 버전/후보 보존 시 단일 파일 상한. 초과하면 DB 보존을 거부하고 명확한 오류를 남긴다 |
+| `UPDATE_CENTER_MAX_VERSION_BYTES` | 선택 | `62914560` (60MB) | 버전(또는 후보) 한 건의 합계 상한 |
 
 **테스트/격리용 경로 오버라이드** (운영에서는 설정하지 않는다 — 설정하면 해당 경로가 통째로 바뀐다)
 
@@ -750,3 +775,104 @@ POST /onboarding/register modules/<slug>.yaml + data_sources.yaml + 스니펫
 전 페이지 수집·상한·수집 실패 처리 / 품질 규칙 8종 / 레코드 diff / 원자적 반영·버전·
 해시 검증 롤백·변조 시 롤백 거부 / 품질 fail·never_auto_apply·staging 변조 승인 차단 /
 스케줄 on·off·겹침 방지·실패 격리 / 온보딩 병합·강제 규칙·slug 검증·등록·중복 거부.
+
+## 9. 버전 관리의 재배포 내구성 (2026-09-07)
+
+> **원칙: Postgres 가 진실(source of truth), 컨테이너 디스크는 캐시다.**
+> Railway 서비스(`park-analysis-web`)의 파일시스템은 재배포마다 git 내용으로 초기화되고,
+> `data_processed/` 와 `vercel_public/` 은 빌드로 다시 만들어진다. 그래서 승인으로 만들어진
+> 버전·반영본·승인 대기 후보는 DB 에 두고, 기동할 때 디스크로 되살린다.
+
+### 9.1 저장 구조
+
+| 저장 위치 | 내용 |
+| --- | --- |
+| `data_version_files` (신규 테이블) | 버전 디렉터리의 **실제 바이트**. `PRIMARY KEY (version_id, rel_path)`, `sha256`/`size_bytes`/`content BYTEA`. `rel_path` 는 버전 디렉터리 기준 상대 경로 — `files/<name>`, `previous/<name>`, `manifest.json` |
+| `data_versions.manifest` (신규 컬럼, JSONB) | 버전 매니페스트 사본(조회용). 같은 내용이 `manifest.json` 행에도 있다 |
+| `data_versions.version_dir` (신규 컬럼, TEXT) | `vNNN` 디렉터리 이름. 예전에는 `snapshot`(base64 JSON) 안에만 있어 복원/롤백이 디코드해야 찾을 수 있었다 |
+| `update_center_meta['active_versions']` | 활성 버전 포인터 — `{active: {<dataset>: {version_id, version_dir, updated_at}}}` |
+| `update_center_meta['last_restore']` | 마지막 기동 복원 요약(`GET /restore-status` 가 그대로 돌려준다) |
+| `update_center_meta['staged_manifest:<staging_id>']` | 승인 대기 후보의 manifest |
+| `data_version_files` (`version_id = 'staging:<staging_id>'`) | 승인 대기 후보의 실제 바이트 |
+
+기존 운영 테이블은 **그대로 두고 컬럼만 추가**한다 — `schema.sql` 의
+`CREATE TABLE IF NOT EXISTS` / `ALTER TABLE … ADD COLUMN IF NOT EXISTS` 가
+`createPgStore()` 기동 때마다 실행되므로 재배포만으로 마이그레이션된다.
+
+파일 백엔드(`DATABASE_URL` 미설정)는 같은 계약을 JSON store 안에서 흉내낸다 —
+`version_files` 맵에 base64 문자열을 그대로 담는 기존 관례를 따른다.
+
+### 9.2 store 인터페이스 (기존 11 메서드 + 신규 8종)
+
+| 메서드 | 하는 일 |
+| --- | --- |
+| `putVersionFiles(versionId, files, manifest)` | 버전 디렉터리 전체를 보존. `files[] = {rel_path, sha256, size_bytes, content(base64)}` |
+| `getVersionFiles(versionId)` | `{version_id, manifest, files[]}` 또는 `null` |
+| `listVersionFileMeta(versionId)` | 내용 없이 `rel_path/sha256/size_bytes` 만 |
+| `getVersionFileCounts(versionIds)` | `{versionId: 파일 수}` — 목록 화면의 "DB 보존" 칩(쿼리 1회) |
+| `getActiveVersions()` | 활성 포인터 전체 |
+| `setActiveVersion(dataset, versionId, {version_dir})` | 활성 포인터 갱신. `versionId=null` 이면 해당 데이터셋 제거(롤백에 직전 버전이 없을 때) |
+| `putStagedFiles(stagingId, files, manifest)` | 승인 대기 후보 보존 |
+| `getStagedFiles(stagingId)` | 위 저장분 또는 `null` |
+
+`store.backend` 속성(`"postgres"` \| `"file"`)이 추가되어 기동 로그가 어떤 백엔드로 붙었는지 말한다.
+
+### 9.3 흐름
+
+- **후보 수집(스캔)** — `candidate.mjs` 가 staging 을 디스크에 쓴 직후 같은 바이트를
+  `putStagedFiles()` 로 보존한다. 보존 실패는 수집을 실패시키지 않고 이벤트/감사 로그에
+  사실만 남긴다(`DB보존=실패(...)`).
+- **승인** — `apply.mjs` 는 예전과 똑같이 버전 디렉터리를 만들고 원자적으로 반영한 뒤,
+  같은 작업 안에서 `putVersionFiles()` + `setActiveVersion()` 을 수행한다. 감사 로그에
+  `version_persisted`(또는 실패 시 `version_persist_failed`)가 남는다.
+  staging 디렉터리가 없으면(재배포 후) 먼저 `getStagedFiles()` 로 되살린 뒤
+  **무결성·품질 재검사를 똑같이 통과해야** 반영된다(`staging_restored` 감사 기록).
+- **롤백** — 버전 디렉터리가 로컬에 없으면 `getVersionFiles()` 로 되살리고
+  (`version_dir_restored`), 저장된 sha256 을 파일마다 다시 확인한 뒤에만 복원한다.
+  하나라도 어긋나면 **아무 파일도 쓰지 않고 거부**한다. 활성 포인터도 직전 버전으로 갱신된다.
+- **기동 복원** — `server.js` 가 listen 직후 `restore.mjs` 의
+  `restoreActiveVersions({store, log})` 를 호출한다(실패해도 서버는 죽지 않는다).
+  활성 포인터의 데이터셋마다 버전 파일을 가져와, 각 반영 루트
+  (`data_processed/`, `vercel_public/data_processed/`)의 현재 파일과 sha256 을 비교해
+  **다르거나 없는 것만** 원자적으로 다시 쓴다. 로컬 버전 디렉터리 캐시와 `active.json` 도
+  재구성한다. 감사 로그에 `active_version_restored` 가 남고, 요약은
+  `update_center_meta['last_restore']` 에 저장된다.
+
+### 9.4 rebuild_command 를 기동 복원에서 건너뛰는 이유
+
+승인 당시 `rebuild_command`(예: `python scripts/build_context_layers.py`)가 만들어낸
+산출물이 그 자체로 반영 대상 파일이면 버전에 포함되어 함께 복원되므로, 재빌드 없이도
+일관된 상태가 된다. 재빌드는 수 분이 걸려 기동을 붙잡기 때문에 기본은 건너뛴다.
+버전에 포함되지 않는 파생 산출물이 있어 재빌드가 필요한 배포에서는
+`UPDATE_CENTER_RESTORE_RUN_REBUILD=1` 을 설정한다(파일을 실제로 재적용한 데이터셋에 대해서만 실행).
+
+### 9.5 용량 상한
+
+단일 파일 **25MB**, 버전(또는 후보) 한 건 합계 **60MB**. 현재 리포의 최대 데이터 파일은
+약 4MB 이므로 여유가 크다. 초과하면 `putVersionFiles`/`putStagedFiles` 가 명확한 오류를
+던지고 **아무것도 저장하지 않는다** — 반영 자체는 진행되지만 그 버전은 디스크에만 남으므로
+재배포 시 사라지고, 감사 로그 `version_persist_failed` 로 그 사실이 드러난다.
+상한은 `UPDATE_CENTER_MAX_FILE_BYTES` / `UPDATE_CENTER_MAX_VERSION_BYTES` 로 조정한다.
+저장 시 파일마다 sha256 을 다시 계산해 대조하고, 버전 디렉터리를 벗어나는 `rel_path`
+(`../`, 절대경로, 드라이브 문자, NUL)는 거부한다.
+
+### 9.6 관리 화면 · 배포 후 확인
+
+- `④ 버전 기록` 에 **보존** 열(`DB 보존 N개` / `디스크만`)과 **활성** 배지(`활성 v002`),
+  그리고 패널 상단에 **복원 상태** 한 줄(`GET /restore-status`)이 표시된다.
+- Railway 배포 로그에서 확인할 두 줄:
+  ```
+  [update-center] store=postgres (DATABASE_URL 사용 — 버전·후보·활성 포인터가 DB 에 보존됩니다)
+  [update-center] 활성 버전 복원: N개 데이터셋, M개 파일 재적용 (동일 K개, 버전 캐시 J개 복원, rebuild_command 건너뜀)
+  ```
+  보존된 활성 버전이 아직 없으면 두 번째 줄 대신
+  `[update-center] 활성 버전 복원: 보존된 활성 버전이 없습니다 (git 배포본 그대로 사용).` 가 나온다.
+
+### 9.7 테스트
+
+`npm run test:update-center` 가 코어 테스트에 이어
+`scripts/tests/test_update_center_persistence.cjs` 를 실행한다(네트워크·실제 Postgres 불필요,
+파일 백엔드로 두 백엔드 공통 계약을 검증):
+신규 store 메서드 라운드트립 / 승인 시 버전·매니페스트·활성 포인터 보존 /
+버전 디렉터리 삭제 후 store 보존본에서 롤백 / staging 디렉터리 삭제 후 승인 시 복원 /
+기동 복원이 달라진 파일만 재적용하고 동일 파일은 건너뜀 / 용량 가드(25MB·60MB)·해시 불일치 거부.

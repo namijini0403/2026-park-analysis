@@ -5,7 +5,9 @@
 //   1) json_api 소스는 totalCount 에 도달할 때까지 모든 페이지를 가져온다(perPage 존중,
 //      상한 초과 시 잘라내고 사실을 보고한다 — 조용히 일부만 쓰지 않는다).
 //   2) 데이터셋 어댑터(adapters/<dataset>.mjs)로 정규화한다.
-//   3) data/update_center/staging/<event_id>/ 에 파일 + 파일별 sha256 을 기록한다.
+//   3) data/update_center/staging/<staging_id>/ 에 파일 + 파일별 sha256 을 기록하고,
+//      같은 바이트를 store(putStagedFiles)에도 보존한다 — 재배포로 컨테이너
+//      파일시스템이 초기화돼도 대기 중인 이벤트를 승인할 수 있게.
 //   4) quality.mjs 의 품질검사(review MVP 규칙 이식본)를 돌린다.
 //   5) 현재 적용본과의 스키마 diff + 기본키 기준 레코드 diff 를 계산한다.
 //   6) 재분석 모듈이 있는 데이터셋(libraries)은 영향 학교 수까지 계산한다.
@@ -173,6 +175,45 @@ export function stageCandidate(stagingId, files, meta = {}) {
   return { dir, manifest };
 }
 
+/**
+ * staging 디렉터리 전체(files/ + manifest.json)를 store 에 보존한다.
+ * Railway 컨테이너 파일시스템은 재배포마다 초기화되므로, 이 보존이 없으면
+ * 재배포 전에 감지된 "승인 대기" 이벤트를 나중에 승인할 수 없다.
+ *
+ * 절대 throw 하지 않는다 — 보존 실패가 후보 수집 자체를 실패로 만들지는 않고,
+ * { ok:false, error } 로 사실만 보고한다(승인 시 staging 이 없으면 그때 거부된다).
+ */
+export async function persistStagedCandidate(store, stagingId, log = () => {}) {
+  if (!store || typeof store.putStagedFiles !== "function") return { ok: false, error: "store 가 후보 보존을 지원하지 않습니다." };
+  const dir = path.join(stagingDir(), String(stagingId));
+  const manifest = loadStagingManifest(stagingId);
+  if (!manifest) return { ok: false, error: `staging manifest 없음: ${stagingId}` };
+  const files = [];
+  const collect = (current, prefix) => {
+    for (const name of fs.readdirSync(current).sort()) {
+      const abs = path.join(current, name);
+      const rel = prefix ? `${prefix}/${name}` : name;
+      const stat = fs.statSync(abs);
+      if (stat.isDirectory()) {
+        collect(abs, rel);
+        continue;
+      }
+      if (!stat.isFile()) continue;
+      const buffer = fs.readFileSync(abs);
+      files.push({ rel_path: rel, sha256: sha256(buffer), size_bytes: buffer.length, content: buffer.toString("base64") });
+    }
+  };
+  try {
+    collect(dir, "");
+    const result = await store.putStagedFiles(stagingId, files, manifest);
+    log(`[candidate] 후보 ${stagingId} DB 보존 — ${result.file_count}개 파일 / ${result.total_bytes}B`);
+    return { ok: true, ...result };
+  } catch (err) {
+    log(`[candidate] 경고 — 후보 ${stagingId} DB 보존 실패: ${err.message}`);
+    return { ok: false, error: err.message };
+  }
+}
+
 export function readStagedFile(stagingId, name) {
   const safe = path.basename(String(name));
   return fs.readFileSync(path.join(stagingDir(), String(stagingId), "files", safe));
@@ -291,7 +332,7 @@ export async function evaluateCandidate(entry, candidateText, fileName) {
  *
  * @returns {Promise<object>} 이벤트 diff_json 에 그대로 실리는 후보 요약
  */
-export async function buildStagedCandidate({ entry, rawRecords, rawText, stagingId, fetchMeta = {}, log = () => {} }) {
+export async function buildStagedCandidate({ entry, rawRecords, rawText, stagingId, store = null, fetchMeta = {}, log = () => {} }) {
   const adapter = getAdapter(entry.dataset);
   const localRel = assertSafeRelPath(entry.local_file);
   const fileName = adapter.outputName || path.basename(localRel);
@@ -308,13 +349,20 @@ export async function buildStagedCandidate({ entry, rawRecords, rawText, staging
     quality_status: evaluation.quality_status,
   });
 
+  // staging 을 store 에도 보존한다 — 재배포로 컨테이너 파일시스템이 초기화돼도
+  // 대기 중인 이벤트를 승인할 수 있게(승인 시 apply.mjs 가 되살린다).
+  const persisted = await persistStagedCandidate(store, stagingId, log);
+
   log(
     `[candidate] ${entry.dataset} 후보 ${fileName} (${candidateText.length}B) staged → ` +
-      `품질=${evaluation.quality_status}, risk=${evaluation.risk}`
+      `품질=${evaluation.quality_status}, risk=${evaluation.risk}` +
+      `, DB보존=${persisted.ok ? `${persisted.file_count}개` : "실패/미지원"}`
   );
 
   return {
     staging_id: String(stagingId),
+    persisted_files: persisted.ok ? persisted.file_count : 0,
+    persist_error: persisted.ok ? null : persisted.error,
     staging_dir: path.relative(applyRoot(), staged.dir).split(path.sep).join("/"),
     files: staged.manifest.files,
     target_file: localRel,

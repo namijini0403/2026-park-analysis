@@ -753,6 +753,7 @@
       <h2>④ 버전 기록</h2>
       <span class="status-line" id="versions-status"></span>
     </div>
+    <p class="status-line" id="restore-status" style="margin:-8px 0 12px;">복원 상태 확인 중...</p>
     <div class="table-scroll">
       <table>
         <thead>
@@ -761,13 +762,14 @@
             <th>데이터셋</th>
             <th>행 수</th>
             <th>content_hash</th>
+            <th>보존</th>
             <th>적용됨</th>
             <th>롤백됨</th>
             <th></th>
           </tr>
         </thead>
         <tbody id="versions-tbody">
-          <tr><td colspan="7" class="empty">로딩 중...</td></tr>
+          <tr><td colspan="8" class="empty">로딩 중...</td></tr>
         </tbody>
       </table>
     </div>
@@ -908,6 +910,7 @@
     sources: [],
     events: [],
     versions: [],
+    activeVersions: {},
     audit: [],
     selectedEventId: null,
     schedule: null,
@@ -1457,7 +1460,7 @@
           : "승인 및 적용 완료.",
         "info"
       );
-      return Promise.all([loadEvents(), loadVersions(), loadAudit()]).then(function () {
+      return Promise.all([loadEvents(), loadVersions(), loadRestoreStatus(), loadAudit()]).then(function () {
         state.selectedEventId = eventId;
         renderEvents();
         renderEventDetail();
@@ -1487,7 +1490,7 @@
   function renderVersions() {
     var tbody = $("versions-tbody");
     if (!state.versions.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="empty">버전 기록이 없습니다.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" class="empty">버전 기록이 없습니다.</td></tr>';
       return;
     }
     tbody.innerHTML = state.versions
@@ -1496,12 +1499,25 @@
         var rollbackBtn = v.rolled_back
           ? '<span class="status-line">롤백됨</span>'
           : '<button class="small-btn danger-outline rollback-btn" data-version-id="' + esc(v.id) + '">롤백</button>';
+        // DB 보존 칩 — 이 버전의 파일이 Postgres 에 몇 개 남아 있는지. 0이면 재배포 시 사라진다.
+        var persisted = Number(v.persisted_files || 0);
+        var persistChip = persisted
+          ? '<span class="badge badge-green" title="이 버전의 파일이 DB 에 보존되어 재배포 후에도 복원·롤백됩니다">DB 보존 ' +
+            persisted + "개</span>"
+          : '<span class="badge badge-neutral" title="DB 보존본이 없습니다 — 재배포 시 이 버전의 파일은 사라집니다">디스크만</span>';
+        var activeBadge = v.is_active
+          ? ' <span class="badge badge-indigo" title="현재 활성 버전 — 기동 시 이 버전이 복원됩니다">활성' +
+            (v.version_dir ? " " + esc(v.version_dir) : "") + "</span>"
+          : v.version_dir
+            ? ' <span class="status-line">' + esc(v.version_dir) + "</span>"
+            : "";
         return (
           "<tr>" +
           "<td>" + fmtTime(v.created_at) + "</td>" +
-          "<td>" + esc(v.dataset) + "</td>" +
+          "<td>" + esc(v.dataset) + activeBadge + "</td>" +
           "<td>" + esc(v.row_count === null || v.row_count === undefined ? "-" : v.row_count) + "</td>" +
           "<td>" + hashShort + "</td>" +
+          "<td>" + persistChip + "</td>" +
           "<td>" + (v.applied ? "예" : "아니오") + "</td>" +
           "<td>" + (v.rolled_back ? "예" : "아니오") + "</td>" +
           "<td>" + rollbackBtn + "</td>" +
@@ -1533,12 +1549,45 @@
       if (!res.ok) {
         $("versions-status").textContent = "로드 실패";
         $("versions-tbody").innerHTML =
-          '<tr><td colspan="7" class="empty">' + esc((res.data && res.data.error) || "로드 실패") + "</td></tr>";
+          '<tr><td colspan="8" class="empty">' + esc((res.data && res.data.error) || "로드 실패") + "</td></tr>";
         return;
       }
       state.versions = res.data.versions || [];
-      $("versions-status").textContent = state.versions.length + "건";
+      state.activeVersions = res.data.active || {};
+      var persistedCount = state.versions.filter(function (v) {
+        return Number(v.persisted_files || 0) > 0;
+      }).length;
+      $("versions-status").textContent =
+        state.versions.length + "건 (DB 보존 " + persistedCount + "건 · store=" + esc(res.data.store_backend || "?") + ")";
       renderVersions();
+    });
+  }
+
+  // 기동 복원 상태 — 재배포 후 활성 버전이 실제로 다시 반영됐는지 한 줄로 보여준다.
+  function loadRestoreStatus() {
+    var el = $("restore-status");
+    if (!el) return Promise.resolve();
+    return apiFetch("/restore-status").then(function (res) {
+      if (!res.ok) {
+        el.textContent = "복원 상태: 로드 실패";
+        return;
+      }
+      var backend = (res.data && res.data.store_backend) || "?";
+      var r = res.data && res.data.restore;
+      if (!r) {
+        el.textContent =
+          "복원 상태: 기록 없음 (store=" + backend + ") — " +
+          (backend === "file"
+            ? "DATABASE_URL 미설정: 재배포 시 버전이 휘발됩니다."
+            : "아직 기동 복원이 실행되지 않았습니다.");
+        return;
+      }
+      el.textContent =
+        "복원 상태: " + fmtTime(r.at) + " · store=" + backend +
+        " · 데이터셋 " + (r.datasets || 0) + "개, 파일 재적용 " + (r.files_reapplied || 0) + "개" +
+        ", 동일 " + (r.files_unchanged || 0) + "개, 버전 캐시 " + (r.version_dirs_restored || 0) + "개" +
+        ((r.errors && r.errors.length) ? " · 오류 " + r.errors.length + "건: " + r.errors.join(" / ") : "") +
+        ((r.skipped && r.skipped.length) ? " · 건너뜀 " + r.skipped.length + "건" : "");
     });
   }
 
@@ -1549,7 +1598,7 @@
         return;
       }
       showGlobalMsg("롤백 완료.", "info");
-      return Promise.all([loadVersions(), loadEvents(), loadAudit()]);
+      return Promise.all([loadVersions(), loadRestoreStatus(), loadEvents(), loadAudit()]);
     });
   }
 
@@ -1984,7 +2033,14 @@
   // ---------------------------------------------------------------------
 
   function refreshAll() {
-    return Promise.all([loadSchedule(), loadSources(), loadEvents(), loadVersions(), loadAudit()]).then(function () {
+    return Promise.all([
+      loadSchedule(),
+      loadSources(),
+      loadEvents(),
+      loadVersions(),
+      loadRestoreStatus(),
+      loadAudit(),
+    ]).then(function () {
       $("last-refreshed").textContent = "마지막 갱신: " + new Date().toLocaleString("ko-KR", { hour12: false });
     });
   }

@@ -56,3 +56,34 @@ CREATE TABLE IF NOT EXISTS update_center_meta (
   value JSONB,
   updated_at TIMESTAMPTZ NOT NULL
 );
+
+-- ---------------------------------------------------------------------------
+-- 2026-09-07: 버전 파일 영속화 (Postgres = 진실, 컨테이너 디스크 = 캐시)
+-- ---------------------------------------------------------------------------
+-- Railway 컨테이너 파일시스템은 재배포마다 초기화되므로, 승인으로 만들어진
+-- 불변 버전 디렉터리(data/update_center/versions/vNNN/)의 실제 바이트를 DB 에 둔다.
+-- rel_path 는 버전 디렉터리 기준 상대 경로다: "files/x.csv", "previous/x.csv",
+-- "manifest.json". 승인 대기 후보(staging)는 version_id = 'staging:<staging_id>'
+-- 네임스페이스로 같은 테이블에 보존된다(재배포 후에도 승인 가능하도록).
+CREATE TABLE IF NOT EXISTS data_version_files (
+  version_id TEXT NOT NULL,
+  rel_path TEXT NOT NULL,
+  sha256 TEXT NOT NULL,
+  size_bytes INTEGER NOT NULL,
+  content BYTEA NOT NULL,
+  PRIMARY KEY (version_id, rel_path)
+);
+
+CREATE INDEX IF NOT EXISTS idx_data_version_files_version_id
+  ON data_version_files (version_id);
+
+-- 기존 운영 테이블을 그대로 두고 컬럼만 추가한다(재배포 시 자동 마이그레이션).
+--   manifest    : 버전 매니페스트 원본(파일 목록/해시/반영 경로) — 조회용 사본.
+--                 같은 내용이 data_version_files 의 "manifest.json" 행에도 있다.
+--   version_dir : vNNN 디렉터리 이름. 예전에는 snapshot(base64 JSON) 안에만 있어
+--                 복원/롤백이 디코드해야 찾을 수 있었다.
+ALTER TABLE data_versions ADD COLUMN IF NOT EXISTS manifest JSONB;
+ALTER TABLE data_versions ADD COLUMN IF NOT EXISTS version_dir TEXT;
+
+CREATE INDEX IF NOT EXISTS idx_data_versions_version_dir
+  ON data_versions (dataset, version_dir);

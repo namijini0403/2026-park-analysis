@@ -465,6 +465,8 @@ async function collectCandidate(entry, dataUrl, store, opts, log) {
       entry,
       rawRecords: paged.records,
       stagingId,
+      // staging 바이트를 store 에도 보존한다 — 재배포 후에도 이 후보를 승인할 수 있게.
+      store,
       fetchMeta: {
         pages_fetched: paged.pagesFetched,
         pages_expected: paged.pagesExpected,
@@ -483,7 +485,8 @@ async function collectCandidate(entry, dataUrl, store, opts, log) {
       detail:
         `후보 staged — ${candidate.staging_dir} / 페이지 ${paged.pagesFetched}` +
         `${paged.pagesExpected ? `/${paged.pagesExpected}` : ""}` +
-        `${paged.truncated ? " (상한 도달로 잘림)" : ""} / 품질=${candidate.quality_status}`,
+        `${paged.truncated ? " (상한 도달로 잘림)" : ""} / 품질=${candidate.quality_status}` +
+        ` / DB보존=${candidate.persisted_files ? `${candidate.persisted_files}개 파일` : `실패(${candidate.persist_error || "미지원"})`}`,
     });
     return { ok: true, ...candidate };
   } catch (err) {

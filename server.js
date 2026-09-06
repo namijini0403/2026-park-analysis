@@ -255,6 +255,18 @@ server.listen(PORT, HOST, () => {
   console.log(`Server listening on http://${HOST}:${PORT}`);
   console.log(`Static root: ${STATIC_ROOT}`);
 
+  // 기동 복원. Railway 컨테이너 파일시스템은 재배포마다 초기화되므로, store(Postgres)에
+  // 보존된 활성 버전의 파일을 data_processed/ 와 vercel_public/data_processed/ 로 다시
+  // 반영한다. 어떤 store 백엔드로 붙었는지(store=postgres | store=file)도 여기서 남긴다.
+  // 복원 실패는 절대 치명적이지 않다 — 로그만 남기고 git 배포본으로 계속 서비스한다.
+  if (typeof updateCenterHandler.restoreStartupState === "function") {
+    updateCenterHandler
+      .restoreStartupState()
+      .catch((error) => {
+        console.error("[update-center] 활성 버전 복원 실패(서비스는 계속됩니다):", error && error.message);
+      });
+  }
+
   // 자동 감시(주기 스캔) 기동. UPDATE_CENTER_SCAN_INTERVAL_MIN 이 없거나 0이고
   // 런타임 설정(POST /api/update-center/schedule)도 없으면 꺼진 채로 유지된다.
   // 기동 실패는 로그만 남기고 서버를 죽이지 않는다.
