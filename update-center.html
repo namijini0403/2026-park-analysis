@@ -484,9 +484,156 @@
     color: var(--muted);
   }
 
+  /* ⑧ 자동 감시 설정 --------------------------------------------------- */
+
+  .schedule-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 22px;
+  }
+
+  .schedule-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 132px;
+  }
+
+  .schedule-stat .label {
+    font-size: 11.5px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .schedule-stat .value {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .scan-now-btn {
+    padding: 12px 26px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 10px;
+  }
+
+  .schedule-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .interval-input {
+    width: 84px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--panel-border);
+    background: var(--surface-muted);
+    color: var(--text);
+    font: inherit;
+  }
+
+  .switch-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  /* 후보 diff 패널 ------------------------------------------------------ */
+
+  .candidate-box {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--panel-border);
+    background: var(--surface-muted);
+  }
+
+  .candidate-box h4 {
+    margin: 0 0 10px;
+    font-size: 13.5px;
+  }
+
+  .diff-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin-bottom: 8px;
+  }
+
+  .diff-stats .stat .n { font-size: 16px; font-weight: 700; }
+  .diff-stats .stat .k { font-size: 11.5px; color: var(--muted); display: block; }
+  .diff-stats .stat .n.add { color: var(--success); }
+  .diff-stats .stat .n.del { color: var(--danger); }
+  .diff-stats .stat .n.chg { color: var(--warning); }
+
+  /* 온보딩 질문 --------------------------------------------------------- */
+
+  .question {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .question:last-child { border-bottom: none; }
+
+  .question .q-text {
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 7px;
+  }
+
+  .q-options {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .q-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .q-option input { margin-top: 3px; }
+  .q-option .hint { display: block; color: var(--muted); font-size: 11.5px; }
+
+  .free-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .free-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+
+  .free-fields input {
+    width: 170px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--panel-border);
+    background: var(--surface-muted);
+    color: var(--text);
+    font: inherit;
+  }
+
   @media (max-width: 640px) {
     .audit-item { flex-direction: column; gap: 2px; }
     .audit-item .at { min-width: 0; }
+    .schedule-grid { flex-direction: column; align-items: stretch; }
+    .scan-now-btn { width: 100%; }
   }
 </style>
 </head>
@@ -508,6 +655,45 @@
 
   <div id="global-msg"></div>
 
+  <section class="panel" id="schedule-panel">
+    <div class="panel-head">
+      <h2>⑧ 자동 감시 설정</h2>
+      <span class="status-line" id="schedule-status">로딩 중...</span>
+    </div>
+    <div class="schedule-grid">
+      <button id="scan-now-btn" class="primary scan-now-btn">지금 검사</button>
+      <div class="schedule-stat">
+        <span class="label">자동 감시</span>
+        <span class="value" id="schedule-state">-</span>
+      </div>
+      <div class="schedule-stat">
+        <span class="label">마지막 검사</span>
+        <span class="value" id="schedule-last">-</span>
+      </div>
+      <div class="schedule-stat">
+        <span class="label">다음 검사 예정</span>
+        <span class="value" id="schedule-next">-</span>
+      </div>
+      <div class="schedule-stat">
+        <span class="label">마지막 결과</span>
+        <span class="value" id="schedule-result">-</span>
+      </div>
+      <div class="schedule-controls">
+        <label class="switch-label" for="schedule-enabled">
+          <input type="checkbox" id="schedule-enabled" />
+          자동 감시 켜기
+        </label>
+        <input type="number" id="schedule-interval" class="interval-input" min="1" max="10080" step="1" value="360" />
+        <span class="status-line">분 주기</span>
+        <button id="schedule-save-btn" class="small-btn">적용</button>
+      </div>
+    </div>
+    <p class="status-line" style="margin:12px 0 0;">
+      자동 감시는 겹쳐 돌지 않습니다(이전 검사가 끝나야 다음 검사가 시작됩니다). 검사 실패는 기록만 되고 일정은 유지됩니다.
+      환경변수 <code>UPDATE_CENTER_SCAN_INTERVAL_MIN</code> 이 기본값이며, 여기서 바꾼 설정이 우선합니다.
+    </p>
+  </section>
+
   <section class="panel" id="sources-panel">
     <div class="panel-head">
       <h2>① 데이터 소스 현황</h2>
@@ -524,13 +710,15 @@
             <th>제공기관</th>
             <th>갱신주기</th>
             <th>확인방식</th>
+            <th>상태</th>
+            <th>마지막 확인</th>
+            <th>다음 확인</th>
             <th>원본 URL</th>
-            <th>마지막 스캔</th>
             <th></th>
           </tr>
         </thead>
         <tbody id="sources-tbody">
-          <tr><td colspan="7" class="empty">로딩 중...</td></tr>
+          <tr><td colspan="9" class="empty">로딩 중...</td></tr>
         </tbody>
       </table>
     </div>
@@ -600,7 +788,8 @@
       <h2>⑦ 신규 모듈 제안 (온보딩 에이전트)</h2>
     </div>
     <p class="status-line" style="margin:-8px 0 14px;">
-      자연어 요청 → AI 설계안 + YAML 초안 → 계약 검사 — 승인·파일 생성 전까지 운영에 반영되지 않습니다
+      자연어 요청 → 설계 초안 → <b>판단이 필요한 지점만 객관식 확인</b> → 계약 검사 → 등록.
+      나머지는 자동으로 채워지며, 등록 전까지 운영에 반영되지 않습니다.
     </p>
     <textarea
       id="onboarding-input"
@@ -613,6 +802,8 @@
       <button id="onboarding-submit-btn" class="primary">제안 생성</button>
     </div>
     <div id="onboarding-result"></div>
+    <div id="onboarding-questions"></div>
+    <div id="onboarding-answer-result"></div>
   </section>
 
   <footer class="bottom" id="last-refreshed">마지막 갱신: -</footer>
@@ -719,6 +910,9 @@
     versions: [],
     audit: [],
     selectedEventId: null,
+    schedule: null,
+    // 온보딩 3단계 상태: 제안 → 답변 병합 → 등록
+    onboarding: { proposalEventId: null, questions: [], answeredEventId: null, submitting: false },
   };
 
   // ---------------------------------------------------------------------
@@ -750,34 +944,45 @@
     return html;
   }
 
+  // 소스별 상태 칩: 아직 확인한 적이 없으면 "미확인", 수동 소스는 "수동 확인".
+  function sourceStatusChip(source) {
+    var checkType = (source.check && source.check.type) || "-";
+    var lastState = source.last_state || {};
+    if (checkType === "manual") return '<span class="badge badge-neutral">수동 확인</span>';
+    if (!lastState.lastStatus) return '<span class="badge badge-neutral">미확인</span>';
+    if (lastState.lastStatus === "ok") return '<span class="badge badge-green">정상</span>';
+    if (lastState.lastStatus === "moved") return '<span class="badge badge-moved">이동 감지</span>';
+    if (lastState.lastStatus === "error") return '<span class="badge badge-red">확인 실패</span>';
+    return '<span class="badge badge-neutral">' + esc(lastState.lastStatus) + "</span>";
+  }
+
   function renderSources() {
     var tbody = $("sources-tbody");
     if (!state.sources.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="empty">데이터 소스가 없습니다.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" class="empty">데이터 소스가 없습니다.</td></tr>';
       return;
     }
     tbody.innerHTML = state.sources
       .map(function (s) {
         var lastState = s.last_state || {};
-        var lastScan = lastState.lastCheckedAt || null;
-        var lastScanCell = fmtTime(lastScan);
-        if (lastScan && lastState.lastStatus) {
-          lastScanCell += " (" + esc(lastState.lastStatus === "ok" ? "unchanged" : lastState.lastStatus) + ")";
-        }
         var checkType = (s.check && s.check.type) || "-";
         var sourceUrl = s.source_url || "-";
         var urlCell =
           sourceUrl && sourceUrl.indexOf("http") === 0
             ? '<a href="' + esc(sourceUrl) + '" target="_blank" rel="noopener">' + esc(sourceUrl) + "</a>"
             : esc(sourceUrl);
+        var nextCell = s.next_check_at ? fmtTime(s.next_check_at) : (checkType === "manual" ? "-" : "자동 감시 꺼짐");
+        var lockTag = s.never_auto_apply ? ' <span class="badge badge-yellow">확인 필요</span>' : "";
         return (
           "<tr>" +
-          "<td>" + esc(s.dataset) + "</td>" +
+          "<td>" + esc(s.dataset) + lockTag + "</td>" +
           "<td>" + esc(s.provider || "-") + "</td>" +
           "<td>" + esc(s.update_cycle || "-") + "</td>" +
           "<td>" + esc(checkType) + "</td>" +
+          "<td>" + sourceStatusChip(s) + "</td>" +
+          "<td>" + fmtTime(lastState.lastCheckedAt || null) + "</td>" +
+          "<td>" + nextCell + "</td>" +
           "<td>" + urlCell + "</td>" +
-          "<td>" + lastScanCell + "</td>" +
           '<td><button class="small-btn scan-one-btn" data-dataset="' + esc(s.dataset) + '">검사</button></td>' +
           "</tr>"
         );
@@ -797,13 +1002,86 @@
       if (!res.ok) {
         $("sources-status").textContent = "로드 실패";
         $("sources-tbody").innerHTML =
-          '<tr><td colspan="7" class="empty">' + esc((res.data && res.data.error) || "로드 실패") + "</td></tr>";
+          '<tr><td colspan="9" class="empty">' + esc((res.data && res.data.error) || "로드 실패") + "</td></tr>";
         return;
       }
       state.sources = res.data.sources || [];
+      if (res.data.schedule) {
+        state.schedule = res.data.schedule;
+        renderSchedule();
+      }
       $("sources-status").textContent = state.sources.length + "개 소스";
       renderSources();
     });
+  }
+
+  // ---------------------------------------------------------------------
+  // ⑧ 자동 감시 설정
+  // ---------------------------------------------------------------------
+
+  function renderSchedule() {
+    var s = state.schedule;
+    if (!s) {
+      $("schedule-status").textContent = "상태 불명";
+      return;
+    }
+    $("schedule-status").textContent = s.running ? "검사 실행 중..." : "대기 중";
+    $("schedule-state").innerHTML = s.enabled
+      ? '<span class="badge badge-green">ON</span> ' + esc(s.interval_min) + "분 주기 (" + esc(s.source) + ")"
+      : '<span class="badge badge-neutral">OFF</span>';
+    $("schedule-last").textContent = s.last_scan_at ? fmtTime(s.last_scan_at) : "없음";
+    $("schedule-next").textContent = s.next_scan_at ? fmtTime(s.next_scan_at) : "예정 없음";
+
+    var result = s.last_result;
+    if (!result) {
+      $("schedule-result").textContent = "-";
+    } else if (result.ok) {
+      $("schedule-result").innerHTML =
+        '<span class="badge badge-green">정상</span> 이벤트 ' + esc(result.event_count || 0) + "건";
+    } else {
+      $("schedule-result").innerHTML =
+        '<span class="badge badge-red">실패</span> <span class="status-line">' + esc(result.error || "") + "</span>";
+    }
+
+    // 사용자가 입력 중일 때 값을 덮어쓰지 않도록, 포커스가 없을 때만 동기화한다.
+    var enabledEl = $("schedule-enabled");
+    var intervalEl = $("schedule-interval");
+    if (document.activeElement !== enabledEl) enabledEl.checked = Boolean(s.enabled);
+    if (document.activeElement !== intervalEl) {
+      intervalEl.value = String(s.interval_min || s.env_interval_min || 360);
+    }
+  }
+
+  function loadSchedule() {
+    return apiFetch("/schedule").then(function (res) {
+      if (!res.ok) {
+        $("schedule-status").textContent = "로드 실패";
+        return;
+      }
+      state.schedule = res.data.schedule || null;
+      renderSchedule();
+    });
+  }
+
+  function saveSchedule() {
+    var enabled = $("schedule-enabled").checked;
+    var intervalMin = Number($("schedule-interval").value || 0);
+    if (enabled && (!intervalMin || intervalMin < 1)) {
+      showGlobalMsg("자동 감시를 켜려면 1분 이상의 주기가 필요합니다.", "error");
+      return Promise.resolve();
+    }
+    return apiFetch("/schedule", { method: "POST", body: { enabled: enabled, interval_min: intervalMin } }).then(
+      function (res) {
+        if (!res.ok) {
+          showGlobalMsg((res.data && res.data.error) || "자동 감시 설정 저장 실패", "error");
+          return;
+        }
+        state.schedule = res.data.schedule || null;
+        renderSchedule();
+        showGlobalMsg(enabled ? "자동 감시를 켰습니다 (" + intervalMin + "분 주기)." : "자동 감시를 껐습니다.", "info");
+        return Promise.all([loadSources(), loadAudit()]);
+      }
+    );
   }
 
   // ---------------------------------------------------------------------
@@ -850,6 +1128,13 @@
     return null;
   }
 
+  function findSource(dataset) {
+    for (var i = 0; i < state.sources.length; i += 1) {
+      if (state.sources[i].dataset === dataset) return state.sources[i];
+    }
+    return null;
+  }
+
   function approveDisabledReason(ev) {
     if (ev.kind === "onboarding_proposal") {
       return "온보딩 제안은 승인 대상이 아닙니다 — YAML 초안을 복사해 사람이 modules/ 파일을 생성합니다.";
@@ -860,6 +1145,109 @@
     if (ev.status === "applied") return "이미 적용된 이벤트입니다.";
     if (ev.status === "rolled_back") return "롤백된 이벤트입니다.";
     return null;
+  }
+
+  // 후보(staged candidate) 요약 패널 — 품질 판정, 스키마 diff, 레코드 diff,
+  // 영향 학교 수까지 한 화면에서 보이게 한다.
+  function renderCandidatePanel(ev) {
+    var c = ev.diff_json && ev.diff_json.candidate;
+    if (!c) return "";
+    if (!c.ok) {
+      return (
+        '<div class="candidate-box"><h4>후보 수집 실패</h4>' +
+        '<div class="msg-banner error">' + esc(c.error || "알 수 없는 오류") + "</div>" +
+        '<p class="status-line">후보가 없으므로 이 이벤트는 승인할 수 없습니다 — 원인을 확인한 뒤 다시 검사하세요.</p></div>'
+      );
+    }
+
+    var qualityBadge =
+      c.quality_status === "ok"
+        ? '<span class="badge badge-green">품질 ok</span>'
+        : c.quality_status === "warn"
+          ? '<span class="badge badge-yellow">품질 warn</span>'
+          : '<span class="badge badge-red">품질 ' + esc(c.quality_status) + "</span>";
+
+    var html = '<div class="candidate-box"><h4>수집된 후보 ' + qualityBadge + "</h4>";
+
+    var fetchInfo = c.fetch || {};
+    html +=
+      '<p class="status-line">' +
+      "페이지 " + esc(fetchInfo.pages_fetched || 0) +
+      (fetchInfo.pages_expected ? "/" + esc(fetchInfo.pages_expected) : "") +
+      " · 레코드 " + esc(fetchInfo.record_count || 0) +
+      (fetchInfo.total_count ? "/" + esc(fetchInfo.total_count) : "") +
+      " · 어댑터 " + esc(c.adapter || "-") +
+      (fetchInfo.truncated ? ' · <span class="badge badge-yellow">페이지 상한 도달(일부만 수집)</span>' : "") +
+      "</p>";
+
+    var rd = c.record_diff || {};
+    if (rd.supported) {
+      html +=
+        '<div class="diff-stats">' +
+        '<div class="stat"><span class="n add">+' + esc(rd.added) + '</span><span class="k">추가</span></div>' +
+        '<div class="stat"><span class="n del">-' + esc(rd.removed) + '</span><span class="k">삭제</span></div>' +
+        '<div class="stat"><span class="n chg">~' + esc(rd.changed) + '</span><span class="k">변경</span></div>' +
+        '<div class="stat"><span class="n">' + esc(rd.unchanged) + '</span><span class="k">동일</span></div>' +
+        "</div>" +
+        '<p class="status-line">기본키: ' + esc((rd.primary_key || []).join(", ") || "-") + "</p>";
+    } else if (rd.note) {
+      html += '<p class="status-line">' + esc(rd.note) + "</p>";
+    }
+
+    var affected = c.affected_schools || {};
+    if (affected.supported) {
+      html +=
+        '<div class="compare-box">' +
+        '<div class="compare-cell"><div class="label">영향 학교 수</div><div class="value">' +
+        esc(affected.affected_school_count) + "</div></div>" +
+        '<div class="compare-cell"><div class="label">external_shortage</div><div class="value">' +
+        esc(affected.external_shortage_before) + '<span class="arrow">→</span>' +
+        esc(affected.external_shortage_after) + "</div></div>" +
+        "</div>";
+    } else if (affected.note) {
+      html += '<p class="status-line">영향 학교 수: ' + esc(affected.note) + "</p>";
+    }
+
+    var sd = c.schema_diff || {};
+    if (sd.baseline_available && (sd.added || []).length + (sd.removed || []).length > 0) {
+      html += '<p class="status-line">컬럼 변화 — 추가: ' + esc((sd.added || []).join(", ") || "없음") +
+        " / 삭제: " + esc((sd.removed || []).join(", ") || "없음") + "</p>";
+      if ((sd.mapping_suggestions || []).length) {
+        html +=
+          '<ul class="muted-list">' +
+          sd.mapping_suggestions
+            .map(function (m) {
+              return "<li>이름 변경 후보: " + esc(m.from) + " → " + esc(m.to) + " (유사도 " + esc(m.confidence) + ")</li>";
+            })
+            .join("") +
+          "</ul>";
+      }
+    }
+
+    var issues = (c.quality && c.quality.issues) || [];
+    if (issues.length) {
+      html +=
+        '<ul class="' + (c.approval_blocked ? "fail-list" : "warn-list") + '">' +
+        issues.map(function (i) { return "<li>[" + esc(i.level) + "] " + esc(i.message) + "</li>"; }).join("") +
+        "</ul>";
+    }
+    if (c.staging_dir) {
+      html += '<p class="status-line">후보 위치: <code>' + esc(c.staging_dir) + "</code> (승인 직전 sha256 재검증)</p>";
+    }
+    return html + "</div>";
+  }
+
+  // 레지스트리 반영 대기 이벤트: 붙여넣기용 스니펫 + 복사 버튼
+  function renderRegistryPanel(ev) {
+    if (ev.kind !== "registry_patch_pending") return "";
+    var d = ev.diff_json || {};
+    return (
+      '<div class="candidate-box"><h4>LAYER_REGISTRY 수동 반영 필요</h4>' +
+      '<p class="status-line">' + esc(d.note || "") + "</p>" +
+      '<p class="status-line">모듈 파일: <code>' + esc(d.module_file || "-") + "</code></p>" +
+      '<pre id="registry-snippet-pre">' + esc(d.registry_snippet || "") + "</pre>" +
+      '<button class="small-btn" id="registry-copy-btn" type="button">스니펫 복사</button></div>'
+    );
   }
 
   function renderEventDetail() {
@@ -897,6 +1285,9 @@
       ? '<div class="ai-note">' + esc(ev.ai_note) + "</div>"
       : "";
 
+    var candidateHtml = renderCandidatePanel(ev);
+    var registryHtml = renderRegistryPanel(ev);
+
     var applyDiff = ev.diff_json && ev.diff_json.applyDiff;
     var compareHtml = "";
     if (applyDiff) {
@@ -917,6 +1308,8 @@
       '<div class="detail-box">' +
       "<h3>이벤트 상세 — " + esc(ev.dataset) + " / " + esc(ev.kind) + "</h3>" +
       "<p>" + esc(ev.summary || "(요약 없음)") + "</p>" +
+      candidateHtml +
+      registryHtml +
       '<div class="details-toggle" id="diff-toggle">diff_json 펼치기 ▾</div>' +
       '<pre id="diff-pre" style="display:none;">' + esc(diffText) + "</pre>" +
       aiNoteHtml +
@@ -937,10 +1330,51 @@
       toggle.textContent = isHidden ? "diff_json 접기 ▴" : "diff_json 펼치기 ▾";
     });
 
+    var copyRegistryBtn = $("registry-copy-btn");
+    if (copyRegistryBtn) {
+      copyRegistryBtn.addEventListener("click", function () {
+        copyToClipboard((ev.diff_json && ev.diff_json.registry_snippet) || "")
+          .then(function () {
+            copyRegistryBtn.textContent = "복사됨!";
+            setTimeout(function () { copyRegistryBtn.textContent = "스니펫 복사"; }, 1500);
+          })
+          .catch(function () {
+            copyRegistryBtn.textContent = "복사 실패";
+            setTimeout(function () { copyRegistryBtn.textContent = "스니펫 복사"; }, 1500);
+          });
+      });
+    }
+
     var approveBtnEl = $("approve-btn");
     if (approveBtnEl && !disabledReason) {
       approveBtnEl.addEventListener("click", function () {
-        approveEvent(ev.id);
+        var source = findSource(ev.dataset);
+        var candidate = ev.diff_json && ev.diff_json.candidate;
+        var lines = ["이 변경을 승인하고 실제 데이터에 반영하시겠습니까?", "", "데이터셋: " + ev.dataset];
+        if (candidate && candidate.ok) {
+          lines.push("대상 파일: " + (candidate.target_file || "-"));
+          if (candidate.record_diff && candidate.record_diff.supported) {
+            lines.push(
+              "레코드: +" + candidate.record_diff.added +
+                " / -" + candidate.record_diff.removed +
+                " / ~" + candidate.record_diff.changed
+            );
+          }
+          if (candidate.affected_schools && candidate.affected_schools.supported) {
+            lines.push("영향 학교: " + candidate.affected_schools.affected_school_count + "건");
+          }
+        }
+        lines.push("", "반영 전 원본은 버전으로 보존되며 롤백할 수 있습니다.");
+        if (!window.confirm(lines.join("\n"))) return;
+
+        var needsConfirm = Boolean(source && source.never_auto_apply);
+        if (needsConfirm) {
+          var second =
+            "\"" + ev.dataset + "\" 는 자동 반영 금지(never_auto_apply)로 표시된 소스입니다.\n" +
+            "그래도 반영하시겠습니까? (기준 테이블·낙인 위험 레이어)";
+          if (!window.confirm(second)) return;
+        }
+        approveEvent(ev.id, needsConfirm);
       });
     }
     var holdBtnEl = $("hold-btn");
@@ -967,21 +1401,48 @@
     });
   }
 
+  var scanning = false;
+
   function runScan(dataset) {
+    if (scanning) {
+      showGlobalMsg("이미 검사가 진행 중입니다.", "error");
+      return Promise.resolve();
+    }
+    scanning = true;
+    var scanNowBtn = $("scan-now-btn");
+    var scanAllBtn = $("scan-all-btn");
+    if (scanNowBtn) { scanNowBtn.disabled = true; scanNowBtn.textContent = "검사 중..."; }
+    if (scanAllBtn) scanAllBtn.disabled = true;
     showGlobalMsg((dataset ? dataset + " " : "전체 ") + "검사를 시작합니다...", "info");
-    return apiFetch("/scan", { method: "POST", body: dataset ? { dataset: dataset } : {} }).then(function (res) {
-      if (!res.ok) {
-        showGlobalMsg((res.data && res.data.error) || "검사 실패", "error");
-        return;
-      }
-      showGlobalMsg("검사 완료 — 이벤트 " + (res.data.events || []).length + "건 감지", "info");
-      return Promise.all([loadEvents(), loadSources(), loadAudit()]);
-    });
+
+    return apiFetch("/scan", { method: "POST", body: dataset ? { dataset: dataset } : {} })
+      .then(function (res) {
+        if (res.data && res.data.schedule) {
+          state.schedule = res.data.schedule;
+          renderSchedule();
+        }
+        if (!res.ok) {
+          showGlobalMsg((res.data && res.data.error) || "검사 실패", "error");
+          return loadAudit();
+        }
+        showGlobalMsg("검사 완료 — 이벤트 " + (res.data.events || []).length + "건 감지", "info");
+        return Promise.all([loadEvents(), loadSources(), loadAudit(), loadSchedule()]);
+      })
+      .catch(function () {
+        showGlobalMsg("검사 요청 중 네트워크 오류가 발생했습니다.", "error");
+      })
+      .then(function () {
+        scanning = false;
+        if (scanNowBtn) { scanNowBtn.disabled = false; scanNowBtn.textContent = "지금 검사"; }
+        if (scanAllBtn) scanAllBtn.disabled = false;
+      });
   }
 
-  function approveEvent(eventId) {
+  function approveEvent(eventId, confirmFlag) {
     var resultBox = $("approve-result");
-    return apiFetch("/approve", { method: "POST", body: { event_id: eventId } }).then(function (res) {
+    var body = { event_id: eventId };
+    if (confirmFlag) body.confirm = true;
+    return apiFetch("/approve", { method: "POST", body: body }).then(function (res) {
       if (!res.ok) {
         if (resultBox) {
           resultBox.innerHTML =
@@ -990,7 +1451,12 @@
         showGlobalMsg((res.data && res.data.error) || "승인 실패", "error");
         return loadEvents();
       }
-      showGlobalMsg("승인 및 적용 완료.", "info");
+      showGlobalMsg(
+        res.data && res.data.version
+          ? "승인 및 반영 완료 — 버전 " + res.data.version + " 생성 (" + (res.data.written || []).length + "개 경로)"
+          : "승인 및 적용 완료.",
+        "info"
+      );
       return Promise.all([loadEvents(), loadVersions(), loadAudit()]).then(function () {
         state.selectedEventId = eventId;
         renderEvents();
@@ -1047,7 +1513,15 @@
     Array.prototype.forEach.call(document.querySelectorAll(".rollback-btn"), function (btn) {
       btn.addEventListener("click", function () {
         var versionId = btn.getAttribute("data-version-id");
-        if (!window.confirm("이 버전으로 롤백하시겠습니까? 현재 반영된 내용이 되돌려집니다.")) return;
+        if (
+          !window.confirm(
+            "이 버전을 롤백하시겠습니까?\n\n" +
+              "반영 전 원본으로 되돌립니다. 저장된 sha256 해시와 현재 내용이 다르면\n" +
+              "아무 파일도 쓰지 않고 롤백이 거부됩니다."
+          )
+        ) {
+          return;
+        }
         rollbackVersion(versionId);
       });
     });
@@ -1239,6 +1713,7 @@
       "</div>";
 
     box.innerHTML = summaryHtml + yamlHtml + contractHtml + checklistHtml + datasetsHtml + noticeHtml;
+    renderOnboardingQuestions(data.questions || []);
 
     var copyBtn = $("onboarding-copy-btn");
     if (copyBtn) {
@@ -1254,6 +1729,207 @@
           });
       });
     }
+  }
+
+  // --- 객관식 확인 (판단이 필요한 지점만) ------------------------------
+
+  var FREE_FIELDS = [
+    { id: "slug", label: "레이어 slug (영소문자/숫자/_)", placeholder: "sports_facility" },
+    { id: "resource_type", label: "자원 종류", placeholder: "공공 체육시설" },
+    { id: "button_label", label: "버튼 라벨", placeholder: "🏟 체육시설" },
+    { id: "panel_label", label: "패널 라벨", placeholder: "체육시설" },
+    { id: "name_key", label: "이름 컬럼명", placeholder: "시설명" },
+    { id: "source_url", label: "원천 URL (알고 있으면)", placeholder: "https://www.data.go.kr/data/..." },
+    { id: "local_file", label: "로컬 파일 경로 (있으면)", placeholder: "data/context_sources/xxx.csv" },
+    { id: "provider", label: "제공기관", placeholder: "인천광역시" },
+    { id: "color", label: "색상 (#RRGGBB)", placeholder: "#2B6CB0" },
+  ];
+
+  function renderOnboardingQuestions(questions) {
+    var box = $("onboarding-questions");
+    state.onboarding.questions = questions || [];
+    if (!questions || !questions.length) {
+      box.innerHTML = "";
+      return;
+    }
+    var qHtml = questions
+      .map(function (q) {
+        var options = (q.options || [])
+          .map(function (o) {
+            var checked = o.value === q.default ? " checked" : "";
+            return (
+              '<label class="q-option">' +
+              '<input type="radio" name="q_' + esc(q.id) + '" value="' + esc(o.value) + '"' + checked + " />" +
+              "<span>" + esc(o.label) +
+              (o.hint ? '<span class="hint">' + esc(o.hint) + "</span>" : "") +
+              "</span></label>"
+            );
+          })
+          .join("");
+        return (
+          '<div class="question" data-question-id="' + esc(q.id) + '">' +
+          '<div class="q-text">' + esc(q.text) + (q.required ? ' <span class="badge badge-neutral">필수</span>' : "") + "</div>" +
+          '<div class="q-options">' + options + "</div>" +
+          "</div>"
+        );
+      })
+      .join("");
+
+    var fieldsHtml = FREE_FIELDS.map(function (f) {
+      return (
+        "<label>" + esc(f.label) +
+        '<input type="text" id="of_' + esc(f.id) + '" placeholder="' + esc(f.placeholder) + '" />' +
+        "</label>"
+      );
+    }).join("");
+
+    box.innerHTML =
+      '<div class="detail-box"><h3>확인이 필요한 항목</h3>' +
+      '<p class="status-line" style="margin:-4px 0 8px;">' +
+      "선택하지 않은 항목은 기본값(가장 보수적인 값)으로 처리됩니다. 나머지 YAML 필드는 자동으로 채워집니다." +
+      "</p>" +
+      qHtml +
+      '<div class="free-fields">' + fieldsHtml + "</div>" +
+      '<div class="row-actions"><button class="primary" id="onboarding-answer-btn" type="button">답변 제출</button></div>' +
+      "</div>";
+
+    $("onboarding-answer-btn").addEventListener("click", submitOnboardingAnswers);
+  }
+
+  function collectAnswers() {
+    var answers = {};
+    (state.onboarding.questions || []).forEach(function (q) {
+      var checked = document.querySelector('input[name="q_' + q.id + '"]:checked');
+      answers[q.id] = checked ? checked.value : q.default;
+    });
+    FREE_FIELDS.forEach(function (f) {
+      var el = $("of_" + f.id);
+      if (el && el.value.trim()) answers[f.id] = el.value.trim();
+    });
+    return answers;
+  }
+
+  function renderAnswerResult(data) {
+    var box = $("onboarding-answer-result");
+    var ready = data.status === "ready_for_registration";
+    var html = '<div class="detail-box"><h3>답변 반영 결과 ' +
+      (ready ? '<span class="badge badge-green">등록 가능</span>' : '<span class="badge badge-red">계약 미충족</span>') +
+      "</h3>";
+
+    if ((data.forced || []).length) {
+      html += '<div class="msg-banner error">' + data.forced.map(esc).join("<br>") + "</div>";
+    }
+    if ((data.corrections || []).length) {
+      html += '<ul class="warn-list">' + data.corrections.map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("") + "</ul>";
+    }
+    if ((data.notes || []).length) {
+      html += '<ul class="muted-list">' + data.notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>";
+    }
+    if (!ready && (data.failures || []).length) {
+      html +=
+        '<div class="msg-banner error">계약 검사 실패 (' + data.failures.length + "건) — 아래 항목을 해소한 뒤 다시 제출하세요</div>" +
+        '<ul class="fail-list">' + data.failures.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul>";
+    }
+
+    html +=
+      '<h3 style="display:flex; align-items:center; justify-content:space-between;">' +
+      "<span>최종 YAML</span>" +
+      '<button class="small-btn" id="answer-copy-btn" type="button">복사</button></h3>' +
+      "<pre>" + esc(data.yaml || "") + "</pre>";
+
+    html +=
+      '<div class="row-actions">' +
+      '<button class="primary" id="onboarding-register-btn" type="button"' + (ready ? "" : " disabled") + ">등록</button>" +
+      "</div>" +
+      '<div class="onboarding-notice">' + esc(data.notice || "") + "</div>" +
+      '<div id="register-result"></div></div>';
+
+    box.innerHTML = html;
+
+    var copyBtn = $("answer-copy-btn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        copyToClipboard(data.yaml || "").then(function () {
+          copyBtn.textContent = "복사됨!";
+          setTimeout(function () { copyBtn.textContent = "복사"; }, 1500);
+        });
+      });
+    }
+    var registerBtn = $("onboarding-register-btn");
+    if (registerBtn && ready) {
+      registerBtn.addEventListener("click", function () {
+        if (
+          !window.confirm(
+            "modules/" + (data.slug || "") + ".yaml 파일과 data_sources.yaml 항목을 생성합니다.\n" +
+              "index.html(LAYER_REGISTRY)은 자동으로 수정하지 않으며, 붙여넣기용 스니펫만 제공됩니다.\n\n계속하시겠습니까?"
+          )
+        ) {
+          return;
+        }
+        registerOnboarding(data.event_id);
+      });
+    }
+  }
+
+  function submitOnboardingAnswers() {
+    if (!state.onboarding.proposalEventId) return;
+    var btn = $("onboarding-answer-btn");
+    btn.disabled = true;
+    btn.textContent = "반영 중...";
+    apiFetch("/onboarding/answer", {
+      method: "POST",
+      body: { event_id: state.onboarding.proposalEventId, answers: collectAnswers() },
+    })
+      .then(function (res) {
+        if (!res.ok) {
+          $("onboarding-answer-result").innerHTML =
+            '<div class="msg-banner error">' + esc((res.data && res.data.error) || "답변 반영 실패") + "</div>";
+          return;
+        }
+        state.onboarding.answeredEventId = res.data.event_id;
+        renderAnswerResult(res.data);
+        return loadEvents();
+      })
+      .catch(function () {
+        $("onboarding-answer-result").innerHTML = '<div class="msg-banner error">네트워크 오류로 답변 반영에 실패했습니다.</div>';
+      })
+      .then(function () {
+        btn.disabled = false;
+        btn.textContent = "답변 제출";
+      });
+  }
+
+  function registerOnboarding(eventId) {
+    var box = $("register-result");
+    return apiFetch("/onboarding/register", { method: "POST", body: { event_id: eventId } })
+      .then(function (res) {
+        if (!res.ok) {
+          box.innerHTML = '<div class="msg-banner error">' + esc((res.data && res.data.error) || "등록 실패") + "</div>";
+          return;
+        }
+        var d = res.data;
+        box.innerHTML =
+          '<div class="msg-banner info">등록 완료 — ' + esc(d.module_file) +
+          (d.data_sources_appended ? " + data_sources.yaml 항목 추가" : "") + "</div>" +
+          '<div class="candidate-box"><h4>index.html 에 붙여넣을 LAYER_REGISTRY 스니펫</h4>' +
+          "<pre>" + esc(d.registry_snippet || "") + "</pre>" +
+          '<button class="small-btn" id="reg-snippet-copy" type="button">복사</button>' +
+          '<p class="status-line" style="margin-top:8px;">' + esc(d.notice || "") + "</p></div>";
+        var copyBtn = $("reg-snippet-copy");
+        if (copyBtn) {
+          copyBtn.addEventListener("click", function () {
+            copyToClipboard(d.registry_snippet || "").then(function () {
+              copyBtn.textContent = "복사됨!";
+              setTimeout(function () { copyBtn.textContent = "복사"; }, 1500);
+            });
+          });
+        }
+        showGlobalMsg("신규 레이어가 등록되었습니다 — LAYER_REGISTRY 반영은 사람이 합니다.", "info");
+        return Promise.all([loadEvents(), loadSources(), loadAudit()]);
+      })
+      .catch(function () {
+        box.innerHTML = '<div class="msg-banner error">네트워크 오류로 등록에 실패했습니다.</div>';
+      });
   }
 
   function submitOnboarding() {
@@ -1284,8 +1960,11 @@
           }
           return;
         }
+        state.onboarding.proposalEventId = res.data.event_id || null;
+        state.onboarding.answeredEventId = null;
+        $("onboarding-answer-result").innerHTML = "";
         renderOnboardingResult(res.data);
-        showGlobalMsg("온보딩 제안이 생성되어 이벤트로 저장되었습니다.", "info");
+        showGlobalMsg("설계 초안이 생성되었습니다 — 아래 객관식 확인 항목에 답해 주세요.", "info");
         return loadEvents();
       })
       .catch(function () {
@@ -1305,7 +1984,7 @@
   // ---------------------------------------------------------------------
 
   function refreshAll() {
-    return Promise.all([loadSources(), loadEvents(), loadVersions(), loadAudit()]).then(function () {
+    return Promise.all([loadSchedule(), loadSources(), loadEvents(), loadVersions(), loadAudit()]).then(function () {
       $("last-refreshed").textContent = "마지막 갱신: " + new Date().toLocaleString("ko-KR", { hour12: false });
     });
   }
@@ -1329,6 +2008,10 @@
   $("scan-all-btn").addEventListener("click", function () {
     runScan(null);
   });
+  $("scan-now-btn").addEventListener("click", function () {
+    runScan(null);
+  });
+  $("schedule-save-btn").addEventListener("click", saveSchedule);
 
   $("token-input").value = getToken();
   refreshAll();

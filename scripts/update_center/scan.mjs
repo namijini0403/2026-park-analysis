@@ -29,11 +29,15 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
 import { createStore } from "./store.mjs";
+import { fetchAllPages, buildStagedCandidate } from "./candidate.mjs";
+import { sourcesPath, statePath } from "./paths.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.join(__dirname, "..", "..");
-const SOURCES_PATH = path.join(REPO_ROOT, "data_sources.yaml");
-const STATE_PATH = path.join(REPO_ROOT, "data", "update_center_state.json");
+// 두 경로 모두 paths.mjs 를 통해 호출 시점에 해석한다 — 테스트가 환경변수
+// (UPDATE_CENTER_SOURCES_PATH / UPDATE_CENTER_STATE_PATH)로 격리할 수 있게.
+const SOURCES_PATH = () => sourcesPath();
+const STATE_PATH = () => statePath();
 
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
@@ -68,7 +72,7 @@ async function fetchWithTimeout(url, opts = {}) {
 }
 
 function loadSources() {
-  const raw = fs.readFileSync(SOURCES_PATH, "utf-8");
+  const raw = fs.readFileSync(SOURCES_PATH(), "utf-8");
   const doc = yaml.load(raw);
   if (!doc || !Array.isArray(doc.sources)) {
     throw new Error(`data_sources.yaml: expected top-level "sources" array`);
@@ -77,25 +81,25 @@ function loadSources() {
 }
 
 function ensureStateDir() {
-  const dir = path.dirname(STATE_PATH);
+  const dir = path.dirname(STATE_PATH());
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
 function loadState() {
   ensureStateDir();
-  if (!fs.existsSync(STATE_PATH)) return {};
-  const raw = fs.readFileSync(STATE_PATH, "utf-8").trim();
+  if (!fs.existsSync(STATE_PATH())) return {};
+  const raw = fs.readFileSync(STATE_PATH(), "utf-8").trim();
   if (!raw) return {};
   try {
     return JSON.parse(raw);
   } catch (err) {
-    throw new Error(`update_center scan: failed to parse ${STATE_PATH}: ${err.message}`);
+    throw new Error(`update_center scan: failed to parse ${STATE_PATH()}: ${err.message}`);
   }
 }
 
 function saveState(state) {
   ensureStateDir();
-  fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2), "utf-8");
+  fs.writeFileSync(STATE_PATH(), JSON.stringify(state, null, 2), "utf-8");
 }
 
 // Minimal RFC4180-ish CSV parser (handles quoted fields with embedded commas/
@@ -371,53 +375,121 @@ async function checkJsonApi(entry, state, store, opts, log) {
   }
 
   const { added, removed } = diffSchema(prev.schema, remoteSchema);
-  if (removed.length > 0) {
-    const event = await store.recordEvent({
-      dataset,
-      kind: "schema",
-      risk: "red",
-      summary: `컬럼 삭제 감지: ${removed.join(", ")}`,
-      diff_json: { added, removed, prevTotalCount: prev.totalCount, totalCount },
-      status: "pending",
-    });
-    await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: event.summary });
-    state[dataset] = nextState;
-    log(`[${dataset}] RED schema event: ${event.summary}`);
-    return { outcome: "red", event };
-  }
-  if (added.length > 0) {
-    const event = await store.recordEvent({
-      dataset,
-      kind: "schema",
-      risk: "yellow",
-      summary: `컬럼 추가/개명 감지: ${added.join(", ")}`,
-      diff_json: { added, removed, prevTotalCount: prev.totalCount, totalCount },
-      status: "pending",
-    });
-    await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: event.summary });
-    state[dataset] = nextState;
-    log(`[${dataset}] YELLOW schema event: ${event.summary}`);
-    return { outcome: "yellow", event };
-  }
 
-  if (contentHash === prev.contentHash) {
+  if (removed.length === 0 && added.length === 0 && contentHash === prev.contentHash) {
     state[dataset] = { ...nextState };
     log(`[${dataset}] no change (schema+content hash identical, totalCount=${totalCount})`);
     return { outcome: "unchanged" };
   }
 
+  // 변경이 감지되었다 -> 여기서부터는 "실제 후보 수집" 단계다. 1페이지 해시로 변화를
+  // 알아낸 뒤 전체 페이지를 가져와 어댑터로 정규화하고 staging 에 후보를 남긴 다음,
+  // 품질검사·스키마 diff·레코드 diff 결과까지 합쳐서 최종 risk 를 정한다.
+  // (후보 수집에 실패해도 변경 감지 사실 자체는 이벤트로 남긴다.)
+  const baseKind = removed.length > 0 || added.length > 0 ? "schema" : "content";
+  const baseRisk = removed.length > 0 ? "red" : added.length > 0 ? "yellow" : "green";
+  const baseSummary =
+    removed.length > 0
+      ? `컬럼 삭제 감지: ${removed.join(", ")}`
+      : added.length > 0
+        ? `컬럼 추가/개명 감지: ${added.join(", ")}`
+        : `내용 변경 감지: totalCount ${prev.totalCount ?? "?"} -> ${totalCount}`;
+
+  const diffJson = {
+    added,
+    removed,
+    prevTotalCount: prev.totalCount,
+    totalCount,
+    prevContentHash: prev.contentHash,
+    contentHash,
+  };
+
+  let finalRisk = baseRisk;
+  let summary = baseSummary;
+  if (opts.fetchCandidate !== false) {
+    const candidate = await collectCandidate(entry, dataUrl, store, opts, log);
+    diffJson.candidate = candidate;
+    if (candidate && candidate.ok) {
+      finalRisk = worstRisk(baseRisk, candidate.risk);
+      summary +=
+        ` · 후보 수집 완료(품질=${candidate.quality_status}, 레코드 +${candidate.record_diff?.added ?? 0}` +
+        `/-${candidate.record_diff?.removed ?? 0}/~${candidate.record_diff?.changed ?? 0})`;
+      if (candidate.affected_schools?.supported) {
+        summary += ` · 영향 학교 ${candidate.affected_schools.affected_school_count}건`;
+      }
+    } else if (candidate) {
+      // 후보 수집 실패는 승인 가능한 상태가 아니다 — red 로 올려 승인 버튼을 막는다.
+      finalRisk = "red";
+      summary += ` · 후보 수집 실패: ${candidate.error}`;
+    }
+  }
+
   const event = await store.recordEvent({
     dataset,
-    kind: "content",
-    risk: "green",
-    summary: `내용 변경 감지: totalCount ${prev.totalCount ?? "?"} -> ${totalCount}`,
-    diff_json: { prevTotalCount: prev.totalCount, totalCount, prevContentHash: prev.contentHash, contentHash },
+    kind: baseKind,
+    risk: finalRisk,
+    summary,
+    diff_json: diffJson,
     status: "pending",
   });
-  await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: event.summary });
+  await store.appendAudit({ actor, action: "record_event", dataset, event_id: event.id, detail: summary });
   state[dataset] = nextState;
-  log(`[${dataset}] GREEN content event: ${event.summary}`);
-  return { outcome: "green", event };
+  log(`[${dataset}] ${finalRisk.toUpperCase()} ${baseKind} event: ${summary}`);
+  const outcome = finalRisk === "red" ? "red" : finalRisk === "yellow" ? "yellow" : "green";
+  return { outcome, event };
+}
+
+const RISK_ORDER = { green: 0, yellow: 1, red: 2 };
+
+function worstRisk(a, b) {
+  return (RISK_ORDER[b] ?? 0) > (RISK_ORDER[a] ?? 0) ? b : a;
+}
+
+/**
+ * 전체 페이지 수집 → 어댑터 정규화 → staging 기록 → 품질/스키마/레코드 diff 평가.
+ * 절대 throw 하지 않는다 — 실패는 { ok:false, error } 로 이벤트에 그대로 실린다.
+ */
+async function collectCandidate(entry, dataUrl, store, opts, log) {
+  const stagingId = `${entry.dataset}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+  try {
+    const paged = await fetchAllPages({
+      url: dataUrl,
+      maxPages: entry.check?.max_pages,
+      fetchImpl: opts.fetchImpl,
+      log,
+    });
+    if (paged.errors.length && paged.records.length === 0) {
+      return { ok: false, error: `전체 페이지 수집 실패: ${paged.errors.join(" / ")}`, fetch: paged };
+    }
+    const candidate = await buildStagedCandidate({
+      entry,
+      rawRecords: paged.records,
+      stagingId,
+      fetchMeta: {
+        pages_fetched: paged.pagesFetched,
+        pages_expected: paged.pagesExpected,
+        per_page: paged.perPage,
+        total_count: paged.totalCount,
+        record_count: paged.records.length,
+        truncated: paged.truncated,
+        errors: paged.errors,
+      },
+      log,
+    });
+    await store.appendAudit({
+      actor: opts.actor || "scan.mjs",
+      action: "candidate_staged",
+      dataset: entry.dataset,
+      detail:
+        `후보 staged — ${candidate.staging_dir} / 페이지 ${paged.pagesFetched}` +
+        `${paged.pagesExpected ? `/${paged.pagesExpected}` : ""}` +
+        `${paged.truncated ? " (상한 도달로 잘림)" : ""} / 품질=${candidate.quality_status}`,
+    });
+    return { ok: true, ...candidate };
+  } catch (err) {
+    log(`[${entry.dataset}] 후보 수집 실패: ${err.message}`);
+    return { ok: false, error: err.message, staging_id: stagingId };
+  }
 }
 
 async function recordFailure(dataset, summary, errMessage, httpStatus, entry, state, store, log, extraDiff = {}, actor = "scan.mjs") {
@@ -670,6 +742,10 @@ export async function runScan(opts = {}) {
     simulateChange = null,
     simulateChangeB64 = null,
     forceUrl = null,
+    // fetchCandidate=false 로 두면 1페이지 CDC 판정까지만 하고 전체 수집을 건너뛴다
+    // (네트워크가 막힌 환경에서 감지 자체만 확인하고 싶을 때).
+    fetchCandidate = true,
+    fetchImpl = null,
     log = () => {},
     actor = null,
   } = opts;
@@ -723,9 +799,9 @@ export async function runScan(opts = {}) {
       log(`[${entry.dataset}] manual check.type — skip (수동 확인 필요, 이벤트 없음)`);
       continue;
     } else if (type === "json_api") {
-      result = await checkJsonApi(entry, state, store, { forceUrl, actor: effectiveActor }, log);
+      result = await checkJsonApi(entry, state, store, { forceUrl, actor: effectiveActor, fetchCandidate, fetchImpl }, log);
     } else if (type === "file_head") {
-      result = await checkFileHead(entry, state, store, { forceUrl, actor: effectiveActor }, log);
+      result = await checkFileHead(entry, state, store, { forceUrl, actor: effectiveActor, fetchCandidate, fetchImpl }, log);
     } else {
       log(`[${entry.dataset}] unknown check.type "${type}" — skipping`);
       continue;

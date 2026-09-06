@@ -43,20 +43,23 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
+import { storeFilePath } from "./paths.mjs";
 
 const { Pool } = pg;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.join(__dirname, "..", "..");
 const SCHEMA_PATH = path.join(__dirname, "schema.sql");
-const FILE_STORE_PATH = path.join(REPO_ROOT, "data", "update_center_store.json");
+// 파일 백엔드 경로는 호출 시점에 해석한다 — paths.mjs 가 UPDATE_CENTER_STORE_PATH 환경변수
+// 오버라이드를 지원하므로, 테스트가 임시 디렉터리로 store 를 격리할 수 있다.
+const FILE_STORE_PATH = () => storeFilePath();
 
 function nowIso() {
   return new Date().toISOString();
 }
 
 function emptyDb() {
-  return { events: [], versions: [], audit: [] };
+  return { events: [], versions: [], audit: [], meta: {} };
 }
 
 // ---------------------------------------------------------------------------
@@ -64,14 +67,14 @@ function emptyDb() {
 // ---------------------------------------------------------------------------
 
 function ensureDataDir() {
-  const dir = path.dirname(FILE_STORE_PATH);
+  const dir = path.dirname(FILE_STORE_PATH());
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
 function loadDb() {
   ensureDataDir();
-  if (!fs.existsSync(FILE_STORE_PATH)) return emptyDb();
-  const raw = fs.readFileSync(FILE_STORE_PATH, "utf-8").trim();
+  if (!fs.existsSync(FILE_STORE_PATH())) return emptyDb();
+  const raw = fs.readFileSync(FILE_STORE_PATH(), "utf-8").trim();
   if (!raw) return emptyDb();
   try {
     const parsed = JSON.parse(raw);
@@ -79,15 +82,16 @@ function loadDb() {
       events: Array.isArray(parsed.events) ? parsed.events : [],
       versions: Array.isArray(parsed.versions) ? parsed.versions : [],
       audit: Array.isArray(parsed.audit) ? parsed.audit : [],
+      meta: parsed.meta && typeof parsed.meta === "object" ? parsed.meta : {},
     };
   } catch (err) {
-    throw new Error(`update_center store: failed to parse ${FILE_STORE_PATH}: ${err.message}`);
+    throw new Error(`update_center store: failed to parse ${FILE_STORE_PATH()}: ${err.message}`);
   }
 }
 
 function saveDb(db) {
   ensureDataDir();
-  fs.writeFileSync(FILE_STORE_PATH, JSON.stringify(db, null, 2), "utf-8");
+  fs.writeFileSync(FILE_STORE_PATH(), JSON.stringify(db, null, 2), "utf-8");
 }
 
 function createFileStore() {
@@ -203,6 +207,22 @@ function createFileStore() {
       const db = loadDb();
       const sorted = [...db.audit].sort((a, b) => (a.at < b.at ? 1 : -1));
       return typeof limit === "number" ? sorted.slice(0, limit) : sorted;
+    },
+
+    // --- meta: small key/value store for operational state that is neither an
+    // event, a version, nor an audit entry (scheduler status, schedule config).
+    async getMeta(key) {
+      const db = loadDb();
+      const row = db.meta ? db.meta[key] : undefined;
+      return row === undefined ? null : row;
+    },
+
+    async setMeta(key, value) {
+      const db = loadDb();
+      if (!db.meta || typeof db.meta !== "object") db.meta = {};
+      db.meta[key] = value;
+      saveDb(db);
+      return value;
     },
   };
 }
@@ -400,6 +420,33 @@ async function createPgStore() {
         useLimit ? [limit] : []
       );
       return rows.map(mapAuditRow);
+    },
+
+    // --- meta: mirrors the file backend's key/value store (update_center_meta table).
+    // Values are stored as JSON text and parsed back on read, so callers see the
+    // same shapes from either backend.
+    async getMeta(key) {
+      const { rows } = await pool.query(`SELECT value FROM update_center_meta WHERE key = $1`, [key]);
+      if (!rows[0]) return null;
+      const value = rows[0].value;
+      if (value === null || value === undefined) return null;
+      if (typeof value === "string") {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return value;
+        }
+      }
+      return value;
+    },
+
+    async setMeta(key, value) {
+      await pool.query(
+        `INSERT INTO update_center_meta (key, value, updated_at) VALUES ($1, $2, $3)
+         ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = EXCLUDED.updated_at`,
+        [key, JSON.stringify(value ?? null), nowIso()]
+      );
+      return value;
     },
   };
 }

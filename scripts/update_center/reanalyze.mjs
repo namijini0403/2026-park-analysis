@@ -58,6 +58,12 @@ const SEALED_PARKS_PATH = path.join(REPO_ROOT, "output", "sealed_nearest_park_di
 const LIBRARIES_REL = "data_processed/libraries.csv";
 const ACCESS_REL = "data_processed/school_library_access.csv";
 
+// SEALED_FILES: 자동 반영이 절대 덮어써서는 안 되는 파일들(수동 검증 실측값).
+// sealedGuard()가 학교 단위 보호 목록을 돌려주는 것과 짝을 이루는 "파일 단위" 목록으로,
+// scripts/update_center/apply.mjs 가 반영/롤백 직전에 이 목록을 확인한다.
+// 새 봉인 파일이 생기면 여기에 상대경로를 추가하면 apply 경로 전체에 즉시 적용된다.
+export const SEALED_FILES = ["output/sealed_nearest_park_dist.json"];
+
 // Same set as build_library_layer.py's PUBLIC_TYPES (already-mapped 유형 values
 // as they appear in libraries.csv, not the raw LBRRY_SE codes).
 const PUBLIC_TYPES = new Set(["공공", "어린이"]);

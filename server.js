@@ -254,4 +254,22 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, HOST, () => {
   console.log(`Server listening on http://${HOST}:${PORT}`);
   console.log(`Static root: ${STATIC_ROOT}`);
+
+  // 자동 감시(주기 스캔) 기동. UPDATE_CENTER_SCAN_INTERVAL_MIN 이 없거나 0이고
+  // 런타임 설정(POST /api/update-center/schedule)도 없으면 꺼진 채로 유지된다.
+  // 기동 실패는 로그만 남기고 서버를 죽이지 않는다.
+  if (typeof updateCenterHandler.startScheduler === "function") {
+    updateCenterHandler
+      .startScheduler()
+      .then((effective) => {
+        if (effective && effective.enabled) {
+          console.log(`[update-center] 자동 감시 ON — ${effective.interval_min}분 주기 (${effective.source})`);
+        } else {
+          console.log("[update-center] 자동 감시 OFF (UPDATE_CENTER_SCAN_INTERVAL_MIN 미설정/0)");
+        }
+      })
+      .catch((error) => {
+        console.error("[update-center] 자동 감시 기동 중 예외:", error && error.message);
+      });
+  }
 });

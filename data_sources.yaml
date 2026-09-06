@@ -7,9 +7,20 @@
 # (or the scanner's portal-search step) can relocate the dataset on data.go.kr.
 #
 # check.type:
-#   json_api  - poll a keyless data.go.kr JSON API (columList schema + standard.json content)
+#   json_api  - poll a keyless data.go.kr JSON API (columList schema + standard.json content).
+#               변경이 감지되면 scan.mjs 가 totalCount 까지 전 페이지를 수집해
+#               어댑터(scripts/update_center/adapters/<dataset>.mjs)로 정규화하고
+#               data/update_center/staging/ 에 후보를 남긴다.
 #   file_head - HTTP HEAD against a source page/file, compare ETag/Last-Modified/Content-Length
 #   manual    - no automated polling; scan.mjs counts it as skipped, no event/audit written
+#
+# 선택 필드:
+#   never_auto_apply: true  - 승인 시 확인 플래그(POST /approve 의 confirm:true) 없이는
+#                             반영하지 않는다. 봉인/기준 테이블·낙인 위험 레이어에 사용.
+#   rebuild_command         - 반영(및 롤백) 직후 실행할 재빌드 명령. 실행 파일은
+#                             python/python3/py/node/npm 로 제한되며, 표준 출력/에러는
+#                             audit_log 에 기록된다.
+#   coverage                - 수집 범위(부분 수집이면 그 사실을 문장으로 남긴다).
 #
 # last_known_hash / schema snapshots are NOT stored here — scan.mjs persists those
 # in the gitignored data/update_center_state.json so this manifest stays static.
@@ -79,6 +90,9 @@ sources:
 
   - dataset: schools
     local_file: data_processed/schools.csv
+    # 학교 기준 테이블은 모든 결합(학교ID)과 우선순위 산출의 기준점이다 —
+    # 자동 반영은 사람이 확인 플래그(confirm)를 줄 때만 허용한다.
+    never_auto_apply: true
     portal_pk: null
     uddi: null
     provider: 추가 확인 필요
@@ -112,3 +126,253 @@ sources:
     notes: >-
       위치 추적 대상. redevelopment.csv(재개발 구역 현황)의 원천 포털 URL 미확정.
       manual 체크로 등록하고 search_keywords만 유지한다.
+
+  # =========================================================================
+  # 학교 맥락 레이어(2026-09-06 통합) 원천 — data/context_sources/ 정규화본 기준
+  #
+  # 이 그룹의 공통 사항
+  #   - local_file 은 정규화된 산출물(원자료가 아님)이다. 원자료는 CP949/EPSG:5174 등
+  #     변환이 필요해 scripts/build_context_layers.py 가 담당한다.
+  #   - rebuild_command 는 승인 반영 직후 실행되어 data_processed/context/ 산출물을
+  #     다시 만든다(표준 출력은 감사 로그에 기록된다).
+  #   - never_auto_apply: true 는 "사람이 확인 플래그를 줄 때만 반영" 을 뜻한다.
+  #     낙인 위험이 있는 시설 레이어와 커버리지가 부분인 레이어에 붙였다.
+  # =========================================================================
+
+  - dataset: nightlife_entertainment
+    local_file: data/context_sources/incheon_nightlife_geocoded.csv
+    portal_pk: "15045018"
+    uddi: null
+    provider: 행정안전부(LOCALDATA 지방행정 인허가)
+    license: 공공데이터포털 이용허락(출처표시)
+    update_cycle: 수시(매일 2일 전 기준 현행화)
+    coverage: 전국 원자료 → 인천 필터(영업/정상 971건, 좌표 유효 796건)
+    source_url: https://www.data.go.kr/data/15045018/fileData.do
+    check:
+      type: file_head
+      urls:
+        head: https://file.localdata.go.kr/file/download/entertainment_bars/info
+    search_keywords:
+      - 유흥주점영업 LOCALDATA
+      - 지방행정 인허가 유흥주점
+    never_auto_apply: true
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      유흥주점영업 인허가 원자료. 정규화본(incheon_nightlife_geocoded.csv)은 단란주점
+      (15045017)과 한 파일로 합쳐져 있으므로, 어느 쪽이 바뀌어도 반영은 rebuild_command
+      의 병합 단계를 거쳐야 한다. 낙인 위험이 있는 레이어라 참고 맥락 표시 전용이며
+      자동 반영을 금지한다(never_auto_apply). 좌표 결측 행은 삭제하지 않고 보존한다.
+
+  - dataset: nightlife_singing
+    local_file: data/context_sources/incheon_nightlife_geocoded.csv
+    portal_pk: "15045017"
+    uddi: null
+    provider: 행정안전부(LOCALDATA 지방행정 인허가)
+    license: 공공데이터포털 이용허락(출처표시)
+    update_cycle: 수시
+    coverage: 전국 원자료 → 인천 필터(영업/정상 563건, 좌표 유효 426건)
+    source_url: https://www.data.go.kr/data/15045017/fileData.do
+    check:
+      type: file_head
+      urls:
+        head: https://file.localdata.go.kr/file/download/singing_bars/info
+    search_keywords:
+      - 단란주점영업 LOCALDATA
+      - 지방행정 인허가 단란주점
+    never_auto_apply: true
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      단란주점영업 인허가 원자료. 정규화본은 유흥주점(15045018)과 동일 파일이며
+      원본 좌표계는 EPSG:5174 → EPSG:4326 변환이 필요하다. 낙인 위험 레이어이므로
+      자동 반영 금지.
+
+  - dataset: construction_yeonsu
+    local_file: data/context_sources/construction_geocoded_exact.csv
+    portal_pk: "15029299"
+    uddi: null
+    provider: 인천광역시 연수구
+    license: 공공데이터포털 이용허락(출처표시)
+    update_cycle: 수시
+    coverage: 연수구 74건 중 15건만 전체주소 정확일치로 좌표 확보(나머지 59건 미매핑 보존)
+    source_url: https://www.data.go.kr/data/15029299/fileData.do
+    check:
+      type: file_head
+      urls:
+        head: https://www.data.go.kr/data/15029299/fileData.do
+    search_keywords:
+      - 인천광역시 연수구 건축물 착공신고 현황
+      - 연수구 착공신고
+    never_auto_apply: true
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      연수구 건축물 착공신고 현황(파일데이터). 좌표는 상가 주소 기반 추정 위치이며
+      실제 공사현장 좌표가 아니다 — 미매핑 59건을 0건으로 표시하지 않도록 커버리지
+      상태를 반드시 유지해야 하므로 자동 반영을 금지한다.
+
+  - dataset: construction_michuhol
+    local_file: data/context_sources/construction_geocoded_michuhol.csv
+    portal_pk: "15029300"
+    uddi: null
+    provider: 인천광역시 미추홀구
+    license: 공공데이터포털 이용허락(출처표시)
+    update_cycle: 수시
+    coverage: 미추홀구 1,971건 중 1,851건 Kakao 주소 지오코딩 좌표 확보(2026-09-06)
+    source_url: https://www.data.go.kr/data/15029300/fileData.do
+    check:
+      type: file_head
+      urls:
+        head: https://www.data.go.kr/data/15029300/fileData.do
+    search_keywords:
+      - 인천광역시 미추홀구 건축물 착공신고 현황
+      - 미추홀구 착공신고
+    never_auto_apply: true
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      미추홀구 건축물 착공신고 현황(파일데이터). scripts/context/normalize_construction.py 로
+      정규화하고 Kakao Local API 주소 지오코딩(정확일치만)으로 좌표를 추정했다. 좌표는
+      공사현장 좌표가 아니며 미부여 건은 unresolved 로 보존한다(자동 반영 금지).
+
+  - dataset: construction_gyeyang
+    local_file: data/context_sources/construction_geocoded_gyeyang.csv
+    portal_pk: "15038929"
+    uddi: null
+    provider: 인천광역시 계양구
+    license: 공공데이터포털 이용허락(출처표시)
+    update_cycle: 수시
+    coverage: 계양구 1,684건(착공·사용승인 기록 있는 행) 중 1,620건 좌표 확보(2026-09-06)
+    source_url: https://www.data.go.kr/data/15038929/fileData.do
+    check:
+      type: file_head
+      urls:
+        head: https://www.data.go.kr/data/15038929/fileData.do
+    search_keywords:
+      - 인천광역시 계양구 건축착공사용승인현황
+      - 계양구 착공 사용승인
+    never_auto_apply: true
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      계양구 건축착공사용승인현황(파일데이터). 허가만 있고 착공·사용승인 기록이 없는
+      264행은 제외했다. 미추홀구와 같은 정규화·지오코딩 절차를 따른다(자동 반영 금지).
+
+  - dataset: school_designations_2026
+    local_file: data/context_sources/school_designations_2026.csv
+    portal_pk: null
+    uddi: null
+    provider: 인천광역시교육청
+    license: 기관 공지 자료(출처표시)
+    update_cycle: 연간
+    coverage: 인천 전체(2026 지정 명단)
+    source_url: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3353108
+    check:
+      type: file_head
+      urls:
+        head: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3353108
+    search_keywords:
+      - 인천광역시교육청 AI 디지털 연구학교 지정
+      - 인천 교육청 지정학교 명단
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      교육청 공지 게시물(xlsx 첨부)에서 추출한 지정학교 명단. 게시물 페이지 자체의
+      HTTP 헤더를 변경 감지용 대리 신호로 쓴다(첨부 파일 URL은 게시물 개정 시 바뀐다).
+      원본 첨부의 sha256 은 data/context_sources/download_manifest.json 에 기록되어 있다.
+
+  - dataset: school_ai_focus_2026
+    local_file: data/context_sources/school_ai_focus_2026.csv
+    portal_pk: null
+    uddi: null
+    provider: 인천광역시교육청
+    license: 기관 공지 자료(출처표시)
+    update_cycle: 연간
+    coverage: 인천 전체(2026 AI중점학교)
+    source_url: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3359748
+    check:
+      type: file_head
+      urls:
+        head: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3359748
+    search_keywords:
+      - 인천 AI중점학교 지정
+      - 인천광역시교육청 AI 교육 중점학교
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      AI중점학교 명단(hwpx 첨부에서 표 추출). 게시물 페이지 헤더를 변경 감지 신호로 사용.
+
+  - dataset: school_digital_tutor_2025
+    local_file: data/context_sources/school_digital_tutor_2025.csv
+    portal_pk: null
+    uddi: null
+    provider: 인천광역시교육청
+    license: 기관 공지 자료(출처표시)
+    update_cycle: 연간
+    coverage: 인천 전체(2025 디지털튜터 운영교)
+    source_url: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3320903
+    check:
+      type: file_head
+      urls:
+        head: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3320903
+    search_keywords:
+      - 인천 디지털튜터 운영교
+      - 인천광역시교육청 디지털튜터
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      디지털튜터 운영교 명단(pdf 첨부에서 추출). 2025년 자료이며 2026년 갱신 시
+      새 게시물(nttSn)이 발급되므로 moved 감지 후 사람이 URL을 갱신해야 한다.
+
+  - dataset: school_edu_welfare_2026
+    local_file: data/context_sources/school_edu_welfare_2026.csv
+    portal_pk: null
+    uddi: null
+    provider: 인천광역시교육청
+    license: 기관 공지 자료(출처표시)
+    update_cycle: 연간
+    coverage: 인천 전체(2026 교육복지우선지원사업 학교 212교)
+    source_url: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3355686&bbsId=788&mi=11841
+    check:
+      type: file_head
+      urls:
+        head: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3355686&bbsId=788&mi=11841
+    search_keywords:
+      - 인천 교육복지우선지원사업 학교
+      - 인천광역시교육청 교육복지 2026
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      교육복지우선지원사업 2026 학교 명단(첨부 표 추출). 원문에 지원액('계')이 있어 financial_support_amount 를 원문 그대로 기록한다.
+
+  - dataset: school_edu_welfare_2025
+    local_file: data/context_sources/school_edu_welfare_2025.csv
+    portal_pk: null
+    uddi: null
+    provider: 인천광역시교육청
+    license: 기관 공지 자료(출처표시)
+    update_cycle: 연간
+    coverage: 인천 전체(2025 교육복지우선지원사업 학교 225교, 과거 이력)
+    source_url: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3319291&bbsId=788&mi=11841
+    check:
+      type: file_head
+      urls:
+        head: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3319291&bbsId=788&mi=11841
+    search_keywords:
+      - 인천 교육복지우선지원사업 2025
+      - 인천광역시교육청 교육복지
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      2025 교육복지우선지원사업 학교 명단(과거 이력). 새 연도 게시물은 nttSn 이 바뀌므로 moved 감지 후 사람이 URL 을 갱신한다.
+
+  - dataset: school_multicultural_2026
+    local_file: data/context_sources/school_multicultural_2026.csv
+    portal_pk: null
+    uddi: null
+    provider: 인천광역시교육청
+    license: 기관 공지 자료(출처표시)
+    update_cycle: 연간
+    coverage: 인천 전체(2026 다문화교육 연구·한국어학급·선도 100교)
+    source_url: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3369492&bbsId=720&mi=11841
+    check:
+      type: file_head
+      urls:
+        head: https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3369492&bbsId=720&mi=11841
+    search_keywords:
+      - 인천 다문화교육 정책학교
+      - 인천광역시교육청 한국어학급 선도학교
+    rebuild_command: python scripts/build_context_layers.py
+    notes: >-
+      2026 다문화교육 연구학교·한국어학급·선도학교 명단(첨부 표 추출). 지정 사실만 기록하며 예산은 원문 미기재.

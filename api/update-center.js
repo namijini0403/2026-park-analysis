@@ -29,8 +29,16 @@ const crypto = require("node:crypto");
 const yaml = require("js-yaml");
 
 const REPO_ROOT = path.join(__dirname, "..");
-const SOURCES_PATH = path.join(REPO_ROOT, "data_sources.yaml");
-const STATE_PATH = path.join(REPO_ROOT, "data", "update_center_state.json");
+// 두 경로는 scripts/update_center/paths.mjs 와 같은 환경변수 오버라이드를 존중한다
+// (테스트가 임시 디렉터리로 전체 서브시스템을 격리할 수 있게).
+const SOURCES_PATH = () =>
+  process.env.UPDATE_CENTER_SOURCES_PATH
+    ? path.resolve(process.env.UPDATE_CENTER_SOURCES_PATH)
+    : path.join(REPO_ROOT, "data_sources.yaml");
+const STATE_PATH = () =>
+  process.env.UPDATE_CENTER_STATE_PATH
+    ? path.resolve(process.env.UPDATE_CENTER_STATE_PATH)
+    : path.join(REPO_ROOT, "data", "update_center_state.json");
 
 const TOKEN_HEADER = "x-update-center-token";
 const ACTOR = "web-admin";
@@ -59,7 +67,19 @@ function loadModules() {
       // (checkModuleDoc/POLICY_ACTION_ENUM) for the onboarding endpoint below,
       // instead of duplicating the 7-action enum / required-field list here.
       import("../scripts/validate_module_contract.mjs"),
-    ]).then(([storeMod, scanMod, reanalyzeMod, contractMod]) => ({ storeMod, scanMod, reanalyzeMod, contractMod }));
+      // P6: 원자적 반영/버전/롤백, 온보딩 객관식 병합·등록, 자동 감시 스케줄러.
+      import("../scripts/update_center/apply.mjs"),
+      import("../scripts/update_center/onboarding.mjs"),
+      import("../scripts/update_center/scheduler.mjs"),
+    ]).then(([storeMod, scanMod, reanalyzeMod, contractMod, applyMod, onboardingMod, schedulerMod]) => ({
+      storeMod,
+      scanMod,
+      reanalyzeMod,
+      contractMod,
+      applyMod,
+      onboardingMod,
+      schedulerMod,
+    }));
   }
   return modulesPromise;
 }
@@ -71,6 +91,76 @@ async function getStore() {
     storePromise = storeMod.createStore();
   }
   return storePromise;
+}
+
+// ---------------------------------------------------------------------------
+// data_sources.yaml 접근 (스캔/승인 양쪽이 같은 항목을 본다)
+// ---------------------------------------------------------------------------
+
+function loadSourcesDoc() {
+  return yaml.load(fs.readFileSync(SOURCES_PATH(), "utf-8"));
+}
+
+function loadSourceEntry(dataset) {
+  try {
+    const doc = loadSourcesDoc();
+    const sources = Array.isArray(doc?.sources) ? doc.sources : [];
+    return sources.find((s) => s && s.dataset === dataset) || null;
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 스캔 실행 + 자동 감시 스케줄러 (server.js 가 startScheduler()로 기동한다)
+// ---------------------------------------------------------------------------
+
+// 스캔 1회 = scan.mjs 실행 + 생성된 이벤트마다 AI 해설 부착.
+// "지금 검사" 버튼(POST /scan)과 주기 스캔이 같은 함수를 쓴다.
+async function performScan({ dataset = null, simulateChangeB64 = null, log = () => {} } = {}) {
+  const { scanMod } = await loadModules();
+  const result = await scanMod.runScan({ dataset, simulateChangeB64, log, actor: ACTOR });
+  const store = await getStore();
+  const rawEvents = result.mode === "simulate" ? [result.event] : result.events;
+  const events = [];
+  for (const ev of rawEvents) {
+    const { note, source } = await buildAiNote(ev);
+    const updated = await store.setEventAiNote(ev.id, note);
+    await store.appendAudit({
+      actor: ACTOR,
+      action: "ai_note_generated",
+      dataset: ev.dataset,
+      event_id: ev.id,
+      detail: `AI 해설 생성 — source=${source}`,
+    });
+    events.push(updated || { ...ev, ai_note: note });
+  }
+  return { ...result, events };
+}
+
+let schedulerPromise = null;
+async function getScheduler() {
+  if (!schedulerPromise) {
+    schedulerPromise = loadModules().then(({ schedulerMod }) =>
+      schedulerMod.createScheduler({
+        getStore,
+        runScan: (opts) => performScan(opts),
+        log: (line) => console.log(`[update-center] ${line}`),
+      })
+    );
+  }
+  return schedulerPromise;
+}
+
+// server.js 가 listen 직후 호출한다. 실패해도 서버는 계속 떠 있어야 한다.
+async function startScheduler() {
+  try {
+    const scheduler = await getScheduler();
+    return await scheduler.start();
+  } catch (err) {
+    console.error(`[update-center] 스케줄러 기동 실패(자동 감시 없이 계속 실행): ${err.message}`);
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -475,7 +565,7 @@ async function handlePostOnboarding(req, res) {
     });
   }
 
-  const { contractMod } = await loadModules();
+  const { contractMod, onboardingMod } = await loadModules();
   const proposal = await buildOnboardingProposal(requestText, contractMod);
   proposal.suggested_datasets = filterStringArray(proposal.suggested_datasets);
   proposal.philosophy_notes = filterStringArray(proposal.philosophy_notes);
@@ -524,7 +614,205 @@ async function handlePostOnboarding(req, res) {
     philosophy_checklist: philosophyChecklist,
     contract_check: contractCheck,
     ai_source: proposal.ai_source,
-    notice: "이 제안은 저장만 되며 승인·파일 생성 전까지 운영에 반영되지 않습니다.",
+    // 사람이 판단해야 하는 지점만 객관식으로. 답변은 POST /onboarding/answer 로 보낸다.
+    questions: onboardingMod.QUESTIONS,
+    answer_endpoint: "POST /api/update-center/onboarding/answer",
+    notice: "이 제안은 저장만 되며 답변·등록 전까지 운영에 반영되지 않습니다.",
+  });
+}
+
+// ---------------------------------------------------------------------------
+// 온보딩 2단계: 객관식 답변 병합 → 계약 재검사 → ready_for_registration
+// ---------------------------------------------------------------------------
+
+async function handlePostOnboardingAnswer(req, res) {
+  const body = req.body || {};
+  const eventId = typeof body.event_id === "string" ? body.event_id : "";
+  if (!eventId) return json(res, 400, { error: "event_id가 필요합니다." });
+
+  const store = await getStore();
+  const parent = await store.getEvent(eventId);
+  if (!parent) return json(res, 404, { error: `이벤트를 찾을 수 없습니다: ${eventId}` });
+  if (parent.kind !== "onboarding_proposal") {
+    return json(res, 409, { error: `온보딩 제안 이벤트가 아닙니다 (kind=${parent.kind}).` });
+  }
+
+  const { contractMod, onboardingMod } = await loadModules();
+
+  let baseDoc = {};
+  try {
+    const parsed = yaml.load(parent.diff_json?.yaml_draft || "", { schema: yaml.CORE_SCHEMA });
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) baseDoc = parsed;
+  } catch {
+    baseDoc = {};
+  }
+  // 최초 제안의 placeholder slug 를 기본값으로 쓰되, 답변에 slug 가 오면 그것을 쓴다.
+  if (!baseDoc.layer || typeof baseDoc.layer !== "object") baseDoc.layer = {};
+  if (!baseDoc.layer.id) baseDoc.layer.id = String(parent.dataset || "").replace(/^onboarding:/, "");
+
+  let merged;
+  try {
+    merged = onboardingMod.mergeAnswers(baseDoc, body.answers || {});
+  } catch (err) {
+    return json(res, 400, { error: err.message, questions: onboardingMod.QUESTIONS });
+  }
+
+  const yamlText = onboardingMod.dumpYaml(merged.doc);
+  const contractCheck = checkYamlDraft(yamlText, contractMod);
+  const ready = contractCheck.passed;
+
+  const event = await store.recordEvent({
+    dataset: `onboarding:${merged.slug}`,
+    kind: "onboarding_answered",
+    risk: ready ? "green" : "red",
+    status: ready ? "ready_for_registration" : "pending",
+    summary: ready
+      ? `온보딩 답변 병합 완료 — 계약 검사 통과, 등록 가능 (${merged.slug})`
+      : `온보딩 답변 병합 — 계약 검사 실패 ${contractCheck.failures.length}건 (${merged.slug})`,
+    diff_json: {
+      parent_event_id: parent.id,
+      slug: merged.slug,
+      answers: merged.answers,
+      yaml: yamlText,
+      source_entry: merged.source_entry,
+      contract_check: contractCheck,
+      notes: merged.notes,
+      corrections: merged.corrections,
+      forced: merged.forced,
+    },
+    actor: ACTOR,
+  });
+  await store.appendAudit({
+    actor: ACTOR,
+    action: "onboarding_answered",
+    dataset: event.dataset,
+    event_id: event.id,
+    detail:
+      `답변 병합 — 계약검사 ${ready ? "통과" : `실패(${contractCheck.failures.length}건)`}` +
+      (merged.forced.length ? ` / 강제 적용: ${merged.forced.join(" ")}` : ""),
+  });
+
+  return json(res, 200, {
+    event_id: event.id,
+    parent_event_id: parent.id,
+    slug: merged.slug,
+    status: event.status,
+    yaml: yamlText,
+    source_entry: merged.source_entry,
+    contract_check: contractCheck,
+    notes: merged.notes,
+    corrections: merged.corrections,
+    forced: merged.forced,
+    // 실패가 남아 있으면 같은 질문지를 다시 돌려준다 — 무엇을 고쳐야 하는지는 failures 에.
+    questions: ready ? [] : onboardingMod.QUESTIONS,
+    failures: contractCheck.failures,
+    philosophy_checklist: PHILOSOPHY_CHECKLIST.map((item) => ({ ...item, status: "human 검토 필요" })),
+    notice: ready
+      ? "계약 검사를 통과했습니다 — POST /api/update-center/onboarding/register 로 등록할 수 있습니다."
+      : "계약 검사를 통과하지 못했습니다 — 남은 실패 항목을 해소한 뒤 다시 답변을 제출하세요.",
+  });
+}
+
+// ---------------------------------------------------------------------------
+// 온보딩 3단계: modules/<slug>.yaml + data_sources.yaml 기록 + 레지스트리 스니펫
+// (index.html 은 절대 자동 편집하지 않는다 — 붙여넣기용 조각만 반환한다.)
+// ---------------------------------------------------------------------------
+
+async function handlePostOnboardingRegister(req, res) {
+  const body = req.body || {};
+  const eventId = typeof body.event_id === "string" ? body.event_id : "";
+  if (!eventId) return json(res, 400, { error: "event_id가 필요합니다." });
+
+  const store = await getStore();
+  const answered = await store.getEvent(eventId);
+  if (!answered) return json(res, 404, { error: `이벤트를 찾을 수 없습니다: ${eventId}` });
+  if (answered.kind !== "onboarding_answered") {
+    return json(res, 409, { error: `답변 병합 이벤트가 아닙니다 (kind=${answered.kind}).` });
+  }
+  if (answered.status === "registered") {
+    return json(res, 409, { error: "이미 등록된 온보딩입니다." });
+  }
+  if (answered.status !== "ready_for_registration") {
+    return json(res, 409, {
+      error: `계약 검사를 통과한 답변만 등록할 수 있습니다 (status=${answered.status}).`,
+      contract_check: answered.diff_json?.contract_check || null,
+    });
+  }
+
+  const { onboardingMod } = await loadModules();
+  let doc;
+  try {
+    doc = yaml.load(answered.diff_json?.yaml || "", { schema: yaml.CORE_SCHEMA });
+  } catch (err) {
+    return json(res, 500, { error: `저장된 YAML 파싱 실패: ${err.message}` });
+  }
+  if (!doc || typeof doc !== "object") return json(res, 500, { error: "저장된 YAML 이 객체가 아닙니다." });
+
+  let registered;
+  try {
+    registered = onboardingMod.registerModule({
+      doc,
+      sourceEntry: answered.diff_json?.source_entry || null,
+      overwrite: body.overwrite === true,
+    });
+  } catch (err) {
+    await store.appendAudit({
+      actor: ACTOR,
+      action: "onboarding_register_failed",
+      dataset: answered.dataset,
+      event_id: answered.id,
+      detail: `등록 실패: ${err.message}`,
+    });
+    return json(res, 409, { error: err.message });
+  }
+
+  const snippet = onboardingMod.buildRegistrySnippet(doc, doc.geometry_kind || "point");
+
+  await store.updateEventStatus(answered.id, "registered", ACTOR);
+  await store.appendAudit({
+    actor: ACTOR,
+    action: "onboarding_registered",
+    dataset: answered.dataset,
+    event_id: answered.id,
+    detail: `등록 완료 — ${registered.module_file}${registered.data_sources_appended ? " + data_sources.yaml 항목 추가" : ""}`,
+  });
+
+  // 레지스트리 반영은 사람이 해야 한다 — 대기 상태를 노란 이벤트로 남긴다.
+  const pendingEvent = await store.recordEvent({
+    dataset: answered.dataset,
+    kind: "registry_patch_pending",
+    risk: "yellow",
+    status: "pending",
+    summary: `LAYER_REGISTRY 수동 반영 대기 — index.html 에 "${registered.slug}" 항목을 붙여넣어야 지도에 표시됩니다.`,
+    diff_json: {
+      slug: registered.slug,
+      module_file: registered.module_file,
+      data_sources_file: registered.data_sources_file,
+      registry_snippet: snippet,
+      target_file: "index.html (LAYER_REGISTRY 배열)",
+      note: "index.html 은 업데이트 센터가 자동 편집하지 않습니다 — 사람이 검토 후 붙여넣습니다.",
+    },
+    actor: ACTOR,
+  });
+  await store.appendAudit({
+    actor: ACTOR,
+    action: "registry_patch_pending",
+    dataset: answered.dataset,
+    event_id: pendingEvent.id,
+    detail: `LAYER_REGISTRY 스니펫 생성 — index.html 수동 반영 필요 (slug=${registered.slug})`,
+  });
+
+  return json(res, 200, {
+    registered: true,
+    slug: registered.slug,
+    module_file: registered.module_file,
+    data_sources_appended: registered.data_sources_appended,
+    data_sources_file: registered.data_sources_file,
+    registry_snippet: snippet,
+    registry_event_id: pendingEvent.id,
+    notice:
+      "modules/ 와 data_sources.yaml 에는 기록했습니다. index.html 의 LAYER_REGISTRY 는 " +
+      "자동 편집하지 않으므로 위 스니펫을 사람이 붙여넣어야 지도에 나타납니다.",
   });
 }
 
@@ -535,21 +823,63 @@ async function handlePostOnboarding(req, res) {
 async function handleGetSources(res) {
   let doc;
   try {
-    doc = yaml.load(fs.readFileSync(SOURCES_PATH, "utf-8"));
+    doc = loadSourcesDoc();
   } catch (err) {
     return json(res, 500, { error: `data_sources.yaml 파싱 실패: ${err.message}` });
   }
   const sources = Array.isArray(doc?.sources) ? doc.sources : [];
   let state = {};
-  if (fs.existsSync(STATE_PATH)) {
+  if (fs.existsSync(STATE_PATH())) {
     try {
-      state = JSON.parse(fs.readFileSync(STATE_PATH, "utf-8") || "{}");
+      state = JSON.parse(fs.readFileSync(STATE_PATH(), "utf-8") || "{}");
     } catch {
       state = {};
     }
   }
-  const merged = sources.map((s) => ({ ...s, last_state: state[s.dataset] || null }));
-  return json(res, 200, { sources: merged });
+  // 다음 검사 예정 시각은 소스별 값이 아니라 스케줄 전체의 값이다 — UI 의 소스별
+  // "다음 검사" 칩이 실제보다 정밀해 보이지 않도록 스케줄 상태를 그대로 함께 준다.
+  let schedule = null;
+  try {
+    const scheduler = await getScheduler();
+    schedule = await scheduler.getStatus();
+  } catch {
+    schedule = null;
+  }
+  const merged = sources.map((s) => ({
+    ...s,
+    last_state: state[s.dataset] || null,
+    next_check_at: schedule && schedule.enabled && s.check?.type !== "manual" ? schedule.next_scan_at : null,
+    auto_pollable: s.check?.type === "json_api" || s.check?.type === "file_head",
+    never_auto_apply: s.never_auto_apply === true,
+  }));
+  return json(res, 200, { sources: merged, schedule });
+}
+
+async function handleGetSchedule(res) {
+  const scheduler = await getScheduler();
+  return json(res, 200, { schedule: await scheduler.getStatus() });
+}
+
+async function handlePostSchedule(req, res) {
+  const body = req.body || {};
+  if (typeof body.enabled !== "boolean") {
+    return json(res, 400, { error: "enabled(boolean)가 필요합니다." });
+  }
+  const scheduler = await getScheduler();
+  const { schedulerMod } = await loadModules();
+  const interval = schedulerMod.normaliseIntervalMin(body.interval_min);
+  if (body.enabled && interval <= 0) {
+    return json(res, 400, { error: "자동 감시를 켜려면 interval_min(1분 이상)이 필요합니다." });
+  }
+  const effective = await scheduler.setSchedule({ enabled: body.enabled, interval_min: interval, actor: ACTOR });
+  const store = await getStore();
+  await store.appendAudit({
+    actor: ACTOR,
+    action: "schedule_updated",
+    dataset: null,
+    detail: `자동 감시 ${effective.enabled ? "ON" : "OFF"} — 주기 ${effective.interval_min}분`,
+  });
+  return json(res, 200, { schedule: await scheduler.getStatus(), effective });
 }
 
 async function handleGetEvents(res, url) {
@@ -586,38 +916,30 @@ async function handlePostScan(req, res) {
   const simulateChangeB64 =
     typeof body.simulate_change_b64 === "string" && body.simulate_change_b64 ? body.simulate_change_b64 : null;
 
-  const { scanMod } = await loadModules();
   const logLines = [];
   const log = (...parts) => logLines.push(parts.map((p) => (typeof p === "string" ? p : JSON.stringify(p))).join(" "));
 
-  let result;
-  try {
-    result = await scanMod.runScan({ dataset, simulateChangeB64, log, actor: ACTOR });
-  } catch (err) {
-    return json(res, 400, { error: err.message });
-  }
-
-  const store = await getStore();
-  const rawEvents = result.mode === "simulate" ? [result.event] : result.events;
-  const events = [];
-  for (const ev of rawEvents) {
-    const { note, source } = await buildAiNote(ev);
-    const updated = await store.setEventAiNote(ev.id, note);
-    await store.appendAudit({
-      actor: ACTOR,
-      action: "ai_note_generated",
-      dataset: ev.dataset,
-      event_id: ev.id,
-      detail: `AI 해설 생성 — source=${source}`,
+  // 수동 "지금 검사"도 스케줄러를 통해 실행한다 — 주기 스캔과 겹치지 않고,
+  // last_scan_at/next_scan_at/last_result 가 한 곳에서만 갱신된다.
+  const scheduler = await getScheduler();
+  const outcome = await scheduler.runOnce("manual", { dataset, simulateChangeB64, log });
+  if (outcome.skipped) {
+    return json(res, 409, {
+      error: "이미 스캔이 실행 중입니다 — 완료 후 다시 시도하세요(겹침 방지).",
+      schedule: await scheduler.getStatus(),
     });
-    events.push(updated || { ...ev, ai_note: note });
+  }
+  if (outcome.error) {
+    return json(res, 400, { error: outcome.error, log: logLines, schedule: await scheduler.getStatus() });
   }
 
+  const result = outcome.result;
   return json(res, 200, {
     mode: result.mode,
     summary: result.mode === "scan" ? result.summary : null,
-    events,
+    events: result.mode === "simulate" ? result.events : result.events,
     log: logLines,
+    schedule: await scheduler.getStatus(),
   });
 }
 
@@ -666,6 +988,14 @@ async function handlePostApprove(req, res) {
   }
 
   const diff = event.diff_json || {};
+
+  // --- P6 경로: 스캔이 실제로 수집·정규화해 staging 에 남긴 후보가 있으면
+  // 원자적 반영 + 불변 버전 생성으로 처리한다(데이터셋 무관).
+  const candidate = diff.candidate && diff.candidate.ok ? diff.candidate : null;
+  if (candidate) {
+    return await approveStagedCandidate(res, event, candidate, body);
+  }
+
   const simulateCsvB64 = diff.simulateCsvB64 || null;
 
   // Honest prototype boundary: real remote change events (no simulate payload
@@ -752,6 +1082,113 @@ async function handlePostApprove(req, res) {
   return json(res, 200, { event: finalEvent, versionId: applyResult.versionId, diff: applyResult.diff });
 }
 
+// staged 후보 승인: 품질 게이트 → never_auto_apply 확인 → 원자적 반영 → 버전 기록.
+async function approveStagedCandidate(res, event, candidate, body) {
+  const store = await getStore();
+  const { applyMod } = await loadModules();
+
+  if (candidate.approval_blocked) {
+    await store.appendAudit({
+      actor: ACTOR,
+      action: "approve_rejected_quality",
+      dataset: event.dataset,
+      event_id: event.id,
+      detail: `승인 거부 — 품질검사 ${candidate.quality_status} (fail/unsupported 또는 컬럼 삭제)`,
+    });
+    return json(res, 409, {
+      error: `품질검사 결과(${candidate.quality_status})가 승인 가능한 상태가 아닙니다 — 반영하지 않았습니다.`,
+      quality: candidate.quality,
+      event,
+    });
+  }
+
+  const entry = loadSourceEntry(event.dataset);
+  if (!entry) {
+    return json(res, 409, { error: `data_sources.yaml 에서 소스를 찾을 수 없습니다: ${event.dataset}` });
+  }
+
+  const confirm = body.confirm === true;
+  if (entry.never_auto_apply === true && !confirm) {
+    await store.appendAudit({
+      actor: ACTOR,
+      action: "approve_needs_confirmation",
+      dataset: event.dataset,
+      event_id: event.id,
+      detail: "승인 보류 — never_auto_apply 소스는 확인 플래그(confirm)가 필요합니다.",
+    });
+    return json(res, 409, {
+      error:
+        `"${event.dataset}" 은 data_sources.yaml 에 never_auto_apply: true 로 표시된 소스입니다 — ` +
+        "확인(confirm) 후에만 반영됩니다.",
+      needs_confirmation: true,
+      event,
+    });
+  }
+
+  await store.updateEventStatus(event.id, "approved", ACTOR);
+  await store.appendAudit({
+    actor: ACTOR,
+    action: "approve",
+    dataset: event.dataset,
+    event_id: event.id,
+    detail:
+      `승인 — staged 후보(${candidate.staging_id}) 원자적 반영 시작 (risk=${event.risk}, 품질=${candidate.quality_status}` +
+      `${confirm ? ", never_auto_apply 확인됨" : ""})`,
+  });
+
+  let applied;
+  try {
+    applied = await applyMod.applyStagedCandidate({
+      entry,
+      stagingId: candidate.staging_id,
+      store,
+      eventId: event.id,
+      actor: ACTOR,
+      confirm,
+      log: (line) => console.log(`[update-center] ${line}`),
+    });
+  } catch (err) {
+    await store.updateEventStatus(event.id, "pending", ACTOR);
+    await store.appendAudit({
+      actor: ACTOR,
+      action: "approve_apply_failed",
+      dataset: event.dataset,
+      event_id: event.id,
+      detail: `적용 실패(파일 변경 없음 또는 부분 실패): ${err.message}`,
+    });
+    return json(res, 500, { error: `적용 중 오류가 발생했습니다: ${err.message}` });
+  }
+
+  await store.updateEventStatus(event.id, "applied", ACTOR);
+  const { note, source } = await buildAiNote({
+    dataset: event.dataset,
+    kind: event.kind,
+    risk: event.risk,
+    status: "applied",
+    summary: event.summary,
+    diff_json: { ...event.diff_json, applied: true, applied_version: applied.version },
+  });
+  const finalEvent = await store.setEventAiNote(event.id, note);
+  await store.appendAudit({
+    actor: ACTOR,
+    action: "ai_note_generated",
+    dataset: event.dataset,
+    event_id: event.id,
+    detail: `AI 해설 생성(적용 후) — source=${source}`,
+  });
+
+  return json(res, 200, {
+    event: finalEvent,
+    version: applied.version,
+    versionId: applied.versionId,
+    written: applied.written,
+    content_hash: applied.contentHash,
+    rebuild: applied.rebuild,
+    record_diff: candidate.record_diff,
+    affected_schools: candidate.affected_schools,
+  });
+}
+
 async function handlePostHold(req, res) {
   const body = req.body || {};
   const eventId = body.event_id;
@@ -787,7 +1224,39 @@ async function handlePostRollback(req, res) {
     return json(res, 409, { error: "이미 롤백된 버전입니다.", version: existingVersion });
   }
 
-  const { reanalyzeMod } = await loadModules();
+  const { reanalyzeMod, applyMod } = await loadModules();
+
+  // P6 버전(불변 디렉터리 방식)이면 apply.mjs 의 해시 재검증 롤백을 쓴다.
+  const versionDirName = applyMod.versionDirFromStoreRow(existingVersion);
+  if (versionDirName) {
+    try {
+      const entry = loadSourceEntry(existingVersion.dataset);
+      const result = await applyMod.rollbackVersionDir({
+        versionName: versionDirName,
+        entry,
+        store,
+        actor: ACTOR,
+        log: (line) => console.log(`[update-center] ${line}`),
+      });
+      await store.markVersionRolledBack(versionId);
+      if (existingVersion.source_event_id) {
+        await store.updateEventStatus(existingVersion.source_event_id, "rolled_back", ACTOR);
+      }
+      const version = await store.getVersion(versionId);
+      return json(res, 200, {
+        versionId,
+        version_dir: versionDirName,
+        restoredFiles: result.restoredFiles,
+        removedFiles: result.removedFiles,
+        activeVersion: result.activeVersion,
+        rebuild: result.rebuild,
+        version,
+      });
+    } catch (err) {
+      return json(res, 400, { error: err.message });
+    }
+  }
+
   try {
     const result = await reanalyzeMod.rollbackVersion(versionId, store, ACTOR);
     if (existingVersion.source_event_id) {
@@ -824,14 +1293,22 @@ module.exports = async function handler(req, res) {
     if (req.method === "GET" && subPath === "/events") return await handleGetEvents(res, url);
     if (req.method === "GET" && subPath === "/audit") return await handleGetAudit(res, url);
     if (req.method === "GET" && subPath === "/versions") return await handleGetVersions(res, url);
+    if (req.method === "GET" && subPath === "/schedule") return await handleGetSchedule(res);
+    if (req.method === "POST" && subPath === "/schedule") return await handlePostSchedule(req, res);
     if (req.method === "POST" && subPath === "/scan") return await handlePostScan(req, res);
     if (req.method === "POST" && subPath === "/approve") return await handlePostApprove(req, res);
     if (req.method === "POST" && subPath === "/hold") return await handlePostHold(req, res);
     if (req.method === "POST" && subPath === "/rollback") return await handlePostRollback(req, res);
     if (req.method === "POST" && subPath === "/onboarding") return await handlePostOnboarding(req, res);
+    if (req.method === "POST" && subPath === "/onboarding/answer") return await handlePostOnboardingAnswer(req, res);
+    if (req.method === "POST" && subPath === "/onboarding/register") return await handlePostOnboardingRegister(req, res);
     return json(res, 404, { error: `알 수 없는 엔드포인트: ${req.method} ${subPath}` });
   } catch (err) {
     console.error("[update-center] handler error:", err);
     return json(res, 500, { error: "서버 내부 오류가 발생했습니다.", detail: err.message });
   }
 };
+
+// server.js 가 listen 직후 호출하는 자동 감시 기동 훅.
+// (핸들러 함수 객체에 붙여 export — CommonJS 단일 export 형태를 깨지 않기 위해.)
+module.exports.startScheduler = startScheduler;

@@ -6,16 +6,41 @@
 > `.superpowers/sdd/2026-08-09-p4-update-center/task-6-report.md`에 raw 출력으로
 > 남겼다.
 
+> **P6 갱신 (2026-09-06)** — 자동 감시(스케줄러)·실제 전체 수집(후보 staging)·
+> 품질 게이트·원자적 반영/불변 버전/해시 검증 롤백·객관식 온보딩 등록이 추가되었다.
+> 이 문서의 §1·§2·§4·§5·§6 과 새 §8 이 그 내용을 담고 있고, §3 과 §6.5 의
+> transcript 는 2026-08-09/08-10 당시 실행 기록이므로 손대지 않았다.
+
 ## 1. 아키텍처
 
 ```
 data_sources.yaml (메타층)
-        │  5개 데이터셋 정의: check.type(json_api/file_head/manual),
-        │  포털 URL/PK, search_keywords(위치추적용)
+        │  13개 데이터셋 정의: check.type(json_api/file_head/manual),
+        │  포털 URL/PK, search_keywords(위치추적용),
+        │  never_auto_apply(확인 필요), rebuild_command(반영 후 재빌드), coverage
+        ▼
+scripts/update_center/scheduler.mjs (자동 감시)
+        │  UPDATE_CENTER_SCAN_INTERVAL_MIN 또는 런타임 설정(POST /schedule)에 따라
+        │  주기 실행. 겹침 금지(실행 중이면 skip), 실패해도 타이머 유지,
+        │  last_scan_at/next_scan_at/last_result 를 store meta 에 기록.
+        │  "지금 검사" 버튼(POST /scan)도 같은 실행기를 통과한다.
         ▼
 scripts/update_center/scan.mjs (CDC 스캐너)
         │  해시·스키마 diff, Green/Yellow/Red 등급 판정,
         │  moved(위치이동) 감지 + 포털 재검색, --simulate-change 시연 훅
+        │  변경 감지 시 ↓ 후보 수집 단계로 이어진다
+        ▼
+scripts/update_center/candidate.mjs (실제 수집 → 후보)
+        │  json_api: totalCount 에 도달할 때까지 전 페이지 수집(perPage 존중,
+        │            상한 도달 시 truncated 로 보고 — 조용히 자르지 않는다)
+        │  → adapters/<dataset>.mjs 로 정규화(libraries 전용 + 통과 어댑터)
+        │  → data/update_center/staging/<id>/ 에 파일 + 파일별 sha256 기록
+        ▼
+scripts/update_center/quality.mjs (품질 게이트 — 파일검토 MVP 규칙 이식)
+        │  빈 파일·0행, 좌표 범위(한반도 광역, 도서 포함), 시설/지정학교/GeoJSON 계약,
+        │  컨텍스트 v2 null 의미론(unknown→count null, partial→하한 관측치),
+        │  비밀문자열, 미지원 계약(unsupported) → fail/unsupported 는 승인 차단
+        │  + 현재 적용본 대비 스키마 diff(이름변경 매핑 제안) + 기본키 레코드 diff
         ▼
 scripts/update_center/store.mjs (저장소, 이중 백엔드)
         │  DATABASE_URL 있으면 → Railway Postgres
@@ -26,37 +51,53 @@ scripts/update_center/store.mjs (저장소, 이중 백엔드)
         │  updateEventStatus/setEventAiNote/saveVersion/listVersions/
         │  getVersion/markVersionRolledBack/appendAudit/listAudit
         ▼
-api/update-center.js (서버 API, 8 엔드포인트)
+api/update-center.js (서버 API, 13 엔드포인트)
         │  모든 요청에 x-update-center-token 헤더 게이트
         │  (process.env.UPDATE_CENTER_TOKEN, 기본값 "2026")
-        │  GET sources/events/audit/versions,
-        │  POST scan/approve/hold/rollback
+        │  GET sources/events/audit/versions/schedule,
+        │  POST scan/approve/hold/rollback/schedule,
+        │  POST onboarding · onboarding/answer · onboarding/register
         │  AI 해설(ai_note): OpenAI Responses API
         │  (실패/키없음 시 결정론적 요약 폴백, 항상 "참고용" 명시)
         ▼
+scripts/update_center/apply.mjs (원자적 반영 · 불변 버전 · 롤백)
+        │  승인 직전 staging sha256 재검증 + 내용 재검사(저장된 판정은 신뢰하지 않음)
+        │  never_auto_apply 확인 플래그 게이트, 봉인 파일(SEALED_FILES) 가드
+        │  임시파일 write → rename 으로 data_processed/ 와 vercel_public/data_processed/
+        │  양쪽 교체(재빌드 없이 지도 앱과 AI 서버가 같은 버전을 읽는다)
+        │  data/update_center/versions/vNNN/{files,previous,manifest.json} + active.json
+        │  rebuild_command 실행(출력은 감사 로그) · 롤백은 해시 재검증 후에만
+        ▼
 /update-center (관리 화면, update-center.html)
-        │  소스 테이블, 이벤트 목록(리스크 배지+시뮬레이션 태그),
-        │  승인/보류 버튼, 버전 이력, 감사 로그 타임라인
+        │  ⑧ 자동 감시 설정(지금 검사 · ON/OFF · 주기 · 마지막/다음 검사),
+        │  ① 소스별 상태/마지막·다음 확인 칩, ③ 후보 diff 패널(추가·삭제·변경·영향 학교),
+        │  ④ 버전 이력·롤백, ⑤ 감사 로그, ⑦ 온보딩(객관식 확인 → 등록 → 스니펫)
         ▼
 scripts/update_center/reanalyze.mjs (경량 재분석)
            libraries 데이터셋 전용: 등시선 기반 iso_/nearest_ 컬럼만
            재계산·패치. JS↔Python 파리티 검증 완료(0/245/245 무변경
            입력 기준 external_shortage 일치). 스냅샷+sha256 무결성
-           가드로 롤백, sealedGuard()로 봉인값(수동 검증 실측값) 보호.
+           가드로 롤백, sealedGuard()/SEALED_FILES 로 봉인값(수동 검증 실측값) 보호.
 ```
 
 ### 계층별 책임 요약
 
 | 계층 | 파일 | 역할 |
 | --- | --- | --- |
-| 메타층 | `data_sources.yaml` | 5개 데이터셋(libraries/school_library/parks/schools/redevelopment)의 원천 URL·PK·체크 방식·검색 키워드 정적 정의 |
-| CDC 스캐너 | `scripts/update_center/scan.mjs` | 원격 폴링(json_api/file_head), 해시/스키마 diff, Green/Yellow/Red 판정, moved 감지+포털 재검색, `--simulate-change` 시연 |
-| 저장소 | `scripts/update_center/store.mjs` | `data_events`/`data_versions`/`audit_log` CRUD, pg/파일 이중 백엔드 |
-| API | `api/update-center.js` | 토큰 게이트, 8개 엔드포인트, AI 해설 생성 |
-| 관리 화면 | `update-center.html` (서버 루트에서 `/update-center`로 서빙) | 스캔/승인/보류/롤백 UI, localStorage 토큰 입력 |
+| 메타층 | `data_sources.yaml` | 13개 데이터셋의 원천 URL·PK·체크 방식·검색 키워드·`never_auto_apply`·`rebuild_command`·`coverage` 정적 정의 |
+| 경로 해석 | `scripts/update_center/paths.mjs` | 모든 파일 경로를 한 곳에서 해석(환경변수 오버라이드로 테스트 격리), 경로 탈출 차단 |
+| 자동 감시 | `scripts/update_center/scheduler.mjs` | 주기 실행, 겹침 방지, 실패 격리, `last_scan_at`/`next_scan_at`/`last_result` 기록 |
+| CDC 스캐너 | `scripts/update_center/scan.mjs` | 원격 폴링(json_api/file_head), 해시/스키마 diff, Green/Yellow/Red 판정, moved 감지+포털 재검색, 변경 시 후보 수집 호출 |
+| 후보 수집 | `scripts/update_center/candidate.mjs` + `adapters/` | 전 페이지 수집 → 어댑터 정규화 → staging 기록(파일별 sha256) → 평가 |
+| 품질 게이트 | `scripts/update_center/quality.mjs` | 구조·좌표·출처·null 의미론 검사, 스키마 diff, 기본키 레코드 diff, 승인 차단 판정 |
+| 반영/버전/롤백 | `scripts/update_center/apply.mjs` | 원자적 교체(두 경로), 불변 버전 디렉터리, active 포인터, 해시 검증 롤백, rebuild_command |
+| 온보딩 | `scripts/update_center/onboarding.mjs` | 객관식 질문 정의, 결정론적 답변 병합, 모듈 YAML/소스 항목 기록, LAYER_REGISTRY 스니펫 |
+| 저장소 | `scripts/update_center/store.mjs` | `data_events`/`data_versions`/`audit_log`/`update_center_meta` CRUD, pg/파일 이중 백엔드 |
+| API | `api/update-center.js` | 토큰 게이트, 13개 엔드포인트, AI 해설 생성, 스케줄러 기동 훅 |
+| 관리 화면 | `update-center.html` (서버 루트에서 `/update-center`로 서빙) | 자동 감시/스캔/승인/보류/롤백/온보딩 UI, localStorage 토큰 입력 |
 | 경량 재분석 | `scripts/update_center/reanalyze.mjs` | libraries 전용 재계산+적용+롤백+봉인값 가드 |
 
-## 2. API 명세 (8 엔드포인트)
+## 2. API 명세 (13 엔드포인트)
 
 모든 요청은 헤더 `x-update-center-token: <UPDATE_CENTER_TOKEN>`이 필요합니다. 불일치 시 `401 {"error":"..."}`.
 
@@ -71,8 +112,18 @@ scripts/update_center/reanalyze.mjs (경량 재분석)
 | 7 | POST | `/api/update-center/hold` | `event_id` | 성공 200: `event`(status:"held") / 실패: 400(`event_id` 누락) · 404(이벤트 없음) · 409(이미 처리됨) | 이벤트 보류 처리 |
 | 8 | POST | `/api/update-center/rollback` | `version_id` | 성공 200: `versionId, restoredFiles[], version` / 실패: 400(`version_id` 누락 또는 무결성 검증 실패) · 404(버전 없음) · 409(이미 롤백됨) | 스냅샷 sha256 무결성 검증 후 파일 복원, 소스 이벤트(`source_event_id`)가 있으면 이벤트 상태도 `rolled_back`으로 갱신 |
 
+| 9 | GET | `/api/update-center/schedule` | (없음) | `schedule` — `enabled,interval_min,source(env\|runtime\|off),env_interval_min,running,timer_armed,last_scan_at,next_scan_at,last_trigger,last_result,last_skipped_at` | 자동 감시 상태 |
+| 10 | POST | `/api/update-center/schedule` | `enabled`(boolean, 필수), `interval_min`(number, 켤 때 1 이상) | `schedule`, `effective` / 실패: 400(`enabled` 누락·주기 없이 ON) | 자동 감시 런타임 on/off·주기 변경(store meta 에 영속화, 환경변수보다 우선) |
+| 11 | POST | `/api/update-center/onboarding` | `request_text`(10~2000자) | `event_id, design_summary, yaml_draft, suggested_datasets, philosophy_notes, philosophy_checklist, contract_check, ai_source, questions[], answer_endpoint` | 신규 레이어 설계 초안 + **객관식 확인 질문 7종** 반환(저장만, 반영 없음) |
+| 12 | POST | `/api/update-center/onboarding/answer` | `event_id`(제안 이벤트), `answers`(질문 id → 선택 value + 자유입력 `slug`/`resource_type`/`button_label`/`panel_label`/`name_key`/`lat_key`/`lng_key`/`source_url`/`local_file`/`provider`/`license`/`color`/`reference_date`/`demand_unit`/`search_keywords`) | `event_id`(새 이벤트), `status`(`ready_for_registration`\|`pending`), `slug, yaml, source_entry, contract_check, notes, corrections, forced, questions[], failures[]` / 실패: 400(`event_id` 누락·slug 형식·local_file 부재) · 404 · 409(제안 이벤트 아님) | 답변을 **결정론적으로** YAML 초안에 병합 → 계약 재검사. 통과하면 등록 가능 상태, 실패하면 남은 실패를 질문과 함께 반환 |
+| 13 | POST | `/api/update-center/onboarding/register` | `event_id`(답변 이벤트), `overwrite`(선택) | `slug, module_file, data_sources_appended, data_sources_file, registry_snippet, registry_event_id, notice` / 실패: 400 · 404 · 409(답변 이벤트 아님·계약 미통과·이미 등록·중복 파일) | `modules/<slug>.yaml` 기록 + `data_sources.yaml` 항목 추가 + 붙여넣기용 `LAYER_REGISTRY` 스니펫 반환 + `registry_patch_pending`(yellow) 이벤트 기록. **`index.html` 은 자동 편집하지 않는다** |
+
 **공통 정책 (Global Constraints)**
 - `risk="red"` 또는 `kind∈{"moved","error"}` 이벤트는 승인(자동 반영) 불가 — 409로 거부하고 `approve_rejected` 감사 기록.
+- 후보 품질검사 결과가 `fail`/`unsupported` 이거나 컬럼이 삭제된 후보는 승인 불가(409, `approve_rejected_quality`).
+- `data_sources.yaml` 에서 `never_auto_apply: true` 인 소스는 `POST /approve` 에 `confirm: true` 가 있어야만 반영된다(없으면 409 + `needs_confirmation: true`).
+- 승인 직전 staging 파일의 sha256 이 반입 시점과 다르면 반영하지 않는다(무결성 실패).
+- `POST /scan` 은 실행 중이면 409(겹침 방지) — 자동 감시와 "지금 검사"가 같은 실행기를 공유한다.
 - 시뮬레이션 페이로드(`simulateCsvB64`)가 없는 이벤트(실제 원격 변경 감지분)는 승인 시 501 — "시제품 범위 밖" 명시.
 - `libraries` 이외 데이터셋은 재분석 모듈이 없어 승인 시 501.
 - 이미 롤백된 버전에 다시 `POST /rollback`을 호출하면 409로 거부된다(idempotency guard).
@@ -218,7 +269,45 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 
 ## 4. 한계 (정직하게 — 시제품 범위)
 
-- **실원격 반영은 시뮬레이션 페이로드가 필요합니다.** `libraries` 데이터셋의
+> **P6에서 해소된 항목** — 아래 원문 목록 중 다음 세 가지는 더 이상 한계가 아니다:
+> ①"스케줄러가 없습니다"(→ §8.1 자동 감시), ②"실원격 반영은 시뮬레이션 페이로드가
+> 필요합니다"(→ §8.2 전 페이지 수집 + 후보 staging. 단 아래 첫 항목에 적은
+> data.go.kr 봇 게이트 자체는 그대로다), ③"적용된 변경이 지도 앱에 즉시 반영되지
+> 않습니다"(→ §8.3 반영이 `data_processed/` 와 `vercel_public/data_processed/` 양쪽에
+> 원자적으로 쓰이므로 재빌드가 필요 없다). 원문은 이력을 위해 남긴다.
+
+### 4.0 P6 이후에도 남는 한계
+
+- **data.go.kr `standard.json` 은 여전히 봇 게이트로 404를 반환합니다.** 2026-09-06
+  실행에서도 `columList.json`(스키마)과 포털 검색은 정상이지만 콘텐츠 엔드포인트는
+  자동화 요청에 404였고, 스캐너는 이를 `moved`(red) 이벤트 + 포털 재검색 후보 5건으로
+  정직하게 보고했다. 전 페이지 수집 코드는 준비되어 있으나, 이 소스에서 실제로
+  후보가 만들어지려면 게이트를 통과하는 접근 수단(공식 인증키 API 등)이 필요하다.
+- **`file_head` 소스에는 자동 후보 수집 경로가 없습니다.** 헤더 변화는 감지하지만,
+  실제 파일을 내려받아 정규화하는 단계는 `json_api` 소스에만 구현되어 있다
+  (LOCALDATA/교육청 공지처럼 CP949·EPSG:5174·hwpx/pdf 변환이 필요한 원천은
+  `rebuild_command`(`python scripts/build_context_layers.py`)가 담당한다).
+- **전용 어댑터는 `libraries` 하나뿐입니다.** 나머지는 통과(passthrough) 어댑터를
+  쓰며, 품질검사가 알려진 계약을 감지하지 못하면 `unsupported`(검토 전용)로 남아
+  승인이 차단된다 — 정규화가 없다는 사실이 승인 게이트에서 숨겨지지 않게 한 설계다.
+- **`data/update_center/`(staging·versions·active)가 `.gitignore` 에 없습니다.**
+  런타임 산출물이므로 운영자가 `.gitignore` 에 `data/update_center/` 를 추가해야
+  한다(이 작업의 편집 허용 범위 밖이라 반영하지 않았다).
+- **Postgres 를 써도 적용된 데이터 파일 자체는 여전히 컨테이너 파일시스템에 있습니다.**
+  이벤트/버전 메타데이터·감사 로그·스케줄 상태는 `DATABASE_URL` 설정 시 영속되지만,
+  `data_processed/*.csv` 와 `data/update_center/versions/` 의 실제 파일은 Railway
+  재배포 시 초기화된다(영구 볼륨 필요).
+- **`rebuild_command` 는 동기 실행이며 실행 파일이 allowlist 로 제한됩니다.**
+  `python/python3/py/node/npm` 만 허용하고(임의 명령 실행 방지), 기본 타임아웃은
+  10분이다. 오래 걸리는 재빌드는 승인 요청을 그만큼 붙잡는다.
+- **레코드 diff 는 어댑터가 기본키를 선언한 CSV 후보에만 적용됩니다.**
+  통과 어댑터에는 기본키가 없어 `supported:false` 로 보고한다.
+- **롤백은 버전 디렉터리 단위이며, 여러 버전을 건너뛰는 복원은 없습니다.**
+  각 버전의 `previous/` 로 한 단계 되돌리는 것만 지원한다.
+
+### 4.1 원문 (2026-08-09 시점 기록)
+
+- **실원격 반영은 시뮬레이션 페이로드가 필요했습니다.** `libraries` 데이터셋의
   실제 원격 콘텐츠 엔드포인트(`standard.json`)는 공공데이터포털의 봇 게이트로
   자동화된 요청(curl/fetch)에 404를 반환합니다 — HTML 페이지와
   `columList.json`(스키마)은 정상 응답하지만 콘텐츠 자체는 자동 수집이 막혀
@@ -278,6 +367,22 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 | `OPENAI_API_KEY` | 선택 | (없음 → 결정론적 요약 폴백) | 설정 시 이벤트 AI 해설(`ai_note`)을 OpenAI Responses API로 생성. 미설정/호출 실패 시 diff_json 기반 결정론적 요약으로 자동 대체, 두 경우 모두 "해설은 참고용입니다" 명시 |
 | `AI_EXPLAINER_MODEL` | 선택 | `gpt-5.4-mini` | AI 해설 생성에 사용할 모델명 override |
 | `PORT` | 선택 | `3000` | `server.js`(update-center의 API/관리 화면을 함께 서빙하는 로컬/Railway 서버)가 리스닝할 포트. Railway 배포 시 플랫폼이 자동 주입 |
+| `UPDATE_CENTER_SCAN_INTERVAL_MIN` | 선택 | (없음/0 = 자동 감시 OFF) | 자동 감시 주기(분). 1~10080 범위로 정규화된다. 관리 화면 ⑧ 에서 바꾼 런타임 설정(store meta)이 이 값보다 **우선**하므로, 운영 중 껐다 켜는 것은 재배포 없이 가능하다 |
+| `UPDATE_CENTER_MAX_PAGES` | 선택 | `50` | `json_api` 전 페이지 수집의 페이지 상한. 도달하면 수집을 멈추고 이벤트에 `truncated: true` 로 보고한다(소스별 `check.max_pages` 로 개별 지정 가능) |
+| `UPDATE_CENTER_FETCH_TIMEOUT_MS` | 선택 | `15000` | 후보 수집(페이지 요청) 타임아웃. 초과 시 예외가 아니라 이벤트의 `candidate.error` 로 기록된다 |
+| `UPDATE_CENTER_REBUILD_TIMEOUT_MS` | 선택 | `600000` | `rebuild_command` 실행 타임아웃(밀리초) |
+| `UPDATE_CENTER_SKIP_REBUILD` | 선택 | (없음) | `"1"` 이면 `rebuild_command` 를 실행하지 않고 건너뛴 사실만 기록한다(테스트·점검용) |
+
+**테스트/격리용 경로 오버라이드** (운영에서는 설정하지 않는다 — 설정하면 해당 경로가 통째로 바뀐다)
+
+| 변수 | 기본값 | 대상 |
+| --- | --- | --- |
+| `UPDATE_CENTER_SOURCES_PATH` | `data_sources.yaml` | 소스 매니페스트 |
+| `UPDATE_CENTER_MODULES_DIR` | `modules/` | 온보딩 등록이 모듈 YAML 을 쓰는 위치 |
+| `UPDATE_CENTER_HOME` | `data/update_center/` | staging · versions · active 포인터 |
+| `UPDATE_CENTER_STORE_PATH` | `data/update_center_store.json` | 파일 백엔드 store |
+| `UPDATE_CENTER_STATE_PATH` | `data/update_center_state.json` | 스캐너 CDC 상태 |
+| `UPDATE_CENTER_APPLY_ROOT` | 리포 루트 | 반영 대상 루트(`data_processed/`, `vercel_public/data_processed/`) |
 
 ## 6. 온보딩 에이전트 (Onboarding Agent) — P5 시제품
 
@@ -512,3 +617,136 @@ approve_rejected_onboarding  | 승인 거부 — 온보딩 제안은 승인 대�
   스크립트 vm 파싱, `validate:modules`, `build:vercel`, `store.mjs
   --selftest`) + 실제 서버 왕복(온보딩 폴백 강제 → risk 확인 → 승인 시도 409 →
   감사 로그 확인)을 실행하고 raw 출력을 위 6.5절에 남겼다.
+
+- 2026-09-06: **P6 (본 갱신)** — 자동 감시 스케줄러, 실제 전 페이지 수집 →
+  후보 staging, 품질 게이트(파일검토 MVP 규칙 이식), 원자적 반영 + 불변 버전 +
+  해시 검증 롤백, 객관식 온보딩(답변 병합 → 계약 통과 → 등록), 학교 맥락 레이어
+  8개 소스 등록. 게이트: `node --check` (변경 파일 전체), `update-center.html`
+  인라인 스크립트 vm 파싱, `npm run validate:modules`(5개 모듈 통과),
+  `node scripts/update_center/store.mjs --selftest`,
+  `npm run test:update-center`(86건 통과, 네트워크 없음).
+  실제 서버 왕복 2회(§8.5).
+
+## 8. P6 — 자동 감시 · 실제 수집 · 원자적 반영 (2026-09-06)
+
+### 8.1 자동 감시 (스케줄러)
+
+- 설정 우선순위: **런타임 설정(`POST /schedule`, store meta) > 환경변수
+  `UPDATE_CENTER_SCAN_INTERVAL_MIN`**. 둘 다 없거나 0이면 자동 감시는 꺼진 상태다.
+- `server.js` 는 `listen` 직후 `api/update-center.js` 가 export 한
+  `startScheduler()` 를 호출한다. 기동 실패는 로그만 남기고 서버를 죽이지 않는다.
+- **겹침 금지**: 실행 중에 타이머가 발화하면 그 주기는 건너뛰고
+  `last_skipped_at`/`last_skip_reason="overlap"` 을 기록한다. 관리 화면의
+  "지금 검사" 버튼(`POST /scan`)도 같은 실행기를 통과하므로, 자동 스캔이 도는
+  중에 버튼을 누르면 409(겹침)로 거부된다.
+- **실패 격리**: 스캔이 던진 예외는 잡아서 `last_result:{ok:false,error}` 로
+  기록하고 타이머는 그대로 유지한다.
+- 기록 위치: `update_center_meta` 테이블(파일 백엔드는 store JSON 의 `meta` 객체)
+  의 `schedule_config` / `scan_status` 키.
+
+### 8.2 실제 수집 → 후보(staged candidate)
+
+`json_api` 소스에서 1페이지 해시/스키마로 **변경이 감지된 뒤에만** 전체 수집이 시작된다.
+
+1. `page` 쿼리를 증가시키며 `totalCount` 에 도달할 때까지 수집(`perPage` 존중).
+   페이지 상한(`UPDATE_CENTER_MAX_PAGES`, 소스별 `check.max_pages`)에 걸리면
+   멈추고 `truncated: true`, `pages_fetched/pages_expected` 를 이벤트에 남긴다.
+2. `adapters/<dataset>.mjs` 로 정규화. `libraries` 는 전용 어댑터(인천 필터,
+   도서관유형 매핑, 구 추출, 좌표 결측 보존), 그 외는 통과 어댑터.
+3. `data/update_center/staging/<id>/files/` 에 파일을 쓰고
+   `manifest.json` 에 **파일별 sha256** 을 남긴다.
+4. 품질검사 + 현재 적용본 대비 스키마 diff + 기본키 레코드 diff
+   (added/removed/changed/unchanged + 최대 20건 예시) + 영향 학교 수
+   (재분석 모듈이 있는 `libraries` 만).
+5. 최종 risk = max(CDC 판정, 품질/스키마 판정).
+   - 품질 `fail`/`unsupported` 또는 컬럼 삭제 → **red, 승인 차단**
+   - 컬럼 추가/이름변경 → **yellow** + 결정론적 이름변경 매핑 제안
+     (AI 해설이 있으면 설명만 덧붙는다)
+   - 내용만 변경 → **green**
+   - 후보 수집 자체가 실패하면 red(승인 불가) + `candidate.error` 기록
+
+### 8.3 원자적 반영 · 불변 버전 · 롤백
+
+승인(`POST /approve`) 시 순서:
+
+1. staging sha256 **재검증** → 반입 이후 바뀌었으면 중단(파일 변경 없음).
+2. 저장된 판정이 아니라 **실제 바이트로 품질검사를 다시** 실행 → `fail`/`unsupported` 면 중단.
+3. `never_auto_apply: true` 소스는 `confirm: true` 없으면 중단(409).
+4. 봉인 파일(`reanalyze.mjs` 의 `SEALED_FILES`) 대상이면 중단.
+5. 불변 버전 디렉터리 생성:
+   `data/update_center/versions/vNNN/{files/(새 내용), previous/(반영 전 원본), manifest.json}`
+   — manifest 에는 양쪽 sha256, 대상 경로, actor, 시각, source_event_id, 품질 상태가 들어간다.
+6. **임시 파일 write → rename** 으로 `data_processed/<file>` 과, `vercel_public/` 이
+   있으면 `vercel_public/data_processed/<file>` 을 교체 → 지도 앱과 AI 서버가
+   재빌드 없이 같은 버전을 읽는다.
+7. `rebuild_command` 가 있으면 실행하고 stdout/stderr 를 감사 로그에 기록.
+8. `active.json` 포인터 갱신 + `data_versions` 행 저장(스냅샷에 버전 디렉터리 이름).
+
+롤백(`POST /rollback`)은 버전 디렉터리의 `files/` 와 `previous/` 해시를 **모두 재검증**한 뒤에만
+복원한다. 하나라도 어긋나면 `rollback_integrity_failed` 를 남기고 **아무 파일도 쓰지 않는다**.
+반영 전에 존재하지 않던 파일은 롤백 시 삭제되어 원래의 "부재" 상태로 돌아간다.
+구버전(P4 방식, libraries 결합 스냅샷) 버전 행은 기존 `reanalyze.rollbackVersion()` 경로로
+자동 분기된다.
+
+### 8.4 온보딩 3단계 (객관식 확인 → 등록)
+
+```
+POST /onboarding          설계 초안 + 질문 7종
+  ↓ (사람: 라디오 선택 + 필요한 자유입력)
+POST /onboarding/answer   결정론적 병합 → 계약 재검사
+  ↓ (통과 시 status=ready_for_registration)
+POST /onboarding/register modules/<slug>.yaml + data_sources.yaml + 스니펫
+```
+
+질문 7종: `source_location`(포털URL 앎/로컬파일/미상), `join_key`(학교ID/학교명
+완전일치/좌표/주소 지오코딩), `geometry`(점/면/표), `usage`(참고 맥락만/격차 판정 지표),
+`refresh_cycle`(연간/분기/수시/미상), `coverage`(인천 전체/일부 구/미상),
+`sensitivity`(낙인 위험 있음/없음).
+
+병합 규칙(모두 결정론적 — AI 없이도 같은 답변이면 같은 YAML):
+
+- `sensitivity=stigma_risk` 면 `usage` 답변과 무관하게 **참고 전용으로 강제**하고
+  (`policy_actions=[maintain_monitor]`) 강제한 사실을 `forced[]` 로 보고한다.
+- `usage=gap_metric` → `policy_actions=[external_supply_new, access_route_improvement, maintain_monitor]`
+  + "도보 네트워크 기준" 제약 자동 삽입.
+- `coverage != incheon_all` → "미수집을 0건으로 표시 금지" 제약 삽입.
+- `join_key=address_geocode` → "지오코딩 실패분을 결측 상태로 보존" 제약 삽입.
+- 초안의 `gap_type_actions` 가 확정된 `policy_actions` 와 값 집합이 다르면
+  지어내지 않고 **제거**하고 그 사실을 `notes[]` 에 남긴다.
+- 신규 소스 항목은 `never_auto_apply: true` 로 등록된다(안전 기본값).
+- `slug` 는 `^[a-z][a-z0-9_]{1,30}$` 만 허용(경로 탈출 차단).
+
+등록은 `modules/<slug>.yaml` 을 쓰고 `data_sources.yaml` 끝에 항목을 **append** 한다
+(기존 주석·서식을 파괴하지 않는다). `index.html` 의 `LAYER_REGISTRY` 는 **자동 편집하지
+않고** 붙여넣기용 스니펫만 반환하며, 반영 대기 상태는 `registry_patch_pending`(yellow)
+이벤트로 남는다.
+
+### 8.5 2026-09-06 실행 확인
+
+**(A) 실제 소스 대상 (`PORT=3102`, 파일 백엔드, 런타임 상태는 임시 디렉터리로 격리)**
+
+- `GET /schedule` → `{"enabled":false,"source":"off","env_interval_min":0, ...}`
+- `POST /schedule {"enabled":true,"interval_min":360}` →
+  `enabled:true, source:"runtime", timer_armed:true, next_scan_at:"2026-09-06T17:35:00.388Z"`
+- `POST /scan {"dataset":"libraries"}` → `summary {"moved":1}`,
+  이벤트 1건 `red / moved / "데이터 이동/접근 불가 감지 (standard.json 404) — 포털 재검색 후보 5건"`,
+  감사 로그 `scan_started → record_event → scan_completed → ai_note_generated(source=openai)`,
+  스케줄 상태 `last_scan_at` 갱신 + `last_result.ok=true`.
+  → **네트워크 실패가 예외가 아니라 이벤트/감사 기록으로 정직하게 남는다**는 것을 실측 확인.
+- `POST /schedule {"enabled":false, ...}` → `enabled:false, timer_armed:false`
+
+**(B) 온보딩 전 과정 (`PORT=3103`, 모든 경로를 임시 디렉터리로 스코프)**
+
+- `POST /onboarding` → `ai_source=openai`, `contract_check.passed=true`, `questions=7`
+- `POST /onboarding/answer` (slug=`sports_facility`, 좌표 결합, 격차 지표, 인천 전체,
+  낙인 위험 없음) → `status=ready_for_registration`, `contract_check.passed=true`,
+  `notes` 에 `gap_type_actions` 제거 사유 기록
+- `POST /onboarding/register` → `modules/sports_facility.yaml` 기록,
+  `data_sources.yaml` 항목 추가(유효 YAML 로 재파싱 확인), 스니펫 반환,
+  `registry_patch_pending`(yellow) 이벤트 생성.
+  실제 리포의 `modules/` 와 `data_sources.yaml` 은 **변경되지 않았다**(임시 스코프).
+
+**(C) 자동 테스트** — `npm run test:update-center` 86건 통과(네트워크 호출 없음):
+전 페이지 수집·상한·수집 실패 처리 / 품질 규칙 8종 / 레코드 diff / 원자적 반영·버전·
+해시 검증 롤백·변조 시 롤백 거부 / 품질 fail·never_auto_apply·staging 변조 승인 차단 /
+스케줄 on·off·겹침 방지·실패 격리 / 온보딩 병합·강제 규칙·slug 검증·등록·중복 거부.

@@ -47,3 +47,12 @@ CREATE TABLE IF NOT EXISTS audit_log (
 
 CREATE INDEX IF NOT EXISTS idx_audit_log_at
   ON audit_log (at);
+
+-- update_center_meta: 이벤트/버전/감사 어디에도 속하지 않는 운영 상태 key/value.
+-- (자동 감시 스케줄 설정, 마지막/다음 스캔 시각, 마지막 스캔 결과 요약 등)
+-- 파일 백엔드는 update_center_store.json 의 "meta" 객체가 같은 역할을 한다.
+CREATE TABLE IF NOT EXISTS update_center_meta (
+  key TEXT PRIMARY KEY,
+  value JSONB,
+  updated_at TIMESTAMPTZ NOT NULL
+);
