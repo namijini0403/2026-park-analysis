@@ -32,10 +32,10 @@ type GuideShot = {
 const flowSteps: FlowStep[] = [
   {
     id: 1,
-    title: "학교 선택",
-    summary: "분석할 학교를 고르면 주변 환경 정보가 연결됩니다.",
+    title: "학교 선택(정책 단위)",
+    summary: "정책이 닿아야 할 단위인 학교를 먼저 고릅니다.",
     detail:
-      "지도에서 학교를 선택하면 도보 생활권, 직선 반경, 공원·놀이터, 재개발, 후보지 레이어가 같은 기준 좌표로 정렬됩니다.",
+      "정책 도달성은 인천 272개 초등학교를 단위로 진단합니다. 지도에서 학교를 선택하면 도보 도달권, 직선 반경, 공원·놀이터, 도서관, 재개발, 후보지 레이어가 같은 기준 좌표로 정렬됩니다.",
     image: guideMapLayers,
     imageAlt: "학교 선택 후 지도 레이어가 켜진 화면",
     actionLabel: "지도 레이어 보기",
@@ -43,21 +43,21 @@ const flowSteps: FlowStep[] = [
   },
   {
     id: 2,
-    title: "실제 도보생활권",
-    summary: "직선거리가 아니라 실제 보행 가능한 범위를 계산합니다.",
+    title: "실제 도보 도달권(외부 접근성)",
+    summary: "직선 반경이 아니라 보행 네트워크로 도달권을 계산합니다.",
     detail:
-      "case2처럼 겉으로는 접근 가능해 보이지만 녹지·활동 규모나 경로 조건을 함께 확인해야 하는 전형적 학교를 기준으로, 도보 500m 안의 실제 활동 환경을 먼저 읽습니다.",
+      "외부 접근성은 OSM 보행 네트워크를 따라 계산한 도보 500m 도달권으로 봅니다. 직선 반경에서는 닿는 것처럼 보여도 실제 보행 경로로는 닿지 않는 학교가 있어, 두 기준을 같이 표시해 차이를 먼저 확인합니다.",
     image: guideMapLayers,
-    imageAlt: "case2 전형 학교 판단에 쓰는 지도 레이어 화면",
-    actionLabel: "생활권 기준 확인",
+    imageAlt: "도보 도달권과 직선 반경을 비교하는 지도 레이어 화면",
+    actionLabel: "도달권 기준 확인",
     actionView: "report",
   },
   {
     id: 3,
-    title: "환경 격차 진단",
-    summary: "공원 거리, 녹지비율, 놀이터, 비교학교를 함께 봅니다.",
+    title: "외부 접근성 × 내부 공급 격차 진단",
+    summary: "학교 밖 도달 자원과 학교 안 공급을 함께 봅니다.",
     detail:
-      "상세 리포트는 현재 격차와 비교 기준을 분리해 보여줍니다. 정책 판단이 특정 숫자 하나에 묶이지 않도록 핵심 취약성, 시·구 기준, 유사학교 맥락을 같이 확인합니다.",
+      "상세 리포트는 학교 밖 도달 자원(공원·녹지, 공공도서관 252관)과 학교 안 공급(학교도서관 장서·사서 등)을 분리해 보여줍니다. 정책 판단이 특정 숫자 하나에 묶이지 않도록 핵심 취약성, 시·구 기준, 유사학교(KNN k=4) 맥락을 같이 확인합니다.",
     image: guideReport,
     imageAlt: "대표 학교 상세 리포트 화면",
     actionLabel: "상세 리포트 열기",
@@ -66,31 +66,31 @@ const flowSteps: FlowStep[] = [
   {
     id: 4,
     title: "미래 수요 반영",
-    summary: "현재뿐 아니라 2029·2031년 잠재 수요를 함께 봅니다.",
+    summary: "현재 학생 수와 2029·2031년 수요를 함께 봅니다.",
     detail:
-      "전체 통계 리포트에서 구별 격차와 잠재 수요 흐름을 확인합니다. 현재 부족 학교와 앞으로 수요가 커질 학교를 분리해 설명할 수 있습니다.",
+      "수요 축은 학교 재학생 전망(가중 추세 + LightGBM 잔차 보정)과 250m 격자 아동 수요(cohort + Prophet + LightGBM)를 분리해 봅니다. 전체 통계에서 지금 부족한 학교와 앞으로 수요가 커질 학교를 나눠 설명할 수 있습니다.",
     image: guideStatistics,
-    imageAlt: "구조적 격차 분포와 전체 통계 화면",
+    imageAlt: "도달성 격차 분포와 전체 통계 화면",
     actionLabel: "전체 통계 보기",
     actionView: "statistics",
   },
   {
     id: 5,
-    title: "AI 기반 견고 후보 추천",
-    summary: "미래 수요, Pareto 후보군, 순위 안정성을 함께 봅니다.",
+    title: "정책 행동 카드와 견고 후보",
+    summary: "행동 카드와 견고 후보지를 사람이 확인하고 조정합니다.",
     detail:
-      "후보지 추천은 자동 결정이 아니라 비교 시작점입니다. 후보 카드에서 Pareto 여부, Top5 안정성, 평균 순위, 추천 유형을 함께 확인합니다.",
+      "진단은 7가지 정책 행동 유형을 바탕으로 우선 검토안 1개, 조건부 대안 1개, 핵심 근거 3개, 전환조건으로 이어집니다. 후보지 추천은 자동 결정이 아니라 비교 시작점이며, Pareto 여부·Top5 안정성·평균 순위를 함께 보고 담당자가 기준을 조정합니다.",
     image: guideSimulation,
-    imageAlt: "AI 기반 견고 후보 추천과 지도 중심 화면",
-    actionLabel: "견고 추천 보기",
+    imageAlt: "정책 행동 카드와 견고 후보 추천 화면",
+    actionLabel: "행동 카드·견고 추천 보기",
     actionView: "simulation",
   },
   {
     id: 6,
-    title: "SHAP 후보 진단과 기준 조정",
+    title: "SHAP 근거와 기준 조정",
     summary: "후보지별 예측 근거를 열어보고 정책 기준을 조정합니다.",
     detail:
-      "SHAP 후보 근거 보기는 최종 추천 순위나 학교 단위 미래수요 예측이 아니라, 후보지별 예상 수혜 아동 수를 높이거나 낮춘 변수별 근거를 보여줍니다. 사용자는 이 진단과 필터·가중치 변화를 함께 보며 현장 검토 대상을 좁힙니다.",
+      "SHAP 후보 근거 보기는 최종 추천 순위나 학교 단위 미래수요 예측이 아니라, 후보지별 예상 수혜 아동 수를 높이거나 낮춘 변수별 근거를 보여줍니다. 담당자는 이 진단과 필터·가중치 변화를 함께 보며 현장 검토 대상을 좁힙니다.",
     image: guideSimulation,
     imageAlt: "SHAP 후보 근거와 기준 조정 화면",
     actionLabel: "SHAP 후보 진단 열기",
@@ -100,12 +100,12 @@ const flowSteps: FlowStep[] = [
 
 const guideShots: GuideShot[] = [
   {
-    eyebrow: "Representative School Report",
-    title: "대표학교 상세 리포트",
+    eyebrow: "School Reachability Report",
+    title: "학교별 정책 도달성 리포트",
     description:
-      "학교별 현재 격차, 시·구 기준 해석, 유사학교 비교를 한 화면에서 검토합니다.",
+      "외부 접근성(도보 도달권 공원·도서관), 내부 공급(학교 안 자원), 수요를 한 화면에서 검토하고 시·구 기준과 유사학교 비교로 맥락을 확인합니다.",
     image: guideReport,
-    imageAlt: "대표학교 상세 리포트 캡처",
+    imageAlt: "학교별 정책 도달성 리포트 캡처",
     view: "report",
   },
   {
@@ -119,12 +119,12 @@ const guideShots: GuideShot[] = [
     imageClass: "object-[center_72%]",
   },
   {
-    eyebrow: "Structural Gap View",
-    title: "구조적 격차 분포 확인",
+    eyebrow: "Reachability Gap View",
+    title: "도달성 격차 분포 확인",
     description:
-      "전체 학교의 case 분포와 잠재 수요 흐름을 확인해 지원 우선순위를 설명합니다.",
+      "전체 학교의 case 분포와 미래 수요 흐름을 확인해 어디부터 정책이 닿아야 하는지 설명합니다.",
     image: guideStatistics,
-    imageAlt: "구조적 격차 분포 확인 캡처",
+    imageAlt: "도달성 격차 분포 확인 캡처",
     view: "statistics",
   },
 ];
@@ -173,8 +173,8 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
                 <span className="block">정책 도달성으로</span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 정책 도달성 관점에서 진단하고,
-                <span className="font-semibold text-forest-300"> 견고한 후보지와 SHAP 후보 진단</span>을 제안합니다.
+                외부 접근성(도보 네트워크 기준 도달권) × 내부 공급(학교 안 자원) × 수요(현재·미래 학생 수)를 학교 단위로 함께 보아 정책이 실제로 아이에게 닿는지 진단하고,
+                <span className="font-semibold text-forest-300"> 설명 가능한 정책 행동 카드와 견고 후보</span>로 연결합니다.
               </p>
             </div>
 
@@ -182,12 +182,12 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <p className="text-[56px] font-black leading-none tracking-tight text-white">10.3%</p>
               <p className="mt-1 text-lg font-black text-forest-300">28 / 272개교</p>
               <p className="mt-4 max-w-sm text-sm font-semibold leading-relaxed text-slate-200">
-                직선 500m 안에 공원이 잡혀도 실제 도보 500m 생활권에서는 공원이 0개인 학교가 있습니다.
+                직선 500m 안에 공원이 잡혀도 실제 도보 500m 도달권에서는 공원이 0개인 학교가 있습니다.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "견고 후보 추천", "SHAP 후보 진단", "Human-in-the-loop"].map((item) => (
+              {["외부 접근성", "내부 공급", "현재·미래 수요", "정책 행동 카드", "SHAP 후보 진단", "Human-in-the-loop"].map((item) => (
                 <span key={item} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold text-slate-100">
                   {item}
                 </span>
@@ -198,11 +198,11 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-navy-950/80">
             <img
               src={guideMapLayers}
-              alt="도보권 지도와 학교별 진단 패널"
+              alt="도보 도달권 지도와 학교별 정책 도달성 진단 패널"
               className="h-[360px] w-full object-cover object-center brightness-[1.04] saturate-[1.08] sm:h-[430px] lg:h-[500px]"
             />
             <div className="grid gap-3 border-t border-white/10 p-4 sm:grid-cols-5">
-              <HeroMetric label="도보 생활권 공원" value="0개" />
+              <HeroMetric label="도보 도달권 공원" value="0개" />
               <HeroMetric label="직선 500m 공원" value="1개" />
               <HeroMetric label="놀이터" value="0개" />
               <HeroMetric label="녹지 비율" value="0%" />
@@ -218,7 +218,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <h2 className="mt-2 text-2xl font-black text-white">주요 화면 사용 설명서</h2>
             </div>
             <p className="max-w-xl text-sm leading-relaxed text-slate-400">
-              후보 카드는 Pareto 여부와 Top5 안정성을 먼저 보여주고, SHAP 버튼은 최종 추천이 아니라 후보지별 예상 수혜 아동 수의 설명 근거를 펼칩니다.
+              세 화면은 외부 접근성·내부 공급·수요를 각각 다른 각도에서 보여줍니다. 후보 카드는 Pareto 여부와 Top5 안정성을 먼저 보여주고, SHAP 버튼은 최종 추천이 아니라 후보지별 예상 수혜 아동 수의 설명 근거를 펼칩니다.
             </p>
           </div>
 
@@ -257,11 +257,11 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
         <section className="mt-12">
           <div className="grid gap-4 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
             <div>
-              <span className="eyebrow">Policy Flow</span>
-              <h2 className="mt-2 text-2xl font-black text-white">정책 판단 흐름도</h2>
+              <span className="eyebrow">Policy Reachability Flow</span>
+              <h2 className="mt-2 text-2xl font-black text-white">정책 도달성 판단 흐름도</h2>
             </div>
             <p className="text-sm leading-relaxed text-slate-400">
-              각 단계를 누르면 아래에 판단 설명과 관련 화면 캡처가 함께 표시됩니다. case2 단계는 봉화초 단일 사례가 아니라 전형적 검토 학교 흐름으로 읽히도록 지도 레이어 화면을 붙였습니다.
+              학교 선택 → 외부 접근성 → 내부 공급 → 수요 → 행동 카드 → 근거 확인 순서로, 정책이 학교에 닿기까지의 경로를 따라 읽는 흐름입니다. 각 단계를 누르면 아래에 판단 설명과 관련 화면 캡처가 함께 표시됩니다.
             </p>
           </div>
 
@@ -312,8 +312,12 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
           </div>
         </section>
 
-        <p className="mt-12 text-center text-[11px] tracking-[0.24em] text-slate-500">
-          DATA · 2026 인천 학생수 시계열 / Valhalla isochrone / 인천시 공원·놀이터 공공데이터 / OSM
+        <p className="mx-auto mt-12 max-w-3xl text-center text-sm leading-relaxed text-slate-400">
+          진단 근거는 고정된 스냅샷이 아닙니다. 학교 맥락 레이어(지정·연구학교 명단, 유흥·단란주점 인허가 관측치, 공사장 행정기록)는 참고용 맥락으로 함께 두고, 공공데이터 업데이트 센터가 변경 감지 → 품질검사 → 담당자 승인 → 버전 반영·롤백 절차로 근거를 최신 상태로 유지합니다.
+        </p>
+
+        <p className="mt-6 text-center text-[11px] tracking-[0.24em] text-slate-500">
+          DATA · 2026 인천 학생수 시계열 / OSM 보행 네트워크 도보 도달권 / 인천시 공원·놀이터 공공데이터 / 전국 도서관 표준데이터
         </p>
       </div>
     </div>

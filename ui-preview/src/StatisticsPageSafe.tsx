@@ -216,10 +216,10 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
     <div className="mx-auto flex max-w-[1380px] flex-col gap-8 px-4 py-8 lg:px-8">
       <section className="panel space-y-5 p-7">
         <div className="space-y-2">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">Overview</p>
-          <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">인천 학교 전체 통계 리포트</h1>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">Reachability Overview</p>
+          <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">인천 학교 전체 정책 도달성 통계</h1>
           <p className="max-w-3xl text-base leading-7 text-slate-300">
-            시 전체 우선 지원 흐름을 먼저 보고, 이어서 구별 상위 5개 학교와 각 구 최우수 학교 1개를 내려보는 구조의 통계 프리뷰입니다.
+            정책이 어디까지 닿고 어디서 끊기는지를 시 → 구 → 학교 순으로 좁혀 보는 화면입니다. 시 전체 우선 지원 흐름을 먼저 보고, 이어서 구별 상위 5개 학교와 각 구 최우수 학교 1개를 확인합니다.
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -326,7 +326,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
           <SectionTitle
             eyebrow="City Best"
             title="시 전체 최우수 학교"
-            description="생활환경 벤치마크 역할을 하는 학교 1개를 표시 녹지비율 기준으로 보여줍니다."
+            description="외부 접근성 벤치마크 역할을 하는 학교 1개를 표시 녹지비율 기준으로 보여줍니다."
           />
           <div className="mt-5">
             <BestSchoolCard school={data.cityBestSchool} label="인천시 최우수 학교" />
@@ -338,7 +338,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
         <SectionTitle
           eyebrow="District Detail"
           title="구별 상세 통계"
-          description="구를 선택하면 해당 구의 전체 지표와 우선 지원 학교 Top 5, 구 최우수 학교 1개를 함께 확인할 수 있습니다."
+          description="구를 선택하면 해당 구의 도달성 지표와 우선 지원 학교 Top 5, 구 최우수 학교 1개를 함께 확인할 수 있습니다."
         />
         <div className="flex flex-wrap gap-2">
           {data.districts.map((district) => {
@@ -476,7 +476,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
           <SectionTitle
             eyebrow="City Mix"
             title="구별 2029 잠재 수요"
-            description="구 단위 총 잠재 수요 규모를 막대로 비교해 전체 배분 흐름을 빠르게 볼 수 있습니다."
+            description="구 단위 총 잠재 수요 규모를 막대로 비교해, 수요가 커지는 방향을 빠르게 볼 수 있습니다."
           />
           <div className="mt-5 h-[560px]">
             <ResponsiveContainer width="100%" height="100%">
