@@ -13,8 +13,9 @@ PRIORITY_PATH = BASE / "data_processed" / "school_priority_with_functional_park_
 FORECAST_PATH = BASE / "data_processed" / "school_enrollment_forecast_20260418_model1.csv"
 STUDENT_TREND_PATH = BASE / "data_processed" / "student_trend.csv"
 APARTMENT_ADJUSTMENT_PATH = BASE / "data_processed" / "school_walk_500m_apartment_adjustment_20260504.csv"
+# ui-preview 전체 통계는 2026-09-07부터 런타임 계산(ui-preview/src/statisticsLive.ts)으로 전환 —
+# 이 스냅샷은 레거시 app/ 미리보기 전용. 규칙 변경 시 statisticsLive.ts와 동기 유지.
 OUT_PATHS = [
-    BASE / "ui-preview" / "src" / "statisticsPreviewDataSafe.ts",
     BASE / "app" / "src" / "statisticsPreviewDataSafe.ts",
 ]
 

@@ -32,7 +32,8 @@ const requiredDataFiles = [
   "candidate_grid_final.geojson",
   "libraries.csv",
   "school_library_access.csv",
-  "policy_action_cards.json"
+  "policy_action_cards.json",
+  "school_walk_500m_apartment_adjustment_20260504.csv"
 ];
 
 function assertExists(targetPath) {

@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SchoolDetailReportPage from "./SchoolDetailReportPagePreview";
 import SimulationPage from "./SimulationPage";
 import StatisticsPageSafe from "./StatisticsPageSafe";
 import LandingPage from "./LandingPage";
 import AiExplainerPanel from "./AiExplainerPanel";
 import { previewSchoolDetailReport } from "./previewData";
-import { cityStatisticsPreviewDataSafe } from "./statisticsPreviewDataSafe";
+import { loadStatisticsLive, type StatisticsLiveResult } from "./statisticsLive";
 import { applyLegacySchoolSnapshot, mapSchoolRowToReportProps, mapCandidateFeatures } from "./schoolDataBridge";
 import type { ReadingContext } from "./schoolDataBridge";
 
@@ -107,6 +107,71 @@ function readReadingContext(schoolRow: Record<string, any> | null): ReadingConte
   return raw as ReadingContext;
 }
 
+type StatisticsLoadState =
+  | { status: "idle" | "loading" }
+  | { status: "ready"; result: StatisticsLiveResult }
+  | { status: "error"; message: string };
+
+// 전체 통계: 화면을 열 때 data_processed/ 파일을 직접 읽어 계산 (하드코딩 스냅샷 없음)
+function useStatisticsLive(active: boolean): [StatisticsLoadState, () => void] {
+  const [state, setState] = useState<StatisticsLoadState>({ status: "idle" });
+  const [attempt, setAttempt] = useState(0);
+  const loadedFor = useRef(-1);
+  useEffect(() => {
+    if (!active || loadedFor.current === attempt) return;
+    loadedFor.current = attempt;
+    let cancelled = false;
+    setState({ status: "loading" });
+    loadStatisticsLive()
+      .then((result) => {
+        if (!cancelled) setState({ status: "ready", result });
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) setState({ status: "error", message: error instanceof Error ? error.message : String(error) });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [active, attempt]);
+  return [state, () => setAttempt((n) => n + 1)];
+}
+
+function StatisticsLoadingView({ state, onRetry }: { state: StatisticsLoadState; onRetry: () => void }) {
+  const failed = state.status === "error";
+  return (
+    <div className="mx-auto max-w-[1380px] px-4 py-8 lg:px-8">
+      <section className="panel space-y-4 p-7">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">Reachability Overview</p>
+        <h1 className="text-3xl font-black tracking-tight text-white">인천 학교 전체 정책 도달성 통계</h1>
+        {failed ? (
+          <>
+            <p className="text-sm leading-6 text-slate-300">
+              통계 데이터 파일을 읽지 못했습니다. 지도 앱(index.html) 안에서 열었는지, 배포본에 data_processed/ 파일이 포함됐는지 확인해 주세요.
+            </p>
+            <pre className="overflow-x-auto rounded-xl border border-white/10 bg-navy-900/95 p-3 text-[11px] text-rose-200">{state.message}</pre>
+            <button
+              type="button"
+              onClick={onRetry}
+              className="rounded-full bg-forest-grad px-4 py-2 text-sm font-semibold text-white shadow-glow"
+            >
+              다시 시도
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="text-sm leading-6 text-slate-300">272개교 × 6개 레이어를 읽어 시·구·학교 통계와 교차 인사이트를 계산하는 중입니다.</p>
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="h-28 animate-pulse rounded-2xl border border-white/10 bg-navy-850/95" />
+              ))}
+            </div>
+          </>
+        )}
+      </section>
+    </div>
+  );
+}
+
 function getPreviewCaseType(schoolRow: Record<string, any> | null): number {
   if (!schoolRow) return 1;
   const caseLabel = String(schoolRow.case_label ?? "").trim();
@@ -136,6 +201,7 @@ export default function PreviewWorkspaceSafe() {
   const schoolLat = schoolRow ? Number(schoolRow["위도"] ?? schoolRow.lat ?? 37.46235) : 37.46235;
   const schoolLng = schoolRow ? Number(schoolRow["경도"] ?? schoolRow.lng ?? 126.6867275) : 126.6867275;
   const caseType = getPreviewCaseType(schoolRow);
+  const [statsState, retryStats] = useStatisticsLive(view === "statistics");
 
   const detailProps = useMemo(() => {
     if (!schoolRow) {
@@ -304,7 +370,11 @@ export default function PreviewWorkspaceSafe() {
           onBack={() => setView("report")}
         />
       ) : view === "statistics" ? (
-        <StatisticsPageSafe data={cityStatisticsPreviewDataSafe} />
+        statsState.status === "ready" ? (
+          <StatisticsPageSafe data={statsState.result.city} insight={statsState.result.insight} />
+        ) : (
+          <StatisticsLoadingView state={statsState} onRetry={retryStats} />
+        )
       ) : (
         <SchoolDetailReportPage {...detailProps} />
       )}
