@@ -101,6 +101,122 @@
       flex-direction: column;
     }
 
+    /* 데스크톱: 패널은 기본 숨김 → 학교·후보 클릭이나 '구·패널' 버튼으로 슬라이드 인 */
+    @media (min-width: 769px) {
+      .panel {
+        transform: translateX(calc(100% + 40px));
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease;
+      }
+      .panel.open {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    .panel-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .panel-close:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .top-action-button.data {
+      border-color: rgba(167, 139, 250, 0.45);
+      background: rgba(91, 33, 182, 0.42);
+      color: #EDE9FE;
+    }
+
+    .top-action-button.secondary.is-open {
+      border-color: rgba(16, 185, 129, 0.5);
+      background: var(--accent-soft);
+    }
+
+    /* 학교 마커 호버 카드 (6개 레이어 요약) */
+    .school-hover-card {
+      pointer-events: none;
+      min-width: 236px;
+      max-width: 290px;
+      padding: 12px 14px 11px;
+      border-radius: 14px;
+      background: rgba(8, 20, 33, 0.97);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.5);
+      color: #F8FAFC;
+      font-family: Pretendard, "Noto Sans KR", sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      transform: translateY(-16px);
+    }
+
+    .school-hover-card .hc-name {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .school-hover-card .hc-case {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      vertical-align: 1px;
+    }
+
+    .school-hover-card .hc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px 12px;
+      margin-top: 8px;
+    }
+
+    .school-hover-card .hc-k {
+      color: #94A3B8;
+      font-size: 10.5px;
+    }
+
+    .school-hover-card .hc-v {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .school-hover-card .hc-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .school-hover-card .hc-chip {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 800;
+      border: 1px solid;
+    }
+
+    .school-hover-card .hc-foot {
+      margin-top: 7px;
+      font-size: 10.5px;
+      color: #64748B;
+    }
+
     .panel-header {
       padding: 20px 22px 16px;
       border-bottom: 1px solid var(--line);
@@ -834,7 +950,7 @@
       gap: 10px;
       align-items: stretch;
       justify-content: flex-end;
-      width: min(560px, calc(100vw - 40px));
+      width: min(760px, calc(100vw - 40px));
     }
 
     .top-action-button {
@@ -3141,6 +3257,8 @@
       <button class="top-action-button secondary" type="button" data-shortcut-action="simulation">시뮬레이션</button>
       <button class="top-action-button secondary" id="statisticsShortcutButton" type="button" data-shortcut-action="statistics">전체 통계</button>
       <button class="top-action-button secondary" id="guideShortcutButton" type="button" data-shortcut-action="guide">활용 가이드</button>
+      <button class="top-action-button secondary" id="panelShortcutButton" type="button" data-shortcut-action="panel" aria-pressed="false">구·패널</button>
+      <button class="top-action-button data" id="dataShortcutButton" type="button" data-shortcut-action="data">데이터 관리</button>
       <button class="top-action-button ai" id="aiChatToggleButton" type="button">AI 챗봇</button>
     </div>
 
@@ -3192,11 +3310,12 @@
     </div>
 
     <aside class="panel" id="controlPanel">
-      <div class="panel-header">
+      <div class="panel-header" style="position:relative;">
         <div class="mobile-handle"></div>
+        <button class="panel-close" id="panelCloseButton" type="button" aria-label="패널 닫기" title="닫기 (Esc)">✕</button>
         <p class="eyebrow">Policy Reachability</p>
         <h1 class="panel-title">반경 너머, 정책 도달성으로</h1>
-        <p class="panel-subtitle">외부 접근성 × 내부 공급 × 수요를 학교 단위로 함께 보아 정책 도달성을 진단합니다.</p>
+        <p class="panel-subtitle">학교 마커를 누르면 진단 요약이, 구를 고르면 구 통계가 여기에 열립니다.</p>
       </div>
 
       <div class="panel-body">
@@ -3229,8 +3348,8 @@
         </section>
 
         <section class="section">
-          <a href="/update-center" target="_blank" rel="noreferrer"
-             style="font-size:12px; opacity:0.75; text-decoration:underline;">공공데이터 업데이트 센터</a>
+          <button type="button" onclick="openDataOverlay()"
+             style="font-size:12px; opacity:0.85; text-decoration:underline; background:none; border:0; color:inherit; cursor:pointer; padding:0;">공공데이터 관리(수집·업로드·승인·롤백)</button>
         </section>
 
         <div class="panel-util" aria-hidden="true">
@@ -3703,7 +3822,7 @@
           title: "실제 도보 도달권(외부 접근성)",
           short: "직선 반경이 아니라 보행 네트워크로 도달권을 계산합니다.",
           headline: "직선 반경에서는 닿아 보여도\n실제 보행 경로로는 닿지 않을 수 있습니다.",
-          items: ["OSM 보행 네트워크 기준 도보 500m 도달권", "직선 반경 500m와의 비교", "도달권 안 공원 수와 최근접 공원 거리", "간선도로 횡단 등 보행부담"],
+          items: ["OSM 보행망에서 학교점을 최근접 도로에 투영해 500m 다익스트라", "경계에 걸친 도로는 닿는 부분까지만 절단(exact edge trimming)", "도달권 안 공원 수·최근접 공원 거리·간선도로 횡단 보행부담", "단지 내부 보행로 누락은 아파트 투과성 보정 시나리오로 보완"],
           principle: "반경 너머의 정책 도달성을 기준으로 판단합니다.",
           actionText: "지도에서 도보 도달권과 직선 반경을 함께 켜고 두 기준의 차이를 먼저 확인합니다.",
           image: "./assets/guide-bright-map-layers.png",
@@ -3865,9 +3984,44 @@
       ui.statusBox.textContent += `\n${message}`;
     }
 
+    function syncPanelShortcutButton() {
+      const button = document.getElementById("panelShortcutButton");
+      if (!button) return;
+      const isOpen = ui.panel.classList.contains("open");
+      button.classList.toggle("is-open", isOpen);
+      button.setAttribute("aria-pressed", String(isOpen));
+    }
+
     function openPanel() {
       ui.panel.classList.add("open");
       ui.panelToggleButton.textContent = "필터 닫기";
+      syncPanelShortcutButton();
+    }
+
+    function closePanel() {
+      ui.panel.classList.remove("open");
+      ui.layerToggleBar?.classList.remove("open");
+      ui.panelToggleButton.textContent = "필터 열기";
+      syncPanelShortcutButton();
+    }
+
+    function togglePanel() {
+      if (ui.panel.classList.contains("open")) closePanel();
+      else openPanel();
+    }
+
+    // 데이터 관리(업데이트 센터) 오버레이 — 수집·업로드·품질검사·승인·롤백
+    function openDataOverlay() {
+      const overlay = document.getElementById("dataOverlay");
+      const frame = document.getElementById("dataFrame");
+      if (!overlay || !frame) return;
+      if (frame.getAttribute("src") === "about:blank") frame.src = "/update-center";
+      overlay.style.display = "flex";
+    }
+
+    function closeDataOverlay() {
+      const overlay = document.getElementById("dataOverlay");
+      if (overlay) overlay.style.display = "none";
     }
 
     function syncLayerToggleButtons() {
@@ -5183,25 +5337,35 @@
         .map((row) => {
           const schoolName = getSchoolName(row);
           const demand2029 = Number(row.predicted_2029);
-          const demand2031 = Number(row.predicted_2031);
-          const parkCount = formatCount(row.iso_park_count);
-          const playgroundCount = formatCount(row.iso_playground_count);
           const star = Number(row.priority_score) >= 3 ? " ⭐" : "";
+          const caseMeta = getCaseMeta(row);
+          const caseColor = isSpecialPolicySchool(row) ? "#6B7280" : caseMeta.color;
+          const { items: layerItems, chips } = getSchoolLayerSummary(row);
+          const lines = layerItems
+            .map((it) => `<span style="display:inline-block; margin:0 10px 2px 0; white-space:nowrap;"><span style="color:#6b7280;">${escapeHtml(it.k)}</span> <strong>${escapeHtml(it.v)}</strong></span>`)
+            .join("");
+          const chipHtml = chips.length
+            ? `<div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:4px;">${chips
+                .map((c) => `<span style="padding:1px 7px; border-radius:999px; font-size:10.5px; font-weight:800; border:1px solid ${c.color}88; background:${c.color}1f; color:${c.color};">${escapeHtml(c.text)}</span>`)
+                .join("")}</div>`
+            : "";
           return `
             <li style="margin-bottom:10px;">
-              <div style="font-weight:700; color:#111827;">${schoolName}${star}</div>
-              <div>2029 잠재 수요: ${Number.isFinite(demand2029) ? `${formatCount(demand2029)}명` : "추정값 없음"}</div>
-              <div>2031 잠재 수요: ${Number.isFinite(demand2031) ? `${formatCount(demand2031)}명` : "추정값 없음"}</div>
-              <div>등시권 내 공원 수: ${parkCount}개</div>
-              <div>등시권 내 놀이터 수: ${playgroundCount}개</div>
+              <div style="font-weight:800; color:#111827;">${escapeHtml(schoolName)}${star}
+                <span style="margin-left:6px; padding:1px 7px; border-radius:999px; font-size:10.5px; font-weight:800; background:${caseColor}22; color:${caseColor}; border:1px solid ${caseColor}66;">${escapeHtml(getCaseTypeLabel(row))}</span>
+              </div>
+              <div style="margin-top:3px;">2029 잠재 수요 <strong>${Number.isFinite(demand2029) ? `${formatCount(demand2029)}명` : "추정값 없음"}</strong></div>
+              <div style="margin-top:3px; line-height:1.7;">${lines}</div>
+              ${chipHtml}
             </li>
           `;
         })
         .join("");
 
       return `
-        <div style="padding:14px 16px; min-width:320px; max-width:360px; line-height:1.6; font-family:Pretendard,'Noto Sans KR',sans-serif;">
-          <div style="font-weight:800; font-size:14px; margin-bottom:8px;">500m 학교 탐색</div>
+        <div style="padding:14px 16px; min-width:340px; max-width:400px; line-height:1.6; font-family:Pretendard,'Noto Sans KR',sans-serif;">
+          <div style="font-weight:800; font-size:14px; margin-bottom:2px;">500m 학교 탐색</div>
+          <div style="font-size:10.5px; color:#6b7280; margin-bottom:8px;">공원·독서·지정·유흥·공사·학생 전망 요약 · 시설 수치는 하한 관측치</div>
           <ul style="padding-left:18px; margin:0; font-size:12px; color:#1f2937;">
             ${items}
           </ul>
@@ -5662,8 +5826,123 @@
     function bindSchoolPopup(marker, row) {
       kakao.maps.event.addListener(marker, "click", () => {
         state.suppressNextMapClick = true;
+        hideSchoolHoverCard();
         openSchoolPanel(row);
       });
+      kakao.maps.event.addListener(marker, "mouseover", () => {
+        showSchoolHoverCard(row, marker.getPosition());
+      });
+      kakao.maps.event.addListener(marker, "mouseout", hideSchoolHoverCard);
+    }
+
+    // ── 학교 단위 6개 레이어 요약 (호버 카드·클릭 팝업 공용) ─────────────
+    // 불변식: 미수집은 '미수집'(0건 아님), 시설 수치는 좌표 확보분 하한, 안전·자격 판정 아님.
+    const HOVER_LAYER_COLORS = {
+      read: "#F59E0B", night: "#EC4899", constr: "#94A3B8", desig: "#A78BFA", grow: "#5DA8D4"
+    };
+
+    function getSchoolLayerSummary(row) {
+      const schoolId = getSchoolId(row);
+      const items = [];
+      const chips = [];
+      const green = Number(getDisplayGreenRatio(row));
+      items.push({ k: "도보권 공원", v: `${formatCount(row.iso_park_count)}개` });
+      items.push({ k: "놀이터", v: `${formatCount(row.iso_playground_count)}개` });
+      items.push({ k: "표시 녹지", v: Number.isFinite(green) ? `${green.toFixed(1)}%` : "-" });
+      const nearest = Number(row.nearest_park_dist_m);
+      items.push({ k: "최근접 공원", v: Number.isFinite(nearest) ? `${Math.round(nearest)}m` : "-" });
+
+      const lib = (state.datasets.schoolLibraryAccess || []).find((r) => r.학교ID === schoolId);
+      if (lib) {
+        const meta = getReadingGapMeta(lib.reading_gap_type);
+        items.push({ k: "독서 접근", v: meta.label });
+        if (lib.reading_gap_type === "direct_investment_first" || lib.reading_gap_type === "school_hub_mobile") {
+          chips.push({ text: `📚 ${meta.label}`, color: HOVER_LAYER_COLORS.read });
+        }
+      }
+
+      const forecast = (state.datasets.beneficiaryForecast || []).find((r) => r.학교ID === schoolId);
+      if (forecast) {
+        const cur = Number(forecast.current_students_2025);
+        const f29 = Number(forecast.forecast_2029);
+        if (Number.isFinite(cur) && Number.isFinite(f29)) {
+          items.push({ k: "학생 2025→2029", v: `${formatCount(cur)}→${formatCount(Math.round(f29))}명` });
+          if (f29 > cur && cur > 0) chips.push({ text: "📈 학생 증가 전망", color: HOVER_LAYER_COLORS.grow });
+        }
+      }
+
+      const entry = state.contextLoadState === "loaded" ? getSchoolContextEntry(schoolId) : null;
+      if (entry) {
+        const desig = entry.designations || {};
+        const current = Array.isArray(desig.current) ? desig.current : [];
+        const known = desig.status === "available";
+        items.push({ k: "2026 지정사업", v: !known ? "미수집" : current.length ? `${current.length}건` : "없음" });
+        if (known && current.length) {
+          const types = current.map((d) => d.designation_type).filter(Boolean);
+          const shown = types.slice(0, 2).join("·");
+          chips.push({ text: `🎓 ${shown}${types.length > 2 ? ` +${types.length - 2}` : ""}`, color: HOVER_LAYER_COLORS.desig });
+        }
+        const night = entry.nightlife || {};
+        const recs = Array.isArray(night.records) ? night.records : [];
+        const n300 = recs.filter((r) => Number(r.distance_m) <= 300).length;
+        const nightKnown = night.status && night.status !== "unknown" && night.observed_count != null;
+        items.push({ k: "유흥 인허가 300m", v: nightKnown ? `${n300}건↑` : "미수집" });
+        if (nightKnown && n300 >= 5) chips.push({ text: `🍺 유흥 밀집 ${n300}건↑`, color: HOVER_LAYER_COLORS.night });
+        const constr = entry.construction || {};
+        const constrKnown = constr.status && constr.status !== "unknown" && constr.observed_count != null;
+        if (constrKnown) {
+          const open = Math.max(0, Number(constr.observed_count || 0) - Number(constr.observed_completed_count || 0));
+          items.push({ k: "미완료 착공 500m", v: `${open}건↑` });
+          if (open >= 3) chips.push({ text: `🏗 착공기록 ${open}건↑`, color: HOVER_LAYER_COLORS.constr });
+        } else {
+          items.push({ k: "착공기록", v: "미수집" });
+        }
+      } else {
+        items.push({ k: "맥락 레이어", v: state.contextLoadState === "failed" ? "로딩 실패" : "불러오는 중" });
+      }
+      return { items, chips };
+    }
+
+    function buildSchoolHoverCardHtml(row) {
+      const caseMeta = getCaseMeta(row);
+      const caseColor = isSpecialPolicySchool(row) ? "#6B7280" : caseMeta.color;
+      const { items, chips } = getSchoolLayerSummary(row);
+      const grid = items
+        .map((it) => `<div><div class="hc-k">${escapeHtml(it.k)}</div><div class="hc-v">${escapeHtml(it.v)}</div></div>`)
+        .join("");
+      const chipHtml = chips.length
+        ? `<div class="hc-chips">${chips
+            .map((c) => `<span class="hc-chip" style="border-color:${c.color}66; background:${c.color}22; color:${c.color};">${escapeHtml(c.text)}</span>`)
+            .join("")}</div>`
+        : "";
+      return `
+        <div class="hc-name">${escapeHtml(getSchoolName(row))}
+          <span class="hc-case" style="background:${caseColor}26; color:${caseColor}; border:1px solid ${caseColor}66;">${escapeHtml(getCaseTypeLabel(row))}</span>
+        </div>
+        <div class="hc-grid">${grid}</div>
+        ${chipHtml}
+        <div class="hc-foot">클릭하면 진단 패널 · 시설 수치는 좌표 확보분 하한(직선거리)</div>`;
+    }
+
+    function ensureHoverCard() {
+      if (state.hoverCard) return state.hoverCard;
+      const el = document.createElement("div");
+      el.className = "school-hover-card";
+      const overlay = new kakao.maps.CustomOverlay({ content: el, yAnchor: 1.12, zIndex: 90, clickable: false });
+      state.hoverCard = { overlay, el };
+      return state.hoverCard;
+    }
+
+    function showSchoolHoverCard(row, latLng) {
+      if (!state.map || !row || !latLng) return;
+      const card = ensureHoverCard();
+      card.el.innerHTML = buildSchoolHoverCardHtml(row);
+      card.overlay.setPosition(latLng);
+      card.overlay.setMap(state.map);
+    }
+
+    function hideSchoolHoverCard() {
+      if (state.hoverCard) state.hoverCard.overlay.setMap(null);
     }
 
     function bindCandidatePopup(marker, candidate) {
@@ -6068,6 +6347,58 @@
       return `${icon} ${labelKo}: 직선거리 500m 내 관측 <strong>${node.observed_count}건</strong>${completed}${nearest} · 하한값(좌표 확보분 기준)`;
     }
 
+    // "2,808,000원 (2025.3~2026.2 지원액 계, 원문 명시)" → { amount, period }
+    function parseSupportAmount(text) {
+      if (!text) return null;
+      const raw = String(text);
+      const amount = raw.match(/([\d,]+)\s*원/);
+      const period = raw.match(/\((\d{4}\.\d{1,2})\s*~\s*(\d{4}\.\d{1,2})/);
+      return { amount: amount ? `${amount[1]}원` : raw, period: period ? `${period[1]}~${period[2]}` : null };
+    }
+
+    // 학교별 지정·연구학교 이력을 (사업, 유형) 단위로 묶어 기간·연차·지원액을 표시
+    function buildDesignationDetailHtml(schoolId, entry) {
+      const known = entry && entry.designations && entry.designations.status === "available";
+      if (!known) return `🎓 지정 현황: <strong>자료 수집 전 (0건 의미 아님)</strong><br>`;
+      const records = (((state.datasets.contextDesignations || {}).records) || [])
+        .filter((rec) => rec && rec.match && rec.match.school_id === schoolId);
+      if (!records.length) return `🎓 지정 현황: <strong>수집된 명단 기준 해당 없음</strong><br>`;
+      const groups = new Map();
+      records.forEach((rec) => {
+        const key = `${rec.program_name || ""}|${rec.designation_type || ""}`;
+        if (!groups.has(key)) groups.set(key, { program: rec.program_name || "", type: rec.designation_type || "", years: new Map() });
+        groups.get(key).years.set(Number(rec.school_year), rec);
+      });
+      const cards = [...groups.values()]
+        .sort((a, b) => Math.max(...b.years.keys()) - Math.max(...a.years.keys()))
+        .map((group) => {
+          const years = [...group.years.keys()].filter(Number.isFinite).sort((a, b) => a - b);
+          const first = years[0];
+          const last = years[years.length - 1];
+          const span = years.length > 1 ? `${first}~${last}학년도 · ${years.length}년` : `${first}학년도`;
+          const isCurrent = [...group.years.values()].some((rec) => rec.period_status === "current");
+          const amounts = years
+            .map((year) => {
+              const parsed = parseSupportAmount(group.years.get(year).financial_support_amount);
+              return parsed ? `${year}학년도 ${parsed.amount}${parsed.period ? ` (${parsed.period})` : ""}` : null;
+            })
+            .filter(Boolean);
+          const sourceUrl = (group.years.get(last).source || {}).url || "";
+          const safeUrl = /^https?:\/\//.test(sourceUrl) ? sourceUrl : "";
+          const title = /^유형\d/.test(group.program) ? `${group.type} ${group.program}` : `${group.program} ${group.type}`;
+          return `
+            <div style="margin:5px 0 7px; padding:7px 9px; border-radius:9px; background:rgba(167,139,250,0.10); border:1px solid rgba(167,139,250,0.30);">
+              <div><strong>${escapeHtml(title.trim())}</strong>
+                <span style="margin-left:4px; padding:0 7px; border-radius:999px; font-size:10.5px; font-weight:800; background:${isCurrent ? "rgba(16,185,129,0.18)" : "rgba(148,163,184,0.18)"}; color:${isCurrent ? "#6EE7B7" : "#CBD5E1"};">${isCurrent ? "진행 중" : "종료"}</span>
+              </div>
+              <div style="opacity:0.85;">기간 ${escapeHtml(span)}</div>
+              <div style="opacity:0.85;">지원액 ${amounts.length ? escapeHtml(amounts.join(" / ")) : "공고에 미기재"}${safeUrl ? ` · <a href="${escapeHtml(safeUrl)}" target="_blank" rel="noreferrer" style="color:#C4B5FD;">공고 원문</a>` : ""}</div>
+            </div>`;
+        })
+        .join("");
+      return `🎓 지정·연구학교 이력 <strong>${groups.size}건</strong> <span style="opacity:0.7;">(연속 지정은 한 줄로 묶음)</span>${cards}`;
+    }
+
     function buildSchoolContextCardHtml(schoolId) {
       if (state.contextLoadState === "failed") {
         return `<div class="detail-section-title">🧭 참고 맥락</div>
@@ -6078,22 +6409,14 @@
           <div class="metric-list"><div class="metric-item muted">학교 맥락 정보를 불러오는 중입니다…</div></div>`;
       }
       const entry = getSchoolContextEntry(schoolId);
-      const current = entry && entry.designations ? entry.designations.current || [] : [];
-      const historicalCount = entry && entry.designations ? (entry.designations.historical || []).length : 0;
-      const designationsKnown = entry && entry.designations && entry.designations.status === "available";
-      const designationText = !designationsKnown
-        ? "자료 수집 전 (0건 의미 아님)"
-        : current.length
-          ? current.map((item) => escapeHtml(`${item.school_year || ""}학년도 ${item.program_name || ""} ${item.designation_type || ""}`.trim())).join(", ")
-          : "수집된 명단 기준 해당 없음";
-      const historicalText = historicalCount ? ` · 과거 이력 ${historicalCount}건` : "";
+      const designationBlock = buildDesignationDetailHtml(schoolId, entry);
       const manifest = state.datasets.contextManifest || {};
       const asOf = manifest.data_as_of || "";
       return `
         <div class="detail-section-title">🧭 참고 맥락 <span style="font-weight:500; opacity:0.7;">(정책 도달성 참고용${asOf ? ` · 산출 기준 ${escapeHtml(asOf)}` : ""})</span></div>
         <div style="font-size:12px; line-height:1.8; margin-top:6px;">
-          🎓 지정 현황: <strong>${designationText}</strong>${historicalText}<br>
-          <span style="opacity:0.7;">수집된 공식 명단(AI·디지털 연구·선도/AI중점/디지털튜터) 기준 · 학년도 명단 기준 추정 · 그 외 사업 미수집</span><br>
+          ${designationBlock}
+          <span style="opacity:0.7;">수집된 공식 명단(교육복지우선지원·AI·디지털 연구/선도·AI중점·다문화·디지털튜터) 기준 · 기간은 학년도(3월~익년 2월) 추정 · 그 외 사업 미수집</span><br>
           ${contextFacilityCardLine("🍸", "유흥·단란주점 인허가", entry ? entry.nightlife : null)}<br>
           ${contextFacilityCardLine("🚧", "공사장 행정기록", entry ? entry.construction : null)}<br>
           <span style="opacity:0.7;">시설 수치는 학교 중심점 기준 <strong>직선거리 500m</strong>(도보 경로 아님) 안에서 좌표를 확보한 인허가·행정기록만 센 최소 관측치입니다. 위험도·안전 등급·지원 자격 판정이 아니며, 미수집 항목은 0건이 아니라 미상입니다.</span>
@@ -6757,9 +7080,19 @@
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && !document.getElementById("appCover")?.classList.contains("is-hidden")) {
+      if (event.key !== "Escape") return;
+      if (!document.getElementById("appCover")?.classList.contains("is-hidden")) {
         closeAppCover();
+        return;
       }
+      const dataOverlay = document.getElementById("dataOverlay");
+      if (dataOverlay && dataOverlay.style.display === "flex") {
+        closeDataOverlay();
+        return;
+      }
+      const simOverlay = document.getElementById("simulationOverlay");
+      const simOpen = simOverlay && simOverlay.style.display === "flex";
+      if (!simOpen && ui.panel?.classList.contains("open")) closePanel();
     });
 
     function getShortcutSchoolRow() {
@@ -6805,6 +7138,16 @@
 
       if (normalizedAction === "statistics") {
         openPreviewOverlay("statistics");
+        return;
+      }
+
+      if (normalizedAction === "panel") {
+        togglePanel();
+        return;
+      }
+
+      if (normalizedAction === "data") {
+        openDataOverlay();
         return;
       }
 
@@ -6856,9 +7199,12 @@
         }
       });
 
+      document.getElementById("panelCloseButton")?.addEventListener("click", closePanel);
+
       ui.panelToggleButton?.addEventListener("click", () => {
         const opening = !ui.panel.classList.contains("open");
         ui.panel.classList.toggle("open", opening);
+        syncPanelShortcutButton();
         // Mobile-only: the layer/case/access filter bar shares the same open state as the
         // control panel so the single "필터 열기" button reveals both as one bottom sheet.
         // Has no effect on desktop, where .layer-toggle-bar is always visible regardless of this class.
@@ -8299,6 +8645,25 @@
         src="ui-preview/dist/index.html"
         class="simulation-overlay-frame"
         title="후보지 시뮬레이션"
+      ></iframe>
+    </div>
+  </div>
+
+  <div id="dataOverlay" style="
+    display:none; position:fixed; inset:0; z-index:10000;
+    background:rgba(0,0,0,0.6);
+    align-items:center; justify-content:center;
+  ">
+    <div class="simulation-overlay-card">
+      <div class="simulation-overlay-actions">
+        <a class="simulation-overlay-button" href="/update-center" target="_blank" rel="noreferrer" style="text-decoration:none;">새 창에서 열기</a>
+        <button class="simulation-overlay-button" type="button" onclick="closeDataOverlay()">✕ 닫기</button>
+      </div>
+      <iframe
+        id="dataFrame"
+        src="about:blank"
+        class="simulation-overlay-frame"
+        title="공공데이터 관리"
       ></iframe>
     </div>
   </div>

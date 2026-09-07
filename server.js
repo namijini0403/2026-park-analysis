@@ -25,6 +25,8 @@ const PORT = Number(process.env.PORT || 3000);
 const HOST = "0.0.0.0";
 const STATIC_ROOT = path.join(__dirname, "vercel_public");
 const MAX_BODY_BYTES = 1024 * 1024; // 1 MB, API payloads are small
+// 업데이트 센터 수동 업로드(base64 JSON)만 별도 한도 — 원본 25MB ≈ base64 34MB
+const UPLOAD_BODY_BYTES = Number(process.env.UPDATE_CENTER_MAX_UPLOAD_BODY_BYTES || 40 * 1024 * 1024);
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -59,12 +61,12 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
-async function readJsonBody(req) {
+async function readJsonBody(req, maxBytes = MAX_BODY_BYTES) {
   const chunks = [];
   let total = 0;
   for await (const chunk of req) {
     total += chunk.length;
-    if (total > MAX_BODY_BYTES) {
+    if (total > maxBytes) {
       const error = new Error("Payload too large");
       error.statusCode = 413;
       throw error;
@@ -111,7 +113,8 @@ async function handleApi(req, res) {
 async function handleUpdateCenter(req, res) {
   try {
     if (req.method === "POST") {
-      req.body = await readJsonBody(req);
+      const isUpload = String(req.url || "").startsWith("/api/update-center/upload");
+      req.body = await readJsonBody(req, isUpload ? UPLOAD_BODY_BYTES : MAX_BODY_BYTES);
     }
     await updateCenterHandler(req, res);
   } catch (error) {

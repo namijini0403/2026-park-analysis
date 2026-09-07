@@ -1002,6 +1002,98 @@ async function handlePostScan(req, res) {
   });
 }
 
+// ── 수동 업로드 → 후보(staging) → 품질검사·diff → pending 이벤트 ──────────
+// 포털 자동 수집(scan)과 같은 buildStagedCandidate 파이프라인을 타므로 승인·
+// 원자적 반영·불변 버전·롤백 절차가 동일하다. 업로드 자체는 절대 적용하지 않는다.
+const MAX_UPLOAD_BYTES = Number(process.env.UPDATE_CENTER_MAX_UPLOAD_BYTES || 25 * 1024 * 1024);
+
+async function handlePostUpload(req, res) {
+  const body = req.body || {};
+  const dataset = typeof body.dataset === "string" ? body.dataset.trim() : "";
+  const fileName = typeof body.file_name === "string" ? path.basename(body.file_name.trim()) : "";
+  const contentB64 = typeof body.content_b64 === "string" ? body.content_b64 : "";
+  const note = typeof body.note === "string" ? body.note.trim().slice(0, 300) : "";
+  if (!dataset || !fileName || !contentB64) {
+    return json(res, 400, { error: "dataset, file_name, content_b64 가 필요합니다." });
+  }
+  const entry = loadSourceEntry(dataset);
+  if (!entry) return json(res, 404, { error: `data_sources.yaml 에서 소스를 찾을 수 없습니다: ${dataset}` });
+  if (!entry.local_file) return json(res, 409, { error: `"${dataset}" 은 local_file 이 정의되지 않아 업로드 후보를 만들 수 없습니다.` });
+
+  const buffer = Buffer.from(contentB64.replace(/^data:[^;]+;base64,/, ""), "base64");
+  if (!buffer.length) return json(res, 400, { error: "빈 파일입니다." });
+  if (buffer.length > MAX_UPLOAD_BYTES) {
+    return json(res, 413, { error: `파일이 너무 큽니다 (${buffer.length}B > ${MAX_UPLOAD_BYTES}B).` });
+  }
+  const targetExt = path.extname(entry.local_file).toLowerCase();
+  const uploadExt = path.extname(fileName).toLowerCase();
+  if (targetExt && uploadExt && targetExt !== uploadExt) {
+    return json(res, 409, {
+      error: `확장자가 대상 파일(${path.basename(entry.local_file)})과 다릅니다: ${uploadExt}. 같은 형식으로 올려주세요.`,
+    });
+  }
+  let rawText = buffer.toString("utf-8");
+  if (rawText.charCodeAt(0) === 0xfeff) rawText = rawText.slice(1);
+
+  const store = await getStore();
+  const candidateMod = await import("../scripts/update_center/candidate.mjs");
+  const stagingId = `upload_${dataset}_${Date.now()}`.replace(/[^A-Za-z0-9_.-]/g, "_");
+  const logLines = [];
+  const log = (...parts) => logLines.push(parts.map((p) => (typeof p === "string" ? p : JSON.stringify(p))).join(" "));
+  const upload = {
+    mode: "manual_upload",
+    file_name: fileName,
+    bytes: buffer.length,
+    sha256: candidateMod.sha256(buffer),
+    uploaded_at: new Date().toISOString(),
+    actor: ACTOR,
+    note: note || null,
+  };
+
+  // 업로드 파일의 첫 줄(헤더)이 현재 적용본과 같으면 이미 앱 형식 → 어댑터 정규화 생략(passthrough).
+  // 다르면 포털 원천 형식으로 보고 데이터셋 어댑터로 정규화한다(어댑터가 없으면 통과).
+  let passthrough = false;
+  try {
+    const currentAbs = path.join(REPO_ROOT, entry.local_file);
+    if (fs.existsSync(currentAbs)) {
+      const firstLine = (text) => String(text).replace(/^\uFEFF/, "").split(/\r?\n/, 1)[0].trim();
+      passthrough = firstLine(fs.readFileSync(currentAbs, "utf-8")) === firstLine(rawText);
+    }
+  } catch {
+    passthrough = false;
+  }
+  upload.passthrough = passthrough;
+  log(`[upload] ${dataset} ${fileName} ${buffer.length}B · 헤더 일치=${passthrough ? "예(정규화 생략)" : "아니오(어댑터 정규화)"}`);
+
+  let candidate;
+  try {
+    const built = await candidateMod.buildStagedCandidate({ entry, rawText, stagingId, store, fetchMeta: upload, passthrough, log });
+    candidate = { ok: true, ...built };
+  } catch (err) {
+    candidate = { ok: false, error: err && err.message ? err.message : String(err), staging_id: stagingId };
+    log(`[upload] ${dataset} 후보 생성 실패: ${candidate.error}`);
+  }
+
+  const risk = candidate.ok ? candidate.risk : "red";
+  const rd = candidate.ok ? candidate.record_diff || {} : {};
+  const summary = candidate.ok
+    ? `수동 업로드 후보 ${fileName} (${buffer.length}B) · 품질=${candidate.quality_status} · 레코드 +${rd.added ?? 0}/-${rd.removed ?? 0}/~${rd.changed ?? 0}` +
+      (candidate.affected_schools?.supported ? ` · 영향 학교 ${candidate.affected_schools.affected_school_count}건` : "") +
+      (note ? ` · 메모: ${note}` : "")
+    : `수동 업로드 처리 실패 (${fileName}): ${candidate.error}`;
+
+  const event = await store.recordEvent({
+    dataset,
+    kind: "manual_upload",
+    risk,
+    summary,
+    diff_json: { upload, candidate },
+    status: "pending",
+  });
+  await store.appendAudit({ actor: ACTOR, action: "manual_upload", dataset, event_id: event.id, detail: summary });
+  return json(res, candidate.ok ? 200 : 422, { event, candidate, log: logLines });
+}
+
 async function handlePostApprove(req, res) {
   const body = req.body || {};
   const eventId = body.event_id;
@@ -1361,6 +1453,7 @@ module.exports = async function handler(req, res) {
     if (req.method === "GET" && subPath === "/schedule") return await handleGetSchedule(res);
     if (req.method === "POST" && subPath === "/schedule") return await handlePostSchedule(req, res);
     if (req.method === "POST" && subPath === "/scan") return await handlePostScan(req, res);
+    if (req.method === "POST" && subPath === "/upload") return await handlePostUpload(req, res);
     if (req.method === "POST" && subPath === "/approve") return await handlePostApprove(req, res);
     if (req.method === "POST" && subPath === "/hold") return await handlePostHold(req, res);
     if (req.method === "POST" && subPath === "/rollback") return await handlePostRollback(req, res);

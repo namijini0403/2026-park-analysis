@@ -332,12 +332,15 @@ export async function evaluateCandidate(entry, candidateText, fileName) {
  *
  * @returns {Promise<object>} 이벤트 diff_json 에 그대로 실리는 후보 요약
  */
-export async function buildStagedCandidate({ entry, rawRecords, rawText, stagingId, store = null, fetchMeta = {}, log = () => {} }) {
+export async function buildStagedCandidate({ entry, rawRecords, rawText, stagingId, store = null, fetchMeta = {}, passthrough = false, log = () => {} }) {
   const adapter = getAdapter(entry.dataset);
   const localRel = assertSafeRelPath(entry.local_file);
   const fileName = adapter.outputName || path.basename(localRel);
 
-  const normalised = rawText !== undefined && rawText !== null ? adapter.normalize(rawText) : adapter.normalize(rawRecords || []);
+  // passthrough: 수동 업로드가 이미 앱 파일 형식(정규화 결과)과 같을 때 어댑터 정규화를 생략한다.
+  const normalised = passthrough
+    ? { text: String(rawText ?? ""), note: "수동 업로드 — 현재 적용본과 헤더가 같아 어댑터 정규화 생략", skipped: true }
+    : rawText !== undefined && rawText !== null ? adapter.normalize(rawText) : adapter.normalize(rawRecords || []);
   const candidateText = normalised.text;
 
   const evaluation = await evaluateCandidate(entry, candidateText, fileName);

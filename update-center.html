@@ -724,6 +724,24 @@
     </div>
   </section>
 
+  <section class="panel" id="upload-panel">
+    <div class="panel-head">
+      <h2>② 파일 업로드 (수동 후보)</h2>
+      <span class="status-line" id="upload-status"></span>
+    </div>
+    <p style="margin:0 0 10px; font-size:13px; opacity:0.8; line-height:1.6;">
+      포털 자동 수집 대신 직접 받은 파일을 후보로 올립니다. 올린 파일은 ①과 같은 품질검사·스키마 diff·영향 학교 계산을 거쳐
+      ③ 이벤트(pending)로 등록되며, 승인해야만 반영되고 롤백 절차도 동일합니다. 대상 데이터셋의 파일 형식과 같아야 합니다(최대 25MB).
+    </p>
+    <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+      <select id="upload-dataset" style="min-width:260px;"></select>
+      <input id="upload-file" type="file" accept=".csv,.json,.geojson,.txt" />
+      <input id="upload-note" type="text" placeholder="메모(선택) — 출처·기준일" maxlength="300" style="min-width:220px;" />
+      <button id="upload-btn" class="primary small-btn">후보로 올리기</button>
+    </div>
+    <pre id="upload-log" style="display:none; margin:10px 0 0; padding:10px; font-size:12px; white-space:pre-wrap; border-radius:8px; background:rgba(255,255,255,0.05); max-height:220px; overflow:auto;"></pre>
+  </section>
+
   <section class="panel" id="events-panel">
     <div class="panel-head">
       <h2>③ 이벤트 목록</h2>
@@ -997,6 +1015,73 @@
         runScan(btn.getAttribute("data-dataset"));
       });
     });
+    renderUploadDatasetOptions();
+  }
+
+  // ── ② 수동 업로드 ──────────────────────────────────────────────────────
+  function renderUploadDatasetOptions() {
+    var select = $("upload-dataset");
+    if (!select) return;
+    var previous = select.value;
+    select.innerHTML = state.sources
+      .map(function (s) {
+        var target = s.local_file ? " → " + s.local_file : "";
+        return '<option value="' + esc(s.dataset) + '">' + esc(s.dataset + target) + "</option>";
+      })
+      .join("");
+    if (previous) select.value = previous;
+  }
+
+  function readFileAsBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        var result = String(reader.result || "");
+        resolve(result.slice(result.indexOf(",") + 1));
+      };
+      reader.onerror = function () { reject(reader.error || new Error("파일을 읽지 못했습니다")); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function runUpload() {
+    var dataset = $("upload-dataset").value;
+    var fileInput = $("upload-file");
+    var file = fileInput.files && fileInput.files[0];
+    var status = $("upload-status");
+    var logBox = $("upload-log");
+    if (!dataset) { status.textContent = "데이터셋을 선택하세요."; return; }
+    if (!file) { status.textContent = "파일을 선택하세요."; return; }
+    if (file.size > 25 * 1024 * 1024) { status.textContent = "25MB 이하 파일만 올릴 수 있습니다."; return; }
+    var btn = $("upload-btn");
+    btn.disabled = true;
+    status.textContent = "업로드·품질검사 중… (" + Math.round(file.size / 1024) + "KB)";
+    logBox.style.display = "none";
+    readFileAsBase64(file)
+      .then(function (b64) {
+        return apiFetch("/upload", {
+          method: "POST",
+          body: { dataset: dataset, file_name: file.name, content_b64: b64, note: $("upload-note").value },
+        });
+      })
+      .then(function (r) {
+        var d = r.data || {};
+        if (r.ok && d.event) {
+          var c = d.candidate || {};
+          status.textContent = "후보 등록됨 → ③ 이벤트 " + d.event.id + " (risk=" + d.event.risk + ", 품질=" + (c.quality_status || "-") + "). 검토 후 승인하세요.";
+        } else {
+          status.textContent = "실패: " + (d.error || (d.event && d.event.summary) || ("HTTP " + r.status));
+        }
+        if (Array.isArray(d.log) && d.log.length) {
+          logBox.textContent = d.log.join("\n");
+          logBox.style.display = "block";
+        }
+        loadEvents();
+      })
+      .catch(function (err) {
+        status.textContent = "실패: " + (err && err.message ? err.message : String(err));
+      })
+      .then(function () { btn.disabled = false; });
   }
 
   function loadSources() {
@@ -2044,6 +2129,8 @@
       $("last-refreshed").textContent = "마지막 갱신: " + new Date().toLocaleString("ko-KR", { hour12: false });
     });
   }
+
+  $("upload-btn").addEventListener("click", runUpload);
 
   $("save-token-btn").addEventListener("click", function () {
     setToken($("token-input").value);
