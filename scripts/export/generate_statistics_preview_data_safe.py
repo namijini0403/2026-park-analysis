@@ -129,7 +129,9 @@ def choose_best_school(df: pd.DataFrame) -> pd.Series | None:
     candidates["playground_flag"] = (candidates["iso_playground_count"] >= 1).astype(int)
 
     candidates = candidates.sort_values(
-        by=["quartile_order", STATISTICS_GREEN_RATIO_COLUMN, "playground_flag", "nearest_park_dist_m"],
+        # Match index.html _scoreBestEnvironmentSchool: green quartile, then
+        # playground presence, then green ratio, then shortest park distance.
+        by=["quartile_order", "playground_flag", STATISTICS_GREEN_RATIO_COLUMN, "nearest_park_dist_m"],
         ascending=[True, False, False, True],
         kind="mergesort",
     )

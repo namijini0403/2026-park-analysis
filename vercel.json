@@ -5,6 +5,11 @@
   "outputDirectory": "vercel_public",
   "cleanUrls": false,
   "trailingSlash": false,
+  "functions": {
+    "api/ai-explainer-v2.js": {
+      "includeFiles": "data_processed/context/*.json"
+    }
+  },
   "headers": [
     {
       "source": "/ui-preview/dist/assets/(.*)",

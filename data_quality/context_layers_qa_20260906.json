@@ -1,0 +1,35 @@
+{
+  "construction": {
+    "dropped_incomplete": 0,
+    "duplicates_collapsed": 0,
+    "input_rows": 74,
+    "invalid_dates": [],
+    "located_records": 15,
+    "records": 74,
+    "unlocated_records": 59
+  },
+  "designations": {
+    "ambiguous": [],
+    "dropped_incomplete": 0,
+    "duplicates_collapsed": 0,
+    "input_rows": 267,
+    "matched_elementary": 102,
+    "missing_input_files": [],
+    "out_of_scope_level": 147,
+    "records": 267,
+    "undated_records": [],
+    "unmatched": [],
+    "unsafe_urls_dropped": 0
+  },
+  "nightlife": {
+    "active_located_records": 1222,
+    "active_records": 1534,
+    "dropped_incomplete": 0,
+    "duplicates_collapsed": 0,
+    "input_rows": 1534,
+    "invalid_coordinates": [],
+    "records": 1534,
+    "unknown_status": 0,
+    "unlocated_records": 312
+  }
+}

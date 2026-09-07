@@ -1068,6 +1068,24 @@
       color: #FDA4AF;
     }
 
+    .layer-toggle-btn.is-on[data-layer="designation"] {
+      background: rgba(139, 92, 246, 0.16);
+      border-color: rgba(139, 92, 246, 0.38);
+      color: #DDD6FE;
+    }
+
+    .layer-toggle-btn.is-on[data-layer="nightlife"] {
+      background: rgba(236, 72, 153, 0.16);
+      border-color: rgba(236, 72, 153, 0.38);
+      color: #FBCFE8;
+    }
+
+    .layer-toggle-btn.is-on[data-layer="construction"] {
+      background: rgba(148, 163, 184, 0.18);
+      border-color: rgba(148, 163, 184, 0.4);
+      color: #E2E8F0;
+    }
+
     .case-filter-group,
     .access-filter-group {
       display: flex;
@@ -2987,6 +3005,9 @@
         min-height: 40px;
       }
     }
+    .map-evidence { margin: 12px 0; border: 1px solid rgba(148,163,184,.3); border-radius: 12px; padding: 12px; }
+    .map-evidence > summary { cursor: pointer; font-size: 13px; font-weight: 700; line-height: 1.7; }
+    button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid #34d399; outline-offset: 3px; }
   </style>
 </head>
 <body>
@@ -3016,10 +3037,9 @@
         <div class="app-cover-main">
           <p class="app-cover-kicker">Incheon Outdoor Equity</p>
           <h1 class="app-cover-title" id="appCoverTitle"><span>반경 너머,</span><span>도달 가능성으로</span></h1>
-          <p class="app-cover-statement">도보 네트워크·보행 부담·활동규모 기준을 함께 봅니다.</p>
+          <p class="app-cover-statement">아이들이 실제로 걸어서 갈 수 있는 활동 공간은 충분할까요?</p>
           <p class="app-cover-copy">
-            초등학교 야외활동 환경을 공식 공원 존재, 실제 도달 가능성, 보행 부담, 활동규모 기준으로 나누어 진단하고
-            XAI 우선지원 의사결정을 지원합니다.
+            학교 주변의 현재 격차를 찾고, 미래 수요와 보행 경로를 확인해 개선 후보를 비교합니다. 최종 정책은 담당자가 근거를 검토해 결정합니다.
           </p>
           <div class="app-cover-tags" aria-label="핵심 분석 기준">
             <span class="app-cover-tag">실제 도보생활권</span>
@@ -3090,6 +3110,9 @@
       <button class="layer-toggle-btn" type="button" data-layer="parks">🌳 공원·놀이터</button>
       <button class="layer-toggle-btn" type="button" data-layer="redevelopment">🏗️ 재개발</button>
       <button class="layer-toggle-btn" type="button" data-layer="candidate">📍 후보지</button>
+      <button class="layer-toggle-btn" type="button" data-layer="designation">🎓 지정·연구학교</button>
+      <button class="layer-toggle-btn" type="button" data-layer="nightlife">🍸 유흥·단란주점</button>
+      <button class="layer-toggle-btn" type="button" data-layer="construction">🚧 공사기록(연수)</button>
       <div class="case-filter-group" aria-label="학교 마커 분류 필터">
         <button class="case-filter-btn is-on" type="button" data-case-filter="all">전체 학교</button>
         <button class="case-filter-btn" type="button" data-case-filter="case1">즉시 개선 대상</button>
@@ -3112,7 +3135,7 @@
         <div class="mobile-handle"></div>
         <p class="eyebrow">Incheon Outdoor Equity</p>
         <h1 class="panel-title">반경 너머, 도달 가능성으로</h1>
-        <p class="panel-subtitle">도보 네트워크·보행 부담·활동규모 기준을 반영해 학교별 야외활동 환경을 진단합니다.</p>
+        <p class="panel-subtitle">① 학교 선택 → ② 현재 환경 확인 → ③ 개선 후보 비교</p>
       </div>
 
       <div class="panel-body">
@@ -3135,12 +3158,12 @@
         </section>
 
         <section class="section">
-          <h2 class="section-title">구 전체 통계</h2>
+          <h2 class="section-title">선택 지역 요약</h2>
           <div class="summary-box" id="guSummaryBox">구를 선택하면 요약을 표시합니다.</div>
         </section>
 
         <section class="section">
-          <h2 class="section-title">학교 상세</h2>
+          <h2 class="section-title">이 학교의 핵심 진단</h2>
           <div class="school-detail-box" id="schoolDetailBox">학교 마커를 클릭하면 상세 정보를 표시합니다.</div>
         </section>
 
@@ -3167,30 +3190,58 @@
                 <input type="checkbox" id="toggleCandidate" />
                 <label for="toggleCandidate">후보지</label>
               </div>
+              <div class="toggle-row">
+                <input type="checkbox" id="toggleDesignation" />
+                <label for="toggleDesignation">지정·연구학교</label>
+              </div>
+              <div class="toggle-row">
+                <input type="checkbox" id="toggleNightlife" />
+                <label for="toggleNightlife">유흥·단란주점 인허가</label>
+              </div>
+              <div class="toggle-row">
+                <input type="checkbox" id="toggleConstruction" />
+                <label for="toggleConstruction">공사장 행정기록(연수구)</label>
+              </div>
             </div>
           </section>
           <section class="section">
             <div class="legend">
               <div class="legend-item">
                 <span class="swatch" style="background:#E53E3E;"></span>
-                <span>최우선 지원(case 3)</span>
+                <span>즉시 개선 대상(case 1)</span>
               </div>
               <div class="legend-item">
                 <span class="swatch" style="background:#ED8936;"></span>
-                <span>우선 지원(case 2)</span>
+                <span>우선 검토 대상(case 2)</span>
               </div>
               <div class="legend-item">
                 <span class="swatch" style="background:#F6E05E;"></span>
-                <span>관심 필요(case 1)</span>
+                <span>모니터링 대상(case 3)</span>
               </div>
               <div class="legend-item">
                 <span class="swatch" style="background:#38A169;"></span>
-                <span>일반 관리(case 4)</span>
+                <span>유지·관리 대상(case 4)</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch" style="background:#8B5CF6;"></span>
+                <span>지정·연구학교(수집 명단 기준)</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch" style="background:#EC4899;"></span>
+                <span>유흥·단란주점 인허가(좌표 확보분)</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch" style="background:#94A3B8;"></span>
+                <span>공사장 행정기록(연수구, 추정 위치)</span>
               </div>
             </div>
           </section>
           <section class="section">
             <div class="status-box" id="statusBox">카카오맵 SDK를 불러오는 중입니다.</div>
+          </section>
+          <section class="section">
+            <a href="update_center/public/dashboard.html" target="_blank" rel="noreferrer"
+               style="font-size:12px; opacity:0.75; text-decoration:underline;">공공데이터 업데이트 센터 대시보드 (읽기 전용)</a>
           </section>
         </div>
       </div>
@@ -3226,7 +3277,12 @@
       isochrone: "./data_processed/school_isochrone_500m.geojson",
       buffer: "./data_processed/school_buffer_500m.geojson",
       redevelopment: "./data_processed/redevelopment_geocoded.csv",
-      largeApt: "./data_processed/large_apt_complexes_2025.csv"
+      largeApt: "./data_processed/large_apt_complexes_2025.csv",
+      contextManifest: "./data_processed/context/context_layers_manifest.json",
+      contextSummary: "./data_processed/context/school_context_summary.json",
+      contextDesignations: "./data_processed/context/school_designations.json",
+      contextFacilitiesNightlife: "./data_processed/context/facilities_nightlife.geojson",
+      contextFacilitiesConstruction: "./data_processed/context/facilities_construction.geojson"
     };
 
     const INCHEON_CENTER = { lat: 37.4563, lng: 126.7052 };
@@ -3372,9 +3428,18 @@
         candidateMarkers: [],
         parkMarkers: [],
         redevelopmentMarkers: [],
+        designationBadges: [],
+        nightlifeMarkers: [],
+        constructionMarkers: [],
         isochronePolygons: [],
         bufferPolygons: []
       },
+      // 학교 맥락 레이어(지정·연구학교, 시설 맥락): 지연 로딩. pending → loaded | failed
+      contextLoadState: "pending",
+      // 시설 geojson(무거움)은 토글/리포트 최초 요구 시에만 로딩
+      contextFacilitiesLoadState: "pending",
+      // 진행 중 로딩 Promise 공유: 로딩 중 리포트를 열어도 같은 Promise를 await한다
+      contextFacilitiesPromise: null,
       datasets: {
         schools: [],
         schoolCoords: [],
@@ -3392,7 +3457,11 @@
         candidateFeatures: [],
         candidateBarrierRoutes: {},
         robustRecommendations: [],
-        robustRecommendationMap: {}
+        robustRecommendationMap: {},
+        contextManifest: null,
+        contextSummary: null,
+        contextDesignations: null,
+        contextFacilities: { nightlife: null, construction: null }
       }
     };
 
@@ -3557,7 +3626,10 @@
         buffer: document.getElementById("toggleBuffer"),
         parks: document.getElementById("toggleParks"),
         redevelopment: document.getElementById("toggleRedevelopment"),
-        candidate: document.getElementById("toggleCandidate") || false
+        candidate: document.getElementById("toggleCandidate") || false,
+        designation: document.getElementById("toggleDesignation") || false,
+        nightlife: document.getElementById("toggleNightlife") || false,
+        construction: document.getElementById("toggleConstruction") || false
       },
       layerButtons: Array.from(document.querySelectorAll(".layer-toggle-btn[data-layer]")),
       caseFilterButtons: Array.from(document.querySelectorAll(".case-filter-btn")),
@@ -5227,8 +5299,14 @@
     }
 
     function getAiExplainerEndpoints() {
-      const isProductionHost = window.location.hostname === "2026-park-analysis.vercel.app";
+      const hostname = window.location.hostname;
+      const isProductionHost = hostname === "2026-park-analysis.vercel.app";
+      const isLoopbackHost = hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]";
       const sameOriginEndpoint = "/api/ai-explainer-v2";
+      // 로컬(loopback) 시연은 완전 오프라인 보장: 원격 호스팅 API로 절대 폴백하지 않는다.
+      if (isLoopbackHost) {
+        return [sameOriginEndpoint];
+      }
       if (window.location.protocol === "file:" || !isProductionHost) {
         return [PRODUCTION_AI_EXPLAINER_V2_URL, sameOriginEndpoint];
       }
@@ -5647,10 +5725,278 @@
       }
     }
 
+    /* ── 학교 맥락 레이어 (지정·연구학교, 주변 시설 맥락) ──────────
+       참고용 맥락 정보이며 자동 안전 등급·지원 자격 판정에 쓰지 않는다.
+       미수집 레이어는 절대 0건으로 표기하지 않는다 (자료 수집 전). */
+    function getSchoolContextEntry(schoolId) {
+      const summary = state.datasets.contextSummary;
+      if (!summary || !summary.schools) return null;
+      return summary.schools[schoolId] || null;
+    }
+
+    function renderDesignationBadges() {
+      clearOverlayGroup("designationBadges");
+      if (state.contextLoadState !== "loaded") return;
+      state.datasets.schools.filter(shouldShowSchoolMarker).forEach((row) => {
+        const entry = getSchoolContextEntry(getSchoolId(row));
+        const current = entry && entry.designations ? entry.designations.current || [] : [];
+        if (!current.length) return;
+        const latLng = toLatLng(row, row.위도 !== undefined ? "위도" : "lat", row.경도 !== undefined ? "경도" : "lng");
+        if (!latLng) return;
+        const labels = current.map((item) => `${item.school_year || ""} ${item.program_name || ""} ${item.designation_type || ""}`.trim());
+        const badge = document.createElement("div");
+        badge.style.cssText = [
+          "display:inline-flex", "align-items:center", "gap:4px",
+          "padding:3px 8px", "border-radius:999px",
+          "background:rgba(91, 33, 182, 0.92)", "border:1px solid rgba(221, 214, 254, 0.85)",
+          "color:#EDE9FE", "font-size:11px", "font-weight:700", "white-space:nowrap",
+          "box-shadow:0 2px 6px rgba(0,0,0,0.35)", "pointer-events:none"
+        ].join(";");
+        badge.textContent = `🎓 ${current.map((item) => item.designation_type).join("·")}`;
+        badge.title = labels.join(", ");
+        const overlay = new kakao.maps.CustomOverlay({
+          position: latLng,
+          content: badge,
+          yAnchor: 2.6,
+          zIndex: 4
+        });
+        overlay.setMap(ui.toggles.designation && ui.toggles.designation.checked ? state.map : null);
+        state.overlays.designationBadges.push(overlay);
+      });
+    }
+
+    function contextFacilityCardLine(icon, labelKo, node) {
+      if (!node || node.status === "unknown") {
+        const reason = node && node.label_ko ? node.label_ko : "자료 수집 전";
+        return `${icon} ${labelKo}: <strong>${escapeHtml(reason)}</strong> (0건 의미 아님)`;
+      }
+      if (node.observed_count == null) {
+        return `${icon} ${labelKo}: 좌표 미상으로 집계 불가`;
+      }
+      const nearest = node.nearest_observed_m != null ? ` · 최근접 ${Math.round(node.nearest_observed_m)}m` : "";
+      const completed = Number.isFinite(Number(node.observed_completed_count)) && node.observed_completed_count > 0
+        ? ` (사용승인 완료 ${node.observed_completed_count}건 포함)`
+        : "";
+      return `${icon} ${labelKo}: 500m 내 관측 <strong>${node.observed_count}건</strong>${completed}${nearest} · 직선거리·하한값`;
+    }
+
+    function buildSchoolContextCardHtml(schoolId) {
+      if (state.contextLoadState === "failed") {
+        return `<div style="font-size:12px; opacity:0.75; margin-bottom:14px;">학교 맥락 정보(지정 현황·주변 시설)를 불러오지 못했습니다.</div>`;
+      }
+      if (state.contextLoadState !== "loaded") {
+        return `<div style="font-size:12px; opacity:0.75; margin-bottom:14px;">학교 맥락 정보를 불러오는 중입니다…</div>`;
+      }
+      const entry = getSchoolContextEntry(schoolId);
+      const current = entry && entry.designations ? entry.designations.current || [] : [];
+      const historicalCount = entry && entry.designations ? (entry.designations.historical || []).length : 0;
+      const designationsKnown = entry && entry.designations && entry.designations.status === "available";
+      const designationText = !designationsKnown
+        ? "자료 수집 전"
+        : current.length
+          ? current.map((item) => escapeHtml(`${item.school_year || ""}학년도 ${item.program_name || ""} ${item.designation_type || ""}`.trim())).join(", ")
+          : "수집된 명단 기준 해당 없음";
+      const historicalText = historicalCount ? ` · 과거 이력 ${historicalCount}건` : "";
+      const asOf = state.datasets.contextManifest?.data_as_of || "";
+      return `
+        <div class="detail-section-title" style="margin-top:2px;">학교 맥락 정보 <span style="font-weight:500; opacity:0.7;">(참고용${asOf ? ` · 기준 ${escapeHtml(asOf)}` : ""})</span></div>
+        <div style="font-size:12px; line-height:1.8; margin-bottom:14px;">
+          🎓 지정 현황: <strong>${designationText}</strong>${historicalText}<br>
+          <span style="opacity:0.7;">수집된 공식 명단(AI·디지털 연구·선도/AI중점/디지털튜터) 기준 · 학년도 명단 기준 추정 · 그 외 사업 미수집</span><br>
+          ${contextFacilityCardLine("🍸", "유흥·단란주점 인허가", entry ? entry.nightlife : null)}<br>
+          ${contextFacilityCardLine("🚧", "공사장 행정기록", entry ? entry.construction : null)}<br>
+          <span style="opacity:0.7;">시설 수치는 인허가·행정기록의 좌표 확보분 기준 최소 관측치이며 안전 판정이 아닙니다.</span>
+        </div>`;
+    }
+
+    function findContextFacilityProps(layerKey, facilityId) {
+      const geojson = state.datasets.contextFacilities[layerKey];
+      if (!geojson || !Array.isArray(geojson.features)) return null;
+      const feature = geojson.features.find((f) => f?.properties?.facility_id === facilityId);
+      return feature ? feature.properties : null;
+    }
+
+    function buildFacilityDetailRecords(layerKey, summaryNode, limit = 30) {
+      const hits = Array.isArray(summaryNode?.records) ? summaryNode.records : [];
+      const detailed = hits.slice(0, limit).map((hit) => {
+        const props = findContextFacilityProps(layerKey, hit.facility_id) || {};
+        return {
+          facility_id: hit.facility_id,
+          distance_m: hit.distance_m,
+          name: props.name || null,
+          category: props.category || null,
+          subtype: props.subtype || null,
+          address: props.address || null,
+          business_status: props.business_status || null,
+          construction_status: props.construction_status || null,
+          construction_type: props.category || null,
+          main_use: props.main_use || null,
+          permit_date: props.permit_date || null,
+          start_date: props.start_date || null,
+          approval_date: props.approval_date || null,
+          use_approved: props.use_approved ?? null,
+          coordinate_source: props.coordinate_source || null,
+          source_url: props.source_url || null
+        };
+      });
+      return { records: detailed, truncated_count: Math.max(0, hits.length - detailed.length) };
+    }
+
+    function buildContextLayersPayload(schoolId) {
+      if (state.contextLoadState !== "loaded") {
+        return { load_status: state.contextLoadState === "failed" ? "failed" : "pending" };
+      }
+      const manifest = state.datasets.contextManifest || {};
+      const records = (state.datasets.contextDesignations?.records || [])
+        .filter((rec) => rec.match && rec.match.school_id === schoolId);
+      const summary = getSchoolContextEntry(schoolId);
+      // 상세 목록을 만들 수 없을 때도 원인(status)을 payload에 남겨 리포트가 명시적으로 표시하게 한다
+      const facilityDetailsStatus = state.contextFacilitiesLoadState === "loaded"
+        ? "loaded"
+        : state.contextFacilitiesLoadState === "failed" ? "failed" : "pending";
+      const facilityDetails = facilityDetailsStatus === "loaded"
+        ? {
+            status: "loaded",
+            nightlife: buildFacilityDetailRecords("nightlife", summary?.nightlife),
+            construction: buildFacilityDetailRecords("construction", summary?.construction)
+          }
+        : { status: facilityDetailsStatus, nightlife: null, construction: null };
+      return {
+        load_status: "loaded",
+        data_as_of: manifest.data_as_of || null,
+        usage_note_ko: manifest.usage_note_ko || null,
+        manifest_layers: manifest.layers || {},
+        school_summary: summary,
+        designation_records: records,
+        facility_details: facilityDetails
+      };
+    }
+
+    function ensureContextFacilitiesLoaded() {
+      if (state.contextFacilitiesLoadState === "loaded") {
+        return Promise.resolve(true);
+      }
+      // 이미 로딩 중이면 진행 중 Promise를 그대로 공유 (중복 fetch·미완 스냅샷 방지)
+      if (state.contextFacilitiesPromise) {
+        return state.contextFacilitiesPromise;
+      }
+      state.contextFacilitiesLoadState = "loading";
+      state.contextFacilitiesPromise = (async () => {
+        try {
+          const [nightlife, construction] = await Promise.all([
+            loadJSON(PATHS.contextFacilitiesNightlife),
+            loadJSON(PATHS.contextFacilitiesConstruction)
+          ]);
+          state.datasets.contextFacilities.nightlife = nightlife;
+          state.datasets.contextFacilities.construction = construction;
+          state.contextFacilitiesLoadState = "loaded";
+          renderContextFacilityMarkers();
+          updateOverlayVisibility();
+          return true;
+        } catch (error) {
+          console.warn("[context-facilities] 로딩 실패", error);
+          state.contextFacilitiesLoadState = "failed";
+          // 실패 시 Promise를 비워 다음 요구(토글/리포트)에서 재시도 가능하게 한다
+          state.contextFacilitiesPromise = null;
+          return false;
+        }
+      })();
+      return state.contextFacilitiesPromise;
+    }
+
+    function renderContextFacilityMarkers() {
+      const configs = [
+        {
+          layerKey: "nightlife",
+          group: "nightlifeMarkers",
+          color: "#EC4899",
+          toggle: ui.toggles.nightlife,
+          note: "인허가 기록 기준 · 현장 영업 여부·안전 판정 아님"
+        },
+        {
+          layerKey: "construction",
+          group: "constructionMarkers",
+          color: "#94A3B8",
+          toggle: ui.toggles.construction,
+          note: "착공·사용승인 행정기록 · 주소 기반 추정 위치 · 현재 공사 여부 미확인"
+        }
+      ];
+      configs.forEach((config) => {
+        clearOverlayGroup(config.group);
+        const geojson = state.datasets.contextFacilities[config.layerKey];
+        if (!geojson || !Array.isArray(geojson.features)) return;
+        geojson.features.forEach((feature) => {
+          const coords = feature?.geometry?.coordinates;
+          if (!coords || !Number.isFinite(Number(coords[0])) || !Number.isFinite(Number(coords[1]))) return;
+          const props = feature.properties || {};
+          const marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(Number(coords[1]), Number(coords[0])),
+            title: props.name || "",
+            image: createMarkerImage(config.color)
+          });
+          kakao.maps.event.addListener(marker, "click", () => {
+            state.infoWindow.setContent(`
+              <div style="padding:12px 14px; min-width:180px; max-width:260px; font-family:Pretendard,'Noto Sans KR',sans-serif;">
+                <div style="font-weight:800; font-size:13px; margin-bottom:4px;">${escapeHtml(props.name || "이름 미상")}</div>
+                <div style="font-size:12px; color:#374151;">${escapeHtml(props.category || "")}${props.subtype ? " · " + escapeHtml(props.subtype) : ""}</div>
+                <div style="font-size:11px; color:#6b7280; margin-top:4px;">${escapeHtml(props.address || "")}</div>
+                <div style="font-size:11px; color:#9ca3af; margin-top:6px;">${escapeHtml(config.note)}</div>
+              </div>
+            `);
+            state.infoWindow.open(state.map, marker);
+          });
+          marker.setMap(config.toggle && config.toggle.checked ? state.map : null);
+          state.overlays[config.group].push(marker);
+        });
+      });
+    }
+
+    async function loadContextLayers() {
+      try {
+        const [manifest, summary, designations] = await Promise.all([
+          loadJSON(PATHS.contextManifest),
+          loadJSON(PATHS.contextSummary),
+          loadJSON(PATHS.contextDesignations)
+        ]);
+        if (!manifest || !manifest.layers || !summary || !summary.schools) {
+          throw new Error("context layer payload missing or malformed");
+        }
+        state.datasets.contextManifest = manifest;
+        state.datasets.contextSummary = summary;
+        state.datasets.contextDesignations = designations && Array.isArray(designations.records)
+          ? designations
+          : { records: [] };
+        state.contextLoadState = "loaded";
+        renderDesignationBadges();
+        updateOverlayVisibility();
+        const layer = manifest.layers.school_designations;
+        if (layer && layer.record_count != null) {
+          appendStatus(`지정·연구학교 명단: ${layer.record_count}건 (초등 ${layer.matched_elementary_count}교)`);
+        }
+        const selectedRow = state.datasets.schools.find((row) => getSchoolId(row) === state.selectedSchoolId);
+        if (state.currentPanelMode === "school" && selectedRow) {
+          renderDetailPanel(selectedRow);
+        }
+      } catch (error) {
+        console.warn("[context-layers] 로딩 실패", error);
+        state.contextLoadState = "failed";
+      }
+    }
+
     function updateOverlayVisibility() {
       state.overlays.candidateMarkers.forEach((marker) => {
         marker.setMap(ui.toggles.candidate && ui.toggles.candidate.checked ? state.map : null);
       });
+      state.overlays.designationBadges.forEach((overlay) => {
+        overlay.setMap(ui.toggles.designation && ui.toggles.designation.checked ? state.map : null);
+      });
+      const nightlifeOn = Boolean(ui.toggles.nightlife && ui.toggles.nightlife.checked);
+      const constructionOn = Boolean(ui.toggles.construction && ui.toggles.construction.checked);
+      if ((nightlifeOn || constructionOn) && state.contextFacilitiesLoadState === "pending") {
+        ensureContextFacilitiesLoaded();
+      }
+      state.overlays.nightlifeMarkers.forEach((marker) => marker.setMap(nightlifeOn ? state.map : null));
+      state.overlays.constructionMarkers.forEach((marker) => marker.setMap(constructionOn ? state.map : null));
       state.overlays.parkMarkers.forEach((marker) => marker.setMap(ui.toggles.parks.checked ? state.map : null));
       state.overlays.redevelopmentMarkers.forEach((marker) => marker.setMap(ui.toggles.redevelopment.checked ? state.map : null));
       state.overlays.isochronePolygons.forEach((polygon) => polygon.setMap(ui.toggles.isochrone.checked ? state.map : null));
@@ -5660,6 +6006,7 @@
 
     function rerenderAll() {
       renderSchoolMarkers();
+      renderDesignationBadges();
       renderCandidateMarkers();
       renderPointMarkers("parkMarkers", state.datasets.parks, {
         latKey: "위도",
@@ -5880,7 +6227,7 @@
                 <div class="guide-impact-stat" aria-label="핵심 발견">
                   <div class="guide-impact-copy">
                     <strong><span class="guide-impact-emphasis">도보 500m 생활권 녹지비율 0.05% 미만 학교가</span> 37개교입니다.</strong>
-                    <span>PPT 기준 핵심 격차 지표로, 생활권 안에서 체감 가능한 녹지 부족을 보여줍니다.</span>
+                    <span>분석 기준의 녹지 부족 지표입니다. 현재 학교별 결과는 상세 리포트에서 확인하세요.</span>
                   </div>
                   <div class="guide-impact-number">0.05% 미만<span>37개교</span></div>
                 </div>
@@ -5909,7 +6256,8 @@
               </div>
             </section>
 
-            <section class="guide-section-block">
+            <details class="guide-section-block map-evidence">
+              <summary>화면별 사용 예시 펼치기 · 기존 가이드 이미지</summary>
               <div class="guide-section-head">
                 <h3>실제 앱 화면으로 보는 판단 흐름</h3>
                 <p>학교 진단, 시뮬레이션, 전체 통계가 어떤 순서로 정책 판단을 돕는지 한눈에 비교합니다.</p>
@@ -5943,7 +6291,7 @@
                   <img src="./assets/guide-statistics-case-distribution.png" alt="구별 전체 Case 분포 차트 화면" />
                 </article>
               </div>
-            </section>
+            </details>
 
             <section class="guide-section-block">
               <div class="guide-section-head">
@@ -6949,9 +7297,9 @@
           ${getDiagnosticMessage(row)}
         </div>
         <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:12px; line-height:1.75; margin-bottom:16px;">
-          우측 지도 패널은 현재 학교의 개별 공원 수치 대신 Case 분류만 간단히 보여줍니다.<br>
-          상세 수치와 후보지 비교는 아래 리포트 화면에서 확인합니다.
+          상세 리포트에서 <strong>현재 격차 → 보행 경로 → 미래 수요</strong>를 확인하고, 개선 후보를 비교하세요.
         </div>
+        <details class="map-evidence"><summary>주변 시설·학교 지정 이력 보기</summary>${buildSchoolContextCardHtml(getSchoolId(row))}</details>
         <button
           onclick="openSimulationOverlay()"
           style="
@@ -7258,6 +7606,13 @@
         await loadCandidateLayer();
       }
 
+      // 시설 상세 레코드(리포트용)는 geojson 로딩 후에만 첨부 가능.
+      // pending뿐 아니라 이미 "loading" 중이어도 공유 Promise를 await해 미완 스냅샷 고정을 막는다.
+      if (state.contextLoadState === "loaded" && state.contextFacilitiesLoadState !== "loaded") {
+        await ensureContextFacilitiesLoaded();
+      }
+      _enrichedRow._contextLayers = buildContextLayersPayload(getSchoolId(row));
+
       localStorage.setItem("parkAnalysis_school", JSON.stringify(_enrichedRow));
       localStorage.setItem("parkAnalysis_legacySnapshotLog", JSON.stringify(_enrichedRow._legacySnapshotLog));
       const _schoolName = getSchoolName(row);
@@ -7370,6 +7725,8 @@
       wireEvents();
       await loadData();
       await loadCandidateLayer();
+      // 맥락 레이어는 지연 로딩: 초기 렌더를 막지 않고, 실패해도 다른 기능에 영향 없음.
+      loadContextLayers();
     }
 
     initAuthGate();

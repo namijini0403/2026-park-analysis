@@ -1,0 +1,20 @@
+{
+  "filename": "localdata_entertainment_national.csv",
+  "url": "https://file.localdata.go.kr/file/download/entertainment_bars/info",
+  "source_url": "https://www.data.go.kr/data/15045018/fileData.do",
+  "headers": {
+    "Referer": "https://file.localdata.go.kr/file/entertainment_bars/info",
+    "User-Agent": "Mozilla/5.0"
+  },
+  "retrieved_at": "2026-09-06",
+  "sha256": "0b0fa8e51d02e534e5ef7256beafaf921f1ad56f726e644d0ff0f56c068d99a4",
+  "status": 200,
+  "bytes": 16532082,
+  "encoding": "cp949",
+  "national_rows": 53574,
+  "incheon_all_status": 2264,
+  "incheon_active": 971,
+  "incheon_active_valid_coords": 796,
+  "crs": "EPSG:5174",
+  "notes": "공식 설명: 매일 2일전 기준 현행화. 개별 레코드 갱신시점과 수집일은 별도이며 정확한 파일 기준일은 소개페이지에서 추가 확인."
+}

@@ -1,4 +1,5 @@
 import * as React from "react";
+import Disclosure from "./Disclosure";
 import {
   CartesianGrid,
   LabelList,
@@ -41,6 +42,129 @@ type RedevelopmentProject = {
   distanceM: number;
   stage: string;
   location: string;
+};
+
+// 학교 맥락 레이어 (지정·연구학교, 주변 시설): 참고용 정보 계약
+// docs/context_layers_contract_20260906.md 참조. 미수집 커버리지는 0건으로 표기하지 않는다.
+export type ContextDesignationSummary = {
+  designation_id: string;
+  designation_type: string;
+  program_name: string;
+  school_year: number | null;
+  period_status: string;
+  source_url: string;
+};
+
+export type ContextFacilitySummary = {
+  status: string;
+  observed_count?: number | null;
+  total_count?: number | null;
+  observed_completed_count?: number | null;
+  label_ko?: string;
+  within_m?: number;
+  distance_basis_ko?: string;
+  nearest_observed_m?: number | null;
+  records?: Array<{ facility_id: string; distance_m: number }>;
+};
+
+export type ContextFacilityDetailRecord = {
+  facility_id: string;
+  distance_m: number;
+  name?: string | null;
+  category?: string | null;
+  subtype?: string | null;
+  address?: string | null;
+  business_status?: string | null;
+  construction_status?: string | null;
+  construction_type?: string | null;
+  main_use?: string | null;
+  permit_date?: string | null;
+  start_date?: string | null;
+  approval_date?: string | null;
+  use_approved?: boolean | null;
+  coordinate_source?: string | null;
+  source_url?: string | null;
+};
+
+export type ContextFacilityDetails = {
+  records: ContextFacilityDetailRecord[];
+  truncated_count: number;
+};
+
+export type ContextDesignationRecord = {
+  designation_id: string;
+  school_name: string;
+  school_level: string;
+  designation_type: string;
+  program_name: string;
+  school_year: number | null;
+  period_status: string;
+  period_basis?: string;
+  designation_start_date?: string | null;
+  designation_end_date?: string | null;
+  financial_support_amount?: string | null;
+  verification_status?: string | null;
+  source?: {
+    url?: string | null;
+    title?: string | null;
+    published_date?: string | null;
+    retrieved_at?: string | null;
+    source_file?: string | null;
+  };
+};
+
+export type ContextManifestLayer = {
+  status?: string;
+  status_label_ko?: string;
+  label_ko?: string;
+  reason_ko?: string;
+  usage_note_ko?: string;
+  period_note_ko?: string;
+  scope_note_ko?: string;
+  coverage_note_ko?: string;
+  coverage_regions?: string[];
+  coverage_basis_ko?: string;
+  coordinate_note_ko?: string;
+  source_as_of_note_ko?: string;
+  distance_basis_ko?: string;
+  record_count?: number;
+  located_record_count?: number;
+  unlocated_record_count?: number;
+  active_record_count?: number;
+  matched_elementary_count?: number;
+  programs_covered?: string[];
+  sources?: Array<{
+    url?: string | null;
+    title?: string | null;
+    published_date?: string | null;
+    source_as_of?: string | null;
+    retrieved_at?: string | null;
+  }>;
+};
+
+export type SchoolContextLayers = {
+  load_status: "loaded" | "pending" | "failed";
+  data_as_of?: string | null;
+  usage_note_ko?: string | null;
+  manifest_layers?: Record<string, ContextManifestLayer>;
+  school_summary?: {
+    school_name?: string;
+    gu?: string | null;
+    designations?: {
+      status: string;
+      current: ContextDesignationSummary[];
+      historical: ContextDesignationSummary[];
+      scope_note_ko?: string;
+    };
+    nightlife?: ContextFacilitySummary;
+    construction?: ContextFacilitySummary;
+  } | null;
+  designation_records?: ContextDesignationRecord[];
+  facility_details?: {
+    status?: "loaded" | "pending" | "failed";
+    nightlife?: ContextFacilityDetails | null;
+    construction?: ContextFacilityDetails | null;
+  } | null;
 };
 
 export const CASE_LABELS = {
@@ -159,6 +283,7 @@ export type SchoolDetailReportProps = {
   cityBestEnvironmentSchool?: BenchmarkSchoolItem;
   districtBestEnvironmentSchool?: BenchmarkSchoolItem;
   redevelopmentProjects?: RedevelopmentProject[];
+  contextLayers?: SchoolContextLayers;
   onSimulationClick?: () => void;
 };
 
@@ -730,8 +855,8 @@ function SchoolHeader({ schoolName, districtName, casePolicyLabel, caseStatusLab
         {/* Decorative top-left forest accent corner */}
         <div className="pointer-events-none absolute -top-px left-7 right-7 h-px bg-gradient-to-r from-transparent via-forest-400/50 to-transparent" />
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-400/45 bg-rose-500/12 px-3 py-1 text-[11px] font-bold tracking-[0.16em] text-rose-200">
-            <span className="h-1.5 w-1.5 rounded-full bg-rose-300" />
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-bold tracking-[0.16em] text-slate-100">
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: casePolicyLabel === "즉시 개선 대상" ? "#f87171" : casePolicyLabel === "우선 검토 대상" ? "#fb923c" : casePolicyLabel === "모니터링 대상" ? "#fbbf24" : casePolicyLabel === "유지·관리 대상" ? "#34d399" : "#94a3b8" }} />
             {casePolicyLabel}
           </span>
           <span className="rounded-full border border-white/10 bg-navy-900/95 px-3 py-1 text-[11px] font-semibold tracking-wide text-slate-300">{caseStatusLabel}</span>
@@ -1126,7 +1251,7 @@ function ProblemSection({
   const first = studentTrend[0]?.value ?? 0;
   const last = studentTrend[studentTrend.length - 1]?.value ?? 0;
   const changePercent = studentTrendChangePct ?? (first ? ((last - first) / first) * 100 : 0);
-  const hasNoWalkablePark = noParkWithin500m ?? nearestParkDistanceM >= 500;
+  const hasNoWalkablePark = noParkWithin500m ?? nearestParkDistanceM > 500;
   const lowGreen = greenRatio <= 0;
   const noPlayground = playgroundCount <= 0;
   const highDemand = potentialDemand2029 >= 400;
@@ -1276,7 +1401,7 @@ function SimilarSchoolsSection({
 
   const currentPoint: PositionPoint = { id: "current", label: "현재 학교", schoolName, districtName, nearestParkDistanceM, greenRatio, playgroundCount, pointType: "current" };
   const sharedBenchmark = cityBestEnvironmentSchool && districtBestEnvironmentSchool && cityBestEnvironmentSchool.schoolName === districtBestEnvironmentSchool.schoolName && cityBestEnvironmentSchool.districtName === districtBestEnvironmentSchool.districtName;
-  const benchmarkPoints: PositionPoint[] = sharedBenchmark ? [{ id: "shared-best", label: "시·구 공통 기준학교", schoolName: cityBestEnvironmentSchool.schoolName, districtName: cityBestEnvironmentSchool.districtName, nearestParkDistanceM: cityBestEnvironmentSchool.nearestParkDistanceM, greenRatio: cityBestEnvironmentSchool.greenRatio, playgroundCount: cityBestEnvironmentSchool.playgroundCount, pointType: "sharedBest" }] : [ ...(cityBestEnvironmentSchool ? [{ id: "city-best", label: "인천시 최우수", schoolName: cityBestEnvironmentSchool.schoolName, districtName: cityBestEnvironmentSchool.districtName, nearestParkDistanceM: cityBestEnvironmentSchool.nearestParkDistanceM, greenRatio: cityBestEnvironmentSchool.greenRatio, playgroundCount: cityBestEnvironmentSchool.playgroundCount, pointType: "cityBest" as const }] : []), ...(districtBestEnvironmentSchool ? [{ id: "district-best", label: "구 최우수", schoolName: districtBestEnvironmentSchool.schoolName, districtName: districtBestEnvironmentSchool.districtName, nearestParkDistanceM: districtBestEnvironmentSchool.nearestParkDistanceM, greenRatio: districtBestEnvironmentSchool.greenRatio, playgroundCount: districtBestEnvironmentSchool.playgroundCount, pointType: "districtBest" as const }] : []) ];
+  const benchmarkPoints: PositionPoint[] = sharedBenchmark ? [{ id: "shared-best", label: "시·구 공통 기준학교", schoolName: cityBestEnvironmentSchool.schoolName, districtName: cityBestEnvironmentSchool.districtName, nearestParkDistanceM: cityBestEnvironmentSchool.nearestParkDistanceM, greenRatio: cityBestEnvironmentSchool.greenRatio, playgroundCount: cityBestEnvironmentSchool.playgroundCount, pointType: "sharedBest" }] : [ ...(cityBestEnvironmentSchool ? [{ id: "city-best", label: "인천시 녹지 참고", schoolName: cityBestEnvironmentSchool.schoolName, districtName: cityBestEnvironmentSchool.districtName, nearestParkDistanceM: cityBestEnvironmentSchool.nearestParkDistanceM, greenRatio: cityBestEnvironmentSchool.greenRatio, playgroundCount: cityBestEnvironmentSchool.playgroundCount, pointType: "cityBest" as const }] : []), ...(districtBestEnvironmentSchool ? [{ id: "district-best", label: "구 녹지 참고", schoolName: districtBestEnvironmentSchool.schoolName, districtName: districtBestEnvironmentSchool.districtName, nearestParkDistanceM: districtBestEnvironmentSchool.nearestParkDistanceM, greenRatio: districtBestEnvironmentSchool.greenRatio, playgroundCount: districtBestEnvironmentSchool.playgroundCount, pointType: "districtBest" as const }] : []) ];
   const similarPoints: PositionPoint[] = similarSchools.map((school, index) => ({
     id: `similar-${index}`,
     label: school.schoolName,
@@ -1380,7 +1505,7 @@ function SimilarSchoolsSection({
             현재 학교와 환경 맥락이 비슷한 학교를 KNN으로 묶고, 그 안에서 공원 거리와 녹지 비율이 어디에 놓이는지 비교했습니다.
             {similarityK ? ` 이번 비교는 K=${similarityK} 기준입니다.` : ""}
           </p>
-          <div className="mt-4 flex flex-wrap gap-2"><SectionChip>현재 학교</SectionChip><SectionChip>KNN 비교군</SectionChip><SectionChip>인천시 최우수</SectionChip><SectionChip>구 최우수</SectionChip></div>
+          <div className="mt-4 flex flex-wrap gap-2"><SectionChip>현재 학교</SectionChip><SectionChip>KNN 비교군</SectionChip><SectionChip>인천시 녹지 참고</SectionChip><SectionChip>구 녹지 참고</SectionChip></div>
           <p className="mt-4 text-xs leading-6 text-slate-400">{similarityMethodText}</p>
           <div className="mt-4 grid gap-2 sm:grid-cols-2"><div className="accent-stripe accent-stripe-forest rounded-2xl border border-white/10 bg-navy-900/95 px-5 py-3 text-sm font-medium text-forest-200">좋은 방향은 왼쪽 위입니다. 공원 거리는 500m 안쪽일수록, 녹지 비율은 5% 이상일수록 유리합니다.</div><div className="rounded-2xl border border-white/10 bg-navy-900/95 px-5 py-3 text-sm font-medium text-slate-200">배경 사분면은 인천시 평균이 아니라 생활권 판단선 기준으로 나뉩니다.</div></div>
           {clippedCount > 0 ? <p className="mt-3 text-xs text-slate-400">가독성을 위해 최근접 공원 거리 축은 1,200m까지 표시했고, 이를 넘는 점 {clippedCount}개는 우측 경계에 맞춰 표시했습니다.</p> : null}
@@ -1505,6 +1630,300 @@ function RedevelopmentNotice({ redevelopmentPlanYear, redevelopmentType, redevel
   );
 }
 
+const PERIOD_STATUS_LABELS: Record<string, string> = {
+  current: "지정 운영 중",
+  expired: "지정 기간 종료",
+  upcoming: "지정 예정",
+  unknown: "지정 기간 미상",
+};
+
+function formatContextDate(value?: string | null) {
+  return value ? value : "날짜 미상";
+}
+
+function isSafeHttpUrl(url?: string | null): url is string {
+  return typeof url === "string" && /^https?:\/\//i.test(url);
+}
+
+function ContextFacilityCard({
+  title,
+  layer,
+  summary,
+  details,
+  detailsStatus,
+  recordLine,
+}: {
+  title: string;
+  layer?: ContextManifestLayer;
+  summary?: ContextFacilitySummary;
+  details?: ContextFacilityDetails | null;
+  detailsStatus?: "loaded" | "pending" | "failed";
+  recordLine: (record: ContextFacilityDetailRecord) => string;
+}) {
+  const status = summary?.status ?? layer?.status ?? "unknown";
+  const pending = status === "unknown" || status === "unavailable";
+  return (
+    <div className="rounded-2xl border border-white/10 bg-navy-900/95 p-4">
+      <p className="text-sm font-semibold text-white">{title}</p>
+      {pending ? (
+        <>
+          <p className="mt-2 inline-flex rounded-full border border-slate-400/40 bg-slate-500/15 px-2.5 py-1 text-[11px] font-semibold text-slate-200">
+            {summary?.label_ko ?? layer?.status_label_ko ?? "자료 수집 전"}
+          </p>
+          <p className="mt-2 text-xs leading-5 text-slate-400">
+            {layer?.reason_ko ?? layer?.coverage_note_ko ?? "검증된 공공데이터 원본이 아직 확보되지 않았습니다."}
+          </p>
+          <p className="mt-1 text-xs leading-5 text-slate-500">
+            미수집·미관측 상태이며 &quot;0건&quot;을 의미하지 않습니다.
+          </p>
+        </>
+      ) : summary?.observed_count == null ? (
+        <p className="mt-2 text-xs leading-5 text-slate-400">학교 좌표 미상으로 집계할 수 없습니다.</p>
+      ) : (
+        <>
+          <p className="mt-2 text-2xl font-bold text-white">
+            관측 {formatNumber(summary.observed_count)}건
+            <span className="ml-2 text-xs font-medium text-slate-400">반경 {summary.within_m ?? 500}m 직선거리</span>
+          </p>
+          {summary.observed_completed_count != null && summary.observed_completed_count > 0 ? (
+            <p className="mt-1 text-xs text-slate-300">이 중 사용승인(완료) 기록 {summary.observed_completed_count}건 — 현재 공사 위험 아님</p>
+          ) : null}
+          {summary.nearest_observed_m != null ? (
+            <p className="mt-1 text-xs text-slate-400">최근접 관측 {formatNumber(Math.round(summary.nearest_observed_m))}m</p>
+          ) : null}
+          <p className="mt-2 text-xs leading-5 text-amber-200/90 font-semibold">
+            {summary.label_ko ?? "좌표 확보 레코드 기준 최소 관측치"} · 전체 수는 확인 불가(total 미상)
+          </p>
+          {details?.records.length ? (
+            <details className="mt-3">
+              <summary className="cursor-pointer text-xs font-semibold text-slate-300">
+                개별 기록 {details.records.length}건 보기
+                {details.truncated_count > 0 ? ` (거리순 상위, 외 ${details.truncated_count}건)` : ""}
+              </summary>
+              <ul className="mt-2 space-y-1.5">
+                {details.records.map((record) => (
+                  <li key={record.facility_id} className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs leading-5 text-slate-300">
+                    {recordLine(record)}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ) : summary.observed_count > 0 ? (
+            // 관측 건수가 있는데 개별 기록이 없으면 원인을 숨기지 않고 명시한다
+            <p className="mt-3 rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-xs leading-5 text-rose-100">
+              {detailsStatus === "failed"
+                ? "개별 기록 데이터를 불러오지 못했습니다(시설 위치 데이터 다운로드 실패). 지도 화면을 새로고침한 뒤 학교를 다시 선택해 주세요."
+                : "개별 기록이 아직 로딩되지 않은 상태에서 리포트가 생성되었습니다. 지도에서 학교를 다시 선택하면 목록이 포함됩니다."}
+            </p>
+          ) : null}
+          {layer?.coverage_note_ko ? (
+            <p className="mt-2 text-xs leading-5 text-slate-500">{layer.coverage_note_ko}</p>
+          ) : null}
+          {layer?.coordinate_note_ko ? (
+            <p className="mt-1 text-xs leading-5 text-slate-500">{layer.coordinate_note_ko}</p>
+          ) : null}
+        </>
+      )}
+    </div>
+  );
+}
+
+function SchoolContextLayersSection({ contextLayers }: Pick<SchoolDetailReportProps, "contextLayers">) {
+  const notice = (message: string) => (
+    <SectionShell kicker="School Context" title="학교 지정·주변 맥락 정보">
+      <Card className="p-5">
+        <p className="text-sm text-slate-300">{message}</p>
+      </Card>
+    </SectionShell>
+  );
+
+  if (!contextLayers) {
+    return notice("이 세션에는 학교 맥락 데이터(지정 현황·주변 시설)가 연결되지 않았습니다.");
+  }
+  if (contextLayers.load_status === "failed") {
+    return notice("학교 맥락 데이터를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.");
+  }
+  if (contextLayers.load_status !== "loaded") {
+    return notice("학교 맥락 데이터가 아직 로딩되지 않은 상태에서 리포트가 열렸습니다. 지도를 새로고침한 뒤 학교를 다시 선택해 주세요.");
+  }
+
+  const layers = contextLayers.manifest_layers ?? {};
+  const designationLayer = layers.school_designations;
+  const summary = contextLayers.school_summary;
+  const records = contextLayers.designation_records ?? [];
+  const current = summary?.designations?.current ?? [];
+  const historical = summary?.designations?.historical ?? [];
+  const currentIds = new Set(current.map((item) => item.designation_id));
+
+  const nightlifeRecordLine = (record: ContextFacilityDetailRecord) =>
+    [
+      record.name ?? "이름 미상",
+      record.category ? `${record.category}${record.subtype ? `(${record.subtype})` : ""}` : null,
+      `${formatNumber(Math.round(record.distance_m))}m`,
+      record.business_status ? `인허가 상태: ${record.business_status}` : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
+  const constructionRecordLine = (record: ContextFacilityDetailRecord) =>
+    [
+      record.name ?? record.main_use ?? "기록",
+      record.construction_type ?? record.category,
+      `${formatNumber(Math.round(record.distance_m))}m`,
+      record.start_date ? `착공처리 ${record.start_date}` : null,
+      record.approval_date ? `사용승인 ${record.approval_date} (완료 기록)` : "사용승인 기록 없음",
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
+  return (
+    <SectionShell kicker="School Context" title="학교 지정·주변 맥락 정보">
+      <Card className="p-5">
+        <div className="space-y-5">
+          <p className="text-xs leading-5 text-slate-400">
+            {contextLayers.usage_note_ko ?? "참고용 맥락 정보입니다. 자동 안전 등급·지원 자격·법령 위반 판정에 사용하지 않습니다."}
+            {contextLayers.data_as_of ? ` · 수집 기준일 ${contextLayers.data_as_of}` : ""}
+          </p>
+
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">지정·지원 프로그램 현황</p>
+            <p className="mt-2 text-base font-semibold text-white">
+              {summary?.designations?.status !== "available"
+                ? "자료 수집 전"
+                : current.length
+                  ? current
+                      .map((item) => `${item.school_year ?? ""}학년도 ${item.program_name} ${item.designation_type}`.trim())
+                      .join(", ")
+                  : "수집된 명단 기준 해당 없음"}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              {summary?.designations?.scope_note_ko ??
+                designationLayer?.scope_note_ko ??
+                "수집된 프로그램 명단 기준이며, 그 외 지정·지원 사업은 미수집입니다."}
+            </p>
+            {designationLayer?.period_note_ko ? (
+              <p className="mt-1 text-xs text-slate-500">{designationLayer.period_note_ko}</p>
+            ) : null}
+            {records.length ? (
+              <div className="mt-3 grid gap-3 md:grid-cols-2">
+                {records.map((record) => {
+                  const isCurrent = currentIds.has(record.designation_id);
+                  return (
+                    <div
+                      key={record.designation_id}
+                      className={`rounded-2xl border p-4 ${
+                        isCurrent ? "border-violet-400/25 bg-violet-500/10" : "border-white/10 bg-white/[0.03]"
+                      }`}
+                    >
+                      <p className="text-sm font-semibold text-white">
+                        {record.program_name} {record.designation_type}
+                      </p>
+                      <p className={`mt-1 inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                        isCurrent
+                          ? "border border-violet-300/40 bg-violet-500/20 text-violet-100"
+                          : "border border-slate-400/40 bg-slate-500/15 text-slate-200"
+                      }`}>
+                        {record.school_year != null ? `${record.school_year}학년도 명단 · ` : ""}
+                        {PERIOD_STATUS_LABELS[record.period_status] ?? "지정 기간 미상"}
+                        {record.period_basis === "school_year_only" ? " (학년도 기준 추정)" : ""}
+                      </p>
+                      <p className="mt-2 text-xs leading-5 text-slate-300">
+                        {record.financial_support_amount
+                          ? `지원 내역(원문 명시): ${record.financial_support_amount}`
+                          : "지원 예산·금액은 원문에 명시되지 않아 표시하지 않습니다."}
+                      </p>
+                      {isSafeHttpUrl(record.source?.url) ? (
+                        <p className="mt-2 text-xs leading-5 text-slate-400">
+                          출처:{" "}
+                          <a
+                            href={record.source!.url!}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-forest-300 underline decoration-forest-300/50 underline-offset-2 hover:text-forest-200"
+                          >
+                            {record.source?.title ?? record.source?.url}
+                          </a>
+                          <br />
+                          발행 {formatContextDate(record.source?.published_date)} · 수집 {formatContextDate(record.source?.retrieved_at)}
+                        </p>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+            {historical.length && !records.length ? (
+              <p className="mt-2 text-xs text-slate-400">과거 학년도 이력 {historical.length}건 (상세는 위 목록 참조)</p>
+            ) : null}
+          </div>
+
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">학교 주변 시설 맥락 (직선거리 500m)</p>
+            <p className="mt-1 text-xs text-slate-500">
+              인허가·행정기록 기반 참고 지표입니다. 직선거리 기준이라 실제 도보 경로·체감 노출과 다르며,
+              업종·기록 사실이지 사고위험·불법행위·현장 상태 판정이 아닙니다.
+            </p>
+            <div className="mt-3 grid gap-3 md:grid-cols-2">
+              <ContextFacilityCard
+                title="유흥·단란주점 인허가 현황"
+                layer={layers.nightlife_permits}
+                summary={summary?.nightlife}
+                details={contextLayers.facility_details?.nightlife}
+                detailsStatus={contextLayers.facility_details?.status}
+                recordLine={nightlifeRecordLine}
+              />
+              <ContextFacilityCard
+                title="공사장(착공신고) 행정기록"
+                layer={layers.construction_records}
+                summary={summary?.construction}
+                details={contextLayers.facility_details?.construction}
+                detailsStatus={contextLayers.facility_details?.status}
+                recordLine={constructionRecordLine}
+              />
+            </div>
+          </div>
+
+          {(() => {
+            const sourceGroups = [
+              { label: "지정·지원 프로그램 출처", sources: designationLayer?.sources ?? [], note: undefined },
+              { label: "유흥·단란주점 인허가 출처", sources: layers.nightlife_permits?.sources ?? [], note: layers.nightlife_permits?.source_as_of_note_ko },
+              { label: "공사장 행정기록 출처", sources: layers.construction_records?.sources ?? [], note: layers.construction_records?.source_as_of_note_ko },
+            ].filter((group) => group.sources.length);
+            if (!sourceGroups.length) return null;
+            return (
+              <div className="border-t border-white/10 pt-3 space-y-2">
+                {sourceGroups.map((group) => (
+                  <div key={group.label}>
+                    <p className="text-xs font-semibold text-slate-400">{group.label}</p>
+                    {group.sources.map((source, index) => (
+                      <p key={`${source.url}-${index}`} className="mt-1 text-xs leading-5 text-slate-500">
+                        {isSafeHttpUrl(source.url) ? (
+                          <a href={source.url} target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-slate-300">
+                            {source.title ?? source.url}
+                          </a>
+                        ) : (
+                          source.title
+                        )}
+                        {source.source_as_of ? ` · 원자료 기준 ${source.source_as_of}` : ""}
+                        {source.published_date ? ` · 발행 ${source.published_date}` : ""}
+                        {!source.source_as_of && !source.published_date ? " · 원자료 기준일 미확인" : ""}
+                        {` · 수집 ${formatContextDate(source.retrieved_at)}`}
+                      </p>
+                    ))}
+                    {group.note ? (
+                      <p className="mt-1 text-xs leading-5 text-slate-600">{group.note}</p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+        </div>
+      </Card>
+    </SectionShell>
+  );
+}
+
 function SimulationEntry({
   onSimulationClick,
   potentialDemand2029,
@@ -1543,10 +1962,51 @@ export default function SchoolDetailReportPage(props: SchoolDetailReportProps) {
   return (
     <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-4 py-8 lg:px-8">
       <SchoolHeader {...props} />
-      <SchoolProfileGrid {...props} />
-      <ProblemSection {...props} />
-      <ContextSection {...props} />
-      <SimilarSchoolsSection {...props} />
+      <section className="reading-summary" aria-label="학교 검토 핵심">
+        <p className="text-sm font-semibold text-forest-200">이 학교를 읽는 세 가지 기준</p>
+        <h2>현재 환경을 진단하고, 도달 경로와 미래 수요를 따로 확인하세요</h2>
+        <div className="reading-grid mt-5">
+          <div className="reading-metric"><span>01 · 현재 격차</span><strong>{props.casePolicyLabel}</strong><p>{props.caseStatusLabel}</p></div>
+          <div className="reading-metric"><span>02 · 접근 마찰</span><strong>{props.functionalAccessPhysicalBarrierFlag ? "보행 부담 확인" : "경로 조건 확인"}</strong><p>{props.functionalAccessPhysicalBarrierFlag ? (props.functionalAccessPhysicalBarrierLabel ?? "활동규모 공원까지의 보행 부담 동반") : (props.accessConditionLabel ?? "경로 자료를 펼쳐 확인하세요")}</p></div>
+          <div className="reading-metric"><span>03 · 미래 수요</span><strong>{formatNumber(props.potentialDemand2029)}명</strong><p>2029년 잠재 수요 추정 · 현재 학생수와 구분</p></div>
+        </div>
+        <p className="mt-4 text-xs">정책 분류와 AI 추정은 검토 근거입니다. 현장 확인과 담당자의 판단을 거쳐 사업을 결정합니다.</p>
+      </section>
+      <section className="panel p-5" aria-label="현재 환경 비교">
+        <h2 className="text-xl font-bold">시 평균과 비교하면 어떤가요?</h2>
+        <p className="mt-2 text-sm text-slate-300">공원 거리는 짧을수록, 녹지와 놀이터는 많을수록 유리합니다. 평균과의 차이가 정책 등급을 직접 결정하지는 않습니다.</p>
+        <div className="reading-grid mt-5">
+          {[
+            { label: "최근접 공원 거리", value: props.nearestParkDistanceM, average: props.nearestParkDistanceCityAvg, unit: "m" },
+            { label: "표시 녹지비율", value: props.greenRatio, average: props.greenRatioCityAvg, unit: "%" },
+            { label: "도보권 놀이터", value: props.playgroundCount, average: props.playgroundCountCityAvg, unit: "개" },
+          ].map(metric => {
+            const maximum = Math.max(...[metric.value, metric.average, 1].filter(Number.isFinite));
+            return <div key={metric.label} className="rounded-xl bg-white/[.03] p-4">
+              <h3 className="mb-3 text-sm font-bold">{metric.label}</h3>
+              {[{ label: "이 학교", value: metric.value, color: "#6ee7b7" }, { label: "시 평균", value: metric.average, color: "#94a3b8" }].map(row =>
+                <div key={row.label} className="mt-3">
+                  <div className="mb-1 flex justify-between gap-2 text-xs"><span>{row.label}</span><strong>{Number.isFinite(row.value) ? `${new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 1 }).format(row.value)}${metric.unit}` : "자료 없음"}</strong></div>
+                  <div className="h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true"><div className="h-full rounded-full" style={{ width: `${Number.isFinite(row.value) ? Math.max(0, row.value) / maximum * 100 : 0}%`, background: row.color }} /></div>
+                </div>)}
+            </div>;
+          })}
+        </div>
+        {props.greenRatioHighReviewFlag && <p className="mt-3 text-sm text-amber-200">이 학교의 녹지비율은 검수 대상입니다. 상세 근거에서 표시 기준을 확인하세요.</p>}
+      </section>
+      <SimulationEntry {...props} />
+      <Disclosure title="현재 격차와 접근 경로의 상세 근거" description="공원·녹지·놀이터 · 도로 횡단 · 학생 추이 · 지표별 비교">
+        <SchoolProfileGrid {...props} />
+        <ProblemSection {...props} />
+      </Disclosure>
+      <Disclosure title="미래 수요와 지역 변화" description="2029·2031 추정치와 재개발 맥락을 함께 확인">
+        <ContextSection {...props} />
+        <RedevelopmentNotice {...props} />
+      </Disclosure>
+      <Disclosure title="비슷한 학교와 비교" description="유사학교와 녹지 환경 참고 사례 · 학교 평가 순위가 아닙니다">
+        <SimilarSchoolsSection {...props} />
+      </Disclosure>
+      <Disclosure title="AI에 근거 질문하기" description="이 학교의 진단 이유와 확인할 사항을 질문하세요">
       <AiExplainerPanel
         schoolContext={{
           school_name: props.schoolName,
@@ -1562,8 +2022,10 @@ export default function SchoolDetailReportPage(props: SchoolDetailReportProps) {
           potential_demand_2031: props.potentialDemand2031,
         }}
       />
-      <RedevelopmentNotice {...props} />
-      <SimulationEntry {...props} />
+      </Disclosure>
+      <Disclosure title="주변 시설과 학교 지정 이력" description="부분 관측 자료 · 자료가 없다는 이유로 시설 없음이나 안전함을 뜻하지 않습니다">
+        <SchoolContextLayersSection contextLayers={props.contextLayers} />
+      </Disclosure>
     </div>
   );
 }

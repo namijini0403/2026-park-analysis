@@ -53,7 +53,8 @@ function readSchoolFromStorage(): Record<string, any> | null {
   try {
     const raw = localStorage.getItem("parkAnalysis_school");
     if (!raw) return null;
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
   } catch {
     return null;
   }
@@ -161,7 +162,7 @@ export default function PreviewWorkspaceSafe() {
   const handlePrint = () => {
     if (typeof window === "undefined") return;
     const previousTitle = document.title;
-    const printTitle = `${detailProps.schoolName} - ${VIEW_PRINT_LABELS[view]}`;
+    const printTitle = view === "statistics" ? VIEW_PRINT_LABELS[view] : `${detailProps.schoolName} - ${VIEW_PRINT_LABELS[view]}`;
     const restoreTitle = () => {
       document.title = previousTitle;
       window.removeEventListener("afterprint", restoreTitle);
@@ -193,7 +194,7 @@ export default function PreviewWorkspaceSafe() {
                 ParkLens · Incheon
               </p>
               <p className="text-sm font-bold text-white">
-                {schoolRow ? detailProps.schoolName : "UI Preview"}
+                {view === "statistics" ? "인천 전체 통계" : schoolRow ? detailProps.schoolName : "예시 학교 · 시연 데이터"}
                 <span className="ml-2 text-[11px] font-medium text-slate-400">
                   · 학교 상세 · 시뮬레이션 · 통계
                 </span>
@@ -210,7 +211,8 @@ export default function PreviewWorkspaceSafe() {
               return (
                 <button
                   key={item.key}
-                  onClick={() => setView(item.key as ViewMode)}
+                  aria-current={active ? "page" : undefined}
+                  onClick={() => { setView(item.key as ViewMode); setAiChatOpen(false); window.scrollTo(0, 0); }}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                     active
                       ? "bg-forest-grad text-white shadow-glow"
@@ -223,6 +225,7 @@ export default function PreviewWorkspaceSafe() {
             })}
             <button
               type="button"
+              aria-expanded={aiChatOpen}
               onClick={() => setAiChatOpen((current) => !current)}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                 aiChatOpen
@@ -237,7 +240,7 @@ export default function PreviewWorkspaceSafe() {
               onClick={handlePrint}
               className="rounded-full border border-forest-400/45 bg-forest-500/10 px-4 py-2 text-sm font-semibold text-forest-100 transition hover:bg-forest-500/20"
             >
-              PDF/인쇄
+              펼친 내용 PDF/인쇄
             </button>
           </div>
         </div>
@@ -280,6 +283,7 @@ export default function PreviewWorkspaceSafe() {
         </div>
       ) : null}
 
+      {!schoolRow && view !== "statistics" && <div role="status" className="mx-auto mt-5 max-w-[1280px] rounded-xl border border-amber-400/40 bg-amber-500/10 px-5 py-3 text-sm text-amber-100">예시 학교로 보는 시연 화면입니다. 실제 학교 리포트는 지도에서 학교를 선택해 열어주세요.</div>}
       {view === "simulation" ? (
         <SimulationPage
           schoolName={detailProps.schoolName}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import Disclosure from "./Disclosure";
 import {
   Bar,
   BarChart,
@@ -109,14 +110,14 @@ function SchoolRow({ school, compact = false }: { school: StatisticsSchoolItem; 
         </div>
         <p className="mt-1 text-sm text-slate-400">{school.caseStatusLabel}</p>
 {!compact ? (
-          <div className="mt-3 flex flex-wrap gap-3 text-sm text-slate-300">
+          <details className="mt-3 text-sm text-slate-300"><summary className="cursor-pointer text-forest-200">학교 지표 펼치기</summary><div className="mt-2 flex flex-wrap gap-3">
             <span>학생수 {formatNumber(school.currentStudentCount)}명</span>
             <span>2029 {formatNumber(school.potentialDemand2029)}명</span>
             <span>2031 {formatNumber(school.potentialDemand2031)}명</span>
             <span>공원 {formatDecimal(school.nearestParkDistanceM, 1)}m</span>
             <span>녹지 {formatDecimal(school.greenRatio, 1)}%</span>
             <span>놀이터 {formatNumber(school.playgroundCount)}개</span>
-          </div>
+          </div></details>
         ) : null}
       </div>
       <div className="rounded-2xl border border-white/10 bg-navy-900/95 px-4 py-3 text-right">
@@ -203,10 +204,10 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
 
   const cityCaseSummary = useMemo(
     () => [
-      { label: "case1", value: data.summary.case1Count, color: "#dc2626" },
-      { label: "case2", value: data.summary.case2Count, color: "#f97316" },
-      { label: "case3", value: data.summary.case3Count, color: "#eab308" },
-      { label: "case4", value: data.summary.case4Count, color: "#16a34a" },
+      { label: "즉시 개선", value: data.summary.case1Count, color: "#dc2626" },
+      { label: "우선 검토", value: data.summary.case2Count, color: "#f97316" },
+      { label: "모니터링", value: data.summary.case3Count, color: "#eab308" },
+      { label: "유지·관리", value: data.summary.case4Count, color: "#16a34a" },
       { label: "별도 묶음", value: data.summary.separateBundleCount, color: "#64748b" },
     ],
     [data.summary]
@@ -217,50 +218,48 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
       <section className="panel space-y-5 p-7">
         <div className="space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">Overview</p>
-          <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">인천 학교 전체 통계 리포트</h1>
+          <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">어디에 지원이 필요한가</h1>
           <p className="max-w-3xl text-base leading-7 text-slate-300">
-            시 전체 우선 지원 흐름을 먼저 보고, 이어서 구별 상위 5개 학교와 각 구 최우수 학교 1개를 내려보는 구조의 통계 프리뷰입니다.
+            인천 초등학교의 현재 환경 격차를 비교하고, 구별 검토 학교를 좁혀보세요. 미래 수요는 별도 참고 지표입니다.
           </p>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <SummaryCard title="전체 학교" value={`${formatNumber(data.summary.schoolCount)}개교`} helper={`${formatNumber(data.summary.districtCount)}개 구·군 · 별도 ${formatNumber(data.summary.separateBundleCount)}개`} />
-          <SummaryCard title="즉시 개선 대상" value={`${formatNumber(data.summary.case1Count)}개교`} helper={`case2 ${formatNumber(data.summary.case2Count)} · case3 ${formatNumber(data.summary.case3Count)} · case4 ${formatNumber(data.summary.case4Count)}`} />
-          <SummaryCard title="우선 검토 대상" value={`${formatNumber(data.summary.priorityReviewCount)}개교`} helper="공원 접근 가능 · 녹지 부족 포함" />
-          <SummaryCard title="2029 잠재 수요" value={`${formatNumber(data.summary.totalPotentialDemand2029)}명`} helper={`단지보정 후보 ${formatNumber(data.summary.apartmentAdjustmentCandidateCount)}개교`} />
+        <div className="reading-summary">
+          <p className="text-sm font-semibold text-forest-200">현재 격차 · 학교 중심 500m 분석</p>
+          <h2>{formatNumber(data.summary.schoolCount)}개교 중 {formatNumber(data.summary.case1Count + data.summary.case2Count)}개교가 개선·우선 검토 대상입니다</h2>
+          <p>전체의 {formatDecimal(data.summary.schoolCount ? (data.summary.case1Count + data.summary.case2Count) / data.summary.schoolCount * 100 : 0)}% · 정책 분류에 따른 검토 대상이며, 예산 배분이나 사업 확정을 뜻하지 않습니다.</p>
+          <div className="mt-5 flex h-4 overflow-hidden rounded-full" role="img" aria-label={cityCaseSummary.map(item => `${item.label} ${item.value}개교`).join(", ")}>
+            {cityCaseSummary.map(item => <span key={item.label} style={{ width: `${data.summary.schoolCount ? item.value / data.summary.schoolCount * 100 : 0}%`, background: item.color }} />)}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {cityCaseSummary.map(item => <span key={item.label}><span aria-hidden="true" style={{ color: item.color }}>● </span>{item.label} <strong>{item.value}개교</strong></span>)}
+          </div>
         </div>
-        <div className="grid gap-3 sm:grid-cols-5">
-          {cityCaseSummary.map((item) => (
-            <div key={item.label} className="rounded-2xl border border-white/10 bg-navy-850/95 px-4 py-3">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">{item.label}</p>
-              </div>
-              <p className="mt-2 text-2xl font-black tracking-tight text-white">{formatNumber(item.value)}개교</p>
-            </div>
-          ))}
-        </div>
+        <Disclosure title="통계 범위와 해석 기준" description="현재 분류, 미래 수요, 별도 정책 대상의 차이">
+          <p className="text-sm leading-7 text-slate-300">{data.summary.districtCount}개 구·군, {data.summary.schoolCount}개교의 분석 산출물 기준입니다. 별도 묶음 {data.summary.separateBundleCount}개교는 전체 분모에 포함되며 일반 학교와 같은 기준으로 순위를 매기지 않습니다. 분류는 현재 환경을 나타내고, 2029·2031 수요 추정치는 미래 검토의 보조 근거입니다. 구별 학교 수가 다르므로 아래 막대의 크기를 구의 위험도나 지원 필요 비율로 해석하지 마세요.</p>
+        </Disclosure>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <section className="grid gap-6">
         <div className="panel p-6">
           <SectionTitle
             eyebrow="District View"
-            title={chartMode === "pressure" ? "구별 우선 지원 압력" : "구별 전체 case 분포"}
+            title={chartMode === "pressure" ? "어느 구에 검토 학교가 많은가" : "구별 정책 분류"}
             description={
               chartMode === "pressure"
-                ? "즉시 개선 대상과 우선 검토 대상을 함께 쌓아 보여주는 비교 차트입니다."
-                : "구별 학교가 어떤 case에 얼마나 분포하는지 한 번에 비교할 수 있는 차트입니다."
+                ? "즉시 개선(빨강)과 우선 검토(주황)의 학교 수를 비교합니다. 단위: 개교."
+                : "학교 수 기준의 분포입니다. 구의 전체 학교 수 차이를 함께 고려하세요."
             }
           />
           <div className="mt-4 flex flex-wrap gap-2">
             {[
-              { key: "pressure", label: "우선지원 압력" },
-              { key: "cases", label: "전체 case 수" },
+              { key: "pressure", label: "개선·검토 학교 수" },
+              { key: "cases", label: "모든 정책 분류" },
             ].map((item) => {
               const active = chartMode === item.key;
               return (
                 <button
                   key={item.key}
+                  aria-pressed={active}
                   onClick={() => setChartMode(item.key as "pressure" | "cases")}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                     active
@@ -273,6 +272,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
               );
             })}
           </div>
+          <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-300">{Object.entries(CASE_COLORS).filter(([label]) => chartMode === "cases" || SUPPORT_PRIORITY_LABELS.has(label)).map(([label, color]) => <span key={label}><span style={{ color }} aria-hidden="true">● </span>{label}</span>)}</div>
           <div className="mt-5 h-[360px]">
             <ResponsiveContainer width="100%" height="100%">
               {chartMode === "pressure" ? (
@@ -322,23 +322,23 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
           </div>
         </div>
 
-        <div className="panel p-6">
+        <Disclosure title="녹지 환경 참고 사례" description="공원 200m 이내 · 녹지 분위·놀이터·거리 기준 · 학교 종합평가가 아닙니다">
           <SectionTitle
             eyebrow="City Best"
-            title="시 전체 최우수 학교"
-            description="생활환경 벤치마크 역할을 하는 학교 1개를 표시 녹지비율 기준으로 보여줍니다."
+            title="녹지비율이 높은 참고 학교"
+            description="최근접 공원 200m 이내 학교를 녹지 분위 → 놀이터 유무 → 녹지비율 → 거리 순으로 비교합니다. 실제 보행 부담과 활동 규모는 별도 확인하세요."
           />
           <div className="mt-5">
-            <BestSchoolCard school={data.cityBestSchool} label="인천시 최우수 학교" />
+            <BestSchoolCard school={data.cityBestSchool} label="인천 녹지 환경 참고 학교" />
           </div>
-        </div>
+        </Disclosure>
       </section>
 
       <section className="panel space-y-5 p-6">
         <SectionTitle
           eyebrow="District Detail"
-          title="구별 상세 통계"
-          description="구를 선택하면 해당 구의 전체 지표와 우선 지원 학교 Top 5, 구 최우수 학교 1개를 함께 확인할 수 있습니다."
+          title="우리 구에서는 어느 학교부터 검토할까"
+          description="구를 고르고 검토 기준을 선택하세요. 같은 정책 분류 안에서도 놀이공간 부족과 학생 규모에 따라 순서가 달라집니다."
         />
         <div className="flex flex-wrap gap-2">
           {data.districts.map((district) => {
@@ -346,6 +346,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
             return (
               <button
                 key={district.districtName}
+                aria-pressed={active}
                 onClick={() => setSelectedDistrictName(district.districtName)}
                 className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                   active
@@ -360,8 +361,9 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
         </div>
 
         {selectedDistrict ? (
-          <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid gap-6">
             <div className="space-y-5">
+              <Disclosure title={`${selectedDistrict.districtName} 수치와 비교 사례`} description="학교 수 · 수요 추정 · 평균 공원 거리 · 녹지">
               <div className="grid gap-4 sm:grid-cols-2">
                 <SummaryCard
                   title={`${selectedDistrict.districtName} 전체 학교`}
@@ -384,7 +386,8 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
                   helper={`우선 검토 ${formatNumber(selectedDistrict.priorityReviewCount)}개교`}
                 />
               </div>
-              <BestSchoolCard school={selectedDistrict.bestSchool} label={`${selectedDistrict.districtName} 최우수 학교`} />
+              <BestSchoolCard school={selectedDistrict.bestSchool} label={`${selectedDistrict.districtName} 녹지 환경 참고 학교`} />
+              </Disclosure>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-navy-850/95 p-5">
@@ -436,12 +439,13 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
         ) : null}
       </section>
 
+      <Disclosure title="인천 전체 검토 목록과 미래 수요" description="즉시 개선 대상 전체 목록 · 구별 2029 수요 추정">
       <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <div className="panel p-6">
           <SectionTitle
             eyebrow="City Case 1"
-            title={`시 전체 case1 우선순위 ${formatNumber(cityCase1Schools.length)}개교`}
-            description="같은 case1 안에서도 무엇을 먼저 볼지 선택할 수 있습니다. 놀이공간 부족을 우선할지, 현재 학생 규모를 우선할지 바로 비교해 볼 수 있습니다."
+            title={`즉시 개선 대상 검토 순서 ${formatNumber(cityCase1Schools.length)}개교`}
+            description="같은 즉시 개선 대상 안에서도 무엇을 먼저 볼지 선택할 수 있습니다. 놀이공간 부족을 우선할지, 현재 학생 규모를 우선할지 바로 비교해 볼 수 있습니다."
           />
           <div className="mt-4 flex flex-wrap gap-2">
             {[
@@ -495,6 +499,7 @@ export default function StatisticsPageSafe({ data }: StatisticsPageProps) {
           </div>
         </div>
       </section>
+      </Disclosure>
     </div>
   );
 }

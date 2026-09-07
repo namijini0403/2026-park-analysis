@@ -112,6 +112,15 @@ for (const file of requiredDataFiles) {
   copyFileToOutput(path.join("data_processed", file));
 }
 
+// 학교 맥락 레이어 (지정·연구학교, 유흥·단란주점 인허가, 공사장 행정기록)
+// — python scripts/build_context_layers.py 산출물
+copyDirectoryToOutput(path.join("data_processed", "context"));
+
+// 업데이트 센터 읽기 전용 공개 대시보드 (public만 포함; managed/staging 스냅샷 제외)
+if (existsSync(path.join(root, "update_center", "public"))) {
+  copyDirectoryToOutput(path.join("update_center", "public"));
+}
+
 copyDirectoryToOutput(path.join("ui-preview", "dist"));
 copyDirectoryToOutput("assets");
 copyDirectoryToOutput(path.join("outputs", "robust_xai"));

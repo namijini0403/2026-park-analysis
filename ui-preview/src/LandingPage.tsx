@@ -1,3 +1,4 @@
+import Disclosure from "./Disclosure";
 import { useState } from "react";
 import guideMapLayers from "./assets/guide/guide-map-layers-bright.png";
 import guideReport from "./assets/guide/guide-report-modal-bright.png";
@@ -173,8 +174,8 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
                 <span className="block">도달 가능성으로</span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                도보 네트워크·보행 부담·활동규모 기준을 반영해 초등학교 야외활동 환경을 진단하고,
-                <span className="font-semibold text-forest-300"> 견고한 후보지와 SHAP 후보 진단</span>을 제안합니다.
+                아이들이 걸어서 갈 수 있는 야외활동 공간을 확인하고,
+                <span className="font-semibold text-forest-300"> 개선이 필요한 학교와 검토할 후보지</span>을 제안합니다.
               </p>
             </div>
 
@@ -187,7 +188,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {["실제 도보생활권", "활동규모 기준", "학교별 환경 진단", "견고 후보 추천", "SHAP 후보 진단", "Human-in-the-loop"].map((item) => (
+              {["현재 격차 진단", "미래 수요 확인", "후보 비교·사람의 판단"].map((item) => (
                 <span key={item} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold text-slate-100">
                   {item}
                 </span>
@@ -201,6 +202,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               alt="도보권 지도와 학교별 진단 패널"
               className="h-[360px] w-full object-cover object-center brightness-[1.04] saturate-[1.08] sm:h-[430px] lg:h-[500px]"
             />
+            <p className="px-4 pt-4 text-xs text-slate-400">가이드 사례 수치 · 선택한 학교의 실시간 결과가 아닙니다</p>
             <div className="grid gap-3 border-t border-white/10 p-4 sm:grid-cols-5">
               <HeroMetric label="도보 생활권 공원" value="0개" />
               <HeroMetric label="직선 500m 공원" value="1개" />
@@ -222,6 +224,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
             </p>
           </div>
 
+          <Disclosure title="화면별 사용법과 예시 보기" description="학교 진단 · 후보 비교 · 전체 통계의 읽는 순서">
           <div className="mt-5 grid gap-6">
             {guideShots.map((shot) => (
               <article
@@ -252,6 +255,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               </article>
             ))}
           </div>
+          </Disclosure>
         </section>
 
         <section className="mt-12">
@@ -261,7 +265,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
               <h2 className="mt-2 text-2xl font-black text-white">정책 판단 흐름도</h2>
             </div>
             <p className="text-sm leading-relaxed text-slate-400">
-              각 단계를 누르면 아래에 판단 설명과 관련 화면 캡처가 함께 표시됩니다. case2 단계는 봉화초 단일 사례가 아니라 전형적 검토 학교 흐름으로 읽히도록 지도 레이어 화면을 붙였습니다.
+              단계를 누르면 확인할 질문과 관련 화면을 볼 수 있습니다. 현재 격차 → 미래 수요 → 후보 비교 순서로 검토하세요.
             </p>
           </div>
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>update_center 로컬 검토 대시보드</title>
+<style>
+  body { font-family: 'Malgun Gothic', sans-serif; max-width: 1200px; margin: 24px auto; padding: 0 16px; line-height: 1.7; background: #10241c; color: #e8f2ec; }
+  h1 { font-size: 20px; } h2 { font-size: 16px; margin-top: 28px; border-bottom: 1px solid #2e5d47; padding-bottom: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { border: 1px solid #2e5d47; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #1a3a2c; }
+  code { background: #1a3a2c; padding: 1px 4px; border-radius: 3px; }
+  .badge { padding: 1px 8px; border-radius: 10px; font-size: 12px; }
+  .badge.ok { background: #1f6f43; } .badge.warn { background: #8a6d1a; } .badge.fail { background: #8a2626; } .badge.unsupported { background: #565672; }
+  .active { background: #1f6f43; padding: 2px 10px; border-radius: 4px; }
+  .cmd { background: #0b1a13; border: 1px solid #2e5d47; padding: 10px 14px; border-radius: 6px; font-size: 13px; }
+  .note { color: #9fc1ad; font-size: 12px; }
+  details { margin: 16px 0; border: 1px solid #2e5d47; border-radius: 12px; padding: 16px; }
+  summary { cursor: pointer; font-weight: bold; }
+  summary:focus-visible { outline: 3px solid #6ee7b7; outline-offset: 4px; }
+  .table-scroll, pre { overflow-x: auto; }
+  .overview { padding: 20px; border: 1px solid #3f916b; border-radius: 16px; background: #133326; }
+</style>
+</head>
+<body>
+<h1>데이터 갱신 검토 현황 <span class="note">(읽기 전용 · 생성 시각 2026-09-07T20:27:25.081Z)</span></h1>
+<p class="note">이 화면은 로컬 파일 변경 검토 MVP의 상태 표시용이다. 외부 원본 자동 감시 기능이 아니며, 버튼으로 실행되는 기능은 없다.
+모든 조치는 아래 CLI 명령으로만 수행한다. 승인 결과는 update_center/managed/ 에만 기록되고 data_processed/ 운영 데이터에는 자동 반영되지 않는다.</p>
+<p>활성 버전: <span class="active">v002</span></p>
+
+<div class="overview"><strong>반입 → 품질 확인 → 변경 비교 → 담당자 검토</strong><p>등록된 검토 자료 5개 · 변경 비교 2개</p><p class="note">품질 통과와 운영 반영은 다릅니다. 이 화면은 관리 영역의 상태를 보여주며, 운영 앱의 데이터는 자동으로 바뀌지 않습니다.</p></div>
+<details><summary>갱신 작업 방법 · 로컬 명령어</summary>
+<h2>조치 명령 (로컬 CLI)</h2>
+<div class="cmd"><pre>node update_center/review_cli.cjs stage &lt;파일|디렉터리&gt; [--as 이름.csv] [--label 설명]   # 후보 반입+품질검사
+node update_center/review_cli.cjs diff &lt;baseline_id&gt; &lt;candidate_id&gt;                       # 전후 비교 리포트
+node update_center/review_cli.cjs approve &lt;snapshot_id&gt; --note "승인 메모"                 # 버전 승격(품질 fail 차단)
+node update_center/review_cli.cjs reject &lt;snapshot_id&gt; --note "반려 사유"
+node update_center/review_cli.cjs rollback &lt;vNNN&gt;                                          # 해시 일치 확인 후 활성 버전 되돌림
+node update_center/review_cli.cjs verify &lt;snapshot_id&gt;                                     # 스냅샷 무결성 재검증</pre></div>
+</details>
+
+<details><summary>스냅샷 (staging) 펼치기</summary>
+<div class="table-scroll">
+<table><tr><th>ID</th><th>라벨</th><th>반입 시각</th><th>품질</th><th>파일 (행수 · 계약 · SHA-256 앞 12자리 · 품질 메모)</th></tr>
+<tr><td><code>snap_20260906T021519_ff6a9d</code></td><td>구중구권 정규화 기준본(좌표 지오코딩 pending)</td><td>2026-09-06T02:15:19.548Z</td><td><span class="badge ok">ok</span></td><td>entertainment_facilities.csv (140행, facility, sha:7b60ced91e9a)</td></tr>
+<tr><td><code>snap_20260906T021610_65bf0d</code></td><td>인천 전체 LOCALDATA 영업중 971건(좌표 796건 변환, 175건 missing 유지)</td><td>2026-09-06T02:16:10.584Z</td><td><span class="badge ok">ok</span></td><td>entertainment_facilities.csv (971행, facility, sha:9317218071c2)</td></tr>
+<tr><td><code>snap_20260906T021809_9ac390</code></td><td>2026 AI·디지털 연구·선도학교 73교(검토 대기)</td><td>2026-09-06T02:18:09.453Z</td><td><span class="badge ok">ok</span></td><td>school_designations_2026.csv (73행, designation, sha:3698f58e4c8f)</td></tr>
+<tr><td><code>snap_20260906T023448_51630b</code></td><td>메인 파이프라인 컨텍스트 산출물 3종(계약 검증 데모)</td><td>2026-09-06T02:34:48.680Z</td><td><span class="badge ok">ok</span></td><td>context_layers_manifest.json (3행, context_manifest, sha:08b99dba5e59)<br>school_context_summary.json (272행, school_context_summary, sha:f789e6aff24f)<br>school_designations.json (73행, designation, sha:f59343ec4111)</td></tr>
+<tr><td><code>snap_20260906T024623_21e066</code></td><td>schema_version 2 최종 산출물(검토 후보, 미승격)</td><td>2026-09-06T02:46:24.057Z</td><td><span class="badge ok">ok</span></td><td>context_layers_manifest.json (3행, context_manifest, sha:1cea572acd63)<br>facilities_construction.geojson (74행, geojson, sha:e6e44f903acc)<br>facilities_nightlife.geojson (1534행, geojson, sha:2f942cfe168a)<br>school_context_summary.json (272행, school_context_summary, sha:1355f414570e)<br>school_designations.json (267행, designation, sha:0a1b9cfd6fa8)</td></tr>
+</table>
+</div></details>
+
+<details><summary>전후 비교 (diff) 펼치기</summary>
+<div class="table-scroll">
+<table><tr><th>비교</th><th>추가/삭제/변경</th><th>변경 상세</th></tr>
+<tr><td><code>snap_20260906T021519_ff6a9d</code> → <code>snap_20260906T021610_65bf0d</code></td><td>+0 / -0 / 변경 1</td><td>entertainment_facilities.csv: 140→971행, 열 추가 subtype·source_download_url·source_updated_at·source_modified_at·coordinate_source·coordinate_status·original_x·original_y, 열 삭제 geocode_status·risk_interpretation</td></tr>
+<tr><td><code>snap_20260906T023448_51630b</code> → <code>snap_20260906T024623_21e066</code></td><td>+2 / -0 / 변경 3</td><td>context_layers_manifest.json: 3→3행<br>school_context_summary.json: 272→272행<br>school_designations.json: 73→267행, 열 추가 designation_end_date·designation_start_date·period_basis</td></tr>
+</table>
+</div></details>
+
+<details><summary>승인 버전 이력 (managed) 펼치기</summary>
+<div class="table-scroll">
+<table><tr><th>버전</th><th>조치</th><th>시각</th><th>메모</th><th>내용 해시</th></tr>
+<tr><td>v001</td><td>approve</td><td>2026-09-06T02:17:08.061Z</td><td>구중구권 140건 정규화본을 기준선으로 승인(로컬 검토 데모, 운영 미반영)</td><td><code>31f10225bda51ae3</code></td></tr>
+<tr><td>v002</td><td>approve</td><td>2026-09-06T02:17:13.803Z</td><td>인천 전체 971건(좌표 796 변환)으로 갱신 승인 — 커버리지 확대, 누락좌표 175건 상태 유지 확인</td><td><code>ace112d25babc84a</code></td></tr>
+<tr><td>v001</td><td>rollback</td><td>2026-09-06T02:18:00.140Z</td><td>-</td><td><code>31f10225bda51ae3</code></td></tr>
+<tr><td>v002</td><td>rollback</td><td>2026-09-06T02:18:03.427Z</td><td>-</td><td><code>ace112d25babc84a</code></td></tr>
+</table>
+</div></details>
+
+<details><summary>결정 로그 펼치기</summary>
+<div class="table-scroll">
+<table><tr><th>시각</th><th>결정</th><th>대상</th><th>메모</th></tr>
+<tr><td>2026-09-06T02:17:08.061Z</td><td>approved</td><td><code>snap_20260906T021519_ff6a9d</code></td><td>구중구권 140건 정규화본을 기준선으로 승인(로컬 검토 데모, 운영 미반영)</td></tr>
+<tr><td>2026-09-06T02:17:13.803Z</td><td>approved</td><td><code>snap_20260906T021610_65bf0d</code></td><td>인천 전체 971건(좌표 796 변환)으로 갱신 승인 — 커버리지 확대, 누락좌표 175건 상태 유지 확인</td></tr>
+<tr><td>2026-09-06T02:18:00.147Z</td><td>rollback</td><td><code>v001</code></td><td>-</td></tr>
+<tr><td>2026-09-06T02:18:03.594Z</td><td>rollback</td><td><code>v002</code></td><td>-</td></tr>
+</table>
+</div></details>
+
+<p class="note">한계: 품질검사는 알려진 계약(시설·지정학교·GeoJSON)에 대한 구조/좌표/출처 메타데이터 검증이며 사실관계 검증이 아니다.
+시설·지정·맥락 자료의 구조 검증과 실제 현장 확인은 별개다. 원본 데이터 내용 자체는 이 화면에 싣지 않는다.</p>
+</body>
+</html>

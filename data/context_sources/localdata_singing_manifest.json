@@ -1,0 +1,29 @@
+{
+  "source_url": "https://www.data.go.kr/data/15045017/fileData.do",
+  "download_url": "https://file.localdata.go.kr/file/download/singing_bars/info",
+  "retrieved_at": "2026-09-06",
+  "raw_file": "localdata_singing_national.csv",
+  "raw_bytes": 12436046,
+  "sha256": "352b17bf2a9cebdb55d43b637f55721d550040c93be5b3bd9480aec44734b243",
+  "encoding": "cp949",
+  "national_rows": 41666,
+  "incheon_all_status_rows": 1669,
+  "incheon_status_counts": {
+    "폐업": 1106,
+    "영업/정상": 563
+  },
+  "active_rows": 563,
+  "valid_coordinate_rows": 426,
+  "original_crs": "EPSG:5174",
+  "output_crs": "EPSG:4326",
+  "headers": {
+    "Referer": "https://file.localdata.go.kr/file/singing_bars/info",
+    "User-Agent": "Mozilla/5.0"
+  },
+  "authentication_required": false,
+  "https_verification": true,
+  "notes": [
+    "Source snapshot date not independently stated; source_as_of null. Per-record update timestamps preserved.",
+    "Address prefix Incheon used to filter. Missing coordinates retained; no synthetic placement."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "연수구74행만 검토",
+  "retrieved_at": "2026-09-06",
+  "total_rows": 74,
+  "matched_rows": 15,
+  "unmatched_rows": 59,
+  "reason_counts": {
+    "multiple_parcels_or_development_block_or_unparsed_address": 41,
+    "exact_parcel_address_match": 15,
+    "no_exact_parcel_address_in_sbiz": 17,
+    "coordinate_conflict_over_50m": 1
+  },
+  "match_rule": "Exact full parcel address: province+district+dong/ri+mountain flag+main/sub parcel number. No road/parcel conversion; no fuzzy matching; reject multiple-parcel and development-block notation. Reject maximum pairwise coordinate distance >50m. Representative mean of unique points only.",
+  "coordinate_meaning": "Shop-address-based estimate, not surveyed/construction site coordinate.",
+  "source_url": "https://www.data.go.kr/data/15029299/fileData.do",
+  "coordinate_source_url": "https://www.data.go.kr/data/15083033/fileData.do",
+  "source_as_of": "2026-03-09",
+  "coordinate_source_as_of": "2026-06-30",
+  "raw_sha256": {
+    "construction_15029299.csv": "626d086015de6a58a33ffe548b5694f17299dae6f37af4ec33fe9c6226c26228",
+    "sbiz_incheon_202606.csv": "9198cdf381f7cc6adffe9c91c7856fdad037fbddb442fb49c68f796bf85bc1bc"
+  },
+  "notes": [
+    "Start date and missing approval do not prove currently active construction.",
+    "Large parcels may have substantial intra-parcel error even when shop coordinates agree.",
+    "No coordinates assigned to unmatched/conflict records."
+  ]
+}

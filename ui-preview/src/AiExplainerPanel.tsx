@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 type QuestionType =
   | "case_reason"
@@ -133,8 +133,13 @@ function getAiExplainerEndpoints() {
   const sameOriginEndpoint = "/api/ai-explainer-v2";
   const productionEndpoint = "https://2026-park-analysis.vercel.app/api/ai-explainer-v2";
   if (typeof window === "undefined") return [sameOriginEndpoint];
+  const hostname = window.location.hostname;
+  // 로컬(loopback) 시연은 완전 오프라인 보장: 원격 호스팅 API로 폴백하지 않는다.
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]") {
+    return [sameOriginEndpoint];
+  }
   if (window.location.protocol === "file:") return [productionEndpoint];
-  if (window.location.hostname === "2026-park-analysis.vercel.app") return [sameOriginEndpoint];
+  if (hostname === "2026-park-analysis.vercel.app") return [sameOriginEndpoint];
   return [sameOriginEndpoint, productionEndpoint];
 }
 
@@ -198,13 +203,14 @@ export default function AiExplainerPanel({
   schoolContext,
   candidateContext = null,
   title = "AI 근거 해설",
-  description = "선택된 학교·후보지 지표와 봉인된 근거 문서 안에서만 답변합니다.",
+  description = "선택한 학교·후보지의 지표와 확인된 근거를 바탕으로 설명합니다.",
 }: {
   schoolContext: SchoolContext;
   candidateContext?: CandidateContext | null;
   title?: string;
   description?: string;
 }) {
+  const requestPending = useRef(false);
   const [customQuestion, setCustomQuestion] = useState("");
   const [response, setResponse] = useState<AiExplainerResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -219,7 +225,8 @@ export default function AiExplainerPanel({
 
   async function ask(question: string, questionType: QuestionType, loadingKey: string) {
     const trimmed = question.trim();
-    if (!trimmed) return;
+    if (!trimmed || requestPending.current) return;
+    requestPending.current = true;
     setError(null);
     setResponse(null);
     setLoadingId(loadingKey);
@@ -233,13 +240,14 @@ export default function AiExplainerPanel({
         candidate_context: candidateContext,
       });
       if (!isDisplayable(data)) {
-        setError("근거 chunk가 없는 답변은 표시하지 않았습니다.");
+        setError("답변의 출처를 확인할 수 없습니다. 다른 질문으로 다시 시도하세요.");
         return;
       }
       setResponse(data);
     } catch {
       setError("AI 해설을 불러오지 못했습니다.");
     } finally {
+      requestPending.current = false;
       setLoadingId(null);
     }
   }
@@ -254,12 +262,12 @@ export default function AiExplainerPanel({
       <div className="rounded-3xl border border-white/10 bg-navy-900/95 p-5 shadow-2xl">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">RAG Explainer</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">근거 확인</p>
             <h2 className="mt-1 text-xl font-bold tracking-tight text-white">{title}</h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{description}</p>
           </div>
           <span className="inline-flex w-fit rounded-full border border-forest-400/40 bg-forest-500/15 px-3 py-1 text-xs font-semibold text-forest-200">
-            cited chunk 필수
+            출처 기반 설명
           </span>
         </div>
 
@@ -279,10 +287,12 @@ export default function AiExplainerPanel({
 
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
           <input
+            aria-label="학교 또는 후보지에 관한 질문"
+            disabled={loadingId !== null}
             value={customQuestion}
             onChange={(event) => setCustomQuestion(event.target.value.slice(0, 180))}
             onKeyDown={(event) => {
-              if (event.key === "Enter") askCustom();
+              if (event.key === "Enter" && !event.nativeEvent.isComposing) askCustom();
             }}
             placeholder="짧은 질문 입력"
             className="min-h-11 flex-1 rounded-2xl border border-white/15 bg-navy-850/95 px-4 py-2 text-sm text-white outline-none placeholder:text-slate-500 focus:border-forest-300/70"
@@ -298,7 +308,7 @@ export default function AiExplainerPanel({
         </div>
 
         {error ? (
-          <div className="mt-4 rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm font-medium text-rose-100">
+          <div role="alert" className="mt-4 rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm font-medium text-rose-100">
             {error}
           </div>
         ) : null}
@@ -312,8 +322,8 @@ export default function AiExplainerPanel({
             ) : (
               <>
                 <ExplainerBlock title="요약">{response.summary}</ExplainerBlock>
-                <div className="rounded-2xl border border-white/10 bg-navy-850/95 p-4">
-                  <p className="text-sm font-bold text-white">근거</p>
+                <details className="rounded-2xl border border-white/10 bg-navy-850/95 p-4">
+                  <summary className="cursor-pointer text-sm font-bold text-white">근거 수치 펼치기</summary>
                   <div className="mt-3 grid gap-2">
                     {response.evidence.map((item) => (
                       <div key={`${item.chunk_id}-${item.label}`} className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
@@ -327,11 +337,11 @@ export default function AiExplainerPanel({
                       </div>
                     ))}
                   </div>
-                </div>
+                </details>
                 <ExplainerBlock title="해석">{response.interpretation}</ExplainerBlock>
                 <ExplainerBlock title="주의사항">{response.limitations}</ExplainerBlock>
                 <details className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-slate-300">
-                  <summary className="cursor-pointer font-bold text-slate-100">출처 chunk</summary>
+                  <summary className="cursor-pointer font-bold text-slate-100">출처 식별정보</summary>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {response.cited_chunk_ids.map((chunkId) => (
                       <span key={chunkId} className="rounded-full bg-white/10 px-2 py-1 text-xs font-semibold">

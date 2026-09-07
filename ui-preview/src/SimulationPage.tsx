@@ -1,3 +1,4 @@
+import Disclosure from "./Disclosure";
 ﻿import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import type { MouseEvent } from "react";
 import AiExplainerPanel from "./AiExplainerPanel";
@@ -73,7 +74,8 @@ interface RedevelopmentProject {
   stage: string;
   distanceM: number;
   type?: string;
-  area?: number;
+  // 브리지(PreviewWorkspaceSafe)가 원자료 결측을 null로 전달한다. 이 페이지는 area를 읽지 않는다.
+  area?: number | null;
   householdCount?: number | null;
 }
 
@@ -999,11 +1001,10 @@ export default function SimulationPage({
         }}
       >
         <div style={{ fontSize: 18, fontWeight: 800, color: SIM_COLORS.text, marginBottom: 8 }}>
-          공공시설 입지 선정을 위한 의사결정 인터페이스
+          어디를 먼저 현장 검토할까요?
         </div>
         <div style={{ fontSize: 14, color: SIM_COLORS.secondary, lineHeight: 1.75 }}>
-          정보를 많이 보여주는 것이 아니라, 30초 안에 비교 후보를 좁혀 선택할 수 있도록 설계한 화면입니다.
-          지도에서 위치를 먼저 보고, 참고 맥락과 추천 결과를 비교한 뒤 필요한 경우만 상세 정보를 펼쳐 확인합니다.
+          학교 주변 후보의 위치와 예상 수요를 비교하세요. 제외 조건과 가중치를 바꾸면 검토 순서가 달라집니다. 최종 입지는 현장·토지·보행 조건을 확인한 뒤 결정합니다.
         </div>
       </div>
 
@@ -1035,6 +1036,7 @@ export default function SimulationPage({
       </div>
 
       {(redevelopmentProjects.length > 0 || largeApartmentComplexes.length > 0) && (
+        <Disclosure title="주변 개발·주거 맥락" description="재개발과 대단지 정보 · 수요 확정을 뜻하지 않습니다">
         <div
           style={{
             display: "grid",
@@ -1068,6 +1070,7 @@ export default function SimulationPage({
             </div>
           ))}
         </div>
+        </Disclosure>
       )}
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 18 }}>
@@ -1084,7 +1087,7 @@ export default function SimulationPage({
             fontWeight: 800,
           }}
         >
-          AI 기반 견고 후보 추천
+          AI 추천으로 비교
         </button>
         <button
           type="button"
@@ -1099,11 +1102,12 @@ export default function SimulationPage({
             fontWeight: 800,
           }}
         >
-          직접 설정 모드
+          내 기준으로 비교
         </button>
       </div>
 
       {mode === "manual" ? (
+        <Disclosure title="비교 기준 조정" description="제외 조건과 가중치를 바꾸며 후보 순서를 비교하세요">
         <div style={{ display: "grid", gridTemplateColumns: isNarrow ? "1fr" : "minmax(260px, 1fr) minmax(260px, 1fr)", gap: 16, marginBottom: 18 }}>
           <div style={{ padding: 18, borderRadius: 18, ...SIM_PANEL_FLAT }}>
             <div style={{ fontSize: 18, fontWeight: 800, color: SIM_COLORS.text, marginBottom: 12 }}>제외 조건 설정</div>
@@ -1161,6 +1165,7 @@ export default function SimulationPage({
                   {weightsExpanded && weightToggles[item.key] ? (
                     <div style={{ marginTop: 10 }}>
                       <input
+                        aria-label={`${item.title} 가중치`}
                         type="range"
                         min={0}
                         max={100}
@@ -1176,9 +1181,11 @@ export default function SimulationPage({
             </div>
           </div>
         </div>
+        </Disclosure>
       ) : (
         <div style={{ marginBottom: 18, padding: "14px 16px", borderRadius: 18, background: "rgba(16, 185, 129, 0.10)", color: SIM_COLORS.greenSoft, fontSize: 13, lineHeight: 1.7 }}>
-          미래 수요 예측, Pareto 후보군, 1,000회 가중치 샘플링 기반 순위 안정성을 결합해 다양한 정책 선호에서도 상위권에 유지되는 후보를 제시합니다.
+          여러 정책 기준에서도 상위권을 유지하는 후보를 먼저 확인하세요.
+          <details><summary style={{ cursor: "pointer", marginTop: 8 }}>추천 산출 방식</summary>미래 수요 예측, Pareto 후보군, 1,000회 가중치 샘플링 기반 순위 안정성을 결합합니다.</details>
           <div style={{ marginTop: 6 }}>{aiRecommendations.filterSummary}</div>
         </div>
       )}
@@ -1204,7 +1211,7 @@ export default function SimulationPage({
 
       {displayedCandidates.length > 0 ? (
         <>
-          <div style={{ marginBottom: 12, fontSize: 13, fontWeight: 800, color: SIM_COLORS.muted }}>TOP 1 추천 후보</div>
+          <div style={{ marginBottom: 12, fontSize: 13, fontWeight: 800, color: SIM_COLORS.muted }}>현재 기준에서 먼저 검토할 후보</div>
           {(() => {
             const topCandidate = displayedCandidates[0];
             const barrierColor = getBarrierColor(topCandidate);
@@ -1304,7 +1311,7 @@ export default function SimulationPage({
         </>
       ) : (
         <div style={{ border: `1px dashed ${SIM_COLORS.border}`, borderRadius: 16, padding: "18px 20px", background: "rgba(255,255,255,0.03)", fontSize: 13, color: SIM_COLORS.muted, lineHeight: 1.7, marginBottom: 18 }}>
-          현재 조건에서 비교 가능한 후보가 없습니다. 직접 설정 모드에서 필터를 일부 완화하면 다시 비교할 수 있습니다.
+          현재 조건에서 비교 가능한 후보가 없습니다. 내 기준으로 비교에서 필터를 일부 완화하면 다시 비교할 수 있습니다.
         </div>
       )}
 
@@ -1332,6 +1339,7 @@ export default function SimulationPage({
               {selectedCandidate.fallback_explanation ?? "보조 후보지입니다. 도보 500m 직접 후보지가 부족할 때만 참고로 표시하며, 기본 추천 후보로 해석하지 않습니다."}
             </div>
           ) : null}
+          <Disclosure key={selectedCandidate.grid_id} title="선택 후보의 상세 수치와 추천 근거" description="거주 아동 · 잠재 수요 · 거리 · 추천 점수 · AI 질문">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 12 }}>
             <div style={{ padding: "10px 12px", borderRadius: 12, background: SIM_COLORS.inset }}>인근 거주 2029 <b>{formatCount(selectedCandidate.resident_children_2029)}명</b></div>
             <div style={{ padding: "10px 12px", borderRadius: 12, background: SIM_COLORS.inset }}>인근 거주 2031 <b>{formatCount(selectedCandidate.resident_children_2031)}명</b></div>
@@ -1370,11 +1378,12 @@ export default function SimulationPage({
               교내 설치 대안도 유지됩니다. 필요하면 지도에서 `교내` 마커를 선택해 수혜 규모를 함께 비교할 수 있습니다.
             </div>
           ) : null}
+          </Disclosure>
         </div>
       ) : null}
       {selectedCandidate ? (
-        <div style={{ marginTop: 18 }}>
-          <AiExplainerPanel
+        <Disclosure key={`ai-${selectedCandidate.grid_id}`} title="선택 후보에 관해 AI에 질문하기" description="추천 이유와 주의사항을 확인된 근거로 설명합니다">
+          <AiExplainerPanel key={selectedCandidate.grid_id}
             title="선택 후보지 AI 근거 해설"
             description="선택된 후보지 지표와 봉인된 근거 문서 안에서만 추천 이유와 주의사항을 설명합니다."
             schoolContext={{
@@ -1402,7 +1411,7 @@ export default function SimulationPage({
               barrier_note: getBarrierNote(selectedCandidate),
             }}
           />
-        </div>
+        </Disclosure>
       ) : null}
     </div>
   );
