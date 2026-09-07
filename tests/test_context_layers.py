@@ -417,8 +417,8 @@ class RealBuildOutputTestCase(unittest.TestCase):
     # 독립 재계산으로 확정한 실데이터 기준선
     NIGHTLIFE_BASELINE = {"schools": 111, "pairs": 1459, "max": 163}
     CONSTRUCTION_BASELINE = {"schools": 65, "pairs": 2449, "max": 130, "completed_pairs": 2183}
-    DESIGNATION_RECORD_COUNT = 804
-    MATCHED_ELEMENTARY_COUNT = 176
+    DESIGNATION_RECORD_COUNT = 1090  # 2026-09-07: 결대로자람·자율학교·공간재구조화·미래교실·AI정보중심 추가
+    MATCHED_ELEMENTARY_COUNT = 226
 
     @classmethod
     def setUpClass(cls):
@@ -481,9 +481,17 @@ class RealBuildOutputTestCase(unittest.TestCase):
         for rec in data["records"]:
             url = rec["source"]["url"]
             self.assertTrue(url and url.startswith("https://"), rec["designation_id"])
-            self.assertEqual(rec["period_basis"], "school_year_only")
-            self.assertIsNone(rec["designation_start_date"])
-            self.assertIsNone(rec["designation_end_date"])
+            # 2026-09-07: 실제 지정기간이 공고된 사업(자율학교·결대로자람 등)은 official_period 등으로
+            # 시작일을 반드시 갖고, 학년도만 있는 명단은 종전대로 school_year_only + null 날짜
+            self.assertIn(rec["period_basis"],
+                          ("school_year_only", "official_period", "designation_year_only", "selection_year_only"))
+            if rec["period_basis"] == "school_year_only":
+                self.assertIsNone(rec["designation_start_date"])
+                self.assertIsNone(rec["designation_end_date"])
+            else:
+                self.assertRegex(rec["designation_start_date"] or "", r"^20[0-9]{2}-[0-9]{2}-[0-9]{2}$")
+                if rec["period_basis"] == "official_period":
+                    self.assertRegex(rec["designation_end_date"] or "", r"^20[0-9]{2}-[0-9]{2}-[0-9]{2}$")
 
     def test_real_financial_support_only_when_stated_in_source(self):
         """지원 금액은 원문에 금액이 명시된 명단(교육복지우선지원)에서만 나온다."""

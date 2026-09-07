@@ -63,6 +63,16 @@ RADIUS_M = 500.0
 VALID_BOUNDS = {"lat_min": 36.0, "lat_max": 39.0, "lng_min": 124.0, "lng_max": 128.0}
 
 DESIGNATION_FILES = [
+    # 2026-09-07 추가 (scripts/context/normalize_designations_20260907.py) — 실제 지정기간·메모 컬럼 포함
+    "school_teaching_practice_2026.csv", # 2026학년도 경인교대 교육실습 협력학교(교생실습교) 인천 초 43
+    "school_gyeoldaero_2026.csv",        # 2026.3.1.자 결대로자람학교(인천형 혁신학교) 운영교 — 초 61
+    "school_gyeoldaero_2025.csv",        # 2025.3.1.자 운영교(과거 명단)
+    "school_autonomous_2026.csv",        # 2026.3.1.자 자율학교 지정 현황(결대로 유형 제외)
+    "school_autonomous_2025.csv",        # 2025.3.1.자 자율학교 지정 현황(과거 명단)
+    "school_space_restructure_2026.csv", # 공간재구조화(그린스마트 미래학교) 사업 대상교 누적
+    "school_future_classroom_2025.csv",  # 2025 미래교실 구축 지원교
+    "school_future_classroom_2024.csv",  # 2024 미래교실 구축 지원교
+    "school_ai_info_center_2025.csv",    # 2025 AI·정보(융합)교육 중심학교
     "school_designations_2026.csv",      # 2026 AI·디지털 연구 3 + 선도 70
     "school_ai_focus_2026.csv",          # 2026 AI중점학교 107
     "school_digital_tutor_2025.csv",     # 2025 디지털튜터 운영교 87 (과거 이력)
@@ -207,6 +217,21 @@ def slugify_designation_id(school_year, designation_type, program_name, school_n
     return re.sub(r"[^0-9A-Za-z가-힣_·]+", "-", raw)
 
 
+def period_status_from_dates(start: str | None, end: str | None, as_of: str) -> str:
+    """원문에 실제 지정 시작(·종료)일이 있을 때의 current/expired/upcoming. 종료일이 없으면 시작 이후는 current."""
+    if not start:
+        return "unknown"
+    as_of_date = datetime.date.fromisoformat(as_of)
+    start_date = datetime.date.fromisoformat(start)
+    if as_of_date < start_date:
+        return "upcoming"
+    if end:
+        end_date = datetime.date.fromisoformat(end)
+        if as_of_date > end_date:
+            return "expired"
+    return "current"
+
+
 def match_school(name: str, schools_by_name: dict[str, list[dict]]) -> tuple[str | None, str]:
     resolved = SCHOOL_NAME_ALIASES.get(name, name)
     hits = schools_by_name.get(resolved, [])
@@ -276,6 +301,19 @@ def build_designations(sources_dir: Path, schools: list[dict], as_of: str, qa: d
                 qa["designations"]["undated_records"].append({"school_name": name, "reason": "발행일 없음/무효"})
 
             support_raw = (row.get("financial_support_amount") or "").strip()
+            # 선택 컬럼: 원문에 실제 지정 시작·종료일이 있으면 그 기간으로 판정(official_period 등),
+            # 없으면 기존처럼 학년도 추정(school_year_only). 메모(note)는 원문 부가정보(지정년도·건물·주제 등).
+            start_date = parse_date(row.get("designation_start_date"))
+            end_date = parse_date(row.get("designation_end_date"))
+            basis = (row.get("period_basis") or "").strip() or ("official_period" if start_date else "school_year_only")
+            if start_date:
+                status = period_status_from_dates(start_date, end_date, as_of)
+                # 명단 학년도가 지났는데 종료일이 없는 추정 기간은 학년도 판정으로 되돌린다(과거 명단 보존)
+                if not end_date and basis != "official_period" and year and school_year_status(year, as_of) == "expired":
+                    status = "expired"
+            else:
+                status = school_year_status(year, as_of)
+            note = (row.get("note") or "").strip() or None
             source = {
                 "url": url,
                 "title": (row.get("source_file") or "").strip() or None,
@@ -290,11 +328,12 @@ def build_designations(sources_dir: Path, schools: list[dict], as_of: str, qa: d
                 "designation_type": dtype,
                 "program_name": program,
                 "school_year": year,
-                # 원문에 학년도만 있고 지정 시작·종료일이 없으므로 기간은 추정임을 명시
-                "period_basis": "school_year_only",
-                "designation_start_date": None,
-                "designation_end_date": None,
-                "period_status": school_year_status(year, as_of),
+                # 원문에 학년도만 있으면 추정(school_year_only), 실제 기간이 있으면 official_period 등으로 명시
+                "period_basis": basis,
+                "designation_start_date": start_date,
+                "designation_end_date": end_date,
+                "period_status": status,
+                "note": note,
                 # 지정 사실만으로 지원 금액을 추론하지 않는다. 원문 명시 시에만 값.
                 "financial_support_amount": support_raw or None,
                 "verification_status": (row.get("verification_status") or "").strip() or None,
@@ -597,6 +636,13 @@ def build(sources_dir: Path = SOURCES_DIR,
                 "source_url": rec["source"]["url"],
             }
             (current if rec["period_status"] in ("current", "upcoming") else historical).append(entry)
+        # 같은 (사업, 유형)이 여러 학년도 명단에 모두 '진행 중'으로 실리면(실제 지정기간 결합 시) 최신 학년도 1건만 남긴다
+        latest_by_program: dict[tuple, dict] = {}
+        for entry in current:
+            key = (entry["program_name"], entry["designation_type"])
+            if key not in latest_by_program or (entry["school_year"] or 0) > (latest_by_program[key]["school_year"] or 0):
+                latest_by_program[key] = entry
+        current = list(latest_by_program.values())
         summary: dict = {
             "school_name": school["school_name"],
             "gu": school["gu"],
@@ -604,7 +650,7 @@ def build(sources_dir: Path = SOURCES_DIR,
                 "status": "available" if designations_available else "unknown",
                 "current": sorted(current, key=lambda r: r["designation_id"]),
                 "historical": sorted(historical, key=lambda r: r["designation_id"]),
-                "scope_note_ko": "수집된 공식 명단(2026 AI·디지털 연구·선도, 2026 AI중점, 2025 디지털튜터) 기준. 그 외 지정·지원 사업 미수집. 명단 미등재가 미지정 확정은 아님.",
+                "scope_note_ko": "수집된 공식 명단(교육복지우선지원, 결대로자람학교, 자율학교(IB·특색교육과정·농어촌 등), AI·디지털 연구·선도, AI중점, AI·정보교육 중심, 다문화교육, 디지털튜터, 공간재구조화, 미래교실) 기준. 그 외 지정·지원 사업 미수집. 명단 미등재가 미지정 확정은 아님.",
             },
         }
 

@@ -1,0 +1,136 @@
+{
+  "generated_by": "scripts/context/normalize_designations_20260907.py",
+  "retrieved_at": "2026-09-07",
+  "sources": {
+    "gyeol_2026": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3360283&bbsId=852&mi=11841",
+      "2026-02-11"
+    ],
+    "gyeol_2025": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3316288&bbsId=852&mi=11841",
+      "2025-02-17"
+    ],
+    "auto_end_2027": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3378038&bbsId=610&mi=11841",
+      "2026-07-13"
+    ],
+    "space_2026": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3367588&bbsId=840&mi=11841",
+      "2026-04-10"
+    ],
+    "future_2025": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3320373&bbsId=841&mi=11841",
+      "2025-03-14"
+    ],
+    "future_2024": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3281742&bbsId=841&mi=11841",
+      "2024-03-29"
+    ],
+    "ai_info_2025": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3315152&bbsId=863&mi=11841",
+      "2025-02-12"
+    ],
+    "ginue_2026": [
+      "https://www.ginue.ac.kr/kor/CMS/Contents/Contents.do?mCode=MN081",
+      null
+    ],
+    "auto_2026": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3367080&bbsId=610&mi=11841",
+      "2026-04-07"
+    ],
+    "auto_2025": [
+      "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3304861&bbsId=610&mi=11841",
+      "2024-11-28"
+    ]
+  },
+  "normalized": [
+    {
+      "raw": "ice_autonomous_school_2025_designation.hwpx",
+      "normalized_to": "school_autonomous_2025.csv",
+      "rows_total": 107,
+      "rows_elementary_non_gyeol": 35,
+      "types": [
+        "결대로 자람학교 (7호)",
+        "교과교실제 (2호)",
+        "농어촌학교 (6호)",
+        "산업수요맞춤형고 및 특성화고(5호)",
+        "인천세계 시민학교 (7호)",
+        "특색있는 교육과정 (2호)"
+      ],
+      "gyeol_rows_used_for_period": 45
+    },
+    {
+      "raw": "ice_autonomous_school_2026_designation.converted.hwpx",
+      "normalized_to": "school_autonomous_2026.csv",
+      "rows_total": 68,
+      "rows_elementary_non_gyeol": 30,
+      "types": [
+        "IB학교(후보·인증)(7호)",
+        "결대로 자람학교 (7호)",
+        "과학중점학교(3호)",
+        "농어촌학교 (6호)",
+        "산업수요맞춤형고 및 특성화고(5호)",
+        "예술중점학교(2호)",
+        "인천세계 시민학교 (7호)",
+        "특색있는 교육과정 (2호)"
+      ],
+      "gyeol_rows_used_for_period": 18
+    },
+    {
+      "raw": "ice_gyeoldaero_jaram_2025_operating_schools.hwpx",
+      "normalized_to": "school_gyeoldaero_2025.csv",
+      "rows_elementary": 62,
+      "with_official_period": 47
+    },
+    {
+      "raw": "ice_gyeoldaero_jaram_2026_operating_schools.hwpx",
+      "normalized_to": "school_gyeoldaero_2026.csv",
+      "rows_elementary": 61,
+      "with_official_period": 51
+    },
+    {
+      "raw": "ice_space_restructure_2026.hwpx",
+      "normalized_to": "school_space_restructure_2026.csv",
+      "rows_elementary": 31
+    },
+    {
+      "raw": "ice_future_classroom_2024.hwpx",
+      "normalized_to": "school_future_classroom_2024.csv",
+      "rows_elementary": 6
+    },
+    {
+      "raw": "ice_future_classroom_2025.hwpx",
+      "normalized_to": "school_future_classroom_2025.csv",
+      "rows_elementary": 13
+    },
+    {
+      "raw": "ice_ai_info_center_school_2025.hwpx",
+      "normalized_to": "school_ai_info_center_2025.csv",
+      "rows_total": 52,
+      "rows_elementary": 15
+    },
+    {
+      "raw": "ginue_teaching_practice_MN081.html",
+      "normalized_to": "school_teaching_practice_2026.csv",
+      "rows_incheon_elementary": 43,
+      "note": "경기 소재 협력학교는 제외. 게시일 미표기 → source_published_date null"
+    }
+  ],
+  "summary": {
+    "school_autonomous_2025.csv": 35,
+    "school_autonomous_2026.csv": 30,
+    "school_gyeoldaero_2025.csv": 62,
+    "school_gyeoldaero_2026.csv": 61,
+    "school_space_restructure_2026.csv": 31,
+    "school_future_classroom_2024.csv": 6,
+    "school_future_classroom_2025.csv": 13,
+    "school_ai_info_center_2025.csv": 15,
+    "school_teaching_practice_2026.csv": 43
+  },
+  "name_resolution": {
+    "exact": 42,
+    "expanded": 155,
+    "unresolved": [],
+    "ambiguous": []
+  }
+}

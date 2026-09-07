@@ -6375,8 +6375,22 @@
           const years = [...group.years.keys()].filter(Number.isFinite).sort((a, b) => a - b);
           const first = years[0];
           const last = years[years.length - 1];
-          const span = years.length > 1 ? `${first}~${last}학년도 · ${years.length}년` : `${first}학년도`;
-          const isCurrent = [...group.years.values()].some((rec) => rec.period_status === "current");
+          const recs = [...group.years.values()];
+          const isCurrent = recs.some((rec) => rec.period_status === "current");
+          // 실제 지정기간이 있으면 그 기간을, 없으면 명단 학년도 범위를 표시
+          const dated = recs.filter((rec) => rec.designation_start_date).sort((a, b) => String(b.designation_start_date).localeCompare(String(a.designation_start_date)))[0];
+          const fmtDate = (d) => String(d).replace(/-/g, ".").replace(/\.0(\d)/g, ".$1");
+          let span;
+          if (dated && dated.designation_end_date) {
+            const y0 = Number(String(dated.designation_start_date).slice(0, 4));
+            const y1 = Number(String(dated.designation_end_date).slice(0, 4));
+            span = `${fmtDate(dated.designation_start_date)} ~ ${fmtDate(dated.designation_end_date)} (${Math.max(1, y1 - y0)}년)`;
+          } else if (dated) {
+            span = `${fmtDate(dated.designation_start_date)} ~ ${isCurrent ? "운영 중" : "종료"} · 명단 ${first === last ? `${first}` : `${first}~${last}`}학년도`;
+          } else {
+            span = years.length > 1 ? `${first}~${last}학년도 · ${years.length}년` : `${first}학년도`;
+          }
+          const latestNote = recs.map((rec) => rec.note).filter(Boolean).slice(-1)[0] || "";
           const amounts = years
             .map((year) => {
               const parsed = parseSupportAmount(group.years.get(year).financial_support_amount);
@@ -6392,6 +6406,7 @@
                 <span style="margin-left:4px; padding:0 7px; border-radius:999px; font-size:10.5px; font-weight:800; background:${isCurrent ? "rgba(16,185,129,0.18)" : "rgba(148,163,184,0.18)"}; color:${isCurrent ? "#6EE7B7" : "#CBD5E1"};">${isCurrent ? "진행 중" : "종료"}</span>
               </div>
               <div style="opacity:0.85;">기간 ${escapeHtml(span)}</div>
+              ${latestNote ? `<div style="opacity:0.75;">${escapeHtml(latestNote)}</div>` : ""}
               <div style="opacity:0.85;">지원액 ${amounts.length ? escapeHtml(amounts.join(" / ")) : "공고에 미기재"}${safeUrl ? ` · <a href="${escapeHtml(safeUrl)}" target="_blank" rel="noreferrer" style="color:#C4B5FD;">공고 원문</a>` : ""}</div>
             </div>`;
         })
@@ -6416,7 +6431,7 @@
         <div class="detail-section-title">🧭 참고 맥락 <span style="font-weight:500; opacity:0.7;">(정책 도달성 참고용${asOf ? ` · 산출 기준 ${escapeHtml(asOf)}` : ""})</span></div>
         <div style="font-size:12px; line-height:1.8; margin-top:6px;">
           ${designationBlock}
-          <span style="opacity:0.7;">수집된 공식 명단(교육복지우선지원·AI·디지털 연구/선도·AI중점·다문화·디지털튜터) 기준 · 기간은 학년도(3월~익년 2월) 추정 · 그 외 사업 미수집</span><br>
+          <span style="opacity:0.7;">수집된 공식 명단(교육복지우선지원·결대로자람(인천형 혁신)·자율학교(IB·특색교육과정 등)·교육실습 협력학교(경인교대)·AI·디지털 연구/선도·AI중점·AI정보교육 중심·다문화·디지털튜터·공간재구조화·미래교실) 기준 · 지정기간이 공고된 사업은 실제 기간, 그 외는 학년도(3월~익년 2월) 추정 · 그 외 사업 미수집</span><br>
           ${contextFacilityCardLine("🍸", "유흥·단란주점 인허가", entry ? entry.nightlife : null)}<br>
           ${contextFacilityCardLine("🚧", "공사장 행정기록", entry ? entry.construction : null)}<br>
           <span style="opacity:0.7;">시설 수치는 학교 중심점 기준 <strong>직선거리 500m</strong>(도보 경로 아님) 안에서 좌표를 확보한 인허가·행정기록만 센 최소 관측치입니다. 위험도·안전 등급·지원 자격 판정이 아니며, 미수집 항목은 0건이 아니라 미상입니다.</span>

@@ -5,7 +5,7 @@
 (`README.md`, `REPRODUCE.md`, `reproduce_sources.py`, `reproduce_school_rosters.py`)에서 수행되며,
 이 폴더는 그 산출물 중 앱에 필요한 소형 정규화 파일과, 2026-09-06 확장분(추가 명단 원문 + 좌표 보강)입니다.
 
-## 지정·지원 명단 (빌더 `DESIGNATION_FILES`, 합계 804건 / 초등 매칭 176교)
+## 지정·지원 명단 (빌더 `DESIGNATION_FILES`, 합계 1,047건 / 초등 매칭 222교 — 2026-09-07 갱신)
 
 | 파일 | 내용 | 원문 출처 |
 |---|---|---|
@@ -15,6 +15,14 @@
 | `school_edu_welfare_2026.csv` | 2026 교육복지우선지원사업 지원학교 212 (초등 99교) | 인천광역시교육청 공고(2026-01-16 게시) |
 | `school_edu_welfare_2025.csv` | 2025 교육복지우선지원사업 지원학교 225 (초등 118교, 과거 이력) | 인천광역시교육청 공고(2025-03-06 게시) |
 | `school_multicultural_2026.csv` | 2026 다문화교육 연구학교·한국어학급·선도학교 100 (초등 43교) | 인천광역시교육청 공고(2026-04-27 게시) |
+| `school_gyeoldaero_2026.csv` / `_2025.csv` | 결대로자람학교(인천형 혁신학교) 운영교 현황 2026.3.1.자 초 61교 / 2025.3.1.자 초 62교. 지정년도(2023~2026)·교육지원청, 자율학교 지정기간(7호) 결합(2026 명단 51교 실제 기간) | 인천광역시교육청 사전정보공표 bbsId=852 (2026-02-11 / 2025-02-17), 기간은 bbsId=610 자율학교 지정 현황·2027.2.28.자 종료교 심의 결과 |
+| `school_autonomous_2026.csv` / `_2025.csv` | 자율학교 지정 현황(결대로자람 유형 제외) 2026.3.1.자 초 30교 / 2025.3.1.자 초 35교 — 특색있는 교육과정·농어촌·IB학교(후보·인증)·인천세계시민학교 등, **실제 지정기간**(예: 2026.3.1~2031.2.28) | 사전정보공표 bbsId=610 (2026-04-07 / 2024-11-28). 2026 원문은 HWP 5.0 바이너리 → 한글 COM(pyhwpx)으로 hwpx 변환(`*.converted.hwpx`) |
+| `school_space_restructure_2026.csv` | 공간재구조화(그린스마트 미래학교) 사업 대상교 누적 명단 중 초 31교(선정연도 2021~2026·건물·준공연도·재건축 연면적·개축완료 여부) | 사전정보공표 bbsId=840 (2026-04-10) |
+| `school_future_classroom_2025.csv` / `_2024.csv` | 미래교실 구축 지원교 초 13교 / 6교(교실형·도서지역 교실형, 신청 주제) | 사전정보공표 bbsId=841 (2025-03-14 / 2024-03-29). 2026년은 대상교 없음(원문 확인) |
+| `school_ai_info_center_2025.csv` | 2025 AI·정보(융합)교육 중심학교 52교 중 초 15교(과거 이력) | 사전정보공표 bbsId=863 (2025-02-12) |
+
+2026-09-07 추가분 정규화 스크립트: `scripts/context/normalize_designations_20260907.py` (표 셀 병합 해제, 학교명 약칭은 `schools.csv` 정식 명칭과 **'인천' 접두 생략형까지만** 유일 일치 시 확장 — 154건 전부 확장, 미해결 0). 증빙: `raw/designation_raw_manifest_20260907.json`, `raw/designation_raw_manifest_20260907_additions.json`.
+추가 컬럼 `designation_start_date`·`designation_end_date`·`period_basis`·`note`: 실제 지정기간이 공고된 사업은 `official_period`, 결대로 지정년도만 있는 경우 `designation_year_only`, 공간재구조화 선정연도는 `selection_year_only`. builder는 이 컬럼이 있으면 실제 기간으로 `period_status`를 계산한다. 합계 1,047건 / 초등 매칭 222교.
 
 원문 파일(xlsx/hwpx/hwp)은 `raw/` 에 그대로 보관하고, `raw/designation_raw_manifest.json` 이
 url·제목·발행일·수집일·sha256·정규화 대상 여부를 남깁니다.
