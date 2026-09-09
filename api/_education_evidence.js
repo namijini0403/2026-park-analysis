@@ -2,7 +2,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 let data;
-const TOPIC=/학원|교습|예체능|수능|성취|학력|성적|수상|실적|메달|체육대회|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i;
+const TOPIC=/학원|교습|예체능|수능|성취|학력|성적|운동부|선수 인원|수상|실적|메달|체육대회|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i;
 function load(){
   if(!data) {
     try { data=JSON.parse(fs.readFileSync(path.join(__dirname,'../data_processed/context/education_school_evidence.json'),'utf8')); }
@@ -58,8 +58,13 @@ function build(row,question){
   const q=String(question||'');
   const parts=[];
   if(/학원|교습|예체능/.test(q)) parts.push(chunk(row,'academy','학원·교습소',`직선 500m ${fmt(row.academy.straight_500m_count)}개, 보행 도달권 ${fmt(row.academy.walkshed_count)}개 관측. 예체능 관측 ${fmt(row.academy.arts_sports_count)}개. 대상 분류 ${JSON.stringify(row.academy.target_categories||{})}. 학원은 주변 환경 시설이며 학교 분석 대상이 아니다. 좌표 확보 시설만 집계하고 교습과정으로 대상을 분류한다. 학원 수는 학력이나 교육 품질 점수가 아니다.`));
-  if(/수능|성취|학력|성적|수상|실적|메달|체육대회|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i.test(q)) {
+  if(/수능|성취|학력|성적|운동부|선수 인원|수상|실적|메달|체육대회|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i.test(q)) {
     let text=/수능|성취|학력|성적/.test(q)?'수능 학교별 점수는 미확보, 학업성취도 개별 공시는 보안문자 요구로 미수집이다. 미수집을 성적 0 또는 학력 저하로 해석하지 않는다.':'';
+    if(/운동부|선수 인원/.test(q)) {
+      const years=requestedYears(q), athletics=row.athletics||{};
+      const observations=(athletics.observations||[]).filter(o=>!years.length||years.includes(Number(o.posted_date.slice(0,4))));
+      text+=` 운동부 공개 게시 기록이며 현재 선수 총수·실적 점수가 아니다. ${observations.length}건 중 최근 최대 6건: ${JSON.stringify(observations.slice(0,6))}. ${athletics.coverage||'연결 자료 미확보'}`;
+    }
     if(/진학|졸업|취업/.test(q)) {
       const years=requestedYears(q),progression=row.progression||{};
       const observations=(progression.observations||[]).filter(o=>!years.length||years.includes(o.year));

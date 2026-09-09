@@ -31,10 +31,11 @@ def main():
     indicators = read('school_public_indicators.json')['schools']
     science = read('science_awards.json')['schools']
     sports = read('sports_awards.json')['schools']
+    athletics = read('school_athletics.json')['schools']
     invention = read('invention_awards.json')['schools']
     progression = read('school_progression.json')['schools']
     residential = read('residential_scenario.json')['schools']
-    for label, linked in [('analysis',analysis),('age',age),('routes',routes),('academy',academy),('indicators',indicators),('science',science),('invention',invention),('progression',progression),('residential',residential),('sports',sports)]:
+    for label, linked in [('analysis',analysis),('age',age),('routes',routes),('academy',academy),('indicators',indicators),('science',science),('invention',invention),('progression',progression),('residential',residential),('sports',sports),('athletics',athletics)]:
         if set(linked)-set(ids):
             raise ValueError(f'{label}: unknown school IDs')
     if set(analysis)!=set(age) or set(analysis)!=set(routes):
@@ -60,6 +61,7 @@ def main():
                   '연결_공시행수':len(disclosures), '연결_공시항목수':len(linked_items),
                   '연결_공시항목코드':'|'.join(linked_items),
                   '연결_공시연도':'|'.join(map(str,sorted({r['year'] for r in disclosures}))),
+                  '학교운동부_공개게시기록수':len(athletics.get(sid,[])),
                   '전국체육대회_학교결과관측수':len(sports.get(sid,[])),
                   '과학전람회_확인기록수':len(science.get(sid,[])),
                   '학생발명대회_확인기록수':len(invention.get(sid,[])),

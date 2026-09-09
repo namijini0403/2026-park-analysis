@@ -49,6 +49,7 @@ python -m scripts.education.build_regional_age_forecasts
 python scripts/education/build_science_awards.py
 python scripts/education/build_science_awards.py --competition invention
 python -m scripts.education.build_sports_awards
+python -m scripts.education.build_school_athletics
 python scripts/accessibility/build_walkshed_500m_v3.py --graph ../_cache/incheon_walk_graph_v3.graphml --schools data_processed/education/new_school_coords.csv --out data_processed/education/walkshed_500m.geojson --report data_processed/education/walkshed_report.csv
 python scripts/education/build_candidate_grid.py
 python scripts/education/build_candidate_age_demand.py
@@ -268,3 +269,12 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 인천 대건고등학교는 공백 제거 후 원장 인천대건고등학교와 유일하게 일치해 2024년 스쿼시 2개 관측을 연결했다. 부개고등학교(컴)는 교육청 공식 양궁 리커브/컴파운드 운영 공고(nttSn=3379542)와 대회 세부종목 컴파운드를 대조해 2024년 혼성단체전 은메달 관측 1건을 연결했다. 일반적인 괄호 삭제나 지역 접두어 생략 매칭은 하지 않는다. 예외는 sports_identity_aliases.json에 학교 ID·원장명·종목·세부종목 조건·공식 근거 URL·응답 해시로 보존한다. 결과별 identity_basis에 연결 규칙을 남긴다.
 
 최신 범위는 33개 학교·180개 결과 관측이다. 남은 19개 학교·연도 쌍은 대학, 별도 방송통신고, 연송고등학교 표기 미확인을 구분해 보류한다. 대학 선수가 인천 대표로 출전한 사실을 인천 소재 유·초·중·고로 해석하지 않는다. 방송통신고를 본교 결과로 합치지 않는다. 공백 중복 후보·별도 기관 접미어·다른 양궁 세부종목은 연결을 거부하는 테스트를 추가했다.
+
+
+## 2026-09-09 학교운동부 공개 운영 기록
+
+교육청 학교운동부 예산현황 공개 목록(bbsId=1723, mi=11849)을 100건씩 실제 페이지 순서로 읽었다. 게시판 제목은 고등학교로 표시되지만 실제 목록에는 초·중·고가 함께 있어 원장 학교급으로 연결한다. 9페이지에서 2023년 게시일 경계까지 확인하고 2024-01-01 이후 846개 게시 기록을 보존했다. 게시물 ID 중복과 날짜 역전을 검사하며 경계 전 빈 응답을 0건으로 처리하지 않는다. 원문: https://www.ice.go.kr/ice/na/ntt/selectNttList.do?bbsId=1723&mi=11849
+
+공백 정규화 후 원장 학교명과 유일하게 일치한 133개 학교에 802건을 연결하고 44건은 보류했다. 학교명·운영 종목·선수 인원 원문/명확한 단일 수치·경비 원문·게시일·게시물 URL을 제공한다. 이름·연락처 등 개인 정보는 수집 대상 필드가 아니다. 첨부파일 참조는 금액 미확보이며 금액을 만들어 채우지 않는다. 게시일을 선수 수 조사일·회계기간으로 해석하지 않고 반복 게시·여러 종목 인원을 합산하지 않는다. 운동부 운영은 학교 성적·수상 실적과 별도다.
+
+정규화 출처와 페이지별 URL·응답 해시는 data/education_sources/school_athletics.json에 보존했다. 기본 생성은 캐시 재사용, --fetch 지정 시 재수집한다. 학교 보고서·AI 운동부 질문·전체 학교 자료 현황표에 연결했다. AI는 요청한 게시연도 범위 중 최근 6개 기록까지만 전달한다. 종목별 최신 재적인원 또는 학교 전체 선수 수를 자동 결정하지 않는다. 단일 인원 해석·복합 표기 결측·경비 원문·게시일 보존 단위 검증을 추가했다.

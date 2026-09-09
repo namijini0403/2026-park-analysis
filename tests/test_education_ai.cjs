@@ -33,6 +33,10 @@ async function ask(payload){
   assert.equal(unknown.answerable,false);
   const routed=Object.values(data).find(r=>r.extended&&r.route.road_exposure);
   assert(routed);
+  const athletic=Object.values(data).find(r=>r.athletics.observations.length);
+  const athleticAnswer=await ask({mode:'identified_school_explainer',question:'학교 운동부 선수 인원을 알려줘',school_context:{school_id:athletic.school_id}});
+  assert.equal(athleticAnswer.answerable,true);
+  assert.match(JSON.stringify(athleticAnswer),/현재 선수 총수/);
   const scenarioAnswer=await ask({mode:'identified_school_explainer',question:'내부 통행 가정은 어떻게 달라져?',school_context:{school_id:routed.school_id}});
   assert.match(JSON.stringify(scenarioAnswer),/실제 접근성 판정이 아니다/);
   assert.match(JSON.stringify(scenarioAnswer),new RegExp(String(routed.route.residential_scenario.added_area_m2)));
