@@ -1,0 +1,13 @@
+{
+  "source_url": "https://www.ice.go.kr/ice/func/spm/selectSpmUserList.do?searchWord=%EC%8B%A0%EA%B2%80%EB%8B%A8&currPage=1",
+  "response_sha256": "a21a9f7173c8500a3250119d74f58c71dd5c8f962937f00caf09ec9e308f0cf8",
+  "matched_directory_rows": [
+    "인천신검단초등학교 공립 032-500-7100 인천 검단구 금정로 55(불로동 247-49) 홈페이지 바로가기 학교/유치원 알리미"
+  ],
+  "national_registry_school_id": "B000030928",
+  "national_registry_name": "인천신검단중학교",
+  "national_registry_level": "초등학교",
+  "neis_exact_name_result": "INFO-200",
+  "neis_exact_code_result": "INFO-200",
+  "status": "identity_conflict_review_required"
+}
