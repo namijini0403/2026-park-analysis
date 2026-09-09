@@ -6043,12 +6043,22 @@
       openCandidatePanel(candidate);
     }
 
+    let candidateLayerRequest = 0;
     async function loadCandidateLayer() {
+      const request = ++candidateLayerRequest;
+      const schoolLevel = document.getElementById('schoolLevelFilter')?.value || '초등학교';
+      if (schoolLevel !== '초등학교') {
+        EducationLayers.renderCandidates();
+        if (schoolLevel !== 'all') {
+          state.datasets.candidateFeatures = [];
+          return;
+        }
+      }
       try {
         const res = await fetch("./data_processed/candidate_grid_final.geojson");
         const geojson = await res.json();
-
-        clearOverlayGroup("candidateMarkers");
+        if (request !== candidateLayerRequest) return;
+        if (schoolLevel === '초등학교') clearOverlayGroup("candidateMarkers");
 
         geojson.features.forEach((feature) => {
           const p = feature?.properties || {};
@@ -6067,6 +6077,7 @@
             fillColor: color,
             fillOpacity: 0.55
           });
+          circle.__educationKind = 'elementary_baseline';
 
           kakao.maps.event.addListener(circle, "click", () => {
             state.suppressNextMapClick = true;
@@ -7406,6 +7417,14 @@
         <div class="legend-item">
           <span class="swatch" style="background:#94A3B8;"></span>
           <span>공사장 행정기록(추정 위치)</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#0891B2;"></span>
+          <span>학원·교습소(좌표 확보분)</span>
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#a78bfa;border:2px solid #7c3aed;"></span>
+          <span>학교급별 250m 탐색격자(부지 미확인)</span>
         </div>
       `;
     }

@@ -7,6 +7,7 @@ const root=path.resolve(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const dom=new JSDOM(html,{runScripts:'outside-only',url:'http://localhost/',pretendToBeVisual:true});
 const w=dom.window,errors=[];
+w.addEventListener('error',event=>errors.push(String(event.error||event.message)));
 w.console.error=(...args)=>errors.push(args.map(String).join(' '));
 w.console.warn=()=>{};
 w.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
@@ -29,6 +30,7 @@ w.kakao={maps:{Map:MapView,LatLng,Marker:MapObject,MarkerClusterer:MapObject,Inf
   Circle:MapObject,CustomOverlay:MapObject,Polygon:MapObject,MarkerImage:MapObject,Point:MapObject,Size:MapObject,
   event:{addListener(target,event,handler){(target.events[event] ||= []).push(handler);}},load(callback){callback();}}};
 const fetched=[];
+let holdBaseline=false,releaseBaseline;
 w.fetch=async(input)=>{
   const url=new URL(String(input),'http://localhost/');
   assert.equal(url.origin,'http://localhost','No real external API calls in app boot test');
@@ -36,11 +38,13 @@ w.fetch=async(input)=>{
   assert(file.startsWith(root+path.sep));
   fetched.push(url.pathname);
   if(!fs.existsSync(file))return {ok:false,status:404};
-  return {ok:true,status:200,text:async()=>fs.readFileSync(file,'utf8'),json:async()=>JSON.parse(fs.readFileSync(file,'utf8'))};
+  const response={ok:true,status:200,text:async()=>fs.readFileSync(file,'utf8'),json:async()=>JSON.parse(fs.readFileSync(file,'utf8'))};
+  if(holdBaseline && url.pathname==='/data_processed/candidate_grid_final.geojson') return await new Promise(resolve=>{releaseBaseline=()=>resolve(response);});
+  return response;
 };
 const inline=[...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n');
 const education=fs.readFileSync(path.join(root,'assets/education-layers.js'),'utf8');
-w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection};');
+w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer};');
 (async()=>{
   const app=w.__app;
   await app.init();
@@ -50,10 +54,15 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert.equal(app.state.datasets.educationAllSchools.length,916);
   assert.equal(app.state.datasets.schools.length,272);
   assert(fetched.includes('/data_processed/education/school_analysis.json'));
+  const baselineRequests=()=>fetched.filter(p=>p==='/data_processed/candidate_grid_final.geojson').length;
+  const initialRequests=baselineRequests();
   for(const [level,count] of [['유치원',369],['중학교',146],['고등학교',129]]){
     selector.value=level;selector.dispatchEvent(new w.Event('change'));
     assert.equal(app.state.datasets.schools.length,count);
     assert.equal(app.state.overlays.schoolMarkers.length,count);
+    assert(app.state.overlays.candidateMarkers.length>0);
+    assert(app.state.overlays.candidateMarkers.every(p=>p.__educationKind==='extended_survey_grid'));
+    assert.equal(app.state.datasets.candidateFeatures.length,0);
     const school=app.state.datasets.schools[0];
     const marker=app.state.overlays.schoolMarkers[0];
     assert(marker.events.click?.length);
@@ -66,7 +75,29 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
     assert.equal(context.iso_child_6_12,undefined,'No elementary model facts in extended AI context');
     await w.EducationLayers.openReport(school);
     assert(w.document.querySelector('.edu-body').textContent.includes(school.학교명));
+    const grid=app.state.overlays.candidateMarkers[0];
+    grid.events.click[0]();
+    const schoolPicker=w.document.getElementById('edu-candidate-school');
+    assert([...schoolPicker.options].every(o=>o.textContent.includes(level)));
+    await w.document.getElementById('edu-candidate-open-school').onclick();
+    assert.equal(app.state.selectedPanelData.학교급구분,level);
+    assert.equal(w.document.getElementById('edu-map-candidate').value,grid.__gridId);
   }
+  assert.equal(baselineRequests(),initialRequests,'Extended filters must not reload elementary candidates');
+  // A late elementary response must not replace the newly selected middle-school grid.
+  holdBaseline=true;selector.value='초등학교';selector.dispatchEvent(new w.Event('change'));
+  assert(releaseBaseline);
+  selector.value='중학교';selector.dispatchEvent(new w.Event('change'));
+  releaseBaseline();holdBaseline=false;
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert(app.state.overlays.candidateMarkers.every(p=>p.__educationKind==='extended_survey_grid'));
+  assert.equal(app.state.datasets.candidateFeatures.length,0);
+  selector.value='all';selector.dispatchEvent(new w.Event('change'));await app.loadCandidateLayer();
+  assert.equal(app.state.overlays.candidateMarkers.filter(p=>p.__educationKind==='extended_survey_grid').length,3081);
+  assert.equal(app.state.overlays.candidateMarkers.filter(p=>p.__educationKind==='elementary_baseline').length,1535);
+  selector.value='초등학교';selector.dispatchEvent(new w.Event('change'));await app.loadCandidateLayer();
+  assert.equal(app.state.overlays.candidateMarkers.length,1535);
+  assert(app.state.overlays.candidateMarkers.every(p=>p.__educationKind==='elementary_baseline'));
   const academy=w.document.getElementById('toggleAcademy');
   academy.checked=true;academy.dispatchEvent(new w.Event('change'));
   assert.equal(app.state.overlays.academyMarkers.length,6743);

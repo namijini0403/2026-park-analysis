@@ -5,9 +5,16 @@ window.EducationLayers = (() => {
   const e = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num = (v, suffix = '') => v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? '미확보' : Number(v).toLocaleString('ko-KR', {maximumFractionDigits:1}) + suffix;
   const categories = {elementary:'초등',middle:'중등',high:'고등',secondary:'중·고등',integrated:'통합(초등 포함)',kindergarten:'유아',mixed:'복합 대상',unknown:'대상 미확인'};
+  const candidateSchools = new Map();
   async function json(name) { const r = await fetch(root + name); if (!r.ok) throw new Error(`${name}: ${r.status}`); return r.json(); }
   async function init() {
-    const [schools, walks, academyData, academyContext] = await Promise.all([json('school_analysis.json'), json('walkshed_500m.geojson'), json('academies_map.json'),json('academy_school_context.json')]);
+    const [schools, walks, academyData, academyContext, grids] = await Promise.all([json('school_analysis.json'), json('walkshed_500m.geojson'), json('academies_map.json'),json('academy_school_context.json'),json('candidate_grid.geojson')]);
+    candidateGrid = grids;
+    candidateSchools.clear();
+    for (const school of schools) for (const candidate of school.candidates || []) {
+      if (!candidateSchools.has(candidate.grid_id)) candidateSchools.set(candidate.grid_id,[]);
+      candidateSchools.get(candidate.grid_id).push(school);
+    }
     academies = academyData;
     state.datasets.academies = academies;
     state.datasets.schools = state.datasets.schools.map(r => ({...r, 학교급구분:'초등학교',context:{academy:academyContext[getSchoolId(r)]}}));
@@ -60,6 +67,35 @@ window.EducationLayers = (() => {
       document.body.appendChild(dialog); dialog.querySelector('button').onclick = () => dialog.close();
     }
     return dialog;
+  }
+  function renderCandidates() {
+    for (const overlay of state.overlays.candidateMarkers || []) overlay.setMap(null);
+    state.overlays.candidateMarkers=[];
+    if (!candidateGrid) return;
+    const active = new Set(state.datasets.schools.filter(s=>s.analysis_version && (typeof shouldShowSchoolMarker!=='function' || shouldShowSchoolMarker(s))).map(getSchoolId));
+    for (const feature of candidateGrid.features) {
+      const schools=(candidateSchools.get(feature.properties.grid_id)||[]).filter(s=>active.has(getSchoolId(s)));
+      if (!schools.length) continue;
+      const polygon=new kakao.maps.Polygon({path:feature.geometry.coordinates[0].map(([lng,lat])=>new kakao.maps.LatLng(lat,lng)),strokeWeight:1,strokeColor:'#7c3aed',fillColor:'#a78bfa',fillOpacity:.3});
+      polygon.__educationKind='extended_survey_grid';
+      polygon.__gridId=feature.properties.grid_id;
+      kakao.maps.event.addListener(polygon,'click',()=>{
+        state.suppressNextMapClick=true;
+        const dialog=ensureModal(),body=dialog.querySelector('.edu-body');
+        ++reportRequest;
+        body.innerHTML=`<p class="edu-kicker">학교급별 250m 후보 탐색</p><h1>${e(feature.properties.grid_id)}</h1><p>현재 학교급·지역·학교 필터에서 이 격자와 직선 1.5km 이내인 ${schools.length}개 기관입니다. 학교별 거리·공원 부족·해당 연령 수요를 비교합니다. 점수는 학교별 정규화 값이므로 학교 사이의 우열로 비교하지 않습니다.</p>${table(['학교','학교급','학교 직선거리','학교 내 비교 점수'],schools.map(s=>{const c=s.candidates.find(c=>c.grid_id===feature.properties.grid_id);return [s.학교명,s.학교급구분,num(c.straight_distance_m,'m'),c.default_score==null?'미확보':c.default_score.toFixed(3)];}))}<label>분석할 학교 <select id="edu-candidate-school">${schools.map(s=>`<option value="${e(getSchoolId(s))}" ${getSchoolId(s)===state.selectedSchoolId?'selected':''}>${e(s.학교명)} · ${e(s.학교급구분)}</option>`).join('')}</select></label> <button type="button" id="edu-candidate-open-school">학교별 비교 보고서 보기</button><p class="edu-note">보행 도달권과 일부 겹치는 탐색 격자입니다. 토지 확보·개발 가능성은 미확인이며 초등 후보지의 부지 적합성·미래 초등 수요 점수를 전용하지 않습니다.</p>`;
+        body.querySelector('#edu-candidate-open-school').onclick=async()=>{
+          const school=schools.find(s=>getSchoolId(s)===body.querySelector('#edu-candidate-school').value);
+          setSchoolPanelSelection(school);
+          await openReport(school);
+          const picker=body.querySelector('#edu-map-candidate');
+          if(picker && state.selectedSchoolId===getSchoolId(school)) picker.value=feature.properties.grid_id;
+        };
+        if(!dialog.open) dialog.showModal();
+      });
+      polygon.setMap(isLayerOnById('candidate')?state.map:null);
+      state.overlays.candidateMarkers.push(polygon);
+    }
   }
   function table(headers, rows) {
     return `<div class="edu-table"><table><thead><tr>${headers.map(h=>`<th>${e(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(v=>`<td>${e(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
@@ -178,5 +214,5 @@ window.EducationLayers = (() => {
     body.innerHTML=`<p class="edu-kicker">선택 학교급·지역의 실제 관측값</p><h1>학교급별 분석 현황</h1>${table(['학교급','기관','환경 분석','평균 추정 공원면적 비율','새 수요모형 산출'],groups)}<p>초등학교의 기존 검토·보정값과 확장 학교급의 v3 도달권·공원 대체경계 추정값은 산출 기준이 다릅니다. 학교급별로 나누어 해석합니다.</p><h2>공원 환경 분포</h2>${table(['학교급','공원 관측 0개','1% 미만','1~5% 미만','5% 이상'],groups.map(g=>{const r=rows.filter(s=>(s.학교급구분||'초등학교')===g[0]);return [g[0],r.filter(s=>Number(s.iso_park_count)===0).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)<1).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)>=1&&Number(s.iso_green_ratio)<5).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)>=5).length];}))}<p>학원·교습소 원자료 ${num(academies.length,'개')} 시설 중 ${num(academies.filter(a=>a.lat!=null).length,'개')} 좌표 확보. 원자료 기준 2026-08-01.</p>`;
     if (!dialog.open) dialog.showModal();
   }
-  return {init,summary,renderAcademies,openReport,openStatistics};
+  return {init,summary,renderAcademies,renderCandidates,openReport,openStatistics};
 })();
