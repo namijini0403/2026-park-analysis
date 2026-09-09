@@ -32,6 +32,12 @@ async function ask(payload){
   const unknown=await ask({mode:'identified_school_explainer',question:'공원 환경 분석',school_context:{school_id:'../unknown',school_level:'중학교'}});
   assert.equal(unknown.answerable,false);
   const middle=Object.values(data).find(r=>r.school_level==='중학교');
+  const inventor=Object.values(data).find(r=>r.awards.some(a=>a.event.includes('발명품')));
+  const inventionChunks=evidence.build(inventor,'발명대회 결과를 알려줘');
+  assert(inventionChunks.some(c=>c.body.includes(inventor.awards.find(a=>a.event.includes('발명품')).work_title)));
+  const inventionAnswer=await ask({mode:'identified_school_explainer',question:'발명대회 결과를 알려줘',school_context:{school_id:inventor.school_id}});
+  assert.equal(inventionAnswer.answerable,true);
+  assert(inventionAnswer.evidence.every(r=>r.source_chunk_id===`education#${inventor.school_id}-performance`));
   for(const question of ['PAPS 체력 비율을 알려줘','방과후 프로그램 수를 알려줘']) {
     const answer=await ask({mode:'identified_school_explainer',question,school_context:{school_id:middle.school_id}});
     assert.equal(answer.answerable,true);

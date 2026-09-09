@@ -2,7 +2,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 let data;
-const TOPIC=/학원|교습|예체능|수능|성취|학력|성적|수상|실적|공시|장학|체력|동아리|방과후|paps/i;
+const TOPIC=/학원|교습|예체능|수능|성취|학력|성적|수상|실적|발명|과학전람회|공시|장학|체력|동아리|방과후|paps/i;
 function load(){
   if(!data) {
     try { data=JSON.parse(fs.readFileSync(path.join(__dirname,'../data_processed/context/education_school_evidence.json'),'utf8')); }
@@ -22,9 +22,12 @@ function build(row,question){
   const q=String(question||'');
   const parts=[];
   if(/학원|교습|예체능/.test(q)) parts.push(chunk(row,'academy','학원·교습소',`직선 500m ${fmt(row.academy.straight_500m_count)}개, 보행 도달권 ${fmt(row.academy.walkshed_count)}개 관측. 예체능 관측 ${fmt(row.academy.arts_sports_count)}개. 대상 분류 ${JSON.stringify(row.academy.target_categories||{})}. 학원은 주변 환경 시설이며 학교 분석 대상이 아니다. 좌표 확보 시설만 집계하고 교습과정으로 대상을 분류한다. 학원 수는 학력이나 교육 품질 점수가 아니다.`));
-  if(/수능|성취|학력|성적|수상|실적|공시|장학|체력|동아리|방과후|paps/i.test(q)) {
+  if(/수능|성취|학력|성적|수상|실적|발명|과학전람회|공시|장학|체력|동아리|방과후|paps/i.test(q)) {
     let text=/수능|성취|학력|성적/.test(q)?'수능 학교별 점수는 미확보, 학업성취도 개별 공시는 보안문자 요구로 미수집이다. 미수집을 성적 0 또는 학력 저하로 해석하지 않는다.':'';
-    if(/수상|실적/.test(q)) text+=` ${row.award_coverage} 이 학교 확인 기록 ${row.awards.length}건 중 최근 최대 6건: ${JSON.stringify([...row.awards].sort((a,b)=>b.year-a.year).slice(0,6))}. 웹·보도자료·PDF 기록은 중복될 수 있어 합산하지 않는다. 전체 기록은 학교별 보고서에서 확인한다.`;
+    if(/수상|실적|발명|과학전람회/.test(q)) {
+      const related=row.awards.filter(r=>q.includes('발명')?r.event.includes('발명'):q.includes('과학전람회')?r.event.includes('과학전람회'):true);
+      text+=` 질문에 해당하는 이 학교의 확인 기록 ${related.length}건 중 최근 최대 6건: ${JSON.stringify([...related].sort((a,b)=>b.year-a.year).slice(0,6))}. ${row.award_coverage} 웹·보도자료·PDF 기록은 중복될 수 있어 합산하지 않는다. 전체 기록은 학교별 보고서에서 확인한다.`;
+    }
     if(/공시|장학|체력|동아리|방과후|paps/i.test(q)) {
       const terms=['장학','체력','동아리','방과후'].filter(term=>q.includes(term));
       if(/paps/i.test(q)) terms.push('체력');

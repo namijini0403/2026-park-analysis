@@ -15,6 +15,7 @@ def main():
     academy=read('academy_school_context.json')
     routes=read('school_routes.json')
     awards=read('science_awards.json')
+    invention=read('invention_awards.json')
     regional=read('regional_age_forecasts.json')
     demand=read('candidate_age_demand.json')['candidates']
     indicators=read('school_public_indicators.json')['schools']
@@ -42,7 +43,8 @@ def main():
                      'knn_basis':row.get('knn_basis'),'candidates':candidates[:5],
                      'candidate_comparison':row.get('candidate_comparison'),'designations':row.get('designations',[]),
                      'regional':regional.get(f"{row.get('gu',institution.get('gu'))}|{institution['학교급구분']}"),
-                     'awards':row.get('awards',[])+awards['schools'].get(sid,[]),'award_coverage':awards['coverage'],
+                     'awards':row.get('awards',[])+awards['schools'].get(sid,[])+invention['schools'].get(sid,[]),
+                     'award_coverage':awards['coverage']+' '+invention['coverage'],
                      'public_indicators':[{**g,'observations':g['observations'][-1:]} for g in indicators.get(sid,[])],
                      'disclosure_titles':titles,'limitations':row.get('limitations',[])}
         # Facility IDs are large and unnecessary for answering aggregate questions.

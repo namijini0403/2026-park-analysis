@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[2]
 CACHE = ROOT / 'data/education_sources/science_awards'
 OUT = ROOT / 'data_processed/education'
 BASE = 'https://www.science.go.kr/mps/1079/bbs/423/'
+YEAR_FIELD = 'aditfield7'
+EVENT = '전국과학전람회'
 LOCAL = threading.local()
 
 
@@ -47,14 +49,14 @@ def detail(entry):
 
 def collect(years):
     CACHE.mkdir(parents=True, exist_ok=True)
-    manifest = {'years': years, 'scope': '전국과학전람회 출품작 검색 결과 전체 페이지; 지도논문 제외', 'entries': [], 'failures': []}
+    manifest = {'years': years, 'scope': f'{EVENT} 출품작 검색 결과 전체 페이지; 지도논문 제외', 'entries': [], 'failures': []}
     entries = {}
     for year in years:
         def page_rows(page):
             path = CACHE / f'list_{year}_{page}.json'
             if path.exists():
                 return json.loads(path.read_text(encoding='utf-8'))
-            response = get(BASE + 'moveBbsNttList.do', {'searchCnd':'aditfield7', 'searchKrwd':str(year), 'searchKrwd2':'entry', 'page':page})
+            response = get(BASE + 'moveBbsNttList.do', {'searchCnd':YEAR_FIELD, 'searchKrwd':str(year), 'searchKrwd2':'entry', 'page':page})
             soup = BeautifulSoup(response.text, 'html.parser')
             output = []
             for row in soup.select('#bbsNttTable tbody.singlerow[onclick]'):
@@ -97,10 +99,17 @@ def collect(years):
 
 
 def main():
+    global CACHE,BASE,YEAR_FIELD,EVENT
     parser = argparse.ArgumentParser()
+    parser.add_argument('--competition', choices=['science','invention'], default='science')
     parser.add_argument('--fetch', action='store_true')
     parser.add_argument('--years', nargs='+', type=int, default=[2023,2024,2025])
     args = parser.parse_args()
+    if args.competition=='invention':
+        CACHE=ROOT/'data/education_sources/invention_awards'
+        BASE='https://www.science.go.kr/mps/1075/bbs/424/'
+        YEAR_FIELD='aditfield1'
+        EVENT='전국학생과학발명품경진대회'
     if args.fetch:
         collect(args.years)
     manifest = json.loads((CACHE/'manifest.json').read_text(encoding='utf-8'))
@@ -119,7 +128,7 @@ def main():
             raise ValueError(f'Conflicting result sources: {ident}')
         first = json.loads((CACHE/f"list_{record['year']}_1.json").read_text(encoding='utf-8'))
         page = (first[0]['ordinal']-record['ordinal'])//10+1
-        result_url = record['source_url'] if record['fields']['수상'] else BASE+f"moveBbsNttList.do?searchCnd=aditfield7&searchKrwd={record['year']}&searchKrwd2=entry&page={page}"
+        result_url = record['source_url'] if record['fields']['수상'] else BASE+f"moveBbsNttList.do?searchCnd={YEAR_FIELD}&searchKrwd={record['year']}&searchKrwd2=entry&page={page}"
         matches = [school for school, pattern in patterns if pattern.search(record['fields']['학교'])]
         if not matches and '인천' in record['fields']['학교']:
             unmatched.append({'id':ident, 'school_field':record['fields']['학교']})
@@ -131,15 +140,16 @@ def main():
                 'event':record['fields']['대회명'], 'year':record['year'], 'category':record['category'],
                 'result':record['fields']['수상'] or record['listed_result'], 'work_title':record['title'], 'source_url':record['source_url'],
                 'result_source_url':result_url, 'result_basis':'상세 페이지' if record['fields']['수상'] else '목록의 동일 작품 수상 칸; 상세 수상 칸은 비어 있음',
-                'participant_scope':'출품작(학생/교원 미분류); 지도논문 제외',
+                'participant_scope':'학생 출품작; 지도논문 제외' if args.competition=='invention' else '출품작(학생/교원 미분류); 지도논문 제외',
                 'verification':'국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능.'})
     pdf_source = ROOT/'data/education_sources/science_awards_2024_pdf.json'
-    pdf_records = json.loads(pdf_source.read_text(encoding='utf-8'))['records'] if pdf_source.exists() else []
+    pdf_records = json.loads(pdf_source.read_text(encoding='utf-8'))['records'] if args.competition=='science' and pdf_source.exists() else []
     for record in pdf_records:
         linked.setdefault(record['school_id'],[]).append(record)
-    output = {'coverage':f"국립중앙과학관 {', '.join(map(str,manifest['years']))}년 전국과학전람회 출품작 검색 게시물(요약집 포함) {manifest['listed_count']}건 중 상세 {len(manifest['entries'])}건 확인. 웹 학교명 공란 {len(missing_school)}건은 그대로 보존하고, 2024 공식 요약집에서 {len(pdf_records)}개 학교-작품 실적을 별도 대조·보완함. 다른 대회·연도 전체 실적은 아님.",
+    pdf_note=f' 2024 공식 요약집에서 {len(pdf_records)}개 학교-작품 실적을 별도 대조·보완함.' if pdf_records else ''
+    output = {'coverage':f"국립중앙과학관 {', '.join(map(str,manifest['years']))}년 {EVENT} 출품작 검색 게시물(요약집 포함) {manifest['listed_count']}건 중 상세 {len(manifest['entries'])}건 확인. 웹 학교명 공란 {len(missing_school)}건은 그대로 보존함.{pdf_note} 다른 대회·연도 전체 실적은 아님.",
               'schools':linked, 'unmatched_incheon':unmatched, 'ambiguous_school_names':ambiguous, 'missing_school_fields':missing_school, 'failures':manifest['failures']}
-    (OUT/'science_awards.json').write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf-8')
+    (OUT/f'{args.competition}_awards.json').write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf-8')
     print(f'Matched {len(linked)} schools / {sum(map(len,linked.values()))} school-work observations; failures {len(manifest["failures"])}', flush=True)
 
 

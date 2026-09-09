@@ -47,6 +47,7 @@ python scripts/education/build_academies.py
 python scripts/education/build_regional_demography.py
 python -m scripts.education.build_regional_age_forecasts
 python scripts/education/build_science_awards.py
+python scripts/education/build_science_awards.py --competition invention
 python scripts/accessibility/build_walkshed_500m_v3.py --graph ../_cache/incheon_walk_graph_v3.graphml --schools data_processed/education/new_school_coords.csv --out data_processed/education/walkshed_500m.geojson --report data_processed/education/walkshed_report.csv
 python scripts/education/build_candidate_grid.py
 python scripts/education/build_candidate_age_demand.py
@@ -58,6 +59,7 @@ python scripts/education/build_ai_school_evidence.py
 python -m unittest discover -s tests -p test_education_layers.py
 python -m unittest discover -s tests -p test_education_demography.py
 python -m unittest discover -s tests -p test_education_awards.py
+python -m unittest discover -s tests -p test_education_invention_awards.py
 python -m unittest discover -s tests -p test_education_candidate_demand.py
 python -m unittest discover -s tests -p test_education_candidate_comparison.py
 python -m unittest discover -s tests -p test_education_candidate_grid.py
@@ -96,3 +98,5 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 공개 활동·지원·체력 지표: `build_public_indicators.py`가 기관 원장 920개 전체에 대해 학교알리미 55(장학금), 56(동아리), 59(방과후), 90(PAPS)를 공시연도별로 정리한다. 최신 관측에서 공개 수치가 있는 기관은 장학금 200교·동아리 548교·방과후 550교·체력 544교다. 장학금 75교, 동아리 2교, 체력 6교의 최신 관측은 공시 제외·공개 여부 미확인으로 수치를 요약하지 않았다. 자료 없는 기관은 0으로 바꾸지 않는다. 원문의 공시연도를 실제 활동연도로 바꾸지 않으며 참여 인원을 합산하거나 재학생 대비 비율로 임의 변환하지 않는다. 금액 단위는 공식 opendata.js의 원 단위를 사용한다. PAPS는 공개 학년·성별 행의 중복 여부와 1~5등급 인원 합=검사 인원 합을 확인한 뒤 인원 가중 4·5등급 비율을 계산한다. 비공개·불일치·결측이 있으면 비율을 만들지 않고 인원 0이면 비율은 null이다. 학교의 전교생 비율·종합 교육 품질·야외환경 인과 효과가 아니다. 보고서는 전체 공시연도를, AI는 질문에 해당하는 최신 공시연도 지표를 제공한다. AI 무키 폴백에서도 핵심 수치와 모집단 설명이 원자료 JSON보다 먼저 나오도록 보완했다. 공시 갱신 후 공개 지표 → AI 근거 순서로 재생성한다.
 
 공시 식별자 보완: 인천 접두어 차이가 있는 학교명을 같은 학교급·인천광역시·도로명/건물번호 일치·좌표 200m 이내의 독립 근거로 확인한 경우에만 학교알리미 코드에 연결한다. 재능중학교 158행·재능고등학교 235행의 공시와 2020~2026년 학생 이력을 복구했다. 같은 조건의 후보가 복수이면 보류하며 근거는 `schoolinfo_verified_aliases.json`에 기록한다. 복구된 2개 학교를 포함해 같은 학교급 KNN 비교가 639개에서 가능하다. 추가 공개 경로 조사와 식별자 없는 자율공시 CSV의 보류 근거는 [공개 실적 자료 조사](public_performance_source_audit.md)에 정리했다.
+
+전국학생과학발명품경진대회: 국립중앙과학관의 별도 공식 DB(`/mps/1075/bbs/424/`)에서 2023~2025년 출품작 901개 게시물의 상세 조회를 완료했고 요청 실패는 0이다. 과학전람회의 연도 검색 필드 `aditfield7`과 달리 이 DB의 실제 공개 폼은 `aditfield1`을 사용한다. 지도논문을 제외하고 학교명·대회·등급·작품명·응답 해시만 정규화해 개인 수상자/지도교사 필드는 저장하지 않는다. 정확하게 연결한 결과는 23개 학교·32개 학교-작품 관측이다. 학교명 공란 301건과 동명 학교 보류 8건은 별도 기록이며 수상 없음으로 해석하지 않는다. 이 대회의 PDF 요약집은 아직 연결하지 않았다. 다른 대회의 PDF 보완 결과를 재사용하지 않는다. 보고서에 두 대회의 결과를 대회명과 함께 표시하고, AI의 발명대회 질문에는 해당 대회의 관측만 전달한다. 갱신은 `python scripts/education/build_science_awards.py --competition invention --fetch --years 2023 2024 2025` 후 AI 근거 재생성이다. 원문: https://www.science.go.kr/mps/1075/bbs/424/moveBbsNttList.do
