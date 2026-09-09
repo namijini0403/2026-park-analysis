@@ -54,6 +54,38 @@ def institution_key(name, level):
     return re.sub(r"\s+", "", str(name)), level
 
 
+def verified_schoolinfo_aliases(registry, manifest):
+    """Resolve Incheon-prefix variants only with matching street and nearby coordinates."""
+    from math import asin, cos, radians, sin, sqrt
+    matched = {}
+    institutions=registry.to_dict('records')
+    for source in sorted(manifest,key=lambda m:m.get('year',0),reverse=True):
+        if source['item']!='0' or not source.get('rows'):continue
+        for basic in json.loads((RAW/source['file']).read_text(encoding='utf-8'))['list']:
+            level=LEVELS.get(source['school_level_code'])
+            name=str(basic.get('SCHUL_NM','')).strip()
+            candidates=[]
+            for school in institutions:
+                if school['학교급구분']!=level or school['학교명']==name:continue
+                if school['학교명'].removeprefix('인천')!=name.removeprefix('인천'):continue
+                a=str(school.get('소재지도로명주소','')).split()
+                b=str(basic.get('SCHUL_RDNMA','')).split()
+                if len(a)<4 or len(b)<4 or a[0]!='인천광역시' or b[0]!='인천광역시' or a[2:]!=b[2:]:continue
+                try:
+                    lat1,lon1,lat2,lon2=map(radians,[float(school['위도']),float(school['경도']),float(basic['LTTUD']),float(basic['LGTUD'])])
+                    distance=2*6371000*asin(sqrt(sin((lat1-lat2)/2)**2+cos(lat1)*cos(lat2)*sin((lon1-lon2)/2)**2))
+                except (TypeError,ValueError,KeyError):continue
+                if not np.isfinite(distance) or distance>200:continue
+                candidates.append({'school_id':school['학교ID'],'registry_name':school['학교명'],
+                                   'disclosure_name':name,'school_level':level,'distance_m':round(distance,2),
+                                   'registry_address':school['소재지도로명주소'],'disclosure_address':basic['SCHUL_RDNMA'],
+                                   'source_file':source['file'],'source_year':source['year'],
+                                   'basis':'인천 접두어 차이만 허용 + 동일 학교급 + 시도·도로명·건물번호 일치 + 좌표 200m 이내'})
+            key=basic.get('SCHUL_CODE')
+            if len(candidates)==1 and key not in matched:matched[key]=candidates[0]
+    return matched
+
+
 def disclosures(registry):
     manifest = json.loads((RAW / "manifest.json").read_text(encoding="utf-8"))
     definitions = (RAW / "official_field_definitions.js").read_text(encoding="utf-8")
@@ -66,6 +98,8 @@ def disclosures(registry):
     keys = defaultdict(list)
     for r in registry.to_dict("records"):
         keys[institution_key(r["학교명"], r["학교급구분"])].append(r["학교ID"])
+    aliases=verified_schoolinfo_aliases(registry,manifest)
+    save('schoolinfo_verified_aliases.json',aliases)
     linked, enrollment, unmatched = defaultdict(list), defaultdict(dict), []
     for m in manifest:
         if not m.get("rows"):
@@ -73,6 +107,9 @@ def disclosures(registry):
         rows = json.loads((RAW / m["file"]).read_text(encoding="utf-8"))["list"]
         for r in rows:
             ids = keys[institution_key(r.get("SCHUL_NM"), LEVELS.get(m["school_level_code"]))]
+            alias=aliases.get(r.get('SCHUL_CODE'))
+            if not ids and alias and alias['school_level']==LEVELS.get(m['school_level_code']):
+                ids=[alias['school_id']]
             if len(ids) != 1:
                 unmatched.append({"name": r.get("SCHUL_NM"), "level": m["school_level_code"], "file": m["file"]})
                 continue
