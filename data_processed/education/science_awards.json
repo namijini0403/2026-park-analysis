@@ -1,0 +1,2041 @@
+{
+  "coverage": "국립중앙과학관 2023, 2024, 2025년 전국과학전람회 출품작 검색 게시물(요약집 포함) 899건 중 상세 899건 확인. 학교명 공란 300건은 연결하지 않음. 다른 대회·연도 전체 실적은 아님.",
+  "schools": {
+    "B000011828": [
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "지구및환경",
+        "result": "특상",
+        "work_title": "위도별 앙부일구 생성 프로그램 제작 및 교육적 활용에 관한 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30530",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30530",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "기타",
+        "result": "우수상",
+        "work_title": "인공지능을 활용한 시각장애인 식품 선택 보조 애플리케이션 개발",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30464",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30464",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "기타",
+        "result": "장려상",
+        "work_title": "QGIS와 AHP를 활용한 인천광역시 부평구 내 경찰관서와 관할구역의 효율적인 재배치에 관한 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30454",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30454",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "생물",
+        "result": "특상",
+        "work_title": "갯벌아 도와줘! 갯벌 미생물을 활용한 음식물쓰레기 분해",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30404",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30404",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "화학",
+        "result": "장려상",
+        "work_title": "바이오매스 지지체의 표면 작용기에 따른 나노영가철의 오염물질 제거 성능 분석",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30339",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30339",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "물리",
+        "result": "장려상",
+        "work_title": "볼링공 코어의 모양에 따른 최종 도달 위치 예측에 관한 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30280",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30280",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "지구및환경",
+        "result": "우수상",
+        "work_title": "둥둥 떠다니며 중금속과 미세플라스틱을 쏙쏙! 퓨리볼 제작 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=48013",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=48013",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "지구및환경",
+        "result": "특상",
+        "work_title": "노후 수동형 경위대식 망원경 활용성 향상을 위한 관측 보조 시스템 개발",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=48010",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=48010",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "산업및에너지",
+        "result": "우수상",
+        "work_title": "CCTV 영상 채도·명도 변화량을 이용한 실시간 안개 판독 알고리즘 개발",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47938",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47938",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "생물",
+        "result": "특상",
+        "work_title": "초음파 단층 촬영 기반 감자 부패 3D 시각화 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47906",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47906",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "생물",
+        "result": "특상",
+        "work_title": "실내 공기질 개선을 위한 이끼소담 제작 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47903",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47903",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "화학",
+        "result": "장려상",
+        "work_title": "Schiff`s reagent 기반 알데하이드 정량을 활용한 식용유지 산패도 분석 장치 개발",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47830",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47830",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000012269": [
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "지구및환경",
+        "result": "특상",
+        "work_title": "N-Body Simulation을 활용한 은하 나선팔 구조의 영향요인 분석",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30522",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30522",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "생물",
+        "result": "장려상",
+        "work_title": "하천 정화를 위한 꽃가루·글리신 복합체 제작 및 효과 검증",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30429",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30429",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "물리",
+        "result": "우수상",
+        "work_title": "윷의 초기 운동상태에 따른 윷의 확률변화에 대한 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30292",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30292",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "물리",
+        "result": "특상",
+        "work_title": "Archimedes screw 구조 변화에 따른 수력발전기 효율 향상 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30266",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30266",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "산업및에너지",
+        "result": "특상",
+        "work_title": "친환경 코팅제를 이용한 선박 프로펠러의 공동현상 방지에 대한 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47965",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47965",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "산업및에너지",
+        "result": "장려상",
+        "work_title": "깊이 추정 기반 3D 촉각 핀스크린 인터페이스 개발",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47944",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47944",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "화학",
+        "result": "우수상",
+        "work_title": "실란 커플링제 표면처리와 Si/Al 비율 조절을 통한 소수성 Zeolite 개발 : 머신러닝 기반의 소수성 폐기물 흡착 효율 최적화",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47842",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47842",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "물리",
+        "result": "특상",
+        "work_title": "Formant Energy를 활용한 언어치료 프로그램 VoiceBloom 개발",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47767",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47767",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천진산과학고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "물리",
+        "result": "우수상",
+        "work_title": "BIC 공진 특성 분석 및 에너지 하베스팅 응용 가능성 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47763",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47763",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000008823": [
+      {
+        "school_name": "인천신정중학교",
+        "school_level": "중학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "지구및환경",
+        "result": "장려상",
+        "work_title": "우리 동네 생물 다양성 지도로 알아보는 송도 신도시의 생태계 건강성 평가",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30502",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30502",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000025755": [
+      {
+        "school_name": "인천청람중학교",
+        "school_level": "중학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "기타",
+        "result": "장려상",
+        "work_title": "OPEN CV 기술을 활용한 꿀벌 응애 감지 시스템",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30441",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30441",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      },
+      {
+        "school_name": "인천청람중학교",
+        "school_level": "중학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "물리",
+        "result": "장려상",
+        "work_title": "보도블록의 모양과 배치에 따른 견고성 탐구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30257",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30257",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000022834": [
+      {
+        "school_name": "인천청람초등학교",
+        "school_level": "초등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "기타",
+        "result": "우수상",
+        "work_title": "머신러닝을 활용한 주차장 내 소화기 위치식별에 대한 탐구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30437",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30437",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000012251": [
+      {
+        "school_name": "인천만수고등학교",
+        "school_level": "고등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "생물",
+        "result": "장려상",
+        "work_title": "금붕어 먹이에 따른 아쿠아포닉스 채소 생장도 비교 탐구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30409",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30409",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000008862": [
+      {
+        "school_name": "인천초은중학교",
+        "school_level": "중학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "생물",
+        "result": "장려상",
+        "work_title": "어항물의 질산염 성분을 이용한 천연 비료의 효과 탐구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30393",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30393",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000008866": [
+      {
+        "school_name": "검암중학교",
+        "school_level": "중학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "화학",
+        "result": "우수상",
+        "work_title": "건전지 직렬 연결시 내부저항에 따른 건전지 온도변화로 인한 위험성 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30321",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30321",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000003007": [
+      {
+        "school_name": "인천부곡초등학교",
+        "school_level": "초등학교",
+        "event": "제69회 전국과학전람회",
+        "year": 2023,
+        "category": "화학",
+        "result": "우수상",
+        "work_title": "사진의 빛바램에 빛, 온도, 습도가 미치는 영향 탐구(채도의 측정)",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30309",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30309",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000008873": [
+      {
+        "school_name": "인천석남중학교",
+        "school_level": "중학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "지구및환경",
+        "result": "특상",
+        "work_title": "선인장 가시 구조를 이용한 수분 포집 장치의 개발에 관한 연구",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47994",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47994",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000012293": [
+      {
+        "school_name": "인천원당고등학교",
+        "school_level": "고등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "생물",
+        "result": "우수상",
+        "work_title": "전기장과 자기장이 황색포도상구균의 정족수 인지에 미치는 영향과 활용 방안에 대한 고찰",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47905",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47905",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000008789": [
+      {
+        "school_name": "부원중학교",
+        "school_level": "중학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "생물",
+        "result": "특상",
+        "work_title": "귀뚜라미 소리의 파형 분석을 통한 수렴진화의 이해",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47876",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47876",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000025751": [
+      {
+        "school_name": "인천경연초등학교",
+        "school_level": "초등학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "화학",
+        "result": "장려상",
+        "work_title": "해조류로 물안경을 닦으면 김서림 방지에 효과가 있을까?",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47816",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47816",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000008845": [
+      {
+        "school_name": "숭덕여자중학교",
+        "school_level": "중학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "물리",
+        "result": "우수상",
+        "work_title": "역사 속에서 살펴본 한국 숟가락의 특징과 숟가락에 담긴 과학 원리와 적용",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47757",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47757",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ],
+    "B000008861": [
+      {
+        "school_name": "인천해원중학교",
+        "school_level": "중학교",
+        "event": "제71회 전국과학전람회",
+        "year": 2025,
+        "category": "물리",
+        "result": "장려상",
+        "work_title": "에너지 절감을 위해 회생 제동 원리를 이용한 전동휠체어",
+        "source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47756",
+        "result_source_url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47756",
+        "result_basis": "상세 페이지",
+        "participant_scope": "출품작(학생/교원 미분류); 지도논문 제외",
+        "verification": "국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능."
+      }
+    ]
+  },
+  "unmatched_incheon": [],
+  "ambiguous_school_names": [
+    {
+      "id": "30392",
+      "school_field": "부흥중학교 2학년",
+      "candidate_school_id": "B000008803"
+    },
+    {
+      "id": "47935",
+      "school_field": "구산중학교",
+      "candidate_school_id": "B000008805"
+    }
+  ],
+  "missing_school_fields": [
+    {
+      "id": "48701",
+      "year": 2024,
+      "title": "2024년 전국과학전람회 수상작품요약집"
+    },
+    {
+      "id": "47018",
+      "year": 2024,
+      "title": "14면체 주사위 주령구의 확률 및 물리학적 관점에서의 고찰"
+    },
+    {
+      "id": "47017",
+      "year": 2024,
+      "title": "Arduino TSL2561센서를 이용한 도로 위 블랙아이스 탐지 장치 탐색"
+    },
+    {
+      "id": "47016",
+      "year": 2024,
+      "title": "capstan problem을 접목한 버클 구조의 물리적분석"
+    },
+    {
+      "id": "47015",
+      "year": 2024,
+      "title": "Snail Ball의 경사면 운동에 대한 개선된 물리학적 분석"
+    },
+    {
+      "id": "47014",
+      "year": 2024,
+      "title": "spinning tube의 패턴에 관한 연구"
+    },
+    {
+      "id": "47013",
+      "year": 2024,
+      "title": "splash 현상에서 특징을 활용한 실생활 적용 방안 연구"
+    },
+    {
+      "id": "47012",
+      "year": 2024,
+      "title": "기상풍선을 이용한 고도별 뮤온관측으로 상대론적 시간지연효과 검증"
+    },
+    {
+      "id": "47007",
+      "year": 2024,
+      "title": "감은사지 동탑의 ㄹ 자 모양 가구식 기단에 대한 탐구"
+    },
+    {
+      "id": "47004",
+      "year": 2024,
+      "title": "갯가제 집게발의 Bouligand 구조를 응용한 이중 반꼬임 구조의 안정성 분석"
+    },
+    {
+      "id": "46998",
+      "year": 2024,
+      "title": "고려거란전쟁의 비밀 병기 「고려 검차」 탐구"
+    },
+    {
+      "id": "46997",
+      "year": 2024,
+      "title": "골프공의 딤플 구조에 따른 공기 저항과의 상관관계 연구"
+    },
+    {
+      "id": "46996",
+      "year": 2024,
+      "title": "공명 현상을 이용한 소리 에너지 하베스팅"
+    },
+    {
+      "id": "46995",
+      "year": 2024,
+      "title": "광학 이미지 분석을 활용한 액체 굴절률 추정기술의 개발"
+    },
+    {
+      "id": "46994",
+      "year": 2024,
+      "title": "국내 유일! 화암사 극락전의 하앙 구조에 담긴 비밀"
+    },
+    {
+      "id": "46993",
+      "year": 2024,
+      "title": "기체가 발생하는 반응에서 질량 측정의 문제점과 개선방법에 대한 탐구"
+    },
+    {
+      "id": "46992",
+      "year": 2024,
+      "title": "나뭇잎은 어떻게 그네를 탔을까?"
+    },
+    {
+      "id": "46991",
+      "year": 2024,
+      "title": "네오디뮴 자석으로 강화된 피젯 스피너의 독특한 회전 현상 연구"
+    },
+    {
+      "id": "46990",
+      "year": 2024,
+      "title": "다양한 물체의 회전 운동에 따른 충격력에 대한 연구"
+    },
+    {
+      "id": "46989",
+      "year": 2024,
+      "title": "다양한 용매에 따른 IMF 생성 여부에 대한 탐구"
+    },
+    {
+      "id": "46988",
+      "year": 2024,
+      "title": "다이빙 선수는 왜 다이빙 전에 돌을 던졌을까?"
+    },
+    {
+      "id": "46987",
+      "year": 2024,
+      "title": "댐퍼를 이용한 보다 안정적인 표지 구조물 연구 및 제작"
+    },
+    {
+      "id": "46986",
+      "year": 2024,
+      "title": "도전1 세계대회 멀리날리기 1등 종이비행기 만들기"
+    },
+    {
+      "id": "46985",
+      "year": 2024,
+      "title": "돌아가는 선풍기 날개에 왜 먼지가 쌓이는 걸까?"
+    },
+    {
+      "id": "46984",
+      "year": 2024,
+      "title": "동결 건조한 녹조 분말을 이용한 친환경 단열재의 제작"
+    },
+    {
+      "id": "46983",
+      "year": 2024,
+      "title": "동백나무 잎 증류 추출물과 동백 기름을 활용한 친환경 섬유유연제의 정전기 감소 효과"
+    },
+    {
+      "id": "46982",
+      "year": 2024,
+      "title": "드론의 무게중심 위치에 따른 에너지 효율 분석"
+    },
+    {
+      "id": "46981",
+      "year": 2024,
+      "title": "롤러코스터에서의 역학적 에너지와 손실 에너지"
+    },
+    {
+      "id": "46980",
+      "year": 2024,
+      "title": "메트로놈의 원리를 이용한 운동기구"
+    },
+    {
+      "id": "46979",
+      "year": 2024,
+      "title": "물의 비열을 이용한 일교차 극복 주택 구상에 관한 연구"
+    },
+    {
+      "id": "46978",
+      "year": 2024,
+      "title": "미끄럼 방지 테이프는 왜 계단 끝에 붙어있을까?"
+    },
+    {
+      "id": "46977",
+      "year": 2024,
+      "title": "발목줄넘기를 어떻게 하면 잘 돌릴 수 있을까?"
+    },
+    {
+      "id": "46976",
+      "year": 2024,
+      "title": "복합체의 회전 운동에 대한 자이로스코프 효과 탐구"
+    },
+    {
+      "id": "46975",
+      "year": 2024,
+      "title": "부엉이 깃털 모사를 이용한 저소음 비행 드론"
+    },
+    {
+      "id": "46974",
+      "year": 2024,
+      "title": "부유체의 물리적 조건에 따른 치리오스 효과(Cheerios effect)의 운동 양상 변화에 관한 연구"
+    },
+    {
+      "id": "46973",
+      "year": 2024,
+      "title": "비뉴턴 유체를 이용한 내진설계의 효과성 및 실용 방안 탐구"
+    },
+    {
+      "id": "46972",
+      "year": 2024,
+      "title": "새로운 형태의 자기 기어의 활용성 탐구"
+    },
+    {
+      "id": "46971",
+      "year": 2024,
+      "title": "수증기가 밖으로 나오지 않는 고효율 쿨링포그 팬의 원리 및 구조탐구"
+    },
+    {
+      "id": "46970",
+      "year": 2024,
+      "title": "유체 내 시클리드 이동 경로 분석을 위한 수치해석 기반 최적화 연구"
+    },
+    {
+      "id": "46969",
+      "year": 2024,
+      "title": "돌팔매질로 날리는 비행기: 스핀런치를 활용한 함재기 발사 장치 개발"
+    },
+    {
+      "id": "46968",
+      "year": 2024,
+      "title": "어떻게 하면 가장 효율적인 회전 펌프를 만들 수 있을까?"
+    },
+    {
+      "id": "46967",
+      "year": 2024,
+      "title": "어떻게 하면 전기장을 이용하여 효율적인 물방울 렌즈를 만들 수 있을까?"
+    },
+    {
+      "id": "46966",
+      "year": 2024,
+      "title": "다중 공명장치에서 공명기의 배열 방식과 순서에 따른 공기흐름과 전달 손실 차이 분석"
+    },
+    {
+      "id": "46965",
+      "year": 2024,
+      "title": "왜 대부분의 목도리는 고무뜨기 방법으로 만들어질까?"
+    },
+    {
+      "id": "46964",
+      "year": 2024,
+      "title": "우리 조상들은 왜 오동나무 가구를 인두로 지졌을까?"
+    },
+    {
+      "id": "46963",
+      "year": 2024,
+      "title": "운동량에 따른 공의 모양 변화에 대한 지표 마련"
+    },
+    {
+      "id": "46962",
+      "year": 2024,
+      "title": "종이비행기는 정말 비행기일까? 종이비행기의 비행 원리 및 안정화 조건에 대한 역학적 분석"
+    },
+    {
+      "id": "46961",
+      "year": 2024,
+      "title": "인공파도, 바람을 이용한 해양도시의 구조 최적화 연구"
+    },
+    {
+      "id": "46960",
+      "year": 2024,
+      "title": "장구 모양의 토짝과 다양한 다회틀을 이용하여 끈목을 짠 조상들의 지혜 탐구"
+    },
+    {
+      "id": "46959",
+      "year": 2024,
+      "title": "전동 킥보드 사고 예방을 위한 자세제어시스템 개발"
+    },
+    {
+      "id": "46958",
+      "year": 2024,
+      "title": "주방후드 필터에 관한 탐구"
+    },
+    {
+      "id": "46957",
+      "year": 2024,
+      "title": "줄넘기 도약 순간에 따른 줄 넘을 가능성 탐구"
+    },
+    {
+      "id": "46956",
+      "year": 2024,
+      "title": "중력렌즈 효과 학습을 위한 중력렌즈 교구 제작"
+    },
+    {
+      "id": "46955",
+      "year": 2024,
+      "title": "중력지오이드 면과 물리적 착시 현상에 관한 모델링 학습 자료 개발 탐구"
+    },
+    {
+      "id": "46954",
+      "year": 2024,
+      "title": "진동을 이용한 선풍기 날개 먼지제거에 관한 연구"
+    },
+    {
+      "id": "46953",
+      "year": 2024,
+      "title": "진동을 이용한 철의 부식 위치에 관한 탐구"
+    },
+    {
+      "id": "46952",
+      "year": 2024,
+      "title": "첼로 브릿지의 시각화 탐색"
+    },
+    {
+      "id": "46951",
+      "year": 2024,
+      "title": "코일건의 최적화 및 활용 가능성"
+    },
+    {
+      "id": "46950",
+      "year": 2024,
+      "title": "폭설 및 강풍 피해 방지 비닐하우스 설계"
+    },
+    {
+      "id": "46949",
+      "year": 2024,
+      "title": "학령에 따른 손가락 힘의 변화와 현악기 음정과의 상관관계에 대한 분석"
+    },
+    {
+      "id": "46948",
+      "year": 2024,
+      "title": "회전 펌핑 기구의 활용 및 효율 증가를 위한 요인에 관한 연구"
+    },
+    {
+      "id": "46947",
+      "year": 2024,
+      "title": "보행자의 안전을 위한 방호울타리의 충격 흡수 메커니즘과 가변형 구조에 관한 연구"
+    },
+    {
+      "id": "46946",
+      "year": 2024,
+      "title": "휴대폰 낙하운동 3차원 동역학 운동 분석 장치 개발과 적용(MBL 실험 환자 케어 시스템)"
+    },
+    {
+      "id": "46945",
+      "year": 2024,
+      "title": "ABS세척법과 미세마모법을 응용한 은 세척제 및 세척장치 개발"
+    },
+    {
+      "id": "46944",
+      "year": 2024,
+      "title": "친환경 탄소양자점을 이용한 Cutie(QD) pH sensor kit 제작"
+    },
+    {
+      "id": "46943",
+      "year": 2024,
+      "title": "눈으로 극성을 알 수 있을까? CNS를 활용한 극성도 측정에 대한 탐구"
+    },
+    {
+      "id": "46942",
+      "year": 2024,
+      "title": "PDMS 투명 실리콘 수지를 이용한 페로브스카이트 태양전지 초소수성 광학 필름 제조"
+    },
+    {
+      "id": "46941",
+      "year": 2024,
+      "title": "에탄올 산화 금 나노 촉매의 친환경적 합성 방법 탐구"
+    },
+    {
+      "id": "46940",
+      "year": 2024,
+      "title": "rGO와 ZnO를 도핑한 ZnTe광촉매의 향상된 유기염료 분해능 평가"
+    },
+    {
+      "id": "46939",
+      "year": 2024,
+      "title": "감귤류를 활용한 천연기피제 제작에 관한 연구"
+    },
+    {
+      "id": "46938",
+      "year": 2024,
+      "title": "갑각류 껍질을 이용한 키틴 단열재 제조 연구"
+    },
+    {
+      "id": "46937",
+      "year": 2024,
+      "title": "고로쇠 수액을 오랫동안 먹는 방법: 시럽에 관한 탐구"
+    },
+    {
+      "id": "46936",
+      "year": 2024,
+      "title": "과일껍질을 이용한 리튬 이차전지 음극재 제작을 위한 최적의 조건 탐색 및 성능 분석"
+    },
+    {
+      "id": "46935",
+      "year": 2024,
+      "title": "금속활자에 쓸 먹을 갈 때 왜 매화 달인 물에 갈았을까?"
+    },
+    {
+      "id": "46934",
+      "year": 2024,
+      "title": "바이오/메디컬 응용을 위한 자성 나노입자의 합성 및 항체접합 과정에서 활용방안 제안"
+    },
+    {
+      "id": "46933",
+      "year": 2024,
+      "title": "깨끗한 안경 만들기 프로젝트"
+    },
+    {
+      "id": "46932",
+      "year": 2024,
+      "title": "너 진짜 개코다!(개코의 원리를 통한 후각 장애 지원 장치 개발에 대한 연구)"
+    },
+    {
+      "id": "46931",
+      "year": 2024,
+      "title": "다공구조 내에 전해질을 포함한 PVA가 충진된 투명나무 제조 및 특성 분석 연구"
+    },
+    {
+      "id": "46930",
+      "year": 2024,
+      "title": "미세플라스틱 흡착 기능성 선박용 필름형 도료 개발"
+    },
+    {
+      "id": "46929",
+      "year": 2024,
+      "title": "단백질은 왜 베네딕트 반응에서 색깔이 변할까?"
+    },
+    {
+      "id": "46928",
+      "year": 2024,
+      "title": "자외선 차단제와 모기 기피제의 반응성 여부 및 자외선 차단 효과에 관한 연구"
+    },
+    {
+      "id": "46927",
+      "year": 2024,
+      "title": "밀가루 음식을 건강하게 먹는 방법 탐구"
+    },
+    {
+      "id": "46926",
+      "year": 2024,
+      "title": "바사삭! 탕후루의 과학적 비밀"
+    },
+    {
+      "id": "46925",
+      "year": 2024,
+      "title": "쑥이 김치의 발효속도를 늦출 수 있을까?"
+    },
+    {
+      "id": "46924",
+      "year": 2024,
+      "title": "볍씨의 곰팡이병 예방과 발아율 향상을 위한 최적의 천연 고분자 코팅제 개발"
+    },
+    {
+      "id": "46923",
+      "year": 2024,
+      "title": "복합 이온 처리를 통한 펙틴-알긴산 바이오 포장재 제조"
+    },
+    {
+      "id": "46922",
+      "year": 2024,
+      "title": "새로운 종이를 파피루스와 한지로 만드는 방법에 대한 탐구"
+    },
+    {
+      "id": "46921",
+      "year": 2024,
+      "title": "새차 증후군 원인 물질에 대한 흡착 효과 탐구"
+    },
+    {
+      "id": "46920",
+      "year": 2024,
+      "title": "생태계를보호하는물에녹는풍선에대한가능성연구"
+    },
+    {
+      "id": "46919",
+      "year": 2024,
+      "title": "셀룰로오스를 이용한 폴리우레탄 장갑 코팅제 제작 및 성능 향상에 관한 연구"
+    },
+    {
+      "id": "46918",
+      "year": 2024,
+      "title": "소성장은 왜 사용한 얼레빗을 봉미초 우린 물에 담갔을까?"
+    },
+    {
+      "id": "46917",
+      "year": 2024,
+      "title": "식초를 활용한 욕실 청소 효과 비교 및 실용적인 욕실 청소 도구 제작 탐구"
+    },
+    {
+      "id": "46916",
+      "year": 2024,
+      "title": "실크와 잔탄검, 병풀 추출액을 이용한 하이드로겔 밴드 제작"
+    },
+    {
+      "id": "46915",
+      "year": 2024,
+      "title": "아두이노를 이용한 단백질 정량 실험 키트"
+    },
+    {
+      "id": "46914",
+      "year": 2024,
+      "title": "안전한 캠핑을 위한 생석회 혼합물의 온도와 지속시간 연구"
+    },
+    {
+      "id": "46913",
+      "year": 2024,
+      "title": "알고 먹는 약! 우리의 건강을 지킨다(부제: 활명수의 비밀)"
+    },
+    {
+      "id": "46912",
+      "year": 2024,
+      "title": "알긴산나트륨을 첨가한 친환경 플루란 필름의 제작과 화학적 특성 분석"
+    },
+    {
+      "id": "46911",
+      "year": 2024,
+      "title": "퀀텀닷(Quantum dot)을 활용한 라즈베리 파이 기반의 휴대용 UV-Vis 키트 제작"
+    },
+    {
+      "id": "46910",
+      "year": 2024,
+      "title": "양치를 한 뒤 음식을 먹으면 맛이 왜 달라질까?"
+    },
+    {
+      "id": "46909",
+      "year": 2024,
+      "title": "오징어 먹물로 연고의 성능을 높일 수 있을 까?"
+    },
+    {
+      "id": "46908",
+      "year": 2024,
+      "title": "왕겨와 불가사리에서 추출한 실리카와 탄산칼슘을 컴파운딩한 PLA의 특성 변화 및 실생활 적용 연구"
+    },
+    {
+      "id": "46907",
+      "year": 2024,
+      "title": "용해도가 매우 작은 물질이 물의 어는 정도에 미치는 영향 탐구"
+    },
+    {
+      "id": "46906",
+      "year": 2024,
+      "title": "우리 조상들은 책가도를 채색할 때 왜 천연접착제를 사용하였을까?"
+    },
+    {
+      "id": "46905",
+      "year": 2024,
+      "title": "우리나라 해조류의 VOCs 배출 특성 분석 및 CO2 흡수량 비교 탐구"
+    },
+    {
+      "id": "46904",
+      "year": 2024,
+      "title": "우리의 전통 유삼(油衫)에는 어떤 비밀이 숨어 있을까?"
+    },
+    {
+      "id": "46903",
+      "year": 2024,
+      "title": "응집 반응을 통한 미세플라스틱 제거 방안 연구"
+    },
+    {
+      "id": "46902",
+      "year": 2024,
+      "title": "이산화탄소 MFF 연료전지"
+    },
+    {
+      "id": "46901",
+      "year": 2024,
+      "title": "전기화학적 방법을 활용한 실생활 속 페놀 검출 센서 개발에 관한 연구"
+    },
+    {
+      "id": "46900",
+      "year": 2024,
+      "title": "전위 데이터 및 지시약 색 변화를 이용한 비타민 C 산화-환원 적정의 당량점 예측 프로그램 개발"
+    },
+    {
+      "id": "46899",
+      "year": 2024,
+      "title": "젤 형태의 환원된 그래핀 산화물을 활용한 PMMA 미세플라스틱의 전기화학적 흡착"
+    },
+    {
+      "id": "46898",
+      "year": 2024,
+      "title": "제사상 위 좌면지에 숨겨진 조상들의 지혜 탐구"
+    },
+    {
+      "id": "46897",
+      "year": 2024,
+      "title": "지구를 살리는 친환경 전지 제작 연구"
+    },
+    {
+      "id": "46896",
+      "year": 2024,
+      "title": "창상용알긴산항균하이드로겔드레싱연구"
+    },
+    {
+      "id": "46895",
+      "year": 2024,
+      "title": "파동에 의한 유체 유동이 결정화 과정에 미치는 영향 탐구"
+    },
+    {
+      "id": "46894",
+      "year": 2024,
+      "title": "폐섬유를 활용한 Bio-Char 제작 및 흡착 성능 비교와 향상에 관한 연구"
+    },
+    {
+      "id": "46893",
+      "year": 2024,
+      "title": "피부 질환용 강새해초목 셀룰로오스 필름의 합성 및 분석"
+    },
+    {
+      "id": "46892",
+      "year": 2024,
+      "title": "하이드로겔과 머신러닝을 활용한 고체 확산 기반의 pH 측정 방법 개발"
+    },
+    {
+      "id": "46891",
+      "year": 2024,
+      "title": "할머니는 왜 안동 다식을 만들 때 암키와를 덮어서 달군 숯 위에 얹으셨을까?"
+    },
+    {
+      "id": "46890",
+      "year": 2024,
+      "title": "해조류의 중금속 흡착률 비교 및 폐해조류를 활용한 샤워기 필터 볼 제작"
+    },
+    {
+      "id": "46889",
+      "year": 2024,
+      "title": "논알콜, 제로알콜 너 진짜니!? -BZ 반응을 이용한 극미량의 에탄올 농도 측정 및 알코올 화합물 구별 방법 탐구"
+    },
+    {
+      "id": "46888",
+      "year": 2024,
+      "title": "파이썬 기반의 화학발광 영상데이터 처리를 통한 간편 중금속 정량 분석법 연구"
+    },
+    {
+      "id": "46887",
+      "year": 2024,
+      "title": "효모 골격을 기반으로 한 Ru-효모 촉매 제작 및 HER 반응 효율성 비교"
+    },
+    {
+      "id": "46886",
+      "year": 2024,
+      "title": "Bioinformatics python을 이용한 바이러스 감염 예측과 확산 과정 모델링에 대한 탐구"
+    },
+    {
+      "id": "46885",
+      "year": 2024,
+      "title": "곰팡이(fungi)의 빛 반응 특성과 광수용체 유전자를 통한 계통학적 탐구"
+    },
+    {
+      "id": "46884",
+      "year": 2024,
+      "title": "Helicobacter pylori에 대한 서양민들레 열수추출물의 항균작용 탐구"
+    },
+    {
+      "id": "46883",
+      "year": 2024,
+      "title": "Python을이용한콜로니수측정프로램 제작 및 일반 세균과 비브리오균에 대한 가장 효과적인 음식 탐구"
+    },
+    {
+      "id": "46882",
+      "year": 2024,
+      "title": "감자역병균(Phytophthora infestans)의 친환경적 항균 및 방제 방안 탐구"
+    },
+    {
+      "id": "46881",
+      "year": 2024,
+      "title": "개머루(Ampelopsis brevipedunculata) 추출물의 여드름 원인균에 대한 항균성 및 기능성 화장품 소재로서의 특성연구"
+    },
+    {
+      "id": "46880",
+      "year": 2024,
+      "title": "개미의 신비한 페로몬 행동패턴 및 가시개미의 페로몬 복제에 대한 연구"
+    },
+    {
+      "id": "46879",
+      "year": 2024,
+      "title": "고양이 혓바닥을 생체모방한 약물 도포용 빗 연구"
+    },
+    {
+      "id": "46878",
+      "year": 2024,
+      "title": "고전농서 내 벼 재래종의 형질 및 생화학적 분석을 통한 육종 가치 발굴"
+    },
+    {
+      "id": "46877",
+      "year": 2024,
+      "title": "광촉매 현상을 이용한 살균효과 탐구"
+    },
+    {
+      "id": "46876",
+      "year": 2024,
+      "title": "꽃이 잘 피지 않는 토란을 어떻게 많이 번식시킬 수 있을까?"
+    },
+    {
+      "id": "46875",
+      "year": 2024,
+      "title": "나비 번데기를 쉽게 관찰할 수 있는 방법은 없을까?"
+    },
+    {
+      "id": "46874",
+      "year": 2024,
+      "title": "농작물의 Microcystin 피해 예방을 위한 토양미생물의 생물학적 처리 방법 연구"
+    },
+    {
+      "id": "46873",
+      "year": 2024,
+      "title": "느타리버섯의 주변은 온도가 왜 더 낮을까?"
+    },
+    {
+      "id": "46872",
+      "year": 2024,
+      "title": "단단함의 끝판왕! 왕바구미 딱지날개의 비밀"
+    },
+    {
+      "id": "46871",
+      "year": 2024,
+      "title": "딱정벌레목 곤충을 통한 버섯폐목의 Actinomyces(방선균) 효능 연구"
+    },
+    {
+      "id": "46870",
+      "year": 2024,
+      "title": "말똥비름 부위별 추출물의 황색포도상구균 및 대장균 억제에 관한 연구"
+    },
+    {
+      "id": "46869",
+      "year": 2024,
+      "title": "맹그로브 식물 기반 해수 담수화 기술을 활용한 라이프 스트로우"
+    },
+    {
+      "id": "46868",
+      "year": 2024,
+      "title": "미래형 비닐하우스, 에어돔하우스의 식물생장 효과성 연구"
+    },
+    {
+      "id": "46867",
+      "year": 2024,
+      "title": "미세전류가 식물 성장에 미치는 영향"
+    },
+    {
+      "id": "46866",
+      "year": 2024,
+      "title": "발효식품의 유산균 혼합에 따른 A. flavus의 Aflatoxin 생성 억제 효과 탐구"
+    },
+    {
+      "id": "46865",
+      "year": 2024,
+      "title": "방선균(Streptomyces) 투입이 수경재배에 미치는 영향 탐구"
+    },
+    {
+      "id": "46864",
+      "year": 2024,
+      "title": "백색부후균(Phanerochaete chrysosporium)을 활용한 투명목재 제작"
+    },
+    {
+      "id": "46863",
+      "year": 2024,
+      "title": "버려지는 마카다미아 껍질과 TiO₂를 이용한 폴리락틱산의 물성 향상 연구"
+    },
+    {
+      "id": "46862",
+      "year": 2024,
+      "title": "버려지는 커피박과 솔잎 테르펜을 활용한 항균성 정수필터 제작"
+    },
+    {
+      "id": "46861",
+      "year": 2024,
+      "title": "버섯 폐배지와 폐골판지를 활용한 바이오 멀칭지 제조 및 효과성 검증에 대한 연구"
+    },
+    {
+      "id": "46860",
+      "year": 2024,
+      "title": "버섯과 친환경 membrane의 만남, 기름 유출을 막아라!"
+    },
+    {
+      "id": "46859",
+      "year": 2024,
+      "title": "블루베리의 여드름 원인균에 대한 항균 효과 탐구"
+    },
+    {
+      "id": "46858",
+      "year": 2024,
+      "title": "블루카본 증대를 위한 패각 활용 인공어초 개발"
+    },
+    {
+      "id": "46857",
+      "year": 2024,
+      "title": "빛의 포집을 통한 전면 UV 살균 모형 제작"
+    },
+    {
+      "id": "46856",
+      "year": 2024,
+      "title": "뿌리혹박테리아가식물의생장에미치는영향및스마트팜고안"
+    },
+    {
+      "id": "46855",
+      "year": 2024,
+      "title": "사람에게 이로운 영양제가 식물의 성장에 어떠한 영양을 미칠까?"
+    },
+    {
+      "id": "46854",
+      "year": 2024,
+      "title": "사막에 내린 얼음 채소 아이스 플랜트의 최적 수경 재배 조건에 대한 탐구"
+    },
+    {
+      "id": "46853",
+      "year": 2024,
+      "title": "살갈퀴 생존전략의 비밀은? 살갈퀴의 구조를 중심으로"
+    },
+    {
+      "id": "46852",
+      "year": 2024,
+      "title": "생태계 교란식물을 이용한 황색 포도상구균 항균 효과 확인"
+    },
+    {
+      "id": "46851",
+      "year": 2024,
+      "title": "수영 못하는 물고기 해마의 독특한 몸은 바닷속에서 어떤 도움을 줄까?"
+    },
+    {
+      "id": "46850",
+      "year": 2024,
+      "title": "식물 종류에 따른 기공복합체의 특성에 대한 탐구"
+    },
+    {
+      "id": "46849",
+      "year": 2024,
+      "title": "식물성 및 동물성 오메가-3가 장내유익균에 미치는 영향에 관한 연구"
+    },
+    {
+      "id": "46848",
+      "year": 2024,
+      "title": "양파 껍질 세포의 크기에 관한 연구"
+    },
+    {
+      "id": "46847",
+      "year": 2024,
+      "title": "어떻게 하면 항상 싱싱한 잎채소를 먹을 수 있을까?"
+    },
+    {
+      "id": "46846",
+      "year": 2024,
+      "title": "어항 속 물 순환에 따른 이끼 생성 정도 탐구 및 최적의 물 순환 팬 개발"
+    },
+    {
+      "id": "46845",
+      "year": 2024,
+      "title": "완보동물의 환경지표종 기능 탐구 및 AI Detector 프로그램 개발"
+    },
+    {
+      "id": "46844",
+      "year": 2024,
+      "title": "왜 조상들은 은행나무로 소반을 만들었을까?"
+    },
+    {
+      "id": "46843",
+      "year": 2024,
+      "title": "외래개미의 종특이적 프라이머 분석 및 프로그래밍을 활용한 스마트 트랩 설계"
+    },
+    {
+      "id": "46842",
+      "year": 2024,
+      "title": "우리 고장에서 미나리를 키우기 좋은 물 탐구"
+    },
+    {
+      "id": "46841",
+      "year": 2024,
+      "title": "생물막 두께(Biofilm Thickness) 예측 인공지능 제작 및 농업부산물을 이용한 정족수 감지 억제능 비교에 관한 연구"
+    },
+    {
+      "id": "46840",
+      "year": 2024,
+      "title": "임금님의 산나물 ‘어수리(御授)’ 어떻게 조리하면 건강하게 먹을 수 있을까?"
+    },
+    {
+      "id": "46839",
+      "year": 2024,
+      "title": "음식물 쓰레기를 활용한 Biochar 정수 필터 제작"
+    },
+    {
+      "id": "46838",
+      "year": 2024,
+      "title": "인공지능을 활용한 미세플라스틱이 암세포의 성장에 미치는 영향에 대한 탐구"
+    },
+    {
+      "id": "46837",
+      "year": 2024,
+      "title": "자소엽을 활용한 장류의 곰팡이 억제 효과 탐구"
+    },
+    {
+      "id": "46836",
+      "year": 2024,
+      "title": "전기생리학적 신호와 인공지능을 활용한 식물 모니터링 방안 탐구"
+    },
+    {
+      "id": "46835",
+      "year": 2024,
+      "title": "중력에 반응하는 머리카락곰팡이에 관한 탐구"
+    },
+    {
+      "id": "46834",
+      "year": 2024,
+      "title": "지렁이 무사 귀환 작전"
+    },
+    {
+      "id": "46833",
+      "year": 2024,
+      "title": "진흙 속에서 숨을 쉬는 갈대의 비밀"
+    },
+    {
+      "id": "46832",
+      "year": 2024,
+      "title": "큰 힘을 내는 곤충의 다리 구조 탐구"
+    },
+    {
+      "id": "46831",
+      "year": 2024,
+      "title": "토양 미생물에 의한 타감작용 저해효과 연구"
+    },
+    {
+      "id": "46830",
+      "year": 2024,
+      "title": "피부 건강의 비밀병기, 제주 보리누룩의 발효마유에 대한 연구"
+    },
+    {
+      "id": "46829",
+      "year": 2024,
+      "title": "할머니는 왜 월계수잎을 쌀통에 넣었을까?"
+    },
+    {
+      "id": "46828",
+      "year": 2024,
+      "title": "탱자나무 열매의 효과 및 활용가능성에 대한 탐구"
+    },
+    {
+      "id": "46827",
+      "year": 2024,
+      "title": "합성 나노 셀룰로스 필름의 항균 효과 비교 및 포장지 제작"
+    },
+    {
+      "id": "46826",
+      "year": 2024,
+      "title": "해조류 염색제의 제조 및 기능성, 친환경성에 대한 탐구"
+    },
+    {
+      "id": "46825",
+      "year": 2024,
+      "title": "‘10년 뒤에는 어떤 과일 키우실 거예요, 할머니?’미래 재배 과일 예측 AI 프로그램 개발 탐구"
+    },
+    {
+      "id": "46824",
+      "year": 2024,
+      "title": "1차 산업 활성화를 위한 자율주행 방제 카트의 제작 및 효율성 입증"
+    },
+    {
+      "id": "46823",
+      "year": 2024,
+      "title": "API를 이용한 메디컬 족집게 개발"
+    },
+    {
+      "id": "46822",
+      "year": 2024,
+      "title": "Flexible-Solar Panel을 적용한 태양광 자동차 : 향상된 집광 성능과 공기저항 감소를 위한 이중 모드 기술"
+    },
+    {
+      "id": "46821",
+      "year": 2024,
+      "title": "n 중 시그마에 대한 고찰"
+    },
+    {
+      "id": "46820",
+      "year": 2024,
+      "title": "Object Detection 모델을 이용한 필체인식기반 2차 보안기술 개발"
+    },
+    {
+      "id": "46819",
+      "year": 2024,
+      "title": "PVR(파노라마가상현실) 콘텐츠는 왜 유난히 어지러울까?"
+    },
+    {
+      "id": "46818",
+      "year": 2024,
+      "title": "Unity를 활용한 랜덤 3D 미로 탈출 네트워크 게임 구현에 관한 연구"
+    },
+    {
+      "id": "46817",
+      "year": 2024,
+      "title": "YOLOv5를 이용한 갯벌 안전사고 대응 자동화 시스템 개발"
+    },
+    {
+      "id": "46816",
+      "year": 2024,
+      "title": "거미의 유사비행을 모방한 열대저기압 관측 시스템"
+    },
+    {
+      "id": "46815",
+      "year": 2024,
+      "title": "건축물 도색 표면 색과 거칠기 정도에 따른 냉방효율에 대한 연구"
+    },
+    {
+      "id": "46814",
+      "year": 2024,
+      "title": "안전한 로켓은 없는가? 소성법을 활용한 촉매 개발 및 swirl 인젝터 기술을 적용한 액체 로켓 엔진 연구"
+    },
+    {
+      "id": "46813",
+      "year": 2024,
+      "title": "교통약자를 위한 SWㆍAI활용 스마트 횡단 신호 제어시스템 연구"
+    },
+    {
+      "id": "46812",
+      "year": 2024,
+      "title": "2개의 공명 지점을 갖는 다용수철계를 이용한 파력 에너지 하베스팅"
+    },
+    {
+      "id": "46811",
+      "year": 2024,
+      "title": "데이터 증강을 이용한 딥 보이스 탐지 CRNN 모델 개발"
+    },
+    {
+      "id": "46810",
+      "year": 2024,
+      "title": "돔 구조물과 어드레서블 LED를 이용한 구형 디스플레이 설계"
+    },
+    {
+      "id": "46809",
+      "year": 2024,
+      "title": "드론과 머신러닝을 활용한 도로 안전 관리 시스템 개발"
+    },
+    {
+      "id": "46808",
+      "year": 2024,
+      "title": "병원이 멀어도 OK! 세계시민을 위한 혈액 운반 키트 개발"
+    },
+    {
+      "id": "46807",
+      "year": 2024,
+      "title": "머신러닝을 활용한 음료용기 분류장치"
+    },
+    {
+      "id": "46806",
+      "year": 2024,
+      "title": "머신러닝을 활용한 매점 혼잡도 알림이 연구 및 개발"
+    },
+    {
+      "id": "46805",
+      "year": 2024,
+      "title": "멀티모달을 사용한 영상물 등급분류 보조 AI"
+    },
+    {
+      "id": "46804",
+      "year": 2024,
+      "title": "민들레 속(Taraxacum)과 상추 속(Lactuca)의Polyisoprene 추출을 통한 천연고무의 제작 및 활용 가능성 탐구"
+    },
+    {
+      "id": "46803",
+      "year": 2024,
+      "title": "비콘과 3D Depth camera를 활용한 이중 인증 도어락 시스템"
+    },
+    {
+      "id": "46802",
+      "year": 2024,
+      "title": "화면에 깊이를 더하다!사용자 위치 감응형 VR 디스플레이 알고리즘 및 시스템 개발"
+    },
+    {
+      "id": "46801",
+      "year": 2024,
+      "title": "사운드 데이터에서의 자동 멜로디 추출 및 악보 작성 방법에 관한 연구"
+    },
+    {
+      "id": "46800",
+      "year": 2024,
+      "title": "상추의 생장을 예측할 수 있을까?"
+    },
+    {
+      "id": "46799",
+      "year": 2024,
+      "title": "서스펜션에서 착안한 플로팅 건축물의 흔들림 탐구"
+    },
+    {
+      "id": "46798",
+      "year": 2024,
+      "title": "세탁기 속 미세 플라스틱을 잡아라!"
+    },
+    {
+      "id": "46797",
+      "year": 2024,
+      "title": "손 글씨를 점자와 음성으로 변환 및 출력하는 학습 보조 기기 고안"
+    },
+    {
+      "id": "46796",
+      "year": 2024,
+      "title": "스마트팜 공정 통합 모듈 제작 및 탐구"
+    },
+    {
+      "id": "46795",
+      "year": 2024,
+      "title": "시각장애인을 위한 AI 점자 모듈"
+    },
+    {
+      "id": "46794",
+      "year": 2024,
+      "title": "시청각장애인의 의사소통 개선을 위한 스마트 디바이스 개발"
+    },
+    {
+      "id": "46793",
+      "year": 2024,
+      "title": "식물의 잎차례를 활용한 태양광 발전 증폭기"
+    },
+    {
+      "id": "46792",
+      "year": 2024,
+      "title": "실시간 부상 정도 분석 및 병원 정보 공유 시스템 개발"
+    },
+    {
+      "id": "46791",
+      "year": 2024,
+      "title": "아두이노 자동측정기록장치를 이용한 실내 미세먼지 분포 및 확산 연구"
+    },
+    {
+      "id": "46790",
+      "year": 2024,
+      "title": "안전 탑승 시만 작동이 되는 전동킥보드 개발 연구"
+    },
+    {
+      "id": "46789",
+      "year": 2024,
+      "title": "알고리즘을 이용한 최적의 비상 대피 방안 탐구"
+    },
+    {
+      "id": "46788",
+      "year": 2024,
+      "title": "에듀테크 클래스의 전자파 감소에 대한 탐구"
+    },
+    {
+      "id": "46787",
+      "year": 2024,
+      "title": "엘리베이터 시간 예측 모델링 개발 및 엘리베이터 버튼 LED 색상 연구"
+    },
+    {
+      "id": "46786",
+      "year": 2024,
+      "title": "엘리베이터 운행 정보 제공 시스템에 관한 연구"
+    },
+    {
+      "id": "46785",
+      "year": 2024,
+      "title": "유기물의 종류와 농도에 따른 미생물 연료전지(MFC)의 효율에 관한 연구"
+    },
+    {
+      "id": "46784",
+      "year": 2024,
+      "title": "음성 이미지 변환 암호화 기술"
+    },
+    {
+      "id": "46783",
+      "year": 2024,
+      "title": "인공지능을 활용한 인구수 및 위험도 예측을 통한 압사 사고 방지 애플리케이션 개발에 대한 연구"
+    },
+    {
+      "id": "46782",
+      "year": 2024,
+      "title": "자연모사 3차원 미세구조를 활용한 탄성 중합체 기반 웨어러블 압력센서의 성능 향상 연구"
+    },
+    {
+      "id": "46781",
+      "year": 2024,
+      "title": "잡초, 너의 진짜이름이 뭐야? 꽃이 아닌 잎으로 식물 이름 찾는 앱 및 플랫폼 탐구"
+    },
+    {
+      "id": "46780",
+      "year": 2024,
+      "title": "장마철 빗물받이 막힘 현상 해소를 위한 새로운 빗물받이 설계"
+    },
+    {
+      "id": "46779",
+      "year": 2024,
+      "title": "전략기반군중유동역학모델제시및현상분석적용"
+    },
+    {
+      "id": "46778",
+      "year": 2024,
+      "title": "전통 스키 고로쇠 썰매의 현대화 탐구"
+    },
+    {
+      "id": "46777",
+      "year": 2024,
+      "title": "음성 워터마크로 Deepfake 컨텐츠 확인이 가능한 미디어 플랫폼 설계"
+    },
+    {
+      "id": "46776",
+      "year": 2024,
+      "title": "파력발전기의 발전효율 분석 및 구조 이해 촉진을 위한 모형 제작"
+    },
+    {
+      "id": "46775",
+      "year": 2024,
+      "title": "할머니는 왜 텃밭에 바닷물을 뿌렸을까?"
+    },
+    {
+      "id": "46774",
+      "year": 2024,
+      "title": "환기장치의 효과적인 작동과 AI환기장치에 대한 탐구"
+    },
+    {
+      "id": "46773",
+      "year": 2024,
+      "title": "「꿀이 3,000년이 지나도 썩지 않았다고?」에 관한 탐구"
+    },
+    {
+      "id": "46772",
+      "year": 2024,
+      "title": "광물을 이용한 잔류의약물질 제거 효율 향상 연구"
+    },
+    {
+      "id": "46771",
+      "year": 2024,
+      "title": "광물을 통과한 빛의 지연(retardation)을 확인하기 위한 편광 장치 개발"
+    },
+    {
+      "id": "46770",
+      "year": 2024,
+      "title": "교통량에 따른 최적 효율의 회전교차로 모형 탐구"
+    },
+    {
+      "id": "46769",
+      "year": 2024,
+      "title": "그린카본 히어로, 버섯의 생태 및 환경에 미치는 영향 탐구"
+    },
+    {
+      "id": "46768",
+      "year": 2024,
+      "title": "대로변 가로수의 공기정화 능력 비교 탐구"
+    },
+    {
+      "id": "46767",
+      "year": 2024,
+      "title": "대추나무 K-디저트 걸렸네! 보은 대추에 숨은 비밀 탐구"
+    },
+    {
+      "id": "46766",
+      "year": 2024,
+      "title": "마이셀을이용한COD(화학적산소요구량)의측정방법에대한탐구"
+    },
+    {
+      "id": "46765",
+      "year": 2024,
+      "title": "포항 지역 화석을 통한 신생대 지질 및 고환경 연구: 식물, 어패류 그리고 퇴적층 분석"
+    },
+    {
+      "id": "46764",
+      "year": 2024,
+      "title": "바다사막화를 방지하기 위한 탄산칼슘과 미역(알긴산나트륨)을 이용한 인공산호초"
+    },
+    {
+      "id": "46763",
+      "year": 2024,
+      "title": "버려지는 쌀뜨물아 도와줘! 발 냄새 원인균과 악취 모두 물리치기!"
+    },
+    {
+      "id": "46762",
+      "year": 2024,
+      "title": "버려지는 커피찌꺼기와 달걀껍질을 이용한 고추기름으로 오염된 일회용용기 세척 방법"
+    },
+    {
+      "id": "46761",
+      "year": 2024,
+      "title": "북서태평양 해수면 온도와 태풍 경로 및 강도의 상호작용 분석"
+    },
+    {
+      "id": "46760",
+      "year": 2024,
+      "title": "붙였다 떼었다 친환경 가구접착제: 그린 글루 에 대한 탐구"
+    },
+    {
+      "id": "46759",
+      "year": 2024,
+      "title": "성게를 이용한 해양 오염물질 흡착"
+    },
+    {
+      "id": "46758",
+      "year": 2024,
+      "title": "수정은 어떤 땅에서 잘 발견될까?"
+    },
+    {
+      "id": "46757",
+      "year": 2024,
+      "title": "스마트팜 수경농법의 이산화탄소 배출 및 흡수에 대한 연구와 환경문제에 대한 고찰"
+    },
+    {
+      "id": "46756",
+      "year": 2024,
+      "title": "시아노박테리아로 벽돌을 만들 수 있을까?"
+    },
+    {
+      "id": "46755",
+      "year": 2024,
+      "title": "‘그린 루트(Green Root)’: 황폐화된 토양에서 식물의 생장을 돕는 알긴산 칼슘 식물 근분 포장재"
+    },
+    {
+      "id": "46754",
+      "year": 2024,
+      "title": "미세 및 나노플라스틱이 식물에 미치는 영향과 섭취 최소화 방안 탐구"
+    },
+    {
+      "id": "46753",
+      "year": 2024,
+      "title": "친환경 부표 어부바로 세상을 구하다"
+    },
+    {
+      "id": "46752",
+      "year": 2024,
+      "title": "이끼(Moss)가 산불 지연과 산불 피해지 복원에 미치는 영향에 관한 탐구"
+    },
+    {
+      "id": "46751",
+      "year": 2024,
+      "title": "자기 이상 줄무늬의 생성과정 이해를 위한 실험 개발"
+    },
+    {
+      "id": "46750",
+      "year": 2024,
+      "title": "전기응집법을 활용한 미세플라스틱의 침전식 제거"
+    },
+    {
+      "id": "46749",
+      "year": 2024,
+      "title": "전복 껍질 구조를 모방한방호 및 제진 설계 연구"
+    },
+    {
+      "id": "46748",
+      "year": 2024,
+      "title": "지구 온도는 내리고! 활용도는 올리는! 플렉서블 스코비 회로기판 연구"
+    },
+    {
+      "id": "46747",
+      "year": 2024,
+      "title": "지구의 위도에 따른 접평면의 회전 관찰 실험 장치"
+    },
+    {
+      "id": "46746",
+      "year": 2024,
+      "title": "지질도의 3차원 변환 알고리즘 : 독도를 중심으로"
+    },
+    {
+      "id": "46745",
+      "year": 2024,
+      "title": "채소에서 미세플라스틱의 위해성과 분포에 관한 탐구"
+    },
+    {
+      "id": "46744",
+      "year": 2024,
+      "title": "천체의 좌표표시가 가능한 별 지시기 개발에 관한 탐구"
+    },
+    {
+      "id": "46743",
+      "year": 2024,
+      "title": "최적 경사면을 이용한 고효율 진동 수주형 파력발전 모형 제작"
+    },
+    {
+      "id": "46742",
+      "year": 2024,
+      "title": "친환경 종이 빨대에 대한 탐구"
+    },
+    {
+      "id": "46741",
+      "year": 2024,
+      "title": "커피 찌꺼기를 이용한 에틸렌 흡착 방법 탐구"
+    },
+    {
+      "id": "46740",
+      "year": 2024,
+      "title": "콘크리트 노화의 진행과 훈탄과 세균을 이용한 방지 방안"
+    },
+    {
+      "id": "46739",
+      "year": 2024,
+      "title": "탄산칼슘형성 미생물을 이용한 스트론튬 오염수 정화"
+    },
+    {
+      "id": "46738",
+      "year": 2024,
+      "title": "토마토와 천연 물질 ‘테르펜’을 내뿜는 식물들의 살충, 방충, 항균효과 비교 연구"
+    },
+    {
+      "id": "46737",
+      "year": 2024,
+      "title": "토석류의 충격하중 감소를 위한 방재구조물 성능 향상에 관한 연구"
+    },
+    {
+      "id": "46736",
+      "year": 2024,
+      "title": "파래의 미세플라스틱 흡착 능력"
+    },
+    {
+      "id": "46735",
+      "year": 2024,
+      "title": "폐자원을 활용한 비건 가죽의 제작 및 실용성 탐구"
+    },
+    {
+      "id": "46734",
+      "year": 2024,
+      "title": "전기장 스크리닝 기법을 활용한 플라스틱 코팅 분해 세균 판별"
+    },
+    {
+      "id": "46733",
+      "year": 2024,
+      "title": "화학물질 분해능을 지닌 미생물의 수질정화에 관한 연구"
+    },
+    {
+      "id": "46732",
+      "year": 2024,
+      "title": "환경파괴의 주범, 팜유를 대체할 수 있는 곤충오일 탐구"
+    },
+    {
+      "id": "46731",
+      "year": 2024,
+      "title": "흡수 스펙트럼의 원리를 이용한 자동차 안개등 개선 방안 연구"
+    },
+    {
+      "id": "46730",
+      "year": 2024,
+      "title": "인공지능 음성인식을 활용한 색상 인지 과학 교구 개발 및 적용"
+    },
+    {
+      "id": "46729",
+      "year": 2024,
+      "title": "전자기 유도 법칙 학습을 위한 정량적 실험장치 개발 및 활용 연구"
+    },
+    {
+      "id": "46728",
+      "year": 2024,
+      "title": "피지컬코딩 기반 MBL 과학실험 방법 개발에 관한 연구"
+    },
+    {
+      "id": "46727",
+      "year": 2024,
+      "title": "학생주도성 키움을 위한 전기의 이해 실험장치 개발 및 적용"
+    },
+    {
+      "id": "46726",
+      "year": 2024,
+      "title": "레질리언스를 이용하여 개방이 용이한 캔(an easy opening can using resilience)"
+    },
+    {
+      "id": "46725",
+      "year": 2024,
+      "title": "감각기관을 활용한 원생생물 학습자료 개발에 관한 연구"
+    },
+    {
+      "id": "46724",
+      "year": 2024,
+      "title": "침입외래식물의 특성 및 지속가능한 발전"
+    },
+    {
+      "id": "46723",
+      "year": 2024,
+      "title": "재활용 녹차티백 비료로 재배한 작물의 생장특성 및 영양성분 비교 연구"
+    },
+    {
+      "id": "46722",
+      "year": 2024,
+      "title": "농게의 굴 입구 막기 행동을 통한 생체시계 작동 연구"
+    },
+    {
+      "id": "46721",
+      "year": 2024,
+      "title": "동해안 사구 염분농도 차이가 염생식물의 성장에 미치는 영향 연구"
+    },
+    {
+      "id": "46720",
+      "year": 2024,
+      "title": "제주도 염습지 일대 염생식물 생태환경 연구 및 학습자료 개발"
+    },
+    {
+      "id": "46719",
+      "year": 2024,
+      "title": "AI모션 인식 기술 이용한 과학 퀴즈 연구"
+    },
+    {
+      "id": "46718",
+      "year": 2024,
+      "title": "가스계 소화설비의 선택밸브 개발과 작동 구현"
+    },
+    {
+      "id": "46717",
+      "year": 2024,
+      "title": "자연어 데이터 분석과 딥러닝을 활용한 독서감상문 분류 및 평가 프로그램 개발-AI일까? 학생일까? 선생님은 알고 있다.-"
+    },
+    {
+      "id": "46716",
+      "year": 2024,
+      "title": "겨울철 갈대-(가칭)갈대깍지벌레-붉은머리오목눈이의 생태적 관계 규명"
+    },
+    {
+      "id": "46715",
+      "year": 2024,
+      "title": "공기 정화 식물의 실내 공기질 개선 효과에 대한 연구"
+    },
+    {
+      "id": "46714",
+      "year": 2024,
+      "title": "삼락생태공원 가치 탐구와 습지 교육 프로그램 개발"
+    },
+    {
+      "id": "46713",
+      "year": 2024,
+      "title": "이매패류 패각의 특징에 따른 서식 환경 분석 및AI코스웨어 연계 실험 장치 개발"
+    },
+    {
+      "id": "46712",
+      "year": 2024,
+      "title": "지구물리 탐사를 통한 광주지역 소규모 저수지 제방 안정성 연구"
+    },
+    {
+      "id": "46711",
+      "year": 2024,
+      "title": "친환경 멀칭블럭 개발 및 사용이 식물의 생육과 토양에 미치는 영향 연구"
+    },
+    {
+      "id": "46710",
+      "year": 2024,
+      "title": "해륙풍 관찰이 용이한 바람발생실험장치 개발 및 적용"
+    },
+    {
+      "id": "46709",
+      "year": 2024,
+      "title": "보편적 학습설계 기반 다감각다차원으로 느끼는 입체 별자리 모형"
+    }
+  ],
+  "failures": []
+}

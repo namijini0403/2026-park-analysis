@@ -15,6 +15,7 @@
 - 학원·교습소 74,061개 교습과정 행을 이름·주소·종류 기준 6,839개 시설로 통합했다. 좌표 확보 6,743개, 미확보 96개다. 등록번호 부재로 동일시설 식별 한계가 있다. 교습과정에 근거해 학교급과 예체능을 별도 분류하며 초급·중급·고급을 학교급으로 해석하지 않는다.
 - 학교알리미 공개 일괄 목록에서 32개 항목의 실제 응답을 확보했다. 요청 단위 실패·빈 응답은 원본 manifest에 보존한다. 학교별 실제 공시값과 공식 필드 설명을 지연 로딩한다.
 - 공식 교육청 보도자료에서 확인한 수상 관측은 현재 3개 학교 기록이다. 전체 수상 이력이 아니며, 기록이 없다는 것을 수상 없음으로 해석하지 않는다.
+- 국립중앙과학관 전국과학전람회 2023~2025년 출품작 검색 899개 게시물(요약집 포함)의 상세 조회를 완료해 15개 학교·35개 학교-작품 실적을 추가 연결했다. 지도논문은 제외하지만 출품자의 학생/교원 구분을 추정하지 않는다. 2024년 300개 게시물의 학교명 공란은 미연결이며 별도 요약집 확인이 필요하다. 전국 동명 학교는 지역 근거가 없으면 보류한다. 상세 수상 칸이 비어 있으면 같은 작품의 목록 수상 칸과 별도 URL을 근거로 사용한다. 보도자료와 중복 합산하지 않는다.
 
 ## 아직 동일 깊이라고 할 수 없는 부분
 
@@ -41,11 +42,13 @@
 python scripts/education/build_school_registry.py
 python scripts/education/build_academies.py
 python scripts/education/build_regional_demography.py
+python scripts/education/build_science_awards.py
 python scripts/accessibility/build_walkshed_500m_v3.py --graph ../_cache/incheon_walk_graph_v3.graphml --schools data_processed/education/new_school_coords.csv --out data_processed/education/walkshed_500m.geojson --report data_processed/education/walkshed_report.csv
 python scripts/education/build_education_analysis.py
 python scripts/education/build_school_routes.py
 python -m unittest discover -s tests -p test_education_layers.py
 python -m unittest discover -s tests -p test_education_demography.py
+python -m unittest discover -s tests -p test_education_awards.py
 node tests/test_education_ui.cjs
 node scripts/check_inline_script.mjs
 npm run validate:modules
@@ -53,5 +56,7 @@ npm run build:vercel
 ```
 
 원자료 갱신: 학교 원장·학원 스크립트의 `--fetch`, 학교알리미는 `python scripts/education/fetch_disclosures.py`. 신규 주소 보정은 각각 `--geocode-missing`, `--geocode`이며 기존 Kakao 클라이언트 인증 설정이 필요하다. 실패·미확보 자료를 0으로 대체하지 않는다.
+
+과학전람회 갱신: `python scripts/education/build_science_awards.py --fetch --years 2023 2024 2025`. 목록·상세 스냅샷을 재사용하며 최초 수집은 네트워크가 필요하다. 기존 연도 캐시를 자동 덮어쓰지 않는다. 학교명·대회·수상·작품 제목과 응답 해시를 보존하고 학생/교사 개인 이름은 추출하지 않는다. 공식 DB: https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttList.do
 
 데모: 루트 `index.html`에서 학교급 선택 → 학교 검색/선택 → 공개자료·학교급 분석. 환경 레이어의 학원·교습소를 켜면 공원과 같은 주변 시설로 표시된다. 외부 배포는 수행하지 않았다.
