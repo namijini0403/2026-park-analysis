@@ -67,6 +67,7 @@ python -m unittest discover -s tests -p test_education_regional_forecasts.py
 python -m unittest discover -s tests -p test_education_kindergarten.py
 python -m unittest discover -s tests -p test_education_public_indicators.py
 python -m unittest discover -s tests -p test_education_identity.py
+node tests/test_education_app_startup.cjs
 node tests/test_education_ui.cjs
 node tests/test_education_ai.cjs
 node scripts/tests/test_context_ai_ops20260906.cjs
@@ -102,3 +103,5 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 전국학생과학발명품경진대회: 국립중앙과학관의 별도 공식 DB(`/mps/1075/bbs/424/`)에서 2023~2025년 출품작 901개 게시물의 상세 조회를 완료했고 요청 실패는 0이다. 과학전람회의 연도 검색 필드 `aditfield7`과 달리 이 DB의 실제 공개 폼은 `aditfield1`을 사용한다. 지도논문을 제외하고 학교명·대회·등급·작품명·응답 해시만 정규화해 개인 수상자/지도교사 필드는 저장하지 않는다. 정확하게 연결한 결과는 23개 학교·32개 학교-작품 관측이다. 학교명 공란 301건과 동명 학교 보류 8건은 별도 기록이며 수상 없음으로 해석하지 않는다. 이 대회의 2024년 공식 PDF 요약집에서 추가 17개 학생 수상 기록을 별도 대조해 보완했다. 다른 대회의 PDF 보완 결과를 재사용하지 않는다. 보고서에 두 대회의 결과를 대회명과 함께 표시하고, AI의 발명대회 질문에는 해당 대회의 관측만 전달한다. 갱신은 `python scripts/education/build_science_awards.py --competition invention --fetch --years 2023 2024 2025` 후 AI 근거 재생성이다. 원문: https://www.science.go.kr/mps/1075/bbs/424/moveBbsNttList.do
 
 발명품 대회 2024 PDF 보완: 공식 게시물 48700의 첨부 75800(88,299,009바이트, 341쪽)을 확인했다. PDF 파일 15~23쪽의 학생 수상자 명단 299작품과 작품 설명의 출품번호·학교명·등급을 대조해 17개 기록을 추가했다. 교원 지도논문 수상자 명단은 24쪽부터여서 학생 명단에서 제외한다. 전국 동명 학교 5건은 미확정으로 남겼다. 학생/교사 소속이 다른 예시 작품 설명과 수상자 명단을 렌더링해 표 배치를 확인했다. 웹 32건과 합쳐 23개 학교·49개 학교-작품 관측이며 전수 학교 실적은 아니다. PDF 파일 쪽수는 인쇄된 쪽번호와 다를 수 있어 파일 쪽수로 링크한다. 원본 PDF는 Git에서 제외하고 URL·SHA-256·쪽수·비개인 관측을 `invention_awards_2024_pdf.json`에 보존한다. 재현: `python scripts/education/build_invention_awards_pdf.py --fetch` → `python scripts/education/build_science_awards.py --competition invention` → AI 근거 재생성. 원문: https://www.science.go.kr/mps/1075/bbs/424/moveBbsNttDetail.do?nttSn=48700
+
+앱 초기화 경로 수정: 추가 학교급 AI 문맥 반환 블록이 `loadData()` 말미에 잘못 위치해 정의되지 않은 `row`를 참조하던 오류를 발견했다. 이를 `getAiSchoolContext()`의 학교 선택 분기로 옮기고 `loadData()`에서는 확장 레이어 초기화를 await한다. 이전 커밋의 실제 페이지를 새 검사에 적용해 `row is not defined` 실패를 재현했고 수정본이 통과함을 확인했다. 새 `test_education_app_startup.cjs`는 실제 index.html 전체 스크립트와 실제 로컬 데이터를 실행한다. 외부 지도 SDK와 네트워크만 모의 처리하며, 실제 초기화·학교급 변경·마커 생성과 클릭·보고서·AI 문맥·학원 6,743개 표시/숨김 경로를 검증한다. 기존 모듈 직접 실행 검사만으로는 초기화 연결 오류를 검증하지 못했다. `npm run test:education`으로 앱 초기화·UI·AI 검사를 함께 실행한다. 이는 실제 지도 타일·브라우저 시각 QA를 대체하지 않는다.

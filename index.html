@@ -5498,6 +5498,10 @@
         };
       }
 
+      if (row.analysis_version) return {
+        context_scope: "selected_school", school_id: getSchoolId(row), school_name: row.학교명,
+        school_level: row.학교급구분, analysis_version: row.analysis_version
+      };
       const badge = getSchoolBadge(row);
       const normalizedCase = normalizeCaseType(row.case_type, row);
       const numericCase = normalizedCase.startsWith("case") ? normalizedCase.replace("case", "Case ") : normalizedCase;
@@ -6702,11 +6706,7 @@
         appendStatus("school_priority.csv가 아직 없거나 로딩에 실패했습니다.");
       }
 
-      if (row.analysis_version) return {
-        context_scope: "selected_school", school_id: getSchoolId(row), school_name: row.학교명,
-        school_level: row.학교급구분, analysis_version: row.analysis_version
-      };
-      EducationLayers.init().catch(error => appendStatus(`학교급 확장 자료 로딩 실패: ${error.message}`));
+      await EducationLayers.init().catch(error => appendStatus(`학교급 확장 자료 로딩 실패: ${error.message}`));
     }
 
     function escapeGuideText(value = "") {
