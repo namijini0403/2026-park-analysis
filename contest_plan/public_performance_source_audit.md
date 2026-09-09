@@ -66,3 +66,10 @@
 - 정규화 원자료와 해시: `data/education_sources/kess_school_progression.json`. 분석: `data_processed/education/school_progression.json`. 후자는 원본 파일별 직접 다운로드 URL도 포함한다. 원본 엑셀은 Git 제외 outputs/education_sources에 두었다.
 
 진학률을 대학 수준·수능 성적·학교 품질로 해석하지 않으며, 취업률을 새로 만들어 비교하지 않는다. ‘기타’는 재수·상황 미확인 등 여러 경우를 포함한다. 교육통계의 조사기준일 자료와 학교알리미 수시 공시를 서로 덮어쓰지 않는다.
+
+
+## 신검단 식별 후속 결론
+
+KEDI의 검단가온중학교와 학교알리미 S040002365·나이스7361341을 대조해 기존 위치 원장 B000030928을 보정하고 중학교 분석에 편입했다. 초기 조회의 실패는 옛 이름을 조회한 조사 이력으로 보존하며, 현재 미해결 상태가 아니다. 공식 이름·학교급·설립일 및 가까운 공식 좌표를 조합한 보정 근거는 school_registry_corrections.json에 있다. 교육청의 2026-03-01 신설 중학교 목록에도 검단가온중이 명시된다: https://www.ice.go.kr/ice/cm/cntnts/cntntsView.do?cntntsId=958&mi=10875
+
+법적 교명변경 절차에 대한 판단은 하지 않는다. KEDI 진로의 미연결1건도 해소돼 중·고276교에 연결된다.

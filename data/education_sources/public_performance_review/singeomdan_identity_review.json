@@ -9,5 +9,8 @@
   "national_registry_level": "초등학교",
   "neis_exact_name_result": "INFO-200",
   "neis_exact_code_result": "INFO-200",
-  "status": "identity_conflict_review_required"
+  "status": "resolved_registry_correction",
+  "resolution_source": "data/education_sources/school_registry_corrections.json",
+  "resolved_name": "인천검단가온중학교",
+  "note": "Earlier exact-name queries are preserved as investigation history. Current official name, level, foundation date and nearby official coordinates support correction of the location-registry record; no claim about legal renaming procedure."
 }

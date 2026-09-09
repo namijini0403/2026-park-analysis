@@ -1,0 +1,38 @@
+[
+  {
+    "school_id": "B000030928",
+    "expected": {
+      "학교명": "인천신검단중학교",
+      "학교급구분": "초등학교",
+      "위도": "37.60926532",
+      "경도": "126.6992891",
+      "설립일자": "2026-03-01"
+    },
+    "replacement": {
+      "학교명": "인천검단가온중학교",
+      "학교급구분": "중학교",
+      "소재지도로명주소": "인천광역시 검단구 동화시로 122",
+      "위도": 37.6091139889,
+      "경도": 126.6992753453
+    },
+    "neis_code": "7361341",
+    "schoolinfo_code": "S040002365",
+    "sources": [
+      {
+        "url": "https://open.neis.go.kr/hub/schoolInfo?Type=json&pIndex=1&pSize=10&SCHUL_NM=%EC%9D%B8%EC%B2%9C%EA%B2%80%EB%8B%A8%EA%B0%80%EC%98%A8%EC%A4%91%ED%95%99%EA%B5%90",
+        "sha256": "1f51ed0ea1fd993d9c4ac8e5b4f521377fb2cbb19c4f15fc31dc4e7c26539a46",
+        "fields": {
+          "SCHUL_NM": "인천검단가온중학교",
+          "SCHUL_KND_SC_NM": "중학교",
+          "ORG_RDNMA": "인천광역시 검단구 동화시로 122",
+          "FOND_YMD": "20260301"
+        }
+      },
+      {
+        "file": "data\\education_sources\\disclosures\\0_2026_03_0.json",
+        "sha256": "5b3de946f9190d646f8e15430dc7ebfa9de178e82d65115f97e8ab282757568a"
+      }
+    ],
+    "basis": "현재 공식 학교명·중학교 분류·설립일 일치 및 위치원장 좌표 50m 이내. 원장 레코드의 명칭·분류 보정이며 법적 교명변경 절차를 주장하지 않음."
+  }
+]

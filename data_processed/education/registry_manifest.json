@@ -1,8 +1,8 @@
 {
   "counts": {
     "유치원": 369,
-    "초등학교": 276,
-    "중학교": 146,
+    "초등학교": 275,
+    "중학교": 147,
     "고등학교": 129
   },
   "coordinate_status": {
@@ -12,6 +12,10 @@
     {
       "file": "school_locations.json",
       "sha256": "e87a3dcd7c28d75988f5ee380b5decb44393ed62ae586c3f6228c2be35c673d5"
+    },
+    {
+      "file": "school_registry_corrections.json",
+      "sha256": "abd55ca390e21c3ef0ece1483de35b0ece7f8fa934097fd6c751241d487f69b5"
     },
     {
       "file": "유치원 일반 현황_20161_인천광역시.csv",

@@ -60,6 +60,10 @@ def main():
     if not location_path.exists():
         location_path = args.raw_dir / "전국초중등학교위치표준데이터.json"
     records = json.loads(location_path.read_text(encoding="utf-8"))["records"]
+    corrections_path = ROOT / 'data/education_sources/school_registry_corrections.json'
+    if corrections_path.exists():
+        from scripts.education.registry_corrections import apply_corrections
+        records = apply_corrections(records, json.loads(corrections_path.read_text(encoding='utf-8')))
     rows = []
     for r in records:
         if r.get("시도교육청명") != "인천광역시교육청" or r.get("운영상태") != "운영":
@@ -67,8 +71,10 @@ def main():
         if r.get("학교급구분") not in ("초등학교", "중학교", "고등학교"):
             continue
         rows.append({**{k: r.get(k) for k in ("학교ID", "학교명", "위도", "경도", "소재지도로명주소", "학교급구분", "설립형태", "데이터기준일자")},
-                     "source_url": SCHOOL_URL, "id_method": "official_school_id"})
+                     "source_url": SCHOOL_URL, "id_method": "official_school_id",
+                     "registry_correction":r.get('registry_correction')})
     sources = [location_path]
+    if corrections_path.exists():sources.append(corrections_path)
     trends = []
     kindergarten_files = {}
     for directory in [args.raw_dir,args.raw_dir / 'kindergarten']:

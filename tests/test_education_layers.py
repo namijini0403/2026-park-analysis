@@ -33,14 +33,14 @@ class EducationDataTests(unittest.TestCase):
 
     def test_non_elementary_coverage(self):
         self.assertEqual(pd.Series([s['학교급구분'] for s in self.schools]).value_counts().to_dict(),
-                         {'유치원':369,'중학교':146,'고등학교':129})
-        self.assertEqual(len({s['학교ID'] for s in self.schools}),644)
+                         {'유치원':369,'중학교':147,'고등학교':129})
+        self.assertEqual(len({s['학교ID'] for s in self.schools}),645)
         self.assertTrue(all(s['analysis_status']=='available' for s in self.schools))
 
     def test_no_circular_fallback_claimed_as_walkshed(self):
         report=pd.read_csv(self.path/'walkshed_report.csv')
         self.assertEqual(set(report.method),{'exact_edge_trim_v3'})
-        self.assertEqual(len(report),644)
+        self.assertEqual(len(report),645)
         self.assertTrue((report.v3_area_m2>0).all())
 
     def test_suppressed_data_not_zero_predictions(self):

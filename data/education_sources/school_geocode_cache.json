@@ -42,6 +42,49 @@
    "total_count": 1
   }
  },
+ "address|인천광역시 검단구 동화시로 122": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 검단구 불로동 1002-1",
+     "b_code": "2829011000",
+     "h_code": "2829052000",
+     "main_address_no": "1002",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "검단구",
+     "region_3depth_h_name": "불로대곡동",
+     "region_3depth_name": "불로동",
+     "sub_address_no": "1",
+     "x": "126.699190837647",
+     "y": "37.6092314422849"
+    },
+    "address_name": "인천 검단구 동화시로 122",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 검단구 동화시로 122",
+     "building_name": "인천검단가온중학교",
+     "main_building_no": "122",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "검단구",
+     "region_3depth_name": "불로동",
+     "road_name": "동화시로",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.699190837647",
+     "y": "37.6092314422849",
+     "zone_no": "23438"
+    },
+    "x": "126.699190837647",
+    "y": "37.6092314422849"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 계양구 박촌로 53": {
   "documents": [
    {

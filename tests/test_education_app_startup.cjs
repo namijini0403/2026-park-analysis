@@ -51,12 +51,12 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert.deepEqual(errors,[],'App boot must complete without runtime errors');
   const selector=w.document.getElementById('schoolLevelFilter');
   assert.equal(selector.disabled,false,'Boot must initialize the education extension');
-  assert.equal(app.state.datasets.educationAllSchools.length,916);
+  assert.equal(app.state.datasets.educationAllSchools.length,917);
   assert.equal(app.state.datasets.schools.length,272);
   assert(fetched.includes('/data_processed/education/school_analysis.json'));
   const baselineRequests=()=>fetched.filter(p=>p==='/data_processed/candidate_grid_final.geojson').length;
   const initialRequests=baselineRequests();
-  for(const [level,count] of [['유치원',369],['중학교',146],['고등학교',129]]){
+  for(const [level,count] of [['유치원',369],['중학교',147],['고등학교',129]]){
     selector.value=level;selector.dispatchEvent(new w.Event('change'));
     assert.equal(app.state.datasets.schools.length,count);
     assert.equal(app.state.overlays.schoolMarkers.length,count);
@@ -84,6 +84,14 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
     assert.equal(w.document.getElementById('edu-map-candidate').value,grid.__gridId);
   }
   assert.equal(baselineRequests(),initialRequests,'Extended filters must not reload elementary candidates');
+  const corrected=app.state.datasets.educationAllSchools.find(s=>s.학교ID==='B000030928');
+  assert.equal(corrected.학교명,'인천검단가온중학교');
+  assert.equal(corrected.학교급구분,'중학교');
+  await w.EducationLayers.openReport(corrected);
+  assert(w.document.querySelector('.edu-body').textContent.includes('인천검단가온중학교'));
+  assert(w.document.querySelector('.edu-body').textContent.includes('졸업 후 진로 현황'));
+  assert(corrected.disclosure_count>0);
+  assert(corrected.candidates.length>0);
   const district=w.document.getElementById('guFilter');
   for(const gu of ['제물포구','영종구','서해구','검단구']) assert([...district.options].some(o=>o.value===gu));
   selector.value='유치원';selector.dispatchEvent(new w.Event('change'));
@@ -126,7 +134,7 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert(app.state.overlays.candidateMarkers.every(p=>p.__educationKind==='extended_survey_grid'));
   assert.equal(app.state.datasets.candidateFeatures.length,0);
   selector.value='all';selector.dispatchEvent(new w.Event('change'));await app.loadCandidateLayer();
-  assert.equal(app.state.overlays.candidateMarkers.filter(p=>p.__educationKind==='extended_survey_grid').length,3081);
+  assert.equal(app.state.overlays.candidateMarkers.filter(p=>p.__educationKind==='extended_survey_grid').length,3083);
   assert.equal(app.state.overlays.candidateMarkers.filter(p=>p.__educationKind==='elementary_baseline').length,1535);
   selector.value='초등학교';selector.dispatchEvent(new w.Event('change'));await app.loadCandidateLayer();
   assert.equal(app.state.overlays.candidateMarkers.length,1535);

@@ -1,11 +1,11 @@
 {
-  "grid_count": 3081,
-  "linked_schools": 644,
-  "walkshed_schools": 644,
+  "grid_count": 3083,
+  "linked_schools": 645,
+  "walkshed_schools": 645,
   "grid_crs": "EPSG:5179",
   "step_m": 250,
   "id_basis": "E250_floor(easting/250)_floor(northing/250)",
-  "source_sha256": "eebfd74dfab440aeb075d434c37c303952c0ea0602411986c36c759fe90af802",
+  "source_sha256": "cb33ff829c05da9fb2d69870e0cf630856917d13502b5653c889946cf52966db",
   "scope": "유치원·중·고등학교 전체 도달권의 250m 탐색 단위. Case 4도 정책 시나리오 비교를 위해 포함.",
   "limitations": "필지 경계·수면·소유·규제·개발가능성 검증 전 탐색 격자. 격자 전체가 보행 가능하거나 공급 가능한 부지라는 의미가 아님."
 }

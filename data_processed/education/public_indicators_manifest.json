@@ -2,11 +2,11 @@
   "schools": 920,
   "latest_observation_status": {
     "55:available": 200,
-    "56:available": 548,
-    "59:available": 550,
+    "56:available": 549,
+    "59:available": 551,
     "90:available": 544,
-    "55:exempt_or_unconfirmed": 75,
-    "90:exempt_or_unconfirmed": 6,
+    "55:exempt_or_unconfirmed": 76,
+    "90:exempt_or_unconfirmed": 7,
     "56:exempt_or_unconfirmed": 2
   },
   "source_disclosure_hashes": {
@@ -654,6 +654,7 @@
     "B000027506": "e451e889d17d7b3d989cdda050f7aac7c207e7461e249697184b3cfe6c6b2bc7",
     "B000030434": "2aad7f0f3b842fd7c5cd3cf24c5ba2a6005ac3328b9a843a5df7c9903480d53b",
     "B000030812": "b31012049b7e92d31f71531bded6abb8a9e343bd14a7ebc24d343fa1d2742194",
+    "B000030928": "36753c09480756e5274c721d415347adecd238362eecf1d0db4c8bc802e9bf1e",
     "B000002949": "ff4267fd59ef15a0519e6a32a9079401d626614923642f504594703ed742723b",
     "B000002950": "c3930a985ded69089ed70108234acb320a5b2da26e64018d210346ddfdf8285d",
     "B000002951": "0275e84b3c3ef460cf9193227991acd5247002fbd7197a528eb449c346d70940",
@@ -928,8 +929,7 @@
     "B000026473": "9c8930b7fd8ad7ab7834d7c82f39d1d481244195b4ce6ecfb382efdcdd8f4e74",
     "B000026504": "f2cb307a9f959279c8fc4aa64da0b459e5376a94152e3fe314a2e8b13b935038",
     "B000027505": "1040e15c643d9e0632ab6694bc5195a21b904e6d5fdcadffab30e8fa2e96d4e9",
-    "B000030907": "75caa291545e4627748a46162ebd4e081b8cb46f7d17328a81fd616b4ac6f4f6",
-    "B000030928": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    "B000030907": "75caa291545e4627748a46162ebd4e081b8cb46f7d17328a81fd616b4ac6f4f6"
   },
   "field_definitions_sha256": "146c8ab1dac548f25d2d0289d6b3adc707c0c51f474996582e311cd2e8df06f1"
 }
