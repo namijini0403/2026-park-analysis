@@ -1,6 +1,6 @@
 import json
 import unittest
-from scripts.education.build_sports_awards import parse
+from scripts.education.build_sports_awards import parse, resolve_school, ALIASES
 
 
 class SportsAwardsTest(unittest.TestCase):
@@ -21,6 +21,22 @@ class SportsAwardsTest(unittest.TestCase):
         with self.assertRaises(ValueError): parse(self.fixture('서울'),2025)
         with self.assertRaises(ValueError): parse(self.fixture(),2024)
         with self.assertRaises(ValueError): parse('<html></html>',2025)
+
+    def test_whitespace_match_is_unique_and_does_not_strip_institution_suffix(self):
+        registry=[{'학교ID':'one','학교명':'인천대건고등학교'}]
+        row={'school_name':'인천 대건고등학교','category':'스쿼시','discipline':'개인전'}
+        self.assertEqual(resolve_school(row,registry,[])[0]['학교ID'],'one')
+        self.assertIsNone(resolve_school(row,registry+registry,[])[0])
+        row['school_name']='인천대건고등학교부설방송통신고등학교'
+        self.assertIsNone(resolve_school(row,registry,[])[0])
+
+    def test_archery_alias_requires_exact_school_and_discipline(self):
+        aliases=json.loads(ALIASES.read_text(encoding='utf-8'))
+        registry=[{'학교ID':'B000012271','학교명':'부개고등학교'}]
+        row={'school_name':'부개고등학교(컴)','category':'양궁','discipline':'혼성단체전(컴파운드)'}
+        self.assertEqual(resolve_school(row,registry,aliases)[0]['학교ID'],'B000012271')
+        row['discipline']='리커브'
+        self.assertIsNone(resolve_school(row,registry,aliases)[0])
 
 
 if __name__=='__main__': unittest.main()

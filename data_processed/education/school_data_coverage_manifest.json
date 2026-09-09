@@ -53,7 +53,7 @@
     "data_processed\\education\\academy_school_context.json": "3e31106443ab52ad569ad4b290264d776bc689d207ba954cf455088d758af936",
     "data_processed\\education\\school_public_indicators.json": "9d11189abb4586873594ac585f68575a520ddd2c26b52dc8852462729d2ee16c",
     "data_processed\\education\\science_awards.json": "269837db1ec785c37e8db7cca5b0acdaa91e9dd08f46280f5d6486d5719a64fa",
-    "data_processed\\education\\sports_awards.json": "ebe7e3f4415aa1d178227540b8b5976a5010d30944838317a6de38cb5c0cd4b8",
+    "data_processed\\education\\sports_awards.json": "7d81734adb4327c1fc883729ed55c7d2f26b887d60fdac8ec1577f632ee963ed",
     "data_processed\\education\\invention_awards.json": "475afe732ea826a582b0ee347577ef01bb61624291ae45c63bec4da51c7c60ae",
     "data_processed\\education\\school_progression.json": "5f3fc6aedd875a3f6b7674faa043d9e6ab25626bcbaad2a2bf7eb7fe4ef1b124",
     "data_processed\\education\\residential_scenario.json": "96e5042555e1c47da8fe4040c065c7eb9feb48988c71cc8c8e01f380dc6e211d",
@@ -978,7 +978,7 @@
     "data_processed\\education\\disclosures\\B000027505.json": "1040e15c643d9e0632ab6694bc5195a21b904e6d5fdcadffab30e8fa2e96d4e9",
     "data_processed\\education\\disclosures\\B000030907.json": "75caa291545e4627748a46162ebd4e081b8cb46f7d17328a81fd616b4ac6f4f6"
   },
-  "csv_sha256": "a4bc385b624f4eb94cbc482a0a8de57221f0d6c5acdddea1d434815f37741e84",
+  "csv_sha256": "be873c9eb8f6fc689bf75ba935b804cd9c78e93906d2ef79e83cfbd5d5cef8a3",
   "limitations": [
     "확인기록 0은 수상 없음이 아니라 수집한 자료에 연결된 기록이 없다는 뜻.",
     "공시행수·항목수는 수집 범위이며 교육 품질·실적 점수로 비교하지 않음.",

@@ -19,7 +19,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "동산고등학교",
@@ -39,7 +41,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "동산고등학교",
@@ -59,7 +63,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "동산고등학교",
@@ -79,7 +85,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "동산고등학교",
@@ -99,7 +107,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000022837": [
@@ -121,7 +131,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -141,7 +153,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -161,7 +175,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -181,7 +197,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -201,7 +219,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -221,7 +241,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -241,7 +263,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -261,7 +285,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -281,7 +307,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -309,7 +337,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -333,7 +363,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -361,7 +393,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -381,7 +415,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -401,7 +437,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -421,7 +459,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -441,7 +481,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -461,7 +503,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -481,7 +525,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -521,7 +567,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -549,7 +597,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -569,7 +619,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -589,7 +641,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -609,7 +663,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -629,7 +685,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -649,7 +707,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -669,7 +729,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -701,7 +763,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -721,7 +785,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -745,7 +811,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -769,7 +837,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -789,7 +859,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -809,7 +881,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -829,7 +903,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -849,7 +925,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -869,7 +947,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -889,7 +969,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -909,7 +991,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -929,7 +1013,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -949,7 +1035,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -981,7 +1069,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1001,7 +1091,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1021,7 +1113,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1041,7 +1135,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1061,7 +1157,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1081,7 +1179,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1101,7 +1201,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1121,7 +1223,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1141,7 +1245,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1161,7 +1267,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1189,7 +1297,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1217,7 +1327,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1253,7 +1365,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1273,7 +1387,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1293,7 +1409,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1313,7 +1431,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1337,7 +1457,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1361,7 +1483,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1389,7 +1513,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1417,7 +1543,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1437,7 +1565,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1465,7 +1595,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1485,7 +1617,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1505,7 +1639,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1525,7 +1661,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1545,7 +1683,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1565,7 +1705,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1585,7 +1727,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1605,7 +1749,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1625,7 +1771,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1645,7 +1793,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1665,7 +1815,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1685,7 +1837,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1705,7 +1859,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1725,7 +1881,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1745,7 +1903,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1765,7 +1925,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1785,7 +1947,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1805,7 +1969,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1829,7 +1995,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1865,7 +2033,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1885,7 +2055,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1905,7 +2077,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1925,7 +2099,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1945,7 +2121,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1965,7 +2143,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -1985,7 +2165,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2005,7 +2187,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2025,7 +2209,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2045,7 +2231,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2065,7 +2253,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2085,7 +2275,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2105,7 +2297,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2125,7 +2319,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2145,7 +2341,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2177,7 +2375,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2197,7 +2397,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2217,7 +2419,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2237,7 +2441,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천체육고등학교",
@@ -2257,7 +2463,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000011432": [
@@ -2279,7 +2487,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천생활과학고등학교",
@@ -2299,7 +2509,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천생활과학고등학교",
@@ -2319,7 +2531,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012294": [
@@ -2341,7 +2555,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000011438": [
@@ -2363,7 +2579,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "계산공업고등학교",
@@ -2383,7 +2601,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "계산공업고등학교",
@@ -2403,7 +2623,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "계산공업고등학교",
@@ -2423,7 +2645,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012283": [
@@ -2445,7 +2669,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012242": [
@@ -2475,7 +2701,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "연수고등학교",
@@ -2495,7 +2723,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "연수고등학교",
@@ -2515,7 +2745,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012293": [
@@ -2541,7 +2773,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012244": [
@@ -2563,7 +2797,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "연수여자고등학교",
@@ -2587,7 +2823,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "연수여자고등학교",
@@ -2611,7 +2849,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "연수여자고등학교",
@@ -2635,7 +2875,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012272": [
@@ -2661,7 +2903,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "삼산고등학교",
@@ -2693,7 +2937,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "삼산고등학교",
@@ -2713,7 +2959,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012247": [
@@ -2735,7 +2983,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "신송고등학교",
@@ -2755,7 +3005,67 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
+      }
+    ],
+    "B000012249": [
+      {
+        "school_name": "인천 대건고등학교",
+        "category": "스쿼시",
+        "division": "남자18세이하부",
+        "discipline": "개인전",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
+      },
+      {
+        "school_name": "인천 대건고등학교",
+        "category": "스쿼시",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 3
+          },
+          {
+            "table": 16,
+            "row": 4
+          },
+          {
+            "table": 16,
+            "row": 5
+          },
+          {
+            "table": 16,
+            "row": 6
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012262": [
@@ -2777,7 +3087,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "부평고등학교",
@@ -2797,7 +3109,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "부평고등학교",
@@ -2817,7 +3131,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012271": [
@@ -2839,7 +3155,31 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
+      },
+      {
+        "school_name": "부개고등학교(컴)",
+        "category": "양궁",
+        "division": "일반부",
+        "discipline": "혼성단체전(컴파운드)",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 25
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "교육청 공식 부개고등학교 양궁 리커브/컴파운드 지도자 공고. 대회 원문의 (컴)과 세부종목 컴파운드가 일치할 때만 정확한 기본 학교명에 연결. 일반 괄호 삭제 규칙은 사용하지 않음.",
+        "identity_source_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=10994&nttSn=3379542"
       },
       {
         "school_name": "부개고등학교",
@@ -2859,7 +3199,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "부개고등학교",
@@ -2879,7 +3221,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "부개고등학교",
@@ -2899,7 +3243,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012248": [
@@ -2921,7 +3267,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "송도고등학교",
@@ -2941,7 +3289,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "송도고등학교",
@@ -2961,7 +3311,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "송도고등학교",
@@ -2989,7 +3341,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "송도고등학교",
@@ -3009,7 +3363,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "송도고등학교",
@@ -3029,7 +3385,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000013523": [
@@ -3059,7 +3417,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "동인천고등학교",
@@ -3083,7 +3443,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "동인천고등학교",
@@ -3103,7 +3465,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "동인천고등학교",
@@ -3123,7 +3487,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012229": [
@@ -3145,7 +3511,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인일여자고등학교",
@@ -3165,7 +3533,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인일여자고등학교",
@@ -3193,7 +3563,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012288": [
@@ -3219,7 +3591,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "백석고등학교",
@@ -3239,7 +3613,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "백석고등학교",
@@ -3259,7 +3635,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "백석고등학교",
@@ -3279,7 +3657,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "백석고등학교",
@@ -3299,7 +3679,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000011427": [
@@ -3321,7 +3703,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "문학정보고등학교",
@@ -3341,7 +3725,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "문학정보고등학교",
@@ -3361,7 +3747,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012295": [
@@ -3383,7 +3771,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "서인천고등학교",
@@ -3403,7 +3793,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012255": [
@@ -3425,7 +3817,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "석정여자고등학교",
@@ -3445,7 +3839,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012290": [
@@ -3479,7 +3875,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "가림고등학교",
@@ -3499,7 +3897,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000011418": [
@@ -3521,7 +3921,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천반도체고등학교",
@@ -3553,7 +3955,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012291": [
@@ -3575,7 +3979,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "가좌고등학교",
@@ -3595,7 +4001,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000011426": [
@@ -3673,7 +4081,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인천비즈니스고등학교",
@@ -3753,7 +4163,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012284": [
@@ -3787,7 +4199,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012236": [
@@ -3825,7 +4239,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012241": [
@@ -3847,7 +4263,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012273": [
@@ -3869,7 +4287,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012238": [
@@ -3891,7 +4311,9 @@
         "result": "금메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인화여자고등학교",
@@ -3919,7 +4341,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "인화여자고등학교",
@@ -3939,7 +4363,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012263": [
@@ -3961,7 +4387,9 @@
         "result": "은메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012297": [
@@ -3983,7 +4411,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       },
       {
         "school_name": "강화여자고등학교",
@@ -4003,7 +4433,9 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ],
     "B000012278": [
@@ -4069,117 +4501,110 @@
         "result": "동메달 관측",
         "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
         "participant_scope": "school_event_medal_observation",
-        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님",
+        "identity_basis": "Exact name after whitespace normalization",
+        "identity_source_url": null
       }
     ]
   },
-  "coverage": "대한체육회 2024·2025 전국체육대회 인천 메달 명세에서 현재 원장 학교명과 정확히 연결한 관측입니다. 학교·종목·종별·세부종목·등급·일자별로 묶었습니다. 선수별 행 수와 관측 수는 메달 수가 아닙니다. 단체전·복식·개인전 중복 집계와 보도자료 중복을 피하기 위해 총 메달 수를 산출하지 않습니다. 선수 이름·선수 식별자는 저장하지 않습니다. 기록 없음은 수상 없음이 아닙니다.",
+  "coverage": "대한체육회 2024·2025 전국체육대회 인천 메달 명세에서 현재 원장 학교명에 연결한 관측입니다. 공백 차이와 근거가 있는 특정 종목 표기를 구분해 기록합니다. 학교·종목·종별·세부종목·등급·일자별로 묶었습니다. 선수별 행 수와 관측 수는 메달 수가 아닙니다. 단체전·복식·개인전 중복 집계와 보도자료 중복을 피하기 위해 총 메달 수를 산출하지 않습니다. 선수 이름·선수 식별자는 저장하지 않습니다. 기록 없음은 수상 없음이 아닙니다.",
   "unmatched_school_names": [
     {
       "year": 2024,
       "school_name": "가천대학교 메디컬캠퍼스",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2024,
       "school_name": "경기대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2024,
       "school_name": "경남대학교",
-      "reason": "No unique exact current registry match"
-    },
-    {
-      "year": 2024,
-      "school_name": "부개고등학교(컴)",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2024,
       "school_name": "연송고등학교",
-      "reason": "No unique exact current registry match"
+      "reason": "No verified current registry match"
     },
     {
       "year": 2024,
       "school_name": "용인대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2024,
       "school_name": "원광대학교",
-      "reason": "No unique exact current registry match"
-    },
-    {
-      "year": 2024,
-      "school_name": "인천 대건고등학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2024,
       "school_name": "인천대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2024,
       "school_name": "인하대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2024,
       "school_name": "한국체육대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2024,
       "school_name": "호원대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2025,
       "school_name": "경기대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2025,
       "school_name": "경일대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2025,
       "school_name": "경희대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2025,
       "school_name": "연송고등학교",
-      "reason": "No unique exact current registry match"
+      "reason": "No verified current registry match"
     },
     {
       "year": 2025,
       "school_name": "용인대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2025,
       "school_name": "인천대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2025,
       "school_name": "인천여자고등학교부설방송통신고등학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Separate institution: broadcasting high school"
     },
     {
       "year": 2025,
       "school_name": "인하대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     },
     {
       "year": 2025,
       "school_name": "한국체육대학교",
-      "reason": "No unique exact current registry match"
+      "reason": "Outside target school levels: university"
     }
   ],
-  "source_sha256": "0e2ad0a4c0cc97b3093873aeb9275eaa1940edc5f760b9f515dce7e4f2142567"
+  "source_sha256": "0e2ad0a4c0cc97b3093873aeb9275eaa1940edc5f760b9f515dce7e4f2142567",
+  "identity_aliases_sha256": "da474e05aaa4982ba2186382d16794a3cfc74030a0e40af1e8626d5628b17c71"
 }

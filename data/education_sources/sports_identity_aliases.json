@@ -1,0 +1,12 @@
+[
+  {
+    "source_name": "부개고등학교(컴)",
+    "school_id": "B000012271",
+    "registry_name": "부개고등학교",
+    "category": "양궁",
+    "discipline_contains": "컴파운드",
+    "source_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=10994&nttSn=3379542",
+    "source_sha256": "79e3b410390c06d5b68a92c21642c36c25632c5f66a94a58fb7ee3a502d5c35b",
+    "basis": "교육청 공식 부개고등학교 양궁 리커브/컴파운드 지도자 공고. 대회 원문의 (컴)과 세부종목 컴파운드가 일치할 때만 정확한 기본 학교명에 연결. 일반 괄호 삭제 규칙은 사용하지 않음."
+  }
+]
