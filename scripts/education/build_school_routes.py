@@ -13,6 +13,25 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data_processed/education"
 
 
+def road_exposure(graph, path):
+    """Summarize the traversed shortest edges, never infer physical crossings."""
+    classes = ('motorway', 'trunk', 'primary', 'secondary', 'tertiary')
+    groups = {key: {'segments': 0, 'length_m': 0.0} for key in (*classes, 'other', 'unknown')}
+    for u, v in zip(path, path[1:]):
+        edge = min(graph.get_edge_data(u, v).values(), key=lambda item: float(item['length']))
+        raw = edge.get('highway')
+        values = raw if isinstance(raw, (list, tuple, set)) else [raw]
+        tags = {str(value).strip().lower() for value in values if value is not None and str(value).strip()}
+        kind = next((key for key in classes if key in tags or key + '_link' in tags), 'other' if tags else 'unknown')
+        groups[kind]['segments'] += 1
+        groups[kind]['length_m'] += float(edge['length'])
+    for group in groups.values():
+        group['length_m'] = round(group['length_m'], 1)
+    return {'groups': groups,
+            'basis': 'Selected OSM shortest-path edges; highway tag; length attribute in metres',
+            'limitations': '도로 등급별 경로 구간 수·길이이며 실제 횡단 횟수·위험도·안전 판정이 아닙니다. 양끝 연결선은 제외합니다. 복수 태그는 가장 높은 도로 등급으로 분류하며, 동일 길이 평행 간선은 경로 계산과 같은 첫 간선을 사용합니다. OSM 누락·도로 등급 오류·보도 분리 표현의 영향을 받습니다.'}
+
+
 def main():
     graph = ox.project_graph(ox.load_graphml(ROOT.parent / "_cache/incheon_walk_graph_v3.graphml"), to_crs=5179)
     graph = ox.convert.to_undirected(graph)
@@ -53,6 +72,7 @@ def main():
                           route_distance_m=round(distance,1), straight_distance_m=round(straight,1),
                           detour_ratio=round(distance/straight,3) if straight else None, destination_snap_m=round(po[j],1),
                           route_coordinates=[[p.x,p.y] for p in ll],
+                          road_exposure=road_exposure(graph, path),
                           barrier_status="횡단보도·신호·통행허용 현장 확인 필요", destination_basis="공원 대표점; 출입구 아님")
         output[school["학교ID"]] = result
         if (i+1)%100==0: print(f"Routes {i+1}/{len(schools)}",flush=True)

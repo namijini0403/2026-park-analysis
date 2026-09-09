@@ -31,6 +31,12 @@ async function ask(payload){
   assert.match(JSON.stringify(academy),new RegExp(`500m ${elementary.academy.straight_500m_count}개`));
   const unknown=await ask({mode:'identified_school_explainer',question:'공원 환경 분석',school_context:{school_id:'../unknown',school_level:'중학교'}});
   assert.equal(unknown.answerable,false);
+  const routed=Object.values(data).find(r=>r.extended&&r.route.road_exposure);
+  assert(routed);
+  const roadAnswer=await ask({mode:'identified_school_explainer',question:'경로의 간선도로 구간은 얼마나 돼?',school_context:{school_id:routed.school_id}});
+  assert.equal(roadAnswer.answerable,true);
+  assert(roadAnswer.evidence.some(r=>r.source_chunk_id===`education#${routed.school_id}-access`));
+  assert.match(JSON.stringify(roadAnswer),/실제 횡단 횟수/);
   const middle=Object.values(data).find(r=>r.school_level==='중학교');
   const high=Object.values(data).find(r=>r.school_level==='고등학교'&&r.progression.observations.length===2);
   const progressionAnswer=await ask({mode:'identified_school_explainer',question:'2025년 졸업 후 진학률을 알려줘',school_context:{school_id:high.school_id}});
