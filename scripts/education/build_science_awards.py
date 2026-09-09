@@ -142,8 +142,8 @@ def main():
                 'result_source_url':result_url, 'result_basis':'상세 페이지' if record['fields']['수상'] else '목록의 동일 작품 수상 칸; 상세 수상 칸은 비어 있음',
                 'participant_scope':'학생 출품작; 지도논문 제외' if args.competition=='invention' else '출품작(학생/교원 미분류); 지도논문 제외',
                 'verification':'국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능.'})
-    pdf_source = ROOT/'data/education_sources/science_awards_2024_pdf.json'
-    pdf_records = json.loads(pdf_source.read_text(encoding='utf-8'))['records'] if args.competition=='science' and pdf_source.exists() else []
+    pdf_source = ROOT/f'data/education_sources/{args.competition}_awards_2024_pdf.json'
+    pdf_records = json.loads(pdf_source.read_text(encoding='utf-8'))['records'] if pdf_source.exists() else []
     for record in pdf_records:
         linked.setdefault(record['school_id'],[]).append(record)
     pdf_note=f' 2024 공식 요약집에서 {len(pdf_records)}개 학교-작품 실적을 별도 대조·보완함.' if pdf_records else ''
