@@ -117,6 +117,25 @@ async function ask(payload){
     assert.match(JSON.stringify(answer),/2026년 공시/);
     assert.match(JSON.stringify(answer),/전교생 비율이 아니다/);
   }
+  const historicSchool=data.B000011417;
+  const beforeHistory=JSON.stringify(historicSchool.public_indicators);
+  const pastIndicators=evidence.build(historicSchool,'2025년 장학금 공시를 알려줘')[0].body;
+  assert.match(pastIndicators,/장학금·학비 지원 2025년 공시/);
+  assert.match(pastIndicators,/"publication_year":2025/);
+  assert.doesNotMatch(pastIndicators,/"publication_year":2026/);
+  const missingIndicators=evidence.build(historicSchool,'2035년 장학금 공시를 알려줘')[0].body;
+  assert.match(missingIndicators,/요청 범위 공시 미확보/);
+  assert.doesNotMatch(missingIndicators,/"publication_year":202[56]/);
+  const bothIndicators=evidence.build(historicSchool,'2025년부터 2026년 장학금 공시를 비교해줘')[0].body;
+  assert.match(bothIndicators,/"publication_year":2025/);
+  assert.match(bothIndicators,/"publication_year":2026/);
+  const latestIndicators=evidence.build(historicSchool,'장학금 공시를 알려줘')[0].body;
+  assert.match(latestIndicators,/"publication_year":2026/);
+  assert.doesNotMatch(latestIndicators,/"publication_year":2025/);
+  assert.equal(JSON.stringify(historicSchool.public_indicators),beforeHistory);
+  const historicAnswer=await ask({mode:'identified_school_explainer',question:'2025년 장학금 공시를 알려줘',school_context:{school_id:historicSchool.school_id}});
+  assert.equal(historicAnswer.answerable,true);
+  assert.match(JSON.stringify(historicAnswer),/2025년 공시/);
   let captured;
   process.env.OPENAI_API_KEY='test-key';
   global.fetch=async(url,options)=>{assert.equal(url,'https://api.openai.com/v1/responses');captured=JSON.parse(options.body);return {ok:false};};

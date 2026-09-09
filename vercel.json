@@ -7,7 +7,7 @@
   "trailingSlash": false,
   "functions": {
     "api/ai-explainer-v2.js": {
-      "includeFiles": "data_processed/context/*.json"
+      "includeFiles": "data_processed/{context/*.json,education/school_public_indicators.json}"
     }
   },
   "headers": [

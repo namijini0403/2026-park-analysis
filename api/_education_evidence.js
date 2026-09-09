@@ -2,6 +2,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 let data;
+let indicatorHistory;
 const TOPIC=/학원|교습|예체능|수능|성취|학력|성적|운동부|선수 인원|수상|실적|메달|체육대회|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i;
 function load(){
   if(!data) {
@@ -78,13 +79,23 @@ function build(row,question){
       text+=` 요청 범위: ${years.length?years.join(', ')+'년':'수집한 전체 연도'} · ${events.length?events.join(', '):'수집한 대회'}. 이 범위에 해당하는 이 학교의 확인 기록 ${related.length}건 중 최근 최대 6건: ${JSON.stringify([...related].sort((a,b)=>b.year-a.year).slice(0,6))}. 기록이 없으면 수집 범위에서 미확보이며 수상 없음이라는 뜻이 아니다. 다른 연도·대회의 실적으로 대체하지 않는다. ${row.award_coverage} 웹·보도자료·PDF 기록은 중복될 수 있어 합산하지 않는다. 학교단체상과 학생 작품 수상은 별도이며 확인 기록 수를 작품 수나 수상자 수로 바꾸지 않는다. 전체 기록은 학교별 보고서에서 확인한다.`;
     }
     if(/공시|장학|체력|동아리|방과후|paps/i.test(q)) {
+      const years=requestedYears(q);
       const terms=['장학','체력','동아리','방과후'].filter(term=>q.includes(term));
       if(/paps/i.test(q)) terms.push('체력');
-      const indicators=(row.public_indicators||[]).filter(g=>!terms.length||terms.some(term=>g.title.includes(term)));
-      text+=indicators.map(g=>{const o=g.observations.at(-1);if(!o)return `${g.title}: 연결 공시 미확보.`;const metrics=g.item==='90'?o.metrics.filter(m=>['derived_grade45_pct','RATE_SUM'].includes(m.field)):o.metrics.slice(0,2);return `${g.title} ${o.publication_year}년 공시: ${metrics.map(m=>`${m.label} ${m.value==null?'미확보':Number(m.value.toFixed(2))+m.unit}`).join(', ')||'공시 제외 또는 수치 미확보'}.`;}).join(' ');
+      let groups=row.public_indicators||[];
+      if(years.length) {
+        if(!indicatorHistory) {
+          try { indicatorHistory=JSON.parse(fs.readFileSync(path.join(__dirname,'../data_processed/education/school_public_indicators.json'),'utf8')).schools; }
+          catch { indicatorHistory={}; }
+        }
+        groups=indicatorHistory[row.school_id]||[];
+      }
+      const indicators=groups.filter(g=>!terms.length||terms.some(term=>g.title.includes(term))).map(g=>({...g,observations:years.length?g.observations.filter(o=>years.includes(o.publication_year)):g.observations.slice(-1)}));
+      text+=indicators.map(g=>g.observations.length?g.observations.map(o=>{const metrics=g.item==='90'?o.metrics.filter(m=>['derived_grade45_pct','RATE_SUM'].includes(m.field)):o.metrics.slice(0,2);return `${g.title} ${o.publication_year}년 공시: ${metrics.map(m=>`${m.label} ${m.value==null?'미확보':Number(m.value.toFixed(2))+m.unit}`).join(', ')||'공시 제외 또는 수치 미확보'}.`;}).join(' '):`${g.title}: 요청 범위 공시 미확보.`).join(' ');
+      if(years.length) text+=` 요청 공시연도 ${years.join(', ')}. 해당 연도 자료가 없으면 다른 연도로 대체하지 않는다.`;
       text+=' 체력 수치는 공개 평가행 기준으로 전교생 비율이 아니다. 학교 종합 순위·인과 효과가 아니다.';
-      text+=` 최신 공시연도 활동·지원·체력 지표: ${JSON.stringify(indicators)}. 공시연도와 실제 평가기간을 혼동하지 않는다. PAPS 비율은 공개 평가행의 인원 합계 기준이며 전교생 비율이 아니다. 지표 간 참여 인원을 합산하거나 교육 품질·야외환경의 인과 효과로 해석하지 않는다.`;
-      const titles=row.disclosure_titles.filter(title=>!terms.length||terms.some(term=>title.includes(term)));
+      text+=` ${years.length?'요청 공시연도':'최신 공시연도'} 활동·지원·체력 지표: ${JSON.stringify(indicators)}. 공시연도와 실제 평가기간을 혼동하지 않는다. PAPS 비율은 공개 평가행의 인원 합계 기준이며 전교생 비율이 아니다. 지표 간 참여 인원을 합산하거나 교육 품질·야외환경의 인과 효과로 해석하지 않는다.`;
+      const titles=row.disclosure_titles.filter(title=>(!years.length||years.includes(Number(title.slice(0,4))))&&(!terms.length||terms.some(term=>title.includes(term))));
       text+=` 관련 공시 목록 ${titles.length}종 중 최대 12종: ${titles.slice(-12).join('; ')}. 세부 수치는 학교별 보고서에서 확인하며 이 근거에 없는 수치를 만들지 않는다.`;
     }
     parts.push(chunk(row,'performance','학교 공개 공시·성과',text));
