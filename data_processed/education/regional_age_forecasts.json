@@ -1,0 +1,1802 @@
+{
+  "중구|유치원": {
+    "base_year": 2025,
+    "region_code": "2811000000",
+    "region_name": "중구",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 3602.5
+      },
+      {
+        "year": 2027,
+        "residents": 3660.0
+      },
+      {
+        "year": 2028,
+        "residents": 3717.5
+      },
+      {
+        "year": 2029,
+        "residents": 3775.0
+      },
+      {
+        "year": 2030,
+        "residents": 3832.5
+      },
+      {
+        "year": 2031,
+        "residents": 3890.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "중구|초등학교": {
+    "base_year": 2025,
+    "region_code": "2811000000",
+    "region_name": "중구",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 9024.5
+      },
+      {
+        "year": 2027,
+        "residents": 9103.0
+      },
+      {
+        "year": 2028,
+        "residents": 9181.5
+      },
+      {
+        "year": 2029,
+        "residents": 9260.0
+      },
+      {
+        "year": 2030,
+        "residents": 9338.5
+      },
+      {
+        "year": 2031,
+        "residents": 9417.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "중구|중학교": {
+    "base_year": 2025,
+    "region_code": "2811000000",
+    "region_name": "중구",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 5060
+      },
+      {
+        "year": 2027,
+        "residents": 5060
+      },
+      {
+        "year": 2028,
+        "residents": 5060
+      },
+      {
+        "year": 2029,
+        "residents": 5060
+      },
+      {
+        "year": 2030,
+        "residents": 5060
+      },
+      {
+        "year": 2031,
+        "residents": 5060
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "중구|고등학교": {
+    "base_year": 2025,
+    "region_code": "2811000000",
+    "region_name": "중구",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 4692
+      },
+      {
+        "year": 2027,
+        "residents": 4692
+      },
+      {
+        "year": 2028,
+        "residents": 4692
+      },
+      {
+        "year": 2029,
+        "residents": 4692
+      },
+      {
+        "year": 2030,
+        "residents": 4692
+      },
+      {
+        "year": 2031,
+        "residents": 4692
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "동구|유치원": {
+    "base_year": 2025,
+    "region_code": "2814000000",
+    "region_name": "동구",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 485.0
+      },
+      {
+        "year": 2027,
+        "residents": 390.0
+      },
+      {
+        "year": 2028,
+        "residents": 295.0
+      },
+      {
+        "year": 2029,
+        "residents": 200.0
+      },
+      {
+        "year": 2030,
+        "residents": 105.0
+      },
+      {
+        "year": 2031,
+        "residents": 10.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "동구|초등학교": {
+    "base_year": 2025,
+    "region_code": "2814000000",
+    "region_name": "동구",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 1604.0
+      },
+      {
+        "year": 2027,
+        "residents": 1383.0
+      },
+      {
+        "year": 2028,
+        "residents": 1162.0
+      },
+      {
+        "year": 2029,
+        "residents": 941.0
+      },
+      {
+        "year": 2030,
+        "residents": 720.0
+      },
+      {
+        "year": 2031,
+        "residents": 499.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "동구|중학교": {
+    "base_year": 2025,
+    "region_code": "2814000000",
+    "region_name": "동구",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 1211
+      },
+      {
+        "year": 2027,
+        "residents": 1211
+      },
+      {
+        "year": 2028,
+        "residents": 1211
+      },
+      {
+        "year": 2029,
+        "residents": 1211
+      },
+      {
+        "year": 2030,
+        "residents": 1211
+      },
+      {
+        "year": 2031,
+        "residents": 1211
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "동구|고등학교": {
+    "base_year": 2025,
+    "region_code": "2814000000",
+    "region_name": "동구",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 1312
+      },
+      {
+        "year": 2027,
+        "residents": 1312
+      },
+      {
+        "year": 2028,
+        "residents": 1312
+      },
+      {
+        "year": 2029,
+        "residents": 1312
+      },
+      {
+        "year": 2030,
+        "residents": 1312
+      },
+      {
+        "year": 2031,
+        "residents": 1312
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "미추홀구|유치원": {
+    "base_year": 2025,
+    "region_code": "2817700000",
+    "region_name": "미추홀구",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 6416.0
+      },
+      {
+        "year": 2027,
+        "residents": 6336.0
+      },
+      {
+        "year": 2028,
+        "residents": 6256.0
+      },
+      {
+        "year": 2029,
+        "residents": 6176.0
+      },
+      {
+        "year": 2030,
+        "residents": 6096.0
+      },
+      {
+        "year": 2031,
+        "residents": 6016.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "미추홀구|초등학교": {
+    "base_year": 2025,
+    "region_code": "2817700000",
+    "region_name": "미추홀구",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 15714.5
+      },
+      {
+        "year": 2027,
+        "residents": 15149.0
+      },
+      {
+        "year": 2028,
+        "residents": 14583.5
+      },
+      {
+        "year": 2029,
+        "residents": 14018.0
+      },
+      {
+        "year": 2030,
+        "residents": 13452.5
+      },
+      {
+        "year": 2031,
+        "residents": 12887.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "미추홀구|중학교": {
+    "base_year": 2025,
+    "region_code": "2817700000",
+    "region_name": "미추홀구",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 9652
+      },
+      {
+        "year": 2027,
+        "residents": 9652
+      },
+      {
+        "year": 2028,
+        "residents": 9652
+      },
+      {
+        "year": 2029,
+        "residents": 9652
+      },
+      {
+        "year": 2030,
+        "residents": 9652
+      },
+      {
+        "year": 2031,
+        "residents": 9652
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "미추홀구|고등학교": {
+    "base_year": 2025,
+    "region_code": "2817700000",
+    "region_name": "미추홀구",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 9568
+      },
+      {
+        "year": 2027,
+        "residents": 9568
+      },
+      {
+        "year": 2028,
+        "residents": 9568
+      },
+      {
+        "year": 2029,
+        "residents": 9568
+      },
+      {
+        "year": 2030,
+        "residents": 9568
+      },
+      {
+        "year": 2031,
+        "residents": 9568
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "연수구|유치원": {
+    "base_year": 2025,
+    "region_code": "2818500000",
+    "region_name": "연수구",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 8661.5
+      },
+      {
+        "year": 2027,
+        "residents": 8384.0
+      },
+      {
+        "year": 2028,
+        "residents": 8106.5
+      },
+      {
+        "year": 2029,
+        "residents": 7829.0
+      },
+      {
+        "year": 2030,
+        "residents": 7551.5
+      },
+      {
+        "year": 2031,
+        "residents": 7274.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "연수구|초등학교": {
+    "base_year": 2025,
+    "region_code": "2818500000",
+    "region_name": "연수구",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 25400.5
+      },
+      {
+        "year": 2027,
+        "residents": 25067.0
+      },
+      {
+        "year": 2028,
+        "residents": 24733.5
+      },
+      {
+        "year": 2029,
+        "residents": 24400.0
+      },
+      {
+        "year": 2030,
+        "residents": 24066.5
+      },
+      {
+        "year": 2031,
+        "residents": 23733.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "연수구|중학교": {
+    "base_year": 2025,
+    "region_code": "2818500000",
+    "region_name": "연수구",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 14891
+      },
+      {
+        "year": 2027,
+        "residents": 14891
+      },
+      {
+        "year": 2028,
+        "residents": 14891
+      },
+      {
+        "year": 2029,
+        "residents": 14891
+      },
+      {
+        "year": 2030,
+        "residents": 14891
+      },
+      {
+        "year": 2031,
+        "residents": 14891
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "연수구|고등학교": {
+    "base_year": 2025,
+    "region_code": "2818500000",
+    "region_name": "연수구",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 13842
+      },
+      {
+        "year": 2027,
+        "residents": 13842
+      },
+      {
+        "year": 2028,
+        "residents": 13842
+      },
+      {
+        "year": 2029,
+        "residents": 13842
+      },
+      {
+        "year": 2030,
+        "residents": 13842
+      },
+      {
+        "year": 2031,
+        "residents": 13842
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "남동구|유치원": {
+    "base_year": 2025,
+    "region_code": "2820000000",
+    "region_name": "남동구",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 5119.5
+      },
+      {
+        "year": 2027,
+        "residents": 4174.0
+      },
+      {
+        "year": 2028,
+        "residents": 3228.5
+      },
+      {
+        "year": 2029,
+        "residents": 2283.0
+      },
+      {
+        "year": 2030,
+        "residents": 1337.5
+      },
+      {
+        "year": 2031,
+        "residents": 392.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "남동구|초등학교": {
+    "base_year": 2025,
+    "region_code": "2820000000",
+    "region_name": "남동구",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 17945.5
+      },
+      {
+        "year": 2027,
+        "residents": 15550.0
+      },
+      {
+        "year": 2028,
+        "residents": 13154.5
+      },
+      {
+        "year": 2029,
+        "residents": 10759.0
+      },
+      {
+        "year": 2030,
+        "residents": 8363.5
+      },
+      {
+        "year": 2031,
+        "residents": 5968.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "남동구|중학교": {
+    "base_year": 2025,
+    "region_code": "2820000000",
+    "region_name": "남동구",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 13635
+      },
+      {
+        "year": 2027,
+        "residents": 13635
+      },
+      {
+        "year": 2028,
+        "residents": 13635
+      },
+      {
+        "year": 2029,
+        "residents": 13635
+      },
+      {
+        "year": 2030,
+        "residents": 13635
+      },
+      {
+        "year": 2031,
+        "residents": 13635
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "남동구|고등학교": {
+    "base_year": 2025,
+    "region_code": "2820000000",
+    "region_name": "남동구",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 13541
+      },
+      {
+        "year": 2027,
+        "residents": 13541
+      },
+      {
+        "year": 2028,
+        "residents": 13541
+      },
+      {
+        "year": 2029,
+        "residents": 13541
+      },
+      {
+        "year": 2030,
+        "residents": 13541
+      },
+      {
+        "year": 2031,
+        "residents": 13541
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "부평구|유치원": {
+    "base_year": 2025,
+    "region_code": "2823700000",
+    "region_name": "부평구",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 6586.5
+      },
+      {
+        "year": 2027,
+        "residents": 6126.0
+      },
+      {
+        "year": 2028,
+        "residents": 5665.5
+      },
+      {
+        "year": 2029,
+        "residents": 5205.0
+      },
+      {
+        "year": 2030,
+        "residents": 4744.5
+      },
+      {
+        "year": 2031,
+        "residents": 4284.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "부평구|초등학교": {
+    "base_year": 2025,
+    "region_code": "2823700000",
+    "region_name": "부평구",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 17662.0
+      },
+      {
+        "year": 2027,
+        "residents": 16545.0
+      },
+      {
+        "year": 2028,
+        "residents": 15428.0
+      },
+      {
+        "year": 2029,
+        "residents": 14311.0
+      },
+      {
+        "year": 2030,
+        "residents": 13194.0
+      },
+      {
+        "year": 2031,
+        "residents": 12077.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "부평구|중학교": {
+    "base_year": 2025,
+    "region_code": "2823700000",
+    "region_name": "부평구",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 11204
+      },
+      {
+        "year": 2027,
+        "residents": 11204
+      },
+      {
+        "year": 2028,
+        "residents": 11204
+      },
+      {
+        "year": 2029,
+        "residents": 11204
+      },
+      {
+        "year": 2030,
+        "residents": 11204
+      },
+      {
+        "year": 2031,
+        "residents": 11204
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "부평구|고등학교": {
+    "base_year": 2025,
+    "region_code": "2823700000",
+    "region_name": "부평구",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 11722
+      },
+      {
+        "year": 2027,
+        "residents": 11722
+      },
+      {
+        "year": 2028,
+        "residents": 11722
+      },
+      {
+        "year": 2029,
+        "residents": 11722
+      },
+      {
+        "year": 2030,
+        "residents": 11722
+      },
+      {
+        "year": 2031,
+        "residents": 11722
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "계양구|유치원": {
+    "base_year": 2025,
+    "region_code": "2824500000",
+    "region_name": "계양구",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 3001.0
+      },
+      {
+        "year": 2027,
+        "residents": 2729.0
+      },
+      {
+        "year": 2028,
+        "residents": 2457.0
+      },
+      {
+        "year": 2029,
+        "residents": 2185.0
+      },
+      {
+        "year": 2030,
+        "residents": 1913.0
+      },
+      {
+        "year": 2031,
+        "residents": 1641.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "계양구|초등학교": {
+    "base_year": 2025,
+    "region_code": "2824500000",
+    "region_name": "계양구",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 8442.0
+      },
+      {
+        "year": 2027,
+        "residents": 7618.0
+      },
+      {
+        "year": 2028,
+        "residents": 6794.0
+      },
+      {
+        "year": 2029,
+        "residents": 5970.0
+      },
+      {
+        "year": 2030,
+        "residents": 5146.0
+      },
+      {
+        "year": 2031,
+        "residents": 4322.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "계양구|중학교": {
+    "base_year": 2025,
+    "region_code": "2824500000",
+    "region_name": "계양구",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 6156
+      },
+      {
+        "year": 2027,
+        "residents": 6156
+      },
+      {
+        "year": 2028,
+        "residents": 6156
+      },
+      {
+        "year": 2029,
+        "residents": 6156
+      },
+      {
+        "year": 2030,
+        "residents": 6156
+      },
+      {
+        "year": 2031,
+        "residents": 6156
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "계양구|고등학교": {
+    "base_year": 2025,
+    "region_code": "2824500000",
+    "region_name": "계양구",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 6703
+      },
+      {
+        "year": 2027,
+        "residents": 6703
+      },
+      {
+        "year": 2028,
+        "residents": 6703
+      },
+      {
+        "year": 2029,
+        "residents": 6703
+      },
+      {
+        "year": 2030,
+        "residents": 6703
+      },
+      {
+        "year": 2031,
+        "residents": 6703
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "서구|유치원": {
+    "base_year": 2025,
+    "region_code": "2826000000",
+    "region_name": "서구",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 14957.0
+      },
+      {
+        "year": 2027,
+        "residents": 14674.0
+      },
+      {
+        "year": 2028,
+        "residents": 14391.0
+      },
+      {
+        "year": 2029,
+        "residents": 14108.0
+      },
+      {
+        "year": 2030,
+        "residents": 13825.0
+      },
+      {
+        "year": 2031,
+        "residents": 13542.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "서구|초등학교": {
+    "base_year": 2025,
+    "region_code": "2826000000",
+    "region_name": "서구",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 37872.5
+      },
+      {
+        "year": 2027,
+        "residents": 37327.0
+      },
+      {
+        "year": 2028,
+        "residents": 36781.5
+      },
+      {
+        "year": 2029,
+        "residents": 36236.0
+      },
+      {
+        "year": 2030,
+        "residents": 35690.5
+      },
+      {
+        "year": 2031,
+        "residents": 35145.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "서구|중학교": {
+    "base_year": 2025,
+    "region_code": "2826000000",
+    "region_name": "서구",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 21224
+      },
+      {
+        "year": 2027,
+        "residents": 21224
+      },
+      {
+        "year": 2028,
+        "residents": 21224
+      },
+      {
+        "year": 2029,
+        "residents": 21224
+      },
+      {
+        "year": 2030,
+        "residents": 21224
+      },
+      {
+        "year": 2031,
+        "residents": 21224
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "서구|고등학교": {
+    "base_year": 2025,
+    "region_code": "2826000000",
+    "region_name": "서구",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 19197
+      },
+      {
+        "year": 2027,
+        "residents": 19197
+      },
+      {
+        "year": 2028,
+        "residents": 19197
+      },
+      {
+        "year": 2029,
+        "residents": 19197
+      },
+      {
+        "year": 2030,
+        "residents": 19197
+      },
+      {
+        "year": 2031,
+        "residents": 19197
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "강화군|유치원": {
+    "base_year": 2025,
+    "region_code": "2871000000",
+    "region_name": "강화군",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 752.5
+      },
+      {
+        "year": 2027,
+        "residents": 737.0
+      },
+      {
+        "year": 2028,
+        "residents": 721.5
+      },
+      {
+        "year": 2029,
+        "residents": 706.0
+      },
+      {
+        "year": 2030,
+        "residents": 690.5
+      },
+      {
+        "year": 2031,
+        "residents": 675.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "강화군|초등학교": {
+    "base_year": 2025,
+    "region_code": "2871000000",
+    "region_name": "강화군",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 1682.0
+      },
+      {
+        "year": 2027,
+        "residents": 1551.0
+      },
+      {
+        "year": 2028,
+        "residents": 1420.0
+      },
+      {
+        "year": 2029,
+        "residents": 1289.0
+      },
+      {
+        "year": 2030,
+        "residents": 1158.0
+      },
+      {
+        "year": 2031,
+        "residents": 1027.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "강화군|중학교": {
+    "base_year": 2025,
+    "region_code": "2871000000",
+    "region_name": "강화군",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 1249
+      },
+      {
+        "year": 2027,
+        "residents": 1249
+      },
+      {
+        "year": 2028,
+        "residents": 1249
+      },
+      {
+        "year": 2029,
+        "residents": 1249
+      },
+      {
+        "year": 2030,
+        "residents": 1249
+      },
+      {
+        "year": 2031,
+        "residents": 1249
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "강화군|고등학교": {
+    "base_year": 2025,
+    "region_code": "2871000000",
+    "region_name": "강화군",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 1360
+      },
+      {
+        "year": 2027,
+        "residents": 1360
+      },
+      {
+        "year": 2028,
+        "residents": 1360
+      },
+      {
+        "year": 2029,
+        "residents": 1360
+      },
+      {
+        "year": 2030,
+        "residents": 1360
+      },
+      {
+        "year": 2031,
+        "residents": 1360
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "옹진군|유치원": {
+    "base_year": 2025,
+    "region_code": "2872000000",
+    "region_name": "옹진군",
+    "school_level": "유치원",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 923.9333333333333,
+        "trend": 478.5777777777778,
+        "prophet": 657.5888864657842,
+        "prophet_xgb": 638.4370452949242
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 139.0
+      },
+      {
+        "year": 2027,
+        "residents": 112.0
+      },
+      {
+        "year": 2028,
+        "residents": 85.0
+      },
+      {
+        "year": 2029,
+        "residents": 58.0
+      },
+      {
+        "year": 2030,
+        "residents": 31.0
+      },
+      {
+        "year": 2031,
+        "residents": 4.0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "옹진군|초등학교": {
+    "base_year": 2025,
+    "region_code": "2872000000",
+    "region_name": "옹진군",
+    "school_level": "초등학교",
+    "selected_model": {
+      "family": "trend",
+      "tuning_mae": {
+        "persistence": 1054.6,
+        "trend": 713.0,
+        "prophet": 693.6874709614397,
+        "prophet_xgb": 772.5380797052605
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 286.5
+      },
+      {
+        "year": 2027,
+        "residents": 222.0
+      },
+      {
+        "year": 2028,
+        "residents": 157.5
+      },
+      {
+        "year": 2029,
+        "residents": 93.0
+      },
+      {
+        "year": 2030,
+        "residents": 28.5
+      },
+      {
+        "year": 2031,
+        "residents": 0
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "옹진군|중학교": {
+    "base_year": 2025,
+    "region_code": "2872000000",
+    "region_name": "옹진군",
+    "school_level": "중학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 366.31111111111113,
+        "trend": 427.2111111111111,
+        "prophet": 909.7650280391333,
+        "prophet_xgb": 800.74055774711
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 251
+      },
+      {
+        "year": 2027,
+        "residents": 251
+      },
+      {
+        "year": 2028,
+        "residents": 251
+      },
+      {
+        "year": 2029,
+        "residents": 251
+      },
+      {
+        "year": 2030,
+        "residents": 251
+      },
+      {
+        "year": 2031,
+        "residents": 251
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  },
+  "옹진군|고등학교": {
+    "base_year": 2025,
+    "region_code": "2872000000",
+    "region_name": "옹진군",
+    "school_level": "고등학교",
+    "selected_model": {
+      "family": "persistence",
+      "tuning_mae": {
+        "persistence": 515.9555555555555,
+        "trend": 723.2444444444444,
+        "prophet": 801.1575077246583,
+        "prophet_xgb": 695.6608492991697
+      },
+      "tuning_n": 45,
+      "selection_rule": "2020~2022년 목표, 1·3년 전 원점 검증. 복잡한 모형은 최선 단순 모형보다 MAE 5% 이상 개선 시만 채택."
+    },
+    "forecast": [
+      {
+        "year": 2026,
+        "residents": 266
+      },
+      {
+        "year": 2027,
+        "residents": 266
+      },
+      {
+        "year": 2028,
+        "residents": 266
+      },
+      {
+        "year": 2029,
+        "residents": 266
+      },
+      {
+        "year": 2030,
+        "residents": 266
+      },
+      {
+        "year": 2031,
+        "residents": 266
+      }
+    ],
+    "scope": "2025년 행정구역을 고정한 해당 연령 거주 인구 지원 예측. 재학생 수·실제 이용자 예측 아님.",
+    "limitations": "검증은 1·3년 선행으로 수행. 4~6년 선행 성능은 별도 검증되지 않음. 출생·주거개발·정책·행정구역 변경에 따라 달라질 수 있음."
+  }
+}
