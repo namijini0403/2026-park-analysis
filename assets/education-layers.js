@@ -136,6 +136,60 @@ window.EducationLayers = (() => {
   function table(headers, rows) {
     return `<div class="edu-table"><table><thead><tr>${headers.map(h=>`<th>${e(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(v=>`<td>${e(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   }
+  function schoolProfile(row, sourceRows) {
+    const kg=row.학교급구분==='유치원';
+    const latest=item=>{
+      const rows=sourceRows.filter(r=>r.item===item);
+      const year=Math.max(...rows.map(r=>Number(r.year)));
+      const current=rows.filter(r=>Number(r.year)===year);
+      const depth=Math.max(...current.map(r=>Number(r.depth)||0));
+      return current.filter(r=>(Number(r.depth)||0)===depth);
+    };
+    const one=item=>{const rows=latest(item);return rows.length===1?rows[0]:null;};
+    const count=(r,key)=>{
+      if(!r || (r.values.PBAN_EXCP_YN!=null && r.values.PBAN_EXCP_YN!=='N')) return null;
+      const raw=r.values[key];
+      if(raw==null || String(raw).trim()==='') return null;
+      const value=Number(String(raw).replace(/,/g,''));
+      return Number.isFinite(value)&&value>=0?value:null;
+    };
+    const stamp=r=>r?`${r.year}년${kg?` ${r.depth}차`:''}`:'미확보';
+    const student=one(kg?'KG05':'09'), teacher=one(kg?'KG06':'22');
+    const metrics=[];
+    const add=(label,r,key,unit='명')=>metrics.push([label,num(count(r,key),unit),stamp(r)]);
+    if(kg){
+      const ages=['만3세원아수','만4세원아수','만5세원아수','혼합원아수','특수원아수'];
+      const values=ages.map(key=>count(student,key));
+      metrics.push(['원아 수(공개 연령별 5항목 합계)',num(values.every(v=>v!==null)?values.reduce((a,b)=>a+b,0):null,'명'),stamp(student)]);
+      add('인가 총정원',student,'인가총정원수');
+      for(const key of ['일반 교사수','보직 교사수','수석 교사수','특수 교사수','보건 교사수','영양 교사수','기간제교원/강사수','원장수','원감수','직원수']) add(key,teacher,key);
+    }else{
+      add('학생 수(학년별·학급별 공시)',student,'COL_S_SUM');
+      add('학급 수',student,'COL_C_SUM','개');
+      add('교사 수(수업교원 공시 기준)',student,'TEACH_CNT');
+      add('수업교원 1인당 학생 수',student,'TEACH_CAL');
+      add('교원 전체(직위별 공시 총계)',teacher,'COL_S');
+      add('휴직 교원 수(별도 공시)',teacher,'COL_R_SUM');
+    }
+    const sections=kg?[
+      ['기본정보·연령별 원아·학급·정원',['KG05']],['직위·자격별 교직원',['KG06']],['교사 근속연수',['KG07']]
+    ]:[
+      ['학교 기본정보',['0']],['학년·성별 학생·학급 현황',['09','62','63','51']],['직위·과목·자격별 교원 및 직원',['22','24','64','68']]
+    ];
+    const detail=sections.map(([title,items])=>{
+      const rows=items.flatMap(latest);
+      return `<details><summary>${e(title)}</summary>${rows.length?rows.map(r=>{
+        const exempt=r.values.PBAN_EXCP_YN!=null && r.values.PBAN_EXCP_YN!=='N';
+        const fields=Object.entries(r.values).map(([key,value])=>{
+          let label=labels[r.item]?.[key]||key;
+          if(['09','62','63'].includes(r.item) && row.학교급구분!=='초등학교') label=label.replace(/^초등부-/,'');
+          return [label,value==null||String(value).trim()===''?'미확보':String(value)];
+        });
+        return `<h3>${e(r.title)} · ${e(stamp(r))}</h3>${exempt?'<p>공시 제외·미확인 항목입니다. 원문 숫자를 현재 인원으로 사용하지 않습니다.</p>':''}${table(['공개 항목','공시 원문 값'],fields)}<a href="${e(r.source_url)}" target="_blank" rel="noopener">공식 출처</a>`;
+      }).join(''):'<p>확보된 공시자료가 없습니다.</p>'}</details>`;
+    }).join('');
+    return `<section class="edu-school-profile"><h2>학교·유치원 기본정보와 구성원</h2>${table(['지표','공개 인원·규모','공시 시점'],metrics)}<p class="edu-note">항목별 최신 확보 공시입니다. 공시연도와 실제 조사 기준일은 다를 수 있습니다. 수업교원·전체 교원·직원은 범위가 다르므로 합산하지 않습니다. 유치원 직위별 인원과 자격별 인원도 중복 집계하지 않습니다. 결측·공시 제외는 0명이 아닙니다. 이전 연도와 시설·급식 등 나머지 정보는 아래 학교별 공개 공시에서 확인할 수 있습니다.</p>${detail}</section>`;
+  }
   function renderReport(row, body) {
     const c = row.context || {}, enrollment = row.enrollment || {}, route = routes?.[getSchoolId(row)];
     const actual = !!row.analysis_version;
@@ -151,6 +205,7 @@ window.EducationLayers = (() => {
     for (const r of sourceRows) { const key = `${r.title} · ${r.year}년`; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(r); }
     const matchedAcademies = c.academy?.facility_ids ? academies.filter(a=>c.academy.facility_ids.includes(a.facility_id)) : [];
     body.innerHTML = `<p class="edu-kicker">학교 생활권 · 공개자료 기반 정책 지원</p><h1>${e(row.학교명)}</h1><p>${e(row.학교급구분 || '초등학교')} · ${e(row.gu)} · ${e(row.소재지도로명주소 || '')}</p><button type="button" id="edu-ai-explain">이 학교의 분석 근거 설명</button>
+      ${schoolProfile(row,sourceRows)}
       ${actual ? `<div class="edu-metrics"><div>도보권 공원<strong>${num(row.iso_park_count,'개')}</strong></div><div>추정 공원면적 비율<strong>${num(row.iso_green_ratio,'%')}</strong></div><div>학생·원아<strong>${num(row.current_students,'명')}</strong></div><div>직선 500m 학원<strong>${num(c.academy?.straight_500m_count,'개')}</strong></div></div>
       <h2>현재 격차</h2><p>${e(row.case_label || '좌표·보행망 자료 미확보')} · I-EEI와 같은 1%·5% 경계값을 사용한 검토용 분류입니다. 학교급별 정책 적합성은 담당자가 판단합니다.</p><p>공원 ${e((row.accessible_park_names || []).join(', ') || '관측 없음')}.</p>
       ${table(['주변 환경','직선 500m','도보 도달권'],Object.entries(c).map(([k,v])=>[({library:'도서관',playground:'놀이터',large_apartment:'대단지',redevelopment:'재개발',nightlife:'유흥 인허가',construction:'건축행정 기록',academy:'학원·교습소'})[k],num(v.straight_500m_count,'개'),num(v.walkshed_count,'개')]))}
