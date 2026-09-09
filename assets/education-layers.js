@@ -1,7 +1,7 @@
 /* Multi-level analysis and public disclosures. All source text is escaped. */
 window.EducationLayers = (() => {
   const root = './data_processed/education/';
-  let allSchools = [], disclosures = {}, labels = {}, routes = null, academies = [], reportRequest = 0;
+  let allSchools = [], disclosures = {}, labels = {}, routes = null, regionalDemography = {}, academies = [], reportRequest = 0;
   const e = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num = (v, suffix = '') => v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? '미확보' : Number(v).toLocaleString('ko-KR', {maximumFractionDigits:1}) + suffix;
   const categories = {elementary:'초등',middle:'중등',high:'고등',secondary:'중·고등',integrated:'통합(초등 포함)',kindergarten:'유아',mixed:'복합 대상',unknown:'대상 미확인'};
@@ -65,6 +65,7 @@ window.EducationLayers = (() => {
   function renderReport(row, body) {
     const c = row.context || {}, enrollment = row.enrollment || {}, route = routes?.[getSchoolId(row)];
     const actual = !!row.analysis_version;
+    const population = regionalDemography[`${row.gu}|${row.학교급구분 || '초등학교'}`];
     const history = enrollment.history || row.studentTrend || [];
     const sourceRows = disclosures?.[getSchoolId(row)] || [];
     const groups = new Map();
@@ -88,6 +89,7 @@ window.EducationLayers = (() => {
       <details><summary>지정·지원사업 (${(row.designations||[]).length}건)</summary>${table(['사업','연도'],(row.designations||[]).map(d=>[d.program_name,d.school_year]))}</details>
       <details><summary>분석 범위와 한계</summary>${(row.limitations||[]).map(l=>`<p>${e(l)}</p>`).join('')}<p>기관 원자료 기준 ${e(row.데이터기준일자)} · ${e(row.id_method)}</p></details>` : `<p>초등학교의 기존 정밀 분석은 지도 ‘학교 진단’에서 확인할 수 있습니다. 아래는 새로 연결한 공개 공시입니다.</p>`}
       ${!actual ? `<h2>주변 학원·교습소</h2><p>직선 500m ${num(c.academy?.straight_500m_count,'개')} · 도보 도달권 ${num(c.academy?.walkshed_count,'개')}. 좌표 확보분의 관측 건수입니다.</p>${table(['시설','대상','예체능'],matchedAcademies.map(a=>[a.name,categories[a.target_category],a.arts_sports?'해당':'미확인/비해당']))}` : ''}
+      <h2>지역 연령대 수요</h2>${population ? `<p>${e(population.region_name)} · ${e(population.age_band.join('~'))}세. ${e(population.scope)}</p>${table(['관측연도(12월)','주민등록 인구'],population.history.map(h=>[h.year,num(h.residents,'명')]))}<h3>무이동 코호트 시나리오</h3><p>${e(population.scenario_assumption)}</p>${table(['시나리오 연도','해당 연령으로 진입하는 인구'],population.cohort_scenario.map(h=>[h.year,num(h.residents,'명')]))}<p class="edu-note">${e(population.boundary_note)} 250m 후보지 수혜 인원으로 해석하지 않습니다.</p><a href="${e(population.source_url)}" target="_blank" rel="noopener">주민등록 인구통계</a>` : '<p>해당 행정구역·학교급 연결 자료 미확보. 인접 구의 수치를 대신 표시하지 않습니다.</p>'}
       <h2>대외 성과 관측</h2><p>${e(row.award_coverage || '수집한 공식 자료에서 확인한 결과만 표시합니다. 자료 없음은 수상 없음이 아닙니다.')}</p>${(row.awards || []).map(a=>`<p>${e(a.year)} · ${e(a.event)} · ${e(a.category)} · <b>${e(a.result)}</b> <a href="${e(a.source_url)}" target="_blank" rel="noopener">교육청 근거</a></p>`).join('') || '<p>학교별 확인 기록 미확보</p>'}
       <h2>학교별 공개 공시 (${sourceRows.length}개 기록)</h2><p>장학금·체력·활동·교육여건 등 서로 다른 성격의 자료입니다. 수능 성적이나 학력 순위로 합산하지 않습니다. 공시 제외·비공개·결측 표시를 원문대로 보존합니다.</p>
       ${[...groups].map(([title,rows])=>`<details><summary>${e(title)} · ${rows.length}개 기록</summary><a href="${e(rows[0].source_url)}" target="_blank" rel="noopener">학교알리미 공개용 데이터</a>${rows.map(r=>table(['공시 필드','값'],Object.entries(r.values).map(([k,v])=>[`${labels[r.item]?.[k] || k} (${k})`,v == null ? '미공개/결측' : typeof v === 'object' ? JSON.stringify(v) : String(v)]))).join('')}</details>`).join('')}
@@ -118,7 +120,7 @@ window.EducationLayers = (() => {
     if (!dialog.open) dialog.showModal();
     try {
       const sid = getSchoolId(row);
-      if (!routes) [labels, routes] = await Promise.all([json('disclosure_labels.json'),json('school_routes.json')]);
+      if (!routes) [labels, routes, regionalDemography] = await Promise.all([json('disclosure_labels.json'),json('school_routes.json'),json('regional_demography.json')]);
       if (!disclosures[sid]) disclosures[sid] = await json(`disclosures/${encodeURIComponent(sid)}.json`);
       if (request === reportRequest) renderReport(row,body);
     } catch (err) { if (request === reportRequest) body.textContent = `공개자료 로딩 실패: ${err.message}`; }

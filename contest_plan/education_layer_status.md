@@ -10,6 +10,7 @@
 - 같은 학교급 내 학생수·증감·대단지·재개발 조건을 표준화한 KNN 비교는 642개에서 가능하다. 부족한 입력은 임의로 채우지 않는다.
 - 공원 대표점까지 보행망 경로, 연결거리, 우회율을 제공한다. 출입구·횡단 신호·통행 허용을 확인한 안전 경로는 아니다. 651개 경로의 계산 최적화 전후 목적 공원·거리·상태가 모두 일치했다.
 - 중·고교 등 연속 3년 이상 이력이 있는 기관에 추세+LightGBM 잔차 지원 예측을 제공한다. 최근 연도에서 혼합 비중을 선택했으므로 그 검증값은 독립 최종 성능이 아니다. 유치원 2년 이력은 추세만 제공한다.
+- 주민등록 1세별 원자료에서 구·군별 학교급 연령대(3~5, 6~11, 12~14, 15~17세) 관측 이력을 연결했다. 2014~2025년 자료를 사용하되 코드가 바뀐 미추홀구는 2018년부터 별도로 유지한다. 2025년 구·군 10개 합계가 인천 합계와 0~20세 각각 일치함을 검증했다. 출생·이동·사망을 넣지 않은 코호트 시나리오는 유치원 2028년, 다른 학교급 2030년까지이며 예측이나 후보지 수혜 인원이 아니다. 신설 구에는 기존 구 수치를 자동 전용하지 않는다.
 - 기존 규칙을 재사용한 예산·부지·접근성 12개 시나리오와 내부 독서 공급, 250m 기존 후보지 풀에서 학교 주변 후보 비교를 제공한다. 정책 결정을 자동화하지 않는다.
 - 학원·교습소 74,061개 교습과정 행을 이름·주소·종류 기준 6,839개 시설로 통합했다. 좌표 확보 6,743개, 미확보 96개다. 등록번호 부재로 동일시설 식별 한계가 있다. 교습과정에 근거해 학교급과 예체능을 별도 분류하며 초급·중급·고급을 학교급으로 해석하지 않는다.
 - 학교알리미 공개 일괄 목록에서 32개 항목의 실제 응답을 확보했다. 요청 단위 실패·빈 응답은 원본 manifest에 보존한다. 학교별 실제 공시값과 공식 필드 설명을 지연 로딩한다.
@@ -39,10 +40,12 @@
 ```powershell
 python scripts/education/build_school_registry.py
 python scripts/education/build_academies.py
+python scripts/education/build_regional_demography.py
 python scripts/accessibility/build_walkshed_500m_v3.py --graph ../_cache/incheon_walk_graph_v3.graphml --schools data_processed/education/new_school_coords.csv --out data_processed/education/walkshed_500m.geojson --report data_processed/education/walkshed_report.csv
 python scripts/education/build_education_analysis.py
 python scripts/education/build_school_routes.py
 python -m unittest discover -s tests -p test_education_layers.py
+python -m unittest discover -s tests -p test_education_demography.py
 node tests/test_education_ui.cjs
 node scripts/check_inline_script.mjs
 npm run validate:modules

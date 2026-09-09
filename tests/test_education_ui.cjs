@@ -31,6 +31,7 @@ w.eval(fs.readFileSync(path.join(root,'assets/education-layers.js'),'utf8'));
   assert.match(body.textContent,/유사학교 비교/);
   assert.match(body.textContent,/학교 내부 독서 공급/);
   assert.match(body.textContent,/학교별 공개 공시/);
+  assert.match(body.textContent,/무이동 코호트 시나리오/);
   const policy=w.document.getElementById('edu-policy-action');
   assert.match(policy.textContent,/신규 공급/);
   const site=w.document.getElementById('edu-site');site.value='unavailable';site.dispatchEvent(new w.Event('change'));
