@@ -18,6 +18,7 @@ def main():
     invention=read('invention_awards.json')
     regional=read('regional_age_forecasts.json')
     demand=read('candidate_age_demand.json')['candidates']
+    school_age=read('school_age_demand.json')
     indicators=read('school_public_indicators.json')['schools']
     frame=pd.read_csv(DATA/'institutions.csv').astype(object)
     rows=frame.where(pd.notna(frame),None).to_dict('records')
@@ -37,6 +38,7 @@ def main():
                      'extended':bool(row),'district_name':row.get('gu',institution.get('gu')),
                      'case_type':row.get('case_type'),'case_label':row.get('case_label'),
                      'park_count':row.get('iso_park_count'),'green_ratio':row.get('iso_green_ratio'),
+                     'current_age_demand':{'base_year':school_age['base_year'],'limitations':school_age['limitations'],'scopes':{scope:data['levels'].get(institution['학교급구분']) for scope,data in school_age['schools'].get(sid,{}).items()}},
                      'current_students':row.get('current_students'),'enrollment':row.get('enrollment',{}),
                      'context':row.get('context',{}),'academy':{k:v for k,v in academy.get(sid,{}).items() if k!='facility_ids'},
                      'route':route,'reading_gap':row.get('reading_gap',{}),'similar_schools':row.get('similar_schools',[]),

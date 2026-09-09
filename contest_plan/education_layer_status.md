@@ -55,6 +55,7 @@ python scripts/education/build_education_analysis.py
 python scripts/education/build_school_routes.py
 python scripts/education/build_candidate_comparison.py
 python scripts/education/build_public_indicators.py
+python -m scripts.education.build_school_age_demand
 python scripts/education/build_ai_school_evidence.py
 python -m unittest discover -s tests -p test_education_layers.py
 python -m unittest discover -s tests -p test_education_demography.py
@@ -131,3 +132,20 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 ## 2026-09-09: 미확보 공시 재확인
 
 전체 범위 점검 중 기존 실패 요청 36건을 재확인했다. 신규 행은 없으며, 10건은 공식적으로 2026-10-01 공개 예정, 8건은 공개 목록 미확보, 18건은 비 JSON 응답이었다. 공개 예정 자료를 이미 공개된 자료처럼 만들거나 공시 부재를 0으로 바꾸지 않는다. 자세한 요청 단위 근거와 재현 명령은 `public_performance_source_audit.md` 및 `data/education_sources/disclosures/retry_audit.json`에 기록했다. 응답 분류 검사 3개를 통과했다. 실제 브라우저 인벤토리는 다시 확인했으나 연결 브라우저 0개로 시각 QA를 수행하지 못했다.
+
+
+## 2026-09-09: 학교 중심 직선권·보행권 연령 수요 보완
+
+- 후보지뿐 아니라 확장 기관 644개 학교 자체의 좌표 중심 직선 500m와 v3 보행 도달권 도형에 2024년 연령 거주인구를 별도 배분했다. 후보지 중심 수치나 재학생 수를 학교 주변 인구로 전용하지 않는다.
+- 기존 검증된 1km 5세별→인천 1세별 비율→100m 총인구 가중 배분 계산을 재사용한다. 공식 1km 격자 경계를 읽어 100m 도형을 재구성하고 학교 권역과의 면적 교차로 집계한다. 소지역 연령구성의 실제 관측값이나 미래 예측은 아니다.
+
+| 학교급 | 기관 | 직선 500m 전체 추정 가능 | 보행 도달권 전체 추정 가능 |
+|---|---:|---:|---:|
+| 유치원 | 369 | 330 | 344 |
+| 중학교 | 146 | 134 | 139 |
+| 고등학교 | 129 | 122 | 127 |
+
+- 나머지는 연령 관측 결측으로 전체 추정을 null로 두며 확보 부분 소계를 별도로 제공한다. 직선권과 도달권 크기가 달라 결측 격자 포함 여부도 다르다. 도달권 거주가 실제 통학·시설 이용·안전 접근을 뜻하지 않으며 학교별 중복 권역 인구는 합산하지 않는다.
+- 산출물: `data_processed/education/school_age_demand.json`. 계산 가중치·입력 해시는 `data/education_sources/school_age_allocation.json`. 원자료 공간 재계산은 `python -X utf8 -m scripts.education.build_school_age_demand --raw-dir C:/2026_data_analysis_park/data/raw`, 캐시 재현은 `python -X utf8 -m scripts.education.build_school_age_demand`. 이후 AI 근거 빌드를 실행한다. 좌표·보행도형·인구 입력 해시가 바뀌면 캐시 재사용을 거부한다.
+- 학교별 공통 보고서에 두 권역의 전체 추정·확보 소계·연령 미확보 격자 수를 추가하고 서버 AI에는 선택 학교급의 해당 연령만 전달한다. 기존 초등 보정 인구는 수정하지 않았다.
+- 검증: 절반 셀 면적 가중치, 1km 총량 보존, 644개 기관 ID·두 도형 범위·가중치 범위·결측 보존·입력 최신성. 전체 Python 48개, 화면·AI 통합 검사 및 인라인 구문 검사를 통과했다. 실제 브라우저 시각 검증과는 구분한다.
