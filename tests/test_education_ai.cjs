@@ -61,6 +61,25 @@ async function ask(payload){
   const inventor=Object.values(data).find(r=>r.awards.some(a=>a.event.includes('발명품')));
   const inventionChunks=evidence.build(inventor,'발명대회 결과를 알려줘');
   assert(inventionChunks.some(c=>c.body.includes(inventor.awards.find(a=>a.event.includes('발명품')).work_title)));
+  const multiYear=Object.values(data).find(r=>r.awards.some(a=>a.year===2026&&a.event.includes('발명'))&&r.awards.some(a=>a.year===2024&&a.event.includes('발명')));
+  assert(multiYear);
+  const historicAwards=evidence.build(multiYear,'2024년 발명대회 수상 결과')[0].body;
+  assert(historicAwards.includes('"year":2024'));
+  assert(!historicAwards.includes('"year":2026'));
+  assert(!historicAwards.includes('"year":2025'));
+  const missingAwards=evidence.build(multiYear,'2035년 발명대회 수상 결과')[0].body;
+  assert(missingAwards.includes('확인 기록 0건'));
+  assert(missingAwards.includes('수상 없음이라는 뜻이 아니다'));
+  assert(!missingAwards.includes('"year":'));
+  const combinedAwards=evidence.build({...multiYear,awards:[
+    {event:'전국학생과학발명품경진대회',year:2024,work_title:'발명 예시'},
+    {event:'전국과학전람회',year:2025,work_title:'전람회 예시'},
+    {event:'전국과학전람회',year:2026,work_title:'범위 밖 예시'}
+  ]},'2024~2025년 발명과 과학전람회 수상을 함께 알려줘')[0].body;
+  assert(combinedAwards.includes('발명 예시'));
+  assert(combinedAwards.includes('전람회 예시'));
+  assert(!combinedAwards.includes('범위 밖 예시'));
+  assert(combinedAwards.includes('학교단체상과 학생 작품 수상은 별도'));
   const inventionAnswer=await ask({mode:'identified_school_explainer',question:'발명대회 결과를 알려줘',school_context:{school_id:inventor.school_id}});
   assert.equal(inventionAnswer.answerable,true);
   assert(inventionAnswer.evidence.every(r=>r.source_chunk_id===`education#${inventor.school_id}-performance`));

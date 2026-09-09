@@ -190,3 +190,10 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 - 첨부: https://www.science.go.kr/mps/bbs/208/downBbsNttFile.do?atchmnflSn=76588
 - 정규화 자료: `data/education_sources/invention_awards_2026_results.json`(원본 SHA-256 포함). 개인 이름이 든 원본은 Git 제외 `outputs/education_sources/invention_awards_2026.hwpx`에 두었다. 재현은 해당 첨부를 이 경로에 내려받은 후 `python -m scripts.education.build_invention_awards_2026`, `python -m scripts.education.build_science_awards --competition invention`, AI 근거 및 자료연결 점검표 빌드 순서다.
 - Python 전체 50개 및 화면·AI 통합 검사를 통과했다. 보고서·서버 근거·학교별 점검표를 재생성했다.
+
+
+## 2026-09-09: 수상 질의의 연도·대회 범위 수정
+
+2026 결과 추가 후 실제 인천과학고 데이터에서 ‘2024년 발명대회 수상 결과’ 질의가 2026년 기록을 전달하고 2024년 기록은 최근 6건 제한으로 누락하는 오류를 재현했다. 요청 연도·대회를 먼저 거른 다음 최신 6건 제한을 적용하도록 수정했다. 여러 대회가 함께 명시되면 둘 다 포함하고 연도 범위는 중간 연도를 포함한다. 확인 기록 0은 수상 없음으로 해석하지 않으며 다른 연도 기록을 대신 제공하지 않는다. 학교단체상·학생작품·수상자·관측 기록 수를 구분하는 지시도 보강했다.
+
+실제 2024/2026 동시 관측 학교, 미확보 2035년, 2024~2025년 복수 대회 요청을 검사했다. 화면·교육 AI 통합 검사 및 기존 컨텍스트 34개 검사를 통과했다. 전체 원본·보고서의 수상 기록은 유지하며 이번 변경은 서버의 질문별 근거 선택에만 적용된다.

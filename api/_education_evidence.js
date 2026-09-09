@@ -61,8 +61,10 @@ function build(row,question){
   if(/수능|성취|학력|성적|수상|실적|발명|과학전람회|공시|장학|체력|동아리|방과후|paps/i.test(q)) {
     let text=/수능|성취|학력|성적/.test(q)?'수능 학교별 점수는 미확보, 학업성취도 개별 공시는 보안문자 요구로 미수집이다. 미수집을 성적 0 또는 학력 저하로 해석하지 않는다.':'';
     if(/수상|실적|발명|과학전람회/.test(q)) {
-      const related=row.awards.filter(r=>q.includes('발명')?r.event.includes('발명'):q.includes('과학전람회')?r.event.includes('과학전람회'):true);
-      text+=` 질문에 해당하는 이 학교의 확인 기록 ${related.length}건 중 최근 최대 6건: ${JSON.stringify([...related].sort((a,b)=>b.year-a.year).slice(0,6))}. ${row.award_coverage} 웹·보도자료·PDF 기록은 중복될 수 있어 합산하지 않는다. 전체 기록은 학교별 보고서에서 확인한다.`;
+      const years=requestedYears(q);
+      const events=['발명','과학전람회'].filter(term=>q.includes(term));
+      const related=row.awards.filter(r=>(!events.length||events.some(term=>r.event.includes(term)))&&(!years.length||years.includes(r.year)));
+      text+=` 요청 범위: ${years.length?years.join(', ')+'년':'수집한 전체 연도'} · ${events.length?events.join(', '):'수집한 대회'}. 이 범위에 해당하는 이 학교의 확인 기록 ${related.length}건 중 최근 최대 6건: ${JSON.stringify([...related].sort((a,b)=>b.year-a.year).slice(0,6))}. 기록이 없으면 수집 범위에서 미확보이며 수상 없음이라는 뜻이 아니다. 다른 연도·대회의 실적으로 대체하지 않는다. ${row.award_coverage} 웹·보도자료·PDF 기록은 중복될 수 있어 합산하지 않는다. 학교단체상과 학생 작품 수상은 별도이며 확인 기록 수를 작품 수나 수상자 수로 바꾸지 않는다. 전체 기록은 학교별 보고서에서 확인한다.`;
     }
     if(/공시|장학|체력|동아리|방과후|paps/i.test(q)) {
       const terms=['장학','체력','동아리','방과후'].filter(term=>q.includes(term));
