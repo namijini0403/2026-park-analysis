@@ -1,0 +1,484 @@
+{
+  "checked_at": "2026-09-09T05:11:12.604381+00:00",
+  "requests": [
+    {
+      "item": "04",
+      "title": "자유학기제 운영에 관한 사항",
+      "year": 2026,
+      "school_level_code": "03",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "24",
+      "title": "표시과목별 교원 현황",
+      "year": 2025,
+      "school_level_code": "02",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "d59fb2bf5c3cfbf13f0a5149d27acd97141aa5be47d59de0e89c4a6ce7c8d344",
+      "response_bytes": 97,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "status": "public_list_unavailable"
+    },
+    {
+      "item": "24",
+      "title": "표시과목별 교원 현황",
+      "year": 2026,
+      "school_level_code": "02",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "d59fb2bf5c3cfbf13f0a5149d27acd97141aa5be47d59de0e89c4a6ce7c8d344",
+      "response_bytes": 97,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "status": "public_list_unavailable"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2025,
+      "school_level_code": "02",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2025,
+      "school_level_code": "02",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2025,
+      "school_level_code": "03",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2025,
+      "school_level_code": "03",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2025,
+      "school_level_code": "04",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2025,
+      "school_level_code": "04",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2026,
+      "school_level_code": "02",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2026,
+      "school_level_code": "02",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2026,
+      "school_level_code": "03",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2026,
+      "school_level_code": "03",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2026,
+      "school_level_code": "04",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "27",
+      "title": "학교회계 예·결산서(국공립)",
+      "year": 2026,
+      "school_level_code": "04",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2025,
+      "school_level_code": "02",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2025,
+      "school_level_code": "02",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2025,
+      "school_level_code": "03",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2025,
+      "school_level_code": "03",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2025,
+      "school_level_code": "04",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2025,
+      "school_level_code": "04",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2026,
+      "school_level_code": "02",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2026,
+      "school_level_code": "02",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2026,
+      "school_level_code": "03",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2026,
+      "school_level_code": "03",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2026,
+      "school_level_code": "04",
+      "depth": "10",
+      "http_status": 200,
+      "response_sha256": "343a47599c78e81aa0288ba240a20a421055f75e2dfa83753f2106f440c2b989",
+      "response_bytes": 4023,
+      "status": "non_json_response"
+    },
+    {
+      "item": "28",
+      "title": "사립학교 교비회계 예·결산서",
+      "year": 2026,
+      "school_level_code": "04",
+      "depth": "20",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "42",
+      "title": "환경위생관리 현황",
+      "year": 2025,
+      "school_level_code": "02",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "53dbb0943a93201749091e7e369edf41edeaa5996203bd5aa116d6d8c0a2c671",
+      "response_bytes": 136,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "status": "public_list_unavailable"
+    },
+    {
+      "item": "42",
+      "title": "환경위생관리 현황",
+      "year": 2025,
+      "school_level_code": "03",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "53dbb0943a93201749091e7e369edf41edeaa5996203bd5aa116d6d8c0a2c671",
+      "response_bytes": 136,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "status": "public_list_unavailable"
+    },
+    {
+      "item": "42",
+      "title": "환경위생관리 현황",
+      "year": 2025,
+      "school_level_code": "04",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "53dbb0943a93201749091e7e369edf41edeaa5996203bd5aa116d6d8c0a2c671",
+      "response_bytes": 136,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "status": "public_list_unavailable"
+    },
+    {
+      "item": "42",
+      "title": "환경위생관리 현황",
+      "year": 2026,
+      "school_level_code": "02",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "53dbb0943a93201749091e7e369edf41edeaa5996203bd5aa116d6d8c0a2c671",
+      "response_bytes": 136,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "status": "public_list_unavailable"
+    },
+    {
+      "item": "42",
+      "title": "환경위생관리 현황",
+      "year": 2026,
+      "school_level_code": "03",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "53dbb0943a93201749091e7e369edf41edeaa5996203bd5aa116d6d8c0a2c671",
+      "response_bytes": 136,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "status": "public_list_unavailable"
+    },
+    {
+      "item": "42",
+      "title": "환경위생관리 현황",
+      "year": 2026,
+      "school_level_code": "04",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "53dbb0943a93201749091e7e369edf41edeaa5996203bd5aa116d6d8c0a2c671",
+      "response_bytes": 136,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "status": "public_list_unavailable"
+    },
+    {
+      "item": "73",
+      "title": "교복 구매 유형 및 단가",
+      "year": 2026,
+      "school_level_code": "02",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "73",
+      "title": "교복 구매 유형 및 단가",
+      "year": 2026,
+      "school_level_code": "03",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    },
+    {
+      "item": "73",
+      "title": "교복 구매 유형 및 단가",
+      "year": 2026,
+      "school_level_code": "04",
+      "depth": "0",
+      "http_status": 200,
+      "response_sha256": "33d539c3b060512cec3e3d4f878ca6742651f1643ce003656c002fadc1823a48",
+      "response_bytes": 90,
+      "response_keys": [
+        "resultCode",
+        "resultMsg"
+      ],
+      "publication_date": "2026-10-01",
+      "status": "scheduled_publication"
+    }
+  ],
+  "scope": "Retry of prior failed public requests only. Missing public lists are not zero observations or proof of data nonexistence."
+}
