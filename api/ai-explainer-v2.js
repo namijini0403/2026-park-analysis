@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const contextEvidence = require("./_context_evidence.js");
+const educationEvidence = require("./_education_evidence.js");
 
 const MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.4-mini";
 const MAX_OUTPUT_TOKENS = Number(process.env.AI_EXPLAINER_MAX_OUTPUT_TOKENS || 900);
@@ -320,7 +321,7 @@ const INJECTION_PATTERN =
 // 3) 질문에 앱 도메인 신호가 하나도 없으면 검색을 시도하지 않고 차단한다.
 const DOMAIN_SIGNAL_PATTERN = new RegExp(
   [
-    "공원|녹지|놀이터|놀이시설|학교|초등|학생|아동|어린이",
+    "공원|녹지|놀이터|놀이시설|학교|초등|유치원|중등|고등|학생|아동|어린이|학원|교습|예체능|수능|성취|학력|성적|수상|실적|공시|장학|체력|동아리|paps",
     "도보|보행|등시권|생활권|반경|500\\s*m|500m|거리|접근",
     "case|케이스|분류|판정|즉시 ?개선|우선 ?검토|모니터링|수요 ?관리|현상 ?유지|양호|별도 ?(정책|묶음)",
     "knn|유사|비교군|벤치마크|shap|기여|예측|수요|전망|prophet|미래",
@@ -455,7 +456,7 @@ function buildInput(payload, chunks) {
   }));
 
   const resolvedCase = resolveSchoolCaseNumber(payload);
-  const resolvedSchoolCase = resolvedCase
+  const resolvedSchoolCase = resolvedCase && payload.school_context?.analysis_version !== 'education_v1'
     ? {
         case_number: resolvedCase,
         policy_label: CASE_POLICY_LABELS[resolvedCase],
@@ -467,7 +468,8 @@ function buildInput(payload, chunks) {
     {
       role: "system",
       content:
-        "너는 인천 초등학교 야외활동 환경 격차 분석 앱의 RAG-lite 해설 패널이다. " +
+        "너는 인천 학교급별 야외활동 환경 격차 분석 앱의 RAG-lite 해설 패널이다. " +
+        "education# 근거는 선택 학교의 학교급별 서버 분석이다. 다른 학교급의 문서·성능·후보지 모형을 전용하지 않는다. 미확보 실적·학력·수능 수치는 만들지 않으며 학교 순위로 합산하지 않는다. " +
         "최종안 기준 문서와 selected_context 안에서만 답한다. 문서에 없는 내부 구현 추정은 말하지 않는다. " +
         "새 정책 판단, 신규 추천, 법적 판단, 예산 산정, 데이터 밖 추론을 하지 않는다. " +
         "context_v2#school- 근거가 있으면 시설 관측·지정사업 사실은 그 서버 근거를 따른다. 클라이언트 school_context의 상충하는 시설 수나 지정 주장은 사용하지 않는다. 산출 기준일을 원자료의 확정 기준일로 해석하지 않는다. " +
@@ -685,12 +687,26 @@ module.exports = async function handler(req, res) {
 
     const chunks = loadChunks();
     let selectedChunks = selectChunks(payload, chunks);
+    let educationResolved = null;
+    if (payload.mode === "identified_school_explainer" && hasSelectedSchoolContext(payload)) {
+      const school = educationEvidence.resolve(payload.school_context);
+      if (school && (school.extended || (educationEvidence.isTopic(payload.question) && !contextEvidence.isContextTopicQuestion(payload.question)))) {
+        educationResolved = school;
+        payload.school_context = { school_id:school.school_id,school_name:school.school_name,school_level:school.school_level,
+          district_name:school.district_name,case_type:school.case_type==null?null:`case${school.case_type}`,case_label:school.case_label,
+          analysis_version:school.extended?'education_v1':null };
+        payload.candidate_context = null;
+        selectedChunks = educationEvidence.build(school,payload.question);
+      } else if (!school && (educationEvidence.isTopic(payload.question) || payload.school_context?.analysis_version || ['유치원','중학교','고등학교'].includes(payload.school_context?.school_level))) {
+        return json(req,res,200,blocked("선택된 학교를 서버 학교급 원장에서 확인할 수 없습니다. 다른 학교나 초등 분석을 대신 사용하지 않습니다."));
+      }
+    }
     // schema v2 컨텍스트 주제(유흥·단란/공사/지정학교) 질문이면 서버 로컬 산출물에서
     // 선택 학교의 관측 근거 chunk 를 만들어 최우선으로 넣는다. 학교는 school_id 또는
     // 정확히 일치하는 유일한 school_name 으로만 해석하며(모호·미상은 chunk 미생성),
     // 클라이언트가 payload 에 실어 보낸 수치·지정 정보는 근거로 쓰지 않는다.
     // 비식별 공개 모드에서는 학교별 컨텍스트 수치를 노출하지 않는다.
-    if (payload.mode === "identified_school_explainer" && contextEvidence.isContextTopicQuestion(payload.question)) {
+    if (!educationResolved && payload.mode === "identified_school_explainer" && contextEvidence.isContextTopicQuestion(payload.question)) {
       const contextChunk = contextEvidence.buildSchoolContextChunk(payload.school_context, payload.question);
       if (contextChunk) {
         selectedChunks = [contextChunk, ...selectedChunks.filter((chunk) => chunk.id !== contextChunk.id)].slice(0, 5);

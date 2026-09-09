@@ -74,7 +74,7 @@ window.EducationLayers = (() => {
     const groups = new Map();
     for (const r of sourceRows) { const key = `${r.title} · ${r.year}년`; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(r); }
     const matchedAcademies = c.academy?.facility_ids ? academies.filter(a=>c.academy.facility_ids.includes(a.facility_id)) : [];
-    body.innerHTML = `<p class="edu-kicker">학교 생활권 · 공개자료 기반 정책 지원</p><h1>${e(row.학교명)}</h1><p>${e(row.학교급구분 || '초등학교')} · ${e(row.gu)} · ${e(row.소재지도로명주소 || '')}</p>
+    body.innerHTML = `<p class="edu-kicker">학교 생활권 · 공개자료 기반 정책 지원</p><h1>${e(row.학교명)}</h1><p>${e(row.학교급구분 || '초등학교')} · ${e(row.gu)} · ${e(row.소재지도로명주소 || '')}</p><button type="button" id="edu-ai-explain">이 학교의 분석 근거 설명</button>
       ${actual ? `<div class="edu-metrics"><div>도보권 공원<strong>${num(row.iso_park_count,'개')}</strong></div><div>추정 공원면적 비율<strong>${num(row.iso_green_ratio,'%')}</strong></div><div>학생·원아<strong>${num(row.current_students,'명')}</strong></div><div>직선 500m 학원<strong>${num(c.academy?.straight_500m_count,'개')}</strong></div></div>
       <h2>현재 격차</h2><p>${e(row.case_label || '좌표·보행망 자료 미확보')} · I-EEI와 같은 1%·5% 경계값을 사용한 검토용 분류입니다. 학교급별 정책 적합성은 담당자가 판단합니다.</p><p>공원 ${e((row.accessible_park_names || []).join(', ') || '관측 없음')}.</p>
       ${table(['주변 환경','직선 500m','도보 도달권'],Object.entries(c).map(([k,v])=>[({library:'도서관',playground:'놀이터',large_apartment:'대단지',redevelopment:'재개발',nightlife:'유흥 인허가',construction:'건축행정 기록',academy:'학원·교습소'})[k],num(v.straight_500m_count,'개'),num(v.walkshed_count,'개')]))}
@@ -99,6 +99,11 @@ window.EducationLayers = (() => {
       <h2>학교별 공개 공시 (${sourceRows.length}개 기록)</h2><p>장학금·체력·활동·교육여건 등 서로 다른 성격의 자료입니다. 수능 성적이나 학력 순위로 합산하지 않습니다. 공시 제외·비공개·결측 표시를 원문대로 보존합니다.</p>
       ${[...groups].map(([title,rows])=>`<details><summary>${e(title)} · ${rows.length}개 기록</summary><a href="${e(rows[0].source_url)}" target="_blank" rel="noopener">학교알리미 공개용 데이터</a>${rows.map(r=>table(['공시 필드','값'],Object.entries(r.values).map(([k,v])=>[`${labels[r.item]?.[k] || k} (${k})`,v == null ? '미공개/결측' : typeof v === 'object' ? JSON.stringify(v) : String(v)]))).join('')}</details>`).join('')}
       <p class="edu-note">수능 학교별 점수·대외수상 전수 실적은 확보되지 않았습니다. 교과별 학업성취 상세는 보안문자 입력 요구로 자동 수집하지 않았습니다. 자료 없음은 성과 없음이 아닙니다.</p>`;
+    body.querySelector('#edu-ai-explain').onclick=()=>{
+      if(typeof setSchoolPanelSelection==='function') setSchoolPanelSelection(row);
+      body.closest('dialog').close();
+      if(typeof askAiExplainer==='function') askAiExplainer('이 학교의 현재 공원 환경 격차와 분석 한계를 설명해줘.','school_explanation');
+    };
     if (actual) {
       const slider = body.querySelector('#edu-distance-weight');
       const redraw = () => {

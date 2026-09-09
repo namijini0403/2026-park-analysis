@@ -16,6 +16,7 @@
 - 기존 후보지 1,535개에 2024년 학교급별 연령대 배분 인구를 추가했다. 공개 1km 5세별 인구를 같은 연도 인천 1세별 비율로 분할하고, 100m 총인구 비중으로 배분한 후 기존 후보지 도형/주변 직선 500m와의 면적 교차비로 집계한다. 후보지 내부와 주변 인구는 별도이며 실제 이용자·신규 수혜 인원은 아니다. 주변 500m 완전 추정은 유치원 1,430개·초등 1,432개·중등 1,486개·고등 1,504개이며 나머지는 결측으로 남긴다. 원자료가 있는 부분의 소계는 전체 추정과 별도로 보존한다. 공식 100m 도형 100개와 코드 기반 재구성 좌표를 대조한 최대 오차는 0m였다. 기존 후보 도형을 그대로 사용하므로 모든 도형이 정확히 250m 정사각형이라는 의미는 아니다.
 - 학원·교습소 74,061개 교습과정 행을 이름·주소·종류 기준 6,839개 시설로 통합했다. 좌표 확보 6,743개, 미확보 96개다. 등록번호 부재로 동일시설 식별 한계가 있다. 교습과정에 근거해 학교급과 예체능을 별도 분류하며 초급·중급·고급을 학교급으로 해석하지 않는다.
 - 학교알리미 공개 일괄 목록에서 32개 항목의 실제 응답을 확보했다. 요청 단위 실패·빈 응답은 원본 manifest에 보존한다. 학교별 실제 공시값과 공식 필드 설명을 지연 로딩한다.
+- 기존 AI 설명 API에 학교급별 서버 근거를 연결했다. 학교 ID(없으면 정확히 일치하는 유일한 이름)로 원장을 조회하며 클라이언트 수치·학교명·후보지 주장을 근거로 사용하지 않는다. 확장 학교급은 기존 초등 근거와 확정 Case 문구를 전용하지 않는다. 학원·공시·수상·수요·KNN·후보지·접근 마찰·주변 시설 질문에 해당 근거 최대 3개를 전달한다. 수상·후보 예시는 요청 길이를 제한하고 전체 결과는 보고서에서 제공한다. 보고서의 ‘분석 근거 설명’ 버튼으로 기존 패널에 연결된다. 실제 유료 모델 호출은 하지 않았으며 무키 폴백과 요청/응답 모의 검사로 근거 선택·클라이언트 변조 배제·기존 초등 기능을 검증했다.
 - 공식 교육청 보도자료에서 확인한 수상 관측은 현재 3개 학교 기록이다. 전체 수상 이력이 아니며, 기록이 없다는 것을 수상 없음으로 해석하지 않는다.
 - 국립중앙과학관 전국과학전람회 2023~2025년 출품작 검색 899개 게시물(요약집 포함)의 상세 조회를 완료했다. 웹 자료 35건에 2024년 공식 요약집 18건을 보완해 총 19개 학교·53개 학교-작품 실적을 연결했다. 2024년 웹 학교명 공란은 원문대로 보존하며 PDF 보완 기록을 별도 근거로 표시한다. PDF는 학생 수상자 명단과 작품 설명의 작품번호·학교명·등급이 일치하는 학생 소속만 사용한다. PDF 1개 예시 페이지를 렌더링해 표 구조를 확인했다. 웹 출품자의 학생/교원 구분은 추정하지 않는다. 전국 동명 학교는 지역 근거가 없으면 보류한다. 상세 수상 칸이 비어 있으면 같은 작품의 목록 수상 칸과 별도 URL을 근거로 사용한다. 보도자료와 중복 합산하지 않는다.
 
@@ -23,7 +24,7 @@
 
 1. 학업성취도 개별 공시 페이지는 실제 존재하지만 CAPTCHA가 있어 자동 수집하지 않았다. 일괄 공개 목록에는 해당 항목이 없다. 수능 학교별 표준화 성적·전체 대외 수상 이력은 확보한 자료에 없다. 미수집과 자료 부존재를 구분한다.
 2. 구·군 연령 예측과 후보지 지역비례 시나리오는 구축했지만, 후보지별 경계·개발·전입을 반영한 미래 공간 분포 모형은 아직 없다. 초등 미래 인구를 전용하지 않으며 실제 신규 수혜를 뜻하는 `age_specific_beneficiaries`는 null이다. 신규 후보지 순서는 거리·공원 부족 지원 신호이며 연령 인구와 미래 시나리오는 비교용이다. 기존 초등의 모든 후보 추천 모형과 동등하지 않다.
-3. 유치원 장기 이력, 추가 초등 4교 분석, 기존 초등 AI 설명 화면과 신규 학교급의 완전한 통합은 후속 작업이다. 추가 학교급은 별도 분석 대화상자에서 확인한다.
+3. 유치원 장기 재원 이력과 추가 초등 4교 분석은 후속 작업이다. 추가 학교급은 공통 분석 대화상자에서 확인하고, 기존 AI 설명 패널과 연결된다. AI 공시 설명에는 확인된 항목 목록을 제공하며 세부 원문 수치는 보고서에서 확인한다.
 4. 실제 브라우저 연결이 없어 시각·지도 조작 QA는 수행하지 못했다. DOM 통합 검사와 정적 배포 빌드까지 검증했다.
 
 ## 출처
@@ -50,12 +51,15 @@ python scripts/education/build_science_awards.py
 python scripts/accessibility/build_walkshed_500m_v3.py --graph ../_cache/incheon_walk_graph_v3.graphml --schools data_processed/education/new_school_coords.csv --out data_processed/education/walkshed_500m.geojson --report data_processed/education/walkshed_report.csv
 python scripts/education/build_education_analysis.py
 python scripts/education/build_school_routes.py
+python scripts/education/build_ai_school_evidence.py
 python -m unittest discover -s tests -p test_education_layers.py
 python -m unittest discover -s tests -p test_education_demography.py
 python -m unittest discover -s tests -p test_education_awards.py
 python -m unittest discover -s tests -p test_education_candidate_demand.py
 python -m unittest discover -s tests -p test_education_regional_forecasts.py
 node tests/test_education_ui.cjs
+node tests/test_education_ai.cjs
+node scripts/tests/test_context_ai_ops20260906.cjs
 node scripts/check_inline_script.mjs
 npm run validate:modules
 npm run build:vercel
@@ -66,6 +70,8 @@ npm run build:vercel
 연령별 후보지 인구: 기본 실행은 `data/education_sources/candidate_age_allocation.json`의 정규화 원자료와 공간 배분 가중치를 재사용한다. 공간 계산까지 다시 수행하려면 `python scripts/education/build_candidate_age_demand.py --raw-dir C:/2026_data_analysis_park/data/raw`. 필요한 원본 ZIP·후보지·총인구·연령 인구 입력의 파일명과 SHA-256을 스냅샷에 보존한다. 2024년 인구와 2025년 격자 경계 파일을 사용하며 기준연도·배분 가정·관측 결측을 출력에 명시한다.
 
 지역 연령 예측에는 Prophet과 XGBoost가 필요하다. `regional_age_forecast_validation.json`에 패키지 버전·검증 행별 실제값/모형값·학습 목표연도 최댓값·원자료 해시를 보존한다. Prophet은 원점 이전 이력과 모형 설정으로 캐시하며 패키지 버전이 달라지면 재계산한다. XGBoost는 각 원점 이하 목표연도만 학습하며 난수 시드는 42이다.
+
+AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.py`로 다시 생성한다. `data_processed/context/education_school_evidence.json`은 기존 Vercel 함수 `includeFiles` 범위에 포함되며 서버 근거 조회용이다. 기존 컨텍스트 검사의 고정 날짜는 현재 원자료 요약의 `data_as_of`와 대조하도록 수정했다.
 
 과학전람회 갱신: `python scripts/education/build_science_awards.py --fetch --years 2023 2024 2025`. 목록·상세 스냅샷을 재사용하며 최초 수집은 네트워크가 필요하다. 기존 연도 캐시를 자동 덮어쓰지 않는다. 학교명·대회·수상·작품 제목과 응답 해시를 보존하고 학생/교사 개인 이름은 추출하지 않는다. 공식 DB: https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttList.do
 

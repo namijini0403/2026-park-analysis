@@ -185,7 +185,7 @@ async function main() {
   ok("프롬프트 retrieved_chunks 최상단이 컨텍스트 chunk", sentUser.retrieved_chunks[0].chunk_id === "context_v2#school-B000002953");
   const sentBody = sentUser.retrieved_chunks[0].body;
   ok("프롬프트에 실제 지정(유형3)·출처 URL 포함", sentBody.includes("유형3") && sentBody.includes("ice.go.kr"));
-  ok("프롬프트에 커버리지·날짜 주의 포함", sentBody.includes("하한 관측치") && sentBody.includes("2026-09-06"));
+  ok("프롬프트에 커버리지·날짜 주의 포함", sentBody.includes("하한 관측치") && sentBody.includes(SUMMARY.data_as_of));
   ok("프롬프트가 컴팩트(개별 1,222쌍 미덤프, 4096자 미만)", sentBody.length < 4096);
   ok("원자료 기준일과 산출일 구분", sentBody.includes("원자료 시점은 출처별 상이") && sentBody.includes("2026-03-09") && sentBody.includes("2026-06-30") && sentBody.includes("파일 전체 기준일은 미확인"));
   ok("튜터 과거 명단 출처도 누락되지 않음", sentBody.includes("nttSn=3320903"));
