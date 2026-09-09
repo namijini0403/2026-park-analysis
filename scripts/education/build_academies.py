@@ -66,6 +66,11 @@ def normalize(path):
     return facilities, len(frames)
 
 
+def road_building_address(address):
+    match=re.match(r'^(인천(?:광역시)?\s+.+?(?:대로|로|길)\s+\d+(?:-\d+)?)(?=\s|,|\(|$)',address)
+    return match[1].strip() if match else None
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--geocode", action="store_true")
@@ -97,6 +102,18 @@ def main():
                 if coord_valid(lat, lng) and d.get("address_name", "").startswith("인천"):
                     f.update(lat=lat, lng=lng, coordinate_status="address_geocoded",
                              geocode_query=query, matched_address=d.get("address_name"), coordinate_source="Kakao Local address")
+            fallback=road_building_address(f['address'])
+            if f['lat'] is None and fallback and fallback!=query:
+                fallback_docs=client.search_address(fallback).get('documents',[])
+                if len(fallback_docs)==1:
+                    d=fallback_docs[0]
+                    matched=(d.get('road_address') or {}).get('address_name','')
+                    canonical=road_building_address(matched)
+                    lat,lng=float(d['y']),float(d['x'])
+                    if canonical and canonical.rsplit(' ',2)[-2:]==fallback.rsplit(' ',2)[-2:] and coord_valid(lat,lng):
+                        f.update(lat=lat,lng=lng,coordinate_status='road_building_geocoded',geocode_query=fallback,
+                                 matched_address=matched,coordinate_source='Kakao Local address',
+                                 coordinate_note='공개 주소의 도로명·건물번호 일치. 호수·층수는 좌표 조회에서만 제외; 건물 대표좌표이며 출입구 아님.')
             if f["lat"] is None:
                 f["coordinate_status"] = "unresolved"
         except Exception as exc:

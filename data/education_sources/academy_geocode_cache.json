@@ -13924,6 +13924,49 @@
    "total_count": 1
   }
  },
+ "address|인천광역시 계양구 계양대로140번길 15": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 계양구 계산동 989-62",
+     "b_code": "2824510200",
+     "h_code": "2824561100",
+     "main_address_no": "989",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "계양구",
+     "region_3depth_h_name": "계산1동",
+     "region_3depth_name": "계산동",
+     "sub_address_no": "62",
+     "x": "126.724503555388",
+     "y": "37.5364295517611"
+    },
+    "address_name": "인천 계양구 계양대로140번길 15",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 계양구 계양대로140번길 15",
+     "building_name": "",
+     "main_building_no": "15",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "계양구",
+     "region_3depth_name": "계산동",
+     "road_name": "계양대로140번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.724503555388",
+     "y": "37.5364295517611",
+     "zone_no": "21086"
+    },
+    "x": "126.724503555388",
+    "y": "37.5364295517611"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 계양구 계양대로140번길 15 2~3층 전체": {
   "documents": [],
   "meta": {
@@ -18310,6 +18353,49 @@
     },
     "x": "126.711011176988",
     "y": "37.5352669130491"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
+ "address|인천광역시 계양구 안남로489번길 17": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 계양구 효성동 691",
+     "b_code": "2824510100",
+     "h_code": "2824560200",
+     "main_address_no": "691",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "계양구",
+     "region_3depth_h_name": "효성2동",
+     "region_3depth_name": "효성동",
+     "sub_address_no": "",
+     "x": "126.708605873155",
+     "y": "37.526224709435"
+    },
+    "address_name": "인천 계양구 안남로489번길 17",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 계양구 안남로489번길 17",
+     "building_name": "제일풍경채계양위너스카이2단지",
+     "main_building_no": "17",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "계양구",
+     "region_3depth_name": "효성동",
+     "road_name": "안남로489번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.708605873155",
+     "y": "37.526224709435",
+     "zone_no": "21105"
+    },
+    "x": "126.708605873155",
+    "y": "37.526224709435"
    }
   ],
   "meta": {
@@ -26133,6 +26219,49 @@
    "total_count": 1
   }
  },
+ "address|인천광역시 남동구 경인로644번길 28-1": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 남동구 간석동 111-2",
+     "b_code": "2820010200",
+     "h_code": "2820055000",
+     "main_address_no": "111",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_h_name": "간석3동",
+     "region_3depth_name": "간석동",
+     "sub_address_no": "2",
+     "x": "126.7096630556",
+     "y": "37.4667841389392"
+    },
+    "address_name": "인천 남동구 경인로644번길 28-1",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 남동구 경인로644번길 28-1",
+     "building_name": "",
+     "main_building_no": "28",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_name": "간석동",
+     "road_name": "경인로644번길",
+     "sub_building_no": "1",
+     "underground_yn": "N",
+     "x": "126.7096630556",
+     "y": "37.4667841389392",
+     "zone_no": "21510"
+    },
+    "x": "126.7096630556",
+    "y": "37.4667841389392"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 남동구 경인로644번길 28-1 1필지 1층일부": {
   "documents": [],
   "meta": {
@@ -29782,6 +29911,49 @@
    "total_count": 0
   }
  },
+ "address|인천광역시 남동구 남동대로916번길 36-1": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 남동구 간석동 182-8",
+     "b_code": "2820010200",
+     "h_code": "2820054000",
+     "main_address_no": "182",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_h_name": "간석2동",
+     "region_3depth_name": "간석동",
+     "sub_address_no": "8",
+     "x": "126.710140371176",
+     "y": "37.4637225128446"
+    },
+    "address_name": "인천 남동구 남동대로916번길 36-1",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 남동구 남동대로916번길 36-1",
+     "building_name": "",
+     "main_building_no": "36",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_name": "간석동",
+     "road_name": "남동대로916번길",
+     "sub_building_no": "1",
+     "underground_yn": "N",
+     "x": "126.710140371176",
+     "y": "37.4637225128446",
+     "zone_no": "21545"
+    },
+    "x": "126.710140371176",
+    "y": "37.4637225128446"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 남동구 남동대로916번길 36-1 31/3": {
   "documents": [],
   "meta": {
@@ -33048,6 +33220,49 @@
    "total_count": 1
   }
  },
+ "address|인천광역시 남동구 논현로46번길 14": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 남동구 논현동 637-1",
+     "b_code": "2820011000",
+     "h_code": "2820070000",
+     "main_address_no": "637",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_h_name": "논현2동",
+     "region_3depth_name": "논현동",
+     "sub_address_no": "1",
+     "x": "126.710675275788",
+     "y": "37.401806274783"
+    },
+    "address_name": "인천 남동구 논현로46번길 14",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 남동구 논현로46번길 14",
+     "building_name": "리더스프라자",
+     "main_building_no": "14",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_name": "논현동",
+     "road_name": "논현로46번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.710675275788",
+     "y": "37.401806274783",
+     "zone_no": "21655"
+    },
+    "x": "126.710675275788",
+    "y": "37.401806274783"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 남동구 논현로46번길 14 505-3호": {
   "documents": [],
   "meta": {
@@ -34945,6 +35160,49 @@
     },
     "x": "126.735009477981",
     "y": "37.4627231119135"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
+ "address|인천광역시 남동구 만수로71번길 23": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 남동구 만수동 5-33",
+     "b_code": "2820010300",
+     "h_code": "2820057000",
+     "main_address_no": "5",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_h_name": "만수2동",
+     "region_3depth_name": "만수동",
+     "sub_address_no": "33",
+     "x": "126.734845225663",
+     "y": "37.4626313811372"
+    },
+    "address_name": "인천 남동구 만수로71번길 23",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 남동구 만수로71번길 23",
+     "building_name": "",
+     "main_building_no": "23",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_name": "만수동",
+     "road_name": "만수로71번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.734845225663",
+     "y": "37.4626313811372",
+     "zone_no": "21521"
+    },
+    "x": "126.734845225663",
+    "y": "37.4626313811372"
    }
   ],
   "meta": {
@@ -42061,6 +42319,14 @@
    "total_count": 1
   }
  },
+ "address|인천광역시 남동구 석산로220번길 15-1": {
+  "documents": [],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 0,
+   "total_count": 0
+  }
+ },
  "address|인천광역시 남동구 석산로220번길 15-1 45/4": {
   "documents": [],
   "meta": {
@@ -47374,6 +47640,49 @@
     },
     "x": "126.71446892422",
     "y": "37.4599456595417"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
+ "address|인천광역시 남동구 용천로168번길 35": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 남동구 간석동 224-540",
+     "b_code": "2820010200",
+     "h_code": "2820055000",
+     "main_address_no": "224",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_h_name": "간석3동",
+     "region_3depth_name": "간석동",
+     "sub_address_no": "540",
+     "x": "126.716116692804",
+     "y": "37.4639431716796"
+    },
+    "address_name": "인천 남동구 용천로168번길 35",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 남동구 용천로168번길 35",
+     "building_name": "",
+     "main_building_no": "35",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "남동구",
+     "region_3depth_name": "간석동",
+     "road_name": "용천로168번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.716116692804",
+     "y": "37.4639431716796",
+     "zone_no": "21511"
+    },
+    "x": "126.716116692804",
+    "y": "37.4639431716796"
    }
   ],
   "meta": {
@@ -60166,6 +60475,49 @@
     },
     "x": "126.649350691043",
     "y": "37.4583394015353"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
+ "address|인천광역시 미추홀구 독배로317번길 15": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 미추홀구 용현동 665-9",
+     "b_code": "2817710200",
+     "h_code": "2817757000",
+     "main_address_no": "665",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "미추홀구",
+     "region_3depth_h_name": "용현5동",
+     "region_3depth_name": "용현동",
+     "sub_address_no": "9",
+     "x": "126.648319349916",
+     "y": "37.4480753782031"
+    },
+    "address_name": "인천 미추홀구 독배로317번길 15",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 미추홀구 독배로317번길 15",
+     "building_name": "",
+     "main_building_no": "15",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "미추홀구",
+     "region_3depth_name": "용현동",
+     "road_name": "독배로317번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.648319349916",
+     "y": "37.4480753782031",
+     "zone_no": "22188"
+    },
+    "x": "126.648319349916",
+    "y": "37.4480753782031"
    }
   ],
   "meta": {
@@ -90663,6 +91015,49 @@
    "total_count": 1
   }
  },
+ "address|인천광역시 부평구 원적로416번길 45": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 부평구 산곡동 281-48",
+     "b_code": "2823710300",
+     "h_code": "2823758200",
+     "main_address_no": "281",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "부평구",
+     "region_3depth_h_name": "산곡4동",
+     "region_3depth_name": "산곡동",
+     "sub_address_no": "48",
+     "x": "126.712692760362",
+     "y": "37.5016177520298"
+    },
+    "address_name": "인천 부평구 원적로416번길 45",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 부평구 원적로416번길 45",
+     "building_name": "써미트빌",
+     "main_building_no": "45",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "부평구",
+     "region_3depth_name": "산곡동",
+     "road_name": "원적로416번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.712692760362",
+     "y": "37.5016177520298",
+     "zone_no": "21377"
+    },
+    "x": "126.712692760362",
+    "y": "37.5016177520298"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 부평구 원적로416번길 45 201-1호": {
   "documents": [],
   "meta": {
@@ -94541,6 +94936,49 @@
     },
     "x": "126.735707257427",
     "y": "37.4986036571506"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
+ "address|인천광역시 부평구 충선로209번길 13": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 부평구 삼산동 460-3",
+     "b_code": "2823710500",
+     "h_code": "2823764800",
+     "main_address_no": "460",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "부평구",
+     "region_3depth_h_name": "삼산2동",
+     "region_3depth_name": "삼산동",
+     "sub_address_no": "3",
+     "x": "126.735614529458",
+     "y": "37.5078715281903"
+    },
+    "address_name": "인천 부평구 충선로209번길 13",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 부평구 충선로209번길 13",
+     "building_name": "SM프라자",
+     "main_building_no": "13",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "부평구",
+     "region_3depth_name": "삼산동",
+     "road_name": "충선로209번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.735614529458",
+     "y": "37.5078715281903",
+     "zone_no": "21344"
+    },
+    "x": "126.735614529458",
+    "y": "37.5078715281903"
    }
   ],
   "meta": {
@@ -124256,6 +124694,49 @@
    "total_count": 1
   }
  },
+ "address|인천광역시 연수구 신송로 157-9": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 연수구 송도동 21-40",
+     "b_code": "2818510600",
+     "h_code": "2818583000",
+     "main_address_no": "21",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "연수구",
+     "region_3depth_h_name": "송도2동",
+     "region_3depth_name": "송도동",
+     "sub_address_no": "40",
+     "x": "126.648702995851",
+     "y": "37.3969600412908"
+    },
+    "address_name": "인천 연수구 신송로 157-9",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 연수구 신송로 157-9",
+     "building_name": "",
+     "main_building_no": "157",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "연수구",
+     "region_3depth_name": "송도동",
+     "road_name": "신송로",
+     "sub_building_no": "9",
+     "underground_yn": "N",
+     "x": "126.648702995851",
+     "y": "37.3969600412908",
+     "zone_no": "22002"
+    },
+    "x": "126.648702995851",
+    "y": "37.3969600412908"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 연수구 신송로 157-9 204~205호": {
   "documents": [],
   "meta": {
@@ -133968,6 +134449,49 @@
    "total_count": 1
   }
  },
+ "address|인천광역시 영종구 두미포로 113": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 영종구 중산동 1888-1",
+     "b_code": "2815510100",
+     "h_code": "2815553000",
+     "main_address_no": "1888",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "영종구",
+     "region_3depth_h_name": "영종2동",
+     "region_3depth_name": "중산동",
+     "sub_address_no": "1",
+     "x": "126.568011631253",
+     "y": "37.4943422835256"
+    },
+    "address_name": "인천 영종구 두미포로 113",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 영종구 두미포로 113",
+     "building_name": "인천영종하늘 호반써밋 스카이센트럴",
+     "main_building_no": "113",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "영종구",
+     "region_3depth_name": "중산동",
+     "road_name": "두미포로",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.568011631253",
+     "y": "37.4943422835256",
+     "zone_no": "23300"
+    },
+    "x": "126.568011631253",
+    "y": "37.4943422835256"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 영종구 두미포로 113 101~103호": {
   "documents": [],
   "meta": {
@@ -134097,6 +134621,49 @@
     },
     "x": "126.558307279426",
     "y": "37.4872428253742"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
+ "address|인천광역시 영종구 하늘중앙로195번길 21": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 영종구 중산동 1883-10",
+     "b_code": "2815510100",
+     "h_code": "2815553000",
+     "main_address_no": "1883",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "영종구",
+     "region_3depth_h_name": "영종2동",
+     "region_3depth_name": "중산동",
+     "sub_address_no": "10",
+     "x": "126.561946414694",
+     "y": "37.4893933687466"
+    },
+    "address_name": "인천 영종구 하늘중앙로195번길 21",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 영종구 하늘중앙로195번길 21",
+     "building_name": "",
+     "main_building_no": "21",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "영종구",
+     "region_3depth_name": "중산동",
+     "road_name": "하늘중앙로195번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.561946414694",
+     "y": "37.4893933687466",
+     "zone_no": "23303"
+    },
+    "x": "126.561946414694",
+    "y": "37.4893933687466"
    }
   ],
   "meta": {

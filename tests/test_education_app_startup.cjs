@@ -155,7 +155,7 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert(app.state.overlays.candidateMarkers.every(p=>p.__educationKind==='elementary_baseline'));
   const academy=w.document.getElementById('toggleAcademy');
   academy.checked=true;academy.dispatchEvent(new w.Event('change'));
-  assert.equal(app.state.overlays.academyMarkers.length,6743);
+  assert.equal(app.state.overlays.academyMarkers.length,6810);
   assert(app.state.overlays.academyMarkers.every(m=>m.map===app.state.map));
   academy.checked=false;academy.dispatchEvent(new w.Event('change'));
   assert(app.state.overlays.academyMarkers.every(m=>m.map===null));

@@ -6,7 +6,8 @@
   "facilities": 6839,
   "coordinate_status": {
     "address_geocoded": 6743,
-    "unresolved": 96
+    "road_building_geocoded": 67,
+    "unresolved": 29
   },
   "target_categories": {
     "integrated": 3459,

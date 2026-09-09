@@ -234,6 +234,28 @@ def forecast(enrollment, registry):
     return result
 
 
+def build_academy_context(registry, walk):
+    academies = json.loads((OUT / "academies.json").read_text(encoding="utf-8"))
+    save("academies_map.json", [{k: a[k] for k in ("facility_id","name","address","facility_type","lat","lng","target_category","arts_sports","reference_date","source_url")} | {"course_evidence": a["course_evidence"][:4]} for a in academies])
+    af = pd.DataFrame([a for a in academies if a.get("lat") is not None])
+    academy_layer = gpd.GeoDataFrame(af, geometry=gpd.points_from_xy(af.lng, af.lat), crs=4326).to_crs(5179)
+    academy_context = {}
+    baseline_coords = pd.read_csv(DATA / "schools.csv").set_index("학교ID")
+    baseline_walk = gpd.read_file(DATA / "school_walkshed_500m_v3.geojson").to_crs(5179).set_index("학교ID")
+    for inst in registry.to_dict("records"):
+        sid = inst["학교ID"]
+        coords = baseline_coords.loc[sid] if sid in baseline_coords.index else inst
+        origin = gpd.GeoSeries([Point(coords["경도"],coords["위도"])], crs=4326).to_crs(5179).iloc[0]
+        near = academy_layer.iloc[academy_layer.sindex.query(origin.buffer(500), predicate="intersects")]
+        zone = baseline_walk.loc[sid].geometry if sid in baseline_walk.index else walk.loc[sid].geometry if sid in walk.index else None
+        academy_context[sid] = {"straight_500m_count":len(near), "walkshed_count":len(academy_layer.sindex.query(zone,predicate="intersects")) if zone is not None else None,
+                                "facility_ids":near.facility_id.tolist(),"target_categories":near.target_category.value_counts().to_dict(),
+                                "arts_sports_count":int(near.arts_sports.sum()),"source_total":len(academies),"geocoded_total":len(academy_layer),
+                                "coverage":"geocoded_observations_only"}
+    save("academy_school_context.json",academy_context)
+    return academies, academy_layer, academy_context
+
+
 def main():
     registry = pd.read_csv(OUT / "institutions.csv").replace({np.nan: None})
     linked, enrollment = disclosures(registry)
@@ -250,25 +272,7 @@ def main():
               "large_apartment": points("large_apt_complexes_2025.csv"), "redevelopment": points("redevelopment_geocoded.csv")}
     for name in ("nightlife", "construction"):
         layers[name] = gpd.read_file(DATA / f"context/facilities_{name}.geojson").to_crs(5179)
-    academies = json.loads((OUT / "academies.json").read_text(encoding="utf-8"))
-    save("academies_map.json", [{k: a[k] for k in ("facility_id","name","address","facility_type","lat","lng","target_category","arts_sports","reference_date","source_url")} | {"course_evidence": a["course_evidence"][:4]} for a in academies])
-    af = pd.DataFrame([a for a in academies if a.get("lat") is not None])
-    layers["academy"] = gpd.GeoDataFrame(af, geometry=gpd.points_from_xy(af.lng, af.lat), crs=4326).to_crs(5179)
-    academy_context = {}
-    baseline_coords = pd.read_csv(DATA / "schools.csv").set_index("학교ID")
-    baseline_walk = gpd.read_file(DATA / "school_walkshed_500m_v3.geojson").to_crs(5179).set_index("학교ID")
-    academy_layer = layers["academy"]
-    for inst in registry.to_dict("records"):
-        sid = inst["학교ID"]
-        coords = baseline_coords.loc[sid] if sid in baseline_coords.index else inst
-        origin = gpd.GeoSeries([Point(coords["경도"],coords["위도"])], crs=4326).to_crs(5179).iloc[0]
-        near = academy_layer.iloc[academy_layer.sindex.query(origin.buffer(500), predicate="intersects")]
-        zone = baseline_walk.loc[sid].geometry if sid in baseline_walk.index else walk.loc[sid].geometry if sid in walk.index else None
-        academy_context[sid] = {"straight_500m_count":len(near), "walkshed_count":len(academy_layer.sindex.query(zone,predicate="intersects")) if zone is not None else None,
-                                "facility_ids":near.facility_id.tolist(),"target_categories":near.target_category.value_counts().to_dict(),
-                                "arts_sports_count":int(near.arts_sports.sum()),"source_total":len(academies),"geocoded_total":len(academy_layer),
-                                "coverage":"geocoded_observations_only"}
-    save("academy_school_context.json",academy_context)
+    academies, layers["academy"], academy_context = build_academy_context(registry, walk)
     designations = json.loads((DATA / "context/school_designations.json").read_text(encoding="utf-8"))["records"]
     awards = json.loads((ROOT / "data/education_sources/award_observations.json").read_text(encoding="utf-8"))
     result = []

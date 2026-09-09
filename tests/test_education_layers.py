@@ -65,7 +65,7 @@ class EducationDataTests(unittest.TestCase):
         self.assertEqual(len(self.academies),6839)
         self.assertEqual(len({a['facility_id'] for a in self.academies}),6839)
         self.assertEqual(sum(a['course_row_count'] for a in self.academies),74061)
-        self.assertEqual(sum(a['lat'] is not None for a in self.academies),6743)
+        self.assertEqual(sum(a['lat'] is not None for a in self.academies),6810)
         self.assertTrue(all(a['lng'] is None for a in self.academies if a['lat'] is None))
         self.assertTrue(all('설립자-성명' not in a and '교습자-성명' not in a for a in self.academies))
 
