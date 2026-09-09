@@ -55,6 +55,7 @@
     "data_processed\\education\\science_awards.json": "269837db1ec785c37e8db7cca5b0acdaa91e9dd08f46280f5d6486d5719a64fa",
     "data_processed\\education\\invention_awards.json": "475afe732ea826a582b0ee347577ef01bb61624291ae45c63bec4da51c7c60ae",
     "data_processed\\education\\school_progression.json": "5f3fc6aedd875a3f6b7674faa043d9e6ab25626bcbaad2a2bf7eb7fe4ef1b124",
+    "data_processed\\education\\residential_scenario.json": "96e5042555e1c47da8fe4040c065c7eb9feb48988c71cc8c8e01f380dc6e211d",
     "data_processed\\education\\disclosures\\B000011417.json": "b81014f547b7023ef2113c8cf7cf4ce8c40c1224730a20e13f7c3c4f8feb2d3c",
     "data_processed\\education\\disclosures\\B000011418.json": "53a49cfb8f9e34647df5f1a8c1670d826b36102bbc896c17d63b8dcc369205ef",
     "data_processed\\education\\disclosures\\B000011419.json": "36a73326afb756783d0a7b89083c20999b8e6d7fe824463931171c0f1c4185e9",
@@ -976,7 +977,7 @@
     "data_processed\\education\\disclosures\\B000027505.json": "1040e15c643d9e0632ab6694bc5195a21b904e6d5fdcadffab30e8fa2e96d4e9",
     "data_processed\\education\\disclosures\\B000030907.json": "75caa291545e4627748a46162ebd4e081b8cb46f7d17328a81fd616b4ac6f4f6"
   },
-  "csv_sha256": "2c3518d46a3d14ab15a2fe6c5234a8a124e860dc38ce0b3a5dc944ce7fe8bb2f",
+  "csv_sha256": "47fe4effd6769431bdbe301a98fc0b50dc53864dbeeb7e134bfebc31680dfdd9",
   "limitations": [
     "확인기록 0은 수상 없음이 아니라 수집한 자료에 연결된 기록이 없다는 뜻.",
     "공시행수·항목수는 수집 범위이며 교육 품질·실적 점수로 비교하지 않음.",

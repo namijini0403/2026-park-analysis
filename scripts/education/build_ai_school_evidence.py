@@ -14,6 +14,7 @@ def main():
     analysis={r['학교ID']:r for r in read('school_analysis.json')}
     academy=read('academy_school_context.json')
     routes=read('school_routes.json')
+    residential=read('residential_scenario.json')
     awards=read('science_awards.json')
     invention=read('invention_awards.json')
     regional=read('regional_age_forecasts.json')
@@ -32,6 +33,8 @@ def main():
         sid=institution['학교ID']
         row=analysis.get(sid,{})
         route={k:v for k,v in routes.get(sid,{}).items() if k!='route_coordinates'}
+        if sid in residential['schools']:
+            route['residential_scenario']={**residential['schools'][sid], 'limitations':residential['limitations']}
         disclosures=read(f'disclosures/{sid}.json') if (DATA/f'disclosures/{sid}.json').exists() else []
         titles=sorted({f"{r['year']}년 {r['title']}" for r in disclosures})
         candidates=[{**c,'age_demand':demand.get(c['grid_id'],{}).get('straight_500m',{}).get('levels',{}).get(institution['학교급구분'])} for c in row.get('candidates',[])]

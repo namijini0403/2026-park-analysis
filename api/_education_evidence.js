@@ -86,11 +86,16 @@ function build(row,question){
   if(/미래|예측|수요|인구|전망|학생수|원아|prophet|xgboost/i.test(q)) parts.push(chunk(row,'demand','현재·미래 수요',demandText(row,q)));
   if(/유사|knn|비교군|벤치마크/i.test(q)) parts.push(chunk(row,'similar','동일 학교급 유사학교',`${row.knn_basis||'유사학교 입력 미확보'}. ${JSON.stringify(row.similar_schools)}. 유사도는 학교 실력·성과 순위가 아니다.`));
   if(/후보|격자|추천|가중치|파레토|shap/i.test(q)) parts.push(chunk(row,'candidate','후보지 비교',`학교 1.5km 이내 학교급 확장 250m 탐색 격자 전체의 비교 설정: ${JSON.stringify(row.candidate_comparison)}. 기본 가중 점수 상위 최대 5개 예시(전체 후보는 학교별 보고서): ${JSON.stringify(row.candidates.slice(0,5))}. 점수는 거리·공원 부족·해당 연령 추정수요의 가중 기여도 합이다. 파레토와 66개 가중치 조합의 상위5 진입 비율은 비교 지원 신호이며 선정 확률·성능이 아니다. SHAP 학습모형이 아닌 직접 계산한 기여도이다. age_demand는 2024년 해당 학교급 연령의 주변 직선 500m 배분 추정이며 실제 이용자·신규 수혜 아님. 지역비례 미래 시나리오는 선택 학교 구·군 성장률 적용 가정이며 후보지 공간 분포 예측이 아니다. 토지 적합성은 미확인이다.`));
-  if(/도보|보행|우회|접근|횡단|출입|도로|간선/.test(q)) {
+  if(/도보|보행|우회|접근|횡단|출입|도로|간선|내부 통행|투과|주거 구역/.test(q)) {
     const labels={motorway:'고속도로급',trunk:'도시 간선도로급',primary:'주요 간선',secondary:'중간급 간선',tertiary:'지구 내 간선',other:'기타 도로·보행로',unknown:'태그 미확보'};
+    const {residential_scenario:scenario,...observedRoute}=row.route||{};
+    const scenarioAsked=/내부 통행|투과|주거 구역/.test(q);
+    if(scenarioAsked) {
+      parts.push(chunk(row,'access','주거 구역 통행 가정',scenario ? `내부 통행 가능 가정이며 실제 접근성 판정이 아니다. 추가 면적 ${scenario.added_area_m2}㎡. 현재 ${scenario.baseline.area_m2}㎡ → 가정 ${scenario.scenario.area_m2}㎡, 공원 면적 비율 ${scenario.baseline.park_proxy_ratio_pct}% → ${scenario.scenario.park_proxy_ratio_pct}%. ${scenario.limitations}` : '주거 구역 통행 가정 자료 미확보.'));
+    }
     const exposure=row.route?.road_exposure;
     const roadSummary=exposure ? `도로 유형별 경로 지표이며 실제 횡단 횟수·안전 판정이 아니다. ${Object.entries(exposure.groups).filter(([,v])=>v.segments>0).map(([k,v])=>`${labels[k]} ${v.length_m}m(${v.segments}구간)`).join(', ') || '보행망 간선 이동 없음; 양끝 연결선 제외'}. ` : '';
-    parts.push(chunk(row,'access','접근 마찰',`${roadSummary}${row.route?.status==='available' ? `${row.route.park_name} 대표점까지 ${row.route.route_distance_m}m, 직선 대비 ${row.route.detour_ratio}배.` : '유효 경로 미확보.'} ${JSON.stringify(row.route)}. 학교와 공원 대표점 간 경로이며 실제 출입구·통행 허용·횡단 안전을 검증한 경로가 아니다.`));
+    if(!scenarioAsked) parts.push(chunk(row,'access','접근 마찰',`${roadSummary}${row.route?.status==='available' ? `${row.route.park_name} 대표점까지 ${row.route.route_distance_m}m, 직선 대비 ${row.route.detour_ratio}배.` : '유효 경로 미확보.'} ${JSON.stringify(observedRoute)}. 학교와 공원 대표점 간 경로이며 실제 출입구·통행 허용·횡단 안전을 검증한 경로가 아니다.`));
   }
   if(/유흥|공사|도서관|독서|재개발|아파트|대단지|지정|연구학교|선도학교|중점|튜터/.test(q)) parts.push(chunk(row,'context','주변 시설·내부 독서 공급',contextText(row,q)));
   if(!parts.length || /공원|녹지|격차|case|케이스|분류|정책|예산|부지/i.test(q)) parts.push(chunk(row,'current','현재 환경 격차',`도달권 공원 ${fmt(row.park_count)}개, 공개 공원면적 대체경계 기반 추정 비율 ${fmt(row.green_ratio)}%, 검토 분류 ${fmt(row.case_type)} (${fmt(row.case_label)}). v3 보행망 500m 도달권과 1%·5% 경계값을 사용한 검토용 분류이며 실제 녹피율이 아니다. 정책은 예산·부지·접근성 12개 조건 조합을 사람이 조정하며 자동 설치·예산 배정 결정을 하지 않는다.`));

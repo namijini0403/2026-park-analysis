@@ -33,6 +33,9 @@ async function ask(payload){
   assert.equal(unknown.answerable,false);
   const routed=Object.values(data).find(r=>r.extended&&r.route.road_exposure);
   assert(routed);
+  const scenarioAnswer=await ask({mode:'identified_school_explainer',question:'내부 통행 가정은 어떻게 달라져?',school_context:{school_id:routed.school_id}});
+  assert.match(JSON.stringify(scenarioAnswer),/실제 접근성 판정이 아니다/);
+  assert.match(JSON.stringify(scenarioAnswer),new RegExp(String(routed.route.residential_scenario.added_area_m2)));
   const roadAnswer=await ask({mode:'identified_school_explainer',question:'경로의 간선도로 구간은 얼마나 돼?',school_context:{school_id:routed.school_id}});
   assert.equal(roadAnswer.answerable,true);
   assert(roadAnswer.evidence.some(r=>r.source_chunk_id===`education#${routed.school_id}-access`));

@@ -53,6 +53,7 @@ python scripts/education/build_candidate_grid.py
 python scripts/education/build_candidate_age_demand.py
 python scripts/education/build_education_analysis.py
 python scripts/education/build_school_routes.py
+python -m scripts.education.build_residential_scenario
 python scripts/education/build_candidate_comparison.py
 python scripts/education/build_public_indicators.py
 python -m scripts.education.build_school_age_demand
@@ -239,3 +240,12 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 재계산 전후 645개 기관의 목적 공원·거리·상태·경로 좌표가 모두 동일함을 확인했다. 등급별 길이 합과 양끝 연결거리 합이 전체 거리와 반올림 허용오차 0.6m 이내로 일치했다. 평행 간선 선택·복수 태그·태그 결측·동일 노드 경로 단위 검증을 추가했다.
 
 화면 통합 검사와 AI 설명 검사를 통과했다. AI 무키 응답의 길이 제한 때문에 원본 JSON 뒤의 주의 문구가 잘리는 문제를 발견해, 도로 유형 요약과 실제 횡단·안전 판정이 아니라는 문구를 먼저 제공하도록 수정했다. 정적 빌드는 1,043개 파일·196.21MB로 통과했다. 실제 지도 SDK 시각 검증은 별도 미수행이다.
+
+
+## 2026-09-09 주거 구역 내부 통행 가정 비교
+
+기존 초등의 아파트 보행 연결 보정 방법을 확장 학교급 645곳에도 별도 민감도 분석으로 연결했다. OSM 주거 구역 원자료와 현재 v3 도달권·학교 중심 직선 500m를 사용한다. 주거 구역 면적 250㎡ 이상, 현재 도달권의 15m 연결 여유에 접하는 구역, 직선권 내 추가 조각 500㎡ 이상이라는 기존 조건을 사용한다. 연결된 구역을 경유하는 연쇄 확장은 하지 않는다. 중복 면적은 합집합으로 제거한다.
+
+548곳에 추가 면적이 생기며 97곳은 이 가정에서 추가 면적이 없다. 실제 통행이 검증된 학교 수가 아니다. 현재/가정 권역 면적·공원 대체경계 교차 면적·공원 면적 비율을 보고서에서 나란히 제공한다. 현재 분석·도달권·Case·후보 순위는 변경하지 않는다. 원본 입력 경로와 SHA-256은 residential_scenario.json에 저장한다. 출력은 학교별 자료 연결 현황표와 AI 통행 가정 질문에 연결하며, 일반 경로 질문에는 이 시나리오를 추가 전송하지 않는다. 기존 초등의 수동 검토값은 다른 학교급에 전용하지 않는다.
+
+연결 여유·최소 추가 면적·연쇄 확장 배제·중첩 제거·직선권 절단을 단위 검증했고 실제 보고서·AI 연결 검사도 통과했다. 이 결과는 500m 이동거리나 출입 가능성을 검증한 새로운 보행권이 아니며 현장 통행 확인이 필요하다.

@@ -32,7 +32,8 @@ def main():
     science = read('science_awards.json')['schools']
     invention = read('invention_awards.json')['schools']
     progression = read('school_progression.json')['schools']
-    for label, linked in [('analysis',analysis),('age',age),('routes',routes),('academy',academy),('indicators',indicators),('science',science),('invention',invention),('progression',progression)]:
+    residential = read('residential_scenario.json')['schools']
+    for label, linked in [('analysis',analysis),('age',age),('routes',routes),('academy',academy),('indicators',indicators),('science',science),('invention',invention),('progression',progression),('residential',residential)]:
         if set(linked)-set(ids):
             raise ValueError(f'{label}: unknown school IDs')
     if set(analysis)!=set(age) or set(analysis)!=set(routes):
@@ -61,6 +62,7 @@ def main():
                   '과학전람회_확인기록수':len(science.get(sid,[])),
                   '학생발명대회_확인기록수':len(invention.get(sid,[])),
                   '수능_학교점수':'미확보', '학업성취_학교수치':'미확보'}
+        output['확장_주거통행가정_상태']=residential.get(sid,{}).get('status','해당 산출물 없음')
         output['진로_연결_조사연도']='|'.join(str(r['year']) for r in progression.get(sid,[]))
         output['진로_최근_상태']=progression[sid][-1]['status'] if progression.get(sid) else '미확보 또는 해당 학교급 아님'
         for scope,label in [('straight_500m','직선권'),('walkshed_500m','보행권')]:

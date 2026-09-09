@@ -1,7 +1,7 @@
 /* Multi-level analysis and public disclosures. All source text is escaped. */
 window.EducationLayers = (() => {
   const root = './data_processed/education/';
-  let allSchools = [], disclosures = {}, labels = {}, routes = null, regionalDemography = {}, regionalForecasts = {}, regionalForecastValidation = {}, publicIndicators = {}, scienceAwards = {}, inventionAwards = {}, candidateAgeDemand = {}, schoolAgeDemand = {}, schoolProgression = {}, academies = [], candidateGrid = null, reportRequest = 0;
+  let allSchools = [], disclosures = {}, labels = {}, routes = null, regionalDemography = {}, regionalForecasts = {}, regionalForecastValidation = {}, publicIndicators = {}, scienceAwards = {}, inventionAwards = {}, candidateAgeDemand = {}, schoolAgeDemand = {}, schoolProgression = {}, residentialScenario = {}, academies = [], candidateGrid = null, reportRequest = 0;
   const e = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num = (v, suffix = '') => v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? '미확보' : Number(v).toLocaleString('ko-KR', {maximumFractionDigits:1}) + suffix;
   const categories = {elementary:'초등',middle:'중등',high:'고등',secondary:'중·고등',integrated:'통합(초등 포함)',kindergarten:'유아',mixed:'복합 대상',unknown:'대상 미확인'};
@@ -131,6 +131,7 @@ window.EducationLayers = (() => {
       <p class="edu-note">관측된 좌표 보유 시설만 집계합니다. 도달권 내 지점 포함은 출입 가능성 확인과 다르며, 건축행정 기록은 현재 공사 여부를 뜻하지 않습니다.</p>
       <h2>접근 마찰</h2><p>${route?.status==='available' ? `${e(route.park_name)} 대표점까지 보행망 경로 ${num(route.route_distance_m,'m')} · 직선 대비 ${num(route.detour_ratio,'배')}. ${e(route.destination_basis)}.` : '유효한 대표점 보행 경로 미확보.'}</p><p>학교 중심과 보행망 연결거리 ${num(row.walk_origin_offset_m,'m')}. 횡단보도·출입구·통행허용은 현장 확인 대상입니다.</p>
       ${route?.road_exposure ? `<h3>경로의 도로 유형</h3>${table(['OSM 도로 등급','경로 구간 수','경로 길이'],Object.entries(route.road_exposure.groups).map(([key,value])=>[({motorway:'고속도로급',trunk:'도시 간선도로급',primary:'주요 간선',secondary:'중간급 간선',tertiary:'지구 내 간선',other:'기타 도로·보행로',unknown:'태그 미확보'})[key],num(value.segments,'개'),num(value.length_m,'m')]))}<p class="edu-note">${e(route.road_exposure.limitations)}</p>` : ''}
+      ${residentialScenario.schools?.[getSchoolId(row)] ? `<details><summary>주거 구역 내부 통행 가정 비교</summary><p>${e(residentialScenario.limitations)}</p>${table(['조건','권역 면적','추정 공원 면적','공원 면적 비율'],[['baseline','현재 보행망'],['scenario','내부 통행 가정']].map(([key,label])=>{const v=residentialScenario.schools[getSchoolId(row)][key];return [label,num(v.area_m2,'㎡'),num(v.park_proxy_area_m2,'㎡'),num(v.park_proxy_ratio_pct,'%')];}))}<p>기존 초등과 같은 15m 연결 여유·500㎡ 이상 추가 조각 조건입니다. 500m 직선권 안의 주거 구역 중 기존 도달권과 연결 여유 범위에서 닿는 부분만 추가합니다. 여러 단지를 연쇄 연결하지 않습니다.</p></details>` : ''}
       <h2>학교 내부 독서 공급</h2><p>1인당 장서 ${num(row.reading_gap?.books_per_student,'권')} · 동일 학교급 관측 중앙값 ${num(row.reading_gap?.same_level_median,'권')}. 도보권 도서관 ${num(c.library?.walkshed_count,'개')}.</p><p class="edu-note">학교도서관 공시가 없는 유치원은 내부 공급 미확보입니다. 중앙값은 적정 기준이 아닌 동일 학교급 내 비교 기준입니다. 정확한 공시연도·좌석·운영예산은 아래 학교도서관 공시에서 확인합니다.</p>
       <h2>현재·미래 수요</h2>${table(['연도','학생·원아 수'],history.map(h=>[h.year,num(h.students,'명')]))}
       <p>${e(enrollment.model_status === 'insufficient_history' ? '최근 연속 이력 부족: 학교별 장기 예측 미산출' : enrollment.model_status === 'weighted_trend_lightgbm' ? '가중 추세 + 학교급별 LightGBM 잔차 보정' : '가중 추세 모형')}</p>
@@ -209,7 +210,7 @@ window.EducationLayers = (() => {
     if (!dialog.open) dialog.showModal();
     try {
       const sid = getSchoolId(row);
-      if (!routes) [labels, routes, regionalDemography, scienceAwards, candidateAgeDemand, regionalForecasts, regionalForecastValidation, publicIndicators, inventionAwards, schoolAgeDemand, schoolProgression] = await Promise.all([json('disclosure_labels.json'),json('school_routes.json'),json('regional_demography.json'),json('science_awards.json'),json('candidate_age_demand.json'),json('regional_age_forecasts.json'),json('regional_age_forecast_validation.json'),json('school_public_indicators.json'),json('invention_awards.json'),json('school_age_demand.json'),json('school_progression.json')]);
+      if (!routes) [labels, routes, regionalDemography, scienceAwards, candidateAgeDemand, regionalForecasts, regionalForecastValidation, publicIndicators, inventionAwards, schoolAgeDemand, schoolProgression, residentialScenario] = await Promise.all([json('disclosure_labels.json'),json('school_routes.json'),json('regional_demography.json'),json('science_awards.json'),json('candidate_age_demand.json'),json('regional_age_forecasts.json'),json('regional_age_forecast_validation.json'),json('school_public_indicators.json'),json('invention_awards.json'),json('school_age_demand.json'),json('school_progression.json'),json('residential_scenario.json')]);
       if (!disclosures[sid]) disclosures[sid] = await json(`disclosures/${encodeURIComponent(sid)}.json`);
       if (request === reportRequest) renderReport(row,body);
     } catch (err) { if (request === reportRequest) body.textContent = `공개자료 로딩 실패: ${err.message}`; }
