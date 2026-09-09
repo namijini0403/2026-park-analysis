@@ -70,9 +70,17 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert(fetched.includes('/data_processed/education/school_analysis.json'));
   const baselineRequests=()=>fetched.filter(p=>p==='/data_processed/candidate_grid_final.geojson').length;
   const initialRequests=baselineRequests();
+  const bufferToggle=w.document.getElementById('toggleBuffer');
+  bufferToggle.checked=true;bufferToggle.dispatchEvent(new w.Event('change'));
   for(const [level,count] of [['유치원',369],['중학교',147],['고등학교',129]]){
+    const oldBuffers=[...app.state.overlays.bufferPolygons];
     selector.value=level;selector.dispatchEvent(new w.Event('change'));
     assert.equal(app.state.datasets.schools.length,count);
+    const schoolIds=new Set(app.state.datasets.schools.map(s=>s.학교ID));
+    assert.equal(app.state.datasets.buffer.features.length,count);
+    assert.equal(app.state.overlays.bufferPolygons.length,count);
+    assert(app.state.overlays.bufferPolygons.every(p=>schoolIds.has(p.__schoolKeys[0]) && p.map===app.state.map));
+    assert(oldBuffers.every(p=>p.map===null),'Previous school-level buffers must be removed');
     assert.equal(app.state.overlays.schoolMarkers.length,count);
     assert(app.state.overlays.candidateMarkers.length>0);
     assert(app.state.overlays.candidateMarkers.every(p=>p.__educationKind==='extended_survey_grid'));
@@ -148,9 +156,15 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert(app.state.overlays.candidateMarkers.every(p=>p.__educationKind==='extended_survey_grid'));
   assert.equal(app.state.datasets.candidateFeatures.length,0);
   selector.value='all';selector.dispatchEvent(new w.Event('change'));await app.loadCandidateLayer();
+  assert.equal(app.state.datasets.buffer.features.length,917);
+  assert.equal(new Set(app.state.datasets.buffer.features.map(f=>f.properties.학교ID)).size,917);
   assert.equal(app.state.overlays.candidateMarkers.filter(p=>p.__educationKind==='extended_survey_grid').length,3083);
   assert.equal(app.state.overlays.candidateMarkers.filter(p=>p.__educationKind==='elementary_baseline').length,1535);
   selector.value='초등학교';selector.dispatchEvent(new w.Event('change'));await app.loadCandidateLayer();
+  assert.equal(app.state.datasets.buffer.features.length,272);
+  assert(app.state.datasets.buffer.features.every(f=>app.state.datasets.educationBaseBuffer.features.includes(f)));
+  bufferToggle.checked=false;bufferToggle.dispatchEvent(new w.Event('change'));
+  assert(app.state.overlays.bufferPolygons.every(p=>p.map===null));
   assert.equal(app.state.overlays.candidateMarkers.length,1535);
   assert(app.state.overlays.candidateMarkers.every(p=>p.__educationKind==='elementary_baseline'));
   const academy=w.document.getElementById('toggleAcademy');

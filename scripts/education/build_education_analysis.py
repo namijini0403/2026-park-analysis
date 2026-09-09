@@ -383,6 +383,8 @@ def main():
     build_candidate_comparison()
     from scripts.education.build_statistical_regions import main as build_statistical_regions
     build_statistical_regions()
+    from scripts.education.build_school_buffers import main as build_school_buffers
+    build_school_buffers()
 
 
 if __name__ == "__main__":

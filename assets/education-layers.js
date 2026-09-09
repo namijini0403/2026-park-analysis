@@ -8,7 +8,7 @@ window.EducationLayers = (() => {
   const candidateSchools = new Map();
   async function json(name) { const r = await fetch(root + name); if (!r.ok) throw new Error(`${name}: ${r.status}`); return r.json(); }
   async function init() {
-    const [schools, walks, academyData, academyContext, grids] = await Promise.all([json('school_analysis.json'), json('walkshed_500m.geojson'), json('academies_map.json'),json('academy_school_context.json'),json('candidate_grid.geojson')]);
+    const [schools, walks, academyData, academyContext, grids, buffers] = await Promise.all([json('school_analysis.json'), json('walkshed_500m.geojson'), json('academies_map.json'),json('academy_school_context.json'),json('candidate_grid.geojson'),json('school_buffer_500m.geojson')]);
     candidateGrid = grids;
     candidateSchools.clear();
     for (const school of schools) for (const candidate of school.candidates || []) {
@@ -32,6 +32,7 @@ window.EducationLayers = (() => {
     }
     state.datasets.educationBaseIsochrone = state.datasets.isochrone;
     state.datasets.educationNewIsochrone = walks;
+    state.datasets.educationBaseBuffer = state.datasets.buffer || {type:'FeatureCollection',features:[]};
     const select = document.getElementById('schoolLevelFilter');
     select.disabled = false;
     select.addEventListener('change', () => {
@@ -40,6 +41,7 @@ window.EducationLayers = (() => {
       state.datasets.schools = allSchools.filter(r => select.value === 'all' || r.학교급구분 === select.value);
       const ids = new Set(state.datasets.schools.map(getSchoolId));
       state.datasets.isochrone = {type:'FeatureCollection', features:[...state.datasets.educationBaseIsochrone.features, ...walks.features].filter(f => ids.has(f.properties.학교ID))};
+      state.datasets.buffer = {type:'FeatureCollection', features:[...state.datasets.educationBaseBuffer.features, ...buffers.features].filter(f => ids.has(f.properties.학교ID))};
       clearDetailPanelSelection(); populateSchoolSearchOptions(); rerenderAll(); renderGuSummary();
       appendStatus(`학교급 ${select.options[select.selectedIndex].text}: ${state.datasets.schools.length}개 기관`);
     });
