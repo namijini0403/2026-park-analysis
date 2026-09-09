@@ -1,0 +1,4185 @@
+{
+  "schools": {
+    "B000012232": [
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형53kg급",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형125kg급",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 5
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형53kg급",
+        "medal": "금",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형61kg급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 4
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형79kg급",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 5
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000022837": [
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형57kg급",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 3
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형86kg급",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 4
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "그레꼬로만형60kg급",
+        "medal": "금",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 6
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "그레꼬로만형72kg급",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 7
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형53kg급 (시범종목)",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 13
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형57kg급 (시범종목)",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 14
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형68kg급",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 15
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "라이트플라이급",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "자유형100m",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 6
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "혼계영400m",
+        "medal": "은",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 9
+          },
+          {
+            "table": 15,
+            "row": 10
+          },
+          {
+            "table": 15,
+            "row": 11
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영400m",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 14
+          },
+          {
+            "table": 15,
+            "row": 15
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영800m",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 17
+          },
+          {
+            "table": 15,
+            "row": 18
+          },
+          {
+            "table": 15,
+            "row": 19
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "접영50m",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 21
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "양궁",
+        "division": "남자18세이하부",
+        "discipline": "70M",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "인상61kg급",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전57kg이하급",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 10
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전70kg이하급",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 11
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전78kg이하급",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 12
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 18
+          },
+          {
+            "table": 21,
+            "row": 19
+          },
+          {
+            "table": 21,
+            "row": 20
+          },
+          {
+            "table": 21,
+            "row": 21
+          },
+          {
+            "table": 21,
+            "row": 23
+          },
+          {
+            "table": 21,
+            "row": 24
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(트랙)",
+        "division": "남자18세이하부",
+        "discipline": "4×400mR",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 2
+          },
+          {
+            "table": 22,
+            "row": 4
+          },
+          {
+            "table": 22,
+            "row": 6
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(트랙)",
+        "division": "18세이하부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 21
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "남자18세이하부",
+        "discipline": "멀리뛰기",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "남자18세이하부",
+        "discipline": "창던지기",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 3
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "여자18세이하부",
+        "discipline": "멀리뛰기",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 4
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "여자18세이하부",
+        "discipline": "세단뛰기",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 5
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "자전거",
+        "division": "여자18세이하부",
+        "discipline": "도로개인독주15km",
+        "medal": "은",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 3
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "자전거",
+        "division": "여자18세이하부",
+        "discipline": "단체스프린트 (시범종목)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 4
+          },
+          {
+            "table": 24,
+            "row": 5
+          },
+          {
+            "table": 24,
+            "row": 6
+          },
+          {
+            "table": 24,
+            "row": 7
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "남자18세이하부",
+        "discipline": "싱글스컬",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 25,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "남자18세이하부",
+        "discipline": "더블스컬",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 25,
+            "row": 3
+          },
+          {
+            "table": 25,
+            "row": 4
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "여자18세이하부",
+        "discipline": "더블스컬(경량급)",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 25,
+            "row": 5
+          },
+          {
+            "table": 25,
+            "row": 6
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-마루운동",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-철봉",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 3
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-평행봉",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 4
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-링",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 5
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 6
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-평균대",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 8
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-이단평행봉",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 9
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 10
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "표면-200m",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "계영-400m (시범종목)",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 3
+          },
+          {
+            "table": 34,
+            "row": 4
+          },
+          {
+            "table": 34,
+            "row": 5
+          },
+          {
+            "table": 34,
+            "row": 6
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "짝핀-100m",
+        "medal": "금",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 7
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-200m",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 8
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-400m",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 9
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형57kg급",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "그레꼬로만형67kg급",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 6
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형57kg급 (시범종목)",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 10
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형68kg급",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 11
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형76kg급 (시범종목)",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 12
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "사이클",
+        "division": "여자18세이하부",
+        "discipline": "스프린트 (시범종목)",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 14,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "사이클",
+        "division": "여자18세이하부",
+        "discipline": "단체스프린트 (시범종목)",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 14,
+            "row": 3
+          },
+          {
+            "table": 14,
+            "row": 4
+          },
+          {
+            "table": 14,
+            "row": 5
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "사이클",
+        "division": "여자18세이하부",
+        "discipline": "개인도로단체 (시범종목)",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 14,
+            "row": 6
+          },
+          {
+            "table": 14,
+            "row": 7
+          },
+          {
+            "table": 14,
+            "row": 8
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "세팍타크로",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 2
+          },
+          {
+            "table": 15,
+            "row": 3
+          },
+          {
+            "table": 15,
+            "row": 4
+          },
+          {
+            "table": 15,
+            "row": 5
+          },
+          {
+            "table": 15,
+            "row": 6
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "자유형50m",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "접영50m",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "플랫폼",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 4
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "3M싱크로",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 5
+          },
+          {
+            "table": 17,
+            "row": 6
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "플랫폼싱크로",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 7
+          },
+          {
+            "table": 17,
+            "row": 8
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "혼계영400m",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 15
+          },
+          {
+            "table": 17,
+            "row": 16
+          },
+          {
+            "table": 17,
+            "row": 18
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영400m",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 19
+          },
+          {
+            "table": 17,
+            "row": 20
+          },
+          {
+            "table": 17,
+            "row": 22
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "양궁",
+        "division": "남자18세이하부",
+        "discipline": "30M",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "양궁",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 3
+          },
+          {
+            "table": 21,
+            "row": 4
+          },
+          {
+            "table": 21,
+            "row": 6
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "양궁",
+        "division": "18세이하부",
+        "discipline": "혼성단체전",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 18
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "합계61kg급",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "합계96kg급",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "인상61kg급",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 4
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "인상81kg급",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 5
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "인상96kg급",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 6
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "용상61kg급",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 7
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "여자18세이하부",
+        "discipline": "용상49kg급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 11
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전100kg이상급",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전57kg이하급",
+        "medal": "은",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 9
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전63kg이하급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 10
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전78kg이하급",
+        "medal": "금",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 11
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전78kg이상급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 12
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전무제한급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 13
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "남자18세이하부",
+        "discipline": "창던지기",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 27,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "여자18세이하부",
+        "discipline": "멀리뛰기",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 27,
+            "row": 5
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "여자18세이하부",
+        "discipline": "싱글스컬",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "여자18세이하부",
+        "discipline": "더블스컬",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 3
+          },
+          {
+            "table": 28,
+            "row": 4
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제1경기-단체종합",
+        "medal": "금",
+        "date": "2025.09.25",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 2
+          },
+          {
+            "table": 30,
+            "row": 3
+          },
+          {
+            "table": 30,
+            "row": 4
+          },
+          {
+            "table": 30,
+            "row": 5
+          },
+          {
+            "table": 30,
+            "row": 6
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-마루운동",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 7
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-철봉",
+        "medal": "은",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 8
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-평행봉",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 9
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-안마",
+        "medal": "은",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 10
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-링",
+        "medal": "은",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 11
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "금",
+        "date": "2025.09.25",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 12
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "은",
+        "date": "2025.09.25",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 13
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-마루운동",
+        "medal": "동",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 14
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-평균대",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 15
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-이단평행봉",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 16
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "금",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 17
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "에뻬-개인",
+        "medal": "동",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 7
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "표면-100m (시범종목)",
+        "medal": "동",
+        "date": "2025.10.02",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "표면-50m",
+        "medal": "은",
+        "date": "2025.10.03",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "계영-400m (시범종목)",
+        "medal": "동",
+        "date": "2025.10.04",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 4
+          },
+          {
+            "table": 37,
+            "row": 5
+          },
+          {
+            "table": 37,
+            "row": 6
+          },
+          {
+            "table": 37,
+            "row": 7
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "짝핀-100m",
+        "medal": "은",
+        "date": "2025.10.02",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 8
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-200m",
+        "medal": "동",
+        "date": "2025.10.04",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 9
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-400m",
+        "medal": "은",
+        "date": "2025.10.03",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 10
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-50m",
+        "medal": "동",
+        "date": "2025.10.03",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 11
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000011432": [
+      {
+        "school_name": "인천생활과학고등학교",
+        "category": "롤러",
+        "division": "여자18세이하부",
+        "discipline": "제외+포인트 10,000m",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 5,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천생활과학고등학교",
+        "category": "롤러",
+        "division": "여자18세이하부",
+        "discipline": "제외10,000m",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천생활과학고등학교",
+        "category": "롤러",
+        "division": "여자18세이하부",
+        "discipline": "5000M포인트",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012294": [
+      {
+        "school_name": "대인고등학교",
+        "category": "바둑",
+        "division": "18세이하부",
+        "discipline": "혼성개인전",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 6,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000011438": [
+      {
+        "school_name": "계산공업고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "밴텀급",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 3
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "계산공업고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "헤비급",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 4
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "계산공업고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "라이트급",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "계산공업고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "웰터급",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012283": [
+      {
+        "school_name": "인천효성고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012242": [
+      {
+        "school_name": "연수고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 3
+          },
+          {
+            "table": 10,
+            "row": 4
+          },
+          {
+            "table": 10,
+            "row": 5
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "연수고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "개인전",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 8
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "연수고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "마스터즈",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 12,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012293": [
+      {
+        "school_name": "인천원당고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 6
+          },
+          {
+            "table": 10,
+            "row": 7
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012244": [
+      {
+        "school_name": "연수여자고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "3인조경기",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 9
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "연수여자고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 12
+          },
+          {
+            "table": 10,
+            "row": 14
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "연수여자고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "2인조",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 19
+          },
+          {
+            "table": 10,
+            "row": 20
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "연수여자고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "2인조",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 12,
+            "row": 5
+          },
+          {
+            "table": 12,
+            "row": 6
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012272": [
+      {
+        "school_name": "삼산고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "3인조경기",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 10
+          },
+          {
+            "table": 10,
+            "row": 11
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "삼산고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 13
+          },
+          {
+            "table": 10,
+            "row": 15
+          },
+          {
+            "table": 10,
+            "row": 16
+          },
+          {
+            "table": 10,
+            "row": 17
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "삼산고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "마스터즈",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 18
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012247": [
+      {
+        "school_name": "신송고등학교",
+        "category": "산악",
+        "division": "남자일반부",
+        "discipline": "스포츠클라이밍볼더링",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 12,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "신송고등학교",
+        "category": "댄스스포츠",
+        "division": "18세이하부",
+        "discipline": "차차차(C) (시범종목)",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 5,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012262": [
+      {
+        "school_name": "부평고등학교",
+        "category": "씨름",
+        "division": "남자18세이하부",
+        "discipline": "소장급75kg",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "부평고등학교",
+        "category": "씨름",
+        "division": "남자18세이하부",
+        "discipline": "장사급135kg",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 3
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "부평고등학교",
+        "category": "씨름",
+        "division": "남자18세이하부",
+        "discipline": "용사급90kg",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012271": [
+      {
+        "school_name": "부개고등학교",
+        "category": "양궁",
+        "division": "여자18세이하부",
+        "discipline": "50M",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 13
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "부개고등학교",
+        "category": "양궁",
+        "division": "여자18세이하부",
+        "discipline": "60M",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 10
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "부개고등학교",
+        "category": "양궁",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 13
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "부개고등학교",
+        "category": "양궁",
+        "division": "18세이하부",
+        "discipline": "혼성단체전",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 19
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012248": [
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전66kg이하급",
+        "medal": "동",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전90kg이하급",
+        "medal": "은",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 3
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전100kg이하급",
+        "medal": "은",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 4
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 16
+          },
+          {
+            "table": 21,
+            "row": 17
+          },
+          {
+            "table": 21,
+            "row": 22
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전73kg이하급",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전무제한급",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 4
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000013523": [
+      {
+        "school_name": "동인천고등학교",
+        "category": "육상(트랙)",
+        "division": "남자18세이하부",
+        "discipline": "4×400mR",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 3
+          },
+          {
+            "table": 22,
+            "row": 5
+          },
+          {
+            "table": 22,
+            "row": 7
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "동인천고등학교",
+        "category": "육상(트랙)",
+        "division": "18세이하부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 20
+          },
+          {
+            "table": 22,
+            "row": 23
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "동인천고등학교",
+        "category": "육상(트랙)",
+        "division": "남자18세이하부",
+        "discipline": "100m",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "동인천고등학교",
+        "category": "육상(트랙)",
+        "division": "남자18세이하부",
+        "discipline": "200m",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012229": [
+      {
+        "school_name": "인일여자고등학교",
+        "category": "육상(트랙)",
+        "division": "18세이하부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 22
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인일여자고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "공인품새",
+        "medal": "동",
+        "date": "2024.10.05",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 10
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인일여자고등학교",
+        "category": "양궁",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 11
+          },
+          {
+            "table": 21,
+            "row": 12
+          },
+          {
+            "table": 21,
+            "row": 14
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012288": [
+      {
+        "school_name": "백석고등학교",
+        "category": "카누",
+        "division": "남자18세이하부",
+        "discipline": "K2-200M",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 4
+          },
+          {
+            "table": 28,
+            "row": 5
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "태권도",
+        "division": "남자18세이하부",
+        "discipline": "-68kg급",
+        "medal": "동",
+        "date": "2024.10.09",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "K2-500M",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 16
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "K4-500M (시범종목)",
+        "medal": "은",
+        "date": "2025.09.28",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 19
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "태권도",
+        "division": "남자18세이하부",
+        "discipline": "-74kg급",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000011427": [
+      {
+        "school_name": "문학정보고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "-57kg급",
+        "medal": "은",
+        "date": "2024.10.09",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 8
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "문학정보고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "-67kg급",
+        "medal": "금",
+        "date": "2024.10.10",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 9
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "문학정보고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "+73kg급",
+        "medal": "동",
+        "date": "2025.10.16",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 11
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012295": [
+      {
+        "school_name": "서인천고등학교",
+        "category": "테니스",
+        "division": "남자18세이하부",
+        "discipline": "개인전단식",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 2
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "서인천고등학교",
+        "category": "테니스",
+        "division": "남자18세이하부",
+        "discipline": "개인전단식",
+        "medal": "금",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012255": [
+      {
+        "school_name": "석정여자고등학교",
+        "category": "테니스",
+        "division": "여자18세이하부",
+        "discipline": "개인전단식",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 3
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "석정여자고등학교",
+        "category": "테니스",
+        "division": "여자18세이하부",
+        "discipline": "개인전단식",
+        "medal": "은",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 3
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012290": [
+      {
+        "school_name": "가림고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "플러레-단체",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 2
+          },
+          {
+            "table": 33,
+            "row": 3
+          },
+          {
+            "table": 33,
+            "row": 4
+          },
+          {
+            "table": 33,
+            "row": 5
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "가림고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "플러레-개인",
+        "medal": "동",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 6
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000011418": [
+      {
+        "school_name": "인천반도체고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "사브르-개인",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 6
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천반도체고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "사브르-단체",
+        "medal": "동",
+        "date": "2025.09.30",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 2
+          },
+          {
+            "table": 36,
+            "row": 3
+          },
+          {
+            "table": 36,
+            "row": 4
+          },
+          {
+            "table": 36,
+            "row": 5
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012291": [
+      {
+        "school_name": "가좌고등학교",
+        "category": "펜싱",
+        "division": "여자18세이하부",
+        "discipline": "플러레-개인",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 11
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "가좌고등학교",
+        "category": "펜싱",
+        "division": "여자18세이하부",
+        "discipline": "플러레-개인",
+        "medal": "동",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 8
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000011426": [
+      {
+        "school_name": "인천비즈니스고등학교",
+        "category": "핸드볼",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 17
+          },
+          {
+            "table": 37,
+            "row": 18
+          },
+          {
+            "table": 37,
+            "row": 19
+          },
+          {
+            "table": 37,
+            "row": 20
+          },
+          {
+            "table": 37,
+            "row": 21
+          },
+          {
+            "table": 37,
+            "row": 22
+          },
+          {
+            "table": 37,
+            "row": 23
+          },
+          {
+            "table": 37,
+            "row": 24
+          },
+          {
+            "table": 37,
+            "row": 25
+          },
+          {
+            "table": 37,
+            "row": 26
+          },
+          {
+            "table": 37,
+            "row": 27
+          },
+          {
+            "table": 37,
+            "row": 28
+          },
+          {
+            "table": 37,
+            "row": 29
+          },
+          {
+            "table": 37,
+            "row": 30
+          },
+          {
+            "table": 37,
+            "row": 31
+          }
+        ],
+        "year": 2024,
+        "event": "제105회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인천비즈니스고등학교",
+        "category": "핸드볼",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 40,
+            "row": 18
+          },
+          {
+            "table": 40,
+            "row": 19
+          },
+          {
+            "table": 40,
+            "row": 20
+          },
+          {
+            "table": 40,
+            "row": 21
+          },
+          {
+            "table": 40,
+            "row": 22
+          },
+          {
+            "table": 40,
+            "row": 23
+          },
+          {
+            "table": 40,
+            "row": 24
+          },
+          {
+            "table": 40,
+            "row": 25
+          },
+          {
+            "table": 40,
+            "row": 26
+          },
+          {
+            "table": 40,
+            "row": 27
+          },
+          {
+            "table": 40,
+            "row": 28
+          },
+          {
+            "table": 40,
+            "row": 29
+          },
+          {
+            "table": 40,
+            "row": 30
+          },
+          {
+            "table": 40,
+            "row": 31
+          },
+          {
+            "table": 40,
+            "row": 32
+          },
+          {
+            "table": 40,
+            "row": 33
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012284": [
+      {
+        "school_name": "서운고등학교",
+        "category": "검도",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 1,
+            "row": 2
+          },
+          {
+            "table": 1,
+            "row": 5
+          },
+          {
+            "table": 1,
+            "row": 6
+          },
+          {
+            "table": 1,
+            "row": 7
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012236": [
+      {
+        "school_name": "인천고등학교",
+        "category": "검도",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 1,
+            "row": 3
+          },
+          {
+            "table": 1,
+            "row": 4
+          },
+          {
+            "table": 1,
+            "row": 8
+          },
+          {
+            "table": 1,
+            "row": 9
+          },
+          {
+            "table": 1,
+            "row": 10
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012241": [
+      {
+        "school_name": "인명여자고등학교",
+        "category": "댄스스포츠",
+        "division": "18세이하부",
+        "discipline": "차차차(C) (시범종목)",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 5,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012273": [
+      {
+        "school_name": "인천영선고등학교",
+        "category": "양궁",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 5
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012238": [
+      {
+        "school_name": "인화여자고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "K2-500M",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 17
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "금메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인화여자고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "K4-500M (시범종목)",
+        "medal": "은",
+        "date": "2025.09.28",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 18
+          },
+          {
+            "table": 32,
+            "row": 20
+          },
+          {
+            "table": 32,
+            "row": 21
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "인화여자고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "C1-200M",
+        "medal": "은",
+        "date": "2025.09.28",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 22
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012263": [
+      {
+        "school_name": "부광고등학교",
+        "category": "태권도",
+        "division": "남자18세이하부",
+        "discipline": "-54kg급",
+        "medal": "은",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 2
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "은메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012297": [
+      {
+        "school_name": "강화여자고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "-46kg급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 9
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      },
+      {
+        "school_name": "강화여자고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "-62kg급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 10
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ],
+    "B000012278": [
+      {
+        "school_name": "계산고등학교",
+        "category": "하키",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 38,
+            "row": 2
+          },
+          {
+            "table": 38,
+            "row": 3
+          },
+          {
+            "table": 38,
+            "row": 4
+          },
+          {
+            "table": 38,
+            "row": 5
+          },
+          {
+            "table": 38,
+            "row": 6
+          },
+          {
+            "table": 38,
+            "row": 7
+          },
+          {
+            "table": 38,
+            "row": 8
+          },
+          {
+            "table": 38,
+            "row": 9
+          },
+          {
+            "table": 38,
+            "row": 10
+          },
+          {
+            "table": 38,
+            "row": 11
+          },
+          {
+            "table": 38,
+            "row": 12
+          },
+          {
+            "table": 38,
+            "row": 13
+          }
+        ],
+        "year": 2025,
+        "event": "제106회 전국체육대회",
+        "result": "동메달 관측",
+        "source_url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+        "participant_scope": "school_event_medal_observation",
+        "result_basis": "학교별 결과 관측이며 메달 총수·선수 수 아님"
+      }
+    ]
+  },
+  "coverage": "대한체육회 2024·2025 전국체육대회 인천 메달 명세에서 현재 원장 학교명과 정확히 연결한 관측입니다. 학교·종목·종별·세부종목·등급·일자별로 묶었습니다. 선수별 행 수와 관측 수는 메달 수가 아닙니다. 단체전·복식·개인전 중복 집계와 보도자료 중복을 피하기 위해 총 메달 수를 산출하지 않습니다. 선수 이름·선수 식별자는 저장하지 않습니다. 기록 없음은 수상 없음이 아닙니다.",
+  "unmatched_school_names": [
+    {
+      "year": 2024,
+      "school_name": "가천대학교 메디컬캠퍼스",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "경기대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "경남대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "부개고등학교(컴)",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "연송고등학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "용인대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "원광대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "인천 대건고등학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "인천대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "인하대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "한국체육대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2024,
+      "school_name": "호원대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "경기대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "경일대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "경희대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "연송고등학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "용인대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "인천대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "인천여자고등학교부설방송통신고등학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "인하대학교",
+      "reason": "No unique exact current registry match"
+    },
+    {
+      "year": 2025,
+      "school_name": "한국체육대학교",
+      "reason": "No unique exact current registry match"
+    }
+  ],
+  "source_sha256": "0e2ad0a4c0cc97b3093873aeb9275eaa1940edc5f760b9f515dce7e4f2142567"
+}

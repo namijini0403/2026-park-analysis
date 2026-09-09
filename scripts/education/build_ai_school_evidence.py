@@ -17,6 +17,7 @@ def main():
     residential=read('residential_scenario.json')
     awards=read('science_awards.json')
     invention=read('invention_awards.json')
+    sports=read('sports_awards.json')
     regional=read('regional_age_forecasts.json')
     demand=read('candidate_age_demand.json')['candidates']
     school_age=read('school_age_demand.json')
@@ -50,8 +51,8 @@ def main():
                      'candidate_comparison':row.get('candidate_comparison'),'designations':row.get('designations',[]),
                      'statistical_region_2025':row.get('statistical_region_2025'),
                      'regional':regional.get(f"{row.get('statistical_region_2025',{}).get('region_name',row.get('gu',institution.get('gu')))}|{institution['학교급구분']}"),
-                     'awards':row.get('awards',[])+awards['schools'].get(sid,[])+invention['schools'].get(sid,[]),
-                     'award_coverage':awards['coverage']+' '+invention['coverage'],
+                     'awards':row.get('awards',[])+awards['schools'].get(sid,[])+invention['schools'].get(sid,[])+sports['schools'].get(sid,[]),
+                     'award_coverage':awards['coverage']+' '+invention['coverage']+' '+sports['coverage'],
                      'progression':{'observations':progression['schools'].get(sid,[]),'scope':progression['scope'],'limitations':progression['limitations']},
                      'public_indicators':[{**g,'observations':g['observations'][-1:]} for g in indicators.get(sid,[])],
                      'disclosure_titles':titles,'limitations':row.get('limitations',[])}

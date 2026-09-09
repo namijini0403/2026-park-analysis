@@ -48,6 +48,7 @@ python scripts/education/build_regional_demography.py
 python -m scripts.education.build_regional_age_forecasts
 python scripts/education/build_science_awards.py
 python scripts/education/build_science_awards.py --competition invention
+python -m scripts.education.build_sports_awards
 python scripts/accessibility/build_walkshed_500m_v3.py --graph ../_cache/incheon_walk_graph_v3.graphml --schools data_processed/education/new_school_coords.csv --out data_processed/education/walkshed_500m.geojson --report data_processed/education/walkshed_report.csv
 python scripts/education/build_candidate_grid.py
 python scripts/education/build_candidate_age_demand.py
@@ -249,3 +250,14 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 548곳에 추가 면적이 생기며 97곳은 이 가정에서 추가 면적이 없다. 실제 통행이 검증된 학교 수가 아니다. 현재/가정 권역 면적·공원 대체경계 교차 면적·공원 면적 비율을 보고서에서 나란히 제공한다. 현재 분석·도달권·Case·후보 순위는 변경하지 않는다. 원본 입력 경로와 SHA-256은 residential_scenario.json에 저장한다. 출력은 학교별 자료 연결 현황표와 AI 통행 가정 질문에 연결하며, 일반 경로 질문에는 이 시나리오를 추가 전송하지 않는다. 기존 초등의 수동 검토값은 다른 학교급에 전용하지 않는다.
 
 연결 여유·최소 추가 면적·연쇄 확장 배제·중첩 제거·직선권 절단을 단위 검증했고 실제 보고서·AI 연결 검사도 통과했다. 이 결과는 500m 이동거리나 출입 가능성을 검증한 새로운 보행권이 아니며 현장 통행 확인이 필요하다.
+
+
+## 2026-09-09 대한체육회 공식 전국체육대회 실적
+
+대한체육회 역대 대회 시도별 메달 명세의 2024년 제105회·2025년 제106회 전국체육대회 인천 결과를 수집했다. 공개 화면의 실제 선택값 G/105·106/04를 사용했다. 원문 URL: https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04 (2024년은 searchGameno=105). 전국소년체육대회 메달집계는 해당 공개 화면에서 제공하지 않는다고 명시되어 있어 이 경로로 요청하지 않았다. 다른 대회 결과 경로의 존재까지 부정하지 않는다.
+
+현재 원장의 정확한 학교명과 인천 결과 소속이 일치하는 32개 학교에 177개 학교·종목·종별·세부종목·등급·일자 관측을 연결했다. 단체전 선수별 행이나 복식 결과를 메달 여러 개로 합산하지 않는다. source_rows는 원문 표·행 위치이며 선수 이름·개인 식별자는 저장하지 않는다. 인천 대표 선수단 소속이라는 근거만으로 이름이 다른 학교에 자동 연결하지 않았으며 현재 원장과 정확히 연결되지 않은 학교·연도 21쌍은 별도 보류 목록에 남겼다. 학교명 원장이 다르거나 학교급·분교가 다른 기관을 단순 축약명으로 합치지 않는다.
+
+정규화 출처 data/education_sources/sports_awards.json과 입력 해시·원문 URL을 보존한다. 기본 build_sports_awards는 캐시로 재생성하며 --fetch를 명시할 때만 공식 결과를 다시 조회한다. 보고서 별도 체육대회 표·학교별 자료 현황표·서버 AI 근거에 연결했다. 메달 질문은 체육대회 결과, 요청 연도는 해당 연도로 제한한다. 기존 보도자료와 중복될 수 있어 합계·학교 종합 순위를 제공하지 않는다.
+
+단체전 행 통합·선수 이름 제외·지역/연도 불일치·빈 결과 거부 단위 검사, 실제 앱 시작·보고서·AI 연결 검사 및 정적 빌드(1,045파일·197.45MB)를 통과했다. 실제 브라우저 시각 검증과 학교 실적 전수 확보를 의미하지 않는다.

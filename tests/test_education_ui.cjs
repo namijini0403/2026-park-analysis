@@ -32,6 +32,7 @@ w.eval(fs.readFileSync(path.join(root,'assets/education-layers.js'),'utf8'));
   const body=w.document.querySelector('.edu-body');
   assert.match(body.textContent,/유사학교 비교/);
   assert.match(body.textContent,/학교 내부 독서 공급/);
+  assert.match(body.textContent,/대한체육회 공식 대회 결과/);
   assert.match(body.textContent,/주거 구역 내부 통행 가정 비교/);
   if(read('school_routes.json')[row.학교ID].status==='available'){
     assert.match(body.textContent,/경로의 도로 유형/);

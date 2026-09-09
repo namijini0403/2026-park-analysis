@@ -40,6 +40,11 @@ async function ask(payload){
   assert.equal(roadAnswer.answerable,true);
   assert(roadAnswer.evidence.some(r=>r.source_chunk_id===`education#${routed.school_id}-access`));
   assert.match(JSON.stringify(roadAnswer),/실제 횡단 횟수/);
+  const sportsSchool=Object.values(data).find(r=>r.awards.some(a=>a.participant_scope==='school_event_medal_observation'&&a.year===2025));
+  const sportsAnswer=await ask({mode:'identified_school_explainer',question:'2025년 전국체육대회 메달 관측을 알려줘',school_context:{school_id:sportsSchool.school_id}});
+  assert.equal(sportsAnswer.answerable,true);
+  assert(sportsAnswer.evidence.every(r=>r.source_chunk_id===`education#${sportsSchool.school_id}-performance`));
+  assert.match(JSON.stringify(sportsAnswer),/체육대회/);
   const middle=Object.values(data).find(r=>r.school_level==='중학교');
   const high=Object.values(data).find(r=>r.school_level==='고등학교'&&r.progression.observations.length===2);
   const progressionAnswer=await ask({mode:'identified_school_explainer',question:'2025년 졸업 후 진학률을 알려줘',school_context:{school_id:high.school_id}});

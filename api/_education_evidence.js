@@ -2,7 +2,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 let data;
-const TOPIC=/학원|교습|예체능|수능|성취|학력|성적|수상|실적|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i;
+const TOPIC=/학원|교습|예체능|수능|성취|학력|성적|수상|실적|메달|체육대회|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i;
 function load(){
   if(!data) {
     try { data=JSON.parse(fs.readFileSync(path.join(__dirname,'../data_processed/context/education_school_evidence.json'),'utf8')); }
@@ -58,16 +58,17 @@ function build(row,question){
   const q=String(question||'');
   const parts=[];
   if(/학원|교습|예체능/.test(q)) parts.push(chunk(row,'academy','학원·교습소',`직선 500m ${fmt(row.academy.straight_500m_count)}개, 보행 도달권 ${fmt(row.academy.walkshed_count)}개 관측. 예체능 관측 ${fmt(row.academy.arts_sports_count)}개. 대상 분류 ${JSON.stringify(row.academy.target_categories||{})}. 학원은 주변 환경 시설이며 학교 분석 대상이 아니다. 좌표 확보 시설만 집계하고 교습과정으로 대상을 분류한다. 학원 수는 학력이나 교육 품질 점수가 아니다.`));
-  if(/수능|성취|학력|성적|수상|실적|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i.test(q)) {
+  if(/수능|성취|학력|성적|수상|실적|메달|체육대회|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i.test(q)) {
     let text=/수능|성취|학력|성적/.test(q)?'수능 학교별 점수는 미확보, 학업성취도 개별 공시는 보안문자 요구로 미수집이다. 미수집을 성적 0 또는 학력 저하로 해석하지 않는다.':'';
     if(/진학|졸업|취업/.test(q)) {
       const years=requestedYears(q),progression=row.progression||{};
       const observations=(progression.observations||[]).filter(o=>!years.length||years.includes(o.year));
       text+=` 졸업 후 진로 관측: ${JSON.stringify(observations)}. ${progression.scope||'연결 자료 미확보'}. ${(progression.limitations||[]).join(' ')} 요청 연도 자료가 없으면 다른 연도로 대체하지 않는다. pending_publication은 미공개이며 0명이 아니다.`;
     }
-    if(/수상|실적|발명|과학전람회/.test(q)) {
+    if(/수상|실적|메달|체육대회|발명|과학전람회/.test(q)) {
       const years=requestedYears(q);
-      const events=['발명','과학전람회'].filter(term=>q.includes(term));
+      const events=['발명','과학전람회','체육대회'].filter(term=>q.includes(term));
+      if(/메달/.test(q)&&!events.includes('체육대회')) events.push('체육대회');
       const related=row.awards.filter(r=>(!events.length||events.some(term=>r.event.includes(term)))&&(!years.length||years.includes(r.year)));
       text+=` 요청 범위: ${years.length?years.join(', ')+'년':'수집한 전체 연도'} · ${events.length?events.join(', '):'수집한 대회'}. 이 범위에 해당하는 이 학교의 확인 기록 ${related.length}건 중 최근 최대 6건: ${JSON.stringify([...related].sort((a,b)=>b.year-a.year).slice(0,6))}. 기록이 없으면 수집 범위에서 미확보이며 수상 없음이라는 뜻이 아니다. 다른 연도·대회의 실적으로 대체하지 않는다. ${row.award_coverage} 웹·보도자료·PDF 기록은 중복될 수 있어 합산하지 않는다. 학교단체상과 학생 작품 수상은 별도이며 확인 기록 수를 작품 수나 수상자 수로 바꾸지 않는다. 전체 기록은 학교별 보고서에서 확인한다.`;
     }

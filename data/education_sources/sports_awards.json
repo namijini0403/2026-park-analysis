@@ -1,0 +1,8300 @@
+[
+  {
+    "year": 2024,
+    "event": "제105회 전국체육대회",
+    "url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+    "sha256": "e2f7a95a16b518de946fb1895feaa5722f123d243a63c8b59bc97f3aa094b2f5",
+    "records": [
+      {
+        "school_name": "인천광역시체육회",
+        "category": "근대5종",
+        "division": "남자일반부",
+        "discipline": "단체전(4종)",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 1,
+            "row": 2
+          },
+          {
+            "table": 1,
+            "row": 3
+          },
+          {
+            "table": 1,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "근대5종",
+        "division": "남자일반부",
+        "discipline": "개인전(4종)",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 1,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "근대5종",
+        "division": "남자일반부",
+        "discipline": "계주(4종)",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 1,
+            "row": 6
+          },
+          {
+            "table": 1,
+            "row": 7
+          },
+          {
+            "table": 1,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "당구",
+        "division": "남자일반부",
+        "discipline": "잉글리쉬빌리아드",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 2,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "당구",
+        "division": "남자일반부",
+        "discipline": "스누커",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 2,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "현대글로비스",
+        "category": "럭비",
+        "division": "일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 3,
+            "row": 2
+          },
+          {
+            "table": 3,
+            "row": 3
+          },
+          {
+            "table": 3,
+            "row": 4
+          },
+          {
+            "table": 3,
+            "row": 5
+          },
+          {
+            "table": 3,
+            "row": 6
+          },
+          {
+            "table": 3,
+            "row": 7
+          },
+          {
+            "table": 3,
+            "row": 8
+          },
+          {
+            "table": 3,
+            "row": 9
+          },
+          {
+            "table": 3,
+            "row": 10
+          },
+          {
+            "table": 3,
+            "row": 11
+          },
+          {
+            "table": 3,
+            "row": 12
+          },
+          {
+            "table": 3,
+            "row": 13
+          },
+          {
+            "table": 3,
+            "row": 14
+          },
+          {
+            "table": 3,
+            "row": 15
+          },
+          {
+            "table": 3,
+            "row": 16
+          },
+          {
+            "table": 3,
+            "row": 17
+          },
+          {
+            "table": 3,
+            "row": 18
+          },
+          {
+            "table": 3,
+            "row": 19
+          },
+          {
+            "table": 3,
+            "row": 20
+          },
+          {
+            "table": 3,
+            "row": 21
+          },
+          {
+            "table": 3,
+            "row": 22
+          },
+          {
+            "table": 3,
+            "row": 23
+          },
+          {
+            "table": 3,
+            "row": 24
+          },
+          {
+            "table": 3,
+            "row": 25
+          },
+          {
+            "table": 3,
+            "row": 26
+          }
+        ]
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형53kg급",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형57kg급",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형86kg급",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형125kg급",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "그레꼬로만형60kg급",
+        "medal": "금",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "그레꼬로만형72kg급",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "레슬링",
+        "division": "남자대학부",
+        "discipline": "자유형86KG급",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "레슬링",
+        "division": "남자대학부",
+        "discipline": "자유형97KG급",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "경남대학교",
+        "category": "레슬링",
+        "division": "남자대학부",
+        "discipline": "그레꼬로만형60kg급",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "원광대학교",
+        "category": "레슬링",
+        "division": "남자대학부",
+        "discipline": "그레꼬로만형130kg급",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인천환경공단",
+        "category": "레슬링",
+        "division": "남자일반부",
+        "discipline": "그레꼬로만형67kg급",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형53kg급 (시범종목)",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형57kg급 (시범종목)",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형68kg급",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천환경공단",
+        "category": "레슬링",
+        "division": "여자일반부",
+        "discipline": "자유형50kg급",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "레슬링",
+        "division": "여자일반부",
+        "discipline": "자유형53kg급",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인천생활과학고등학교",
+        "category": "롤러",
+        "division": "여자18세이하부",
+        "discipline": "제외+포인트 10,000m",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 5,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "대인고등학교",
+        "category": "바둑",
+        "division": "18세이하부",
+        "discipline": "혼성개인전",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 6,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "배구",
+        "division": "남자대학부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 2
+          },
+          {
+            "table": 7,
+            "row": 3
+          },
+          {
+            "table": 7,
+            "row": 4
+          },
+          {
+            "table": 7,
+            "row": 5
+          },
+          {
+            "table": 7,
+            "row": 6
+          },
+          {
+            "table": 7,
+            "row": 7
+          },
+          {
+            "table": 7,
+            "row": 8
+          },
+          {
+            "table": 7,
+            "row": 9
+          },
+          {
+            "table": 7,
+            "row": 10
+          },
+          {
+            "table": 7,
+            "row": 11
+          },
+          {
+            "table": 7,
+            "row": 12
+          },
+          {
+            "table": 7,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "배드민턴",
+        "division": "남자대학부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 2
+          },
+          {
+            "table": 8,
+            "row": 3
+          },
+          {
+            "table": 8,
+            "row": 4
+          },
+          {
+            "table": 8,
+            "row": 5
+          },
+          {
+            "table": 8,
+            "row": 6
+          },
+          {
+            "table": 8,
+            "row": 7
+          },
+          {
+            "table": 8,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "배드민턴",
+        "division": "남자대학부",
+        "discipline": "개인복식",
+        "medal": "동",
+        "date": "2024.10.08",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 9
+          },
+          {
+            "table": 8,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천국제공항 스카이몬스",
+        "category": "배드민턴",
+        "division": "남자일반부",
+        "discipline": "개인복식",
+        "medal": "은",
+        "date": "2024.10.08",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 11
+          },
+          {
+            "table": 8,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "배드민턴",
+        "division": "여자대학부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 13
+          },
+          {
+            "table": 8,
+            "row": 14
+          },
+          {
+            "table": 8,
+            "row": 15
+          },
+          {
+            "table": 8,
+            "row": 16
+          },
+          {
+            "table": 8,
+            "row": 17
+          },
+          {
+            "table": 8,
+            "row": 18
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "배드민턴",
+        "division": "여자대학부",
+        "discipline": "개인복식",
+        "medal": "금",
+        "date": "2024.10.08",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 19
+          },
+          {
+            "table": 8,
+            "row": 20
+          }
+        ]
+      },
+      {
+        "school_name": "인천국제공항 스카이몬스",
+        "category": "배드민턴",
+        "division": "여자일반부",
+        "discipline": "개인복식",
+        "medal": "은",
+        "date": "2024.10.08",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 21
+          },
+          {
+            "table": 8,
+            "row": 22
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "배드민턴",
+        "division": "대학부",
+        "discipline": "혼합복식",
+        "medal": "은",
+        "date": "2024.10.08",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 23
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "배드민턴",
+        "division": "대학부",
+        "discipline": "혼합복식",
+        "medal": "은",
+        "date": "2024.10.08",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 24
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "라이트플라이급",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "계산공업고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "밴텀급",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "계산공업고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "헤비급",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "복싱",
+        "division": "남자일반부",
+        "discipline": "라이트플라이급 (시범종목)",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "복싱",
+        "division": "남자일반부",
+        "discipline": "라이트웰터급",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천복싱스포츠클럽",
+        "category": "복싱",
+        "division": "여자일반부",
+        "discipline": "라이트급",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천효성고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "연수고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 3
+          },
+          {
+            "table": 10,
+            "row": 4
+          },
+          {
+            "table": 10,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천원당고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 6
+          },
+          {
+            "table": 10,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "연수고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "개인전",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "연수여자고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "3인조경기",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "삼산고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "3인조경기",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 10
+          },
+          {
+            "table": 10,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "연수여자고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 12
+          },
+          {
+            "table": 10,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "삼산고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "5인조경기",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 13
+          },
+          {
+            "table": 10,
+            "row": 15
+          },
+          {
+            "table": 10,
+            "row": 16
+          },
+          {
+            "table": 10,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "삼산고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "마스터즈",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 18
+          }
+        ]
+      },
+      {
+        "school_name": "연수여자고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "2인조",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 19
+          },
+          {
+            "table": 10,
+            "row": 20
+          }
+        ]
+      },
+      {
+        "school_name": "가천대학교 메디컬캠퍼스",
+        "category": "볼링",
+        "division": "여자대학부",
+        "discipline": "2인조",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 21
+          },
+          {
+            "table": 10,
+            "row": 22
+          }
+        ]
+      },
+      {
+        "school_name": "부평구청",
+        "category": "볼링",
+        "division": "여자일반부",
+        "discipline": "3인조경기",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 23
+          },
+          {
+            "table": 10,
+            "row": 24
+          },
+          {
+            "table": 10,
+            "row": 25
+          }
+        ]
+      },
+      {
+        "school_name": "인천체고",
+        "category": "사격",
+        "division": "남자18세이하부",
+        "discipline": "공기소총-개인",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천안남고",
+        "category": "사격",
+        "division": "남자18세이하부",
+        "discipline": "공기권총-개인",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천체고",
+        "category": "사격",
+        "division": "남자18세이하부",
+        "discipline": "공기소총-단체",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 4
+          },
+          {
+            "table": 11,
+            "row": 5
+          },
+          {
+            "table": 11,
+            "row": 6
+          },
+          {
+            "table": 11,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천예일고",
+        "category": "사격",
+        "division": "여자18세이하부",
+        "discipline": "공기권총-개인",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체고",
+        "category": "사격",
+        "division": "여자일반부",
+        "discipline": "50m소총3자세",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시미추홀구청",
+        "category": "사격",
+        "division": "여자일반부",
+        "discipline": "공기권총-개인",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시미추홀구청",
+        "category": "사격",
+        "division": "여자일반부",
+        "discipline": "공기권총-단체",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 11
+          },
+          {
+            "table": 11,
+            "row": 12
+          },
+          {
+            "table": 11,
+            "row": 13
+          },
+          {
+            "table": 11,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "신송고등학교",
+        "category": "산악",
+        "division": "남자일반부",
+        "discipline": "스포츠클라이밍볼더링",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 12,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "세팍타크로",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 13,
+            "row": 2
+          },
+          {
+            "table": 13,
+            "row": 3
+          },
+          {
+            "table": 13,
+            "row": 4
+          },
+          {
+            "table": 13,
+            "row": 5
+          },
+          {
+            "table": 13,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "소프트테니스",
+        "division": "남자일반부",
+        "discipline": "개인단식",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 14,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "남자일반부",
+        "discipline": "배영100m",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "남자일반부",
+        "discipline": "스프링보오드3m",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "남자일반부",
+        "discipline": "플랫폼 싱크로다이빙",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "남자일반부",
+        "discipline": "플랫폼 싱크로다이빙",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "자유형100m",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "배영100m",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "배영200m",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "혼계영400m",
+        "medal": "은",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 9
+          },
+          {
+            "table": 15,
+            "row": 10
+          },
+          {
+            "table": 15,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "혼계영400m",
+        "medal": "은",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "OSA",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영400m",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영400m",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 14
+          },
+          {
+            "table": 15,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영400m",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영800m",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 17
+          },
+          {
+            "table": 15,
+            "row": 18
+          },
+          {
+            "table": 15,
+            "row": 19
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영800m",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 20
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "접영50m",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 21
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "여자일반부",
+        "discipline": "플렛포옴다이빙",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 22
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "여자일반부",
+        "discipline": "플랫폼 싱크로다이빙",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 23
+          },
+          {
+            "table": 15,
+            "row": 24
+          }
+        ]
+      },
+      {
+        "school_name": "인천 대건고등학교",
+        "category": "스쿼시",
+        "division": "남자18세이하부",
+        "discipline": "개인전",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천 대건고등학교",
+        "category": "스쿼시",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 3
+          },
+          {
+            "table": 16,
+            "row": 4
+          },
+          {
+            "table": 16,
+            "row": 5
+          },
+          {
+            "table": 16,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시스쿼시연맹",
+        "category": "스쿼시",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 7
+          },
+          {
+            "table": 16,
+            "row": 8
+          },
+          {
+            "table": 16,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시스쿼시연맹",
+        "category": "스쿼시",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "스쿼시",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 11
+          },
+          {
+            "table": 16,
+            "row": 12
+          },
+          {
+            "table": 16,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "부평고등학교",
+        "category": "씨름",
+        "division": "남자18세이하부",
+        "discipline": "소장급75kg",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "부평고등학교",
+        "category": "씨름",
+        "division": "남자18세이하부",
+        "discipline": "장사급135kg",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "소장급80kg",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "청장급85kg",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "용장급90kg",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "용사급95kg",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "역사급105kg",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "씨름",
+        "division": "남자일반부",
+        "discipline": "소장급80kg",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "야구소프트볼",
+        "division": "여자일반부",
+        "discipline": "소프트볼",
+        "medal": "금",
+        "date": "2024.10.06",
+        "source_rows": [
+          {
+            "table": 18,
+            "row": 2
+          },
+          {
+            "table": 18,
+            "row": 3
+          },
+          {
+            "table": 18,
+            "row": 4
+          },
+          {
+            "table": 18,
+            "row": 5
+          },
+          {
+            "table": 18,
+            "row": 6
+          },
+          {
+            "table": 18,
+            "row": 7
+          },
+          {
+            "table": 18,
+            "row": 8
+          },
+          {
+            "table": 18,
+            "row": 9
+          },
+          {
+            "table": 18,
+            "row": 10
+          },
+          {
+            "table": 18,
+            "row": 11
+          },
+          {
+            "table": 18,
+            "row": 12
+          },
+          {
+            "table": 18,
+            "row": 13
+          },
+          {
+            "table": 18,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "양궁",
+        "division": "남자18세이하부",
+        "discipline": "70M",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천계양구청",
+        "category": "양궁",
+        "division": "남자일반부",
+        "discipline": "30M",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천계양구청",
+        "category": "양궁",
+        "division": "남자일반부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 4
+          },
+          {
+            "table": 19,
+            "row": 5
+          },
+          {
+            "table": 19,
+            "row": 6
+          },
+          {
+            "table": 19,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천계양구청",
+        "category": "양궁",
+        "division": "남자일반부",
+        "discipline": "개인전(컴파운드)",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "팀자이언트 인천",
+        "category": "양궁",
+        "division": "남자일반부",
+        "discipline": "단체전(컴파운드)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 9
+          },
+          {
+            "table": 19,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천계양구청",
+        "category": "양궁",
+        "division": "남자일반부",
+        "discipline": "단체전(컴파운드)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 10
+          },
+          {
+            "table": 19,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "부개고등학교",
+        "category": "양궁",
+        "division": "여자18세이하부",
+        "discipline": "50M",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "여자일반부",
+        "discipline": "30M",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "여자일반부",
+        "discipline": "50M",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "여자일반부",
+        "discipline": "50M",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "여자일반부",
+        "discipline": "60M",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "여자일반부",
+        "discipline": "70M",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 18
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 19
+          },
+          {
+            "table": 19,
+            "row": 20
+          },
+          {
+            "table": 19,
+            "row": 21
+          },
+          {
+            "table": 19,
+            "row": 22
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "양궁",
+        "division": "대학부",
+        "discipline": "혼성단체전",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 23
+          },
+          {
+            "table": 19,
+            "row": 24
+          }
+        ]
+      },
+      {
+        "school_name": "부개고등학교(컴)",
+        "category": "양궁",
+        "division": "일반부",
+        "discipline": "혼성단체전(컴파운드)",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 25
+          }
+        ]
+      },
+      {
+        "school_name": "인천계양구청",
+        "category": "양궁",
+        "division": "일반부",
+        "discipline": "혼성단체전(컴파운드)",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 26
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "인상61kg급",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "남자일반부",
+        "discipline": "합계109kg급이상",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "남자일반부",
+        "discipline": "인상109kg급이상",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "남자일반부",
+        "discipline": "용상109kg급이상",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "합계76kg급",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "합계87kg급",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "인상76kg급",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "인상87kg급",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "용상76kg급",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "용상87kg급",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전66kg이하급",
+        "medal": "동",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전90kg이하급",
+        "medal": "은",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전100kg이하급",
+        "medal": "은",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "유도",
+        "division": "남자대학부",
+        "discipline": "개인전60kg이하급",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "용인대학교",
+        "category": "유도",
+        "division": "남자대학부",
+        "discipline": "개인전100kg이하급",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "용인대학교",
+        "category": "유도",
+        "division": "남자대학부",
+        "discipline": "개인전100kg이상급",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "유도",
+        "division": "남자일반부",
+        "discipline": "개인전66kg이하급",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "유도",
+        "division": "남자일반부",
+        "discipline": "개인전100kg이상급",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전57kg이하급",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전70kg이하급",
+        "medal": "은",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전78kg이하급",
+        "medal": "금",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "경기대학교",
+        "category": "유도",
+        "division": "여자대학부",
+        "discipline": "개인전78kg이상급 (시범종목)",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "유도",
+        "division": "여자일반부",
+        "discipline": "개인전52kg이하급",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "유도",
+        "division": "여자일반부",
+        "discipline": "개인전57kg이하급",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 16
+          },
+          {
+            "table": 21,
+            "row": 17
+          },
+          {
+            "table": 21,
+            "row": 22
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 18
+          },
+          {
+            "table": 21,
+            "row": 19
+          },
+          {
+            "table": 21,
+            "row": 20
+          },
+          {
+            "table": 21,
+            "row": 21
+          },
+          {
+            "table": 21,
+            "row": 23
+          },
+          {
+            "table": 21,
+            "row": 24
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(트랙)",
+        "division": "남자18세이하부",
+        "discipline": "4×400mR",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 2
+          },
+          {
+            "table": 22,
+            "row": 4
+          },
+          {
+            "table": 22,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "동인천고등학교",
+        "category": "육상(트랙)",
+        "division": "남자18세이하부",
+        "discipline": "4×400mR",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 3
+          },
+          {
+            "table": 22,
+            "row": 5
+          },
+          {
+            "table": 22,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "100m",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "100m",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "200m",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "400m",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "4×100mR",
+        "medal": "금",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 12
+          },
+          {
+            "table": 22,
+            "row": 13
+          },
+          {
+            "table": 22,
+            "row": 14
+          },
+          {
+            "table": 22,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "4×400mR",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 16
+          },
+          {
+            "table": 22,
+            "row": 17
+          },
+          {
+            "table": 22,
+            "row": 18
+          },
+          {
+            "table": 22,
+            "row": 19
+          }
+        ]
+      },
+      {
+        "school_name": "동인천고등학교",
+        "category": "육상(트랙)",
+        "division": "18세이하부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 20
+          },
+          {
+            "table": 22,
+            "row": 23
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(트랙)",
+        "division": "18세이하부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 21
+          }
+        ]
+      },
+      {
+        "school_name": "인일여자고등학교",
+        "category": "육상(트랙)",
+        "division": "18세이하부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 22
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "육상(트랙)",
+        "division": "대학부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 24
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "대학부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 25
+          },
+          {
+            "table": 22,
+            "row": 26
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "육상(트랙)",
+        "division": "대학부",
+        "discipline": "4×400mR(Mixed)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 27
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "남자18세이하부",
+        "discipline": "멀리뛰기",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "남자18세이하부",
+        "discipline": "창던지기",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "여자18세이하부",
+        "discipline": "멀리뛰기",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "여자18세이하부",
+        "discipline": "세단뛰기",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "자전거",
+        "division": "남자일반부",
+        "discipline": "경륜",
+        "medal": "동",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "자전거",
+        "division": "여자18세이하부",
+        "discipline": "도로개인독주15km",
+        "medal": "은",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "자전거",
+        "division": "여자18세이하부",
+        "discipline": "단체스프린트 (시범종목)",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 4
+          },
+          {
+            "table": 24,
+            "row": 5
+          },
+          {
+            "table": 24,
+            "row": 6
+          },
+          {
+            "table": 24,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "자전거",
+        "division": "여자일반부",
+        "discipline": "경륜",
+        "medal": "은",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "남자18세이하부",
+        "discipline": "싱글스컬",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 25,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "남자18세이하부",
+        "discipline": "더블스컬",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 25,
+            "row": 3
+          },
+          {
+            "table": 25,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "여자18세이하부",
+        "discipline": "더블스컬(경량급)",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 25,
+            "row": 5
+          },
+          {
+            "table": 25,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-마루운동",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-철봉",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-평행봉",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-링",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "체조",
+        "division": "남자일반부",
+        "discipline": "제3경기-안마",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-평균대",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-이단평행봉",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천현대제철",
+        "category": "축구",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 27,
+            "row": 2
+          },
+          {
+            "table": 27,
+            "row": 3
+          },
+          {
+            "table": 27,
+            "row": 4
+          },
+          {
+            "table": 27,
+            "row": 5
+          },
+          {
+            "table": 27,
+            "row": 6
+          },
+          {
+            "table": 27,
+            "row": 7
+          },
+          {
+            "table": 27,
+            "row": 8
+          },
+          {
+            "table": 27,
+            "row": 9
+          },
+          {
+            "table": 27,
+            "row": 10
+          },
+          {
+            "table": 27,
+            "row": 11
+          },
+          {
+            "table": 27,
+            "row": 12
+          },
+          {
+            "table": 27,
+            "row": 13
+          },
+          {
+            "table": 27,
+            "row": 14
+          },
+          {
+            "table": 27,
+            "row": 15
+          },
+          {
+            "table": 27,
+            "row": 16
+          },
+          {
+            "table": 27,
+            "row": 17
+          },
+          {
+            "table": 27,
+            "row": 18
+          },
+          {
+            "table": 27,
+            "row": 19
+          }
+        ]
+      },
+      {
+        "school_name": "연송고등학교",
+        "category": "카누",
+        "division": "남자18세이하부",
+        "discipline": "C2-1000M (시범종목)",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 2
+          },
+          {
+            "table": 28,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "카누",
+        "division": "남자18세이하부",
+        "discipline": "K2-200M",
+        "medal": "동",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 4
+          },
+          {
+            "table": 28,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천연수구청",
+        "category": "카누",
+        "division": "남자일반부",
+        "discipline": "K2-1000M",
+        "medal": "은",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 6
+          },
+          {
+            "table": 28,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천연수구청",
+        "category": "카누",
+        "division": "남자일반부",
+        "discipline": "K1-200M",
+        "medal": "금",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천연수구청",
+        "category": "카누",
+        "division": "남자일반부",
+        "discipline": "K2-200M",
+        "medal": "은",
+        "date": "2024.10.14",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 9
+          },
+          {
+            "table": 28,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "탁구",
+        "division": "남자대학부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 2
+          },
+          {
+            "table": 29,
+            "row": 3
+          },
+          {
+            "table": 29,
+            "row": 4
+          },
+          {
+            "table": 29,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "탁구",
+        "division": "여자대학부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 6
+          },
+          {
+            "table": 29,
+            "row": 7
+          },
+          {
+            "table": 29,
+            "row": 8
+          },
+          {
+            "table": 29,
+            "row": 9
+          },
+          {
+            "table": 29,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "탁구",
+        "division": "여자대학부",
+        "discipline": "개인전",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "포스코인터내셔널",
+        "category": "탁구",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 12
+          },
+          {
+            "table": 29,
+            "row": 13
+          },
+          {
+            "table": 29,
+            "row": 14
+          },
+          {
+            "table": 29,
+            "row": 15
+          },
+          {
+            "table": 29,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "포스코인터내셔널",
+        "category": "탁구",
+        "division": "여자일반부",
+        "discipline": "개인전",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "탁구",
+        "division": "대학부",
+        "discipline": "혼합복식",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 18
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "탁구",
+        "division": "대학부",
+        "discipline": "혼합복식",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 19
+          }
+        ]
+      },
+      {
+        "school_name": "인천시설공단",
+        "category": "탁구",
+        "division": "일반부",
+        "discipline": "혼합복식",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 20
+          }
+        ]
+      },
+      {
+        "school_name": "포스코인터내셔널",
+        "category": "탁구",
+        "division": "일반부",
+        "discipline": "혼합복식",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 21
+          }
+        ]
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "태권도",
+        "division": "남자18세이하부",
+        "discipline": "-68kg급",
+        "medal": "동",
+        "date": "2024.10.09",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "강화군청",
+        "category": "태권도",
+        "division": "남자일반부",
+        "discipline": "-54kg급 (시범종목)",
+        "medal": "동",
+        "date": "2024.10.06",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "강화군청",
+        "category": "태권도",
+        "division": "남자일반부",
+        "discipline": "-58kg급",
+        "medal": "동",
+        "date": "2024.10.07",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "강화군청",
+        "category": "태권도",
+        "division": "남자일반부",
+        "discipline": "-63kg급",
+        "medal": "금",
+        "date": "2024.10.06",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "강화군청",
+        "category": "태권도",
+        "division": "남자일반부",
+        "discipline": "-74kg급",
+        "medal": "은",
+        "date": "2024.10.07",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "강화군청",
+        "category": "태권도",
+        "division": "남자일반부",
+        "discipline": "-80kg급",
+        "medal": "동",
+        "date": "2024.10.07",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "문학정보고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "-57kg급",
+        "medal": "은",
+        "date": "2024.10.09",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "문학정보고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "-67kg급",
+        "medal": "금",
+        "date": "2024.10.10",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인일여자고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "공인품새",
+        "medal": "동",
+        "date": "2024.10.05",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "태권도",
+        "division": "여자대학부",
+        "discipline": "-49kg급",
+        "medal": "은",
+        "date": "2024.10.07",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "용인대학교",
+        "category": "태권도",
+        "division": "여자대학부",
+        "discipline": "-53kg급",
+        "medal": "은",
+        "date": "2024.10.06",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 동구청",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "-46kg급",
+        "medal": "은",
+        "date": "2024.10.06",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 동구청",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "-49kg급",
+        "medal": "은",
+        "date": "2024.10.07",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 동구청",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "-53kg급",
+        "medal": "동",
+        "date": "2024.10.06",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 동구청",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "-62kg급",
+        "medal": "은",
+        "date": "2024.10.07",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 동구청",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "-67kg급",
+        "medal": "동",
+        "date": "2024.10.07",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 동구청",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "-73kg급",
+        "medal": "은",
+        "date": "2024.10.06",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 18
+          }
+        ]
+      },
+      {
+        "school_name": "인천남클럽",
+        "category": "택견",
+        "division": "남자일반부",
+        "discipline": "-83kg",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 31,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "서인천고등학교",
+        "category": "테니스",
+        "division": "남자18세이하부",
+        "discipline": "개인전단식",
+        "medal": "은",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "석정여자고등학교",
+        "category": "테니스",
+        "division": "여자18세이하부",
+        "discipline": "개인전단식",
+        "medal": "동",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "테니스",
+        "division": "여자대학부",
+        "discipline": "개인전단식",
+        "medal": "금",
+        "date": "2024.10.15",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "가림고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "플러레-단체",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 2
+          },
+          {
+            "table": 33,
+            "row": 3
+          },
+          {
+            "table": 33,
+            "row": 4
+          },
+          {
+            "table": 33,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천반도체고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "사브르-개인",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "펜싱",
+        "division": "남자일반부",
+        "discipline": "에뻬-단체",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "호원대학교",
+        "category": "펜싱",
+        "division": "남자일반부",
+        "discipline": "에뻬-단체",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "경남대학교",
+        "category": "펜싱",
+        "division": "남자일반부",
+        "discipline": "에뻬-단체",
+        "medal": "동",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 9
+          },
+          {
+            "table": 33,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "가좌고등학교",
+        "category": "펜싱",
+        "division": "여자18세이하부",
+        "discipline": "플러레-개인",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시중구청",
+        "category": "펜싱",
+        "division": "여자일반부",
+        "discipline": "플러레-단체",
+        "medal": "은",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 12
+          },
+          {
+            "table": 33,
+            "row": 13
+          },
+          {
+            "table": 33,
+            "row": 14
+          },
+          {
+            "table": 33,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시중구청",
+        "category": "펜싱",
+        "division": "여자일반부",
+        "discipline": "사브르-단체",
+        "medal": "금",
+        "date": "2024.10.16",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 16
+          },
+          {
+            "table": 33,
+            "row": 17
+          },
+          {
+            "table": 33,
+            "row": 18
+          },
+          {
+            "table": 33,
+            "row": 19
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시중구청",
+        "category": "펜싱",
+        "division": "여자일반부",
+        "discipline": "플러레-개인",
+        "medal": "동",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 20
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "표면-200m",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "계영-400m (시범종목)",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 3
+          },
+          {
+            "table": 34,
+            "row": 4
+          },
+          {
+            "table": 34,
+            "row": 5
+          },
+          {
+            "table": 34,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "짝핀-100m",
+        "medal": "금",
+        "date": "2024.10.11",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-200m",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-400m",
+        "medal": "동",
+        "date": "2024.10.12",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "하키",
+        "division": "남자일반부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 2
+          },
+          {
+            "table": 35,
+            "row": 3
+          },
+          {
+            "table": 35,
+            "row": 4
+          },
+          {
+            "table": 35,
+            "row": 5
+          },
+          {
+            "table": 35,
+            "row": 6
+          },
+          {
+            "table": 35,
+            "row": 7
+          },
+          {
+            "table": 35,
+            "row": 8
+          },
+          {
+            "table": 35,
+            "row": 9
+          },
+          {
+            "table": 35,
+            "row": 10
+          },
+          {
+            "table": 35,
+            "row": 11
+          },
+          {
+            "table": 35,
+            "row": 12
+          },
+          {
+            "table": 35,
+            "row": 13
+          },
+          {
+            "table": 35,
+            "row": 14
+          },
+          {
+            "table": 35,
+            "row": 15
+          },
+          {
+            "table": 35,
+            "row": 16
+          },
+          {
+            "table": 35,
+            "row": 17
+          },
+          {
+            "table": 35,
+            "row": 18
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 체육회",
+        "category": "하키",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 19
+          },
+          {
+            "table": 35,
+            "row": 20
+          },
+          {
+            "table": 35,
+            "row": 21
+          },
+          {
+            "table": 35,
+            "row": 22
+          },
+          {
+            "table": 35,
+            "row": 23
+          },
+          {
+            "table": 35,
+            "row": 24
+          },
+          {
+            "table": 35,
+            "row": 25
+          },
+          {
+            "table": 35,
+            "row": 26
+          },
+          {
+            "table": 35,
+            "row": 27
+          },
+          {
+            "table": 35,
+            "row": 28
+          },
+          {
+            "table": 35,
+            "row": 29
+          },
+          {
+            "table": 35,
+            "row": 30
+          },
+          {
+            "table": 35,
+            "row": 31
+          },
+          {
+            "table": 35,
+            "row": 32
+          },
+          {
+            "table": 35,
+            "row": 33
+          },
+          {
+            "table": 35,
+            "row": 34
+          }
+        ]
+      },
+      {
+        "school_name": "마스터리(Master Lee)흑추관 합기도 팀",
+        "category": "합기도",
+        "division": "남자18세이하부",
+        "discipline": "미들급 (시범종목)",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "대한합기도팀",
+        "category": "합기도",
+        "division": "남자일반부",
+        "discipline": "1종목 (시범종목)",
+        "medal": "동",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "부평라이온팀",
+        "category": "합기도",
+        "division": "여자일반부",
+        "discipline": "밴텀급 (시범종목)",
+        "medal": "금",
+        "date": "2024.10.13",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천도시공사",
+        "category": "핸드볼",
+        "division": "남자일반부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 2
+          },
+          {
+            "table": 37,
+            "row": 3
+          },
+          {
+            "table": 37,
+            "row": 4
+          },
+          {
+            "table": 37,
+            "row": 5
+          },
+          {
+            "table": 37,
+            "row": 6
+          },
+          {
+            "table": 37,
+            "row": 7
+          },
+          {
+            "table": 37,
+            "row": 8
+          },
+          {
+            "table": 37,
+            "row": 9
+          },
+          {
+            "table": 37,
+            "row": 10
+          },
+          {
+            "table": 37,
+            "row": 11
+          },
+          {
+            "table": 37,
+            "row": 12
+          },
+          {
+            "table": 37,
+            "row": 13
+          },
+          {
+            "table": 37,
+            "row": 14
+          },
+          {
+            "table": 37,
+            "row": 15
+          },
+          {
+            "table": 37,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "인천비즈니스고등학교",
+        "category": "핸드볼",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 17
+          },
+          {
+            "table": 37,
+            "row": 18
+          },
+          {
+            "table": 37,
+            "row": 19
+          },
+          {
+            "table": 37,
+            "row": 20
+          },
+          {
+            "table": 37,
+            "row": 21
+          },
+          {
+            "table": 37,
+            "row": 22
+          },
+          {
+            "table": 37,
+            "row": 23
+          },
+          {
+            "table": 37,
+            "row": 24
+          },
+          {
+            "table": 37,
+            "row": 25
+          },
+          {
+            "table": 37,
+            "row": 26
+          },
+          {
+            "table": 37,
+            "row": 27
+          },
+          {
+            "table": 37,
+            "row": 28
+          },
+          {
+            "table": 37,
+            "row": 29
+          },
+          {
+            "table": 37,
+            "row": 30
+          },
+          {
+            "table": 37,
+            "row": 31
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "핸드볼",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2024.10.17",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 32
+          },
+          {
+            "table": 37,
+            "row": 33
+          },
+          {
+            "table": 37,
+            "row": 34
+          },
+          {
+            "table": 37,
+            "row": 35
+          },
+          {
+            "table": 37,
+            "row": 36
+          },
+          {
+            "table": 37,
+            "row": 37
+          },
+          {
+            "table": 37,
+            "row": 38
+          },
+          {
+            "table": 37,
+            "row": 39
+          },
+          {
+            "table": 37,
+            "row": 40
+          },
+          {
+            "table": 37,
+            "row": 41
+          },
+          {
+            "table": 37,
+            "row": 42
+          },
+          {
+            "table": 37,
+            "row": 43
+          },
+          {
+            "table": 37,
+            "row": 44
+          },
+          {
+            "table": 37,
+            "row": 45
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "year": 2025,
+    "event": "제106회 전국체육대회",
+    "url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+    "sha256": "7ec796204b9b4b04307ba44710cf364ce9cfc0d07776bf544845bb8b856b2562",
+    "records": [
+      {
+        "school_name": "서운고등학교",
+        "category": "검도",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 1,
+            "row": 2
+          },
+          {
+            "table": 1,
+            "row": 5
+          },
+          {
+            "table": 1,
+            "row": 6
+          },
+          {
+            "table": 1,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천고등학교",
+        "category": "검도",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 1,
+            "row": 3
+          },
+          {
+            "table": 1,
+            "row": 4
+          },
+          {
+            "table": 1,
+            "row": 8
+          },
+          {
+            "table": 1,
+            "row": 9
+          },
+          {
+            "table": 1,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천여자고등학교부설방송통신고등학교",
+        "category": "골프",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 2,
+            "row": 2
+          },
+          {
+            "table": 2,
+            "row": 3
+          },
+          {
+            "table": 2,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천여자고등학교부설방송통신고등학교",
+        "category": "골프",
+        "division": "여자일반부",
+        "discipline": "개인전",
+        "medal": "금",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 2,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "근대5종",
+        "division": "남자일반부",
+        "discipline": "단체전(4종)",
+        "medal": "금",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 3,
+            "row": 2
+          },
+          {
+            "table": 3,
+            "row": 3
+          },
+          {
+            "table": 3,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "당구",
+        "division": "남자일반부",
+        "discipline": "잉글리쉬빌리아드",
+        "medal": "금",
+        "date": "2025.10.03",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "당구",
+        "division": "남자일반부",
+        "discipline": "스누커",
+        "medal": "금",
+        "date": "2025.10.01",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "당구",
+        "division": "일반부",
+        "discipline": "포켓9볼 혼성복식전",
+        "medal": "금",
+        "date": "2025.10.01",
+        "source_rows": [
+          {
+            "table": 4,
+            "row": 4
+          },
+          {
+            "table": 4,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인명여자고등학교",
+        "category": "댄스스포츠",
+        "division": "18세이하부",
+        "discipline": "차차차(C) (시범종목)",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 5,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "신송고등학교",
+        "category": "댄스스포츠",
+        "division": "18세이하부",
+        "discipline": "차차차(C) (시범종목)",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 5,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "현대글로비스",
+        "category": "럭비",
+        "division": "일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 6,
+            "row": 2
+          },
+          {
+            "table": 6,
+            "row": 3
+          },
+          {
+            "table": 6,
+            "row": 4
+          },
+          {
+            "table": 6,
+            "row": 5
+          },
+          {
+            "table": 6,
+            "row": 6
+          },
+          {
+            "table": 6,
+            "row": 7
+          },
+          {
+            "table": 6,
+            "row": 8
+          },
+          {
+            "table": 6,
+            "row": 9
+          },
+          {
+            "table": 6,
+            "row": 10
+          },
+          {
+            "table": 6,
+            "row": 11
+          },
+          {
+            "table": 6,
+            "row": 12
+          },
+          {
+            "table": 6,
+            "row": 13
+          },
+          {
+            "table": 6,
+            "row": 14
+          },
+          {
+            "table": 6,
+            "row": 15
+          },
+          {
+            "table": 6,
+            "row": 16
+          },
+          {
+            "table": 6,
+            "row": 17
+          },
+          {
+            "table": 6,
+            "row": 18
+          },
+          {
+            "table": 6,
+            "row": 19
+          },
+          {
+            "table": 6,
+            "row": 20
+          },
+          {
+            "table": 6,
+            "row": 21
+          },
+          {
+            "table": 6,
+            "row": 22
+          },
+          {
+            "table": 6,
+            "row": 23
+          },
+          {
+            "table": 6,
+            "row": 24
+          },
+          {
+            "table": 6,
+            "row": 25
+          },
+          {
+            "table": 6,
+            "row": 26
+          }
+        ]
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형53kg급",
+        "medal": "금",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형57kg급",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형61kg급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "동산고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "자유형79kg급",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "남자18세이하부",
+        "discipline": "그레꼬로만형67kg급",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "레슬링",
+        "division": "남자대학부",
+        "discipline": "자유형86KG급",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "레슬링",
+        "division": "남자대학부",
+        "discipline": "그레꼬로만형60kg급",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천환경공단",
+        "category": "레슬링",
+        "division": "남자일반부",
+        "discipline": "그레꼬로만형77kg급",
+        "medal": "금",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형57kg급 (시범종목)",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형68kg급",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "레슬링",
+        "division": "여자18세이하부",
+        "discipline": "자유형76kg급 (시범종목)",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천환경공단",
+        "category": "레슬링",
+        "division": "여자일반부",
+        "discipline": "자유형68kg급",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 7,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천생활과학고등학교",
+        "category": "롤러",
+        "division": "여자18세이하부",
+        "discipline": "제외10,000m",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천생활과학고등학교",
+        "category": "롤러",
+        "division": "여자18세이하부",
+        "discipline": "5000M포인트",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 8,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "배구",
+        "division": "남자대학부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 2
+          },
+          {
+            "table": 9,
+            "row": 3
+          },
+          {
+            "table": 9,
+            "row": 4
+          },
+          {
+            "table": 9,
+            "row": 5
+          },
+          {
+            "table": 9,
+            "row": 6
+          },
+          {
+            "table": 9,
+            "row": 7
+          },
+          {
+            "table": 9,
+            "row": 8
+          },
+          {
+            "table": 9,
+            "row": 9
+          },
+          {
+            "table": 9,
+            "row": 10
+          },
+          {
+            "table": 9,
+            "row": 11
+          },
+          {
+            "table": 9,
+            "row": 12
+          },
+          {
+            "table": 9,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "현대제철(강스파이크)",
+        "category": "배구",
+        "division": "남자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 9,
+            "row": 14
+          },
+          {
+            "table": 9,
+            "row": 15
+          },
+          {
+            "table": 9,
+            "row": 16
+          },
+          {
+            "table": 9,
+            "row": 17
+          },
+          {
+            "table": 9,
+            "row": 18
+          },
+          {
+            "table": 9,
+            "row": 19
+          },
+          {
+            "table": 9,
+            "row": 20
+          },
+          {
+            "table": 9,
+            "row": 21
+          },
+          {
+            "table": 9,
+            "row": 22
+          },
+          {
+            "table": 9,
+            "row": 23
+          },
+          {
+            "table": 9,
+            "row": 24
+          },
+          {
+            "table": 9,
+            "row": 25
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "배드민턴",
+        "division": "남자대학부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.05",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 2
+          },
+          {
+            "table": 10,
+            "row": 3
+          },
+          {
+            "table": 10,
+            "row": 4
+          },
+          {
+            "table": 10,
+            "row": 5
+          },
+          {
+            "table": 10,
+            "row": 6
+          },
+          {
+            "table": 10,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "배드민턴",
+        "division": "여자대학부",
+        "discipline": "개인복식",
+        "medal": "동",
+        "date": "2025.10.01",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 8
+          },
+          {
+            "table": 10,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "배드민턴",
+        "division": "대학부",
+        "discipline": "혼합복식",
+        "medal": "동",
+        "date": "2025.10.01",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "배드민턴",
+        "division": "대학부",
+        "discipline": "혼합복식",
+        "medal": "동",
+        "date": "2025.10.01",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인천국제공항 스카이몬스",
+        "category": "배드민턴",
+        "division": "일반부",
+        "discipline": "혼합복식",
+        "medal": "동",
+        "date": "2025.10.01",
+        "source_rows": [
+          {
+            "table": 10,
+            "row": 12
+          },
+          {
+            "table": 10,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "계산공업고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "라이트급",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "계산공업고등학교",
+        "category": "복싱",
+        "division": "남자18세이하부",
+        "discipline": "웰터급",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "복싱",
+        "division": "남자대학부",
+        "discipline": "라이트웰터급",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "복싱",
+        "division": "남자일반부",
+        "discipline": "라이트웰터급",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "국군체육부대",
+        "category": "복싱",
+        "division": "남자일반부",
+        "discipline": "웰터급",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 11,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "연수고등학교",
+        "category": "볼링",
+        "division": "남자18세이하부",
+        "discipline": "마스터즈",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 12,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천교통공사",
+        "category": "볼링",
+        "division": "남자일반부",
+        "discipline": "2인조",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 12,
+            "row": 3
+          },
+          {
+            "table": 12,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "연수여자고등학교",
+        "category": "볼링",
+        "division": "여자18세이하부",
+        "discipline": "2인조",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 12,
+            "row": 5
+          },
+          {
+            "table": 12,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천대",
+        "category": "사격",
+        "division": "남자대학부",
+        "discipline": "공기소총-개인",
+        "medal": "금",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 13,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천대",
+        "category": "사격",
+        "division": "남자대학부",
+        "discipline": "공기권총-개인",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 13,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천대",
+        "category": "사격",
+        "division": "남자대학부",
+        "discipline": "공기소총-단체",
+        "medal": "은",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 13,
+            "row": 4
+          },
+          {
+            "table": 13,
+            "row": 5
+          },
+          {
+            "table": 13,
+            "row": 6
+          },
+          {
+            "table": 13,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시미추홀구청",
+        "category": "사격",
+        "division": "여자일반부",
+        "discipline": "50m소총복사(비결선)",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 13,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "사이클",
+        "division": "여자18세이하부",
+        "discipline": "스프린트 (시범종목)",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 14,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "사이클",
+        "division": "여자18세이하부",
+        "discipline": "단체스프린트 (시범종목)",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 14,
+            "row": 3
+          },
+          {
+            "table": 14,
+            "row": 4
+          },
+          {
+            "table": 14,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "사이클",
+        "division": "여자18세이하부",
+        "discipline": "개인도로단체 (시범종목)",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 14,
+            "row": 6
+          },
+          {
+            "table": 14,
+            "row": 7
+          },
+          {
+            "table": 14,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "세팍타크로",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 15,
+            "row": 2
+          },
+          {
+            "table": 15,
+            "row": 3
+          },
+          {
+            "table": 15,
+            "row": 4
+          },
+          {
+            "table": 15,
+            "row": 5
+          },
+          {
+            "table": 15,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "소프트테니스",
+        "division": "남자대학부",
+        "discipline": "개인단식",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "소프트테니스",
+        "division": "남자일반부",
+        "discipline": "개인단식",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "소프트테니스",
+        "division": "여자일반부",
+        "discipline": "개인복식",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 16,
+            "row": 4
+          },
+          {
+            "table": 16,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "자유형50m",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "접영50m",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "플랫폼",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "3M싱크로",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 5
+          },
+          {
+            "table": 17,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "남자18세이하부",
+        "discipline": "플랫폼싱크로",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 7
+          },
+          {
+            "table": 17,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "남자일반부",
+        "discipline": "평영200m",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "남자일반부",
+        "discipline": "접영50m",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "남자일반부",
+        "discipline": "플랫폼",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "OSA",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "자유형50m",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "배영100m",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "배영200m",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "혼계영400m",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 15
+          },
+          {
+            "table": 17,
+            "row": 16
+          },
+          {
+            "table": 17,
+            "row": 18
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "혼계영400m",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영400m",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 19
+          },
+          {
+            "table": 17,
+            "row": 20
+          },
+          {
+            "table": 17,
+            "row": 22
+          }
+        ]
+      },
+      {
+        "school_name": "연수구수영연맹",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "계영400m",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 21
+          }
+        ]
+      },
+      {
+        "school_name": "OSA",
+        "category": "수영(경영,다이빙)",
+        "division": "여자18세이하부",
+        "discipline": "접영50m",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 23
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "여자일반부",
+        "discipline": "플랫폼",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 24
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "여자일반부",
+        "discipline": "플랫폼",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 25
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "여자일반부",
+        "discipline": "3M싱크로",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 26
+          },
+          {
+            "table": 17,
+            "row": 27
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "수영(경영,다이빙)",
+        "division": "여자일반부",
+        "discipline": "플랫폼싱크로",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 17,
+            "row": 28
+          },
+          {
+            "table": 17,
+            "row": 29
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시스쿼시연맹",
+        "category": "스쿼시",
+        "division": "여자18세이하부",
+        "discipline": "개인전",
+        "medal": "은",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 18,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시스쿼시연맹",
+        "category": "스쿼시",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 18,
+            "row": 3
+          },
+          {
+            "table": 18,
+            "row": 4
+          },
+          {
+            "table": 18,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "스쿼시",
+        "division": "여자일반부",
+        "discipline": "개인전",
+        "medal": "금",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 18,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "스쿼시",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 18,
+            "row": 7
+          },
+          {
+            "table": 18,
+            "row": 8
+          },
+          {
+            "table": 18,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "부평고등학교",
+        "category": "씨름",
+        "division": "남자18세이하부",
+        "discipline": "용사급90kg",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "소장급80kg",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "용장급90kg",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "역사급105kg",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "씨름",
+        "division": "남자대학부",
+        "discipline": "장사급140kg",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 19,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "야구소프트볼",
+        "division": "여자일반부",
+        "discipline": "소프트볼",
+        "medal": "은",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 20,
+            "row": 2
+          },
+          {
+            "table": 20,
+            "row": 3
+          },
+          {
+            "table": 20,
+            "row": 4
+          },
+          {
+            "table": 20,
+            "row": 5
+          },
+          {
+            "table": 20,
+            "row": 6
+          },
+          {
+            "table": 20,
+            "row": 7
+          },
+          {
+            "table": 20,
+            "row": 8
+          },
+          {
+            "table": 20,
+            "row": 9
+          },
+          {
+            "table": 20,
+            "row": 10
+          },
+          {
+            "table": 20,
+            "row": 11
+          },
+          {
+            "table": 20,
+            "row": 12
+          },
+          {
+            "table": 20,
+            "row": 13
+          },
+          {
+            "table": 20,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "양궁",
+        "division": "남자18세이하부",
+        "discipline": "30M",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "양궁",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 3
+          },
+          {
+            "table": 21,
+            "row": 4
+          },
+          {
+            "table": 21,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천영선고등학교",
+        "category": "양궁",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "양궁",
+        "division": "남자대학부",
+        "discipline": "50M",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "양궁",
+        "division": "남자대학부",
+        "discipline": "70M",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천계양구청",
+        "category": "양궁",
+        "division": "남자일반부",
+        "discipline": "70M",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "부개고등학교",
+        "category": "양궁",
+        "division": "여자18세이하부",
+        "discipline": "60M",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인일여자고등학교",
+        "category": "양궁",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 11
+          },
+          {
+            "table": 21,
+            "row": 12
+          },
+          {
+            "table": 21,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "부개고등학교",
+        "category": "양궁",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "양궁",
+        "division": "여자대학부",
+        "discipline": "30M",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "여자일반부",
+        "discipline": "70M",
+        "medal": "금",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "여자일반부",
+        "discipline": "개인전",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "양궁",
+        "division": "18세이하부",
+        "discipline": "혼성단체전",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 18
+          }
+        ]
+      },
+      {
+        "school_name": "부개고등학교",
+        "category": "양궁",
+        "division": "18세이하부",
+        "discipline": "혼성단체전",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 19
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "양궁",
+        "division": "일반부",
+        "discipline": "혼성단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 20
+          }
+        ]
+      },
+      {
+        "school_name": "인천계양구청",
+        "category": "양궁",
+        "division": "일반부",
+        "discipline": "혼성단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 21,
+            "row": 21
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "합계61kg급",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "합계96kg급",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "인상61kg급",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "인상81kg급",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "인상96kg급",
+        "medal": "은",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "남자18세이하부",
+        "discipline": "용상61kg급",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "남자일반부",
+        "discipline": "합계109kg급이상",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "남자일반부",
+        "discipline": "인상109kg급이상",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "역도",
+        "division": "남자일반부",
+        "discipline": "용상61kg급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "역도",
+        "division": "여자18세이하부",
+        "discipline": "용상49kg급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "합계76kg급",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "인상76kg급",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "인상87kg급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "역도",
+        "division": "여자일반부",
+        "discipline": "용상76kg급",
+        "medal": "금",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 22,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "요트",
+        "division": "일반부",
+        "discipline": "혼성 국제470급",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 23,
+            "row": 2
+          },
+          {
+            "table": 23,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전73kg이하급",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전100kg이상급",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "송도고등학교",
+        "category": "유도",
+        "division": "남자18세이하부",
+        "discipline": "개인전무제한급",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "유도",
+        "division": "남자대학부",
+        "discipline": "개인전66kg이하급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "용인대학교",
+        "category": "유도",
+        "division": "남자대학부",
+        "discipline": "개인전100kg이하급",
+        "medal": "은",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "유도",
+        "division": "남자일반부",
+        "discipline": "개인전66kg이하급",
+        "medal": "은",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "유도",
+        "division": "남자일반부",
+        "discipline": "개인전90kg이하급",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전57kg이하급",
+        "medal": "은",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전63kg이하급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전78kg이하급",
+        "medal": "금",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전78kg이상급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "유도",
+        "division": "여자18세이하부",
+        "discipline": "개인전무제한급",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "경기대학교",
+        "category": "유도",
+        "division": "여자대학부",
+        "discipline": "개인전63kg이하급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "유도",
+        "division": "여자대학부",
+        "discipline": "개인전70kg이하급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "유도",
+        "division": "여자일반부",
+        "discipline": "개인전78kg이하급",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 24,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "육상(로드레이스)",
+        "division": "남자일반부",
+        "discipline": "마라톤(42.195km)",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 25,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "동인천고등학교",
+        "category": "육상(트랙)",
+        "division": "남자18세이하부",
+        "discipline": "100m",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "동인천고등학교",
+        "category": "육상(트랙)",
+        "division": "남자18세이하부",
+        "discipline": "200m",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "100m",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "200m",
+        "medal": "은",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "400m",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "4×100mR",
+        "medal": "금",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 7
+          },
+          {
+            "table": 26,
+            "row": 8
+          },
+          {
+            "table": 26,
+            "row": 9
+          },
+          {
+            "table": 26,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "육상(트랙)",
+        "division": "여자대학부",
+        "discipline": "4×400mR",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 26,
+            "row": 11
+          },
+          {
+            "table": 26,
+            "row": 12
+          },
+          {
+            "table": 26,
+            "row": 13
+          },
+          {
+            "table": 26,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "남자18세이하부",
+        "discipline": "창던지기",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 27,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "육상(필드)",
+        "division": "남자대학부",
+        "discipline": "세단뛰기",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 27,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "육상(필드)",
+        "division": "남자일반부",
+        "discipline": "창던지기",
+        "medal": "은",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 27,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "육상(필드)",
+        "division": "여자18세이하부",
+        "discipline": "멀리뛰기",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 27,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "여자18세이하부",
+        "discipline": "싱글스컬",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "조정",
+        "division": "여자18세이하부",
+        "discipline": "더블스컬",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 28,
+            "row": 3
+          },
+          {
+            "table": 28,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "무주짓수 선학",
+        "category": "주짓수",
+        "division": "남자일반부",
+        "discipline": "-62kg (시범종목)",
+        "medal": "은",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "구월동주짓수 리라짐",
+        "category": "주짓수",
+        "division": "남자일반부",
+        "discipline": "-69kg (시범종목)",
+        "medal": "금",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "구월동주짓수 리라짐",
+        "category": "주짓수",
+        "division": "남자일반부",
+        "discipline": "-77kg (시범종목)",
+        "medal": "은",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "구월동주짓수 리라짐",
+        "category": "주짓수",
+        "division": "여자일반부",
+        "discipline": "-48kg (시범종목)",
+        "medal": "금",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "영종주짓수",
+        "category": "주짓수",
+        "division": "여자일반부",
+        "discipline": "-57kg (시범종목)",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "OPMT주짓수아카데미",
+        "category": "주짓수",
+        "division": "여자일반부",
+        "discipline": "-63kg (시범종목)",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 29,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제1경기-단체종합",
+        "medal": "금",
+        "date": "2025.09.25",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 2
+          },
+          {
+            "table": 30,
+            "row": 3
+          },
+          {
+            "table": 30,
+            "row": 4
+          },
+          {
+            "table": 30,
+            "row": 5
+          },
+          {
+            "table": 30,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-마루운동",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-철봉",
+        "medal": "은",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-평행봉",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-안마",
+        "medal": "은",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제3경기-링",
+        "medal": "은",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "금",
+        "date": "2025.09.25",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "남자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "은",
+        "date": "2025.09.25",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-마루운동",
+        "medal": "동",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-평균대",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제3경기-이단평행봉",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "체조",
+        "division": "여자18세이하부",
+        "discipline": "제2경기-개인종합",
+        "medal": "금",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 30,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인천유나이티드U18대건고",
+        "category": "축구",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 31,
+            "row": 2
+          },
+          {
+            "table": 31,
+            "row": 3
+          },
+          {
+            "table": 31,
+            "row": 4
+          },
+          {
+            "table": 31,
+            "row": 5
+          },
+          {
+            "table": 31,
+            "row": 6
+          },
+          {
+            "table": 31,
+            "row": 7
+          },
+          {
+            "table": 31,
+            "row": 8
+          },
+          {
+            "table": 31,
+            "row": 9
+          },
+          {
+            "table": 31,
+            "row": 10
+          },
+          {
+            "table": 31,
+            "row": 11
+          },
+          {
+            "table": 31,
+            "row": 12
+          },
+          {
+            "table": 31,
+            "row": 13
+          },
+          {
+            "table": 31,
+            "row": 14
+          },
+          {
+            "table": 31,
+            "row": 15
+          },
+          {
+            "table": 31,
+            "row": 16
+          },
+          {
+            "table": 31,
+            "row": 17
+          },
+          {
+            "table": 31,
+            "row": 18
+          },
+          {
+            "table": 31,
+            "row": 19
+          }
+        ]
+      },
+      {
+        "school_name": "인천인천대",
+        "category": "축구",
+        "division": "남자대학부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 31,
+            "row": 20
+          },
+          {
+            "table": 31,
+            "row": 21
+          },
+          {
+            "table": 31,
+            "row": 22
+          },
+          {
+            "table": 31,
+            "row": 23
+          },
+          {
+            "table": 31,
+            "row": 24
+          },
+          {
+            "table": 31,
+            "row": 25
+          },
+          {
+            "table": 31,
+            "row": 26
+          },
+          {
+            "table": 31,
+            "row": 27
+          },
+          {
+            "table": 31,
+            "row": 28
+          },
+          {
+            "table": 31,
+            "row": 29
+          },
+          {
+            "table": 31,
+            "row": 30
+          },
+          {
+            "table": 31,
+            "row": 31
+          },
+          {
+            "table": 31,
+            "row": 32
+          },
+          {
+            "table": 31,
+            "row": 33
+          },
+          {
+            "table": 31,
+            "row": 34
+          },
+          {
+            "table": 31,
+            "row": 35
+          },
+          {
+            "table": 31,
+            "row": 36
+          },
+          {
+            "table": 31,
+            "row": 37
+          }
+        ]
+      },
+      {
+        "school_name": "인천현대제철",
+        "category": "축구",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 31,
+            "row": 38
+          },
+          {
+            "table": 31,
+            "row": 39
+          },
+          {
+            "table": 31,
+            "row": 40
+          },
+          {
+            "table": 31,
+            "row": 41
+          },
+          {
+            "table": 31,
+            "row": 42
+          },
+          {
+            "table": 31,
+            "row": 43
+          },
+          {
+            "table": 31,
+            "row": 44
+          },
+          {
+            "table": 31,
+            "row": 45
+          },
+          {
+            "table": 31,
+            "row": 46
+          },
+          {
+            "table": 31,
+            "row": 47
+          },
+          {
+            "table": 31,
+            "row": 48
+          },
+          {
+            "table": 31,
+            "row": 49
+          },
+          {
+            "table": 31,
+            "row": 50
+          },
+          {
+            "table": 31,
+            "row": 51
+          },
+          {
+            "table": 31,
+            "row": 52
+          },
+          {
+            "table": 31,
+            "row": 53
+          },
+          {
+            "table": 31,
+            "row": 54
+          }
+        ]
+      },
+      {
+        "school_name": "연송고등학교",
+        "category": "카누",
+        "division": "남자18세이하부",
+        "discipline": "C1-500M",
+        "medal": "동",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "연송고등학교",
+        "category": "카누",
+        "division": "남자18세이하부",
+        "discipline": "C1-1000M",
+        "medal": "은",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "연송고등학교",
+        "category": "카누",
+        "division": "남자18세이하부",
+        "discipline": "C2-500M",
+        "medal": "동",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 4
+          },
+          {
+            "table": 32,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천연수구청",
+        "category": "카누",
+        "division": "남자일반부",
+        "discipline": "K2-500M",
+        "medal": "은",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 6
+          },
+          {
+            "table": 32,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천연수구청",
+        "category": "카누",
+        "division": "남자일반부",
+        "discipline": "K2-1000M",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 8
+          },
+          {
+            "table": 32,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천연수구청",
+        "category": "카누",
+        "division": "남자일반부",
+        "discipline": "K4-500M",
+        "medal": "은",
+        "date": "2025.09.28",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 10
+          },
+          {
+            "table": 32,
+            "row": 11
+          },
+          {
+            "table": 32,
+            "row": 12
+          },
+          {
+            "table": 32,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천연수구청",
+        "category": "카누",
+        "division": "남자일반부",
+        "discipline": "C1-500M",
+        "medal": "은",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천연수구청",
+        "category": "카누",
+        "division": "남자일반부",
+        "discipline": "C1-1000M",
+        "medal": "동",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "K2-500M",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "인화여자고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "K2-500M",
+        "medal": "금",
+        "date": "2025.09.27",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인화여자고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "K4-500M (시범종목)",
+        "medal": "은",
+        "date": "2025.09.28",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 18
+          },
+          {
+            "table": 32,
+            "row": 20
+          },
+          {
+            "table": 32,
+            "row": 21
+          }
+        ]
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "K4-500M (시범종목)",
+        "medal": "은",
+        "date": "2025.09.28",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 19
+          }
+        ]
+      },
+      {
+        "school_name": "인화여자고등학교",
+        "category": "카누",
+        "division": "여자18세이하부",
+        "discipline": "C1-200M",
+        "medal": "은",
+        "date": "2025.09.28",
+        "source_rows": [
+          {
+            "table": 32,
+            "row": 22
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "탁구",
+        "division": "여자대학부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 2
+          },
+          {
+            "table": 33,
+            "row": 3
+          },
+          {
+            "table": 33,
+            "row": 4
+          },
+          {
+            "table": 33,
+            "row": 5
+          },
+          {
+            "table": 33,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "포스코인터내셔널",
+        "category": "탁구",
+        "division": "여자일반부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 7
+          },
+          {
+            "table": 33,
+            "row": 8
+          },
+          {
+            "table": 33,
+            "row": 9
+          },
+          {
+            "table": 33,
+            "row": 10
+          },
+          {
+            "table": 33,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "인하대학교",
+        "category": "탁구",
+        "division": "대학부",
+        "discipline": "혼합복식",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "탁구",
+        "division": "대학부",
+        "discipline": "혼합복식",
+        "medal": "동",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 33,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "부광고등학교",
+        "category": "태권도",
+        "division": "남자18세이하부",
+        "discipline": "-54kg급",
+        "medal": "은",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "백석고등학교",
+        "category": "태권도",
+        "division": "남자18세이하부",
+        "discipline": "-74kg급",
+        "medal": "동",
+        "date": "2025.10.18",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "경일대학교",
+        "category": "태권도",
+        "division": "남자대학부",
+        "discipline": "-54kg급",
+        "medal": "동",
+        "date": "2025.10.14",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "용인대학교",
+        "category": "태권도",
+        "division": "남자대학부",
+        "discipline": "-58kg급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "태권도",
+        "division": "남자대학부",
+        "discipline": "-74kg급",
+        "medal": "동",
+        "date": "2025.10.16",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "경희대학교",
+        "category": "태권도",
+        "division": "남자대학부",
+        "discipline": "-80kg급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "강화군청",
+        "category": "태권도",
+        "division": "남자일반부",
+        "discipline": "-63kg급",
+        "medal": "금",
+        "date": "2025.10.14",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "강화여자고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "-46kg급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "강화여자고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "-62kg급",
+        "medal": "동",
+        "date": "2025.10.17",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "문학정보고등학교",
+        "category": "태권도",
+        "division": "여자18세이하부",
+        "discipline": "+73kg급",
+        "medal": "동",
+        "date": "2025.10.16",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "용인대학교",
+        "category": "태권도",
+        "division": "여자대학부",
+        "discipline": "-53kg급",
+        "medal": "금",
+        "date": "2025.10.14",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "용인대학교",
+        "category": "태권도",
+        "division": "여자대학부",
+        "discipline": "-57kg급",
+        "medal": "은",
+        "date": "2025.10.15",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "경희대학교",
+        "category": "태권도",
+        "division": "여자대학부",
+        "discipline": "-67kg급",
+        "medal": "은",
+        "date": "2025.10.15",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 14
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 동구청",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "-53kg급",
+        "medal": "동",
+        "date": "2025.10.14",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 15
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시 동구청",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "-73kg급",
+        "medal": "동",
+        "date": "2025.10.14",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 16
+          }
+        ]
+      },
+      {
+        "school_name": "한국체육대학교",
+        "category": "태권도",
+        "division": "여자일반부",
+        "discipline": "품새",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 34,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "서인천고등학교",
+        "category": "테니스",
+        "division": "남자18세이하부",
+        "discipline": "개인전단식",
+        "medal": "금",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "석정여자고등학교",
+        "category": "테니스",
+        "division": "여자18세이하부",
+        "discipline": "개인전단식",
+        "medal": "은",
+        "date": "2025.10.21",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "테니스",
+        "division": "여자대학부",
+        "discipline": "단체전",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 4
+          },
+          {
+            "table": 35,
+            "row": 5
+          },
+          {
+            "table": 35,
+            "row": 6
+          },
+          {
+            "table": 35,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천대학교",
+        "category": "테니스",
+        "division": "여자대학부",
+        "discipline": "개인전단식 (시범종목)",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시청",
+        "category": "테니스",
+        "division": "여자일반부",
+        "discipline": "개인전단식",
+        "medal": "은",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 35,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천반도체고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "사브르-단체",
+        "medal": "동",
+        "date": "2025.09.30",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 2
+          },
+          {
+            "table": 36,
+            "row": 3
+          },
+          {
+            "table": 36,
+            "row": 4
+          },
+          {
+            "table": 36,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "가림고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "플러레-개인",
+        "medal": "동",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 6
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "펜싱",
+        "division": "남자18세이하부",
+        "discipline": "에뻬-개인",
+        "medal": "동",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "가좌고등학교",
+        "category": "펜싱",
+        "division": "여자18세이하부",
+        "discipline": "플러레-개인",
+        "medal": "동",
+        "date": "2025.09.26",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시중구청",
+        "category": "펜싱",
+        "division": "여자일반부",
+        "discipline": "플러레-단체",
+        "medal": "은",
+        "date": "2025.09.30",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 9
+          },
+          {
+            "table": 36,
+            "row": 10
+          },
+          {
+            "table": 36,
+            "row": 11
+          },
+          {
+            "table": 36,
+            "row": 12
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시중구청",
+        "category": "펜싱",
+        "division": "여자일반부",
+        "discipline": "플러레-개인",
+        "medal": "은",
+        "date": "2025.09.25",
+        "source_rows": [
+          {
+            "table": 36,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "표면-100m (시범종목)",
+        "medal": "동",
+        "date": "2025.10.02",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "표면-50m",
+        "medal": "은",
+        "date": "2025.10.03",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "계영-400m (시범종목)",
+        "medal": "동",
+        "date": "2025.10.04",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 4
+          },
+          {
+            "table": 37,
+            "row": 5
+          },
+          {
+            "table": 37,
+            "row": 6
+          },
+          {
+            "table": 37,
+            "row": 7
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "남자18세이하부",
+        "discipline": "짝핀-100m",
+        "medal": "은",
+        "date": "2025.10.02",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 8
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-200m",
+        "medal": "동",
+        "date": "2025.10.04",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 9
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-400m",
+        "medal": "은",
+        "date": "2025.10.03",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 10
+          }
+        ]
+      },
+      {
+        "school_name": "인천체육고등학교",
+        "category": "핀수영",
+        "division": "여자18세이하부",
+        "discipline": "표면-50m",
+        "medal": "동",
+        "date": "2025.10.03",
+        "source_rows": [
+          {
+            "table": 37,
+            "row": 11
+          }
+        ]
+      },
+      {
+        "school_name": "계산고등학교",
+        "category": "하키",
+        "division": "남자18세이하부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.20",
+        "source_rows": [
+          {
+            "table": 38,
+            "row": 2
+          },
+          {
+            "table": 38,
+            "row": 3
+          },
+          {
+            "table": 38,
+            "row": 4
+          },
+          {
+            "table": 38,
+            "row": 5
+          },
+          {
+            "table": 38,
+            "row": 6
+          },
+          {
+            "table": 38,
+            "row": 7
+          },
+          {
+            "table": 38,
+            "row": 8
+          },
+          {
+            "table": 38,
+            "row": 9
+          },
+          {
+            "table": 38,
+            "row": 10
+          },
+          {
+            "table": 38,
+            "row": 11
+          },
+          {
+            "table": 38,
+            "row": 12
+          },
+          {
+            "table": 38,
+            "row": 13
+          }
+        ]
+      },
+      {
+        "school_name": "인천광역시체육회",
+        "category": "하키",
+        "division": "남자일반부",
+        "discipline": "단체전",
+        "medal": "동",
+        "date": "2025.10.22",
+        "source_rows": [
+          {
+            "table": 38,
+            "row": 14
+          },
+          {
+            "table": 38,
+            "row": 15
+          },
+          {
+            "table": 38,
+            "row": 16
+          },
+          {
+            "table": 38,
+            "row": 17
+          },
+          {
+            "table": 38,
+            "row": 18
+          },
+          {
+            "table": 38,
+            "row": 19
+          },
+          {
+            "table": 38,
+            "row": 20
+          },
+          {
+            "table": 38,
+            "row": 21
+          },
+          {
+            "table": 38,
+            "row": 22
+          },
+          {
+            "table": 38,
+            "row": 23
+          },
+          {
+            "table": 38,
+            "row": 24
+          },
+          {
+            "table": 38,
+            "row": 25
+          },
+          {
+            "table": 38,
+            "row": 26
+          },
+          {
+            "table": 38,
+            "row": 27
+          },
+          {
+            "table": 38,
+            "row": 28
+          },
+          {
+            "table": 38,
+            "row": 29
+          },
+          {
+            "table": 38,
+            "row": 30
+          },
+          {
+            "table": 38,
+            "row": 31
+          }
+        ]
+      },
+      {
+        "school_name": "마스터리(Master Lee)흑추관 합기도 팀",
+        "category": "합기도",
+        "division": "남자18세이하부",
+        "discipline": "페더급",
+        "medal": "금",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 39,
+            "row": 2
+          }
+        ]
+      },
+      {
+        "school_name": "마스터리(Master Lee)흑추관 합기도 팀",
+        "category": "합기도",
+        "division": "남자18세이하부",
+        "discipline": "미들급",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 39,
+            "row": 3
+          }
+        ]
+      },
+      {
+        "school_name": "대한합기도팀",
+        "category": "합기도",
+        "division": "남자일반부",
+        "discipline": "1종목",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 39,
+            "row": 4
+          }
+        ]
+      },
+      {
+        "school_name": "대한합기도팀",
+        "category": "합기도",
+        "division": "여자18세이하부",
+        "discipline": "미들급",
+        "medal": "동",
+        "date": "2025.10.19",
+        "source_rows": [
+          {
+            "table": 39,
+            "row": 5
+          }
+        ]
+      },
+      {
+        "school_name": "인천도시공사",
+        "category": "핸드볼",
+        "division": "남자일반부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 40,
+            "row": 2
+          },
+          {
+            "table": 40,
+            "row": 3
+          },
+          {
+            "table": 40,
+            "row": 4
+          },
+          {
+            "table": 40,
+            "row": 5
+          },
+          {
+            "table": 40,
+            "row": 6
+          },
+          {
+            "table": 40,
+            "row": 7
+          },
+          {
+            "table": 40,
+            "row": 8
+          },
+          {
+            "table": 40,
+            "row": 9
+          },
+          {
+            "table": 40,
+            "row": 10
+          },
+          {
+            "table": 40,
+            "row": 11
+          },
+          {
+            "table": 40,
+            "row": 12
+          },
+          {
+            "table": 40,
+            "row": 13
+          },
+          {
+            "table": 40,
+            "row": 14
+          },
+          {
+            "table": 40,
+            "row": 15
+          },
+          {
+            "table": 40,
+            "row": 16
+          },
+          {
+            "table": 40,
+            "row": 17
+          }
+        ]
+      },
+      {
+        "school_name": "인천비즈니스고등학교",
+        "category": "핸드볼",
+        "division": "여자18세이하부",
+        "discipline": "단체전",
+        "medal": "금",
+        "date": "2025.10.23",
+        "source_rows": [
+          {
+            "table": 40,
+            "row": 18
+          },
+          {
+            "table": 40,
+            "row": 19
+          },
+          {
+            "table": 40,
+            "row": 20
+          },
+          {
+            "table": 40,
+            "row": 21
+          },
+          {
+            "table": 40,
+            "row": 22
+          },
+          {
+            "table": 40,
+            "row": 23
+          },
+          {
+            "table": 40,
+            "row": 24
+          },
+          {
+            "table": 40,
+            "row": 25
+          },
+          {
+            "table": 40,
+            "row": 26
+          },
+          {
+            "table": 40,
+            "row": 27
+          },
+          {
+            "table": 40,
+            "row": 28
+          },
+          {
+            "table": 40,
+            "row": 29
+          },
+          {
+            "table": 40,
+            "row": 30
+          },
+          {
+            "table": 40,
+            "row": 31
+          },
+          {
+            "table": 40,
+            "row": 32
+          },
+          {
+            "table": 40,
+            "row": 33
+          }
+        ]
+      }
+    ]
+  }
+]
