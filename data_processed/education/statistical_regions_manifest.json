@@ -1,0 +1,8 @@
+{
+  "institutions": 644,
+  "linked": 640,
+  "unresolved": 4,
+  "historical_source_sha256": "1a9bba8d091fb5d646f26aa2b22e9c97b68061f414829e518bcb5b137c190bb3",
+  "rule": "Existing historical gu or same kindergarten name, identical road address after gu, coordinates within 200m; exactly one match.",
+  "note": "2025년 행정구역 기준 지역 전체 통계입니다. 개편 후 구의 인구나 학교 학생 수가 아닙니다."
+}

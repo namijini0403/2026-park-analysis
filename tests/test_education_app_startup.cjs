@@ -84,6 +84,17 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
     assert.equal(w.document.getElementById('edu-map-candidate').value,grid.__gridId);
   }
   assert.equal(baselineRequests(),initialRequests,'Extended filters must not reload elementary candidates');
+  const restoredSchool=app.state.datasets.educationAllSchools.find(s=>s.statistical_region_2025?.historical_address);
+  assert(restoredSchool);
+  await w.EducationLayers.openReport(restoredSchool);
+  const restoredReport=w.document.querySelector('.edu-body').textContent;
+  assert(restoredReport.includes(restoredSchool.statistical_region_2025.historical_address));
+  assert(restoredReport.includes('2025년 행정구역 기준 지역 전체 통계'));
+  assert(!restoredReport.includes('해당 지역·학교급의 검증 가능한 예측 자료 미확보'));
+  assert(restoredReport.includes(`2025년 행정구역 ${restoredSchool.statistical_region_2025.region_name} 전체`));
+  const unresolvedSchool=app.state.datasets.educationAllSchools.find(s=>s.statistical_region_2025?.basis==='unverified');
+  await w.EducationLayers.openReport(unresolvedSchool);
+  assert(w.document.querySelector('.edu-body').textContent.includes('해당 지역·학교급의 검증 가능한 예측 자료 미확보'));
   // A late elementary response must not replace the newly selected middle-school grid.
   holdBaseline=true;selector.value='초등학교';selector.dispatchEvent(new w.Event('change'));
   assert(releaseBaseline);

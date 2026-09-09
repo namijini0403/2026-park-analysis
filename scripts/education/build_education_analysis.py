@@ -377,6 +377,8 @@ def main():
     print(f"Analyzed {len(result)} institutions", flush=True)
     from scripts.education.build_candidate_comparison import main as build_candidate_comparison
     build_candidate_comparison()
+    from scripts.education.build_statistical_regions import main as build_statistical_regions
+    build_statistical_regions()
 
 
 if __name__ == "__main__":
