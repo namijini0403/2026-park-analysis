@@ -133,7 +133,11 @@ def main():
                 'result_source_url':result_url, 'result_basis':'상세 페이지' if record['fields']['수상'] else '목록의 동일 작품 수상 칸; 상세 수상 칸은 비어 있음',
                 'participant_scope':'출품작(학생/교원 미분류); 지도논문 제외',
                 'verification':'국립중앙과학관 출품작 상세의 학교명 정확 일치. 팀 작품은 학교별 관측이며 합산 시 중복 가능.'})
-    output = {'coverage':f"국립중앙과학관 {', '.join(map(str,manifest['years']))}년 전국과학전람회 출품작 검색 게시물(요약집 포함) {manifest['listed_count']}건 중 상세 {len(manifest['entries'])}건 확인. 학교명 공란 {len(missing_school)}건은 연결하지 않음. 다른 대회·연도 전체 실적은 아님.",
+    pdf_source = ROOT/'data/education_sources/science_awards_2024_pdf.json'
+    pdf_records = json.loads(pdf_source.read_text(encoding='utf-8'))['records'] if pdf_source.exists() else []
+    for record in pdf_records:
+        linked.setdefault(record['school_id'],[]).append(record)
+    output = {'coverage':f"국립중앙과학관 {', '.join(map(str,manifest['years']))}년 전국과학전람회 출품작 검색 게시물(요약집 포함) {manifest['listed_count']}건 중 상세 {len(manifest['entries'])}건 확인. 웹 학교명 공란 {len(missing_school)}건은 그대로 보존하고, 2024 공식 요약집에서 {len(pdf_records)}개 학교-작품 실적을 별도 대조·보완함. 다른 대회·연도 전체 실적은 아님.",
               'schools':linked, 'unmatched_incheon':unmatched, 'ambiguous_school_names':ambiguous, 'missing_school_fields':missing_school, 'failures':manifest['failures']}
     (OUT/'science_awards.json').write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf-8')
     print(f'Matched {len(linked)} schools / {sum(map(len,linked.values()))} school-work observations; failures {len(manifest["failures"])}', flush=True)

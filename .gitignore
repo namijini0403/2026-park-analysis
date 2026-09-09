@@ -69,6 +69,7 @@ Thumbs.db
 .vscode/
 .idea/
 .vercel
+data/education_sources/science_awards_2024.pdf
 
 # update-center runtime state (staging/versions/active pointer)
 data/update_center/
