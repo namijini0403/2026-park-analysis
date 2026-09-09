@@ -54,7 +54,7 @@ def main():
                      'regional':regional.get(f"{row.get('statistical_region_2025',{}).get('region_name',row.get('gu',institution.get('gu')))}|{institution['학교급구분']}"),
                      'awards':row.get('awards',[])+awards['schools'].get(sid,[])+invention['schools'].get(sid,[])+sports['schools'].get(sid,[]),
                      'athletics':{'observations':athletics['schools'].get(sid,[]),'coverage':athletics['coverage']},
-                     'award_coverage':awards['coverage']+' '+invention['coverage']+' '+sports['coverage'],
+                     'award_coverages':{'과학전람회':awards['coverage'],'발명':invention['coverage'],'체육대회':sports['coverage']},
                      'progression':{'observations':progression['schools'].get(sid,[]),'scope':progression['scope'],'limitations':progression['limitations']},
                      'public_indicators':[{**g,'observations':g['observations'][-1:]} for g in indicators.get(sid,[])],
                      'disclosure_titles':titles,'limitations':row.get('limitations',[])}
