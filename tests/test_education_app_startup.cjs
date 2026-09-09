@@ -23,11 +23,12 @@ class MapObject {
 class MapView extends MapObject {
   constructor(node,options){super(options);this.level=options.level;}
   getLevel(){return this.level;} setLevel(level){this.level=level;}
+  setBounds(bounds){this.bounds=bounds;}
   panTo(center){this.center=center;} relayout(){} setDraggable(){}
 }
 class LatLng {constructor(lat,lng){this.lat=lat;this.lng=lng;}getLat(){return this.lat;}getLng(){return this.lng;}}
 w.kakao={maps:{Map:MapView,LatLng,Marker:MapObject,MarkerClusterer:MapObject,InfoWindow:MapObject,
-  Circle:MapObject,CustomOverlay:MapObject,Polygon:MapObject,MarkerImage:MapObject,Point:MapObject,Size:MapObject,
+  Polyline:MapObject,LatLngBounds:class {constructor(){this.points=[];}extend(point){this.points.push(point);}},Circle:MapObject,CustomOverlay:MapObject,Polygon:MapObject,MarkerImage:MapObject,Point:MapObject,Size:MapObject,
   event:{addListener(target,event,handler){(target.events[event] ||= []).push(handler);}},load(callback){callback();}}};
 const fetched=[];
 let holdBaseline=false,releaseBaseline;
@@ -53,6 +54,19 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert.equal(selector.disabled,false,'Boot must initialize the education extension');
   assert.equal(app.state.datasets.educationAllSchools.length,917);
   assert.equal(app.state.datasets.schools.length,272);
+  const routedSchool=app.state.datasets.educationAllSchools.find(r=>r.analysis_version&&JSON.parse(fs.readFileSync(path.join(root,'data_processed/education/school_routes.json'),'utf8'))[r.학교ID].status==='available');
+  await w.EducationLayers.openReport(routedSchool);
+  w.document.getElementById('edu-show-route').click();
+  const routeOverlays=[...app.state.overlays.educationRoute];
+  assert(routeOverlays.length>=4);
+  assert(routeOverlays.every(o=>o.map===app.state.map));
+  assert(routeOverlays.some(o=>o.options.strokeStyle==='shortdash'));
+  assert(app.state.map.bounds.points.length>2);
+  assert.equal(w.document.getElementById('educationReportDialog').open,false);
+  app.setSchoolPanelSelection(app.state.datasets.schools[0]);
+  assert(routeOverlays.every(o=>o.map===null));
+  assert.equal(app.state.overlays.educationRoute.length,0);
+
   assert(fetched.includes('/data_processed/education/school_analysis.json'));
   const baselineRequests=()=>fetched.filter(p=>p==='/data_processed/candidate_grid_final.geojson').length;
   const initialRequests=baselineRequests();

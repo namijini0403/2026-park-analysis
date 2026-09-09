@@ -32,6 +32,18 @@ def road_exposure(graph, path):
             'limitations': '도로 등급별 경로 구간 수·길이이며 실제 횡단 횟수·위험도·안전 판정이 아닙니다. 양끝 연결선은 제외합니다. 복수 태그는 가장 높은 도로 등급으로 분류하며, 동일 길이 평행 간선은 경로 계산과 같은 첫 간선을 사용합니다. OSM 누락·도로 등급 오류·보도 분리 표현의 영향을 받습니다.'}
 
 
+def path_geometry_points(graph, path):
+    points=[Point(graph.nodes[path[0]]['x'],graph.nodes[path[0]]['y'])]
+    for u,v in zip(path,path[1:]):
+        edge=min(graph.get_edge_data(u,v).values(),key=lambda item:float(item['length']))
+        geometry=edge.get('geometry')
+        segment=[Point(x,y) for x,y in geometry.coords] if geometry is not None else [Point(graph.nodes[n]['x'],graph.nodes[n]['y']) for n in [u,v]]
+        origin=Point(graph.nodes[u]['x'],graph.nodes[u]['y'])
+        if origin.distance(segment[-1])<origin.distance(segment[0]): segment.reverse()
+        points.extend(segment[1:])
+    return points
+
+
 def main():
     graph = ox.project_graph(ox.load_graphml(ROOT.parent / "_cache/incheon_walk_graph_v3.graphml"), to_crs=5179)
     graph = ox.convert.to_undirected(graph)
@@ -66,7 +78,7 @@ def main():
             j = park_by_node[paths[sn[i]][1]]
             path = list(reversed(paths[sn[i]][1:]))
             straight = sp.iloc[i].distance(pp.iloc[j])
-            route_points = [sp.iloc[i]] + [Point(graph.nodes[n]["x"],graph.nodes[n]["y"]) for n in path] + [pp.iloc[j]]
+            route_points = [sp.iloc[i]] + path_geometry_points(graph,path) + [pp.iloc[j]]
             ll = gpd.GeoSeries(route_points, crs=5179).to_crs(4326)
             result.update(status="available", park_id=str(parks.iloc[j]["관리번호"]), park_name=parks.iloc[j]["공원명"],
                           route_distance_m=round(distance,1), straight_distance_m=round(straight,1),

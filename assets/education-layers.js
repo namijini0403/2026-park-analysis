@@ -69,6 +69,30 @@ window.EducationLayers = (() => {
       marker.setMap(visible ? state.map : null); state.overlays.academyMarkers.push(marker);
     }
   }
+  function clearRoute(keepSchoolId=null) {
+    if(keepSchoolId && state.educationRouteSchoolId===keepSchoolId) return;
+    for(const overlay of state.overlays.educationRoute || []) overlay.setMap(null);
+    state.overlays.educationRoute=[];
+    state.educationRouteSchoolId=null;
+  }
+  function showRoute(row,route) {
+    if(route?.status!=='available' || !Array.isArray(route.route_coordinates) || route.route_coordinates.length<3) return;
+    clearRoute();
+    if(typeof setSchoolPanelSelection==='function') setSchoolPanelSelection(row);
+    const points=route.route_coordinates.map(([lng,lat])=>new kakao.maps.LatLng(lat,lng));
+    const segments=[{path:points.slice(1,-1),strokeColor:'#2563eb',strokeStyle:'solid'},
+      {path:points.slice(0,2),strokeColor:'#d97706',strokeStyle:'shortdash'},
+      {path:points.slice(-2),strokeColor:'#d97706',strokeStyle:'shortdash'}];
+    const overlays=segments.filter(s=>s.path.length>1).map(options=>new kakao.maps.Polyline({...options,strokeWeight:5,strokeOpacity:.9}));
+    for(const [position,title] of [[points[0],`${row.학교명} 중심`],[points.at(-1),`${route.park_name} 대표점 · 출입구 미확인`]]) overlays.push(new kakao.maps.Marker({position,title}));
+    overlays.forEach(overlay=>overlay.setMap(state.map));
+    state.overlays.educationRoute=overlays;
+    state.educationRouteSchoolId=getSchoolId(row);
+    const bounds=new kakao.maps.LatLngBounds();points.forEach(point=>bounds.extend(point));
+    state.map.setBounds(bounds);
+    ensureModal().close();
+    appendStatus(`${row.학교명} → ${route.park_name}: 파랑은 OSM 경로, 주황 점선은 보행망 연결선. 출입구·통행허용·안전 미확인`);
+  }
   function ensureModal() {
     let dialog = document.getElementById('educationReportDialog');
     if (!dialog) {
@@ -132,6 +156,7 @@ window.EducationLayers = (() => {
       <h2>접근 마찰</h2><p>${route?.status==='available' ? `${e(route.park_name)} 대표점까지 보행망 경로 ${num(route.route_distance_m,'m')} · 직선 대비 ${num(route.detour_ratio,'배')}. ${e(route.destination_basis)}.` : '유효한 대표점 보행 경로 미확보.'}</p><p>학교 중심과 보행망 연결거리 ${num(row.walk_origin_offset_m,'m')}. 횡단보도·출입구·통행허용은 현장 확인 대상입니다.</p>
       ${route?.road_exposure ? `<h3>경로의 도로 유형</h3>${table(['OSM 도로 등급','경로 구간 수','경로 길이'],Object.entries(route.road_exposure.groups).map(([key,value])=>[({motorway:'고속도로급',trunk:'도시 간선도로급',primary:'주요 간선',secondary:'중간급 간선',tertiary:'지구 내 간선',other:'기타 도로·보행로',unknown:'태그 미확보'})[key],num(value.segments,'개'),num(value.length_m,'m')]))}<p class="edu-note">${e(route.road_exposure.limitations)}</p>` : ''}
       ${residentialScenario.schools?.[getSchoolId(row)] ? `<details><summary>주거 구역 내부 통행 가정 비교</summary><p>${e(residentialScenario.limitations)}</p>${table(['조건','권역 면적','추정 공원 면적','공원 면적 비율'],[['baseline','현재 보행망'],['scenario','내부 통행 가정']].map(([key,label])=>{const v=residentialScenario.schools[getSchoolId(row)][key];return [label,num(v.area_m2,'㎡'),num(v.park_proxy_area_m2,'㎡'),num(v.park_proxy_ratio_pct,'%')];}))}<p>기존 초등과 같은 15m 연결 여유·500㎡ 이상 추가 조각 조건입니다. 500m 직선권 안의 주거 구역 중 기존 도달권과 연결 여유 범위에서 닿는 부분만 추가합니다. 여러 단지를 연쇄 연결하지 않습니다.</p></details>` : ''}
+      <button type="button" id="edu-show-route" ${route?.status==='available'?'':'disabled'}>공원 보행망 경로 지도에서 보기</button> <button type="button" id="edu-clear-route">지도 경로 지우기</button><p class="edu-note">파란 선은 OSM 간선 도형, 주황 점선은 학교·공원 대표점과 보행망 사이 연결선입니다. 실제 출입구·통행 가능성을 검증한 길 안내가 아닙니다.</p>
       <h2>학교 내부 독서 공급</h2><p>1인당 장서 ${num(row.reading_gap?.books_per_student,'권')} · 동일 학교급 관측 중앙값 ${num(row.reading_gap?.same_level_median,'권')}. 도보권 도서관 ${num(c.library?.walkshed_count,'개')}.</p><p class="edu-note">학교도서관 공시가 없는 유치원은 내부 공급 미확보입니다. 중앙값은 적정 기준이 아닌 동일 학교급 내 비교 기준입니다. 정확한 공시연도·좌석·운영예산은 아래 학교도서관 공시에서 확인합니다.</p>
       <h2>현재·미래 수요</h2>${table(['연도','학생·원아 수'],history.map(h=>[h.year,num(h.students,'명')]))}
       <p>${e(enrollment.model_status === 'insufficient_history' ? '최근 연속 이력 부족: 학교별 장기 예측 미산출' : enrollment.model_status === 'weighted_trend_lightgbm' ? '가중 추세 + 학교급별 LightGBM 잔차 보정' : '가중 추세 모형')}</p>
@@ -160,6 +185,8 @@ window.EducationLayers = (() => {
       if(typeof askAiExplainer==='function') askAiExplainer('이 학교의 현재 공원 환경 격차와 분석 한계를 설명해줘.','school_explanation');
     };
     if (actual) {
+      body.querySelector('#edu-show-route').onclick=()=>showRoute(row,route);
+      body.querySelector('#edu-clear-route').onclick=()=>clearRoute();
       body.querySelector('#edu-show-candidate').onclick=async()=>{
         const button=body.querySelector('#edu-show-candidate');
         button.disabled=true;
@@ -230,5 +257,5 @@ window.EducationLayers = (() => {
     body.innerHTML=`<p class="edu-kicker">선택 학교급·지역의 실제 관측값</p><h1>학교급별 분석 현황</h1><p><a href="./data_processed/education/school_data_coverage.csv" download="학교별_자료연결_점검표.csv">전체 원장 학교별 자료 연결 점검표 CSV</a></p><p class="edu-note">점검표는 현재 필터와 무관한 전체 원장 범위입니다. 미편입·식별 검토·공시 결측을 포함하며, 확인기록 0은 실적 없음이나 학교 품질을 뜻하지 않습니다.</p>${table(['학교급','기관','환경 분석','평균 추정 공원면적 비율','새 수요모형 산출'],groups)}<p>초등학교의 기존 검토·보정값과 확장 학교급의 v3 도달권·공원 대체경계 추정값은 산출 기준이 다릅니다. 학교급별로 나누어 해석합니다.</p><h2>공원 환경 분포</h2>${table(['학교급','공원 관측 0개','1% 미만','1~5% 미만','5% 이상'],groups.map(g=>{const r=rows.filter(s=>(s.학교급구분||'초등학교')===g[0]);return [g[0],r.filter(s=>Number(s.iso_park_count)===0).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)<1).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)>=1&&Number(s.iso_green_ratio)<5).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)>=5).length];}))}<p>학원·교습소 원자료 ${num(academies.length,'개')} 시설 중 ${num(academies.filter(a=>a.lat!=null).length,'개')} 좌표 확보. 원자료 기준 2026-08-01.</p>`;
     if (!dialog.open) dialog.showModal();
   }
-  return {init,summary,renderAcademies,renderCandidates,openReport,openStatistics};
+  return {clearRoute,init,summary,renderAcademies,renderCandidates,openReport,openStatistics};
 })();
