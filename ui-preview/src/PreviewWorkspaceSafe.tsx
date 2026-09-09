@@ -139,7 +139,7 @@ function useStatisticsLive(active: boolean): [StatisticsLoadState, () => void] {
 function StatisticsLoadingView({ state, onRetry }: { state: StatisticsLoadState; onRetry: () => void }) {
   const failed = state.status === "error";
   return (
-    <div className="mx-auto max-w-[1380px] px-4 py-8 lg:px-8">
+    <div className="reading-page mx-auto max-w-[1380px] px-4 py-8 lg:px-8">
       <section className="panel space-y-4 p-7">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">Reachability Overview</p>
         <h1 className="text-3xl font-black tracking-tight text-white">인천 학교 전체 정책 도달성 통계</h1>
@@ -259,7 +259,7 @@ export default function PreviewWorkspaceSafe() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setView("landing")}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/95 p-1.5 shadow-soft transition hover:scale-105"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-transparent transition hover:scale-105"
               aria-label="홈으로"
             >
               <img src={logoSrc} alt="반경 너머, 정책 도달성으로" className="h-full w-full object-contain" />
@@ -321,7 +321,7 @@ export default function PreviewWorkspaceSafe() {
 
       {aiChatOpen ? (
         <div className="app-print-hidden fixed inset-x-4 top-[82px] z-40 mx-auto max-w-[1380px] sm:inset-x-6 lg:inset-x-8">
-          <div className="ml-auto max-h-[calc(100vh-104px)] w-full max-w-[560px] overflow-y-auto rounded-3xl border border-white/15 bg-navy-950/95 p-2 shadow-2xl backdrop-blur">
+          <div className="reading-page reading-chat-window ml-auto max-h-[calc(100vh-104px)] w-full max-w-[560px] overflow-y-auto rounded-3xl border border-white/15 bg-navy-950/95 p-2 shadow-2xl backdrop-blur">
             <div className="flex items-center justify-between px-3 py-2">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-forest-300">AI Chatbot</p>

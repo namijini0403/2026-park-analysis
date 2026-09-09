@@ -217,19 +217,21 @@ export default function KakaoMap({
 
   return (
     <div
+      className="kakao-map-surface"
       ref={containerRef}
       style={{
         width: "100%",
         height,
         borderRadius: 12,
-        border: "1px solid rgba(255,255,255,0.10)",
+        border: "1px solid rgba(72,128,166,0.38)",
         overflow: "hidden",
-        background: "#050B14",
+        background: "#061C31",
         position: "relative",
       }}
     >
       {loadError ? (
         <div
+          className="kakao-map-unavailable"
           style={{
             position: "absolute",
             inset: 0,
@@ -240,8 +242,8 @@ export default function KakaoMap({
             textAlign: "center",
             fontSize: 13,
             lineHeight: 1.7,
-            color: "#CBD5E1",
-            background: "linear-gradient(135deg, rgba(16,27,45,0.98), rgba(8,20,33,0.98))",
+            color: "#B7D1E4",
+            background: "linear-gradient(135deg, rgba(7,31,53,0.98), rgba(5,24,43,0.98))",
           }}
         >
           {loadError}

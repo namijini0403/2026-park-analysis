@@ -701,7 +701,7 @@ function Badge({ tone, children }: { tone: StatusTone; children: React.ReactNode
 }
 
 function Button({ className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={cx("inline-flex items-center justify-center rounded-2xl bg-forest-grad px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:brightness-110", className)} {...props} />;
+  return <button className={cx("inline-flex items-center justify-center rounded-xl bg-forest-grad px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:brightness-105", className)} {...props} />;
 }
 
 function SectionShell({ kicker, title, children }: { kicker: string; title: string; children: React.ReactNode }) {
@@ -847,7 +847,7 @@ function StudentTrendMini({ data }: { data: StudentTrendPoint[] }) {
           <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "#94A3B8" }} width={40} />
           <Tooltip contentStyle={{ borderRadius: 12, backgroundColor: "rgba(10,22,51,0.95)", borderColor: "rgba(255,255,255,0.1)", color: "#E5E7EB" }} formatter={(value: number) => [`${formatNumber(value)}명`, "학생 수"]} />
           <Line type="monotone" dataKey="value" stroke="#3FB081" strokeWidth={2.5} dot={{ r: 3, fill: "#3FB081" }} activeDot={{ r: 5 }}>
-            <LabelList dataKey="value" position="top" formatter={(value: number) => formatNumber(value)} style={{ fill: "#94A3B8", fontSize: 10 }} />
+            <LabelList dataKey="value" position="top" formatter={(value: number) => formatNumber(value)} style={{ fill: "#627386", fontSize: 10 }} />
           </Line>
         </LineChart>
       </ResponsiveContainer>
@@ -857,13 +857,13 @@ function StudentTrendMini({ data }: { data: StudentTrendPoint[] }) {
 
 function SchoolHeader({ schoolName, districtName, casePolicyLabel, caseStatusLabel, statusSummary, noParkWithin500m, nearestParkDistanceM, greenRatio, greenRatioHighReviewFlag, playgroundCount }: Pick<SchoolDetailReportProps, "schoolName" | "districtName" | "casePolicyLabel" | "caseStatusLabel" | "statusSummary" | "noParkWithin500m" | "nearestParkDistanceM" | "greenRatio" | "greenRatioHighReviewFlag" | "playgroundCount">) {
   return (
-    <Card className="overflow-hidden">
+    <Card className="report-header overflow-hidden">
       <div className="relative space-y-5 p-7">
         {/* Decorative top-left forest accent corner */}
         <div className="pointer-events-none absolute -top-px left-7 right-7 h-px bg-gradient-to-r from-transparent via-forest-400/50 to-transparent" />
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-400/45 bg-rose-500/12 px-3 py-1 text-[11px] font-bold tracking-[0.16em] text-rose-200">
-            <span className="h-1.5 w-1.5 rounded-full bg-rose-300" />
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-bold tracking-[0.16em] text-slate-100">
+            <span style={{ background: casePolicyLabel === "즉시 개선 대상" ? "#f87171" : casePolicyLabel === "우선 검토 대상" ? "#fb923c" : casePolicyLabel === "모니터링 대상" ? "#fbbf24" : casePolicyLabel === "유지·관리 대상" ? "#34d399" : "#94a3b8" }} className="h-1.5 w-1.5 rounded-full" />
             {casePolicyLabel}
           </span>
           <span className="rounded-full border border-white/10 bg-navy-900/95 px-3 py-1 text-[11px] font-semibold tracking-wide text-slate-300">{caseStatusLabel}</span>
@@ -2077,7 +2077,7 @@ function SimulationEntry({
 
 export default function SchoolDetailReportPage(props: SchoolDetailReportProps) {
   return (
-    <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-4 py-8 lg:px-8">
+    <div className="reading-page report-reading-page mx-auto flex max-w-[1280px] flex-col gap-8 px-4 py-8 lg:px-8">
       <SchoolHeader {...props} />
       <SchoolProfileGrid {...props} />
       <ReadingAccessSection readingContext={props.readingContext} />

@@ -1,0 +1,139 @@
+/* Reading surfaces only. Keep the cinematic cover, navigation and map canvas navy. */
+:is(.panel, .guide-dialog, .guide-preview-dialog, .ai-chat-panel, .simulation-overlay-card, .school-hover-card) {
+  color-scheme: light;
+  --bg: #f6f2e9;
+  --panel-bg: #fffdf7;
+  --panel-border: #d2d9d2;
+  --text: #19364a;
+  --muted: #647477;
+  --accent: #087e78;
+  --accent-hover: #05645f;
+  --accent-soft: #e3f2eb;
+  --secondary: #255979;
+  --secondary-soft: #eaf0f4;
+  --surface: #fffdf7;
+  --surface-muted: #edece4;
+  --line: #d8ddd5;
+  color: var(--text);
+  background: #f6f2e9;
+  border-color: #c5d4d2;
+}
+:is(.panel, .guide-dialog, .guide-preview-dialog, .ai-chat-panel) :is(button, a, input, select, summary):focus-visible {
+  outline: 3px solid #087e78;
+  outline-offset: 3px;
+}
+:is(.panel-body, .guide-scroll, .guide-preview-scroll, .ai-chat-panel) { scrollbar-color: #a3b8b2 #f6f2e9; }
+
+/* School and district reading panel. */
+.panel { background: #f6f2ef; box-shadow: 0 12px 36px #000b2040; }
+.panel-body { background: #f6f2e9; }
+.panel-close { color: #355363; background: #fffdf7; border-color: #cbd7d1; }
+.panel-close:hover { color: #075e58; background: #e3f2eb; border-color: #70b1a5; }
+.panel .section-title { color: #087e78; }
+.panel .field-label { color: #566d72; }
+.panel select { color: #19364a; background: #fffdf7; border-color: #cad5cf; }
+.summary-box, .school-detail-box, .summary-stat-card, .detail-card, .school-link, .map-evidence {
+  background: #fffdf7; border-color: #d4dcd4; color: #19364a;
+}
+.school-detail-box.case-case1, .school-detail-box.case-island { background: #fffdf7; }
+.detail-name, .summary-stat-value { color: #19364a; }
+.detail-subtitle, .summary-stat-label, .summary-stat-unit { color: #647477; }
+.detail-message { color: #31525c; background: #edf4ea; border-color: #cbdccd; box-shadow: inset 3px 0 0 #087e78; }
+.detail-message-extra { color: #73518c; }
+.metric-list, .metric-item { color: #526c73; }
+.metric-item strong { color: #19364a; }
+.metric-item.warning { color: #926217; }
+.metric-item.danger { color: #b23449; }
+.summary-stat-card { border-top-color: #91b8ad; background: #fffdf7; }
+.school-link:hover { border-color: #86b7ab; background: #eaf4eb; color: #164b4d; }
+.map-evidence > summary { color: #087e78; }
+.detail-badge.critical { color: #aa2c43; background: #ffedf0; border-color: #e5afba; }
+.detail-badge.immediate { color: #694292; background: #f2ebfa; border-color: #cfbde4; }
+.detail-badge.high, .detail-badge.watch, .detail-badge.warning { color: #865d11; background: #fff4d7; border-color: #e6d3a7; }
+.detail-badge.normal, .detail-badge.success { color: #14634e; background: #e6f4e9; border-color: #bad8c6; }
+.detail-badge.island, .detail-badge.neutral { color: #486172; background: #edf0f1; border-color: #cbd4d9; }
+.panel .detail-badge[style*="#e53935" i] { color: #a52c42 !important; background: #ffedf0 !important; border-color: #e4abb8 !important; }
+.panel .detail-badge[style*="#fb8c00" i] { color: #86520a !important; background: #fff0d7 !important; border-color: #dbad63 !important; }
+.panel .detail-badge[style*="#fdd835" i] { color: #725914 !important; background: #fff7d9 !important; border-color: #dac878 !important; }
+.panel .detail-badge[style*="#43a047" i], .panel .detail-badge[style*="#00897b" i] { color: #17664c !important; background: #e5f3e8 !important; border-color: #a6cbb6 !important; }
+.panel .detail-badge[style*="#0288d1" i] { color: #25627f !important; background: #e7f3fa !important; border-color: #abccde !important; }
+.panel .detail-badge[style*="#7c3aed" i] { color: #68438e !important; background: #f0e9f8 !important; border-color: #cbb7e1 !important; }
+.school-hover-card { background: #fffdf7fa; border-color: #b7cec5; border-top-color: #087e78; }
+.school-hover-card .hc-name, .school-hover-card .hc-v { color: #19364a; }
+.school-hover-card .hc-k, .school-hover-card .hc-foot { color: #647477; }
+/* Only app-authored information-window bodies, never map tiles or SDK controls. */
+#map div[style*="font-family:Pretendard"][style*="padding:12px"],
+#map div[style*="font-family:Pretendard"][style*="padding:14px"] {
+  color-scheme: light; color: #19364a; background: #fffdf7; border-radius: 7px;
+}
+#schoolContextCard [style*="color:#6EE7B7"] { color: #16674f !important; }
+#schoolContextCard [style*="color:#CBD5E1"] { color: #526773 !important; }
+#schoolContextCard a[style*="color:#C4B5FD"] { color: #725099 !important; }
+.mobile-handle { background: #a9bcb7; }
+
+/* The guide is a warm document with a small night-city masthead. */
+.guide-dialog { background: #f6f2e9; color: #19364a; }
+.guide-hero { background: linear-gradient(110deg, #062339ed, #082e47bb), url("./night-city-reference.png") right center / cover; border-color: #355f77; }
+.guide-hero h2 { color: #effaff; }
+.guide-hero p { color: #d1e4ec; }
+.guide-hero .guide-kicker { color: #88f1df; }
+.guide-hero .guide-badge { background: #103e49; color: #c2fff0; border-color: #4b8e89; }
+.guide-section-head h3, .guide-detail-title { color: #19364a; }
+.guide-section-head p, .guide-detail-panel p { color: #536e76; }
+.guide-close { background: #fffdf7; border-color: #c4d2cd; color: #284957; }
+.guide-close:hover { background: #e4f3ec; }
+.guide-impact-stat, .guide-case-card, .guide-flow-stage, .guide-detail-panel, .guide-principle-card, .guide-faq-item, .guide-cta-panel {
+  background: #fffdf7; border-color: #d4dcd4; color: #19364a; box-shadow: 0 5px 18px #19364a06;
+}
+.guide-kicker, .guide-impact-number span, .guide-detail-headline { color: #087e78; }
+.guide-impact-number, .guide-impact-copy strong, .guide-case-title, .guide-case-metric strong, .guide-screenshot-card-body h4, .guide-detail-list-wrap h4, .guide-principle-card h4, .guide-faq-question { color: #19364a; }
+.guide-impact-copy span, .guide-screenshot-card-body p, .guide-node-short, .guide-detail-list li, .guide-detail-action, .guide-principle-card p, .guide-faq-answer, .guide-cta-panel p { color: #536e76; }
+.guide-impact-emphasis, .guide-impact-copy .guide-impact-emphasis { border-color: #bad9c8; background: #e5f3e9; color: #1a664d; }
+.guide-badge, .guide-capture-label, .guide-screenshot-card-body span, .guide-screen-hint, .guide-feedback-note, .guide-detail-kicker { border-color: #c2d9d1; background: #eaf3ee; color: #216b61; }
+.guide-capture-label.straight { color: #885718; background: #fff1db; border-color: #dab879; }
+.guide-capture-label.walk { color: #286580; background: #e8f3f8; border-color: #a6c9d9; }
+.guide-capture-card, .guide-screenshot-card, .guide-detail-list-wrap, .guide-detail-principle, .guide-system-note, .guide-case-metric { border-color: #d2dad3; background: #f8f6ee; color: #31545f; }
+.guide-case-metric span { color: #647477; }
+.guide-case-label { border-color: #e5b7c0; background: #ffedf0; color: #a63049; }
+.guide-screenshot-card img, .guide-capture-card img { border-color: #d4dcd4; background: #f6f2e9; }
+.guide-flow-node { border-color: #c8d7d0; background: #fffdf7; color: #214958; }
+.guide-flow-node:not(:last-child)::after { background: #b3c9c0; }
+.guide-flow-node.is-active { border-color: #087e78; background: #e0f1e8; color: #075e58; box-shadow: 0 0 0 2px #087e7817; }
+.guide-flow-node.is-active .guide-node-short { color: #326458; }
+.guide-flow-node.is-active .guide-node-index { color: #075e58; background: #c6e5d9; }
+.guide-preview-dialog, .guide-preview-head, .guide-preview-scroll { border-color: #cbd7d1; background: #f6f2e9; }
+.guide-preview-head strong { color: #19364a; }
+.guide-preview-close { border-color: #cad5cf; background: #fffdf7; color: #355363; }
+.guide-print-button, .guide-cta-button, .guide-cta-button.tertiary { border-color: #9bc9b9; background: #e9f3ed; color: #126b5e; }
+.guide-cta-button.primary { background: #087e78; color: #fffdf7; border-color: #087e78; }
+.guide-print-button:hover, .guide-cta-button:hover { background: #d5ecdf; color: #075b54; border-color: #71ac98; }
+.guide-cta-button.primary:hover { background: #05675f; color: #fffdf7; }
+
+/* AI answers and inputs use the same paper-like surface. No requests are changed. */
+.ai-chat-panel { background: #f6f2e9; border-color: #bcd0c7; }
+.ai-chat-head { background: #eeeede; border-color: #d1dacf; }
+.ai-chat-title { color: #19364a; }
+.ai-chat-kicker, .ai-answer-label { color: #087e78; }
+.ai-chat-copy, .ai-chat-answer, .ai-answer-block, .ai-answer-details { color: #36545f; }
+.ai-answer-block, .ai-answer-details, .ai-question-btn { background: #fffdf7; border-color: #d2dcd3; }
+.ai-question-btn { color: #28565c; }
+.ai-question-btn:hover { background: #e4f2e9; border-color: #90b8a8; }
+.ai-chat-input { background: #fffdf7; border-color: #bfcfc5; color: #19364a; }
+.ai-chat-input::placeholder { color: #687d80; }
+.ai-chat-submit { background: #087e78; color: #fffdf7; }
+.ai-chat-close { background: #fffdf7; border-color: #bfcfc5; color: #365663; }
+.ai-citation-list { color: #5c737a; }
+.ai-answer-details summary { color: #176c61; }
+.ai-answer-details[open] summary { background: #e5f1e9; border-color: #c5d9c9; }
+
+/* Viewer chrome stays ivory; the entry gate keeps its separate night-glass theme. */
+.simulation-overlay-card { background: #f6f2e9; border-color: #a4c1bb; }
+.simulation-overlay-actions { background: #eeeede; border-color: #cbd8cc; }
+.simulation-overlay-button { color: #2c535b; background: #fffdf7; border-color: #bfd3c8; }
+.simulation-overlay-button.print { background: #e2f1e8; border-color: #88b6a2; color: #116354; }
+
+@media (max-width: 768px) {
+  .panel { background: #f6f2ef; }
+  .guide-dialog, .ai-chat-panel { background: #f6f2e9; }
+  .app-shell:has(.ai-chat-panel.is-open) #panelToggleButton { visibility: hidden; pointer-events: none; }
+}

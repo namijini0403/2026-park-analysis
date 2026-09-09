@@ -35,14 +35,14 @@ const CASE_COLORS: Record<string, string> = {
   "별도 정책 적용": "#94A3B8",
 };
 
-const CHART_GRID = "rgba(255,255,255,0.08)";
-const CHART_TICK = "#94A3B8";
-const CHART_CURSOR = "rgba(16,185,129,0.07)";
+const CHART_GRID = "rgba(65,92,101,0.13)";
+const CHART_TICK = "#647477";
+const CHART_CURSOR = "rgba(8,126,120,0.07)";
 const TOOLTIP_STYLE = {
-  backgroundColor: "rgba(16,27,45,0.96)",
-  border: "1px solid rgba(255,255,255,0.10)",
-  borderRadius: 12,
-  color: "#F8FAFC",
+  backgroundColor: "rgba(255,253,247,0.99)",
+  border: "1px solid rgba(65,92,101,0.24)",
+  borderRadius: 10,
+  color: "#19364A",
 };
 const SUPPORT_PRIORITY_LABELS = new Set(["즉시 개선 대상", "우선 검토 대상"]);
 
@@ -101,7 +101,7 @@ function CaseChip({ label }: { label: string }) {
   const color = CASE_COLORS[label] ?? "#94A3B8";
   return (
     <span
-      className="rounded-full border px-2.5 py-1 text-[11px] font-bold"
+      className="stats-case-chip rounded-full border px-2.5 py-1 text-[11px] font-bold"
       style={{ borderColor: `${color}66`, backgroundColor: `${color}22`, color }}
     >
       {label}
@@ -114,11 +114,11 @@ function FlagChip({ flag, muted = false }: { flag: LayerFlag; muted?: boolean })
   return (
     <span
       title={meta.label}
-      className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-bold"
+      className="stats-flag-chip inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-bold"
       style={{
         borderColor: muted ? "rgba(255,255,255,0.10)" : `${meta.color}66`,
         backgroundColor: muted ? "rgba(255,255,255,0.03)" : `${meta.color}22`,
-        color: muted ? "#475569" : meta.color,
+        color: muted ? "#647477" : meta.color,
       }}
     >
       <span aria-hidden>{meta.icon}</span>
@@ -508,9 +508,9 @@ export default function StatisticsPageSafe({ data, insight }: StatisticsPageProp
   const histMax = Math.max(1, ...insight.overlapHistogram.map((h) => h.schools));
 
   return (
-    <div className="mx-auto flex max-w-[1380px] flex-col gap-8 px-4 py-8 lg:px-8">
-      <section className="panel space-y-5 p-7">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+    <div className="stats-page mx-auto flex max-w-[1380px] flex-col gap-6 px-4 py-6 lg:px-8 lg:py-8">
+      <section className="panel stats-overview space-y-5 p-7">
+        <div className="stats-masthead flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-forest-300">Reachability Overview</p>
             <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">인천 학교 전체 정책 도달성 통계</h1>
@@ -519,13 +519,13 @@ export default function StatisticsPageSafe({ data, insight }: StatisticsPageProp
               확인하고, 이어서 시 → 구 → 학교 순으로 좁혀 봅니다.
             </p>
           </div>
-          <div className="rounded-2xl border border-forest-400/30 bg-forest-500/10 px-4 py-3 text-right">
+          <div className="rounded-xl border border-forest-400/30 bg-forest-500/10 px-4 py-3 text-right">
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-forest-300">Live</p>
             <p className="mt-1 text-sm font-bold text-white">화면을 열 때마다 최신 데이터로 재계산</p>
             <p className="text-[11px] text-slate-400">맥락 레이어 기준일 {insight.dataAsOf ?? "—"}</p>
           </div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <SummaryCard
             title="전체 학교"
             value={`${formatNumber(data.summary.schoolCount)}개교`}
@@ -793,8 +793,8 @@ export default function StatisticsPageSafe({ data, insight }: StatisticsPageProp
               <BestSchoolCard school={selectedDistrict.bestSchool} label={`${selectedDistrict.districtName} 최우수 학교`} />
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-navy-850/95 p-5">
-              <div className="flex items-center justify-between gap-3">
+            <div className="stats-top-five rounded-2xl border border-white/10 bg-navy-850/95 p-5">
+              <div className="stats-top-five-head grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-forest-300">Top 5</p>
                   <h3 className="mt-1 text-2xl font-black tracking-tight text-white">{selectedDistrict.districtName} 우선 지원 대상 최대 5개</h3>
@@ -895,7 +895,7 @@ export default function StatisticsPageSafe({ data, insight }: StatisticsPageProp
       </section>
 
       {/* ── 정의·출처(접힘) ───────────────────────────────────────────── */}
-      <details className="group rounded-2xl border border-white/10 bg-navy-900/60 px-5 py-3 text-[11px] leading-5 text-slate-400">
+      <details className="group rounded-xl border border-white/10 bg-navy-900/60 px-5 py-3 text-[11px] leading-5 text-slate-400">
         <summary className="cursor-pointer select-none text-xs font-semibold text-slate-300 marker:text-forest-400">
           계산 정의 · 임계값 · 데이터 출처 보기
         </summary>

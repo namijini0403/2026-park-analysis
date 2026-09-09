@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 :root {
-  color: #F8FAFC;
-  background-color: #050B14;
+  color: #DEF2FF;
+  background-color: #04182B;
+  color-scheme: dark;
   font-family:
     "Pretendard Variable",
     Pretendard,
@@ -24,17 +25,49 @@
 body {
   margin: 0;
   background:
-    linear-gradient(rgba(255,255,255,0.026) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.026) 1px, transparent 1px),
-    linear-gradient(180deg, #050B14 0%, #081421 52%, #101B2D 100%);
-  background-size: 44px 44px, 44px 44px, auto;
+    radial-gradient(ellipse at 92% 0, rgba(24, 109, 160, 0.12), transparent 55%),
+    linear-gradient(180deg, #04182B 0%, #061D32 54%, #041629 100%);
   background-attachment: fixed;
   min-height: 100vh;
-  color: #F8FAFC;
+  color: #DEF2FF;
 }
 
 * {
   box-sizing: border-box;
+}
+
+h1, h2, h3, h4 {
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+p {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* One visible conclusion, with optional evidence underneath. */
+.disclosure { border: 1px solid #214D6C; border-radius: 14px; background: rgba(7,31,53,.97); min-width: 0; box-shadow: 0 10px 26px rgba(0,6,18,.15); }
+.disclosure-toggle { display: flex; justify-content: space-between; align-items: center; gap: 14px; width: 100%; padding: 17px 18px; text-align: left; color: #DEF2FF; background: transparent; border: 0; cursor: pointer; }
+.disclosure-title { display: block; font-size: 17px; font-weight: 750; }
+.disclosure-description { display: block; margin-top: 4px; font-size: 12px; color: #99B4CB; line-height: 1.55; }
+.disclosure-action { flex-shrink: 0; font-size: 12px; color: #47EFDC; }
+.disclosure-content { padding: 0 18px 18px; }
+.disclosure-content > * + * { margin-top: 16px; }
+.reading-summary { border: 1px solid #286075; border-radius: 16px; padding: 21px; background: linear-gradient(120deg, #0A3549, #071F35); box-shadow: 0 10px 26px rgba(0,6,18,.18), inset 0 1px 0 rgba(71,239,220,.06); }
+.reading-summary h2 { margin: 6px 0 12px; font-size: clamp(22px, 3vw, 32px); font-weight: 800; line-height: 1.4; word-break: keep-all; }
+.reading-summary p { color: #B7D1E4; line-height: 1.65; }
+.reading-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.reading-metric { border-left: 3px solid #47EFDC; padding: 7px 14px; min-width: 0; }
+.reading-metric strong { display: block; font-size: 23px; margin: 6px 0; }
+.reading-metric span, .reading-metric p { font-size: 13px; }
+button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #47EFDC; outline-offset: 3px; }
+button, summary { touch-action: manipulation; }
+@media (max-width: 640px) {
+  .reading-grid { grid-template-columns: 1fr; }
+  .disclosure-toggle { padding: 16px; gap: 8px; }
+  .disclosure-content { padding: 0 12px 16px; }
+  .reading-summary { padding: 18px; }
 }
 
 @layer components {
@@ -47,16 +80,16 @@ body {
 
   /* Quiet glass-card surface shared by the cover, guide, reports, and simulation. */
   .panel {
-    @apply relative rounded-2xl border border-white/10 bg-card-grad shadow-card;
+    @apply relative rounded-2xl border border-navy-600 bg-card-grad shadow-card;
   }
   .panel-soft {
-    @apply rounded-2xl border border-white/10 bg-navy-850/95;
+    @apply rounded-2xl border border-navy-600 bg-navy-850/95;
   }
   .panel-inset {
-    @apply rounded-xl border border-white/10 bg-navy-900/95;
+    @apply rounded-xl border border-navy-600 bg-navy-900/95;
   }
   .panel-light {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-soft;
+    @apply rounded-2xl border border-navy-600 bg-navy-850 shadow-soft;
   }
 
   /* Accent stripe for tonal cards — replaces full colored backgrounds */
@@ -74,46 +107,46 @@ body {
   .accent-stripe-sky::before { background: linear-gradient(180deg, #60A5FA 0%, rgba(96,165,250,0.3) 100%); }
 
   .stat-card {
-    @apply rounded-xl border border-white/10 bg-navy-850/95 px-4 py-3;
+    @apply rounded-xl border border-navy-600 bg-navy-850/95 px-4 py-3;
   }
   .stat-label {
     @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-forest-300;
   }
   .stat-value {
-    @apply text-xl font-bold text-white;
+    @apply text-xl font-bold text-slate-100;
   }
 
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold;
   }
   .chip-forest {
-    @apply chip border-forest-500/50 bg-forest-500/10 text-forest-200;
+    @apply chip border-forest-500/40 bg-forest-500/10 text-forest-300;
   }
   .chip-navy {
-    @apply chip border-navy-400/40 bg-navy-800/60 text-navy-300;
+    @apply chip border-navy-600 bg-navy-800 text-slate-200;
   }
   .chip-amber {
-    @apply chip border-signal-warn/45 bg-signal-warn/10 text-signal-warnSoft;
+    @apply chip border-signal-warn/35 bg-signal-warn/10 text-amber-200;
   }
   .chip-alert {
-    @apply chip border-signal-alert/45 bg-signal-alert/10 text-signal-alertSoft;
+    @apply chip border-signal-alert/35 bg-signal-alert/10 text-rose-300;
   }
   .chip-info {
-    @apply chip border-signal-info/45 bg-signal-info/10 text-signal-infoSoft;
+    @apply chip border-signal-info/35 bg-signal-info/10 text-sky-200;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-forest-grad px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 active:brightness-95;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-forest-400/70 bg-forest-grad px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 active:brightness-95;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-navy-600 bg-navy-900 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-navy-750;
   }
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-forest-500 bg-transparent px-4 py-2 text-sm font-semibold text-forest-200 transition hover:bg-forest-500/10;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-forest-600 bg-transparent px-4 py-2 text-sm font-semibold text-forest-300 transition hover:bg-forest-500/10;
   }
 
   .section-title {
-    @apply text-base font-bold tracking-tight text-white;
+    @apply text-base font-bold tracking-tight text-slate-100;
   }
   .section-sub {
     @apply text-sm leading-relaxed text-slate-300;
@@ -129,23 +162,935 @@ body {
   }
 }
 
-/* Recharts tweaks for dark theme */
+/* Chart contrast follows the dark surfaces without changing any data series. */
 .recharts-cartesian-axis-tick text {
-  fill: #94A3B8;
+  fill: #99B4CB !important;
   font-size: 11px;
 }
 .recharts-cartesian-grid line {
-  stroke: rgba(255, 255, 255, 0.08);
+  stroke: rgba(103, 164, 201, 0.15);
 }
 .recharts-default-tooltip {
-  background-color: rgba(8, 20, 33, 0.95) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #E5E7EB !important;
-  border-radius: 8px !important;
+  background-color: rgba(5, 25, 44, 0.98) !important;
+  border: 1px solid #214D6C !important;
+  color: #DEF2FF !important;
+  border-radius: 10px !important;
+  box-shadow: 0 12px 28px rgba(0, 6, 18, 0.32) !important;
 }
 .recharts-tooltip-label {
-  color: #E5E7EB !important;
+  color: #DEF2FF !important;
 }
+
+/* Unify legacy utility colors without changing report markup or copy. */
+.text-white {
+  color: #EEF8FF !important;
+}
+
+.text-slate-100,
+.text-slate-200,
+.text-slate-300 {
+  color: #C1D8E8 !important;
+}
+
+.text-slate-400 {
+  color: #99B4CB !important;
+}
+
+.text-slate-500 {
+  color: #91ADC2 !important;
+}
+
+.text-forest-50,
+.text-forest-100,
+.text-forest-200,
+.text-forest-300 {
+  color: #8BF8E9 !important;
+}
+
+.text-amber-100,
+.text-amber-200,
+.text-amber-300,
+.text-signal-warnSoft {
+  color: #FDE68A !important;
+}
+
+.text-rose-100,
+.text-rose-200,
+.text-rose-300,
+.text-signal-alertSoft {
+  color: #FDA4AF !important;
+}
+
+.text-sky-100,
+.text-sky-200,
+.text-signal-infoSoft {
+  color: #93CFFD !important;
+}
+
+[class~="border-white/10"],
+[class~="border-white/15"],
+[class~="border-white/20"] {
+  border-color: rgba(103, 164, 201, 0.26) !important;
+}
+
+[class~="bg-white/5"],
+[class~="bg-white/10"],
+[class~="bg-white/15"],
+[class~="bg-white/20"],
+[class~="bg-white/[0.03]"],
+[class~="bg-white/[0.04]"] {
+  background-color: rgba(133, 197, 233, 0.06) !important;
+}
+
+:is(.btn-primary, .bg-forest-grad, [class~="bg-forest-500/95"], .bg-forest-600, .bg-forest-700, .bg-forest-800).text-white,
+:is(.btn-primary, .bg-forest-grad, [class~="bg-forest-500/95"], .bg-forest-600, .bg-forest-700, .bg-forest-800) .text-white {
+  color: #FFFFFF !important;
+}
+
+/* A city-at-dusk masthead unifies reports with the supplied cover reference. */
+.report-header {
+  border-color: rgba(91, 176, 215, 0.44) !important;
+  background: linear-gradient(90deg, rgba(3,20,36,.99) 0%, rgba(4,25,44,.96) 44%, rgba(4,25,44,.7) 100%), url('/assets/night-city-reference.png') center 41% / cover !important;
+  box-shadow: 0 18px 40px -26px rgba(0, 6, 18, 0.7), inset 0 1px 0 rgba(91, 176, 215, .08) !important;
+}
+
+.report-header .text-white,
+.report-header .text-slate-100,
+.report-header .text-slate-200 {
+  color: #FFFFFF !important;
+}
+
+.report-header .text-slate-300,
+.report-header .text-slate-400 {
+  color: #D9E6EE !important;
+}
+
+.report-header [class~="bg-white/5"],
+.report-header [class~="bg-navy-900/95"] {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+.report-header [class~="border-white/10"],
+.report-header [class~="border-white/20"] {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Statistics: scan from conclusion to comparison to detail. */
+.stats-page {
+  --stats-ink: #def2ff;
+  --stats-muted: #99b4cb;
+  --stats-line: #214d6c;
+  --stats-soft: #071f35;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-overview {
+  border-color: #285775;
+  background: linear-gradient(100deg, rgba(5,25,44,.99) 0%, rgba(7,31,53,.97) 55%, rgba(7,31,53,.92) 100%), url('/assets/night-city-reference.png') center 41% / cover;
+}
+
+.stats-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(22px, 3vw, 38px);
+  align-items: stretch;
+}
+
+.stats-overview-intro {
+  align-self: center;
+  padding: 8px 4px;
+}
+
+.stats-overview-intro h1 {
+  max-width: 460px;
+  font-size: clamp(36px, 3.4vw, 48px);
+  line-height: 1.1;
+  word-break: keep-all;
+}
+
+.stats-overview-intro > p:last-child {
+  max-width: 440px;
+  color: var(--stats-muted) !important;
+}
+
+.stats-reading-summary {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  padding: 19px 20px;
+  border-color: #286075;
+  background: linear-gradient(125deg, rgba(10,53,73,.94) 0%, rgba(7,31,53,.96) 100%);
+  box-shadow: none;
+}
+
+.stats-reading-summary h2 {
+  margin: 5px 0 9px;
+  font-size: clamp(23px, 2.1vw, 30px);
+  line-height: 1.32;
+}
+
+.stats-reading-summary > p:not(:first-child) {
+  font-size: 14px;
+}
+
+.stats-case-bar {
+  background: #173a55;
+  box-shadow: inset 0 1px 2px rgba(0, 6, 18, 0.2);
+}
+
+.stats-case-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stats-case-item {
+  min-width: 0;
+  padding: 9px 10px 10px;
+  border: 1px solid #214d6c;
+  border-top: 3px solid;
+  border-radius: 10px;
+  background: rgba(7, 31, 53, 0.88);
+}
+
+.stats-case-item > span {
+  display: block;
+  overflow: hidden;
+  color: #aecbdf;
+  font-size: 11px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stats-case-item strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--stats-ink);
+  font-size: 17px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.stats-overview-disclosure {
+  margin-top: 16px;
+}
+
+.stats-overview-disclosure .disclosure {
+  border-color: #214d6c;
+  background: rgba(5, 25, 44, 0.82);
+  box-shadow: none;
+}
+
+.stats-overview-disclosure .disclosure-toggle {
+  padding: 13px 16px;
+}
+
+.stats-chart-panel {
+  overflow: hidden;
+  border-color: #214d6c;
+  background: #071f35;
+}
+
+.stats-chart-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.stats-chart-toolbar > :first-child {
+  min-width: 0;
+  flex: 1;
+}
+
+.stats-chart-modes {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
+.stats-chart-legend {
+  min-height: 24px;
+  padding: 8px 12px;
+  border: 1px solid #214d6c;
+  border-radius: 10px;
+  background: #061c31;
+}
+
+.stats-chart-canvas,
+.stats-demand-chart {
+  padding: 12px 12px 3px;
+  border: 1px solid #214d6c;
+  border-radius: 14px;
+  background: #05192c;
+}
+
+.stats-district-detail {
+  border-color: #214d6c;
+  background: linear-gradient(180deg, #092740 0%, #071f35 100%);
+}
+
+.stats-district-picker {
+  padding: 10px;
+  border: 1px solid #214d6c;
+  border-radius: 14px;
+  background: #061c31;
+}
+
+.stats-district-picker button {
+  min-height: 38px;
+}
+
+.stats-top-five {
+  border-color: #214d6c !important;
+  background: #071f35 !important;
+  box-shadow: none;
+}
+
+.stats-top-five-head > :last-child {
+  border-color: #286075 !important;
+  background: #0a3549 !important;
+}
+
+.stats-page table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #c1d8e8;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-page thead {
+  background: #0c2a42;
+}
+
+.stats-page th {
+  color: #b7d1e4;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.015em;
+}
+
+.stats-page th,
+.stats-page td {
+  padding: 9px 11px;
+  border-bottom-color: #1b405b !important;
+}
+
+.stats-page tbody tr:hover {
+  background: #0b3048;
+}
+
+.stats-page h1,
+.stats-page h2,
+.stats-page h3,
+.stats-page strong {
+  color: var(--stats-ink);
+}
+
+/* Small legacy light-surface utilities also occur in the guide and reading report. */
+.text-slate-950,
+.text-slate-900,
+.text-slate-800 {
+  color: #DEF2FF !important;
+}
+
+.text-slate-700,
+.text-slate-600 {
+  color: #B7D1E4 !important;
+}
+
+.text-forest-600,
+.text-forest-700,
+.text-forest-800,
+.text-forest-900 {
+  color: #8BF8E9 !important;
+}
+
+.text-amber-700,
+.text-amber-800,
+.text-amber-900 {
+  color: #FDE68A !important;
+}
+
+.text-rose-600,
+.text-rose-700,
+.text-rose-800 {
+  color: #FDA4AF !important;
+}
+
+.text-sky-600,
+.text-sky-700,
+.text-sky-800 {
+  color: #93CFFD !important;
+}
+
+.bg-white,
+[class~="bg-white/95"],
+.bg-slate-50,
+.bg-slate-100,
+.bg-slate-200 {
+  background-color: #0B2942 !important;
+}
+
+.bg-forest-50,
+.bg-forest-100,
+.bg-forest-200 {
+  background-color: rgba(32, 205, 189, .11) !important;
+}
+
+.border-slate-100,
+.border-slate-200,
+.border-slate-300 {
+  border-color: #214D6C !important;
+}
+
+.hover\:bg-slate-50:hover,
+.hover\:bg-forest-50:hover {
+  background-color: #103951 !important;
+}
+
+h1 {
+  letter-spacing: -.045em;
+  text-shadow: 0 0 28px rgba(62, 211, 238, .16);
+}
+
+.report-header h1 {
+  text-shadow: 0 0 28px rgba(71, 239, 220, .2);
+}
+
+input,
+select,
+textarea {
+  accent-color: #47EFDC;
+}
+
+::selection {
+  color: #FFFFFF;
+  background: #087F87;
+}
+
+/* SVG presentation attributes are recolored only; labels, positions and thresholds stay intact. */
+svg rect[fill="#F8FAFC"] { fill: #05192C; }
+svg text[fill="#627386"],
+svg text[fill="#486174"],
+.recharts-label-list text { fill: #99B4CB; }
+svg text[fill="#0F766E"] { fill: #8BF8E9; }
+svg text[fill="#8A5200"] { fill: #FDE68A; }
+svg text[fill="#B4233D"] { fill: #FDA4AF; }
+svg line[stroke="rgba(51, 78, 98, 0.14)"] { stroke: rgba(103, 164, 201, .19); }
+.recharts-line-curve[stroke="#0F766E"] { stroke: #47EFDC; }
+.recharts-line-dot[fill="#0F766E"] { fill: #47EFDC; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}
+
+@media (max-width: 1024px) {
+  .stats-overview-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .stats-overview-intro {
+    padding: 0;
+  }
+
+  .stats-overview-intro h1,
+  .stats-overview-intro > p:last-child {
+    max-width: none;
+  }
+
+  .stats-chart-toolbar {
+    display: grid;
+    gap: 16px;
+  }
+
+  .stats-chart-modes {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-page {
+    gap: 16px;
+    padding: 16px 12px;
+  }
+
+  .stats-overview,
+  .stats-chart-panel,
+  .stats-district-detail {
+    padding: 18px !important;
+  }
+
+  .stats-overview-intro h1 {
+    font-size: 34px;
+  }
+
+  .stats-reading-summary {
+    padding: 17px;
+  }
+
+  .stats-case-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stats-case-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .stats-chart-modes > button {
+    flex: 1 1 140px;
+  }
+
+  .stats-chart-canvas {
+    height: 320px !important;
+    padding: 10px 4px 2px;
+  }
+
+  .stats-demand-chart {
+    height: 440px !important;
+    padding: 10px 4px 2px;
+  }
+
+  .stats-top-five {
+    padding: 16px !important;
+  }
+}
+
+/* Reading workspaces: ivory evidence surfaces inside the retained navy app frame.
+   Scoped to reading workspaces; the application navigation and map retain the night theme. */
+:is(.stats-page, .simulation-page, .reading-page) {
+  --stats-ink: #19364A;
+  --stats-muted: #647477;
+  --stats-line: #D8DBD2;
+  --stats-soft: #F6F2E9;
+  color: #19364A;
+  color-scheme: light;
+}
+
+.simulation-page {
+  background: #F6F2E9;
+  border-left: 1px solid rgba(215, 225, 222, .16);
+  border-right: 1px solid rgba(215, 225, 222, .16);
+  font-variant-numeric: tabular-nums;
+}
+
+.simulation-page .kakao-map-surface {
+  border-color: #D3DCD5 !important;
+  background: #EEF2EC !important;
+}
+
+.simulation-page .kakao-map-unavailable {
+  color: #526871 !important;
+  background: linear-gradient(140deg, #F8F8EF 0%, #EAF0E9 100%) !important;
+}
+
+:is(.stats-page, .reading-page) :is(.panel, .panel-soft, .panel-inset, .panel-light, .stat-card, .bg-card-grad),
+:is(.stats-page, .reading-page) [class~="bg-navy-850/95"],
+:is(.stats-page, .reading-page) [class~="bg-navy-900/95"] {
+  color: #19364A;
+  border-color: #D8DBD2 !important;
+  background: #FFFDF7 !important;
+  box-shadow: 0 12px 28px -22px rgba(0, 6, 18, .26);
+}
+
+.stats-page .stats-overview {
+  background: #F6F2E9 !important;
+}
+
+.stats-page .stats-masthead,
+.simulation-page .simulation-heading {
+  padding: 24px;
+  border: 1px solid #285775;
+  border-radius: 16px;
+  color: #DEF2FF;
+  background: linear-gradient(90deg, rgba(3,20,36,.99) 0%, rgba(4,25,44,.94) 57%, rgba(4,25,44,.77) 100%), url('/assets/night-city-reference.png') center 38% / cover;
+  box-shadow: inset 0 1px 0 rgba(71,239,220,.07);
+}
+
+.stats-page .stats-masthead {
+  margin: -4px -4px 4px;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(.text-white, .text-slate-50, .text-slate-100, .text-slate-200, .text-slate-800, .text-slate-900, .text-slate-950) {
+  color: #19364A !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(.text-slate-300, .text-slate-600, .text-slate-700) {
+  color: #425B64 !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(.text-slate-400, .text-slate-500) {
+  color: #647477 !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(.text-forest-100, .text-forest-200, .text-forest-300, .text-forest-400, .text-forest-600, .text-forest-700, .text-forest-800, .eyebrow, .stat-label) {
+  color: #087E78 !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(.text-amber-100, .text-amber-200, .text-amber-300, .text-amber-700, .text-amber-800, .text-signal-warnSoft) {
+  color: #855B10 !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(.text-rose-100, .text-rose-200, .text-rose-300, .text-rose-700, .text-signal-alertSoft) {
+  color: #AC344A !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(.text-sky-100, .text-sky-200, .text-sky-300, .text-sky-700, .text-signal-infoSoft) {
+  color: #296C94 !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) [class~="border-white/5"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="border-white/10"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="border-white/15"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="border-white/20"] {
+  border-color: rgba(65,92,101,.19) !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) [class~="bg-white/5"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="bg-white/10"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="bg-white/15"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="bg-white/[0.02]"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="bg-white/[0.03]"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="bg-white/[0.04]"] {
+  background-color: rgba(73,103,102,.07) !important;
+}
+
+.stats-page .stats-case-chip,
+.stats-page .stats-flag-chip {
+  color: #304A53 !important;
+}
+
+.stats-page :is(.stats-reading-summary, .stats-chart-legend, .stats-district-picker, .stats-top-five-head > :last-child) {
+  color: #19364A;
+  border-color: #CCD9CC !important;
+  background: #EEF3E9 !important;
+}
+
+.stats-page :is(.stats-case-item, .stats-chart-canvas, .stats-demand-chart, .stats-top-five) {
+  color: #19364A;
+  border-color: #D8DBD2 !important;
+  background: #FFFDF7 !important;
+}
+
+.stats-page .stats-case-item > span {
+  color: #647477;
+}
+
+.stats-page .stats-case-bar {
+  background: #E3E4D9;
+}
+
+:is(.stats-page, .reading-page) .reading-summary p {
+  color: #425B64;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) .disclosure {
+  color: #19364A;
+  border-color: #D8DBD2;
+  background: #FFFDF7;
+  box-shadow: none;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) .disclosure-toggle {
+  color: #19364A;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) .disclosure-description {
+  color: #647477;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) .disclosure-action {
+  color: #087E78;
+}
+
+.stats-page table {
+  color: #425B64;
+}
+
+.stats-page thead {
+  background: #ECEFE5;
+}
+
+.stats-page th {
+  color: #425B64;
+}
+
+.stats-page :is(th, td) {
+  border-bottom-color: #DEE1D7 !important;
+}
+
+.stats-page tbody tr:hover {
+  background: #EAF1E8;
+}
+
+:is(.stats-page, .reading-page) .recharts-cartesian-axis-tick text,
+:is(.stats-page, .reading-page) .recharts-label-list text {
+  fill: #647477 !important;
+}
+
+:is(.stats-page, .reading-page) .recharts-cartesian-grid line {
+  stroke: rgba(65,92,101,.13);
+}
+
+:is(.stats-page, .reading-page) .recharts-default-tooltip {
+  color: #19364A !important;
+  border-color: #CCD3C9 !important;
+  background-color: rgba(255,253,247,.99) !important;
+  box-shadow: 0 12px 28px rgba(25,54,74,.14) !important;
+}
+
+:is(.stats-page, .reading-page) .recharts-tooltip-label {
+  color: #19364A !important;
+}
+
+:is(.stats-page, .reading-page) .recharts-tooltip-item {
+  color: #425B64 !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) h1 {
+  text-shadow: none;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(.btn-primary, .bg-forest-grad).text-white,
+:is(.stats-page, .simulation-page, .reading-page) :is(.btn-primary, .bg-forest-grad) .text-white {
+  color: #FFFFFF !important;
+}
+
+.stats-page .stats-masthead :is(h1, .text-white),
+.simulation-page .simulation-heading h1 {
+  color: #DEF2FF !important;
+  text-shadow: 0 0 28px rgba(71,239,220,.14);
+}
+
+.stats-page .stats-masthead :is(.text-slate-300, .text-slate-400) {
+  color: #B7D1E4 !important;
+}
+
+.stats-page .stats-masthead .text-forest-300,
+.simulation-page .simulation-heading > div:first-child,
+.simulation-page .simulation-heading > div:nth-child(3) > span:first-child {
+  color: #8BF8E9 !important;
+}
+
+.simulation-page .simulation-heading > div:nth-child(3) > span:last-child,
+.simulation-page .simulation-heading > div:last-child {
+  color: #B7D1E4 !important;
+}
+
+:is(.stats-page, .simulation-page, .reading-page) :is(input, select, textarea) {
+  accent-color: #087E78;
+}
+
+@media (max-width: 640px) {
+  .stats-page .stats-masthead,
+  .simulation-page .simulation-heading {
+    padding: 18px;
+    border-radius: 12px;
+  }
+}
+
+/* All document-reading views share the same warm evidence canvas. */
+.reading-page {
+  color: #19364A;
+  background: #F6F2E9;
+  color-scheme: light;
+  font-variant-numeric: tabular-nums;
+}
+
+.reading-page.ai-reading-panel {
+  background: transparent;
+}
+
+.reading-page.reading-chat-window {
+  border-color: #CDD7CF !important;
+  background: #F6F2E9 !important;
+  box-shadow: 0 24px 70px rgba(0,6,18,.35);
+}
+
+.reading-page .reading-summary {
+  color: #19364A;
+  border-color: #CCD9CC;
+  background: linear-gradient(120deg, #EDF3E8 0%, #FAFBF1 100%);
+  box-shadow: 0 10px 24px -20px rgba(25,54,74,.25);
+}
+
+.reading-page .reading-metric {
+  border-left-color: #087E78;
+}
+
+.reading-page :is(.bg-navy-900, .bg-white, .btn-ghost),
+.reading-page [class~="bg-white/95"],
+.reading-page [class~="bg-navy-800/90"],
+.reading-page [class~="bg-navy-950/55"],
+.reading-page [class~="bg-navy-950/70"],
+.reading-page [class~="bg-navy-950/80"] {
+  color: #19364A;
+  border-color: #D8DBD2 !important;
+  background-color: #FFFDF7 !important;
+}
+
+.reading-page [class~="bg-white/[.03]"] {
+  background-color: rgba(73,103,102,.055) !important;
+}
+
+.reading-page :is(.btn-outline, .disclosure-action) {
+  color: #087E78;
+}
+
+.reading-page :is(.text-yellow-100, .text-yellow-200, .text-yellow-300) {
+  color: #855B10 !important;
+}
+
+.reading-page :is(.text-violet-100, .text-violet-200, .text-purple-100, .text-purple-200) {
+  color: #69449A !important;
+}
+
+.reading-page [class~="bg-forest-500/95"] {
+  background-color: #087E78 !important;
+}
+
+.reading-page [class~="bg-forest-500/95"].text-white,
+.reading-page [class~="bg-forest-500/95"] :is(.text-white, .text-forest-50) {
+  color: #FFFFFF !important;
+}
+
+.reading-page [class~="bg-forest-500/95"] [class~="bg-white/20"] {
+  background-color: rgba(255,255,255,.16) !important;
+}
+
+.reading-page [class~="ring-white/15"] {
+  --tw-ring-color: rgba(65,92,101,.18);
+}
+
+/* Opacity-qualified legacy amber utilities need the same readable ink tone. */
+:is(.stats-page, .simulation-page, .reading-page) [class~="text-amber-300/90"],
+:is(.stats-page, .simulation-page, .reading-page) [class~="text-amber-200/90"] {
+  color: #855B10 !important;
+}
+
+/* Candidate-provided gold remains a map/border signal; only its text is darkened. */
+.simulation-page [style*="color: rgb(212, 160, 23)"],
+.simulation-page [style*="color: #d4a017"],
+.simulation-page [style*="color: #D4A017"] {
+  color: #855B10 !important;
+}
+
+.reading-page [class~="bg-white/60"] {
+  background-color: #526871;
+}
+
+.reading-page input::placeholder,
+.reading-page textarea::placeholder {
+  color: #768481 !important;
+  opacity: 1;
+}
+
+.reading-page table {
+  color: #425B64;
+  border-color: #D8DBD2;
+}
+
+.reading-page thead {
+  background: #ECEFE5;
+}
+
+.reading-page :is(th, td) {
+  border-bottom-color: #DEE1D7 !important;
+}
+
+.reading-page tbody tr:hover {
+  background: #EAF1E8;
+}
+
+.reading-page svg rect[fill="#F8FAFC"] { fill: #FFFDF7; }
+.reading-page svg text[fill="#627386"],
+.reading-page svg text[fill="#486174"] { fill: #647477; }
+.reading-page svg text[fill="#0F766E"] { fill: #087E78; }
+.reading-page svg text[fill="#8A5200"] { fill: #855B10; }
+.reading-page svg text[fill="#B4233D"] { fill: #AC344A; }
+.reading-page svg line[stroke="rgba(51, 78, 98, 0.14)"] { stroke: rgba(65,92,101,.14); }
+.reading-page .recharts-line-curve[stroke="#0F766E"] { stroke: #087E78; }
+.reading-page .recharts-line-dot[fill="#0F766E"] { fill: #087E78; }
+
+.reading-page .kakao-map-surface {
+  border-color: #D3DCD5 !important;
+  background: #EEF2EC !important;
+}
+
+.reading-page .kakao-map-unavailable {
+  color: #526871 !important;
+  background: linear-gradient(140deg, #F8F8EF 0%, #EAF0E9 100%) !important;
+}
+
+/* Navigation and short introduction bands retain the navy identity, not the reading cards. */
+.reading-page :is(.report-header, .reading-nav, .reading-masthead) {
+  color: #DEF2FF;
+  border: 1px solid #285775 !important;
+  background: linear-gradient(100deg, #04182B 0%, #0A3047 100%) !important;
+}
+
+.reading-page .report-header {
+  background: linear-gradient(90deg, rgba(3,20,36,.99) 0%, rgba(4,25,44,.96) 44%, rgba(4,25,44,.7) 100%), url('/assets/night-city-reference.png') center 41% / cover !important;
+}
+
+.reading-page .reading-nav {
+  padding: 15px 20px;
+  border-radius: 16px;
+}
+
+.reading-page .reading-masthead {
+  padding: 24px;
+  border-radius: 16px;
+}
+
+.reading-page :is(.report-header, .reading-nav, .reading-masthead) :is(.text-white, .text-slate-100, .text-slate-200) {
+  color: #DEF2FF !important;
+}
+
+.reading-page :is(.report-header, .reading-nav, .reading-masthead) :is(.text-slate-300, .text-slate-400, .text-slate-500) {
+  color: #B7D1E4 !important;
+}
+
+.reading-page :is(.report-header, .reading-nav, .reading-masthead) :is(.eyebrow, .text-forest-100, .text-forest-200, .text-forest-300) {
+  color: #8BF8E9 !important;
+}
+
+.reading-page :is(.report-header, .reading-nav) [class~="bg-navy-900/95"],
+.reading-page .report-header [class~="bg-white/5"],
+.reading-page .reading-nav .btn-ghost {
+  color: #DEF2FF !important;
+  border-color: rgba(173,217,234,.24) !important;
+  background: rgba(255,255,255,.075) !important;
+}
+
+.reading-page .report-header :is([class~="border-white/10"], [class~="border-white/20"]) {
+  border-color: rgba(173,217,234,.24) !important;
+}
+
+@media (max-width: 640px) {
+  .reading-page .reading-masthead {
+    padding: 19px;
+  }
+  .reading-page .reading-nav {
+    padding: 14px;
+  }
+}
+
+/* Preserve the feature branch's original SVG props while painting them for ivory. */
+.reading-page svg rect[fill="#050B14"] { fill: #FFFDF7; }
+.reading-page svg text[fill="#94A3B8"],
+.reading-page svg text[fill="#CBD5E1"] { fill: #647477; }
+.reading-page svg text[fill="#6EE7B7"] { fill: #087E78; }
+.reading-page svg text[fill="#FBE6A9"],
+.reading-page svg text[fill="#FCD34D"] { fill: #855B10; }
+.reading-page svg text[fill="#FCA5A5"] { fill: #AC344A; }
+.reading-page svg line[stroke="rgba(148, 163, 184, 0.18)"] { stroke: rgba(65,92,101,.14); }
+.reading-page .recharts-line-curve[stroke="#3FB081"] { stroke: #087E78; }
+.reading-page .recharts-line-dot[fill="#3FB081"] { fill: #087E78; }
 
 @media print {
   @page {
@@ -155,8 +1100,8 @@ body {
 
   :root,
   body {
-    background: #050B14 !important;
-    color: #F8FAFC !important;
+    background: #FFFFFF !important;
+    color: #0B203D !important;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }

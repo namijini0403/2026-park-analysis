@@ -135,13 +135,13 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
   const activeStep = flowSteps.find((step) => step.id === activeStepId) ?? flowSteps[1];
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="reading-page landing-reading-page relative min-h-screen overflow-hidden">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-forest-400/30 to-transparent" />
 
       <div className="relative mx-auto flex max-w-[1280px] flex-col px-5 py-8 lg:px-8 lg:py-10">
-        <div className="flex items-center justify-between gap-4">
+        <div className="reading-nav flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/95 p-1.5 shadow-soft">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-transparent">
               <img src={logoSrc} alt="반경 너머, 정책 도달성으로" className="h-full w-full object-contain" />
             </div>
             <div>
@@ -166,7 +166,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
 
         <section className="mt-8 grid gap-8 rounded-2xl border border-white/10 bg-navy-800/90 p-5 shadow-card lg:grid-cols-[0.84fr_1.16fr] lg:p-7">
           <div className="flex flex-col justify-between gap-8">
-            <div>
+            <div className="reading-masthead">
               <span className="eyebrow">Policy Decision Support</span>
               <h1 className="mt-4 text-4xl font-black leading-[1.14] tracking-tight text-white sm:text-[46px] lg:text-[50px]">
                 <span className="block">반경 너머,</span>

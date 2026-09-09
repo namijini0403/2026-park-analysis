@@ -177,36 +177,36 @@ const RECOMMENDATION_TYPE_LABELS: Record<string, string> = {
 };
 
 const BARRIER_COLOR: Record<NonNullable<Candidate["barrier_severity"]>, string> = {
-  green: "#10B981",
-  yellow: "#FBBF24",
-  orange: "#F97316",
-  red: "#EF4444",
+  green: "#147B60",
+  yellow: "#946A08",
+  orange: "#B65419",
+  red: "#C53D50",
 };
 
 const SIM_COLORS = {
-  bg: "#050B14",
-  page: "#081421",
-  panel: "rgba(16, 27, 45, 0.96)",
-  elevated: "rgba(21, 34, 56, 0.96)",
-  inset: "rgba(8, 20, 33, 0.96)",
-  border: "rgba(255, 255, 255, 0.10)",
-  borderStrong: "rgba(16, 185, 129, 0.34)",
-  text: "#F8FAFC",
-  secondary: "#CBD5E1",
-  muted: "#94A3B8",
-  green: "#10B981",
-  greenSoft: "#A7F3D0",
-  greenDark: "#064E3B",
-  amber: "#FBBF24",
-  amberSoft: "#FDE68A",
-  red: "#F87171",
-  blue: "#60A5FA",
+  bg: "#F6F2E9",
+  page: "#F6F2E9",
+  panel: "rgba(255, 253, 247, 0.99)",
+  elevated: "rgba(250, 249, 240, 0.99)",
+  inset: "rgba(242, 239, 229, 0.98)",
+  border: "rgba(65, 92, 101, 0.19)",
+  borderStrong: "rgba(8, 126, 120, 0.44)",
+  text: "#19364A",
+  secondary: "#425B64",
+  muted: "#647477",
+  green: "#087E78",
+  greenSoft: "#096963",
+  greenDark: "#086B64",
+  amber: "#92620C",
+  amberSoft: "#855B10",
+  red: "#B5394D",
+  blue: "#296C94",
 } as const;
 
 const SIM_PANEL: CSSProperties = {
-  background: "linear-gradient(165deg, rgba(21,34,56,0.96) 0%, rgba(16,27,45,0.98) 55%, rgba(8,20,33,0.98) 100%)",
+  background: "linear-gradient(145deg, #FFFDF7 0%, #FCFAF2 62%, #F8F5EB 100%)",
   border: `1px solid ${SIM_COLORS.border}`,
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 26px 64px -44px rgba(0,0,0,0.95)",
+  boxShadow: "0 12px 28px -22px rgba(25,54,74,0.24), inset 0 1px 0 rgba(255,255,255,0.75)",
 };
 
 const SIM_PANEL_FLAT: CSSProperties = {
@@ -222,7 +222,7 @@ const SIM_INSET: CSSProperties = {
 const SIM_ACCENT_PANEL: CSSProperties = {
   background: SIM_COLORS.elevated,
   border: `1px solid ${SIM_COLORS.border}`,
-  boxShadow: "inset 3px 0 0 rgba(16, 185, 129, 0.72)",
+  boxShadow: "inset 3px 0 0 rgba(8, 126, 120, 0.72)",
 };
 
 const FILTER_COPY: Array<{ key: keyof FilterState; title: string; description: string }> = [
@@ -247,10 +247,10 @@ const DEFAULT_WEIGHT_TOGGLES: WeightToggleState = {
 };
 
 function rankBadgeStyle(index: number): { color: string; bg: string } {
-  if (index === 0) return { color: "#FCA5A5", bg: "rgba(225, 90, 70, 0.12)" };
+  if (index === 0) return { color: "#A63647", bg: "rgba(225, 90, 70, 0.12)" };
   if (index === 1) return { color: SIM_COLORS.amber, bg: "rgba(251, 191, 36, 0.10)" };
-  if (index === 2) return { color: "#FDE68A", bg: "rgba(253, 230, 138, 0.10)" };
-  return { color: SIM_COLORS.muted, bg: "rgba(255,255,255,0.08)" };
+  if (index === 2) return { color: "#855B10", bg: "rgba(253, 230, 138, 0.18)" };
+  return { color: SIM_COLORS.muted, bg: "rgba(72,101,124,0.08)" };
 }
 
 function getStableCandidateLabel(index: number): string {
@@ -622,10 +622,10 @@ function RobustCandidateBrief({
         {candidate.pareto_candidate ? (
           <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(16, 185, 129, 0.14)", color: SIM_COLORS.greenSoft, fontSize: 11, fontWeight: 800 }}>Pareto 후보</span>
         ) : null}
-        <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(255,255,255,0.08)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>
+        <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(72,101,124,0.08)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>
           Top5 안정성 {formatStability(candidate.top5_stability_score)}
         </span>
-        <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(255,255,255,0.08)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>
+        <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(72,101,124,0.08)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>
           평균 순위 {formatOneDecimal(candidate.mean_rank)}위
         </span>
         <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(251, 191, 36, 0.10)", color: SIM_COLORS.amber, fontSize: 11, fontWeight: 800 }}>
@@ -946,6 +946,7 @@ export default function SimulationPage({
 
   return (
     <div
+      className="simulation-page"
       style={{
         fontFamily: "Pretendard, sans-serif",
         maxWidth: 1180,
@@ -969,7 +970,7 @@ export default function SimulationPage({
         리포트로 돌아가기
       </button>
 
-      <div style={{ marginBottom: 20 }}>
+      <div className="simulation-heading" style={{ marginBottom: 20 }}>
         <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1, color: SIM_COLORS.green, marginBottom: 6 }}>
           POLICY REACHABILITY · HUMAN-IN-THE-LOOP SIMULATION
         </div>
@@ -1018,7 +1019,7 @@ export default function SimulationPage({
         style={{
           marginBottom: 22,
           padding: "18px 20px",
-          borderRadius: 18,
+          borderRadius: 14,
           ...SIM_ACCENT_PANEL,
         }}
       >
@@ -1034,7 +1035,7 @@ export default function SimulationPage({
       <div
         style={{
           padding: 18,
-          borderRadius: 22,
+          borderRadius: 16,
           ...SIM_PANEL,
           marginBottom: 18,
         }}
@@ -1068,7 +1069,7 @@ export default function SimulationPage({
           }}
         >
           {largeApartmentComplexes.slice(0, 2).map((complex, index) => (
-            <div key={`${complex.name}-${index}`} style={{ padding: 16, borderRadius: 18, ...SIM_PANEL_FLAT }}>
+            <div key={`${complex.name}-${index}`} style={{ padding: 16, borderRadius: 14, ...SIM_PANEL_FLAT }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: SIM_COLORS.blue, marginBottom: 6 }}>대단지 아파트</div>
               <div style={{ fontSize: 15, fontWeight: 800, color: SIM_COLORS.text, marginBottom: 8 }}>{complex.name}</div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
@@ -1080,7 +1081,7 @@ export default function SimulationPage({
             </div>
           ))}
           {redevelopmentProjects.slice(0, 2).map((project, index) => (
-            <div key={`${project.name}-${index}`} style={{ padding: 16, borderRadius: 18, ...SIM_PANEL_FLAT }}>
+            <div key={`${project.name}-${index}`} style={{ padding: 16, borderRadius: 14, ...SIM_PANEL_FLAT }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: SIM_COLORS.amber, marginBottom: 6 }}>재개발 정비사업</div>
               <div style={{ fontSize: 15, fontWeight: 800, color: SIM_COLORS.text, marginBottom: 8 }}>{project.name}</div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: 12 }}>
@@ -1129,7 +1130,7 @@ export default function SimulationPage({
 
       {mode === "manual" ? (
         <div style={{ display: "grid", gridTemplateColumns: isNarrow ? "1fr" : "minmax(260px, 1fr) minmax(260px, 1fr)", gap: 16, marginBottom: 18 }}>
-          <div style={{ padding: 18, borderRadius: 18, ...SIM_PANEL_FLAT }}>
+          <div style={{ padding: 18, borderRadius: 14, ...SIM_PANEL_FLAT }}>
             <div style={{ fontSize: 18, fontWeight: 800, color: SIM_COLORS.text, marginBottom: 12 }}>제외 조건 설정</div>
             <div style={{ display: "grid", gap: 10 }}>
               {FILTER_COPY.map((item) => (
@@ -1163,7 +1164,7 @@ export default function SimulationPage({
               <button
                 type="button"
                 onClick={() => setWeightsExpanded((previous) => !previous)}
-                style={{ border: "none", background: "rgba(255,255,255,0.08)", color: SIM_COLORS.secondary, borderRadius: 999, padding: "7px 12px", fontWeight: 700, cursor: "pointer" }}
+                style={{ border: "none", background: "rgba(72,101,124,0.08)", color: SIM_COLORS.secondary, borderRadius: 999, padding: "7px 12px", fontWeight: 700, cursor: "pointer" }}
               >
                 {weightsExpanded ? "접기" : "펼치기"}
               </button>
@@ -1201,13 +1202,13 @@ export default function SimulationPage({
           </div>
         </div>
       ) : (
-        <div style={{ marginBottom: 18, padding: "14px 16px", borderRadius: 18, background: "rgba(16, 185, 129, 0.10)", color: SIM_COLORS.greenSoft, fontSize: 13, lineHeight: 1.7 }}>
+        <div style={{ marginBottom: 18, padding: "14px 16px", borderRadius: 14, background: "rgba(15, 118, 110, 0.09)", color: SIM_COLORS.greenSoft, fontSize: 13, lineHeight: 1.7 }}>
           수요 예측, Pareto 후보군, 1,000회 가중치 재추출 기반 순위 안정성을 결합해 다양한 정책 선호에서도 상위권에 유지되는 후보를 제시합니다. 자동 결정이 아니라 비교 시작점입니다.
           <div style={{ marginTop: 6 }}>{aiRecommendations.filterSummary}</div>
         </div>
       )}
 
-      <div style={{ padding: 18, borderRadius: 18, ...SIM_PANEL, marginBottom: 18 }}>
+      <div style={{ padding: 18, borderRadius: 14, ...SIM_PANEL, marginBottom: 18 }}>
         <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginBottom: 12 }}>
           <MetricPill label="전체 후보" value={`${externalCandidates.length}곳`} tone={SIM_COLORS.text} background={SIM_COLORS.inset} />
           <MetricPill label="기본 후보" value={`${primaryCandidateCount}곳`} tone={SIM_COLORS.green} background="rgba(16, 185, 129, 0.12)" />
@@ -1240,9 +1241,9 @@ export default function SimulationPage({
                 style={{
                   marginBottom: 18,
                   padding: 22,
-                  borderRadius: 22,
+                  borderRadius: 16,
                   border: `2px solid ${selectedId === topCandidate.grid_id ? barrierColor : SIM_COLORS.borderStrong}`,
-                  background: "linear-gradient(165deg, rgba(21,34,56,0.97) 0%, rgba(16,27,45,0.98) 60%, rgba(8,20,33,0.98) 100%)",
+                  background: "linear-gradient(145deg, #F2F7EC 0%, #FAFBF1 62%, #FFFDF7 100%)",
                   cursor: "pointer",
                 }}
               >
@@ -1296,14 +1297,14 @@ export default function SimulationPage({
                   onClick={() => toggleSelect(candidate.grid_id)}
                   style={{
                     padding: 16,
-                    borderRadius: 18,
+                    borderRadius: 14,
                     border: `2px solid ${selectedId === candidate.grid_id ? barrierColor : "rgba(255,255,255,0.10)"}`,
                     background: SIM_COLORS.panel,
                     cursor: "pointer",
                   }}
                 >
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
-                    <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(255,255,255,0.08)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>순위 {index + 2}</span>
+                    <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(72,101,124,0.08)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>순위 {index + 2}</span>
                     <span style={{ padding: "3px 8px", borderRadius: 999, background: "rgba(255,255,255,0.10)", color: SIM_COLORS.text, fontSize: 11, fontWeight: 800 }}>위치 {label}</span>
                     <span style={{ padding: "3px 8px", borderRadius: 999, fontSize: 11, fontWeight: 800, ...getCandidateTierStyle(candidate) }}>
                       {getCandidateTierLabel(candidate)}
@@ -1468,7 +1469,7 @@ function ScoreContributionPanel({ contributions }: { contributions: ScoreContrib
             <span style={{ color: SIM_COLORS.secondary, fontWeight: 800 }}>{item.title}</span>
             <span style={{ color: SIM_COLORS.amber, fontWeight: 900 }}>{formatPercent(item.share)}</span>
           </div>
-          <div style={{ height: 7, borderRadius: 999, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+          <div style={{ height: 7, borderRadius: 999, background: "rgba(72,101,124,0.10)", overflow: "hidden" }}>
             <div
               style={{
                 width: `${Math.max(0, Math.min(100, item.share * 100))}%`,

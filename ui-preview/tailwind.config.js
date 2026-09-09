@@ -4,47 +4,47 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Deep navy - shared with the guide modal and cover screen.
+        // Night-city glass surfaces; semantic keys preserve all application markup.
         navy: {
-          950: "#050B14",
-          900: "#081421",
-          850: "#101B2D",
-          800: "#152238",
-          750: "#1B2B44",
-          700: "#233650",
-          600: "#304760",
-          500: "#466177",
-          400: "#6D8799",
-          300: "#A8BBC9",
+          950: "#04182B",
+          900: "#061C31",
+          850: "#071F35",
+          800: "#09263F",
+          750: "#0D2E49",
+          700: "#163A56",
+          600: "#214D6C",
+          500: "#416B88",
+          400: "#739AB6",
+          300: "#AACBE0",
         },
-        // Deep forest / emerald - restrained policy-dashboard accent.
+        // Cyan-teal controls echo the supplied illuminated night-city reference.
         forest: {
-          950: "#02140C",
-          900: "#042016",
-          850: "#063323",
-          800: "#047857",
-          700: "#047857",
-          600: "#059669",
-          500: "#10B981",
-          400: "#34D399",
-          300: "#6EE7B7",
-          200: "#A7F3D0",
+          950: "#032D35",
+          900: "#03414B",
+          850: "#06545C",
+          800: "#086772",
+          700: "#087F87",
+          600: "#0D9C9D",
+          500: "#20CDBD",
+          400: "#47EFDC",
+          300: "#8BF8E9",
+          200: "#BAFFF3",
         },
-        // Warm sand / parchment — for surfaces over dark navy
+        // Warm sand / parchment.
         sand: {
           50: "#FAF8F2",
           100: "#F2EEE3",
           200: "#E5DECB",
           300: "#D2C8AE",
         },
-        // Subtle status colors that work on dark
+        // Status colors remain distinct on dark panels.
         signal: {
           warn: "#F59E0B",
-          warnSoft: "#FBE6A9",
+          warnSoft: "#FDE68A",
           alert: "#F43F5E",
-          alertSoft: "#F4C7BC",
+          alertSoft: "#FDA4AF",
           info: "#5DA8D4",
-          infoSoft: "#BFDFEE",
+          infoSoft: "#93CFFD",
         },
       },
       fontFamily: {
@@ -57,20 +57,20 @@ export default {
         ],
       },
       boxShadow: {
-        soft: "0 18px 42px -28px rgba(0, 0, 0, 0.62)",
-        card: "inset 0 1px 0 0 rgba(255,255,255,0.08), inset 0 0 0 1px rgba(255,255,255,0.03), 0 30px 70px -42px rgba(0,0,0,0.92)",
-        cardLift: "inset 0 1px 0 0 rgba(255,255,255,0.11), inset 0 0 0 1px rgba(16,185,129,0.10), 0 34px 78px -42px rgba(0,0,0,0.95), 0 14px 32px -24px rgba(16,185,129,0.20)",
-        glow: "0 0 0 1px rgba(16, 185, 129, 0.26), 0 18px 46px -30px rgba(16, 185, 129, 0.55)",
+        soft: "0 12px 30px -18px rgba(0, 6, 18, 0.5)",
+        card: "0 16px 36px -22px rgba(0,6,18,0.6), inset 0 1px 0 rgba(145,218,255,0.035)",
+        cardLift: "0 18px 38px -24px rgba(0,6,18,0.7), 0 0 0 1px rgba(71,239,220,0.08)",
+        glow: "0 0 0 1px rgba(71,239,220,0.26), 0 0 22px -10px rgba(71,239,220,0.6), inset 0 0 14px rgba(71,239,220,0.07)",
       },
       backgroundImage: {
         "navy-grad":
-          "linear-gradient(180deg, #050B14 0%, #081421 52%, #101B2D 100%)",
+          "linear-gradient(180deg, #04182B 0%, #061D32 52%, #041629 100%)",
         "card-grad":
-          "linear-gradient(165deg, rgba(21,34,56,0.96) 0%, rgba(16,27,45,0.98) 55%, rgba(8,20,33,0.98) 100%)",
+          "linear-gradient(145deg, rgba(9,39,64,0.96) 0%, rgba(7,31,53,0.97) 58%, rgba(5,24,43,0.98) 100%)",
         "card-grad-hover":
-          "linear-gradient(165deg, rgba(27,43,68,0.98) 0%, rgba(21,34,56,0.98) 55%, rgba(8,20,33,0.98) 100%)",
+          "linear-gradient(145deg, #0D304B 0%, #0A2943 58%, #072238 100%)",
         "forest-grad":
-          "linear-gradient(135deg, #047857 0%, #059669 55%, #10B981 100%)",
+          "linear-gradient(135deg, #087A84 0%, #078A8B 56%, #075865 100%)",
       },
     },
   },

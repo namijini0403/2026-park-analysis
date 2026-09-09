@@ -1,5 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": {
+      "design/night-ivory-review-20260910": false
+    }
+  },
   "framework": null,
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "vercel_public",

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="180" viewBox="0 0 600 180" fill="none">
+  <!-- Decorative connection diagram only; no geographic or quantitative claims. -->
+  <defs>
+    <linearGradient id="line" x1="0" y1="90" x2="600" y2="90" gradientUnits="userSpaceOnUse"><stop stop-color="#5DBDD3" stop-opacity="0"/><stop offset=".32" stop-color="#68BED3"/><stop offset=".7" stop-color="#92E4D2"/><stop offset="1" stop-color="#92E4D2" stop-opacity="0"/></linearGradient>
+    <linearGradient id="plane" x1="250" y1="15" x2="390" y2="160" gradientUnits="userSpaceOnUse"><stop stop-color="#36ACC5" stop-opacity=".16"/><stop offset="1" stop-color="#8CD9C7" stop-opacity=".02"/></linearGradient>
+  </defs>
+  <g stroke="url(#line)" stroke-width=".8">
+    <path d="M0 90H162L240 46H402L480 90H600M22 134H172L251 88H413L490 132H582M35 47H158L238 3H396L473 47H584"/>
+    <path d="M245 18 382 55 308 96 170 59Z" fill="url(#plane)"/>
+    <path d="M245 48 382 85 308 126 170 89Z" fill="url(#plane)"/>
+    <path d="M245 78 382 115 308 156 170 119Z" fill="url(#plane)"/>
+    <path d="M202 52 340 90M221 41 359 79M235 29 372 67M206 108 344 146M229 94 367 133" opacity=".45"/>
+    <path d="M277 24V139M205 71V106M350 70V108M308 98V153" stroke-dasharray="3 4"/>
+    <circle cx="277" cy="84" r="19" fill="#245769" fill-opacity=".8"/>
+    <circle cx="277" cy="84" r="26" stroke-opacity=".35"/>
+    <path d="M267 94V77L277 70 287 77V94H267ZM274 94V86H280V94M271 80H273M281 80H283M276 77H278" stroke="#A5E5E6" stroke-width="1.4"/>
+    <circle cx="170" cy="59" r="3" fill="#88D5E3"/><circle cx="382" cy="85" r="3" fill="#A1E9D1"/><circle cx="308" cy="156" r="3" fill="#88D5E3"/><circle cx="245" cy="18" r="3" fill="#A1E9D1"/>
+    <path d="M88 80v20M78 90h20M508 80v20M498 90h20" opacity=".6"/>
+    <circle cx="454" cy="132" r="3" fill="#83D4D8"/><circle cx="133" cy="47" r="2" fill="#83D4D8"/>
+  </g>
+</svg>

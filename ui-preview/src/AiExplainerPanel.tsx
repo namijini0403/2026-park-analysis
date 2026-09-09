@@ -255,7 +255,7 @@ export default function AiExplainerPanel({
   };
 
   return (
-    <section className="space-y-4">
+    <section className="reading-page ai-reading-panel space-y-4">
       <div className="rounded-3xl border border-white/10 bg-navy-900/95 p-5 shadow-2xl">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
