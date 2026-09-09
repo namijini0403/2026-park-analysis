@@ -32,6 +32,12 @@ async function ask(payload){
   const unknown=await ask({mode:'identified_school_explainer',question:'공원 환경 분석',school_context:{school_id:'../unknown',school_level:'중학교'}});
   assert.equal(unknown.answerable,false);
   const middle=Object.values(data).find(r=>r.school_level==='중학교');
+  for(const question of ['PAPS 체력 비율을 알려줘','방과후 프로그램 수를 알려줘']) {
+    const answer=await ask({mode:'identified_school_explainer',question,school_context:{school_id:middle.school_id}});
+    assert.equal(answer.answerable,true);
+    assert.match(JSON.stringify(answer),/2026년 공시/);
+    assert.match(JSON.stringify(answer),/전교생 비율이 아니다/);
+  }
   let captured;
   process.env.OPENAI_API_KEY='test-key';
   global.fetch=async(url,options)=>{assert.equal(url,'https://api.openai.com/v1/responses');captured=JSON.parse(options.body);return {ok:false};};

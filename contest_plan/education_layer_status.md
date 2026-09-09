@@ -24,7 +24,7 @@
 
 1. 학업성취도 개별 공시 페이지는 실제 존재하지만 CAPTCHA가 있어 자동 수집하지 않았다. 일괄 공개 목록에는 해당 항목이 없다. 수능 학교별 표준화 성적·전체 대외 수상 이력은 확보한 자료에 없다. 미수집과 자료 부존재를 구분한다.
 2. 구·군 연령 예측과 후보지 지역비례 시나리오는 구축했지만, 후보지별 경계·개발·전입을 반영한 미래 공간 분포 모형은 아직 없다. 초등 미래 인구를 전용하지 않으며 실제 신규 수혜를 뜻하는 `age_specific_beneficiaries`는 null이다. 후보 비교는 거리·공원 부족·연령 추정인구의 직접 기여도, 파레토, 가중치 민감도를 제공한다. 학습된 초등 SHAP 모형을 전용하지 않는다. 확장 학교급 도달권을 반영한 격자로 후보 공백은 해소했지만, 탐색 격자와 실제 공급 가능한 토지를 구분해야 한다.
-3. 추가 초등 4교 분석은 후속 작업이다. 유치원 과거 이력·최신 공시는 연결했지만 최신 원장에 없는 과거 기관은 현재 학교에 임의 매칭하지 않는다. 추가 학교급은 공통 분석 대화상자에서 확인하고, 기존 AI 설명 패널과 연결된다. AI 공시 설명에는 확인된 항목 목록을 제공하며 세부 원문 수치는 보고서에서 확인한다.
+3. 추가 초등 4교 분석은 후속 작업이다. 유치원 과거 이력·최신 공시는 연결했지만 최신 원장에 없는 과거 기관은 현재 학교에 임의 매칭하지 않는다. 추가 학교급은 공통 분석 대화상자에서 확인하고, 기존 AI 설명 패널과 연결된다. AI 공시 설명에는 활동·지원·체력의 최신 공시연도 수치와 항목 목록을 제공하며 전체 연도·세부 원문은 보고서에서 확인한다.
 4. 실제 브라우저 연결이 없어 시각·지도 조작 QA는 수행하지 못했다. DOM 통합 검사와 정적 배포 빌드까지 검증했다.
 
 ## 출처
@@ -53,6 +53,7 @@ python scripts/education/build_candidate_age_demand.py
 python scripts/education/build_education_analysis.py
 python scripts/education/build_school_routes.py
 python scripts/education/build_candidate_comparison.py
+python scripts/education/build_public_indicators.py
 python scripts/education/build_ai_school_evidence.py
 python -m unittest discover -s tests -p test_education_layers.py
 python -m unittest discover -s tests -p test_education_demography.py
@@ -62,6 +63,7 @@ python -m unittest discover -s tests -p test_education_candidate_comparison.py
 python -m unittest discover -s tests -p test_education_candidate_grid.py
 python -m unittest discover -s tests -p test_education_regional_forecasts.py
 python -m unittest discover -s tests -p test_education_kindergarten.py
+python -m unittest discover -s tests -p test_education_public_indicators.py
 node tests/test_education_ui.cjs
 node tests/test_education_ai.cjs
 node scripts/tests/test_context_ai_ops20260906.cjs
@@ -89,3 +91,5 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 후보지 비교 보완: 644개 기관에 대해 확장 학교급 탐색 격자 3,081개 중 중심점이 직선 1.5km 안에 있는 44,250개 학교-후보 쌍을 전부 연결한다. 가까운 12개 선제 절삭을 제거했다. 기본 가중치는 거리 40%·공원 부족 30%·학교급 연령 수요 30%이며 점수의 세 기여도를 그대로 보여준다. 수요는 학교별 후보 최대값으로 log1p 정규화하므로 다른 학교의 점수와 직접 비교하지 않는다. 세 지표가 완전한 후보끼리 파레토와 10% 간격 66개 가중치 조합을 계산한다. 상위5 진입 비율은 공동 순위를 포함하며 통계적 선정 확률이 아니다. 수요 결측은 0으로 대체하지 않으며 수요 가중치 0일 때만 사용자 점수 비교를 허용한다. 상속된 초등 부지 적합성 값은 확장 학교급에서 null로 처리한다. AI에는 기본 가중치 상위 5개와 전체 비교 범위를 전달해 요청 길이를 제한한다. 갱신 순서는 연령 수요 → 후보 비교 → AI 근거이며 교육 분석 전체 실행에도 후보 비교가 포함된다.
 
 확장 격자 재현: `build_candidate_grid.py`는 모든 확장 학교급 도달권과 양의 면적으로 겹치는 EPSG:5179 기반 250m 정사각형을 생성한다. 좌표에서 ID를 결정하고 학교 ID를 정렬하므로 입력 순서에 영향을 받지 않는다. 격자 3,081개·644기관 연결을 검증했으며 학교급별 후보 공백은 0이다. 공급 가능 토지·수면·필지·소유·규제는 검증하지 않은 탐색 단위다. 도달권이 바뀌면 격자 → `build_candidate_age_demand.py --raw-dir C:/2026_data_analysis_park/data/raw` → 후보 비교 → AI 근거 순서로 갱신한다. 기본 연령 스크립트는 캐시를 재사용하므로 격자가 바뀌었을 때 원자료로 배분 가중치를 다시 만들어야 한다. 후보 비교는 도달권/격자 원본 해시 불일치 시 중단한다. 학교 보고서에서 격자를 선택하면 지도에 경계와 중심 위치가 표시되며, 학교급 변경 시 해당 표시를 해제한다. 지도 API 동작은 모의 객체로 검증했으며 실제 브라우저 QA는 여전히 미수행이다.
+
+공개 활동·지원·체력 지표: `build_public_indicators.py`가 기관 원장 920개 전체에 대해 학교알리미 55(장학금), 56(동아리), 59(방과후), 90(PAPS)를 공시연도별로 정리한다. 최신 관측에서 공개 수치가 있는 기관은 장학금 198교·동아리 546교·방과후 548교·체력 542교다. 장학금 75교, 동아리 2교, 체력 6교의 최신 관측은 공시 제외·공개 여부 미확인으로 수치를 요약하지 않았다. 자료 없는 기관은 0으로 바꾸지 않는다. 원문의 공시연도를 실제 활동연도로 바꾸지 않으며 참여 인원을 합산하거나 재학생 대비 비율로 임의 변환하지 않는다. 금액 단위는 공식 opendata.js의 원 단위를 사용한다. PAPS는 공개 학년·성별 행의 중복 여부와 1~5등급 인원 합=검사 인원 합을 확인한 뒤 인원 가중 4·5등급 비율을 계산한다. 비공개·불일치·결측이 있으면 비율을 만들지 않고 인원 0이면 비율은 null이다. 학교의 전교생 비율·종합 교육 품질·야외환경 인과 효과가 아니다. 보고서는 전체 공시연도를, AI는 질문에 해당하는 최신 공시연도 지표를 제공한다. AI 무키 폴백에서도 핵심 수치와 모집단 설명이 원자료 JSON보다 먼저 나오도록 보완했다. 공시 갱신 후 공개 지표 → AI 근거 순서로 재생성한다.

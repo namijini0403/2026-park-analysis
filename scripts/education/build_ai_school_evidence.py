@@ -17,6 +17,7 @@ def main():
     awards=read('science_awards.json')
     regional=read('regional_age_forecasts.json')
     demand=read('candidate_age_demand.json')['candidates']
+    indicators=read('school_public_indicators.json')['schools']
     frame=pd.read_csv(DATA/'institutions.csv').astype(object)
     rows=frame.where(pd.notna(frame),None).to_dict('records')
     frame=pd.read_csv(ROOT/'data_processed/schools.csv').astype(object)
@@ -42,6 +43,7 @@ def main():
                      'candidate_comparison':row.get('candidate_comparison'),'designations':row.get('designations',[]),
                      'regional':regional.get(f"{row.get('gu',institution.get('gu'))}|{institution['학교급구분']}"),
                      'awards':row.get('awards',[])+awards['schools'].get(sid,[]),'award_coverage':awards['coverage'],
+                     'public_indicators':[{**g,'observations':g['observations'][-1:]} for g in indicators.get(sid,[])],
                      'disclosure_titles':titles,'limitations':row.get('limitations',[])}
         # Facility IDs are large and unnecessary for answering aggregate questions.
         if 'academy' in output[sid]['context']:
