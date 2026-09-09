@@ -121,5 +121,25 @@ w.eval(fs.readFileSync(path.join(root,'assets/education-layers.js'),'utf8'));
   assert(fs.existsSync(path.join(root,coverageLink.getAttribute('href'))));
   assert.match(body.textContent,/369/);
   assert.match(body.textContent,/147/);
+  if(process.env.EDUCATION_FULL_REPORT_AUDIT==='1'){
+    const counts={};
+    for(const [index,school] of w.state.datasets.educationAllSchools.entries()){
+      await w.EducationLayers.openReport(school);
+      assert.equal(body.querySelector('h1')?.textContent,school.학교명,`Report identity: ${school.학교ID}`);
+      const source=read(`disclosures/${school.학교ID}.json`);
+      assert(body.textContent.includes(`학교별 공개 공시 (${source.length}개 기록)`),`Disclosure coverage: ${school.학교ID}`);
+      for(const heading of ['학교운동부 공개 운영 기록','대한체육회 공식 대회 결과','활동·지원·체력','졸업 후 진로 현황']){
+        assert(body.textContent.includes(heading),`${school.학교ID}: missing ${heading}`);
+      }
+      if(school.analysis_version){
+        for(const id of ['edu-show-route','edu-show-candidate','edu-budget','edu-age-weight']) assert(body.querySelector('#'+id),`${school.학교ID}: missing ${id}`);
+        assert(body.textContent.includes('주거 구역 내부 통행 가정 비교'));
+      }
+      counts[school.학교급구분]=(counts[school.학교급구분]||0)+1;
+      if((index+1)%100===0)console.log(`Full report audit ${index+1}/917`);
+    }
+    assert.deepEqual(counts,{'초등학교':272,'고등학교':129,'유치원':369,'중학교':147});
+    console.log('Full report audit passed:',JSON.stringify(counts));
+  }
   console.log('Education UI integration passed: school filters, lazy disclosures, policy scenarios, escaped source text.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
