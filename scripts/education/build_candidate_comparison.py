@@ -52,13 +52,20 @@ def compare(candidates):
             'missing_age_count':len(candidates)-len(complete), 'weight_scenarios':66,
             'default_weights':dict(zip(FEATURES, DEFAULT_WEIGHTS.tolist())),
             'demand_normalizer_log1p_max':maximum,
-            'scope':'기존 후보지 전체 중 학교 중심에서 직선 1.5km. 신규 부지 발굴·토지 적합성 검증 아님.',
+            'scope':'확장 학교급 도달권 기반 250m 탐색 격자 중 학교 중심에서 직선 1.5km. 토지 적합성 검증 전 분석 단위.',
             'explanation':'거리=1-거리/1500, 공원부족=min(최근접 공원거리/1000,1), 연령수요=log1p(추정인구)/log1p(학교 주변 후보 최대인구). 점수는 가중 기여도의 합.',
             'sensitivity':'세 지표가 확보된 후보끼리 10% 간격 가중치 66조합을 비교. 공동 순위 포함 상위5 진입 비율이며 선정 확률·모형 정확도 아님.'}
 
 
 def enrich(rows):
-    grid = gpd.read_file(DATA/'candidate_grid_final.geojson').to_crs(5179)
+    manifest = json.loads((EDU/'candidate_grid_manifest.json').read_text(encoding='utf-8'))
+    if manifest['source_sha256'] != hashlib.sha256((EDU/'walkshed_500m.geojson').read_bytes()).hexdigest():
+        raise ValueError('Walksheds changed: rebuild candidate_grid and candidate_age_demand before comparison')
+    allocation = json.loads((ROOT/'data/education_sources/candidate_age_allocation.json').read_text(encoding='utf-8'))
+    grid_hash = hashlib.sha256((EDU/'candidate_grid.geojson').read_bytes()).hexdigest()
+    if not any(s['file']=='candidate_grid.geojson' and s['sha256']==grid_hash for s in allocation['sources']):
+        raise ValueError('Candidate grid changed: rebuild age allocation with --raw-dir before comparison')
+    grid = gpd.read_file(EDU/'candidate_grid.geojson').to_crs(5179)
     grid.geometry = grid.geometry.centroid
     park_rows = pd.read_csv(DATA/'parks_with_function_class.csv')
     park_rows = park_rows[park_rows['시설유형'] != '놀이터'].dropna(subset=['경도','위도'])
@@ -77,7 +84,7 @@ def enrich(rows):
             candidates.append({'grid_id':ident, 'lat':float(wgs.loc[i].geometry.y), 'lng':float(wgs.loc[i].geometry.x),
                                'straight_distance_m':round(float(distances[i]),2), 'nearest_park_straight_m':round(park_distance[i],2),
                                'estimated_age_residents':age, 'age_specific_beneficiaries':None, 'land_feasibility_level':None,
-                               'selection_basis':'기존 후보지 중 직선 1.5km 전체; 학교급 연령 수요·공원 부족·거리 비교'})
+                               'selection_basis':'확장 학교급 250m 탐색 격자 중 직선 1.5km 전체; 학교급 연령 수요·공원 부족·거리 비교'})
         row['candidate_comparison'] = compare(candidates)
         row['candidates'] = candidates
     return rows
@@ -87,7 +94,7 @@ def main():
     path = EDU/'school_analysis.json'
     rows = enrich(json.loads(path.read_text(encoding='utf-8')))
     path.write_text(json.dumps(rows,ensure_ascii=False,separators=(',',':'),allow_nan=False),encoding='utf-8')
-    sources = [DATA/'candidate_grid_final.geojson', DATA/'parks_with_function_class.csv', EDU/'candidate_age_demand.json', EDU/'institutions.csv']
+    sources = [EDU/'candidate_grid.geojson', DATA/'parks_with_function_class.csv', EDU/'candidate_age_demand.json', EDU/'institutions.csv']
     manifest = {'schools':len(rows), 'candidate_pairs':sum(len(r['candidates']) for r in rows),
                 'schools_without_candidates':sum(not r['candidates'] for r in rows),
                 'sources':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}}

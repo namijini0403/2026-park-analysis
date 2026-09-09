@@ -46,7 +46,7 @@ class CandidateComparisonTests(unittest.TestCase):
     def test_saved_candidates_are_not_truncated_or_elementary_scores(self):
         rows = json.loads((ROOT/'data_processed/education/school_analysis.json').read_text(encoding='utf-8'))
         self.assertGreater(max(len(r['candidates']) for r in rows),12)
-        grid = gpd.read_file(ROOT/'data_processed/candidate_grid_final.geojson').to_crs(5179)
+        grid = gpd.read_file(ROOT/'data_processed/education/candidate_grid.geojson').to_crs(5179)
         centers = grid.geometry.centroid
         for level in ['유치원','중학교','고등학교']:
             school = next(r for r in rows if r['학교급구분']==level and len(r['candidates'])>12)
@@ -54,6 +54,7 @@ class CandidateComparisonTests(unittest.TestCase):
             expected = set(grid.loc[centers.distance(origin)<=1500,'grid_id'])
             self.assertEqual({c['grid_id'] for c in school['candidates']},expected)
         for row in rows:
+            self.assertGreater(len(row['candidates']),0)
             self.assertEqual(row['candidate_comparison']['candidate_count'],len(row['candidates']))
             for c in row['candidates']:
                 self.assertLessEqual(c['straight_distance_m'],1500)

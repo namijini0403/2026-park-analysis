@@ -1,11 +1,11 @@
 {
   "schools": 644,
-  "candidate_pairs": 26370,
-  "schools_without_candidates": 60,
+  "candidate_pairs": 44250,
+  "schools_without_candidates": 0,
   "sources": {
-    "data_processed\\candidate_grid_final.geojson": "0991ab226a15c8b70b1fefde0ac3f3fc4c924cb6ab4709592960de9c341d8168",
+    "data_processed\\education\\candidate_grid.geojson": "abd0951474faa98623d55d2870aa6418b5acbe6df3121c3a719c42cc861922af",
     "data_processed\\parks_with_function_class.csv": "68bd4254206b2df0edd4602166f3b1d36127438d5fdb2fdd17f18f0007a057c6",
-    "data_processed\\education\\candidate_age_demand.json": "df87a42ebac3ce450fa340f3611e59e944268aa879f672c9d4c984d0ab055842",
+    "data_processed\\education\\candidate_age_demand.json": "3347e6cb8c2f504b6d315a656ed04cb7c6f018574c1c55305b85f891de8a9daa",
     "data_processed\\education\\institutions.csv": "32e39380c9081561ae15033e81ca0a5f3a19f5e34139f529c2f89a732f5cd68a"
   }
 }

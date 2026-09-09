@@ -56,6 +56,10 @@ def extract(raw_dir):
     y=bounds.y+pop['격자코드'].str[7].astype(int)*100
     cells=gpd.GeoDataFrame(pop,geometry=box(x,y,x+100,y+100),crs=5179)
     candidates=gpd.read_file(ROOT/'data_processed/candidate_grid_final.geojson').to_crs(5179)
+    extended=gpd.read_file(ROOT/'data_processed/education/candidate_grid.geojson').to_crs(5179)
+    candidates=gpd.GeoDataFrame(pd.concat([candidates[['grid_id','geometry']],extended[['grid_id','geometry']]],ignore_index=True),crs=5179)
+    if candidates.grid_id.duplicated().any():
+        raise ValueError('Duplicate IDs between baseline and extended candidate grids')
     weights={}
     for index,row in candidates.iterrows():
         scopes={}
@@ -85,7 +89,7 @@ def extract(raw_dir):
             'sources':[{'file':source_zip.name,'sha256':hashlib.sha256(source_zip.read_bytes()).hexdigest()},
                        {'file':'population_grid.csv','sha256':hashlib.sha256((ROOT/'data_processed/population_grid.csv').read_bytes()).hexdigest()}],
             'method':'1km 5세별 공개 인구를 인천 2024년 1세별 비율로 나눔. 100m 총인구 비중으로 1km 총량을 보존해 배분한 뒤 면적 교차비로 집계.'}
-    for path in [ROOT/'data_processed/candidate_grid_final.geojson',ROOT/'data/education_sources/regional_age_observations.json',
+    for path in [ROOT/'data_processed/candidate_grid_final.geojson',ROOT/'data_processed/education/candidate_grid.geojson',ROOT/'data/education_sources/regional_age_observations.json',
                  *[raw_dir/f'_grid_border_grid_2025_grid_{prefix}_grid_{prefix}.zip' for prefix in ['나사','다사']]]:
         source['sources'].append({'file':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
     SOURCE.write_text(json.dumps(source,ensure_ascii=False,separators=(',',':')),encoding='utf-8')

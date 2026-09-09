@@ -1,7 +1,7 @@
 /* Multi-level analysis and public disclosures. All source text is escaped. */
 window.EducationLayers = (() => {
   const root = './data_processed/education/';
-  let allSchools = [], disclosures = {}, labels = {}, routes = null, regionalDemography = {}, regionalForecasts = {}, regionalForecastValidation = {}, scienceAwards = {}, candidateAgeDemand = {}, academies = [], reportRequest = 0;
+  let allSchools = [], disclosures = {}, labels = {}, routes = null, regionalDemography = {}, regionalForecasts = {}, regionalForecastValidation = {}, scienceAwards = {}, candidateAgeDemand = {}, academies = [], candidateGrid = null, reportRequest = 0;
   const e = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num = (v, suffix = '') => v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? '미확보' : Number(v).toLocaleString('ko-KR', {maximumFractionDigits:1}) + suffix;
   const categories = {elementary:'초등',middle:'중등',high:'고등',secondary:'중·고등',integrated:'통합(초등 포함)',kindergarten:'유아',mixed:'복합 대상',unknown:'대상 미확인'};
@@ -18,6 +18,8 @@ window.EducationLayers = (() => {
     const select = document.getElementById('schoolLevelFilter');
     select.disabled = false;
     select.addEventListener('change', () => {
+      for(const overlay of state.overlays.educationCandidate || []) overlay.setMap(null);
+      state.overlays.educationCandidate=[];
       state.datasets.schools = allSchools.filter(r => select.value === 'all' || r.학교급구분 === select.value);
       const ids = new Set(state.datasets.schools.map(getSchoolId));
       state.datasets.isochrone = {type:'FeatureCollection', features:[...state.datasets.educationBaseIsochrone.features, ...walks.features].filter(f => ids.has(f.properties.학교ID))};
@@ -86,7 +88,7 @@ window.EducationLayers = (() => {
       ${enrollment.forecast?.length ? table(['예측연도','지원 신호'],enrollment.forecast.map(h=>[h.year,num(h.students,'명')])) : ''}
       <p class="edu-note">학교급별 시간순 검증을 사용합니다. 유치원 원아수는 만3·4·5세와 혼합 원아의 합이며, 특수학급 원아수는 중복 여부 미확인으로 별도 공시에서 확인합니다. 초등학교의 검증 성능을 다른 학교급의 성능으로 인용하지 않으며, 장기 예측은 확정 수요가 아닙니다.</p>
       <h2>유사학교 비교</h2><p>${e(row.knn_basis || '비교에 필요한 학생수·추세 자료 미확보')}</p>${table(['학교','공원','추정 비율'],(row.similar_schools || []).map(s=>[s.school_name,num(s.park_count,'개'),num(s.green_ratio,'%')]))}
-      <h2>250m 후보지 검토</h2><p>기존 후보지 중 직선 1.5km 내 전체 ${num(row.candidate_comparison?.candidate_count)}개를 비교합니다. 거리·공원 부족·해당 연령 추정인구의 가중치를 바꿔 검토 순서를 조정합니다. 토지 소유·개발 가능성은 미확인입니다.</p><p>2024년 ${e(row.학교급구분)} 해당 연령대(유치원 3~5세·초등 6~11세·중등 12~14세·고등 15~17세)의 추정 거주인구를 후보지 내부와 주변 직선 500m로 나누어 표시합니다. 1km 연령 인구를 100m 총인구 비중으로 배분한 값이며 실제 이용자·신규 수혜 인원·미래 예측이 아닙니다. 미확보는 0명이 아니며 후보지 간 인원을 합산하지 않습니다.</p><label>거리 가중치 <input id="edu-distance-weight" type="range" min="0" max="100" value="40"> <output id="edu-weight-value">40%</output></label><label>연령 수요 가중치 <input id="edu-age-weight" type="range" min="0" max="100" value="30"> <output id="edu-age-weight-value">30%</output></label><p id="edu-gap-weight"></p><p class="edu-note">점수=거리 기여+공원 부족 기여+연령 수요 기여. 거리=1−거리/1500, 공원 부족=min(공원거리/1000,1), 수요=log1p(추정인구)/log1p(학교 주변 후보 최대인구). 3개 지표가 확보된 후보끼리 파레토(다른 후보에 모든 지표에서 밀리지 않음)와 10% 간격 가중치 66조합의 상위5 진입 비율을 계산합니다. 공동 순위를 포함하며 선정 확률·모형 정확도가 아닙니다. 수요 미확보 후보는 수요 가중치가 0일 때만 점수 비교합니다.</p><label>수요 시나리오 연도 <select id="edu-demand-year">${[2026,2027,2028,2029,2030,2031].map(y=>`<option value="${y}" ${y===2028?'selected':''}>${y}년</option>`).join('')}</select></label><p class="edu-note">시나리오는 선택 학교의 ${e(row.gu)} 해당 연령 성장률(예측연도 ÷ 2024년 관측)을 후보지 주변 추정 인구에 적용합니다. 후보지 행정구역·미래 공간 분포를 확인한 예측이 아니며 지역 경계·개발·이동 변화는 별도 검토해야 합니다. 2029~2031년은 4~6년 선행으로 별도 성능 검증이 없습니다.</p><div id="edu-candidates"></div>
+      <h2>250m 후보지 검토</h2><p>확장 학교급 도달권에서 생성한 250m 탐색 격자 중 직선 1.5km 내 전체 ${num(row.candidate_comparison?.candidate_count)}개를 비교합니다. 거리·공원 부족·해당 연령 추정인구의 가중치를 바꿔 검토 순서를 조정합니다. 토지 소유·개발 가능성은 미확인입니다.</p><p>2024년 ${e(row.학교급구분)} 해당 연령대(유치원 3~5세·초등 6~11세·중등 12~14세·고등 15~17세)의 추정 거주인구를 후보지 내부와 주변 직선 500m로 나누어 표시합니다. 1km 연령 인구를 100m 총인구 비중으로 배분한 값이며 실제 이용자·신규 수혜 인원·미래 예측이 아닙니다. 미확보는 0명이 아니며 후보지 간 인원을 합산하지 않습니다.</p><label>거리 가중치 <input id="edu-distance-weight" type="range" min="0" max="100" value="40"> <output id="edu-weight-value">40%</output></label><label>연령 수요 가중치 <input id="edu-age-weight" type="range" min="0" max="100" value="30"> <output id="edu-age-weight-value">30%</output></label><p id="edu-gap-weight"></p><p class="edu-note">점수=거리 기여+공원 부족 기여+연령 수요 기여. 거리=1−거리/1500, 공원 부족=min(공원거리/1000,1), 수요=log1p(추정인구)/log1p(학교 주변 후보 최대인구). 3개 지표가 확보된 후보끼리 파레토(다른 후보에 모든 지표에서 밀리지 않음)와 10% 간격 가중치 66조합의 상위5 진입 비율을 계산합니다. 공동 순위를 포함하며 선정 확률·모형 정확도가 아닙니다. 수요 미확보 후보는 수요 가중치가 0일 때만 점수 비교합니다.</p><label>수요 시나리오 연도 <select id="edu-demand-year">${[2026,2027,2028,2029,2030,2031].map(y=>`<option value="${y}" ${y===2028?'selected':''}>${y}년</option>`).join('')}</select></label><p class="edu-note">시나리오는 선택 학교의 ${e(row.gu)} 해당 연령 성장률(예측연도 ÷ 2024년 관측)을 후보지 주변 추정 인구에 적용합니다. 후보지 행정구역·미래 공간 분포를 확인한 예측이 아니며 지역 경계·개발·이동 변화는 별도 검토해야 합니다. 2029~2031년은 4~6년 선행으로 별도 성능 검증이 없습니다.</p><div id="edu-candidates"></div><label>지도에서 검토할 격자 <select id="edu-map-candidate">${(row.candidates||[]).map(c=>`<option value="${e(c.grid_id)}">${e(c.grid_id)}</option>`).join('')}</select></label> <button type="button" id="edu-show-candidate" ${(row.candidates||[]).length?'':'disabled'}>격자 경계 지도에서 보기</button><p class="edu-note">250m 격자는 보행 도달권과 일부라도 면적으로 겹치는 탐색 단위입니다. 수면·필지·소유·규제 검증 전이며 전체 면적이 공급 가능한 부지는 아닙니다.</p>
       <h2>정책 검토</h2><p>기존 정책 규칙을 학교급별 공원·독서 여건에 적용한 조건부 검토안입니다. 담당자가 조건을 바꿔 확인합니다.</p><div class="edu-policy-controls"><label>예산 <select id="edu-budget"><option value="sufficient">충분</option><option value="moderate">보통</option><option value="constrained">제약</option></select></label> <label>부지 <select id="edu-site"><option value="available">확보 가능</option><option value="unavailable">확보 불가</option></select></label> <label>접근 개선 <select id="edu-access"><option value="feasible">가능</option><option value="infeasible">불가</option></select></label> <label><input id="edu-barrier" type="checkbox">보행 장벽이 있다고 가정</label></div><p id="edu-policy-action"></p><p class="edu-note">보행 장벽 기본값은 미확인 상태의 시나리오 가정입니다. 실제 장벽 없음이라는 판정이 아닙니다.</p>
       <details><summary>학원 분류·근거 (${matchedAcademies.length}개 관측)</summary>${table(['시설','대상','예체능'],matchedAcademies.map(a=>[a.name,categories[a.target_category],a.arts_sports?'해당':'미확인/비해당']))}<p>초급·중급·고급을 학교급으로 해석하지 않습니다. 학원은 유료 민간 환경요소이며 공공 활동공간을 대체하지 않습니다.</p></details>
       <details><summary>지정·지원사업 (${(row.designations||[]).length}건)</summary>${table(['사업','연도'],(row.designations||[]).map(d=>[d.program_name,d.school_year]))}</details>
@@ -105,6 +107,24 @@ window.EducationLayers = (() => {
       if(typeof askAiExplainer==='function') askAiExplainer('이 학교의 현재 공원 환경 격차와 분석 한계를 설명해줘.','school_explanation');
     };
     if (actual) {
+      body.querySelector('#edu-show-candidate').onclick=async()=>{
+        const button=body.querySelector('#edu-show-candidate');
+        button.disabled=true;
+        try {
+          if(!candidateGrid) candidateGrid=await json('candidate_grid.geojson');
+          const selected=body.querySelector('#edu-map-candidate').value;
+          const feature=candidateGrid.features.find(f=>f.properties.grid_id===selected);
+          const candidate=row.candidates.find(c=>c.grid_id===selected);
+          if(!feature || !candidate) throw new Error('선택한 격자 원자료 미확보');
+          for(const overlay of state.overlays.educationCandidate || []) overlay.setMap(null);
+          const polygon=new kakao.maps.Polygon({path:feature.geometry.coordinates[0].map(([lng,lat])=>new kakao.maps.LatLng(lat,lng)),strokeWeight:3,strokeColor:'#7c3aed',fillColor:'#a78bfa',fillOpacity:.25});
+          polygon.setMap(state.map);state.overlays.educationCandidate=[polygon];
+          state.map.panTo(new kakao.maps.LatLng(candidate.lat,candidate.lng));
+          state.map.setLevel(4);body.closest('dialog').close();
+          appendStatus(`${selected}: 250m 탐색 격자 · 토지 적합성 미확인`);
+        } catch(error) {appendStatus(`격자 표시 실패: ${error.message}`);}
+        finally {button.disabled=false;}
+      };
       const slider = body.querySelector('#edu-distance-weight');
       const ageSlider = body.querySelector('#edu-age-weight');
       const redraw = () => {

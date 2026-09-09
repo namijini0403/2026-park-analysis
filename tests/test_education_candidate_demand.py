@@ -28,7 +28,8 @@ class CandidateAgeTests(unittest.TestCase):
         source=json.loads((ROOT/'data/education_sources/candidate_age_allocation.json').read_text(encoding='utf-8'))
         data=json.loads((ROOT/'data_processed/education/candidate_age_demand.json').read_text(encoding='utf-8'))
         candidates=json.loads((ROOT/'data_processed/candidate_grid_final.geojson').read_text(encoding='utf-8'))
-        self.assertEqual(set(data['candidates']),{r['properties']['grid_id'] for r in candidates['features']})
+        extended=json.loads((ROOT/'data_processed/education/candidate_grid.geojson').read_text(encoding='utf-8'))
+        self.assertEqual(set(data['candidates']),{r['properties']['grid_id'] for r in candidates['features']+extended['features']})
         for ident,scopes in source['candidate_weights'].items():
             outer=scopes['straight_500m']['weights']
             for parent,weight in scopes['footprint']['weights'].items():
