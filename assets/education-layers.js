@@ -1,7 +1,7 @@
 /* Multi-level analysis and public disclosures. All source text is escaped. */
 window.EducationLayers = (() => {
   const root = './data_processed/education/';
-  let allSchools = [], disclosures = {}, labels = {}, routes = null, regionalDemography = {}, scienceAwards = {}, academies = [], reportRequest = 0;
+  let allSchools = [], disclosures = {}, labels = {}, routes = null, regionalDemography = {}, scienceAwards = {}, candidateAgeDemand = {}, academies = [], reportRequest = 0;
   const e = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num = (v, suffix = '') => v === null || v === undefined || v === '' || !Number.isFinite(Number(v)) ? '미확보' : Number(v).toLocaleString('ko-KR', {maximumFractionDigits:1}) + suffix;
   const categories = {elementary:'초등',middle:'중등',high:'고등',secondary:'중·고등',integrated:'통합(초등 포함)',kindergarten:'유아',mixed:'복합 대상',unknown:'대상 미확인'};
@@ -84,7 +84,7 @@ window.EducationLayers = (() => {
       ${enrollment.forecast?.length ? table(['예측연도','지원 신호'],enrollment.forecast.map(h=>[h.year,num(h.students,'명')])) : ''}
       <p class="edu-note">학교급별 시간순 검증을 사용합니다. 초등학교의 검증 성능을 다른 학교급의 성능으로 인용하지 않으며, 장기 예측은 확정 수요가 아닙니다.</p>
       <h2>유사학교 비교</h2><p>${e(row.knn_basis || '비교에 필요한 학생수·추세 자료 미확보')}</p>${table(['학교','공원','추정 비율'],(row.similar_schools || []).map(s=>[s.school_name,num(s.park_count,'개'),num(s.green_ratio,'%')]))}
-      <h2>250m 후보지 검토</h2><p>기존 후보지 중 1.5km 내 학교 인접 후보입니다. 학교 인접성과 주변 공원 부족(최근접 공원 직선거리)을 함께 비교합니다. 거리 가중치를 바꾸어 검토 순서를 조정할 수 있습니다. 학교급별 수혜 인원은 미산출입니다.</p><label>거리 가중치 <input id="edu-distance-weight" type="range" min="0" max="100" value="70"> <output id="edu-weight-value">70%</output></label><div id="edu-candidates"></div>
+      <h2>250m 후보지 검토</h2><p>기존 후보지 중 1.5km 내 학교 인접 후보입니다. 학교 인접성과 주변 공원 부족(최근접 공원 직선거리)을 함께 비교합니다. 거리 가중치를 바꾸어 검토 순서를 조정할 수 있습니다.</p><p>2024년 ${e(row.학교급구분)} 해당 연령대(유치원 3~5세·초등 6~11세·중등 12~14세·고등 15~17세)의 추정 거주인구를 후보지 내부와 주변 직선 500m로 나누어 표시합니다. 1km 연령 인구를 100m 총인구 비중으로 배분한 값이며 실제 이용자·신규 수혜 인원·미래 예측이 아닙니다. 미확보는 0명이 아니며 후보지 간 인원을 합산하지 않습니다.</p><label>거리 가중치 <input id="edu-distance-weight" type="range" min="0" max="100" value="70"> <output id="edu-weight-value">70%</output></label><div id="edu-candidates"></div>
       <h2>정책 검토</h2><p>기존 정책 규칙을 학교급별 공원·독서 여건에 적용한 조건부 검토안입니다. 담당자가 조건을 바꿔 확인합니다.</p><div class="edu-policy-controls"><label>예산 <select id="edu-budget"><option value="sufficient">충분</option><option value="moderate">보통</option><option value="constrained">제약</option></select></label> <label>부지 <select id="edu-site"><option value="available">확보 가능</option><option value="unavailable">확보 불가</option></select></label> <label>접근 개선 <select id="edu-access"><option value="feasible">가능</option><option value="infeasible">불가</option></select></label> <label><input id="edu-barrier" type="checkbox">보행 장벽이 있다고 가정</label></div><p id="edu-policy-action"></p><p class="edu-note">보행 장벽 기본값은 미확인 상태의 시나리오 가정입니다. 실제 장벽 없음이라는 판정이 아닙니다.</p>
       <details><summary>학원 분류·근거 (${matchedAcademies.length}개 관측)</summary>${table(['시설','대상','예체능'],matchedAcademies.map(a=>[a.name,categories[a.target_category],a.arts_sports?'해당':'미확인/비해당']))}<p>초급·중급·고급을 학교급으로 해석하지 않습니다. 학원은 유료 민간 환경요소이며 공공 활동공간을 대체하지 않습니다.</p></details>
       <details><summary>지정·지원사업 (${(row.designations||[]).length}건)</summary>${table(['사업','연도'],(row.designations||[]).map(d=>[d.program_name,d.school_year]))}</details>
@@ -102,7 +102,7 @@ window.EducationLayers = (() => {
         const weight = Number(slider.value)/100;
         body.querySelector('#edu-weight-value').textContent = `${slider.value}%`;
         const ranked = (row.candidates||[]).map(c=>({...c,score:weight*(1-Math.min(1,c.straight_distance_m/1500))+(1-weight)*Math.min(1,(c.nearest_park_straight_m ?? 0)/1000)})).sort((a,b)=>b.score-a.score || a.straight_distance_m-b.straight_distance_m);
-        body.querySelector('#edu-candidates').innerHTML = table(['격자','학교 직선거리','공원 직선거리','수혜인원'],ranked.map(c=>[c.grid_id,num(c.straight_distance_m,'m'),num(c.nearest_park_straight_m,'m'),'연령별 자료 미확보']));
+        body.querySelector('#edu-candidates').innerHTML = table(['격자','학교 직선거리','공원 직선거리','후보지 내부 추정 인구','주변 500m 추정 인구'],ranked.map(c=>{const d=candidateAgeDemand.candidates?.[c.grid_id];return [c.grid_id,num(c.straight_distance_m,'m'),num(c.nearest_park_straight_m,'m'),num(d?.footprint?.levels?.[row.학교급구분]?.estimated_residents,'명'),num(d?.straight_500m?.levels?.[row.학교급구분]?.estimated_residents,'명')];}));
       };
       slider.oninput = redraw; redraw();
       const policy = () => {
@@ -122,7 +122,7 @@ window.EducationLayers = (() => {
     if (!dialog.open) dialog.showModal();
     try {
       const sid = getSchoolId(row);
-      if (!routes) [labels, routes, regionalDemography, scienceAwards] = await Promise.all([json('disclosure_labels.json'),json('school_routes.json'),json('regional_demography.json'),json('science_awards.json')]);
+      if (!routes) [labels, routes, regionalDemography, scienceAwards, candidateAgeDemand] = await Promise.all([json('disclosure_labels.json'),json('school_routes.json'),json('regional_demography.json'),json('science_awards.json'),json('candidate_age_demand.json')]);
       if (!disclosures[sid]) disclosures[sid] = await json(`disclosures/${encodeURIComponent(sid)}.json`);
       if (request === reportRequest) renderReport(row,body);
     } catch (err) { if (request === reportRequest) body.textContent = `공개자료 로딩 실패: ${err.message}`; }

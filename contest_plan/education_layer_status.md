@@ -12,6 +12,7 @@
 - 중·고교 등 연속 3년 이상 이력이 있는 기관에 추세+LightGBM 잔차 지원 예측을 제공한다. 최근 연도에서 혼합 비중을 선택했으므로 그 검증값은 독립 최종 성능이 아니다. 유치원 2년 이력은 추세만 제공한다.
 - 주민등록 1세별 원자료에서 구·군별 학교급 연령대(3~5, 6~11, 12~14, 15~17세) 관측 이력을 연결했다. 2014~2025년 자료를 사용하되 코드가 바뀐 미추홀구는 2018년부터 별도로 유지한다. 2025년 구·군 10개 합계가 인천 합계와 0~20세 각각 일치함을 검증했다. 출생·이동·사망을 넣지 않은 코호트 시나리오는 유치원 2028년, 다른 학교급 2030년까지이며 예측이나 후보지 수혜 인원이 아니다. 신설 구에는 기존 구 수치를 자동 전용하지 않는다.
 - 기존 규칙을 재사용한 예산·부지·접근성 12개 시나리오와 내부 독서 공급, 250m 기존 후보지 풀에서 학교 주변 후보 비교를 제공한다. 정책 결정을 자동화하지 않는다.
+- 기존 후보지 1,535개에 2024년 학교급별 연령대 배분 인구를 추가했다. 공개 1km 5세별 인구를 같은 연도 인천 1세별 비율로 분할하고, 100m 총인구 비중으로 배분한 후 기존 후보지 도형/주변 직선 500m와의 면적 교차비로 집계한다. 후보지 내부와 주변 인구는 별도이며 실제 이용자·신규 수혜 인원은 아니다. 주변 500m 완전 추정은 유치원 1,430개·초등 1,432개·중등 1,486개·고등 1,504개이며 나머지는 결측으로 남긴다. 원자료가 있는 부분의 소계는 전체 추정과 별도로 보존한다. 공식 100m 도형 100개와 코드 기반 재구성 좌표를 대조한 최대 오차는 0m였다. 기존 후보 도형을 그대로 사용하므로 모든 도형이 정확히 250m 정사각형이라는 의미는 아니다.
 - 학원·교습소 74,061개 교습과정 행을 이름·주소·종류 기준 6,839개 시설로 통합했다. 좌표 확보 6,743개, 미확보 96개다. 등록번호 부재로 동일시설 식별 한계가 있다. 교습과정에 근거해 학교급과 예체능을 별도 분류하며 초급·중급·고급을 학교급으로 해석하지 않는다.
 - 학교알리미 공개 일괄 목록에서 32개 항목의 실제 응답을 확보했다. 요청 단위 실패·빈 응답은 원본 manifest에 보존한다. 학교별 실제 공시값과 공식 필드 설명을 지연 로딩한다.
 - 공식 교육청 보도자료에서 확인한 수상 관측은 현재 3개 학교 기록이다. 전체 수상 이력이 아니며, 기록이 없다는 것을 수상 없음으로 해석하지 않는다.
@@ -20,7 +21,7 @@
 ## 아직 동일 깊이라고 할 수 없는 부분
 
 1. 학업성취도 개별 공시 페이지는 실제 존재하지만 CAPTCHA가 있어 자동 수집하지 않았다. 일괄 공개 목록에는 해당 항목이 없다. 수능 학교별 표준화 성적·전체 대외 수상 이력은 확보한 자료에 없다. 미수집과 자료 부존재를 구분한다.
-2. 유치원·중·고교의 연령별 250m 미래 수요는 아직 구축하지 않았다. 초등 인구를 전용하지 않으며 후보지의 `age_specific_beneficiaries`는 null이다. 신규 후보지 비교는 거리·공원 부족 지원 신호이며 기존 초등의 모든 후보 추천 모형과 동등하지 않다.
+2. 유치원·중·고교의 연령별 250m 미래 수요는 아직 구축하지 않았다. 현재 연령 인구의 배분 추정은 별도 파일로 제공하지만 초등 미래 인구를 전용하지 않으며 실제 신규 수혜를 뜻하는 `age_specific_beneficiaries`는 null이다. 신규 후보지 순서는 거리·공원 부족 지원 신호이며 현재 연령 인구는 비교용이다. 기존 초등의 모든 후보 추천 모형과 동등하지 않다.
 3. 유치원 장기 이력, 추가 초등 4교 분석, 기존 초등 AI 설명 화면과 신규 학교급의 완전한 통합은 후속 작업이다. 추가 학교급은 별도 분석 대화상자에서 확인한다.
 4. 실제 브라우저 연결이 없어 시각·지도 조작 QA는 수행하지 못했다. DOM 통합 검사와 정적 배포 빌드까지 검증했다.
 
@@ -42,6 +43,7 @@
 python scripts/education/build_school_registry.py
 python scripts/education/build_academies.py
 python scripts/education/build_regional_demography.py
+python scripts/education/build_candidate_age_demand.py
 python scripts/education/build_science_awards.py
 python scripts/accessibility/build_walkshed_500m_v3.py --graph ../_cache/incheon_walk_graph_v3.graphml --schools data_processed/education/new_school_coords.csv --out data_processed/education/walkshed_500m.geojson --report data_processed/education/walkshed_report.csv
 python scripts/education/build_education_analysis.py
@@ -49,6 +51,7 @@ python scripts/education/build_school_routes.py
 python -m unittest discover -s tests -p test_education_layers.py
 python -m unittest discover -s tests -p test_education_demography.py
 python -m unittest discover -s tests -p test_education_awards.py
+python -m unittest discover -s tests -p test_education_candidate_demand.py
 node tests/test_education_ui.cjs
 node scripts/check_inline_script.mjs
 npm run validate:modules
@@ -56,6 +59,8 @@ npm run build:vercel
 ```
 
 원자료 갱신: 학교 원장·학원 스크립트의 `--fetch`, 학교알리미는 `python scripts/education/fetch_disclosures.py`. 신규 주소 보정은 각각 `--geocode-missing`, `--geocode`이며 기존 Kakao 클라이언트 인증 설정이 필요하다. 실패·미확보 자료를 0으로 대체하지 않는다.
+
+연령별 후보지 인구: 기본 실행은 `data/education_sources/candidate_age_allocation.json`의 정규화 원자료와 공간 배분 가중치를 재사용한다. 공간 계산까지 다시 수행하려면 `python scripts/education/build_candidate_age_demand.py --raw-dir C:/2026_data_analysis_park/data/raw`. 필요한 원본 ZIP·후보지·총인구·연령 인구 입력의 파일명과 SHA-256을 스냅샷에 보존한다. 2024년 인구와 2025년 격자 경계 파일을 사용하며 기준연도·배분 가정·관측 결측을 출력에 명시한다.
 
 과학전람회 갱신: `python scripts/education/build_science_awards.py --fetch --years 2023 2024 2025`. 목록·상세 스냅샷을 재사용하며 최초 수집은 네트워크가 필요하다. 기존 연도 캐시를 자동 덮어쓰지 않는다. 학교명·대회·수상·작품 제목과 응답 해시를 보존하고 학생/교사 개인 이름은 추출하지 않는다. 공식 DB: https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttList.do
 
