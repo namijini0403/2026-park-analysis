@@ -1,0 +1,8 @@
+{
+  "coverage": "교육청 공식 보도자료 2건에서 학교별 결과를 확인한 관측 기록. 전수 실적·학교 순위가 아님.",
+  "records": [
+    {"school_name":"부평고등학교","school_level":"고등학교","event":"제105회 전국체육대회","year":2024,"category":"씨름","result":"금메달 2개","source_url":"https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3300657","verification":"교육청 보도자료에서 학교 씨름부의 금메달 2개 획득을 명시"},
+    {"school_name":"구산중학교","school_level":"중학교","event":"제71회 전국과학전람회","year":2025,"category":"과학 탐구","result":"대통령상 1작품","source_url":"https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3340610","verification":"교육청 보도자료에서 해당 학교 인공지능 컴패니언 연구 작품의 대통령상 수상을 명시"},
+    {"school_name":"인천체육고등학교","school_level":"고등학교","event":"제106회 전국체육대회","year":2025,"category":"남자고등부 체조","result":"단체 종합 우승; 개인종합 금메달 1개·은메달 1개","source_url":"https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3340610","verification":"교육청 보도자료에서 해당 학교 남고 체조팀 단체 우승과 개인종합 결과를 명시"}
+  ]
+}

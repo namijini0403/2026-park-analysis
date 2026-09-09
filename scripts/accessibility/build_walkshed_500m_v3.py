@@ -217,8 +217,8 @@ def main():
         rows.append({
             "학교ID": sid, "학교명": row["학교명"], **st,
             "v3_area_m2": round(area), "v3_ratio": round(area / circle, 4),
-            "v2_osmnx_area_m2": round(old_area.get(sid, float("nan"))),
-            "valhalla_area_m2": round(val_area.get(sid, float("nan"))),
+            "v2_osmnx_area_m2": round(old_area[sid]) if sid in old_area else None,
+            "valhalla_area_m2": round(val_area[sid]) if sid in val_area else None,
         })
         if (i + 1) % 25 == 0 or i + 1 == len(gs):
             print(f"  [{i+1}/{len(gs)}] {row['학교명']} area={area:,.0f} ratio={area/circle:.2f} offset={st['offset_m']}m parts={st['n_parts']}")

@@ -1,0 +1,31 @@
+module: academy
+resource_type: 학원·교습소 (유료 민간 환경)
+location:
+  file: data_processed/education/academies_map.json
+  lat_key: lat
+  lng_key: lng
+  name_key: name
+external_supply:
+  - metric: straight_500m_count
+    source: data_processed/education/academy_school_context.json
+  - metric: walkshed_count
+    source: data_processed/education/academy_school_context.json
+demand_unit: 학교급별 학생·원아 (학원 이용자 수는 미확보)
+target_users: 교습과목에 명시된 유아·초등·중등·고등; 미명시는 미확인
+policy_actions:
+  - maintain_monitor
+reference_date: "2026-08-01"
+source:
+  - name: 학원 및 교습소 현황 (2026.8.1.기준)
+    provider: 인천광역시교육청
+    license: 원문 이용조건 확인; 출처와 기준일 표시
+layer:
+  id: academy
+  button_label: "📖 학원·교습소"
+  panel_label: "학원·교습소 (유료 민간 환경)"
+  color: "#0891B2"
+constraints:
+  - 과목별 원자료 74061행을 명칭·주소·시설유형 기준 6839개 시설로 통합
+  - 주소 지오코딩 6743개, 미해결 96개; 관측 없음은 학원 없음과 다름
+  - 초급·중급·고급은 학교급으로 추정하지 않음
+  - 유료 민간시설이며 공원 공급량·학교 정책등급·학교 실적점수에 합산하지 않음

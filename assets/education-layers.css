@@ -1,0 +1,9 @@
+#educationReportDialog{width:min(1060px,94vw);max-height:92vh;border:1px solid #b6c8d6;border-radius:20px;background:#f5f8fc;color:#17263b;padding:28px;box-shadow:0 20px 80px #081a3655;font-family:Pretendard,'Noto Sans KR',sans-serif}
+#educationReportDialog::backdrop{background:#07182eaa;backdrop-filter:blur(3px)}
+#educationReportDialog .edu-close{position:sticky;top:0;float:right;border:0;border-radius:8px;padding:9px 15px;background:#163950;color:white;cursor:pointer;z-index:2}
+#educationReportDialog h1{font-size:30px;margin:8px 0 14px}#educationReportDialog h2{font-size:20px;margin:30px 0 12px;border-top:1px solid #ccd8e4;padding-top:20px}
+#educationReportDialog p{font-size:14px;line-height:1.7}#educationReportDialog .edu-kicker{color:#136b86;font-weight:700;letter-spacing:.06em;font-size:12px}
+.edu-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}.edu-metrics>div{background:white;border:1px solid #d6e1eb;border-radius:12px;padding:16px;font-size:12px}.edu-metrics strong{display:block;font-size:26px;margin-top:8px;color:#12677e}
+.edu-table{overflow:auto;max-height:380px;margin:12px 0}.edu-table table{border-collapse:collapse;width:100%;background:white;font-size:13px}.edu-table th,.edu-table td{text-align:left;border:1px solid #d8e1ea;padding:9px;max-width:520px;overflow-wrap:anywhere}.edu-table th{background:#e7eff6;position:sticky;top:0}.edu-note{color:#52677b;font-size:12px!important}
+#educationReportDialog details{border:1px solid #ccd9e5;border-radius:9px;margin:10px 0;padding:12px;background:#fff}#educationReportDialog summary{font-weight:650;cursor:pointer}#educationReportDialog a{color:#076b89}#edu-distance-weight{max-width:200px;vertical-align:middle}
+@media(max-width:650px){.edu-metrics{grid-template-columns:repeat(2,1fr)}#educationReportDialog{padding:16px}.map-search-box{max-width:94vw;flex-wrap:wrap}.map-search-label[for=schoolSearchInput]{display:none}}

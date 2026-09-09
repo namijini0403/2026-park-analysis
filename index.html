@@ -3192,6 +3192,8 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="./assets/education-layers.css">
+  <script src="./assets/education-layers.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -3246,6 +3248,10 @@
     </section>
 
     <div class="map-search-box" aria-label="학교 검색">
+      <label class="map-search-label" for="schoolLevelFilter">학교급</label>
+      <select id="schoolLevelFilter" aria-label="학교급 선택" disabled style="max-width:105px;border-radius:8px;padding:7px">
+        <option value="초등학교">초등학교</option><option value="유치원">유치원</option><option value="중학교">중학교</option><option value="고등학교">고등학교</option><option value="all">전체 학교급</option>
+      </select>
       <label class="map-search-label" for="schoolSearchInput">학교 검색</label>
       <input class="map-search-input" id="schoolSearchInput" type="search" list="schoolSearchList" placeholder="학교명을 입력하세요" autocomplete="off" />
       <p class="map-search-status">기본 보기 · 전체 초등학교 마커</p>
@@ -3254,6 +3260,7 @@
 
     <div class="top-action-stack" aria-label="상단 바로가기">
       <button class="top-action-button primary" type="button" data-shortcut-action="report">학교 진단</button>
+      <button class="top-action-button secondary" type="button" id="educationReportButton">공개자료·학교급 분석</button>
       <button class="top-action-button secondary" type="button" data-shortcut-action="simulation">시뮬레이션</button>
       <button class="top-action-button secondary" id="statisticsShortcutButton" type="button" data-shortcut-action="statistics">전체 통계</button>
       <button class="top-action-button secondary" id="guideShortcutButton" type="button" data-shortcut-action="guide">활용 가이드</button>
@@ -3452,6 +3459,12 @@
         kind: "point", datasetKey: "libraries", defaultOn: false,
         cssColor: "#7C3AED",
         point: { latKey: "위도", lngKey: "경도", titleKey: "도서관명", fallbackTitle: "도서관", color: "#7C3AED" }
+      },
+      {
+        id: "academy", buttonLabel: "📖 학원·교습소", panelLabel: "학원·교습소 (유료 민간 환경)",
+        toggleId: "toggleAcademy", overlayKey: "academyMarkers", kind: "custom",
+        render: () => EducationLayers.renderAcademies(), defaultOn: false, cssColor: "#0891B2",
+        ensure: () => EducationLayers.renderAcademies(), isLoaded: () => !!state.overlays.academyMarkers?.length
       },
       {
         id: "redevelopment", buttonLabel: "🏗️ 재개발", panelLabel: "재개발 구역",
@@ -5904,6 +5917,7 @@
     }
 
     function buildSchoolHoverCardHtml(row) {
+      if (row.analysis_version) return EducationLayers.summary(row);
       const caseMeta = getCaseMeta(row);
       const caseColor = isSpecialPolicySchool(row) ? "#6B7280" : caseMeta.color;
       const { items, chips } = getSchoolLayerSummary(row);
@@ -6687,6 +6701,7 @@
       if (!schoolPriority.length) {
         appendStatus("school_priority.csv가 아직 없거나 로딩에 실패했습니다.");
       }
+      EducationLayers.init().catch(error => appendStatus(`학교급 확장 자료 로딩 실패: ${error.message}`));
     }
 
     function escapeGuideText(value = "") {
@@ -7152,6 +7167,7 @@
       }
 
       if (normalizedAction === "statistics") {
+        if (document.getElementById('schoolLevelFilter')?.value !== '초등학교') { EducationLayers.openStatistics(); return; }
         openPreviewOverlay("statistics");
         return;
       }
@@ -7167,12 +7183,16 @@
       }
 
       if (normalizedAction === "school-report" || normalizedAction === "report") {
+        const row = getShortcutSchoolRow();
+        if (row?.analysis_version) { setSchoolPanelSelection(row); EducationLayers.openReport(row); return; }
         await prepareShortcutSchoolBridge();
         openPreviewOverlay("report");
         return;
       }
 
       if (normalizedAction === "simulation" || normalizedAction === "ai-recommendation" || normalizedAction === "recommendation") {
+        const row = getShortcutSchoolRow();
+        if (row?.analysis_version) { setSchoolPanelSelection(row); EducationLayers.openReport(row); return; }
         await prepareShortcutSchoolBridge();
         openPreviewOverlay("simulation");
         return;
@@ -8037,6 +8057,11 @@
     }
 
     function renderDetailPanel(payload = null) {
+      if (payload?.analysis_version) {
+        ui.schoolDetailBox.textContent = `${payload.학교명} · ${payload.학교급구분} — 공통 분석 리포트`;
+        EducationLayers.openReport(payload);
+        return;
+      }
       if (isCandidatePanelResponse(payload)) {
         renderCandidatePanel(payload);
         return;
