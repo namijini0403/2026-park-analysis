@@ -23,7 +23,7 @@
 ## 아직 동일 깊이라고 할 수 없는 부분
 
 1. 학업성취도 개별 공시 페이지는 실제 존재하지만 CAPTCHA가 있어 자동 수집하지 않았다. 일괄 공개 목록에는 해당 항목이 없다. 수능 학교별 표준화 성적·전체 대외 수상 이력은 확보한 자료에 없다. 미수집과 자료 부존재를 구분한다.
-2. 구·군 연령 예측과 후보지 지역비례 시나리오는 구축했지만, 후보지별 경계·개발·전입을 반영한 미래 공간 분포 모형은 아직 없다. 초등 미래 인구를 전용하지 않으며 실제 신규 수혜를 뜻하는 `age_specific_beneficiaries`는 null이다. 신규 후보지 순서는 거리·공원 부족 지원 신호이며 연령 인구와 미래 시나리오는 비교용이다. 기존 초등의 모든 후보 추천 모형과 동등하지 않다.
+2. 구·군 연령 예측과 후보지 지역비례 시나리오는 구축했지만, 후보지별 경계·개발·전입을 반영한 미래 공간 분포 모형은 아직 없다. 초등 미래 인구를 전용하지 않으며 실제 신규 수혜를 뜻하는 `age_specific_beneficiaries`는 null이다. 후보 비교는 거리·공원 부족·연령 추정인구의 직접 기여도, 파레토, 가중치 민감도를 제공한다. 학습된 초등 SHAP 모형을 전용하지 않는다. 기존 후보지 풀이 없어 1.5km 내 후보를 제시하지 못하는 기관은 60개이며 새 부지를 발굴했다는 의미가 아니다.
 3. 추가 초등 4교 분석은 후속 작업이다. 유치원 과거 이력·최신 공시는 연결했지만 최신 원장에 없는 과거 기관은 현재 학교에 임의 매칭하지 않는다. 추가 학교급은 공통 분석 대화상자에서 확인하고, 기존 AI 설명 패널과 연결된다. AI 공시 설명에는 확인된 항목 목록을 제공하며 세부 원문 수치는 보고서에서 확인한다.
 4. 실제 브라우저 연결이 없어 시각·지도 조작 QA는 수행하지 못했다. DOM 통합 검사와 정적 배포 빌드까지 검증했다.
 
@@ -51,11 +51,13 @@ python scripts/education/build_science_awards.py
 python scripts/accessibility/build_walkshed_500m_v3.py --graph ../_cache/incheon_walk_graph_v3.graphml --schools data_processed/education/new_school_coords.csv --out data_processed/education/walkshed_500m.geojson --report data_processed/education/walkshed_report.csv
 python scripts/education/build_education_analysis.py
 python scripts/education/build_school_routes.py
+python scripts/education/build_candidate_comparison.py
 python scripts/education/build_ai_school_evidence.py
 python -m unittest discover -s tests -p test_education_layers.py
 python -m unittest discover -s tests -p test_education_demography.py
 python -m unittest discover -s tests -p test_education_awards.py
 python -m unittest discover -s tests -p test_education_candidate_demand.py
+python -m unittest discover -s tests -p test_education_candidate_comparison.py
 python -m unittest discover -s tests -p test_education_regional_forecasts.py
 python -m unittest discover -s tests -p test_education_kindergarten.py
 node tests/test_education_ui.cjs
@@ -81,3 +83,5 @@ AI 근거는 다른 교육 산출물을 갱신한 뒤 `build_ai_school_evidence.
 데모: 루트 `index.html`에서 학교급 선택 → 학교 검색/선택 → 공개자료·학교급 분석. 환경 레이어의 학원·교습소를 켜면 공원과 같은 주변 시설로 표시된다. 외부 배포는 수행하지 않았다.
 
 유치원 공시 갱신: `python scripts/education/fetch_kindergarten_disclosures.py` 후 원장·도달권·교육 분석·경로·AI 근거 순서로 재생성한다. 다운로드는 공개 폼의 실제 시도/공시차수/항목 파라미터를 사용하며 기존 스냅샷을 재사용한다. 원장·대표자 개인 이름은 정규화 원자료에서 제외한다. 최신 일반 현황의 기관을 기준으로 하고 과거 공시는 이름·설립유형·교육지원청(동명 시 주소)으로 정확히 연결한다. 재원 이력은 이름·설립일 기반 로컬 ID가 동일한 자료만 사용한다. 과거 미매칭 642행은 별도 coverage 파일에 남기며 폐원으로 단정하지 않는다. 예측은 과거 공백 이전 구간을 버리고 최신 연속 구간을 사용하되 보고서에는 전체 관측 이력을 보존한다.
+
+후보지 비교 보완: 644개 기관에 대해 기존 1,535개 후보의 중심점이 직선 1.5km 안에 있는 26,370개 학교-후보 쌍을 전부 연결한다. 가까운 12개 선제 절삭을 제거했다. 기본 가중치는 거리 40%·공원 부족 30%·학교급 연령 수요 30%이며 점수의 세 기여도를 그대로 보여준다. 수요는 학교별 후보 최대값으로 log1p 정규화하므로 다른 학교의 점수와 직접 비교하지 않는다. 세 지표가 완전한 후보끼리 파레토와 10% 간격 66개 가중치 조합을 계산한다. 상위5 진입 비율은 공동 순위를 포함하며 통계적 선정 확률이 아니다. 수요 결측은 0으로 대체하지 않으며 수요 가중치 0일 때만 사용자 점수 비교를 허용한다. 상속된 초등 부지 적합성 값은 확장 학교급에서 null로 처리한다. AI에는 기본 가중치 상위 5개와 전체 비교 범위를 전달해 요청 길이를 제한한다. 갱신 순서는 연령 수요 → 후보 비교 → AI 근거이며 교육 분석 전체 실행에도 후보 비교가 포함된다.

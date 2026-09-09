@@ -232,8 +232,6 @@ def main():
                                 "arts_sports_count":int(near.arts_sports.sum()),"source_total":len(academies),"geocoded_total":len(academy_layer),
                                 "coverage":"geocoded_observations_only"}
     save("academy_school_context.json",academy_context)
-    candidate = gpd.read_file(DATA / "candidate_grid_final.geojson").to_crs(5179)
-    candidate.geometry = candidate.geometry.centroid
     designations = json.loads((DATA / "context/school_designations.json").read_text(encoding="utf-8"))["records"]
     awards = json.loads((ROOT / "data/education_sources/award_observations.json").read_text(encoding="utf-8"))
     result = []
@@ -301,16 +299,6 @@ def main():
         history = row["enrollment"].get("history", [])
         row["current_students"] = history[-1]["students"] if history else institution.get("current_students")
         row["student_slope"] = row["enrollment"].get("student_slope")
-        # Existing candidate eligibility is shared, but elementary demand/scores are not.
-        cd = candidate.geometry.distance(origin)
-        local = candidate[cd <= 1500].copy()
-        local["distance_m"] = cd[cd <= 1500]
-        for idx, c in local.sort_values("distance_m").head(12).iterrows():
-            pt = gpd.GeoSeries([c.geometry], crs=5179).to_crs(4326).iloc[0]
-            row["candidates"].append({"grid_id": c.get("grid_id", str(idx)), "lat": pt.y, "lng": pt.x,
-                                      "straight_distance_m": round(c.distance_m), "selection_basis": "기존 250m 후보지 중 학교 인접 후보, 거리순",
-                                      "nearest_park_straight_m": round(float(official.geometry.distance(c.geometry).min())),
-                                      "age_specific_beneficiaries": None, "land_feasibility_level": c.get("land_feasibility_level")})
         result.append(row)
     for level in sorted({r["학교급구분"] for r in result}):
         cohort = [r for r in result if r["학교급구분"] == level and r["analysis_status"] == "available"]
@@ -350,6 +338,8 @@ def main():
                                     "parameters": {"walk_distance_m":500,"straight_buffer_m":500,"candidate_radius_m":1500,"knn_k":4,
                                                    "green_thresholds_pct":[1,5],"park_geometry":"published_area_circle_proxy_clipped_union"}})
     print(f"Analyzed {len(result)} institutions", flush=True)
+    from scripts.education.build_candidate_comparison import main as build_candidate_comparison
+    build_candidate_comparison()
 
 
 if __name__ == "__main__":

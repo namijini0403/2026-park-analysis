@@ -38,7 +38,8 @@ def main():
                      'current_students':row.get('current_students'),'enrollment':row.get('enrollment',{}),
                      'context':row.get('context',{}),'academy':{k:v for k,v in academy.get(sid,{}).items() if k!='facility_ids'},
                      'route':route,'reading_gap':row.get('reading_gap',{}),'similar_schools':row.get('similar_schools',[]),
-                     'knn_basis':row.get('knn_basis'),'candidates':candidates,'designations':row.get('designations',[]),
+                     'knn_basis':row.get('knn_basis'),'candidates':candidates[:5],
+                     'candidate_comparison':row.get('candidate_comparison'),'designations':row.get('designations',[]),
                      'regional':regional.get(f"{row.get('gu',institution.get('gu'))}|{institution['학교급구분']}"),
                      'awards':row.get('awards',[])+awards['schools'].get(sid,[]),'award_coverage':awards['coverage'],
                      'disclosure_titles':titles,'limitations':row.get('limitations',[])}
