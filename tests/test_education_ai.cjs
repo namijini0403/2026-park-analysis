@@ -32,6 +32,16 @@ async function ask(payload){
   const unknown=await ask({mode:'identified_school_explainer',question:'공원 환경 분석',school_context:{school_id:'../unknown',school_level:'중학교'}});
   assert.equal(unknown.answerable,false);
   const middle=Object.values(data).find(r=>r.school_level==='중학교');
+  const high=Object.values(data).find(r=>r.school_level==='고등학교'&&r.progression.observations.length===2);
+  const progressionAnswer=await ask({mode:'identified_school_explainer',question:'2025년 졸업 후 진학률을 알려줘',school_context:{school_id:high.school_id}});
+  assert.equal(progressionAnswer.answerable,true);
+  assert(progressionAnswer.evidence.every(r=>r.source_chunk_id===`education#${high.school_id}-performance`));
+  const progression2025=evidence.build(high,'2025년 졸업 후 진학률')[0].body;
+  assert(progression2025.includes('"year":2025'));
+  assert(!progression2025.includes('"year":2026'));
+  const progression2026=evidence.build(high,'2026년 졸업 후 취업 현황')[0].body;
+  assert(progression2026.includes('progression_pending_publication'));
+  assert(progression2026.includes('"employed":null'));
   const before=JSON.stringify(middle);
   const apartment=evidence.build(middle,'주변 아파트는 몇 개야?')[0].body;
   assert(apartment.includes(JSON.stringify(middle.context.large_apartment)));

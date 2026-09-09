@@ -19,6 +19,7 @@ def main():
     regional=read('regional_age_forecasts.json')
     demand=read('candidate_age_demand.json')['candidates']
     school_age=read('school_age_demand.json')
+    progression=read('school_progression.json')
     indicators=read('school_public_indicators.json')['schools']
     frame=pd.read_csv(DATA/'institutions.csv').astype(object)
     rows=frame.where(pd.notna(frame),None).to_dict('records')
@@ -48,6 +49,7 @@ def main():
                      'regional':regional.get(f"{row.get('statistical_region_2025',{}).get('region_name',row.get('gu',institution.get('gu')))}|{institution['학교급구분']}"),
                      'awards':row.get('awards',[])+awards['schools'].get(sid,[])+invention['schools'].get(sid,[]),
                      'award_coverage':awards['coverage']+' '+invention['coverage'],
+                     'progression':{'observations':progression['schools'].get(sid,[]),'scope':progression['scope'],'limitations':progression['limitations']},
                      'public_indicators':[{**g,'observations':g['observations'][-1:]} for g in indicators.get(sid,[])],
                      'disclosure_titles':titles,'limitations':row.get('limitations',[])}
         # Facility IDs are large and unnecessary for answering aggregate questions.
