@@ -45,6 +45,7 @@ w.fetch=async(input)=>{
 };
 const inline=[...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n');
 const education=fs.readFileSync(path.join(root,'assets/education-layers.js'),'utf8');
+w.eval(fs.readFileSync(path.join(root,'assets/education-statistics.js'),'utf8'));
 w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer};');
 (async()=>{
   const app=w.__app;
@@ -173,6 +174,11 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert(app.state.overlays.academyMarkers.every(m=>m.map===app.state.map));
   academy.checked=false;academy.dispatchEvent(new w.Event('change'));
   assert(app.state.overlays.academyMarkers.every(m=>m.map===null));
+  w.document.getElementById('statisticsShortcutButton').click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert(w.document.querySelector('#educationCorrelations .edu-stat-result'));
+  assert(w.document.querySelector('#educationCorrelations').textContent.includes('Pearson'));
+  assert.equal(w.document.querySelector('#educationCorrelations [data-filter="level"]').value,'초등학교');
   assert.deepEqual(errors,[],'Real rendering/filter functions must not throw');
   console.log('Full page boot passed: actual loadData, extension initialization, school markers, filters, report and AI context.');
 })().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>w.close());

@@ -312,6 +312,17 @@ window.EducationLayers = (() => {
       return [level,group.length,measured.length,num(avg,'%'),group.filter(r=>r.analysis_version ? r.enrollment?.forecast?.length : false).length];
     }).filter(r=>r[1]);
     body.innerHTML=`<p class="edu-kicker">선택 학교급·지역의 실제 관측값</p><h1>학교급별 분석 현황</h1><p><a href="./data_processed/education/school_data_coverage.csv" download="학교별_자료연결_점검표.csv">전체 원장 학교별 자료 연결 점검표 CSV</a></p><p class="edu-note">점검표는 현재 필터와 무관한 전체 원장 범위입니다. 미편입·식별 검토·공시 결측을 포함하며, 확인기록 0은 실적 없음이나 학교 품질을 뜻하지 않습니다.</p>${table(['학교급','기관','환경 분석','평균 추정 공원면적 비율','새 수요모형 산출'],groups)}<p>초등학교의 기존 검토·보정값과 확장 학교급의 v3 도달권·공원 대체경계 추정값은 산출 기준이 다릅니다. 학교급별로 나누어 해석합니다.</p><h2>공원 환경 분포</h2>${table(['학교급','공원 관측 0개','1% 미만','1~5% 미만','5% 이상'],groups.map(g=>{const r=rows.filter(s=>(s.학교급구분||'초등학교')===g[0]);return [g[0],r.filter(s=>Number(s.iso_park_count)===0).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)<1).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)>=1&&Number(s.iso_green_ratio)<5).length,r.filter(s=>Number(s.iso_park_count)>0&&Number(s.iso_green_ratio)>=5).length];}))}<p>학원·교습소 원자료 ${num(academies.length,'개')} 시설 중 ${num(academies.filter(a=>a.lat!=null).length,'개')} 좌표 확보. 원자료 기준 2026-08-01.</p>`;
+    const correlations=document.createElement('section');
+    correlations.id='educationCorrelations';body.appendChild(correlations);
+    const legacy=document.createElement('button');legacy.type='button';legacy.textContent='기존 초등 통계 리포트 보기';
+    legacy.onclick=()=>{dialog.close();openPreviewOverlay('statistics',true);};body.appendChild(legacy);
+    const schools=(state.datasets.educationAllSchools||state.datasets.schools).map(s=>({
+      id:getSchoolId(s),name:s.학교명,level:s.학교급구분||'초등학교',gu:detectGu(s),
+      environment:{parks:s.iso_park_count,green:s.iso_green_ratio,academy:s.context?.academy?.straight_500m_count,
+        library:s.context?.library?.walkshed_count??state.datasets.schoolLibraryAccess?.find(r=>r.학교ID===getSchoolId(s))?.iso_library_count,apartment:s.context?.large_apartment?.straight_500m_count,
+        redevelopment:s.context?.redevelopment?.straight_500m_count}
+    }));
+    if(window.EducationStatistics) window.EducationStatistics.mount(correlations,schools,document.getElementById('schoolLevelFilter')?.value,state.selectedGu);
     if (!dialog.open) dialog.showModal();
   }
   return {clearRoute,init,summary,renderAcademies,renderCandidates,openReport,openStatistics};

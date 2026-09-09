@@ -3193,6 +3193,7 @@
     }
   </style>
   <link rel="stylesheet" href="./assets/education-layers.css">
+  <script src="./assets/education-statistics.js"></script>
   <script src="./assets/education-layers.js"></script>
 </head>
 <body>
@@ -8640,7 +8641,8 @@
     initAuthGate();
 
     /* ── 시뮬레이션 오버레이 ──────────────────────────── */
-    function openPreviewOverlay(initialView = "report") {
+    function openPreviewOverlay(initialView = "report", legacyStatistics = false) {
+      if (initialView === "statistics" && !legacyStatistics) { EducationLayers.openStatistics(); return; }
       document.getElementById("simulationOverlay").style.display = "flex";
       const frame = document.getElementById("simulationFrame");
       frame.src = "ui-preview/dist/index.html?view=" + encodeURIComponent(initialView) + "&t=" + Date.now();
