@@ -32,7 +32,7 @@ def main():
     science = read('science_awards.json')['schools']
     invention = read('invention_awards.json')['schools']
     progression = read('school_progression.json')['schools']
-    for label, linked in [('analysis',analysis),('age',age),('routes',routes),('academy',academy),('indicators',indicators),('science',science),('invention',invention)]:
+    for label, linked in [('analysis',analysis),('age',age),('routes',routes),('academy',academy),('indicators',indicators),('science',science),('invention',invention),('progression',progression)]:
         if set(linked)-set(ids):
             raise ValueError(f'{label}: unknown school IDs')
     if set(analysis)!=set(age) or set(analysis)!=set(routes):

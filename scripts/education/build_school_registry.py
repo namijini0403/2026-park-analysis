@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -126,7 +127,7 @@ def main():
     df[(df["학교급구분"] != "초등학교") & (df.coordinate_status == "available")].to_csv(args.out / "new_school_coords.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(trends).to_csv(args.out / "kindergarten_enrollment.csv", index=False, encoding="utf-8-sig")
     manifest = {"counts": df["학교급구분"].value_counts().to_dict(), "coordinate_status": df.coordinate_status.value_counts().to_dict(),
-                "sources": [{"file": p.name, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in sources],
+                "sources": [{"file": p.name, "path": os.path.relpath(p, ROOT), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in sources],
                 "notes": ["원자료의 기준시점이 서로 다름. 현재 운영 여부를 2026년 현황으로 일괄 해석하지 않음.",
                           "유치원 특수학급 원아수는 별도 보존. 일반 연령별 원아수와 중복 여부 미확인으로 합산하지 않음."]}
     (args.out / "registry_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
