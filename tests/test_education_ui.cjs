@@ -14,6 +14,7 @@ w.state.map={panTo(point){this.point=point;},setLevel(level){this.level=level;}}
 w.kakao={maps:{LatLng:class {constructor(lat,lng){this.lat=lat;this.lng=lng;}},Polygon:class {constructor(options){this.options=options;}setMap(map){this.map=map;}}}};
 w.ui={schoolSearchInput:{value:''}};
 w.getSchoolId=r=>r.학교ID;
+w.detectGu=r=>r.gu;
 for(const name of ['clearDetailPanelSelection','populateSchoolSearchOptions','rerenderAll','renderGuSummary','appendStatus']) w[name]=()=>{};
 w.findSchoolBySearch=()=>null;
 w.isLayerOnById=()=>false;
