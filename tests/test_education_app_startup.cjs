@@ -84,6 +84,28 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
     assert.equal(w.document.getElementById('edu-map-candidate').value,grid.__gridId);
   }
   assert.equal(baselineRequests(),initialRequests,'Extended filters must not reload elementary candidates');
+  const district=w.document.getElementById('guFilter');
+  for(const gu of ['제물포구','영종구','서해구','검단구']) assert([...district.options].some(o=>o.value===gu));
+  selector.value='유치원';selector.dispatchEvent(new w.Event('change'));
+  for(const gu of ['제물포구','영종구','서해구','검단구']){
+    district.value=gu;district.dispatchEvent(new w.Event('change'));
+    const expected=app.state.datasets.schools.filter(s=>s.gu===gu);
+    assert(expected.length>0);
+    assert.equal(app.state.selectedGu,gu);
+    assert.equal(app.state.overlays.schoolMarkers.filter(m=>m.map===app.state.map).length,expected.length);
+    w.EducationLayers.openStatistics();
+    const statsRow=w.document.querySelector('.edu-body table tbody tr');
+    assert.equal(statsRow.children[0].textContent,'유치원');
+    assert.equal(statsRow.children[1].textContent,String(expected.length));
+    assert(app.state.overlays.candidateMarkers.length>0);
+  }
+  const searched=app.state.datasets.schools.find(s=>s.gu==='서해구' && s.학교명==='인천건지초등학교병설유치원');
+  const search=w.document.getElementById('schoolSearchInput');
+  search.value=searched.학교명;search.dispatchEvent(new w.Event('change'));
+  assert.equal(district.value,'서해구','Search must not blank the district selector');
+  assert.equal(app.state.selectedGu,'서해구');
+  assert.equal(app.state.selectedSchoolId,searched.학교ID);
+  district.value='전체';district.dispatchEvent(new w.Event('change'));
   const restoredSchool=app.state.datasets.educationAllSchools.find(s=>s.statistical_region_2025?.historical_address);
   assert(restoredSchool);
   await w.EducationLayers.openReport(restoredSchool);

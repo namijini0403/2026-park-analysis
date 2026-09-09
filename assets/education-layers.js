@@ -20,6 +20,16 @@ window.EducationLayers = (() => {
     state.datasets.schools = state.datasets.schools.map(r => ({...r, 학교급구분:'초등학교',context:{academy:academyContext[getSchoolId(r)]}}));
     allSchools = [...state.datasets.schools, ...schools];
     state.datasets.educationAllSchools = allSchools;
+    const districtSelect = document.getElementById('guFilter');
+    if (districtSelect) {
+      const existing = new Set([...districtSelect.options].map(option => option.value));
+      const districts = [...new Set(allSchools.map(detectGu).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ko'));
+      for (const district of districts) if (!existing.has(district)) {
+        const option = document.createElement('option');
+        option.value = district; option.textContent = district;
+        districtSelect.appendChild(option);
+      }
+    }
     state.datasets.educationBaseIsochrone = state.datasets.isochrone;
     state.datasets.educationNewIsochrone = walks;
     const select = document.getElementById('schoolLevelFilter');
@@ -206,7 +216,7 @@ window.EducationLayers = (() => {
   function openStatistics() {
     const dialog=ensureModal(), body=dialog.querySelector('.edu-body');
     ++reportRequest;
-    const rows=state.datasets.schools.filter(r=>state.selectedGu==='전체' || r.gu===state.selectedGu);
+    const rows=state.datasets.schools.filter(r=>state.selectedGu==='전체' || detectGu(r)===state.selectedGu);
     const groups=['유치원','초등학교','중학교','고등학교'].map(level=>{
       const group=rows.filter(r=>(r.학교급구분||'초등학교')===level);
       const measured=group.filter(r=>r.iso_green_ratio!=null && r.iso_green_ratio!=='' && Number.isFinite(Number(r.iso_green_ratio)));
