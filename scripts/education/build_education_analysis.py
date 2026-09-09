@@ -85,6 +85,28 @@ def disclosures(registry):
                     # Parenthetical special-class count is already part of total.
                     n = int(v.split("(")[0].replace(",", ""))
                     enrollment[sid][m["year"]] = enrollment[sid].get(m["year"], 0) + n
+    kindergarten_path=ROOT/'data/education_sources/kindergarten'
+    kindergarten_unmatched=[]
+    if (kindergarten_path/'manifest.json').exists():
+        kindergarten_manifest=json.loads((kindergarten_path/'manifest.json').read_text(encoding='utf-8'))
+        registry_rows=registry[registry['학교급구분']=='유치원'].to_dict('records')
+        for item in kindergarten_manifest['records']:
+            if item['status']!='available' or not item['rows']:
+                continue
+            source=json.loads((kindergarten_path/item['file']).read_text(encoding='utf-8'))
+            for values in source['body']:
+                record=dict(zip(source['header'],values))
+                matches=[r for r in registry_rows if r['학교명']==record.get('유치원명') and r['설립형태']==record.get('설립유형')
+                         and (not record.get('교육지원청명') or r.get('education_support_name')==record.get('교육지원청명'))]
+                if len(matches)>1 and record.get('주소'):
+                    address=re.sub(r'\s+','',record['주소'])
+                    matches=[r for r in matches if re.sub(r'\s+','',str(r['소재지도로명주소']))==address]
+                if len(matches)!=1:
+                    kindergarten_unmatched.append({'file':item['file'],'name':record.get('유치원명'),'match_count':len(matches)})
+                    continue
+                linked[matches[0]['학교ID']].append({'item':'KG'+item['item'],'title':f"유치원 {item['title']} ({item['timing']%10}차)",
+                    'year':item['timing']//10,'depth':str(item['timing']%10),'source_file':item['file'],'source_url':source['source_url'],'values':record})
+    save('kindergarten_disclosure_coverage.json',{'unmatched':kindergarten_unmatched})
     kinder = pd.read_csv(OUT / "kindergarten_enrollment.csv")
     for r in kinder.to_dict("records"):
         if pd.notna(r["students"]):
@@ -105,10 +127,22 @@ def points(filename, lat="위도", lng="경도"):
     return gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df[lng], df[lat]), crs=4326).to_crs(5179)
 
 
+def recent_contiguous_history(history):
+    if not history:
+        return {}
+    year=max(history)
+    result={}
+    while year in history:
+        result[year]=history[year]
+        year-=1
+    return dict(sorted(result.items()))
+
+
 def forecast(enrollment, registry):
     result, validation = {}, {}
     for level, group in registry.groupby("학교급구분"):
-        histories = {sid: dict(sorted(enrollment.get(sid, {}).items())) for sid in group["학교ID"]}
+        raw_histories = {sid: dict(sorted(enrollment.get(sid, {}).items())) for sid in group["학교ID"]}
+        histories = {sid:recent_contiguous_history(hist) for sid,hist in raw_histories.items()}
         training = []
         for sid, hist in histories.items():
             years = list(hist)
@@ -142,7 +176,8 @@ def forecast(enrollment, registry):
             validation[level] = {"status": "insufficient_history_for_ml"}
         for sid, hist in histories.items():
             years = list(hist)
-            base = {"history": [{"year": y, "students": hist[y]} for y in years], "forecast": [], "model_status": "insufficient_history"}
+            base = {"history": [{"year": y, "students": n} for y,n in raw_histories[sid].items()],
+                    "model_history_years":years,"forecast": [], "model_status": "insufficient_history"}
             if len(years) >= 3 and years == list(range(years[0], years[-1] + 1)):
                 values = [hist[y] for y in years]
                 base["model_status"] = "weighted_trend_lightgbm" if model is not None and weight > 0 else "weighted_trend"

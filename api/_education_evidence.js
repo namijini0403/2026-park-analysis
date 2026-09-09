@@ -33,7 +33,7 @@ function build(row,question){
     }
     parts.push(chunk(row,'performance','학교 공개 공시·성과',text));
   }
-  if(/미래|예측|수요|인구|전망|학생수|원아|prophet|xgboost/i.test(q)) parts.push(chunk(row,'demand','현재·미래 수요',`현재 학생·원아 ${fmt(row.current_students)}명. 학교 이력·지원 예측: ${JSON.stringify(row.enrollment)}. 지역 연령 예측: ${JSON.stringify(row.regional)}. 학교 재학생·구군 연령 인구·후보지 시나리오는 서로 다른 모집단이다. 유치원 학교별 2년 이력으로 장기 예측을 만들지 않았으며 구·군 연령 인구 예측과 구분한다.`));
+  if(/미래|예측|수요|인구|전망|학생수|원아|prophet|xgboost/i.test(q)) parts.push(chunk(row,'demand','현재·미래 수요',`현재 학생·원아 ${fmt(row.current_students)}명. 학교 이력·지원 예측: ${JSON.stringify(row.enrollment)}. 지역 연령 예측: ${JSON.stringify(row.regional)}. 학교 재학생·구군 연령 인구·후보지 시나리오는 서로 다른 모집단이다. 최근 연속 3개년 미만 이력인 기관은 학교별 장기 예측을 만들지 않으며 구·군 연령 인구 예측과 구분한다. 유치원 원아수는 만3·4·5세와 혼합 원아의 합이며 특수학급 수치는 별도 공시로 확인한다.`));
   if(/유사|knn|비교군|벤치마크/i.test(q)) parts.push(chunk(row,'similar','동일 학교급 유사학교',`${row.knn_basis||'유사학교 입력 미확보'}. ${JSON.stringify(row.similar_schools)}. 유사도는 학교 실력·성과 순위가 아니다.`));
   if(/후보|격자|추천|가중치|파레토|shap/i.test(q)) parts.push(chunk(row,'candidate','후보지 비교',`학교 1.5km 이내 기존 후보 중 가까운 최대 5개 예시(전체 후보는 학교별 보고서): ${JSON.stringify(row.candidates.slice(0,5))}. 비교 순서는 학교 거리와 주변 공원 부족의 가중 조합이며 확장 학교급의 SHAP·파레토 모형은 미구축이다. age_demand는 2024년 해당 학교급 연령의 주변 직선 500m 배분 추정이며 실제 이용자·신규 수혜 아님. 지역비례 미래 시나리오는 선택 학교 구·군 성장률 적용 가정이며 후보지 공간 분포 예측이 아니다.`));
   if(/도보|보행|우회|접근|횡단|출입/.test(q)) parts.push(chunk(row,'access','접근 마찰',`${JSON.stringify(row.route)}. 학교와 공원 대표점 간 경로이며 실제 출입구·통행 허용·횡단 안전을 검증한 경로가 아니다.`));

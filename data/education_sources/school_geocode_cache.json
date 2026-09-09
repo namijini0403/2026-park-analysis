@@ -1,4 +1,47 @@
 {
+ "address|인천광역시 검단구 독정로324번길 26 (불로동)": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 검단구 불로동 0",
+     "b_code": "2829011000",
+     "h_code": "2829052000",
+     "main_address_no": "0",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "검단구",
+     "region_3depth_h_name": "불로대곡동",
+     "region_3depth_name": "불로동",
+     "sub_address_no": "",
+     "x": "126.682835659813",
+     "y": "37.6091779889688"
+    },
+    "address_name": "인천 검단구 독정로324번길 26",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 검단구 독정로324번길 26",
+     "building_name": "인천검단호수초등학교",
+     "main_building_no": "26",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "검단구",
+     "region_3depth_name": "불로동",
+     "road_name": "독정로324번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.682835659813",
+     "y": "37.6091779889688",
+     "zone_no": "23462"
+    },
+    "x": "126.682835659813",
+    "y": "37.6091779889688"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
  "address|인천광역시 계양구 박촌로 53": {
   "documents": [
    {
@@ -77,6 +120,92 @@
     },
     "x": "126.706373246321",
     "y": "37.4999012998257"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
+ "address|인천광역시 영종구 영종대로278번길 34 (운서동)": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 영종구 운서동 3103-8",
+     "b_code": "2815510300",
+     "h_code": "2815555000",
+     "main_address_no": "3103",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "영종구",
+     "region_3depth_h_name": "운서2동",
+     "region_3depth_name": "운서동",
+     "sub_address_no": "8",
+     "x": "126.501682470053",
+     "y": "37.4853189947656"
+    },
+    "address_name": "인천 영종구 영종대로278번길 34",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 영종구 영종대로278번길 34",
+     "building_name": "영종고등학교",
+     "main_building_no": "34",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "영종구",
+     "region_3depth_name": "운서동",
+     "road_name": "영종대로278번길",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.501682470053",
+     "y": "37.4853189947656",
+     "zone_no": "23242"
+    },
+    "x": "126.501682470053",
+    "y": "37.4853189947656"
+   }
+  ],
+  "meta": {
+   "is_end": true,
+   "pageable_count": 1,
+   "total_count": 1
+  }
+ },
+ "address|인천광역시 영종구 은하수로 142 (중산동)": {
+  "documents": [
+   {
+    "address": {
+     "address_name": "인천 영종구 중산동 1914-1",
+     "b_code": "2815510100",
+     "h_code": "2815553000",
+     "main_address_no": "1914",
+     "mountain_yn": "N",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "영종구",
+     "region_3depth_h_name": "영종2동",
+     "region_3depth_name": "중산동",
+     "sub_address_no": "1",
+     "x": "126.569618906024",
+     "y": "37.4979566551413"
+    },
+    "address_name": "인천 영종구 은하수로 142",
+    "address_type": "ROAD_ADDR",
+    "road_address": {
+     "address_name": "인천 영종구 은하수로 142",
+     "building_name": "인천중산고등학교",
+     "main_building_no": "142",
+     "region_1depth_name": "인천",
+     "region_2depth_name": "영종구",
+     "region_3depth_name": "중산동",
+     "road_name": "은하수로",
+     "sub_building_no": "",
+     "underground_yn": "N",
+     "x": "126.569618906024",
+     "y": "37.4979566551413",
+     "zone_no": "23299"
+    },
+    "x": "126.569618906024",
+    "y": "37.4979566551413"
    }
   ],
   "meta": {

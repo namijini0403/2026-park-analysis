@@ -1,0 +1,293 @@
+{
+  "source_url": "https://e-childschoolinfo.moe.go.kr/openData.do",
+  "records": [
+    {
+      "timing": 20131,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20131_05.json",
+      "rows": 0,
+      "status": "empty"
+    },
+    {
+      "timing": 20141,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20141_05.json",
+      "rows": 0,
+      "status": "empty"
+    },
+    {
+      "timing": 20151,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20151_05.json",
+      "rows": 0,
+      "status": "empty"
+    },
+    {
+      "timing": 20161,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20161_05.json",
+      "rows": 406,
+      "status": "available"
+    },
+    {
+      "timing": 20171,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20171_05.json",
+      "rows": 411,
+      "status": "available"
+    },
+    {
+      "timing": 20181,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20181_05.json",
+      "rows": 417,
+      "status": "available"
+    },
+    {
+      "timing": 20191,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20191_05.json",
+      "rows": 397,
+      "status": "available"
+    },
+    {
+      "timing": 20201,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20201_05.json",
+      "rows": 394,
+      "status": "available"
+    },
+    {
+      "timing": 20211,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20211_05.json",
+      "rows": 390,
+      "status": "available"
+    },
+    {
+      "timing": 20221,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20221_05.json",
+      "rows": 387,
+      "status": "available"
+    },
+    {
+      "timing": 20231,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20231_05.json",
+      "rows": 384,
+      "status": "available"
+    },
+    {
+      "timing": 20241,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20241_05.json",
+      "rows": 378,
+      "status": "available"
+    },
+    {
+      "timing": 20251,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20251_05.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20252_05.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "06",
+      "title": "직위ㆍ자격별 교직원 현황",
+      "file": "20252_06.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "07",
+      "title": "교사의 현 기관 근속연수",
+      "file": "20252_07.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "14",
+      "title": "급식실시 현황",
+      "file": "20252_14.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "15",
+      "title": "환경위생관리 현황",
+      "file": "20252_15.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "171",
+      "title": "공제회가입 현황",
+      "file": "20252_171.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "172",
+      "title": "보험별가입 현황",
+      "file": "20252_172.json",
+      "rows": 2309,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "19",
+      "title": "통학차량 현황",
+      "file": "20252_19.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20252,
+      "item": "22",
+      "title": "안전점검 현황",
+      "file": "20252_22.json",
+      "rows": 376,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "041",
+      "title": "교실면적 현황",
+      "file": "20261_041.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "042",
+      "title": "건물 현황",
+      "file": "20261_042.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "05",
+      "title": "일반 현황",
+      "file": "20261_05.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "06",
+      "title": "직위ㆍ자격별 교직원 현황",
+      "file": "20261_06.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "07",
+      "title": "교사의 현 기관 근속연수",
+      "file": "20261_07.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "10",
+      "title": "수업일수 현황",
+      "file": "20261_10.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "111",
+      "title": "방과후 과정 편성ㆍ운영에 관한 사항",
+      "file": "20261_111.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "14",
+      "title": "급식실시 현황",
+      "file": "20261_14.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "15",
+      "title": "환경위생관리 현황",
+      "file": "20261_15.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "171",
+      "title": "공제회가입 현황",
+      "file": "20261_171.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "172",
+      "title": "보험별가입 현황",
+      "file": "20261_172.json",
+      "rows": 2277,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "19",
+      "title": "통학차량 현황",
+      "file": "20261_19.json",
+      "rows": 369,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "21",
+      "title": "안전교육 현황",
+      "file": "20261_21.json",
+      "rows": 738,
+      "status": "available"
+    },
+    {
+      "timing": 20261,
+      "item": "22",
+      "title": "안전점검 현황",
+      "file": "20261_22.json",
+      "rows": 369,
+      "status": "available"
+    }
+  ]
+}

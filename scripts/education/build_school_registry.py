@@ -70,10 +70,20 @@ def main():
                      "source_url": SCHOOL_URL, "id_method": "official_school_id"})
     sources = [location_path]
     trends = []
-    for year in (2024, 2025):
-        path = args.raw_dir / f"유치원 일반 현황_{year}1_인천광역시.csv"
+    kindergarten_files = {}
+    for directory in [args.raw_dir,args.raw_dir / 'kindergarten']:
+        for path in directory.glob('유치원 일반 현황_*1_인천광역시.csv'):
+            year=int(path.name.split('_')[1][:4])
+            try:
+                frame=read_csv(path)
+            except pd.errors.EmptyDataError:
+                continue
+            if not frame.empty:
+                kindergarten_files[year]=(path,frame)
+    latest_kindergarten_year=max(kindergarten_files)
+    for year,(path,frame) in sorted(kindergarten_files.items()):
         sources.append(path)
-        for r in read_csv(path).fillna("").to_dict("records"):
+        for r in frame.fillna("").to_dict("records"):
             # No official ID in the supplied disclosure; label the deterministic local ID.
             sid = "KLOCAL-" + hashlib.sha256((r["유치원명"] + "|" + str(r["설립일"])).encode()).hexdigest()[:16]
             age_cols = ("만3세원아수", "만4세원아수", "만5세원아수", "혼합원아수")
@@ -82,10 +92,11 @@ def main():
             trends.append({"학교ID": sid, "학교명": r["유치원명"], "year": year, "students": total,
                            "special_class_students": pd.to_numeric(r.get("특수원아수"), errors="coerce"),
                            "source_url": KINDER_URL, "reference_period": f"{year}년 1차 공시"})
-            if year == 2025:
+            if year == latest_kindergarten_year:
                 rows.append({"학교ID": sid, "학교명": r["유치원명"], "위도": r["위도"], "경도": r["경도"],
                              "소재지도로명주소": r["주소"], "학교급구분": "유치원", "설립형태": r["설립유형"],
-                             "데이터기준일자": "2025년 1차 공시", "source_url": KINDER_URL,
+                             "데이터기준일자": f"{year}년 1차 공시", "source_url": KINDER_URL,
+                             "education_support_name":r.get('교육지원청명'),
                              "id_method": "local_name_establishment_date", "current_students": total,
                              "capacity": pd.to_numeric(r["인가총정원수"], errors="coerce")})
     df = pd.DataFrame(rows)
