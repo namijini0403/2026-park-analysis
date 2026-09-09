@@ -33,6 +33,23 @@ def parse(html):
     return output
 
 
+def resolve_school(title, registry):
+    normalized=re.sub(r'\s+','',title)
+    exact=[r for r in registry if re.sub(r'\s+','',r['학교명'])==normalized]
+    if len(exact)==1: return exact[0], 'Exact name after whitespace normalization'
+    if exact: return None, 'Ambiguous exact name'
+    # Keep Korean-letter boundaries: a broadcasting high school is not its host school.
+    mentions=[r for r in registry if re.search(r'(?<![가-힣])'+re.escape(r['학교명'])+r'(?![가-힣])',title)]
+    if len(mentions)==1: return mentions[0], 'Unique full registry school name in posting title'
+    if mentions: return None, 'Multiple schools named in posting title'
+    for short,full in [('초','초등학교'),('중','중학교'),('고','고등학교')]:
+        if normalized.endswith(short):
+            expanded=normalized[:-len(short)]+full
+            hits=[r for r in registry if re.sub(r'\s+','',r['학교명'])==expanded]
+            if len(hits)==1: return hits[0], 'School-level suffix expanded; unique exact registry name'
+    return None, 'Unverified posting title'
+
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--fetch',action='store_true');args=parser.parse_args()
     if args.fetch:
@@ -55,8 +72,8 @@ def main():
     registry=list(csv.DictReader((ROOT/'data_processed/education/institutions.csv').open(encoding='utf-8-sig')))
     schools={};unmatched=[]
     for row in source['records']:
-        hits=[r for r in registry if re.sub(r'\s+','',r['학교명'])==re.sub(r'\s+','',row['school_name'])]
-        if len(hits)==1: schools.setdefault(hits[0]['학교ID'],[]).append(row)
+        school,basis=resolve_school(row['school_name'],registry)
+        if school is not None: schools.setdefault(school['학교ID'],[]).append({**row,'identity_basis':basis})
         else: unmatched.append(row)
     result={'schools':schools,'unmatched':unmatched,'coverage':NOTE,'source_sha256':hashlib.sha256(SOURCE.read_bytes()).hexdigest()}
     (ROOT/'data_processed/education/school_athletics.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
