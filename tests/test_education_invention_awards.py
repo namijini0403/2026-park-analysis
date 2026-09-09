@@ -14,8 +14,18 @@ class InventionAwardTests(unittest.TestCase):
         nationwide=json.loads((ROOT/'data/education_sources/school_locations.json').read_text(encoding='utf-8'))['records']
         self.assertGreater(len(data['schools']),0)
         for sid,records in data['schools'].items():
-            self.assertEqual(len(records),len({r['source_url'] for r in records}))
+            self.assertEqual(len(records),len({(r['source_url'],r.get('work_number'),r.get('award_scope')) for r in records}))
             for record in records:
+                if record['year']==2026:
+                    latest=json.loads((ROOT/'data/education_sources/invention_awards_2026_results.json').read_text(encoding='utf-8'))
+                    self.assertIn(record,latest['records'])
+                    self.assertIn('/bbs/208/',record['source_url'])
+                    self.assertIn(record['award_scope'],['student_work','school_group'])
+                    if record['award_scope']=='student_work':
+                        self.assertIsNone(record['work_title'])
+                        self.assertLessEqual(record['source_table'],6)
+                    else:self.assertEqual(record['source_table'],10)
+                    continue
                 self.assertIn('/bbs/424/',record['source_url'])
                 self.assertIn('발명품',record['event'])
                 self.assertNotIn('지도논문',record['work_title'])

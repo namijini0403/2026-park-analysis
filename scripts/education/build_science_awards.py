@@ -147,10 +147,16 @@ def main():
     for record in pdf_records:
         linked.setdefault(record['school_id'],[]).append(record)
     pdf_note=f' 2024 공식 요약집에서 {len(pdf_records)}개 학교-작품 실적을 별도 대조·보완함.' if pdf_records else ''
+    latest_source=ROOT/'data/education_sources/invention_awards_2026_results.json'
+    if args.competition=='invention' and latest_source.exists():
+        latest=json.loads(latest_source.read_text(encoding='utf-8'))
+        for record in latest['records']:
+            linked.setdefault(record['school_id'],[]).append(record)
+        pdf_note+=f" 2026-08-28 최종 심사결과 학생작품 {latest['student_works_checked']}건·학교단체상을 확인해 {len(latest['records'])}개 학교별 관측을 별도 추가함. 작품명 미기재는 결측이며 학교단체상과 작품 수상을 합산하지 않음."
     output = {'coverage':f"국립중앙과학관 {', '.join(map(str,manifest['years']))}년 {EVENT} 출품작 검색 게시물(요약집 포함) {manifest['listed_count']}건 중 상세 {len(manifest['entries'])}건 확인. 웹 학교명 공란 {len(missing_school)}건은 그대로 보존함.{pdf_note} 다른 대회·연도 전체 실적은 아님.",
               'schools':linked, 'unmatched_incheon':unmatched, 'ambiguous_school_names':ambiguous, 'missing_school_fields':missing_school, 'failures':manifest['failures']}
     (OUT/f'{args.competition}_awards.json').write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf-8')
-    print(f'Matched {len(linked)} schools / {sum(map(len,linked.values()))} school-work observations; failures {len(manifest["failures"])}', flush=True)
+    print(f'Matched {len(linked)} schools / {sum(map(len,linked.values()))} school award observations; failures {len(manifest["failures"])}', flush=True)
 
 
 if __name__ == '__main__':
