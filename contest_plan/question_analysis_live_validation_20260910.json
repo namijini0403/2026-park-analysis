@@ -1,0 +1,186 @@
+{
+  "url": "https://education-living-area-preview-production.up.railway.app",
+  "deployment": "b989dc1c-2a75-4337-99c9-0ca0d5cc7d86",
+  "assets": {
+    "index.html": "aa9427583e89603dad84531eb029aa1dbd48b51f27c61c0e49d3355cf256ed0b",
+    "assets/education-questions.js": "d28d5a65e357c02cc4b23a3a44de81db2a27201f80e0f67c23bfd9e4ea9b9d8d",
+    "assets/education-networks.js": "dd54696a3606bac1f2059c0effab3996ecef41679b3ae36964dfddab087dfacd",
+    "assets/education-statistics.js": "8ed0f3eaa28e86a2f46db0fb3f03ef9e169df5fb92adf24bface5ca4a3ecf887",
+    "data_processed/education/analysis_dataset.json": "4fbd4581f194b885b4a6b9554a6cb0f25fea814b2601d1b1eae7e84df807f110",
+    "data_processed/education/library_access_preview.json": "6dfd3b258adb5ddac178e6f804deafdbf40865a632bb16293983fff06f62bdb6",
+    "data_processed/education/library_access_scenarios.json": "f59eeac45fea5c563122de7fddba0c1789bdb1d41a3a2e79440c212533623a55",
+    "data_processed/education/academy_clusters.json": "03ee4af1d7fa51e96521802c47f910501a6f98a460c7701efee81ef3a9111fdb"
+  },
+  "cases": [
+    {
+      "question": "학원 수와 학생 수는 관련 있어?",
+      "http": 200,
+      "method": "relationship",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "n": 147,
+        "excluded": 0,
+        "spearman": 0.42999083653326425,
+        "partial_spearman": null,
+        "effective_controls": 0,
+        "pearson": 0.3711849059669074
+      },
+      "analysis_id": "3b098fdfe6a73773"
+    },
+    {
+      "question": "유치원 원아 수 증감 추세",
+      "http": 200,
+      "method": "trend",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "cohort": 312,
+        "excluded": 57,
+        "years": [
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "sen_slope": -801,
+        "change": -7346
+      },
+      "analysis_id": "9dded1fc903684ea"
+    },
+    {
+      "question": "도서관 추천 후보를 보여줘",
+      "http": 200,
+      "method": "library",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "candidates": 7304,
+        "library_count": 82,
+        "age_band": "12~14세"
+      },
+      "analysis_id": "e42dd2c4df31e7f3"
+    },
+    {
+      "question": "학원가 밀집 구역을 보여줘",
+      "http": 200,
+      "method": "academy_clusters",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "radius_m": 300,
+        "minimum_facilities": 10,
+        "cluster_count": 119,
+        "clustered_facilities": 6356,
+        "unclustered_facilities": 454,
+        "geocoded": 6810
+      },
+      "analysis_id": "c557131df930804a"
+    },
+    {
+      "question": "공원 부족이 공간적으로 몰려 있어?",
+      "http": 200,
+      "method": "spatial",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "n": 134,
+        "excluded": 13,
+        "moran_i": 0.36930505756787296,
+        "permutation_p": 0.002,
+        "permutations": 499,
+        "seed": 20260910,
+        "local_cluster_counts": {
+          "high-high": 0,
+          "low-low": 0,
+          "high-low": 0,
+          "low-high": 0,
+          "not_detected": 134
+        }
+      },
+      "analysis_id": "036d6cc896eeafcf"
+    },
+    {
+      "question": "공원 수 격차를 보여줘",
+      "http": 200,
+      "method": "inequality",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "n": 147,
+        "excluded": 0,
+        "gini": 0.5330903790087465,
+        "p10": 0,
+        "median": 1,
+        "p90": 5
+      },
+      "analysis_id": "19027b7487739078"
+    },
+    {
+      "question": "연수구 남동구 공원 수 비교",
+      "http": 200,
+      "method": "difference",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "n_a": 20,
+        "n_b": 22,
+        "median_a": 1,
+        "median_b": 2,
+        "cliffs_delta": -0.15454545454545454
+      },
+      "analysis_id": "514850377b0c8368"
+    },
+    {
+      "question": "연구학교 확산을 보여줘",
+      "http": 200,
+      "method": "network",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "radius_m": 3000,
+        "probability": 0.15,
+        "empirical": {
+          "status": "available",
+          "eligible": 501,
+          "new_designations": 42,
+          "mean_seed_neighbor_share_new": 0.13517325610470365,
+          "mean_seed_neighbor_share_other": 0.08716551803406336,
+          "difference": 0.04800773807064029,
+          "permutation_null_mean": 0.039294783085984795,
+          "permutation_upper_tail_p": 0.257,
+          "permutation_count": 1999,
+          "strata": "school_level × current_gu",
+          "alternative": "new designations have greater prior-seed neighbor share",
+          "isolated_eligible": 41
+        }
+      },
+      "analysis_id": "33256f452bb2d1ae"
+    },
+    {
+      "question": "도로가 막히면 공원 접근은?",
+      "http": 200,
+      "method": "resilience",
+      "status": "ok",
+      "planner": "규칙 기반 질문 해석",
+      "metrics": {
+        "total": 147,
+        "available": 76,
+        "with_loss": 36
+      },
+      "analysis_id": "9cc56d69ecd1e17c"
+    }
+  ],
+  "unsupported_outcome": {
+    "status": "error",
+    "summary": "그 성과 변수는 분석 가능한 학교별 공개 수치로 확보하지 못했습니다. PAPS나 진학률을 대신 쓰지 않습니다."
+  },
+  "get_status": 405
+}
