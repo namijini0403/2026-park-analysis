@@ -3869,9 +3869,9 @@
           title: "학교 선택(정책 단위)",
           short: "정책이 닿아야 할 단위인 학교를 먼저 고릅니다.",
           headline: "진단의 출발점은 행정구역이 아니라\n학교입니다.",
-          items: ["인천 272개 초등학교", "학교 주변 공원·녹지·놀이터·도서관 데이터", "학생 수와 주변 수요 정보"],
+          items: ["인천 유치원·초등·중등·고등 917개 기관", "학교 주변 공원·녹지·놀이터·도서관 데이터", "학생 수와 주변 수요 정보"],
           principle: "정책 판단 단위를 학교 중심으로 고정합니다.",
-          actionText: "지도에서 학교를 선택하면 도달권·공원·도서관·재개발·후보지 레이어가 같은 기준 좌표로 정렬됩니다.",
+          actionText: "학교급·지역을 고른 뒤 학교를 검색하거나 지도에서 선택합니다. 지도 표시 메뉴에서 필요한 정보만 켭니다.",
           image: "./assets/guide-bright-map-layers.png",
           imageAlt: "학교 선택 후 지도 레이어와 상세 패널이 연결된 화면"
         },
@@ -3882,7 +3882,7 @@
           headline: "직선 반경에서는 닿아 보여도\n실제 보행 경로로는 닿지 않을 수 있습니다.",
           items: ["OSM 보행망에서 학교점을 최근접 도로에 투영해 500m 다익스트라", "경계에 걸친 도로는 닿는 부분까지만 절단(exact edge trimming)", "도달권 안 공원 수·최근접 공원 거리·간선도로 횡단 보행부담", "단지 내부 보행로 누락은 아파트 투과성 보정 시나리오로 보완"],
           principle: "반경 너머의 정책 도달성을 기준으로 판단합니다.",
-          actionText: "지도에서 도보 도달권과 직선 반경을 함께 켜고 두 기준의 차이를 먼저 확인합니다.",
+          actionText: "지도 표시 → 생활권 비교에서 도보망 500m와 직선거리 500m를 켭니다. 기본은 선택한 학교만 표시하며 비교 대상을 바꿀 수 있습니다.",
           image: "./assets/guide-bright-map-layers.png",
           imageAlt: "도보 도달권과 직선 반경을 비교하는 지도 레이어 화면"
         },
@@ -3893,7 +3893,7 @@
           headline: "학교 밖에서 닿는 자원과\n학교 안에 있는 자원을 나눠 봅니다.",
           items: ["최근접 공식 공원 거리", "활동규모 공원 거리", "도보권 녹지비율", "공공도서관 252관 도달성", "학교도서관 내부 공급", "Case 분류", "KNN(k=4) 유사학교 비교"],
           principle: "세 축을 하나로 합산하지 않고 설명 가능한 지표로 분리합니다.",
-          actionText: "학교 상세 리포트에서 외부 접근성·내부 공급 격차와 비교 기준을 함께 봅니다.",
+          actionText: "학교 선택 후 상단 학교 분석을 누릅니다. 학교급별로 확보된 공개자료와 주변 환경을 확인합니다.",
           image: "./assets/guide-bright-report.png",
           imageAlt: "학교별 정책 도달성 리포트 화면 캡처"
         },
@@ -3904,7 +3904,7 @@
           headline: "지금 부족한 곳과\n앞으로 수요가 커질 곳을 나눠 봅니다.",
           items: ["학교 재학생 전망(가중 추세 + LightGBM 잔차 보정)", "250m 격자 아동 수요(cohort + Prophet + LightGBM)", "2029·2031년 수혜 가능 아동 규모"],
           principle: "현재 격차와 미래 수요를 분리해 함께 고려합니다.",
-          actionText: "전체 통계에서 공원·독서·지정사업·유흥·공사·학생 전망 여섯 레이어를 겹쳐 본 학교와 구별 격차·수요 흐름을 비교합니다.",
+          actionText: "통계 비교에서 학교급·지역·연도를 고릅니다. 질문 분석에서는 학생 수 변화나 지표 간 관계를 질문할 수 있습니다. 관측 증감과 미래 예측은 구분합니다.",
           image: "./assets/guide-bright-statistics.png",
           imageAlt: "도달성 격차 분포와 전체 통계 화면 캡처"
         },
@@ -6889,10 +6889,23 @@
           <button class="guide-print-button" type="button" data-guide-print>PDF/인쇄</button>
           <button class="guide-close" type="button" data-guide-close aria-label="활용 가이드 닫기">×</button>
           <div class="guide-scroll">
+            <section class="workspace-quick-guide" aria-labelledby="guideTitle">
+              <h2 id="guideTitle">필요한 정보부터 살펴보세요</h2>
+              <p>학교를 찾고 → 지도에 필요한 정보를 더하고 → 궁금한 점을 분석합니다.</p>
+              <ol>
+                <li><strong>학교 찾기</strong><p>상단에서 학교급과 지역을 고른 뒤 학교명을 입력하거나 지도 마커를 누르세요. 현재 선택은 검색창 아래에 표시됩니다.</p></li>
+                <li><strong>지도 표시 고르기</strong><p>지도 표시를 열고 공원 도보권·도서관 주변·학원 주변을 고르세요. 직접 항목을 켜고 끌 수도 있습니다. 학교만을 누르면 추가 표시가 정리됩니다.</p></li>
+                <li><strong>선택 학교 분석하기</strong><p>학교 분석에서 공개자료와 환경을 확인하세요. 학교를 고르지 않았다면 먼저 선택 안내가 나옵니다. 후보지 시뮬레이션과 공개자료 바로가기는 더 보기에 있습니다.</p></li>
+                <li><strong>질문하거나 비교하기</strong><p>질문 분석에서 “학원 수와 학생 수는 관련 있어?”처럼 물어보세요. 통계 비교에서는 조건별 분포와 상관관계를 살펴볼 수 있습니다. 미리 계산한 정책 분석은 필요할 때 펼치세요.</p></li>
+              </ol>
+              <p class="workspace-guide-note">도보망 500m와 직선 반경은 다릅니다. 시설의 직선 2km는 화면 표시 범위이며 도보권이나 분석 기준을 바꾸지 않습니다. 자료 미확보는 0이 아닙니다.</p>
+              <div class="guide-cta-row"><button class="guide-cta-button" type="button" data-guide-action="map">지도에서 학교 찾기</button><button class="guide-cta-button" type="button" data-guide-action="insights">질문 분석 열기</button></div>
+            </section>
+            <details class="workspace-guide-reference"><summary>분석 방법과 과거 화면 참고</summary><p class="workspace-guide-note">아래 화면 캡처는 이전 초등학교 중심 버전입니다. 현재 버튼 위치·이름과 다르며, 일부 예측·정책 지표는 학교급별 확보 범위가 다릅니다. 현재 사용 순서는 위 안내를 따르세요.</p>
             <section class="guide-hero">
               <div class="guide-hero-lead">
                 <p class="guide-kicker">Interactive System Flowmap</p>
-                <h2 id="guideTitle">${guideTextHtml(GUIDE_CONTENT.hero.title)}</h2>
+                <h2 id="guideMethodTitle">${guideTextHtml(GUIDE_CONTENT.hero.title)}</h2>
                 <p>${guideTextHtml(GUIDE_CONTENT.hero.subtitle)}</p>
                 <div class="guide-badges">
                   ${GUIDE_CONTENT.hero.badges.map((badge) => `<span class="guide-badge">${escapeGuideText(badge)}</span>`).join("")}
@@ -6931,7 +6944,7 @@
 
             <section class="guide-section-block">
               <div class="guide-section-head">
-                <h3>실제 앱 화면으로 보는 판단 흐름</h3>
+                <h3>이전 초등학교 분석 화면으로 보는 판단 흐름</h3>
                 <p>학교 진단, 시뮬레이션, 전체 통계가 어떤 순서로 정책 판단을 돕는지 한눈에 비교합니다.</p>
               </div>
               <div class="guide-screenshot-grid">
@@ -7026,6 +7039,7 @@
                   .join("")}
               </div>
             </section>
+            </details>
           </div>
         </div>
       `;
@@ -7169,7 +7183,7 @@
         return;
       }
 
-      if (event.key === "ArrowRight" || event.key === "ArrowDown" || event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      if (event.target.closest('.workspace-guide-reference') && (event.key === "ArrowRight" || event.key === "ArrowDown" || event.key === "ArrowLeft" || event.key === "ArrowUp")) {
         const overlay = document.getElementById("guideOverlay");
         if (!overlay) return;
         const current = Number(overlay.dataset.activeStep || 2);

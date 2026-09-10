@@ -237,6 +237,14 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   await new Promise(resolve=>setTimeout(resolve,0));
   assert.equal(w.document.getElementById('education-insights-panel').hidden,false);
   assert.equal(w.document.getElementById('education-statistics-panel').hidden,true);
+  await app.runShortcutAction('guide');
+  const guide=w.document.getElementById('guideOverlay');
+  assert.equal(guide.querySelectorAll('.workspace-quick-guide ol > li').length,4);
+  assert.equal(guide.querySelector('.workspace-guide-reference').open,false);
+  assert.equal(guide.querySelectorAll('#guideTitle').length,1);
+  assert(guide.querySelector('.workspace-quick-guide').textContent.includes('질문 분석'));
+  guide.querySelector('[data-guide-action="map"]').click();
+  assert.equal(guide.classList.contains('is-open'),false);
   assert.deepEqual(errors,[],'Real rendering/filter functions must not throw');
   console.log('Full page boot passed: actual loadData, extension initialization, school markers, filters, report and AI context.');
 })().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>w.close());
