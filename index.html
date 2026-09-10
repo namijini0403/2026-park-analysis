@@ -3196,6 +3196,18 @@
   <script src="./assets/education-statistics.js"></script>
   <script src="./assets/education-networks.js"></script>
   <script src="./assets/education-layers.js"></script>
+<style>
+.edu-analysis-tabs { display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid #c9d9df; padding-bottom:12px; margin-bottom:22px; }
+.edu-analysis-tabs button { padding:12px 18px; border:1px solid #b5c9d1; border-radius:10px; background:#fff; color:#244658; cursor:pointer; font:inherit; font-weight:700; }
+.edu-analysis-tabs button[aria-selected="true"] { background:#155d73; color:#fff; border-color:#155d73; }
+.edu-analysis-tabs button:focus-visible,.edu-insight-card a:focus-visible { outline:3px solid #e0a126; outline-offset:3px; }
+#education-statistics-panel[hidden],#education-insights-panel[hidden] { display:none; }
+.edu-insight-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr)); gap:16px; margin:22px 0; }
+.edu-insight-card { padding:20px; border:1px solid #cbdde3; border-radius:14px; background:#f5fafb; overflow-wrap:anywhere; }
+.edu-insight-card h2 { margin:8px 0; font-size:20px; }
+.edu-insight-card .edu-kicker { color:#236478; font-size:13px; font-weight:700; }
+.edu-insight-card p { line-height:1.7; }
+</style>
 </head>
 <body>
   <div class="app-shell">
@@ -3265,6 +3277,7 @@
       <button class="top-action-button secondary" type="button" id="educationReportButton">공개자료·학교급 분석</button>
       <button class="top-action-button secondary" type="button" data-shortcut-action="simulation">시뮬레이션</button>
       <button class="top-action-button secondary" id="statisticsShortcutButton" type="button" data-shortcut-action="statistics">전체 통계</button>
+      <button class="top-action-button secondary" id="insightsShortcutButton" type="button" data-shortcut-action="insights">분석 인사이트</button>
       <button class="top-action-button secondary" id="guideShortcutButton" type="button" data-shortcut-action="guide">활용 가이드</button>
       <button class="top-action-button secondary" id="panelShortcutButton" type="button" data-shortcut-action="panel" aria-pressed="false">구·패널</button>
       <button class="top-action-button data" id="dataShortcutButton" type="button" data-shortcut-action="data">데이터 관리</button>
@@ -7185,6 +7198,11 @@
       if (normalizedAction === "start" || normalizedAction === "map") {
         const overlay = document.getElementById("simulationOverlay");
         if (overlay) overlay.style.display = "none";
+        return;
+      }
+
+      if (normalizedAction === "insights") {
+        EducationLayers.openStatistics("insights");
         return;
       }
 

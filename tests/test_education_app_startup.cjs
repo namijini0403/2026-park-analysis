@@ -46,6 +46,7 @@ w.fetch=async(input)=>{
 const inline=[...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n');
 const education=fs.readFileSync(path.join(root,'assets/education-layers.js'),'utf8');
 w.eval(fs.readFileSync(path.join(root,'assets/education-statistics.js'),'utf8'));
+w.eval(fs.readFileSync(path.join(root,'assets/education-networks.js'),'utf8'));
 w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer};');
 (async()=>{
   const app=w.__app;
@@ -179,6 +180,20 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert(w.document.querySelector('#educationCorrelations .edu-stat-result'));
   assert(w.document.querySelector('#educationCorrelations').textContent.includes('Pearson'));
   assert.equal(w.document.querySelector('#educationCorrelations [data-filter="level"]').value,'초등학교');
+  const statsPanel=w.document.getElementById('education-statistics-panel');
+  assert.equal(statsPanel.hidden,false);
+  w.document.getElementById('education-insights-tab').click();
+  for(let i=0;i<30&&!w.document.querySelector('#educationRoadResilience select');i++) await new Promise(resolve=>setTimeout(resolve,0));
+  assert.equal(statsPanel.hidden,true);
+  assert.equal(w.document.querySelectorAll('.edu-insight-card').length,5);
+  assert(w.document.querySelector('#educationRoadResilience select'));
+  w.document.getElementById('education-insights-tab').dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowLeft'}));
+  assert.equal(statsPanel.hidden,false);
+  assert.equal(w.document.getElementById('education-statistics-tab').getAttribute('aria-selected'),'true');
+  w.document.getElementById('insightsShortcutButton').click();
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert.equal(w.document.getElementById('education-insights-panel').hidden,false);
+  assert.equal(w.document.getElementById('education-statistics-panel').hidden,true);
   assert.deepEqual(errors,[],'Real rendering/filter functions must not throw');
   console.log('Full page boot passed: actual loadData, extension initialization, school markers, filters, report and AI context.');
 })().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>w.close());

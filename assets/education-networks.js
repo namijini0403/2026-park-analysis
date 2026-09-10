@@ -4,23 +4,60 @@
   const num=(v,d=2)=>v==null?'미산출':Number(v).toLocaleString('ko-KR',{maximumFractionDigits:d});
   const option=(v,label=v)=>`<option value="${esc(v)}">${esc(label)}</option>`;
   const table=(headers,rows)=>`<div class="edu-table"><table><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const cache=new Map();
+  function load(name){
+    if(!cache.has(name)) cache.set(name,fetch(`./data_processed/education/${name}.json`).then(r=>{if(!r.ok)throw Error(`${name}: ${r.status}`);return r.json();}).catch(error=>{cache.delete(name);throw error;}));
+    return cache.get(name);
+  }
+  async function mountInsights(container,level,gu){
+    container.innerHTML='<p class="edu-kicker">공개자료로 실행한 분석 결과</p><h1>분석 인사이트</h1><p>공간을 늘릴 곳, 접근을 지킬 곳, 먼저 확인할 곳을 구분합니다. 아래 요약은 인천 전체 분석 범위이며 지도 필터에 따라 달라지지 않습니다. 상세 분석의 필터는 해당 영역에만 적용됩니다.</p><div class="edu-insight-grid" aria-live="polite">핵심 결과를 불러오고 있습니다.</div><h2>근거 확인·조건 바꾸기</h2><section id="educationNetworks"></section>';
+    const summary=container.querySelector('.edu-insight-grid');
+    const definitions=[
+      ['shared_parks','공급 집중 · 배분 시나리오','공원 개수만으로 대체 가능성을 판단하기 어렵습니다','insight-shared',d=>{
+        const connected=d.schools.filter(s=>s.park_count>0),multiple=d.schools.filter(s=>s.park_count>=2&&s.largest_park_loss_share!=null);
+        return [`전체 ${d.schools.length}곳 중 공원 대표점이 연결된 기관은 ${connected.length}곳입니다. 공원 2개 이상·배분값 확보 ${multiple.length}곳 중 ${multiple.filter(s=>s.largest_park_loss_share>.5).length}곳은 가장 큰 기여 공원 하나를 제외하면 배분 면적의 절반 이상을 잃습니다.`,`공원 수와 함께 공급 집중도를 확인하고 대체 공간을 검토할 수 있습니다. 실제 이용량·혼잡도는 관측하지 않았습니다.`];
+      }],
+      ['road_resilience','접근 유지 · 구간 중단 시나리오','공원이 가까워도 특정 길에 의존할 수 있습니다','educationRoadResilience',d=>{
+        const valid=d.schools.filter(s=>s.status==='available'),lost=valid.filter(s=>s.segments_losing_500m_access>0);
+        return [`기초 경로가 500m 이내인 ${valid.length}곳 중 ${lost.length}곳(${num(lost.length/valid.length*100,1)}%)은 특정 구간을 제외하면 다른 공원을 포함해도 500m 이내 대안을 찾지 못했습니다.`,`우회 동선과 출입구를 먼저 확인할 후보입니다. 전체 ${d.schools.length}곳 중 기초 경로·연결 조건 미충족 ${d.schools.length-valid.length}곳은 이 비율에서 제외했습니다. 실제 사고 위험이나 전체 도로망 단절을 뜻하지 않습니다.`];
+      }],
+      ['field_verification','현장 조사 · 판단 민감도','결론을 크게 바꾸는 공원부터 확인합니다','educationFieldVerification',d=>{
+        const top=d.parks.filter(p=>p.status==='available').sort((a,b)=>b.priority_change_sum_pp-a.priority_change_sum_pp)[0];
+        return top?[`${top.park_name}을 이용하지 못한다고 가정하면 ${top.analyzed_schools}개 기관의 부족 우선순위 상승 합계가 ${num(top.priority_change_sum_pp,1)}%p로 가장 큽니다.`,`출입구·이용 가능 여부를 확인할 순서를 제안합니다. 여러 기관의 변화량 합이라 100%p를 넘을 수 있으며, 폐쇄 확률·조사 편익·예산 최적화 결과가 아닙니다.`]:['계산 가능한 공원 미확보','원자료 확인이 필요합니다.'];
+      }],
+      ['designation_diffusion','관측 비교 · 선도·연구학교','지정 증가만으로 전염 효과를 단정할 수 없습니다','insight-diffusion',d=>{
+        const rows=d.scenarios.filter(s=>s.probability_per_edge===.15);
+        const ps=rows.map(s=>`${s.radius_m/1000}km ${num(s.empirical_transition.permutation_upper_tail_p,4)}`).join(' · ');
+        return [`일반학교 ${d.registry_n}곳 원장에 연결된 지정은 2025년 ${d.matched_2025}곳, 2026년 ${d.matched_2026}곳이며 신규 등재는 ${d.new_in_2026}곳입니다. 학교급·군구 구성을 유지한 순열 p값: ${ps}.`,`현재 분석에서는 가까운 지정학교를 통한 확산의 뚜렷한 증거를 확인하지 못했습니다. 지정은 실제 도입·교류 기록이 아닙니다. 아래 전파 모형은 반경과 확률을 바꾸는 가상 시나리오입니다.`];
+      }],
+      ['curriculum_network','공개 관계 · 수강 기회망','거리 밖의 교육 연결도 확인해야 합니다','educationCurriculumNetwork',d=>[
+        `2026년 2학기 공개 ${d.summary.courses}강좌에서 확인한 밴드형 중심학교→신청가능학교 연결 ${d.summary.band_directed_edges}개 중 ${d.summary.band_edges_over_3km}개는 직선 3km를 넘습니다.`,
+        '거리망만 쓰면 행정적으로 열린 수강 기회를 놓칠 수 있습니다. 공개 신청 가능 관계이며 실제 수강·교사 교류·혁신 확산 실적은 아닙니다. 전체 교류망 중 공개된 일부만 포함합니다.'
+      ]]
+    ];
+    const results=await Promise.allSettled(definitions.map(d=>load(d[0])));
+    if(!container.isConnected)return;
+    summary.innerHTML=definitions.map(([name,kind,title,target,describe],i)=>{
+      const result=results[i],texts=result.status==='fulfilled'?describe(result.value):['자료를 불러오지 못했습니다. 통계창을 다시 열어 주세요.','실패한 자료를 0으로 표시하지 않습니다.'];
+      return `<article class="edu-insight-card"><span class="edu-kicker">${esc(kind)}</span><h2>${esc(title)}</h2><p>${esc(texts[0])}</p><p class="edu-note">${esc(texts[1])}</p><a href="#${target}">상세 분석 보기</a> · <a href="./data_processed/education/${name}.json" download>결과·근거 JSON</a></article>`;
+    }).join('');
+    await mount(container.querySelector('#educationNetworks'),level,gu);
+  }
   async function mount(container,initialLevel,initialGu){
     container.innerHTML='<h2>공유 자원과 학교 네트워크</h2><p>실행 결과를 불러오고 있습니다.</p>';
     try{
-      const [parks,diffusion]=await Promise.all(['shared_parks','designation_diffusion'].map(async name=>{
-        const r=await fetch(`./data_processed/education/${name}.json`);if(!r.ok)throw Error(`${name}: ${r.status}`);return r.json();
-      }));
+      const [parks,diffusion]=await Promise.all(['shared_parks','designation_diffusion'].map(load));
       if(!container.isConnected)return;
       const levels=['유치원','초등학교','중학교','고등학교'];
       const districts=[...new Set(parks.schools.map(s=>s.gu).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ko'));
-      container.innerHTML=`<h2>공유 공원 · 한 곳을 이용하지 못하면?</h2>
+      container.innerHTML=`<h2 id="insight-shared">공유 공원 · 한 곳을 이용하지 못하면?</h2>
         <p>같은 공원에 접근 가능한 학교들의 2026년 학생·원아 수로 공원 면적을 나눕니다. 실제 혼잡도나 이용자 수가 아닌 공급 배분 시나리오입니다.</p>
         <div class="edu-stat-controls"><label>학교급<select data-network="level">${levels.map(l=>option(l)).join('')}</select></label><label>지역<select data-network="gu">${['전체',...districts].map(g=>option(g)).join('')}</select></label><label>정렬<select data-network="sort">${option('loss','가장 큰 공원 중단 시 손실률')}${option('supply','공유 반영 면적이 적은 순')}${option('sharing','공원을 함께 접근하는 기관 수')}</select></label></div>
         <p class="edu-note">필터는 표시할 학교를 선택합니다. 자원 배분의 분모는 전체 917개 기관을 유지합니다. 공원 대표점이 v3 도보 500m 도달권 안에 있을 때 연결하며 검증된 출입구 기준은 아닙니다. 기존 면적비율과 산출 기준이 다릅니다.</p>
         <div data-network="parks-result" aria-live="polite"></div>
         <p class="edu-note">단위는 ㎡/학생·원아입니다. 공원 전체 공시면적을 공급 대리값으로 사용하며 다른 주민 수요·시간대 차이는 미반영입니다. 한 곳 중단은 나머지 배분을 고정한 시나리오입니다. 연결 학교의 공시 결측 또는 공원 면적 충돌은 미산출로 남깁니다.</p>
         <details><summary>공원 원자료 중복·확인 필요 항목</summary><p>원본 ${parks.raw_park_rows}행 → 이름·좌표 기준 ${parks.parks.length}개. 중복 ${parks.collapsed_duplicate_rows}행을 묶었습니다. 아래 항목의 면적은 임의 선택하지 않았습니다.</p>${table(['공원','확인할 내용'],parks.identity_issues.map(p=>[p.name,p.reason==='conflicting_area_same_name_coordinate'?'동일 이름·좌표의 공시면적 충돌':'서로 다른 시설명이 같은 좌표 사용']))}</details>
-        <h2>선도·연구학교 지정 변화와 확산 시나리오</h2>
+        <h2 id="insight-diffusion">선도·연구학교 지정 변화와 확산 시나리오</h2>
         <p>이 영역은 위 학교급·지역 필터와 별개로 일반학교 ${diffusion.registry_n}곳 전체를 분석합니다. 지정 명단은 관측 자료이고 학교 간 연결·전파 확률은 가정입니다.</p>
         <div class="edu-metrics"><div>2025년 지정<strong>${diffusion.matched_2025}곳</strong></div><div>2026년 지정<strong>${diffusion.matched_2026}곳</strong></div><div>두 해 모두 등재<strong>${diffusion.retained}곳</strong></div><div>2026년 신규 등재<strong>${diffusion.new_in_2026}곳</strong></div></div>
         ${table(['같은 학교급 연결 반경','신규군의 전년도 지정 이웃 비율','나머지군','층화 순열 p'],diffusion.scenarios.filter(s=>s.probability_per_edge===.15).map(s=>[`${s.radius_m/1000}km`,`${num(s.empirical_transition.mean_seed_neighbor_share_new*100)}%`,`${num(s.empirical_transition.mean_seed_neighbor_share_other*100)}%`,num(s.empirical_transition.permutation_upper_tail_p,4)]))}
@@ -60,9 +97,7 @@
   async function mountCurriculum(container){
     container.innerHTML='<h2>공식 공동교육과정 기회망</h2><p>공식 강좌 목록을 불러오고 있습니다.</p>';
     try{
-      const response=await fetch('./data_processed/education/curriculum_network.json');
-      if(!response.ok)throw Error(response.status);
-      const data=await response.json();if(!container.isConnected)return;
+      const data=await load('curriculum_network');if(!container.isConnected)return;
       const labels={official_band_opportunity:'공식 밴드형 수강 기회',same_level_3km:'같은 학교급 직선 3km',combined:'두 연결망 합집합'};
       const schools=data.schools.slice().sort((a,b)=>a.name.localeCompare(b.name,'ko'));
       const names=new Map(schools.map(s=>[s.id,s.name]));
@@ -96,8 +131,7 @@
   async function mountField(container){
     container.innerHTML='<h2>현장 확인 우선순위</h2><p>확인 민감도를 불러오고 있습니다.</p>';
     try{
-      const response=await fetch('./data_processed/education/field_verification.json');if(!response.ok)throw Error(response.status);
-      const data=await response.json();if(!container.isConnected)return;
+      const data=await load('field_verification');if(!container.isConnected)return;
       const available=data.parks.filter(p=>p.status==='available'),unknown=data.parks.filter(p=>p.status!=='available');
       container.innerHTML=`<h2>어느 공원부터 현장 확인할까?</h2><p>공원 한 곳을 이용하지 못하는 경우를 가정해, 연결 학교들의 같은 학교급 내 자원 부족 우선순위가 얼마나 올라가는지 계산했습니다. 변화량 합계가 큰 순서이며 학교 품질 순위가 아닙니다.</p>
         <p class="edu-note">공원 출입구·이용 가능 여부를 확인할 때의 판단 민감도입니다. 폐쇄 확률이나 기대 편익을 추정한 값이 아닙니다. 단위는 학교급 내 백분위 순위 변화의 %p이며 동점은 평균 순위입니다. 여러 공원의 결과를 합산해 조사 예산의 효과로 해석하지 않습니다.</p>
@@ -116,8 +150,7 @@
   async function mountRoad(container){
     container.innerHTML='<h2>도로 구간 한 곳이 막히면?</h2><p>대체 경로 계산을 불러오고 있습니다.</p>';
     try{
-      const response=await fetch('./data_processed/education/road_resilience.json');if(!response.ok)throw Error(response.status);
-      const data=await response.json();if(!container.isConnected)return;
+      const data=await load('road_resilience');if(!container.isConnected)return;
       container.innerHTML=`<h2>도로 구간 한 곳이 막히면?</h2><p>현재 가장 가까운 공원까지의 최단 경로에서 구간을 하나씩 제외한 뒤, 다른 공원을 포함해 500m 안의 대안을 다시 찾았습니다.</p>
         <label>학교급<select data-road="level">${['유치원','초등학교','중학교','고등학교'].map(s=>option(s)).join('')}</select></label><div data-road="result" aria-live="polite"></div>
         <p class="edu-note">학교·공원 대표점을 각각 150m 이내 도로 노드에 연결하는 가정입니다. 연결선의 실제 통행 가능 여부와 공원 출입구는 미확인입니다. OSM의 같은 양끝 노드를 잇는 평행 간선을 함께 제외합니다. 실제 도로 폐쇄 단위·사고 위험을 관측한 결과가 아닙니다. 기초 경로 미확보는 취약성 0이 아니며, 500m 내 대안 미확보는 전체 도로망 단절을 뜻하지 않습니다.</p>
@@ -132,5 +165,5 @@
       select.onchange=draw;draw();
     }catch(error){if(container.isConnected)container.innerHTML=`<h2>도로 중단 자료 로딩 실패</h2><p>${esc(error.message)}</p>`;}
   }
-  global.EducationNetworks={mount};
+  global.EducationNetworks={mount,mountInsights};
 })(window);
