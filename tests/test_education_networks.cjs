@@ -1,0 +1,24 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const {JSDOM}=require('jsdom');
+const root=path.resolve(__dirname,'..');
+const dom=new JSDOM('<section id="networks"></section>',{runScripts:'outside-only'}),w=dom.window;
+w.fetch=async url=>({ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(root,url.replace('./','')),'utf8'))});
+w.eval(fs.readFileSync(path.join(root,'assets/education-networks.js'),'utf8'));
+(async()=>{
+ const container=w.document.getElementById('networks');
+ await w.EducationNetworks.mount(container,'유치원','전체');
+ const el=k=>container.querySelector(`[data-network="${k}"]`);
+ assert.equal(el('level').value,'유치원');
+ assert.equal(el('parks-result').querySelectorAll('tbody tr').length,369);
+ assert.match(el('diffusion-result').textContent,/375\.3/);
+ el('radius').value='1000';el('radius').dispatchEvent(new w.Event('change'));
+ assert.match(el('diffusion-result').textContent,/96\.5/);
+ el('level').value='중학교';el('gu').value='강화군';el('gu').dispatchEvent(new w.Event('change'));
+ const data=JSON.parse(fs.readFileSync(path.join(root,'data_processed/education/shared_parks.json'),'utf8'));
+ assert.equal(el('parks-result').querySelectorAll('tbody tr').length,data.schools.filter(s=>s.level==='중학교'&&s.gu==='강화군').length);
+ assert(!/NaN|undefined/.test(container.textContent));
+ assert.match(container.textContent,/실제 전망이 아닙니다/);
+ console.log('Education network controls, real data, missing-value display passed');
+})().catch(e=>{console.error(e);process.exitCode=1;});
