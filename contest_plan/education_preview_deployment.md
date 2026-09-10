@@ -1,5 +1,12 @@
 # 학교급 확장 미리보기 배포
 
+## 공동교육과정·현장 확인·도로 구간 중단 (2026-09-10 후속)
+
+- 기능 커밋 `c18eb24`, 배포 `3d8e582a-7771-4a6c-86e1-929084e5b1f2`의 SUCCESS를 해당 ID로 확인했다.
+- `assets/education-networks.js`, `curriculum_network.json`, `field_verification.json`, `road_resilience.json`을 배포했다. 네 파일 HTTP 200 및 로컬 SHA-256 일치 확인. 검증 출력 `outputs/resilience_deploy_http_20260910.json`.
+- 통계창에서 공식 공동교육과정 기회망·거리망·합집합 확산을 같은 확률로 비교하고 학교별 제공 강좌·신청가능학교 관계를 조회한다. 현장 확인 후보 공원과 학교별 부족 우선순위 변화, 학교급별 도로 구간 중단 결과도 조회한다. 공유 공원 전체 기관표는 기본 접힘으로 바꿔 다른 분석에 접근하기 쉽게 했다.
+- 실제 데이터 JSDOM의 전체 제어 전환 검사는 통과했다. 이번 CUA 재조회도 `apps: [], browsers: []`로 실제 브라우저 시각 검증은 미완료다. 상세 요구별 판정은 `network_analysis_completion_audit.md`를 참조한다.
+
 ## 공유 공원·네트워크 분석 (2026-09-10)
 
 - 기능 커밋 `e765aab`, 최종 배포 `07d96636-0943-4181-8e0f-203e72f36d39`의 `SUCCESS`를 해당 ID로 확인했다.
