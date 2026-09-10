@@ -1,0 +1,16 @@
+[
+  {
+    "file": "ice_digital_leading_2025.xlsx",
+    "url": "https://www.ice.go.kr/upload/ice/na/bbs_1682/2025/04/57d05eedaec3a9fb876f43cd3963a5d2.xlsx",
+    "page_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3311134",
+    "sha256": "18a8a0f1e4fa37a94b7c95676090ab17a04c3202ff6c34e563e2e8a68f67cb54",
+    "retrieved_at": "2026-09-10T02:04:40.375059+00:00"
+  },
+  {
+    "file": "ice_digital_research_2025.pdf",
+    "url": "https://www.ice.go.kr/upload/ice/na/bbs_1682/2025/01/be15467397cbc6319aa30bd2db1ec18f.pdf",
+    "page_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3311133",
+    "sha256": "b0f511a6d762f887d3a1b2139222ee138f348bd8956f10e093ed51aa0b5a42d7",
+    "retrieved_at": "2026-09-10T02:04:41.156036+00:00"
+  }
+]
