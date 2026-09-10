@@ -1,5 +1,13 @@
 # 학교급 확장 미리보기 배포
 
+## 공유 공원·네트워크 분석 (2026-09-10)
+
+- 기능 커밋 `e765aab`, 최종 배포 `07d96636-0943-4181-8e0f-203e72f36d39`의 `SUCCESS`를 해당 ID로 확인했다.
+- 기존 미리보기 주소에서 `index.html`, `assets/education-layers.js`, `assets/education-networks.js`, `data_processed/education/shared_parks.json`, `data_processed/education/designation_diffusion.json` 모두 HTTP 200 및 로컬 SHA-256 일치를 확인했다. 검증 출력은 `outputs/network_deploy_http_20260910.json`이다.
+- 통계창에 학교급·지역별 공유 공원 배분 및 공원 한 곳 중단 민감도, 공식 지정 변화, 반경·확률별 독립 전파 시나리오를 추가했다. 계산법과 해석 한계는 `network_analysis_methods.md`를 참조한다.
+- 이번 세션의 CUA 조회는 `apps: [], browsers: []`였다. 실제 데이터 JSDOM 조작 및 앱 시작 검사는 통과했지만 새 화면의 실제 브라우저 렌더링 검증은 미완료다.
+- 배포 준비 중 상대 경로 오류로 임시 하위 `outputs` 폴더가 생겼다. 삭제 명령은 자동 승인 검토에서 정책상 차단되어 실행되지 않았고, `.dockerignore`의 `outputs` 제외로 이미지에 포함되지 않게 했다. 두 초기 업로드가 겹친 뒤 새 파일의 404를 관측했으며, 파일 동기화·해시 대조 후 위 최종 배포로 교체하고 HTTP 일치를 확인했다. 초기 `e5dd6c3a-1f5c-4f07-b506-495f8d28a3a2`, `14e0aa05-b1e9-48fb-a366-b6537b610de6`를 완료 근거로 인용하지 않는다.
+
 ## 통계창 상관분석 (2026-09-09)
 
 - 기능 커밋 `eb0e048`, 테스트 하네스 보완 `6abf550`. 배포 `f9351e43-ce0b-4bbe-ab17-eebaacca858d` SUCCESS.

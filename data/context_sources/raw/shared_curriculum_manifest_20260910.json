@@ -1,0 +1,14 @@
+{
+  "manual": {
+    "file": "data\\context_sources\\raw\\ice_shared_curriculum_2026_manual.pdf",
+    "url": "https://www.ice.go.kr/upload/hakjeom/na/bbs_1574/2026/03/fcc584da91a8a84d91ca3e8111b85e7c.pdf",
+    "sha256": "ed708ba740cba26c21e1b5bcf080142de9273bdae78a7cce43f3839875389b68"
+  },
+  "courses": {
+    "file": "data\\context_sources\\raw\\ice_shared_curriculum_2026_2_courses.pdf",
+    "url": "https://songdo.icehs.kr/boardCnts/fileDown.do?fileSeq=78129af2ae95790b784247d9dbad3418",
+    "sha256": "fbcd378c21141b3b89c49a41d413af01e98e1ad74b9220d82d28d65814033b74",
+    "page_url": "https://songdo.icehs.kr/boardCnts/updateCnt.do?action=view&boardID=40907&boardSeq=33934126&lev=0&m=0201&viewBoardID=40907",
+    "retrieved_at": "2026-09-10"
+  }
+}
