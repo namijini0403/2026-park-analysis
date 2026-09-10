@@ -48,7 +48,7 @@ const education=fs.readFileSync(path.join(root,'assets/education-layers.js'),'ut
 w.eval(fs.readFileSync(path.join(root,'assets/education-statistics.js'),'utf8'));
 w.eval(fs.readFileSync(path.join(root,'assets/education-networks.js'),'utf8'));
 w.eval(fs.readFileSync(path.join(root,'assets/education-questions.js'),'utf8'));
-w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer};');
+w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer,runShortcutAction};');
 (async()=>{
   const app=w.__app;
   await app.init();
@@ -57,6 +57,13 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert.equal(selector.disabled,false,'Boot must initialize the education extension');
   assert.equal(app.state.datasets.educationAllSchools.length,917);
   assert.equal(app.state.datasets.schools.length,272);
+  assert(w.document.querySelector('.workspace-header .map-search-box #guFilter'));
+  assert.equal(w.document.querySelectorAll('.workspace-header nav > button').length,3);
+  assert.equal(w.document.getElementById('workspaceMore').open,false);
+  await app.runShortcutAction('report');
+  assert.equal(app.state.selectedSchoolId,null,'No arbitrary school is selected for a report');
+  assert.equal(w.document.activeElement.id,'schoolSearchInput');
+  assert(w.document.querySelector('.map-search-status').textContent.includes('먼저 학교'));
   const menu=w.document.getElementById('mapDisplayMenu');
   assert.equal(menu.open,false,'Map controls start collapsed');
   assert.equal(w.document.getElementById('mapDisplayCount').textContent,'학교만');
@@ -221,6 +228,7 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert.equal(statsPanel.hidden,true);
   assert.equal(w.document.querySelectorAll('.edu-insight-card').length,5);
   assert(w.document.querySelector('#educationQuestionAnalysis form'));
+  assert.equal(w.document.querySelector('.edu-precomputed-insights').open,false,'Precomputed results do not overwhelm the question screen');
   assert(w.document.querySelector('#educationRoadResilience select'));
   w.document.getElementById('education-insights-tab').dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowLeft'}));
   assert.equal(statsPanel.hidden,false);

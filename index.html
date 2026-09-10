@@ -3273,6 +3273,7 @@
       </div>
     </section>
 
+    <header class="workspace-header" aria-label="학교 탐색과 분석">
     <div class="map-search-box" aria-label="학교 검색">
       <label class="map-search-label" for="schoolLevelFilter">학교급</label>
       <select id="schoolLevelFilter" aria-label="학교급 선택" disabled style="max-width:105px;border-radius:8px;padding:7px">
@@ -3280,21 +3281,24 @@
       </select>
       <label class="map-search-label" for="schoolSearchInput">학교 검색</label>
       <input class="map-search-input" id="schoolSearchInput" type="search" list="schoolSearchList" placeholder="학교명을 입력하세요" autocomplete="off" />
-      <p class="map-search-status">기본 보기 · 전체 초등학교 마커</p>
+      <p class="map-search-status" role="status">학교를 검색하거나 지도에서 선택하세요.</p>
       <datalist id="schoolSearchList"></datalist>
     </div>
 
-    <div class="top-action-stack" aria-label="상단 바로가기">
-      <button class="top-action-button primary" type="button" data-shortcut-action="report">학교 진단</button>
-      <button class="top-action-button secondary" type="button" id="educationReportButton">공개자료·학교급 분석</button>
-      <button class="top-action-button secondary" type="button" data-shortcut-action="simulation">시뮬레이션</button>
-      <button class="top-action-button secondary" id="statisticsShortcutButton" type="button" data-shortcut-action="statistics">전체 통계</button>
-      <button class="top-action-button secondary" id="insightsShortcutButton" type="button" data-shortcut-action="insights">분석 인사이트</button>
+    <nav class="top-action-stack" aria-label="분석 도구">
+      <button class="top-action-button primary" type="button" data-shortcut-action="report">학교 분석</button>
+      <button class="top-action-button secondary" id="insightsShortcutButton" type="button" data-shortcut-action="insights">질문 분석</button>
+      <button class="top-action-button secondary" id="statisticsShortcutButton" type="button" data-shortcut-action="statistics">통계 비교</button>
+      <details id="workspaceMore"><summary>더 보기</summary><div class="workspace-more-content">
+      <button class="top-action-button secondary" type="button" id="educationReportButton">선택 학교 공개자료</button>
+      <button class="top-action-button secondary" type="button" data-shortcut-action="simulation">후보지 시뮬레이션</button>
       <button class="top-action-button secondary" id="guideShortcutButton" type="button" data-shortcut-action="guide">활용 가이드</button>
-      <button class="top-action-button secondary" id="panelShortcutButton" type="button" data-shortcut-action="panel" aria-pressed="false">구·패널</button>
+      <button class="top-action-button secondary" id="panelShortcutButton" type="button" data-shortcut-action="panel" aria-pressed="false">지역·선택 학교</button>
       <button class="top-action-button data" id="dataShortcutButton" type="button" data-shortcut-action="data">데이터 관리</button>
-      <button class="top-action-button ai" id="aiChatToggleButton" type="button">AI 챗봇</button>
-    </div>
+      <button class="top-action-button ai" id="aiChatToggleButton" type="button">자료 해설 도움말</button>
+      </div></details>
+    </nav>
+    </header>
 
     <section class="ai-chat-panel" id="aiChatPanel" aria-label="AI 근거 해설 패널">
       <div class="ai-chat-head">
@@ -3347,9 +3351,9 @@
       <div class="panel-header" style="position:relative;">
         <div class="mobile-handle"></div>
         <button class="panel-close" id="panelCloseButton" type="button" aria-label="패널 닫기" title="닫기 (Esc)">✕</button>
-        <p class="eyebrow">Policy Reachability</p>
-        <h1 class="panel-title">반경 너머, 정책 도달성으로</h1>
-        <p class="panel-subtitle">학교 마커를 누르면 진단 요약이, 구를 고르면 구 통계가 여기에 열립니다.</p>
+        <p class="eyebrow">선택 정보</p>
+        <h1 class="panel-title">학교와 지역 살펴보기</h1>
+        <p class="panel-subtitle">선택한 학교와 지역의 요약입니다. 자세한 자료는 ‘학교 분석’에서 확인하세요.</p>
       </div>
 
       <div class="panel-body">
@@ -4092,6 +4096,8 @@
       const row=state.datasets.schools.find(s=>getSchoolId(s)===state.selectedSchoolId);
       const context=document.getElementById('mapDisplayContext');
       if(context)context.textContent=row?`선택: ${getSchoolName(row)} · ${row.학교급구분||'초등학교'}`:'지도나 검색에서 학교를 선택하세요. 선택 학교 범위는 선택 후 표시됩니다.';
+      const searchStatus=document.querySelector('.map-search-status');
+      if(searchStatus)searchStatus.textContent=row?`선택한 학교: ${getSchoolName(row)}`:`${document.getElementById('schoolLevelFilter')?.selectedOptions[0]?.textContent||'학교'} · ${state.selectedGu} · 학교를 선택하세요`;
     }
 
     function syncCaseFilterButtons() {
@@ -7250,6 +7256,12 @@
     async function runShortcutAction(action = "report") {
       const normalizedAction = String(action || "report");
       closeAppCover();
+      const more=document.getElementById('workspaceMore');if(more)more.open=false;
+      if(['school-report','report','simulation','ai-recommendation','recommendation'].includes(normalizedAction) && !state.selectedSchoolId){
+        const searched=findSchoolBySearch(ui.schoolSearchInput?.value);
+        if(searched)setSchoolPanelSelection(searched);
+        else{ui.schoolSearchInput?.focus();const hint=document.querySelector('.map-search-status');if(hint)hint.textContent='먼저 학교를 검색하거나 지도에서 선택해 주세요.';return;}
+      }
 
       if (normalizedAction === "guide") {
         openGuideOverlay();
@@ -7314,6 +7326,14 @@
     });
 
     function wireEvents() {
+      const searchBox=document.querySelector('.map-search-box');
+      const previousRegionSection=ui.guFilter.closest('.section');
+      const regionLabel=document.createElement('label');regionLabel.className='map-search-label';regionLabel.htmlFor='guFilter';regionLabel.textContent='지역';
+      searchBox.append(regionLabel,ui.guFilter);previousRegionSection?.remove();
+      const more=document.getElementById('workspaceMore');
+      more?.addEventListener('keydown',event=>{if(event.key==='Escape'){more.open=false;more.querySelector('summary').focus();}});
+      more?.addEventListener('click',event=>{if(event.target.closest('button')){more.open=false;more.querySelector('summary').focus();}});
+      document.addEventListener('pointerdown',event=>{if(more?.open&&!more.contains(event.target))more.open=false;});
       ui.guFilter.addEventListener("change", (event) => {
         state.selectedGu = event.target.value;
         rerenderAll();
@@ -8638,6 +8658,7 @@
       if (appStarted) return;
       appStarted = true;
       hideAuthGate();
+      closeAppCover();
       init().catch((error) => {
         console.error("[init]", error);
         setStatus("앱 초기화 중 오류가 발생했습니다. 콘솔 로그를 확인하세요.");

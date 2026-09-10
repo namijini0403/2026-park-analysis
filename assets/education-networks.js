@@ -10,7 +10,7 @@
     return cache.get(name);
   }
   async function mountInsights(container,level,gu){
-    container.innerHTML='<p class="edu-kicker">공개자료로 실행한 분석 결과</p><h1>분석 인사이트</h1><section id="educationQuestionAnalysis"></section><p>공간을 늘릴 곳, 접근을 지킬 곳, 먼저 확인할 곳을 구분합니다. 아래 요약은 인천 전체 분석 범위이며 지도 필터에 따라 달라지지 않습니다. 상세 분석의 필터는 해당 영역에만 적용됩니다.</p><div class="edu-insight-grid" aria-live="polite">핵심 결과를 불러오고 있습니다.</div><h2>근거 확인·조건 바꾸기</h2><section id="educationNetworks"></section>';
+    container.innerHTML='<p class="edu-kicker">데이터에 질문하기</p><h1>질문 분석</h1><section id="educationQuestionAnalysis"></section><details class="edu-precomputed-insights"><summary>미리 계산한 정책 분석 5가지 보기</summary><p>공간을 늘릴 곳, 접근을 지킬 곳, 먼저 확인할 곳을 구분합니다. 아래 요약은 인천 전체 분석 범위이며 지도 필터에 따라 달라지지 않습니다. 상세 분석의 필터는 해당 영역에만 적용됩니다.</p><div class="edu-insight-grid" aria-live="polite">핵심 결과를 불러오고 있습니다.</div><h2>근거 확인·조건 바꾸기</h2><section id="educationNetworks"></section></details>';
     if(global.EducationQuestions)global.EducationQuestions.mount(container.querySelector('#educationQuestionAnalysis'),level,gu);
     const summary=container.querySelector('.edu-insight-grid');
     const definitions=[

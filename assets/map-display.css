@@ -1,4 +1,28 @@
 /* Progressive disclosure: one compact entry point, explicit map scope. */
+.workspace-header { position:absolute; top:16px; left:18px; right:18px; z-index:65; display:flex; gap:14px; align-items:flex-start; pointer-events:none; }
+.workspace-header .map-search-box { position:static; flex:1; min-width:240px; width:auto; max-width:720px; margin:0; background:#fff; color:#294c5d; border:1px solid #d6e0e5; box-shadow:0 4px 18px #243c4c14; pointer-events:auto; display:grid; grid-template-columns:105px 115px minmax(120px,1fr); gap:5px 10px; }
+.workspace-header label[for="schoolLevelFilter"]{grid-area:1/1;}
+.workspace-header #schoolLevelFilter{grid-area:2/1;}
+.workspace-header label[for="guFilter"]{grid-area:1/2;}
+.workspace-header #guFilter{grid-area:2/2;}
+.workspace-header label[for="schoolSearchInput"]{grid-area:1/3;display:block;}
+.workspace-header #schoolSearchInput{grid-area:2/3;min-width:0;box-sizing:border-box;}
+.workspace-header .map-search-status{grid-area:3/1/4/4;font-weight:400;margin:3px 0 0;}
+.workspace-header select{width:100%;min-height:42px;box-sizing:border-box;background:#f5f8fa;border:1px solid #d6e0e5;color:#233b49;border-radius:8px;padding:7px;}
+.workspace-header .map-search-label,.workspace-header .map-search-status { color:#607582; }
+.workspace-header .map-search-input { color:#233b49; background:#f5f8fa; }
+.workspace-header .top-action-stack { position:static; flex:none; display:flex; gap:6px; width:auto; max-width:none; flex-wrap:nowrap; overflow:visible; pointer-events:auto; }
+.workspace-header .top-action-button,#workspaceMore > summary { min-width:0; min-height:42px; padding:11px 12px; background:#fff; color:#294c5d; border:1px solid #d6e0e5; border-radius:9px; box-shadow:0 4px 18px #243c4c14; font-size:13px; font-weight:600; white-space:nowrap; cursor:pointer; }
+.workspace-header .top-action-button.primary { background:#244f60; color:#fff; border-color:#244f60; }
+#workspaceMore { position:relative; }
+#workspaceMore > summary { list-style:none; }
+#workspaceMore > summary::after { content:' ▾'; }
+.workspace-more-content { position:absolute; right:0; top:50px; width:220px; display:grid; padding:8px; gap:4px; border:1px solid #d6e0e5; border-radius:12px; background:white; box-shadow:0 8px 26px #243c4c20; }
+.workspace-header .workspace-more-content .top-action-button { text-align:left; border:0; box-shadow:none; }
+.workspace-header :focus-visible { outline:3px solid #368ba5; outline-offset:2px; }
+@media(max-width:1100px){.workspace-header { flex-wrap:wrap; gap:8px; }.workspace-header .map-search-box { max-width:none; flex-basis:100%; }.workspace-header .top-action-stack { margin-left:auto; }}
+@media(max-width:650px){.workspace-header { top:10px; left:12px; right:12px; }.workspace-header .map-search-box { min-width:0; width:100%; max-width:100%; padding:10px; }.workspace-header .top-action-stack { width:100%; justify-content:space-between; gap:4px; }.workspace-header .top-action-button,#workspaceMore > summary { padding:10px 9px; font-size:12px; min-height:44px; }.workspace-more-content { max-height:55vh; overflow:auto; }.workspace-header .map-search-status { flex-basis:100%; margin:3px 0 0; }}
+@media(max-width:650px){.workspace-header .map-search-box{grid-template-columns:1fr 1fr;}.workspace-header label[for="schoolSearchInput"]{grid-area:3/1/4/3;}.workspace-header #schoolSearchInput{grid-area:4/1/5/3;}.workspace-header .map-search-status{grid-area:5/1/6/3;}.workspace-header #schoolLevelFilter{max-width:none!important;}}
 #layerToggleBar {
   display:block; width:340px; max-width:calc(100vw - 36px); height:auto;
   padding:0; border:1px solid #d6e0e5; border-radius:14px; background:#fff;
