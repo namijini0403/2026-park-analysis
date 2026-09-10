@@ -1,0 +1,46 @@
+/* Progressive disclosure: one compact entry point, explicit map scope. */
+#layerToggleBar {
+  display:block; width:340px; max-width:calc(100vw - 36px); height:auto;
+  padding:0; border:1px solid #d6e0e5; border-radius:14px; background:#fff;
+  color:#233b49; box-shadow:0 6px 24px #243c4c20; overflow:visible;
+}
+#layerToggleBar::before { display:none; }
+#mapDisplayMenu > summary {
+  display:flex; gap:12px; align-items:center; justify-content:space-between;
+  padding:14px 16px; cursor:pointer; font-size:14px; font-weight:700;
+  list-style:none; min-height:48px; box-sizing:border-box;
+}
+#mapDisplayMenu > summary::-webkit-details-marker { display:none; }
+#mapDisplayMenu > summary::after { content:'＋'; color:#507381; }
+#mapDisplayMenu[open] > summary::after { content:'−'; }
+#mapDisplayCount { margin-left:auto; font-size:12px; color:#607582; font-weight:500; }
+.map-display-body { padding:0 14px 14px; max-height:min(65vh,620px); overflow:auto; overscroll-behavior:contain; }
+.map-display-intro { margin:0 0 12px; font-size:13px; color:#526873; }
+.map-display-note { font-size:11px; line-height:1.6; color:#607582; margin:8px 0; }
+.map-presets { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.map-presets button,#mapDisplayClose { min-height:38px; padding:8px; border:1px solid #d7e1e7; border-radius:8px; background:#f5f8fa; color:#294c5d; cursor:pointer; font:inherit; font-size:12px; }
+#mapDisplayClose { width:100%; margin-top:12px; background:#244f60; color:white; border-color:#244f60; }
+.map-display-body fieldset { border:0; border-top:1px solid #e4ebef; padding:12px 0; margin:10px 0 0; min-width:0; }
+.map-display-body legend { font-size:13px; font-weight:700; padding-right:8px; }
+.map-scope-label { display:block; font-size:11px; color:#607582; }
+.map-scope-label select { display:block; width:100%; box-sizing:border-box; margin:5px 0 9px; padding:8px; min-height:36px; border:1px solid #d7e1e7; border-radius:7px; background:white; color:#294c5d; font-size:12px; }
+.map-layer-options { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+#layerToggleBar .layer-toggle-btn { display:flex; align-items:center; text-align:left; justify-content:flex-start; width:auto; min-width:0; min-height:40px; padding:8px 9px; border:1px solid #dbe4e9; border-radius:8px; background:#fff; color:#526873; font-size:12px; box-shadow:none; white-space:normal; }
+#layerToggleBar .layer-toggle-btn::before { display:none; }
+#layerToggleBar .layer-toggle-btn.is-on { background:#e9f4f5; border-color:#5c94a0; color:#1f5565; }
+#layerToggleBar .layer-toggle-btn.is-on::after { content:'✓'; margin-left:auto; font-weight:800; }
+.map-secondary { padding:11px 0; border-top:1px solid #e4ebef; }
+.map-secondary > summary { cursor:pointer; font-size:13px; font-weight:650; padding:3px 0; }
+.map-secondary[open] > summary { margin-bottom:10px; }
+.map-color-option { display:flex; align-items:center; gap:7px; font-size:12px; margin:12px 0; }
+#layerToggleBar .case-filter-group,#layerToggleBar .access-filter-group { display:flex; width:auto; flex-wrap:wrap; gap:5px; border:0; padding:6px 0; margin:0; }
+#layerToggleBar .case-filter-btn,#layerToggleBar .access-filter-btn { font-size:11px; min-height:34px; padding:6px 8px; color:#526873; background:#f6f8fa; border:1px solid #dbe4e9; }
+#layerToggleBar .case-filter-btn.is-on,#layerToggleBar .access-filter-btn.is-on { color:#1f5565; background:#e9f4f5; border-color:#5c94a0; }
+#layerToggleBar :focus-visible { outline:3px solid #368ba5; outline-offset:2px; }
+#openSelectedEducationReport { padding:10px 12px; min-height:42px; border:1px solid #b8cbd4; border-radius:8px; background:#edf5f7; color:#244f60; cursor:pointer; font:inherit; font-size:13px; }
+@media(max-width:768px) {
+  #layerToggleBar,#layerToggleBar.open { display:block; left:12px; right:auto; bottom:76px; width:calc(100vw - 24px); max-width:380px; height:auto; padding:0; border-radius:14px; z-index:112; }
+  .map-display-body { max-height:48vh; }
+  #layerToggleBar.open + #controlPanel.open { transform:translateY(0); }
+  .map-presets button,#layerToggleBar .layer-toggle-btn { min-height:44px; }
+}

@@ -3193,6 +3193,7 @@
     }
   </style>
   <link rel="stylesheet" href="./assets/education-layers.css">
+  <link rel="stylesheet" href="./assets/map-display.css">
   <script src="./assets/education-statistics.js"></script>
   <script src="./assets/education-networks.js"></script>
   <script src="./assets/education-questions.js"></script>
@@ -3463,7 +3464,7 @@
     // kind: "point" | "geojson" | "custom"(render 함수가 그림) | "external"(다른 코드가 그림, 가시성만 관리)
     const LAYER_REGISTRY = [
       {
-        id: "isochrone", buttonLabel: "🚶 실제 도보이동 500m", panelLabel: "도보 도달권(보행 네트워크 v3)",
+        id: "isochrone", buttonLabel: "도보망 500m", panelLabel: "도보 도달권(보행 네트워크 v3)",
         toggleId: "toggleIsochrone", overlayKey: "isochronePolygons",
         kind: "geojson", datasetKey: "isochrone", defaultOn: false,
         style: { strokeWeight: 2, strokeColor: "#2B6CB0", strokeOpacity: 0.9, fillColor: "#90CDF4", fillOpacity: 0.22 }
@@ -3542,11 +3543,22 @@
     function buildLayerControls() {
       const bar = document.getElementById("layerToggleBar");
       if (bar) {
-        // 주의: #layerToggleBar 안에는 레이어 버튼 외에 case-filter-group/access-filter-group도
-        // 자식으로 들어있으므로 innerHTML="" 대신 기존 .layer-toggle-btn만 제거하고
-        // 나머지 자식(anchor) 앞에 새 버튼을 순서대로 삽입한다.
-        bar.querySelectorAll(".layer-toggle-btn").forEach((btn) => btn.remove());
-        const anchor = bar.firstChild;
+        const cases=bar.querySelector('.case-filter-group'),access=bar.querySelector('.access-filter-group');
+        bar.innerHTML=`<details id="mapDisplayMenu"><summary><span>지도 표시</span><span id="mapDisplayCount">학교만</span></summary>
+          <div class="map-display-body">
+            <p class="map-display-intro">학교를 고르고, 필요한 정보만 더하세요.</p>
+            <div class="map-presets" aria-label="빠른 지도 구성">
+              <button type="button" data-map-preset="none">학교만</button><button type="button" data-map-preset="walk">공원 도보권</button><button type="button" data-map-preset="reading">도서관 주변</button><button type="button" data-map-preset="academy">학원 주변</button>
+            </div>
+            <p id="mapDisplayContext" class="map-display-note" role="status"></p>
+            <fieldset data-map-group="reach"><legend>생활권 비교</legend><label class="map-scope-label">표시 대상<select id="mapReachScope"><option value="selected">선택한 학교만</option><option value="filtered">현재 학교·지역 필터 전체</option></select></label><div class="map-layer-options"></div><p class="map-display-note">도보 500m는 보행망 거리입니다. 직선 반경·실제 통학로·안전 보장과 다릅니다.</p></fieldset>
+            <fieldset data-map-group="environment"><legend>주변 시설</legend><label class="map-scope-label">표시 범위<select id="mapFacilityScope"><option value="nearby">선택 학교 직선 2km 안</option><option value="all">전체 시설</option></select></label><div class="map-layer-options"></div><p class="map-display-note">2km는 지도를 정리하는 표시 범위이며 도보권 기준이 아닙니다.</p></fieldset>
+            <details class="map-secondary"><summary>정책·개발 정보</summary><div data-map-group="policy" class="map-layer-options"></div><p class="map-display-note">후보지·지정학교는 별도 탐색 정보입니다. 시설의 직선 2km 표시 범위는 적용하지 않습니다.</p></details>
+            <details class="map-secondary" id="mapDiagnosticFilters"><summary>학교 진단 필터</summary><label class="map-color-option"><input type="checkbox" id="mapPolicyColors">학교 마커에 정책 분류 색상 표시</label></details>
+            <button type="button" id="mapDisplayClose">선택 마치기</button>
+          </div></details>`;
+        const diagnostic=bar.querySelector('#mapDiagnosticFilters');
+        if(cases)diagnostic.appendChild(cases);if(access)diagnostic.appendChild(access);
         LAYER_REGISTRY.forEach((def) => {
           const btn = document.createElement("button");
           btn.className = "layer-toggle-btn";
@@ -3557,7 +3569,9 @@
             btn.style.setProperty("--layer-color", def.cssColor);
             btn.dataset.hasColor = "";
           }
-          bar.insertBefore(btn, anchor);
+          const group=['isochrone','buffer'].includes(def.id)?'reach':['parks','library','academy','nightlife','construction'].includes(def.id)?'environment':'policy';
+          const host=bar.querySelector(`[data-map-group="${group}"]`);
+          (host.querySelector('.map-layer-options')||host).appendChild(btn);
         });
       }
       const list = document.querySelector(".panel-util .toggle-list");
@@ -4072,6 +4086,12 @@
         button.classList.toggle("is-on", isOn);
         button.setAttribute("aria-pressed", String(isOn));
       });
+      const enabled=LAYER_REGISTRY.filter(isLayerOn);
+      const count=document.getElementById('mapDisplayCount');
+      if(count)count.textContent=enabled.length?`추가 정보 ${enabled.length}개`:'학교만';
+      const row=state.datasets.schools.find(s=>getSchoolId(s)===state.selectedSchoolId);
+      const context=document.getElementById('mapDisplayContext');
+      if(context)context.textContent=row?`선택: ${getSchoolName(row)} · ${row.학교급구분||'초등학교'}`:'지도나 검색에서 학교를 선택하세요. 선택 학교 범위는 선택 후 표시됩니다.';
     }
 
     function syncCaseFilterButtons() {
@@ -4093,6 +4113,19 @@
     function setupLayerToggleBar() {
       ensureSpecialPolicyCaseFilterButton();
       refreshAccessFilterButtons();
+      document.getElementById('mapReachScope')?.addEventListener('change',updateOverlayVisibility);
+      document.getElementById('mapFacilityScope')?.addEventListener('change',updateOverlayVisibility);
+      document.getElementById('mapPolicyColors')?.addEventListener('change',renderSchoolMarkers);
+      document.getElementById('mapDisplayClose')?.addEventListener('click',()=>{document.getElementById('mapDisplayMenu').open=false;document.querySelector('#mapDisplayMenu > summary').focus();});
+      document.getElementById('mapDisplayMenu')?.addEventListener('keydown',event=>{if(event.key==='Escape'){event.currentTarget.open=false;event.currentTarget.querySelector('summary').focus();event.stopPropagation();}});
+      ui.layerToggleBar?.querySelectorAll('[data-map-preset]').forEach(button=>button.addEventListener('click',()=>{
+        const choices={none:[],walk:['isochrone','parks'],reading:['library'],academy:['academy']};
+        const chosen=choices[button.dataset.mapPreset]||[];
+        LAYER_REGISTRY.forEach(def=>{ui.toggles[def.id].checked=chosen.includes(def.id);});
+        document.getElementById('mapReachScope').value='selected';document.getElementById('mapFacilityScope').value='nearby';
+        if(!chosen.length){window.EducationLayers?.clearRoute();for(const overlay of state.overlays.educationCandidate||[])overlay.setMap(null);}
+        updateOverlayVisibility();
+      }));
 
       ui.layerToggleBar?.addEventListener("pointerdown", (event) => {
         event.stopPropagation();
@@ -4115,6 +4148,7 @@
           state.selectedCaseFilter = button.dataset.caseFilter || "all";
           syncCaseFilterButtons();
           renderSchoolMarkers();
+          updateOverlayVisibility();
         });
       });
       ui.accessFilterButtons.forEach((button) => {
@@ -4123,6 +4157,7 @@
           state.selectedAccessFilter = button.dataset.accessFilter || "all";
           syncAccessFilterButtons();
           renderSchoolMarkers();
+          updateOverlayVisibility();
         });
       });
       syncLayerToggleButtons();
@@ -4287,6 +4322,7 @@
       state.selectedCandidateData = null;
       state.selectedPanelData = null;
       updateAiChatContext();
+      updateOverlayVisibility();
 
       if (!preservePanel) {
         renderDetailPanel(null);
@@ -4301,6 +4337,7 @@
       state.selectedCandidateData = null;
       state.selectedPanelData = row;
       updateAiChatContext();
+      updateOverlayVisibility();
     }
 
     function setCandidatePanelSelection(rawCandidateResponse) {
@@ -4311,6 +4348,7 @@
       state.selectedCandidateData = rawCandidateResponse;
       state.selectedPanelData = rawCandidateResponse;
       updateAiChatContext();
+      updateOverlayVisibility();
     }
 
     function focusSchool(row) {
@@ -6011,7 +6049,7 @@
       rows.forEach((row) => {
         const latLng = toLatLng(row, row.위도 !== undefined ? "위도" : "lat", row.경도 !== undefined ? "경도" : "lng");
         if (!latLng) return;
-        const markerStyle = getMarkerStyle(row);
+        const markerStyle = document.getElementById('mapPolicyColors')?.checked ? getMarkerStyle(row) : {color:'#527385',symbol:'',borderColor:'#ffffff'};
 
         const marker = new kakao.maps.Marker({
           position: latLng,
@@ -6600,6 +6638,10 @@
     }
 
     function updateOverlayVisibility() {
+      const selected=state.datasets.schools.find(s=>getSchoolId(s)===state.selectedSchoolId && shouldShowSchoolMarker(s));
+      const reachRows=document.getElementById('mapReachScope')?.value==='filtered'?state.datasets.schools.filter(shouldShowSchoolMarker):selected?[selected]:[];
+      const reachKeys=new Set(reachRows.map(getSchoolId));
+      const near=document.getElementById('mapFacilityScope')?.value!=='all';
       LAYER_REGISTRY.forEach((def) => {
         const on = isLayerOn(def);
         // 지연 로딩 레이어: 켜졌는데 아직 데이터가 없으면 여기서 최초 로딩을 건다.
@@ -6607,7 +6649,15 @@
         if (on && typeof def.ensure === "function" && !(typeof def.isLoaded === "function" && def.isLoaded())) {
           def.ensure();
         }
-        (state.overlays[def.overlayKey] || []).forEach((overlay) => overlay.setMap(on ? state.map : null));
+        (state.overlays[def.overlayKey] || []).forEach((overlay) => {
+          let visible=on;
+          if(visible && ['isochrone','buffer'].includes(def.id))visible=reachKeys.has(overlay.__schoolKeys?.[0]);
+          if(visible && near && ['parks','library','academy','redevelopment','nightlife','construction'].includes(def.id)){
+            const point=overlay.getPosition?.();
+            visible=Boolean(selected && point && distanceInMeters(Number(selected.위도),Number(selected.경도),point.getLat(),point.getLng())<=2000);
+          }
+          overlay.setMap(visible?state.map:null);
+        });
       });
       syncLayerToggleButtons();
     }
@@ -8117,8 +8167,8 @@
 
     function renderDetailPanel(payload = null) {
       if (payload?.analysis_version) {
-        ui.schoolDetailBox.textContent = `${payload.학교명} · ${payload.학교급구분} — 공통 분석 리포트`;
-        EducationLayers.openReport(payload);
+        ui.schoolDetailBox.innerHTML = `<strong>${escapeHtml(payload.학교명)}</strong><p>${escapeHtml(payload.학교급구분)} · 선택한 학교의 생활권을 지도에서 확인하세요.</p><button type="button" id="openSelectedEducationReport">학교 분석·공개자료 보기</button>`;
+        document.getElementById('openSelectedEducationReport').addEventListener('click',()=>EducationLayers.openReport(payload));
         return;
       }
       if (isCandidatePanelResponse(payload)) {
