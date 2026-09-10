@@ -17,7 +17,7 @@
       const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
       let xspan=xmax-xmin||1,yspan=ymax-ymin||1;
       // Preserve approximate local geographic aspect ratio in the coordinate map.
-      if(map){const ratio=620/280*Math.cos((ymin+ymax)/2*Math.PI/180);if(xspan/yspan<ratio)xspan=yspan*ratio;else yspan=xspan/ratio;}
+      if(map){const ratio=620/280/Math.cos((ymin+ymax)/2*Math.PI/180);if(xspan/yspan<ratio)xspan=yspan*ratio;else yspan=xspan/ratio;}
       const x0=(xmin+xmax-xspan)/2,y0=(ymin+ymax-yspan)/2;
       const px=v=>70+(v-x0)/xspan*620,py=v=>320-(v-y0)/yspan*280;
       const vals=points.map(p=>p.value).filter(v=>v!=null),vmin=Math.min(...vals),vmax=Math.max(...vals);
