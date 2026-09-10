@@ -1,0 +1,16 @@
+{
+  "url": "https://education-living-area-preview-production.up.railway.app",
+  "code_commit": "12c4a51",
+  "assets": {
+    "index.html": {
+      "status": 200,
+      "sha256": "284827ee22214089c08d926e0865dd636138a2cff1ee84fef51a0e197af19e0e",
+      "content_type": "text/html; charset=utf-8"
+    },
+    "assets/map-display.css": {
+      "status": 200,
+      "sha256": "edd19a1e5a04bc9056a1e962c09d27475cb7e918f883d39c9dedfdaba81a2430",
+      "content_type": "text/css; charset=utf-8"
+    }
+  }
+}
