@@ -47,6 +47,7 @@ const inline=[...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>
 const education=fs.readFileSync(path.join(root,'assets/education-layers.js'),'utf8');
 w.eval(fs.readFileSync(path.join(root,'assets/education-statistics.js'),'utf8'));
 w.eval(fs.readFileSync(path.join(root,'assets/education-networks.js'),'utf8'));
+w.eval(fs.readFileSync(path.join(root,'assets/education-questions.js'),'utf8'));
 w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer};');
 (async()=>{
   const app=w.__app;
@@ -186,6 +187,7 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   for(let i=0;i<30&&!w.document.querySelector('#educationRoadResilience select');i++) await new Promise(resolve=>setTimeout(resolve,0));
   assert.equal(statsPanel.hidden,true);
   assert.equal(w.document.querySelectorAll('.edu-insight-card').length,5);
+  assert(w.document.querySelector('#educationQuestionAnalysis form'));
   assert(w.document.querySelector('#educationRoadResilience select'));
   w.document.getElementById('education-insights-tab').dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowLeft'}));
   assert.equal(statsPanel.hidden,false);

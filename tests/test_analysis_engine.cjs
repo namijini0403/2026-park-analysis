@@ -1,0 +1,32 @@
+const assert=require('node:assert/strict');
+const engine=require('../api/_analysis_engine.js');
+const schools=Array.from({length:20},(_,i)=>({id:String(i),name:'학교'+i,level:'중학교',gu:i<10?'A':'B',lat:37.5+i*.0005,lng:126.7,
+ observations:{2026:{students:10+i,classes:30-i,teachers:i*2}},environment:{parks:i},
+ enrollment_trend:{observations:[{year:2020,students:10+i},{year:2022,students:14+i},{year:2026,students:22+i}]}}));
+const dataset={years:[2026],schools,source_hashes:{test:'fixture'}};
+const plan={method:'relationship',level:'중학교',gu:'전체',year:2026,x:'students',y:'classes'};
+let result=engine.analyze(dataset,plan);
+assert.equal(result.metrics.spearman,-1);
+assert.equal(result.chart.points.length,20);
+result=engine.analyze(dataset,{...plan,controls:['teachers']});
+assert.equal(result.status,'insufficient','Perfectly explained residuals are not evidence');
+result=engine.analyze(dataset,{...plan,method:'difference',group_a:'A',group_b:'B'});
+assert.equal(result.metrics.cliffs_delta,-1);
+result=engine.analyze(dataset,{...plan,method:'inequality',x:'parks'});
+assert(Math.abs(result.metrics.gini-.35)<1e-10);
+assert.equal(result.chart.points.at(-1).y,1);
+const signed=engine.analyze({...dataset,schools:schools.map(s=>({...s,environment:{parks:s.environment.parks-10}}))},{...plan,method:'inequality',x:'parks'});
+assert.equal(signed.metrics.gini,null);assert.equal(signed.chart.kind,'box');assert.equal(signed.metrics.n,20);
+result=engine.analyze(dataset,{...plan,method:'trend'});
+assert.equal(result.metrics.sen_slope,40);
+assert.equal(result.metrics.cohort,20);
+const spatial=engine.analyze(dataset,{...plan,method:'spatial'});
+assert(spatial.metrics.moran_i>0);
+assert.deepEqual(spatial.metrics,engine.analyze(dataset,{...plan,method:'spatial'}).metrics);
+assert.throws(()=>engine.analyze(dataset,{...plan,level:'전체'}));
+assert.throws(()=>engine.analyze(dataset,{...plan,x:'fake_metric'}));
+assert.throws(()=>engine.analyze(dataset,{...plan,x:'__proto__'}));
+assert.deepEqual(engine.fdr([.01,.04,.03]),[.03,.04,.04]);
+assert.throws(()=>engine.analyze(dataset,{...plan,year:2024}));
+assert.equal(engine.analyze({...dataset,schools:schools.slice(0,3)},plan).status,'insufficient');
+console.log('Analysis engine: partial-rank degeneracy, Cliff delta, Gini, balanced trend, seeded Moran and plan gates passed');

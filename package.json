@@ -10,7 +10,8 @@
     "validate:modules": "node scripts/validate_module_contract.mjs",
     "test:update-center": "node scripts/tests/test_update_center_core.cjs && node scripts/tests/test_update_center_persistence.cjs",
     "test:update-center-persistence": "node scripts/tests/test_update_center_persistence.cjs",
-    "selftest:update-center-store": "node scripts/update_center/store.mjs --selftest"
+    "selftest:update-center-store": "node scripts/update_center/store.mjs --selftest",
+    "test:analysis": "node tests/test_analysis_engine.cjs && node tests/test_analysis_api.cjs && node tests/test_analysis_planner.cjs && node tests/test_education_questions.cjs"
   },
   "engines": {
     "node": ">=20"

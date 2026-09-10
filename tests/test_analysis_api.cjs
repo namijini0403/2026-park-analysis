@@ -1,0 +1,24 @@
+const assert=require('node:assert/strict');
+process.env.AI_ANALYSIS_ENABLED='false';
+const api=require('../api/analysis.js');
+(async()=>{
+ const options={level:'중학교',gu:'전체',year:2026};
+ const relation=await api.run({question:'학원 수와 학생 수는 관련 있어?',options});
+ assert.equal(relation.status,'ok');assert.equal(relation.plan.method,'relationship');assert.equal(relation.plan.x,'academy');
+ assert(relation.metrics.n>100);assert(relation.source_hashes);
+ const library=await api.run({question:'도서관 추천 후보를 보여줘',options});
+ assert.equal(library.plan.method,'library');assert.equal(library.metrics.candidates,7304);
+ assert(library.chart.points.every(p=>p.lng<126.80));
+ const academy=await api.run({question:'학원가 밀집 구역을 보여줘',options});
+ assert.equal(academy.metrics.cluster_count,119);
+ assert(academy.chart.points[0].target_categories);
+ const trend=await api.run({question:'유치원 원아 수 증감 추세',options});
+ assert.equal(trend.plan.level,'유치원');assert.equal(trend.chart.kind,'line');
+ const spatial=await api.run({question:'공원 부족이 공간적으로 몰려 있어?',options});
+ assert.equal(spatial.chart.kind,'map');
+ await assert.rejects(()=>api.run({question:'수능 성적과 학원은 관계 있어?',options}));
+ await assert.rejects(()=>api.run({question:'초등학교 중학교 학생 수 관계',options}));
+ await assert.rejects(()=>api.run({question:'2010년 학생 수와 학원 관계',options}));
+ await assert.rejects(()=>api.run({question:'검사',plan:{method:'relationship',level:'중학교',year:2026,x:'invented',y:'students'}}));
+ console.log('Analysis API: actual data, Korean plans, library scope, academy categories, trend, spatial and unsupported gates passed');
+})().catch(e=>{console.error(e);process.exitCode=1;});

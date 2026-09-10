@@ -1,0 +1,7 @@
+{
+  "source_url": "https://www.openstreetmap.org/relation/2297419",
+  "cache_sha256": "478638cb8fc8470795cd38676c6499bfc5da1019faab2f59faf5ab2cc86287ba",
+  "sha256": "4e56c298591ea3d24271a072fddd19836edba61c3298a20ec61afad66e80ed4e",
+  "note": "기존 보행망 구축 시 저장한 Nominatim 경계를 재사용. 공식 행정경계·최신 경계 정확성을 보장하지 않는다.",
+  "license": "ODbL; © OpenStreetMap contributors"
+}

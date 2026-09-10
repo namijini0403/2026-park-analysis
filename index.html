@@ -3195,6 +3195,7 @@
   <link rel="stylesheet" href="./assets/education-layers.css">
   <script src="./assets/education-statistics.js"></script>
   <script src="./assets/education-networks.js"></script>
+  <script src="./assets/education-questions.js"></script>
   <script src="./assets/education-layers.js"></script>
 <style>
 .edu-analysis-tabs { display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid #c9d9df; padding-bottom:12px; margin-bottom:22px; }
@@ -3202,6 +3203,16 @@
 .edu-analysis-tabs button[aria-selected="true"] { background:#155d73; color:#fff; border-color:#155d73; }
 .edu-analysis-tabs button:focus-visible,.edu-insight-card a:focus-visible { outline:3px solid #e0a126; outline-offset:3px; }
 #education-statistics-panel[hidden],#education-insights-panel[hidden] { display:none; }
+#educationQuestionAnalysis { padding:20px; border:1px solid #b9d4dc; border-radius:14px; background:#f6fafc; margin-bottom:28px; }
+#educationQuestionAnalysis textarea { display:block; box-sizing:border-box; width:100%; margin:10px 0; padding:12px; border:1px solid #a8bdc7; border-radius:8px; font:inherit; resize:vertical; }
+#educationQuestionAnalysis button { min-height:40px; padding:8px 12px; border:1px solid #9ab6c4; border-radius:8px; color:#17475b; background:white; cursor:pointer; font:inherit; }
+#educationQuestionAnalysis button[type="submit"] { background:#155d73; color:white; }
+#educationQuestionAnalysis button:disabled { opacity:.6; cursor:wait; }
+#educationQuestionAnalysis pre { white-space:pre-wrap; overflow-wrap:anywhere; }
+.edu-question-examples { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+[data-question="plan-controls"] { display:flex; flex-wrap:wrap; align-items:end; gap:12px; padding:12px 0; }
+[data-question="plan-controls"] label { display:grid; gap:6px; }
+.edu-analysis-answer { font-size:18px; line-height:1.7; color:#153f52; }
 .edu-insight-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr)); gap:16px; margin:22px 0; }
 .edu-insight-card { padding:20px; border:1px solid #cbdde3; border-radius:14px; background:#f5fafb; overflow-wrap:anywhere; }
 .edu-insight-card h2 { margin:8px 0; font-size:20px; }

@@ -19,6 +19,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const aiExplainerHandler = require("./api/ai-explainer-v2.js");
+const analysisHandler = require("./api/analysis.js");
 const updateCenterHandler = require("./api/update-center.js");
 
 const PORT = Number(process.env.PORT || 3000);
@@ -84,13 +85,13 @@ async function readJsonBody(req, maxBytes = MAX_BODY_BYTES) {
   }
 }
 
-async function handleApi(req, res) {
+async function handleApi(req, res, handler = aiExplainerHandler) {
   try {
     if (req.method === "POST") {
       // Vercel parses JSON bodies into req.body; reproduce that here.
       req.body = await readJsonBody(req);
     }
-    await aiExplainerHandler(req, res);
+    await handler(req, res);
   } catch (error) {
     const statusCode = error && error.statusCode ? error.statusCode : 500;
     if (!res.headersSent) {
@@ -239,6 +240,10 @@ function serveUpdateCenterPage(req, res) {
 
 const server = http.createServer((req, res) => {
   const pathname = new URL(req.url, "http://localhost").pathname;
+  if (pathname === "/api/analysis") {
+    handleApi(req, res, analysisHandler);
+    return;
+  }
   if (pathname === "/api/ai-explainer-v2") {
     handleApi(req, res);
     return;

@@ -8,6 +8,9 @@
   "functions": {
     "api/ai-explainer-v2.js": {
       "includeFiles": "data_processed/{context/*.json,education/school_public_indicators.json}"
+    },
+    "api/analysis.js": {
+      "includeFiles": "data_processed/education/{analysis_dataset,library_access_preview,academy_clusters,designation_diffusion,road_resilience}.json"
     }
   },
   "headers": [
