@@ -25,7 +25,8 @@ function localPlan(question,options,data){
   let method=relation?'relationship':/도서관/.test(question)?'library':/학원가|학원.*밀집|밀집.*학원/.test(question)?'academy_clusters':/확산|선도|연구학교|공동교육/.test(question)?'network':/막히|중단|폐쇄|우회/.test(question)?'resilience':/증감|추세|늘|줄|변화/.test(question)?'trend':/몰려|군집|공간|핫스폿/.test(question)?'spatial':/불평등|격차|분포|집중/.test(question)?'inequality':/비교|차이/.test(question)?'difference':detected.length>=2?'relationship':null;
   const mentionedLevels=engine.levels.filter(l=>question.includes(l)||question.includes({유치원:'유치원',초등학교:'초등',중학교:'중등',고등학교:'고등'}[l]));
   if(mentionedLevels.length>1)throw Error('학교급을 섞으면 해석이 달라집니다. 학교급 하나씩 질문해 주세요.');
-  const districts=[...new Set(data.schools.map(s=>s.gu).filter(Boolean))].filter(g=>question.includes(g));
+  const districtNames=[...new Set(data.schools.map(s=>s.gu).filter(Boolean))].sort((a,b)=>b.length-a.length);
+  const districts=[...new Set(question.match(new RegExp(districtNames.map(g=>g.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g'))||[])];
   if(districts.length===2&&!relation)method='difference';
   const years=[...question.matchAll(/(20\d{2})년?/g)].map(m=>Number(m[1]));
   const namedSchools=data.schools.filter(s=>question.includes(s.name));
