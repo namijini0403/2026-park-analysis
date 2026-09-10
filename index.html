@@ -4051,6 +4051,7 @@
     }
 
     function openPanel() {
+      const displayMenu=document.getElementById('mapDisplayMenu');if(displayMenu)displayMenu.open=false;
       ui.panel.classList.add("open");
       ui.panelToggleButton.textContent = "필터 닫기";
       syncPanelShortcutButton();
@@ -7326,6 +7327,9 @@
     });
 
     function wireEvents() {
+      const header=document.querySelector('.workspace-header');
+      if(window.ResizeObserver)new ResizeObserver(()=>document.documentElement.style.setProperty('--workspace-panel-top',`${header.getBoundingClientRect().bottom+12}px`)).observe(header);
+      document.getElementById('mapDisplayMenu')?.addEventListener('toggle',event=>{if(event.target.open)closePanel();});
       const searchBox=document.querySelector('.map-search-box');
       const previousRegionSection=ui.guFilter.closest('.section');
       const regionLabel=document.createElement('label');regionLabel.className='map-search-label';regionLabel.htmlFor='guFilter';regionLabel.textContent='지역';
@@ -7359,6 +7363,7 @@
 
       ui.panelToggleButton?.addEventListener("click", () => {
         const opening = !ui.panel.classList.contains("open");
+        if(opening)document.getElementById('mapDisplayMenu').open=false;
         ui.panel.classList.toggle("open", opening);
         syncPanelShortcutButton();
         // Mobile-only: the layer/case/access filter bar shares the same open state as the
