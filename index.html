@@ -7352,12 +7352,18 @@
       if(window.ResizeObserver)new ResizeObserver(()=>document.documentElement.style.setProperty('--workspace-panel-top',`${header.getBoundingClientRect().bottom+12}px`)).observe(header);
       // Kakao needs an explicit relayout when the viewport changes (rotation/resizing).
       let viewportCenter = state.map.getCenter();
-      kakao.maps.event.addListener(state.map, 'center_changed', () => { viewportCenter = state.map.getCenter(); });
+      const mapElement = document.getElementById('map');
+      let viewportSize = mapElement.getBoundingClientRect();
+      kakao.maps.event.addListener(state.map, 'center_changed', () => {
+        const size = mapElement.getBoundingClientRect();
+        if (size.width === viewportSize.width && size.height === viewportSize.height) viewportCenter = state.map.getCenter();
+      });
       if (window.ResizeObserver) new ResizeObserver(() => {
         const center = viewportCenter;
         state.map.relayout();
         state.map.setCenter(center);
-      }).observe(document.getElementById('map'));
+        viewportSize = mapElement.getBoundingClientRect();
+      }).observe(mapElement);
       document.getElementById('mapDisplayMenu')?.addEventListener('toggle',event=>{if(event.target.open)closePanel();});
       const searchBox=document.querySelector('.map-search-box');
       const previousRegionSection=ui.guFilter.closest('.section');
@@ -8672,8 +8678,8 @@
           : _linkedCandidatesBase;
       localStorage.setItem("parkAnalysis_candidates", JSON.stringify(_linkedCandidates));
 
-      // 클릭과 동시에 상세 리포트 오버레이 자동 열기
-      openSimulationOverlay();
+      // Preparing a school summary must not interrupt map exploration.
+      // Reports open only through the explicit report/simulation controls.
     }
 
     function hideAuthGate() {

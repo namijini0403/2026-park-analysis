@@ -41,7 +41,7 @@
       const max=Math.max(...chart.groups.map(g=>g.value),1);
       chart.groups.forEach((g,i)=>{const y=60+i*90;content+=`<rect x="240" y="${y}" width="${g.value/max*400}" height="38" fill="#217c95"/>${text(230,y+25,g.name,'text-anchor="end"')}${text(650,y+25,fmt(g.value))}`;});
     }
-    return `<svg class="edu-stat-scatter" viewBox="0 0 760 400" role="img" aria-label="${esc(description)}"><rect width="760" height="400" fill="white"/><g font-size="12" fill="#2c4656"><path d="M70 40V320H690" fill="none" stroke="#879ba7"/>${content}</g></svg><p class="edu-note">${esc(description)}</p>`;
+    return `<svg class="edu-stat-scatter" data-chart-kind="${esc(chart.kind)}" viewBox="0 0 760 400" role="img" aria-label="${esc(description)}"><rect width="760" height="400" fill="white"/><g font-size="12" fill="#2c4656"><path d="M70 40V320H690" fill="none" stroke="#879ba7"/>${content}</g></svg><p class="edu-note">${esc(description)}</p>`;
   }
   function table(chart){
     const rows=chart?.points?.map(p=>chart.kind==='map'?[p.name,fmt(p.value),fmt(p.lat),fmt(p.lng),p.cluster?clusters[p.cluster][0]:'—',fmt(p.local_q)]:[p.name||p.x,fmt(p.x),fmt(p.y)])||chart?.groups?.map(g=>[g.name,...(chart.kind==='box'?[g.n,g.min,g.q1,g.median,g.q3,g.max]:[g.value])])||[];

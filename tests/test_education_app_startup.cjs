@@ -51,7 +51,7 @@ const education=fs.readFileSync(path.join(root,'assets/education-layers.js'),'ut
 w.eval(fs.readFileSync(path.join(root,'assets/education-statistics.js'),'utf8'));
 w.eval(fs.readFileSync(path.join(root,'assets/education-networks.js'),'utf8'));
 w.eval(fs.readFileSync(path.join(root,'assets/education-questions.js'),'utf8'));
-w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer,runShortcutAction};');
+w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer,runShortcutAction,renderSchoolDetail};');
 (async()=>{
   const app=w.__app;
   await app.init();
@@ -65,6 +65,8 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   app.state.map.setCenter(camera);
   app.state.map.events.center_changed.forEach(callback=>callback());
   app.state.map.center=new LatLng(38,127); // SDK center drifts when container dimensions change.
+  mapResize.target.getBoundingClientRect=()=>({width:390,height:844});
+  app.state.map.events.center_changed.forEach(callback=>callback());
   mapResize.callback();
   assert.equal(app.state.map.getCenter(),camera,'Viewport resizing preserves the map center');
   assert.equal(app.state.map.relayoutCount,1);
@@ -76,6 +78,8 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert.equal(app.state.selectedSchoolId,null,'No arbitrary school is selected for a report');
   assert.equal(w.document.activeElement.id,'schoolSearchInput');
   assert(w.document.querySelector('.map-search-status').textContent.includes('먼저 학교'));
+  await app.renderSchoolDetail(app.state.datasets.schools[0]);
+  assert.notEqual(w.document.getElementById('simulationOverlay').style.display,'flex','Elementary selection must keep the map visible even after async detail preparation');
   const menu=w.document.getElementById('mapDisplayMenu');
   assert.equal(menu.open,false,'Map controls start collapsed');
   assert.equal(w.document.getElementById('mapDisplayCount').textContent,'학교만');

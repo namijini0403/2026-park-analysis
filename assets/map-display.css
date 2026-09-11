@@ -3,13 +3,16 @@
 .edu-question-suggestions { margin:12px 0; }
 [data-question="result"] { scroll-margin-top:62px; }
 @media(max-width:650px){
-  #educationReportDialog .edu-body { padding:14px; }
-  #educationReportDialog .edu-analysis-tabs { gap:5px; padding-top:40px; margin-bottom:16px; }
+  #educationReportDialog .edu-body { padding:0; }
+  #educationReportDialog .edu-analysis-tabs { clear:both; gap:5px; padding-top:12px; margin-bottom:16px; }
   #educationReportDialog .edu-analysis-tabs button { padding:10px 9px; font-size:12px; }
-  #educationQuestionAnalysis { padding:12px; }
+  #educationReportDialog #educationQuestionAnalysis { padding:12px; }
   #educationQuestionAnalysis [data-question="form"] .edu-stat-controls { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
   #educationQuestionAnalysis .edu-stat-controls label { min-width:0; }
   #educationQuestionAnalysis .edu-stat-controls select { min-width:0; width:100%; padding:8px 3px; font-size:12px; }
+  #educationReportDialog .edu-table:has(th:nth-child(4)) table { min-width:520px; }
+  #educationReportDialog [data-chart-kind="scatter"] text,#educationReportDialog [data-chart-kind="line"] text,#educationReportDialog [data-chart-kind="lorenz"] text { font-size:22px; }
+  #educationReportDialog .edu-table:has(th:nth-child(4))::before { content:'← 좌우로 밀어 표 보기 →'; display:block; padding:8px 0; font-size:11px; color:#607582; }
 }
 #controlPanel {
   --text:#233b49; --muted:#607582; --secondary:#233b49; --accent:#244f60;
