@@ -23,7 +23,7 @@
 }
 #controlPanel {
   --text:#233b49; --muted:#607582; --secondary:#233b49; --accent:#244f60;
-  --surface:#fff; --surface-muted:#f4f7f9; --line:#dce5ea; --panel-border:#d6e0e5;
+  --surface:#fff; --surface-muted:#f4f7f9; --secondary-soft:#edf4f7; --line:#dce5ea; --panel-border:#d6e0e5;
   background:#fff; color:#233b49; border:1px solid #d6e0e5;
   box-shadow:0 6px 24px #243c4c20;
 }
@@ -43,6 +43,7 @@
 #controlPanel .summary-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 #controlPanel .summary-card { min-height:0; }
 .workspace-region-summary > summary { cursor:pointer; padding:6px 0; }
+.workspace-school-context > summary { cursor:pointer; padding:10px 0; font-weight:600; }
 @media(min-width:769px){#controlPanel { height:auto!important; max-height:calc(100dvh - var(--workspace-panel-top,170px) - 18px); }}
 @media(max-width:768px){
   #panelToggleButton { display:none!important; }

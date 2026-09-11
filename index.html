@@ -8341,13 +8341,12 @@
         <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:13px; margin-bottom:16px;">
           ${getDiagnosticMessage(row)}
         </div>
-        <div class="detail-message ${getCaseThemeClass(row)}" style="font-size:12px; line-height:1.75; margin-bottom:16px;">
-          우측 지도 패널은 현재 학교의 개별 공원 수치 대신 Case 분류만 간단히 보여줍니다.<br>
-          상세 수치와 후보지 비교는 아래 리포트 화면에서 확인합니다.
-        </div>
+        <details class="workspace-school-context">
+        <summary>독서·지정·주변 정보 더 보기</summary>
         ${renderSchoolReadingSection(row)}
         ${renderSchoolPolicyCardSection(row)}
         <div class="detail-section" id="schoolContextCard">${buildSchoolContextCardHtml(getSchoolId(row))}</div>
+        </details>
         <button
           onclick="openSimulationOverlay()"
           style="
