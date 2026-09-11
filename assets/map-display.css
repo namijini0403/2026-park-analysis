@@ -1,4 +1,45 @@
 /* Progressive disclosure: one compact entry point, explicit map scope. */
+#educationQuestionAnalysis > h2 { border:0; padding-top:0; margin-top:0; }
+.edu-question-suggestions { margin:12px 0; }
+[data-question="result"] { scroll-margin-top:62px; }
+@media(max-width:650px){
+  #educationReportDialog .edu-body { padding:14px; }
+  #educationReportDialog .edu-analysis-tabs { gap:5px; padding-top:40px; margin-bottom:16px; }
+  #educationReportDialog .edu-analysis-tabs button { padding:10px 9px; font-size:12px; }
+  #educationQuestionAnalysis { padding:12px; }
+  #educationQuestionAnalysis [data-question="form"] .edu-stat-controls { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  #educationQuestionAnalysis .edu-stat-controls label { min-width:0; }
+  #educationQuestionAnalysis .edu-stat-controls select { min-width:0; width:100%; padding:8px 3px; font-size:12px; }
+}
+#controlPanel {
+  --text:#233b49; --muted:#607582; --secondary:#233b49; --accent:#244f60;
+  --surface:#fff; --surface-muted:#f4f7f9; --line:#dce5ea; --panel-border:#d6e0e5;
+  background:#fff; color:#233b49; border:1px solid #d6e0e5;
+  box-shadow:0 6px 24px #243c4c20;
+}
+#controlPanel .panel-header { background:#fff; padding:16px 18px; }
+#controlPanel .panel-title { font-size:19px; }
+#controlPanel .panel-subtitle { font-size:12px; }
+#controlPanel .panel-body { background:#f4f7f9; padding:14px; }
+#controlPanel .school-detail-box { min-height:0; }
+#controlPanel .detail-badge { color:#294c5d; }
+#controlPanel .detail-badge.critical { color:#9f1239; }
+#controlPanel .detail-badge.immediate { color:#6b21a8; }
+#controlPanel .detail-badge.high,#controlPanel .detail-badge.watch { color:#854d0e; }
+#controlPanel .detail-badge.normal { color:#166534; }
+#controlPanel .metric-item.warning { color:#854d0e; }
+#controlPanel .metric-item.danger { color:#9f1239; }
+#controlPanel .metric-item.success { color:#166534; }
+#controlPanel .summary-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+#controlPanel .summary-card { min-height:0; }
+.workspace-region-summary > summary { cursor:pointer; padding:6px 0; }
+@media(min-width:769px){#controlPanel { height:auto!important; max-height:calc(100dvh - var(--workspace-panel-top,170px) - 18px); }}
+@media(max-width:768px){
+  #panelToggleButton { display:none!important; }
+  #layerToggleBar,#layerToggleBar.open { bottom:22px!important; }
+  body:has(#mapDisplayMenu[open]) .workspace-header { visibility:hidden; pointer-events:none; }
+  body:has(#mapDisplayMenu[open]) .workspace-header * { pointer-events:none; }
+}
 .workspace-quick-guide { max-width:820px; margin:0 auto 28px; padding:24px; color:#233b49; background:#fff; border:1px solid #d6e0e5; border-radius:16px; }
 .workspace-quick-guide h2 { font-size:clamp(22px,3vw,32px); margin:0 0 12px; }
 .workspace-quick-guide p { font-size:14px; line-height:1.8; }

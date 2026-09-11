@@ -55,7 +55,7 @@
       <form data-question="form"><label for="education-analysis-question">궁금한 관계나 변화를 적어 주세요</label><textarea id="education-analysis-question" data-question="input" maxlength="500" rows="3" placeholder="예: 중학교 학원 수와 학생 수는 관련 있어?" required></textarea>
       <div class="edu-stat-controls"><label>학교급<select data-question="level">${levels.map(l=>option(l)).join('')}</select></label><label>지역<select data-question="gu">${districts.map(g=>option(g)).join('')}</select></label><label>공시연도<select data-question="year">${[2026,2025].map(y=>option(y)).join('')}</select></label></div>
       <button type="submit" data-question="submit">분석 실행</button></form>
-      <div class="edu-question-examples">${['학원 수와 학생 수는 관련 있어?','학생 수 증감 추세를 보여줘','공원 면적의 불평등 분포는?','공원 부족이 공간적으로 몰려 있어?','도서관 추천 후보를 보여줘','학원가 밀집 구역을 보여줘','선도학교 확산 시나리오','길이 막히면 공원에 갈 수 있어?'].map(q=>`<button type="button" data-example="${esc(q)}">${esc(q)}</button>`).join('')}</div>
+      <details class="edu-question-suggestions"><summary>질문 예시 8가지 보기</summary><div class="edu-question-examples">${['학원 수와 학생 수는 관련 있어?','학생 수 증감 추세를 보여줘','공원 면적의 불평등 분포는?','공원 부족이 공간적으로 몰려 있어?','도서관 추천 후보를 보여줘','학원가 밀집 구역을 보여줘','선도학교 확산 시나리오','길이 막히면 공원에 갈 수 있어?'].map(q=>`<button type="button" data-example="${esc(q)}">${esc(q)}</button>`).join('')}</div></details>
       <p class="edu-note">관측값의 관계를 탐색합니다. 수능·대학별 실적 등 미확보 변수는 대신 추정하지 않습니다. 도서관·학원 밀집·확산·도로 중단 사전 계산은 지역 ‘전체’에서 조회합니다.</p>
       <div data-question="result" aria-live="polite"></div><details><summary>이 브라우저의 최근 분석 기록</summary><div data-question="history"></div></details>`;
     const el=k=>container.querySelector(`[data-question="${k}"]`);el('level').value=levels.includes(initialLevel)?initialLevel:'초등학교';el('gu').value=districts.includes(initialGu)?initialGu:'전체';
@@ -70,7 +70,7 @@
         ${(result.limitations||[]).map(t=>`<p class="edu-note">${esc(t)}</p>`).join('')}
         ${(result.sources||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`).join(' · ')}
         ${result.download?`<p><a href="${esc(result.download)}" download>전체 사전 계산 결과·근거</a></p>`:''}
-        ${plan?'<details open data-question="edit"><summary>분석 조건 바꾸기</summary><div data-question="plan-controls"></div><button type="button" data-question="rerun">바꾼 조건으로 재분석</button></details><button type="button" data-question="download">질문·조건·결과 기록 내려받기</button>':''}`;
+        ${plan?'<details data-question="edit"><summary>분석 조건 바꾸기</summary><div data-question="plan-controls"></div><button type="button" data-question="rerun">바꾼 조건으로 재분석</button></details><button type="button" data-question="download">질문·조건·결과 기록 내려받기</button>':''}`;
       const academyRows=(result.chart?.points||[]).filter(p=>p.target_categories);
       if(academyRows.length){
         const labels={elementary:'초등',middle:'중등',high:'고등',secondary:'중·고등',integrated:'통합',kindergarten:'유아',mixed:'복합',unknown:'대상 미확인'};
@@ -100,6 +100,7 @@
       try{
         const response=await fetch('./api/analysis',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,options:{level:el('level').value,gu:el('gu').value,year:Number(el('year').value)},...(plan?{plan}:{})})});
         const result=await response.json();if(id!==request||!container.isConnected)return;render(result);
+        el('result').scrollIntoView?.({block:'start',behavior:'auto'});
         if(result.status==='ok'){history=[{question,plan:result.plan,summary:result.summary},...history].slice(0,10);try{localStorage.setItem('education-analysis-history',JSON.stringify(history));}catch{}showHistory();}
       }catch(error){if(id===request&&container.isConnected)el('result').textContent='분석 서버에 연결하지 못했습니다. 잠시 후 다시 실행해 주세요.';}
       finally{if(id===request&&container.isConnected)el('submit').disabled=false;}

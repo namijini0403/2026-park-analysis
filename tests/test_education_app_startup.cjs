@@ -7,6 +7,8 @@ const root=path.resolve(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const dom=new JSDOM(html,{runScripts:'outside-only',url:'http://localhost/',pretendToBeVisual:true});
 const w=dom.window,errors=[];
+const resizeObservers=[];
+w.ResizeObserver=class {constructor(callback){this.callback=callback;}observe(target){this.target=target;resizeObservers.push(this);}};
 w.addEventListener('error',event=>errors.push(String(event.error||event.message)));
 w.console.error=(...args)=>errors.push(args.map(String).join(' '));
 w.console.warn=()=>{};
@@ -24,7 +26,8 @@ class MapView extends MapObject {
   constructor(node,options){super(options);this.level=options.level;}
   getLevel(){return this.level;} setLevel(level){this.level=level;}
   setBounds(bounds){this.bounds=bounds;}
-  panTo(center){this.center=center;} relayout(){} setDraggable(){}
+  panTo(center){this.center=center;} getCenter(){return this.center;} setCenter(center){this.center=center;}
+  relayout(){this.relayoutCount=(this.relayoutCount||0)+1;} setDraggable(){}
 }
 class LatLng {constructor(lat,lng){this.lat=lat;this.lng=lng;}getLat(){return this.lat;}getLng(){return this.lng;}}
 w.kakao={maps:{Map:MapView,LatLng,Marker:MapObject,MarkerClusterer:MapObject,InfoWindow:MapObject,
@@ -57,6 +60,15 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert.equal(selector.disabled,false,'Boot must initialize the education extension');
   assert.equal(app.state.datasets.educationAllSchools.length,917);
   assert.equal(app.state.datasets.schools.length,272);
+  const mapResize=resizeObservers.find(observer=>observer.target.id==='map');
+  const camera=new LatLng(37.5,126.7);
+  app.state.map.setCenter(camera);
+  app.state.map.events.center_changed.forEach(callback=>callback());
+  app.state.map.center=new LatLng(38,127); // SDK center drifts when container dimensions change.
+  mapResize.callback();
+  assert.equal(app.state.map.getCenter(),camera,'Viewport resizing preserves the map center');
+  assert.equal(app.state.map.relayoutCount,1);
+  assert.equal(app.state.clusterer.markers.length,272,'Overview groups schools at the initial zoom');
   assert(w.document.querySelector('.workspace-header .map-search-box #guFilter'));
   assert.equal(w.document.querySelectorAll('.workspace-header nav > button').length,3);
   assert.equal(w.document.getElementById('workspaceMore').open,false);

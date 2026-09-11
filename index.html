@@ -12,7 +12,14 @@
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
   <!-- Vercel Web Analytics: 익명 방문자 집계 (시간대별 방문자 수/페이지뷰). 개인정보 미수집. -->
-  <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23244f60'/%3E%3Cpath d='M7 23V12l9-5 9 5v11H7zm7 0v-7h4v7' fill='white'/%3E%3C/svg%3E" />
+  <script>
+    if (location.hostname.endsWith('.vercel.app')) {
+      const analytics = document.createElement('script');
+      analytics.defer = true; analytics.src = '/_vercel/insights/script.js';
+      document.head.appendChild(analytics);
+    }
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
@@ -3377,19 +3384,14 @@
         </section>
 
         <section class="section">
-          <h2 class="section-title">구 전체 통계</h2>
-          <div class="summary-box" id="guSummaryBox">구를 선택하면 요약을 표시합니다.</div>
-        </section>
-
-        <section class="section">
           <h2 class="section-title">학교 상세</h2>
           <div class="school-detail-box" id="schoolDetailBox">학교 마커를 클릭하면 상세 정보를 표시합니다.</div>
         </section>
 
-        <section class="section">
-          <button type="button" onclick="openDataOverlay()"
-             style="font-size:12px; opacity:0.85; text-decoration:underline; background:none; border:0; color:inherit; cursor:pointer; padding:0;">공공데이터 관리(수집·업로드·승인·롤백)</button>
-        </section>
+        <details class="section workspace-region-summary">
+          <summary class="section-title">지역 요약 보기</summary>
+          <div class="summary-box" id="guSummaryBox">구를 선택하면 요약을 표시합니다.</div>
+        </details>
 
         <div class="panel-util" aria-hidden="true">
           <section class="section">
@@ -4402,7 +4404,7 @@
         clearTimeout(marker.__pulseTimeout);
       }
 
-      const markerStyle = getMarkerStyle(row);
+      const markerStyle = document.getElementById('mapPolicyColors')?.checked ? getMarkerStyle(row) : {color:'#244f60',symbol:'',borderColor:'#ffffff'};
       marker.setImage(
         createMarkerImage(
           markerStyle.color,
@@ -4413,9 +4415,9 @@
       );
 
       marker.__pulseTimeout = setTimeout(() => {
-        const resetStyle = getMarkerStyle(row);
+        const resetStyle = document.getElementById('mapPolicyColors')?.checked ? getMarkerStyle(row) : {color:'#244f60',symbol:'',borderColor:'#ffffff'};
         marker.setImage(
-          createMarkerImage(resetStyle.color, resetStyle.symbol, resetStyle.borderColor)
+          createMarkerImage(resetStyle.color, resetStyle.symbol, resetStyle.borderColor, {size: 26})
         );
         marker.__pulseTimeout = null;
       }, 500);
@@ -5486,7 +5488,7 @@
     }
 
     function shouldUseSchoolClusterer() {
-      return Boolean(state.map) && state.map.getLevel() >= 10 && state.selectedCaseFilter === "all" && state.selectedAccessFilter === "all";
+      return Boolean(state.map) && state.map.getLevel() >= 8 && state.selectedCaseFilter === "all" && state.selectedAccessFilter === "all";
     }
 
     function getSummaryRow() {
@@ -6060,7 +6062,7 @@
 
         const marker = new kakao.maps.Marker({
           position: latLng,
-          image: createMarkerImage(markerStyle.color, markerStyle.symbol, markerStyle.borderColor),
+          image: createMarkerImage(markerStyle.color, markerStyle.symbol, markerStyle.borderColor, {size: 24}),
           title: getSchoolName(row)
         });
 
@@ -7270,6 +7272,11 @@
 
     async function runShortcutAction(action = "report") {
       const normalizedAction = String(action || "report");
+      if (['insights','statistics','report','school-report','simulation'].includes(normalizedAction) && document.getElementById('schoolLevelFilter')?.disabled) {
+        const hint=document.querySelector('.map-search-status');
+        if(hint)hint.textContent='학교 자료를 불러오는 중입니다. 잠시 후 분석을 열어 주세요.';
+        return;
+      }
       closeAppCover();
       const more=document.getElementById('workspaceMore');if(more)more.open=false;
       if(['school-report','report','simulation','ai-recommendation','recommendation'].includes(normalizedAction) && !state.selectedSchoolId){
@@ -7343,6 +7350,14 @@
     function wireEvents() {
       const header=document.querySelector('.workspace-header');
       if(window.ResizeObserver)new ResizeObserver(()=>document.documentElement.style.setProperty('--workspace-panel-top',`${header.getBoundingClientRect().bottom+12}px`)).observe(header);
+      // Kakao needs an explicit relayout when the viewport changes (rotation/resizing).
+      let viewportCenter = state.map.getCenter();
+      kakao.maps.event.addListener(state.map, 'center_changed', () => { viewportCenter = state.map.getCenter(); });
+      if (window.ResizeObserver) new ResizeObserver(() => {
+        const center = viewportCenter;
+        state.map.relayout();
+        state.map.setCenter(center);
+      }).observe(document.getElementById('map'));
       document.getElementById('mapDisplayMenu')?.addEventListener('toggle',event=>{if(event.target.open)closePanel();});
       const searchBox=document.querySelector('.map-search-box');
       const previousRegionSection=ui.guFilter.closest('.section');
@@ -8736,7 +8751,7 @@
           {
             width: "44px",
             height: "44px",
-            background: "rgba(20, 83, 45, 0.88)",
+            background: "rgba(36, 79, 96, 0.92)",
             borderRadius: "22px",
             color: "#fff",
             textAlign: "center",
