@@ -47,6 +47,7 @@
 @media(min-width:769px){#controlPanel { height:auto!important; max-height:calc(100dvh - var(--workspace-panel-top,170px) - 18px); }}
 @media(max-width:768px){
   #panelToggleButton { display:none!important; }
+  body:has(#controlPanel.open) #layerToggleBar { display:none!important; }
   #layerToggleBar,#layerToggleBar.open { bottom:22px!important; }
   body:has(#mapDisplayMenu[open]) .workspace-header { visibility:hidden; pointer-events:none; }
   body:has(#mapDisplayMenu[open]) .workspace-header * { pointer-events:none; }
