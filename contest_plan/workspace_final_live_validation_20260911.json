@@ -1,0 +1,36 @@
+{
+  "date": "2026-09-11",
+  "code_commit": "47e2442",
+  "deployment_id": "ea176386-d596-47cd-8647-a56e7315000b",
+  "url": "https://education-living-area-preview-production.up.railway.app/",
+  "files": [
+    {
+      "file": "index.html",
+      "http": 200,
+      "local_sha256": "3af2c753722605caa1070ac231d3bf2c4e1b50486d93bbb4abfafe3f9b78dd5e",
+      "live_sha256": "3af2c753722605caa1070ac231d3bf2c4e1b50486d93bbb4abfafe3f9b78dd5e",
+      "match": true
+    },
+    {
+      "file": "assets/map-display.css",
+      "http": 200,
+      "local_sha256": "75c373e6f02b587ba6020421dea08ec0e638d830796dc5113fdb2f4959112950",
+      "live_sha256": "75c373e6f02b587ba6020421dea08ec0e638d830796dc5113fdb2f4959112950",
+      "match": true
+    },
+    {
+      "file": "assets/education-questions.js",
+      "http": 200,
+      "local_sha256": "1d57030c9cbfae2afa450a8af4fb208cd503d38193b074639e783add09f79bad",
+      "live_sha256": "1d57030c9cbfae2afa450a8af4fb208cd503d38193b074639e783add09f79bad",
+      "match": true
+    },
+    {
+      "file": "assets/education-networks.js",
+      "http": 200,
+      "local_sha256": "c1d203fe9eb9cd86374a835470d8e7b3e670a1232732da6a2d7d892336364665",
+      "live_sha256": "c1d203fe9eb9cd86374a835470d8e7b3e670a1232732da6a2d7d892336364665",
+      "match": true
+    }
+  ]
+}
