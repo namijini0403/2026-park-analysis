@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>문제 학교 도보·출입구 검수</title>
+<style>
+body{margin:0;background:#f2f6f4;color:#19392b;font:16px/1.6 system-ui,sans-serif}main{max-width:1150px;margin:auto;padding:24px}section{background:white;border:1px solid #cddcd3;border-radius:12px;margin:16px 0;padding:20px}h1{font-size:27px}h2{font-size:21px}a{color:#146447}label{display:inline-block;margin:6px}input,select,button,textarea{font:inherit;padding:8px;max-width:100%;box-sizing:border-box}button{cursor:pointer}input[type=text],textarea{width:100%}fieldset{margin:12px 0;border:1px solid #cddcd3}legend{font-weight:bold}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:8px;text-align:left;border-bottom:1px solid #dce5df}.scroll{overflow:auto}.warning{background:#fff0ce;padding:12px}.note{font-size:14px;color:#52675a}#error{color:#a02a24}svg{width:100%;height:420px;background:#f5f8f6;border:1px solid #cad7cf}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}@media(max-width:700px){.grid{grid-template-columns:1fr}main{padding:12px}}.swatch{font-weight:bold}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d69210}
+</style>
+<main><a href="../index.html">← 분석 지도</a><h1>카카오·OSM·출입구 통합 검수</h1>
+<p>기존 수동 보정 학교를 500m 판정 차이 → 경계 부근 → 거리 차이 순서로 검토합니다.</p>
+<p class="warning">기존 정책 거리는 유지합니다. 출입구 증거 확인과 경로 검수는 별도이며, 자동 경로가 일치해도 수동검증을 해제하지 않습니다.</p>
+<p id="error" role="alert"></p><div id="summary"></div>
+<section><label>학교 검색 <input id="search" placeholder="학교 이름"></label><label>검토 학교 <select id="school"></select></label><div id="detail"></div></section>
+<section><h2>출입구 확인 기록</h2><p>실제 출입구 좌표·근거·확인일·도보 통행 가능 여부를 기록합니다. 확인은 해당 학교·공원의 출입구인지 식별하고 공개 자료 또는 현장 근거를 확인한 뒤 체크하세요. 대표점 좌표는 기본 입력하지 않습니다.</p>
+<form id="review-form"><div id="endpoints" class="grid"></div><label>확인일 <input type="date" name="checked_on" required></label><label>검수자 식별명 <input name="reviewer" required></label><button type="submit">이 학교의 기록을 내보내기 목록에 저장</button></form>
+<p id="save-status" role="status"></p><button id="download" type="button">출입구 검수 JSON 내려받기</button>
+<p class="note">이 화면에서 저장한 내용은 현재 탭의 임시 기록입니다. 내려받은 파일을 빌더의 --reviews로 지정해 재산출해야 앱 자료에 반영됩니다. 새로고침 전 파일을 내려받으세요. 확인일 365일 초과·근거 누락·통행 불명은 자동으로 검증 완료로 쓰지 않습니다.</p></section>
+<p class="note">OSM © OpenStreetMap contributors · ODbL. 배경 지도 없는 좌표 비교도입니다. 도로 통행 가능성·안전성·토지 접근을 보증하지 않습니다. <a href="https://www.openstreetmap.org/copyright">OSM 출처·라이선스</a></p></main>
+<script src="hybrid-walk-review.js"></script></html>
