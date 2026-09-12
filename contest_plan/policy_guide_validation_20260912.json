@@ -1,0 +1,100 @@
+{
+  "deployment_status": "SUCCESS",
+  "preview": {
+    "passed": true,
+    "live": false,
+    "checks": [
+      "Policy Guide name",
+      "original URL and reference date per answer",
+      "JSON export retains original source trail",
+      "weighted conclusion source cards",
+      "mobile overflow",
+      "saved history source restoration"
+    ],
+    "errors": []
+  },
+  "unit_checks": [
+    "test_source_provenance.cjs",
+    "test_answer_export.cjs",
+    "test_question_levers.cjs",
+    "test_observation_restore.cjs"
+  ],
+  "original_link_checks": [
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11841&nttSn=3381948",
+      "status": 200,
+      "final_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11841&nttSn=3381948",
+      "bytes": 201356
+    },
+    {
+      "url": "https://www.data.go.kr/data/15013109/standard.do",
+      "status": 200,
+      "final_url": "https://www.data.go.kr/data/15013109/standard.do",
+      "bytes": 1706706
+    },
+    {
+      "url": "https://schoolzone.emac.kr/publicData/publicDataList.do",
+      "status": 200,
+      "final_url": "https://schoolzone.emac.kr/publicData/publicDataList.do",
+      "bytes": 30368
+    }
+  ],
+  "runtime_scope": "name, per-answer source trails, history/export compatibility; map and policy gates preserved",
+  "deployment_id": "2ca66616-b2c2-4742-b541-ed52c9ec8f42",
+  "live": {
+    "passed": true,
+    "live": true,
+    "checks": [
+      "Policy Guide name",
+      "original URL and reference date per answer",
+      "JSON export retains original source trail",
+      "weighted conclusion source cards",
+      "mobile overflow",
+      "saved history source restoration"
+    ],
+    "errors": []
+  },
+  "public_hashes": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/chat-workspace.js",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/hitl-analysis.js",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/simple-app.js",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/answer-export.js",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/source-evidence.js",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/source-evidence.css",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/source_provenance/index.json",
+      "status": 200,
+      "match": true
+    }
+  ],
+  "sources_unchanged_since_release": true
+}

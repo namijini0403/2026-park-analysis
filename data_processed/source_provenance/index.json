@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "files": {
+    "data_processed/context/school_designations.json": {
+      "id": "640dc32e53faadec",
+      "sha256": "1455a65d3ab09155399015b92fca0dfdc3e34d9850ad335960613e8b2b2500ef"
+    },
+    "data_processed/education/analysis_dataset.json": {
+      "id": "7b05c8027ccb4115",
+      "sha256": "4fbd4581f194b885b4a6b9554a6cb0f25fea814b2601d1b1eae7e84df807f110"
+    },
+    "data_processed/parks.csv": {
+      "id": "9583fb82d05ccf7c",
+      "sha256": "26c16e48434f7f64c8f5b341583e643e6c182bad0c94f220a62a71e0f412aeb7"
+    },
+    "data_processed/geocoded_playground.csv": {
+      "id": "3b9451e8f5835537",
+      "sha256": "b1f53664d8eb5624130bd3ea5f4466049d9e461a37cf2bd7494763ce0c78e5e8"
+    },
+    "data_processed/student_services/priorities.json": {
+      "id": "5d287046a673c9ba",
+      "sha256": "5a5523caf76f676102d2f03a0c7bedf966d66d8720b01e1127b8a1825f81a42e"
+    },
+    "data_processed/education/library_access_preview.json": {
+      "id": "03d80f4f909ef987",
+      "sha256": "6dfd3b258adb5ddac178e6f804deafdbf40865a632bb16293983fff06f62bdb6"
+    },
+    "data_processed/education/academies.json": {
+      "id": "a9312db1429b5cb3",
+      "sha256": "4b586bb67b89efc2fc14ac279a7fb34dc1290c091c9ad01ad92ab9519e3bbe61"
+    },
+    "data_processed/context/facilities_construction.geojson": {
+      "id": "a73fd1c371deea3a",
+      "sha256": "8567780fac6768286e838f9203ef8c9e62dd5639e2f073a3da2480d67b8861d6"
+    },
+    "data_processed/context/facilities_nightlife.geojson": {
+      "id": "b0f5088ae31b72a7",
+      "sha256": "8b06f4977fc7d22c953528c194b5eda2d06b9263adcadc8e45355f9619cf919b"
+    },
+    "data_processed/redevelopment_geocoded.csv": {
+      "id": "0b48ab6bc86f344c",
+      "sha256": "f90efa2b6fda502d4a14ee541024b7d4eef180bdbf4eaacb1b1de6bcd69d4107"
+    },
+    "data_processed/large_apt_complexes_2025.csv": {
+      "id": "91c0c3a1f25bf153",
+      "sha256": "3c5ac272beb7865b1da90c69013452890d75005d6fa1d8a1b8e5918364a3f1e3"
+    },
+    "data_processed/education/shared_parks.json": {
+      "id": "fe0b0d95074403e8",
+      "sha256": "61b72cc42fb4b407cf5f3be123ba3a314dd6d93c5c8ace23728d3ce91e30c1a3"
+    },
+    "data_processed/education/field_verification.json": {
+      "id": "bf0a27ceb5407148",
+      "sha256": "233d181edf08c81f025b0753ab9fec27c30fc69c2614c7f923bfb439cb0c9293"
+    },
+    "data_processed/education/road_resilience.json": {
+      "id": "cde76f88d41fd9df",
+      "sha256": "bc57e7d67aa0d0c5c4cf13d13d1506debdea2cf38e283848251fcec33c70d377"
+    },
+    "data_processed/education/academy_clusters.json": {
+      "id": "3cbba16988c51235",
+      "sha256": "03ee4af1d7fa51e96521802c47f910501a6f98a460c7701efee81ef3a9111fdb"
+    },
+    "data_processed/education/designation_diffusion.json": {
+      "id": "bc9cb724e97c152d",
+      "sha256": "7d358000a5e913d119d22fac71bfbe52913ae693ba6fc765ea18b737406bc1ba"
+    },
+    "data_processed/education/school_routes.json": {
+      "id": "d7ebba95fa75aeda",
+      "sha256": "7a6ad32ebce411a5d24a416feb8b682641a8016a7206b13ba81644b238b41688"
+    },
+    "data_processed/candidate_barrier_routes_by_school.json": {
+      "id": "3ea7edef1e03a6d2",
+      "sha256": "98cce840b30f5035ed15015c3d86fa88f5265c86e5580a1339766b5a7a7e15c0"
+    },
+    "data_processed/education/route_review.json": {
+      "id": "4c4a50da1a80d8af",
+      "sha256": "ee9977617030f087eb8bf7ad44d89aae8551274a673e25e9a208a0e62964e791"
+    },
+    "data_processed/education/hybrid_walk_review.json": {
+      "id": "1c614946c17a460d",
+      "sha256": "447b981d02adf1395074b68c1cc7984298093533aed74aff8e1a6923a900bebc"
+    },
+    "data_processed/education/residential_scenario.json": {
+      "id": "9acd908c39247314",
+      "sha256": "96e5042555e1c47da8fe4040c065c7eb9feb48988c71cc8c8e01f380dc6e211d"
+    },
+    "data_processed/education/school_age_demand.json": {
+      "id": "b3a064b8622cede7",
+      "sha256": "a9deb05d67dd61abb27067697e176d0b48d1c6acb2db79c0e2138400dcdbd413"
+    },
+    "data_processed/education/candidate_demand_v2.json": {
+      "id": "adb44e42306e9384",
+      "sha256": "2c4532a292018f5c8c163aaa5628f5fcf31489200f99f839a06e59ba99ce0822"
+    },
+    "data_processed/education/enrollment_forecasts.json": {
+      "id": "773969951d33201a",
+      "sha256": "8370781764a187b2ed5062ee42917d00dba123efdb1abe2762fd33e2167b5a73"
+    },
+    "data_processed/education/grade_cohort_scenarios.json": {
+      "id": "76ad24e0f1b13298",
+      "sha256": "685445e6103974efdd0696bd65edfe6bcbcac959009d2c7969684176c14b8103"
+    },
+    "data_processed/education/regional_demography.json": {
+      "id": "ed957fa3bc4c37c2",
+      "sha256": "8431f81524dbea3e82cdcc4c9bbddea42ae5dd4fa93b445f8e66274058fd5777"
+    },
+    "data_processed/education/regional_age_forecasts.json": {
+      "id": "af8e83406cfbf111",
+      "sha256": "59d7303cbcd712e645fe0766ac6e6bf23e0947c222c9c672fb1a82f471d4ffe7"
+    },
+    "data_processed/education/regional_age_forecast_validation.json": {
+      "id": "d0ee8deab3f52eec",
+      "sha256": "cc30121b1ca0dd52f589b6344ad0eb93da3ef1778a486bff17961cc76ba73d62"
+    },
+    "data_processed/education/forecast_validation.json": {
+      "id": "2a6b893a52025ab0",
+      "sha256": "3bd5b6f0ffbcdb6035397301592ce49c40e6328b665f65228173a5b2bfb3c167"
+    },
+    "data_processed/education/school_progression.json": {
+      "id": "68d0e889f1989443",
+      "sha256": "5f3fc6aedd875a3f6b7674faa043d9e6ab25626bcbaad2a2bf7eb7fe4ef1b124"
+    },
+    "data_processed/education/school_athletics.json": {
+      "id": "5d5de5f2bd82693c",
+      "sha256": "12b4f467a53fb3c40bd5f9025e59e64f7f7d1e1efa06e9ca08c92f63b24c9abc"
+    },
+    "data_processed/education/sports_awards.json": {
+      "id": "9ccef74c9f4bcef6",
+      "sha256": "7d81734adb4327c1fc883729ed55c7d2f26b887d60fdac8ec1577f632ee963ed"
+    },
+    "data_processed/education/science_awards.json": {
+      "id": "f4bac495e21dcc1f",
+      "sha256": "269837db1ec785c37e8db7cca5b0acdaa91e9dd08f46280f5d6486d5719a64fa"
+    },
+    "data_processed/education/invention_awards.json": {
+      "id": "23b208bcc4bfe90f",
+      "sha256": "475afe732ea826a582b0ee347577ef01bb61624291ae45c63bec4da51c7c60ae"
+    },
+    "data_processed/education/curriculum_network.json": {
+      "id": "4d2c4a289d0ffe5a",
+      "sha256": "0386a214d5632c9e0f476eca190cfb603c53d922bdd5f81802c2fa37c3644b5d"
+    },
+    "data_processed/education/school_public_indicators.json": {
+      "id": "494f7b2dc4f6676f",
+      "sha256": "9d11189abb4586873594ac585f68575a520ddd2c26b52dc8852462729d2ee16c"
+    },
+    "data_processed/education/school_analysis.json": {
+      "id": "dc959ea058272432",
+      "sha256": "da17135a207042471626fcbe187193b860cc0b41808a11d790c14fefab7540ef"
+    },
+    "data_processed/education/school_zones.geojson": {
+      "id": "b387debd49b81936",
+      "sha256": "9e4ff69ed7c11874edb48d6e7c7af5c88f2d82c2693df027345e7976007e194b"
+    },
+    "data_processed/education/walkshed_500m.geojson": {
+      "id": "7e30824af93b7593",
+      "sha256": "cb33ff829c05da9fb2d69870e0cf630856917d13502b5653c889946cf52966db"
+    },
+    "data_processed/student_services/facilities.json": {
+      "id": "76405ca875169dde",
+      "sha256": "fdbdc4f13f87b3113d56149e153bc4ab23953b1fcbb6827ee3dde44b9ff19053"
+    },
+    "data_processed/libraries.csv": {
+      "id": "26357136f6bc5d3e",
+      "sha256": "171e93033665fc176444132e5b4ce04d4ddbac792d06271a67c6a7d0cfef3f2c"
+    },
+    "data_processed/education/school_statistics.json": {
+      "id": "aac57125ab069ddd",
+      "sha256": "d4281847ec726c00c433b19af4af3c9bacb9c6510df5b8e1b3326ec44fe5b8b9"
+    },
+    "data_processed/school_library_access.csv": {
+      "id": "2bfbd180e8a0789e",
+      "sha256": "d412f058172e8947107b58c217e52afbc4cfeed2fab1015ad673439cdc608512"
+    },
+    "data_processed/schools.csv": {
+      "id": "15b0a9699d4cc5bd",
+      "sha256": "3520a81e1f96c3d80fdf296260f3b6642db6330696c0b45d94c822c2063707b5"
+    },
+    "data_processed/redevelopment.csv": {
+      "id": "f463e2083629858a",
+      "sha256": "f90efa2b6fda502d4a14ee541024b7d4eef180bdbf4eaacb1b1de6bcd69d4107"
+    },
+    "data_processed/school_walkshed_500m_v3.geojson": {
+      "id": "0b2a0596a28af141",
+      "sha256": "55048092ce7ed067f491ac7219107be470c81e85f1b7f6663be7dbe632a72fd1"
+    },
+    "data_processed/education/academies_manifest.json": {
+      "id": "92c5690f807ed2a4",
+      "sha256": "3f0567e2bca60a2186d94599d3b4792159617a683c9379d05409bc7bcc69ec5f"
+    },
+    "data_processed/education/public_indicators_manifest.json": {
+      "id": "73948fcda221fe54",
+      "sha256": "b467fc7a7b53c607c9ac0e33e5900a19b4b5519c689b00e2b75feeb0aec26db6"
+    },
+    "data_processed/education/analysis_manifest.json": {
+      "id": "c92bd8a6b17b5e1d",
+      "sha256": "3db079f7d728d656b362925ab34b4cb718f6c21ddc7e9ce7c590d41bc3ff776d"
+    }
+  }
+}

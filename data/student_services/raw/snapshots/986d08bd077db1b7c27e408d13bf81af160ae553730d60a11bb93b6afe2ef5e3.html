@@ -1,0 +1,63 @@
+ 
+  
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+  
+
+<script type="text/javascript">
+$(document).ready(function() {   
+        advJqPagination("divPagenationrsrc"
+                , 10
+                , 30
+                , 3
+                , function(pageIdx){ fnExcuteUnifiedSearch(pageIdx-1);}
+        );
+});
+</script>
+
+
+
+
+<!-- 검색결과영역[s] -->
+<div class="tabWrap">
+    <div class="detailTop">
+        <strong class="headding1 ico1">자원정보</strong>
+        
+    </div>
+    <p class="num">
+        총 <span>30</span>건
+    </p>
+    
+    <!-- 자원정보 목록영역[s] -->
+        <div id="resource_cate1">
+            <ul class="srchList imgList v2">
+                <!--목록이 없는경우-->
+                
+                    <li class="list_none">검색 결과가 존재하지 않습니다.</li>
+                
+                <!--목록이 있는 경우-->
+                
+            </ul>
+        </div>
+        <!-- 자원정보 목록영역[e] -->
+        <!-- pagination -->
+            <div class="page_nav" id ='divPagenationrsrc'></div>
+        <!-- pagination -->
+
+<!--             <a class="more_txt btn" id="2-1" href="#none" title="더보기" onclick="fnMoreSearchResources();" > -->
+<!--                 <span>더보기</span><span class="ico ico_arrow"></span> -->
+<!--             </a>  -->
+
+    </div>
+<!-- 검색결과영역[e] -->

@@ -1,0 +1,9 @@
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),{JSDOM}=require('jsdom');
+const C=require(path.join(process.env.TEMP,'park-report-qa/node_modules/@napi-rs/canvas'));
+const dom=new JSDOM('<aside id="evidence-panel"></aside>',{runScripts:'outside-only'}),w=dom.window,create=w.document.createElement.bind(w.document);
+w.document.createElement=tag=>tag==='canvas'?C.createCanvas(1,1):create(tag);
+w.Image=C.Image;w.Blob=class{constructor(parts){this.bytes=Buffer.concat(parts.map(p=>Buffer.from(p)));}};
+w.URL.createObjectURL=blob=>blob.bytes;w.URL.revokeObjectURL=()=>{};
+w.docx=require('../assets/vendor/docx/docx.js');
+for(const file of ['chat-workspace.js','answer-export.js'])w.eval(fs.readFileSync(path.join(__dirname,'../assets',file),'utf8'));
+(async()=>{const q='첨부 가상 값과 학생 수 관계',answer=require('../api/_joined_analysis').run(q,{scope:'all',level:'초등학교',upload:{name:'가상값.csv',headers:['학교명','가상값','연도'],rows:[['인천석암초등학교',10,2026],['인천신흥초등학교',20,2026],['인천갈월초등학교',30,2026],['없는 학교',40,2026]],mapping:{type:'school_name',key:0,measure:1,year:2,existing:'schools:students',valueType:'numeric'}}});assert.equal(answer.join.matched,3);const fig=await w.AnswerExport.figure(answer),png=await w.AnswerExport.png(answer,q),doc=await w.AnswerExport.word(answer,q,fig);const bytes=png.toBuffer('image/png'),docBytes=Buffer.from(await doc.arrayBuffer());assert.equal(docBytes.subarray(0,2).toString(),'PK');const out=path.join(__dirname,'../outputs/upload_qa');fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'upload-report.png'),bytes);fs.writeFileSync(path.join(out,'upload-report.docx'),docBytes);console.log('PASS upload PNG/DOCX export',bytes.length,docBytes.length);dom.window.close();})().catch(e=>{console.error(e);dom.window.close();process.exitCode=1;});

@@ -1,0 +1,20 @@
+{
+  "file": "data_processed/education/library_access_preview.json",
+  "sha256": "6dfd3b258adb5ddac178e6f804deafdbf40865a632bb16293983fff06f62bdb6",
+  "originals": [
+    {
+      "url": "https://www.gne.go.kr/component/file/ND_fileDownload.do?q_fileSn=181529718&q_fileId=e51702fc-8a23-405b-a7f0-94d56a7cceef",
+      "title": "2024 공공도서관 건립·운영 매뉴얼, 인쇄 38쪽",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.sources[0].url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [
+    "data_processed/libraries.csv"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

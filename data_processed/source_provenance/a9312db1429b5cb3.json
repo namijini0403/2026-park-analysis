@@ -1,0 +1,20 @@
+{
+  "file": "data_processed/education/academies.json",
+  "sha256": "4b586bb67b89efc2fc14ac279a7fb34dc1290c091c9ad01ad92ab9519e3bbe61",
+  "originals": [
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11841&nttSn=3381948",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "2026-08-01",
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$[0].source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [
+    "data_processed/education/academies_manifest.json"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

@@ -1,0 +1,10 @@
+{
+  "file": "data_processed/education/analysis_dataset.json",
+  "sha256": "4fbd4581f194b885b4a6b9554a6cb0f25fea814b2601d1b1eae7e84df807f110",
+  "originals": [],
+  "upstream": [
+    "data_processed/education/school_statistics.json",
+    "data_processed/parks.csv"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

@@ -1,15 +1,15 @@
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { execFileSync } from "node:child_process";
 import path from "node:path";
+import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, "..", "..");
 const outputDir = path.join(root, "vercel_public");
-const uiPreviewDir = path.join(root, "ui-preview");
 
-const requiredRootFiles = ["index.html", "logo.png", "update-center.html"];
+
+const requiredRootFiles = ["index.html", "logo.png", "update-center.html", "office-documents.html"];
 const requiredDataFiles = [
   "school_priority_with_functional_park_layer.csv",
   "schools.csv",
@@ -42,31 +42,6 @@ function assertExists(targetPath) {
   }
 }
 
-function npmCommand() {
-  return process.platform === "win32" ? "npm.cmd" : "npm";
-}
-
-function runPrebuildSteps() {
-  execFileSync("node", [path.join("scripts", "build_ai_explainer_chunks.mjs")], {
-    cwd: root,
-    stdio: "inherit",
-  });
-
-  if (!existsSync(path.join(uiPreviewDir, "node_modules"))) {
-    execFileSync(npmCommand(), ["--prefix", "ui-preview", "ci"], {
-      cwd: root,
-      stdio: "inherit",
-      shell: true,
-    });
-  }
-
-  execFileSync(npmCommand(), ["--prefix", "ui-preview", "run", "build"], {
-    cwd: root,
-    stdio: "inherit",
-    shell: true,
-  });
-}
-
 function copyFileToOutput(relativePath) {
   const source = path.join(root, relativePath);
   const destination = path.join(outputDir, relativePath);
@@ -81,17 +56,7 @@ function copyIndexHtml() {
   assertExists(source);
   mkdirSync(path.dirname(destination), { recursive: true });
 
-  const kakaoMapKey = process.env.KAKAO_MAP_KEY || process.env.VITE_KAKAO_MAP_KEY;
-  let html = readFileSync(source, "utf-8");
-  if (kakaoMapKey) {
-    html = html.replace(
-      /const DEFAULT_KAKAO_MAP_KEY = "([^"]*)";/,
-      `const DEFAULT_KAKAO_MAP_KEY = "${kakaoMapKey}";`,
-    );
-    console.log("Kakao map key injected from Vercel environment.");
-  } else {
-    console.log("Kakao map key env not set; using index.html default key.");
-  }
+  const html = readFileSync(source, "utf-8");
   writeFileSync(destination, html, "utf-8");
 }
 
@@ -102,7 +67,8 @@ function copyDirectoryToOutput(relativePath) {
   cpSync(source, destination, { recursive: true });
 }
 
-runPrebuildSteps();
+// The simple application has no iframe or frontend bundler dependency.
+if (path.dirname(outputDir) !== root || path.basename(outputDir) !== "vercel_public") throw new Error("Unexpected build output path");
 
 rmSync(outputDir, { recursive: true, force: true });
 mkdirSync(outputDir, { recursive: true });
@@ -118,13 +84,20 @@ for (const file of requiredRootFiles) {
 for (const file of requiredDataFiles) {
   copyFileToOutput(path.join("data_processed", file));
 }
+// Every chatbot source link must also exist in the static output.
+const catalog = createRequire(import.meta.url)("../../api/_data_catalog.js");
+for (const file of new Set(catalog.map(entry => entry.file))) copyFileToOutput(file);
 
 // 학교 맥락 레이어 (지정·연구학교, 유흥·단란주점 인허가, 공사장 행정기록)
 // — python scripts/build_context_layers.py 산출물
 copyDirectoryToOutput(path.join("data_processed", "context"));
 copyDirectoryToOutput(path.join("data_processed", "education"));
+copyDirectoryToOutput(path.join("data_processed", "student_services"));
+// 지도 레이어(공원·놀이터·도서관 등)와 출처 색인 — 첫 화면 레이어 패널과 출처 링크가 정적 출력에서도 동작해야 한다.
+copyDirectoryToOutput(path.join("data_processed", "map_layers"));
+copyDirectoryToOutput(path.join("data_processed", "source_provenance"));
 
-copyDirectoryToOutput(path.join("ui-preview", "dist"));
+copyDirectoryToOutput("rag");
 copyDirectoryToOutput("assets");
 copyDirectoryToOutput(path.join("outputs", "robust_xai"));
 

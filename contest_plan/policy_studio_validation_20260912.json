@@ -1,0 +1,32 @@
+{
+  "actual_example": {
+    "school": "인천신흥초등학교",
+    "observed": 19013,
+    "selected_target": 30000,
+    "quantity_gap": 10987,
+    "year": 2025,
+    "decision": "조건 확인 전 집행 보류"
+  },
+  "real_data": {
+    "schools": 272,
+    "missing": 1,
+    "comparison_eligible": 0
+  },
+  "synthetic_verified_records": {
+    "count": 8,
+    "spent": 9990000,
+    "note": "테스트 전용 근거. 실제 검증·학교 추천으로 사용 금지."
+  },
+  "checks": [
+    "missing coverage",
+    "safety non-compensation",
+    "explicit weights",
+    "no default ranking",
+    "legacy restore blocked",
+    "tied units",
+    "budget bound",
+    "source invalidation",
+    "weight sensitivity",
+    "drilldown membership"
+  ]
+}

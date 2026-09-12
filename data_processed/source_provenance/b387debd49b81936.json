@@ -1,0 +1,68 @@
+{
+  "file": "data_processed/education/school_zones.geojson",
+  "sha256": "9e4ff69ed7c11874edb48d6e7c7af5c88f2d82c2693df027345e7976007e194b",
+  "originals": [
+    {
+      "url": "https://schoolzone.emac.kr/publicData/publicDataList.do",
+      "title": "한국교육시설안전원",
+      "provider": "한국교육시설안전원",
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "data_sources.yaml → school_zones",
+      "kind": "registered"
+    },
+    {
+      "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2957&atchFileId=FILE_000000100002979&fileSn=0",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "2026-03-20",
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.features[0].properties.source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2956&atchFileId=FILE_000000100002978&fileSn=0",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "2026-03-20",
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.features[279].properties.source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2955&atchFileId=FILE_000000100002977&fileSn=0",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "2026-03-20",
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.features[304].properties.source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2954&atchFileId=FILE_000000100002976&fileSn=0",
+      "title": "고등학교 비평준화지역",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.metadata.sources[3].url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2952&atchFileId=FILE_000000100002974&fileSn=0",
+      "title": "학교-학구도 연계정보",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.metadata.sources[4].url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

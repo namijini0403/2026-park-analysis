@@ -1,0 +1,28 @@
+{
+  "file": "data_processed/context/facilities_nightlife.geojson",
+  "sha256": "8b06f4977fc7d22c953528c194b5eda2d06b9263adcadc8e45355f9619cf919b",
+  "originals": [
+    {
+      "url": "https://www.data.go.kr/data/15045018/fileData.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.features[0].properties.source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.data.go.kr/data/15045017/fileData.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.features[24].properties.source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

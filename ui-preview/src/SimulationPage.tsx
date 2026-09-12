@@ -235,7 +235,7 @@ const FILTER_COPY: Array<{ key: keyof FilterState; title: string; description: s
 ];
 
 const WEIGHT_COPY: Array<{ key: keyof WeightState; title: string; description: string }> = [
-  { key: "benefit", title: "잠재수혜학생수", description: "보행권 잠재수요가 높을수록 가점을 줍니다." },
+  { key: "benefit", title: "주변 거주인구 시나리오", description: "직선 500m 거주 아동 시나리오입니다. 보행 접근·신규 수혜 인구가 아닙니다." },
   { key: "schoolDistance", title: "학교에서의 거리", description: "학교와 가까울수록 가점을 줍니다." },
   { key: "parkDistance", title: "기존 공원과의 거리", description: "기존 공원과 멀수록 가점을 줍니다." },
 ];
@@ -283,6 +283,7 @@ function minmaxScore(values: number[], reverse = false): number[] {
 }
 
 function formatCount(value: number): string {
+  if (!Number.isFinite(value)) return '미확보';
   return Math.round(value).toLocaleString("ko-KR");
 }
 
@@ -814,7 +815,7 @@ export default function SimulationPage({
   const supplementalCandidateCount = externalCandidates.length - primaryCandidateCount;
 
   const filteredCandidates = useMemo(
-    () => externalCandidates.filter((candidate) => passesFilters(candidate, filters)),
+    () => externalCandidates.filter((candidate) => Number.isFinite(candidate.walkshed_potential_2029) && passesFilters(candidate, filters)),
     [externalCandidates, filters],
   );
   const candidateLabelMap = useMemo(() => {
@@ -832,7 +833,7 @@ export default function SimulationPage({
     [filteredCandidates, effectiveWeights],
   );
   const aiRecommendations = useMemo(
-    () => computeAiRecommendations(externalCandidates),
+    () => computeAiRecommendations(externalCandidates.filter(candidate => Number.isFinite(candidate.walkshed_potential_2029))),
     [externalCandidates],
   );
 
@@ -1056,6 +1057,7 @@ export default function SimulationPage({
           <LegendItem color={BARRIER_COLOR.orange} shape="circle" label="주요 도시 간선도로 포함" />
           <LegendItem color={BARRIER_COLOR.red} shape="circle" label="간선도로 부담 큼" />
         </div>
+        <p style={{fontSize:13,lineHeight:1.7,color:SIM_COLORS.text}}>외부 후보 수요는 2024년 6~11세 거주인구 배분값에 인천 전체 성장률을 적용한 시나리오입니다. 주변 범위는 직선 500m이며 보행 접근·신규 수혜 인구가 아닙니다. 인구 미확보 후보는 수요를 사용하는 비교에서 제외합니다. <a href="../../assets/method-review.html?tab=demand" target="_blank" rel="noreferrer">현재 인구·산출 근거 보기</a></p>
       </div>
 
       {(redevelopmentProjects.length > 0 || largeApartmentComplexes.length > 0) && (

@@ -1,0 +1,449 @@
+[
+  {
+    "id": "designations",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "schools",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "parks",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "playgrounds",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "services",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "books",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "library_access",
+    "metrics": 2,
+    "sections": 4,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "library_scenarios",
+    "metrics": 2,
+    "sections": 3,
+    "available": 0,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "academies",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "construction",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "nightlife",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "redevelopment",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "apartments",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "shared_parks",
+    "metrics": 5,
+    "sections": 6,
+    "available": 4,
+    "types": [
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "park_review",
+    "metrics": 2,
+    "sections": 3,
+    "available": 0,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "resilience",
+    "metrics": 1,
+    "sections": 2,
+    "available": 0,
+    "types": [
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "clusters",
+    "metrics": 2,
+    "sections": 3,
+    "available": 2,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "diffusion",
+    "metrics": 1,
+    "sections": 2,
+    "available": 0,
+    "types": [
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "routes",
+    "metrics": 3,
+    "sections": 4,
+    "available": 0,
+    "types": [
+      "bar",
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "candidate_routes",
+    "metrics": 1,
+    "sections": 2,
+    "available": 0,
+    "types": [
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "route_review",
+    "metrics": 1,
+    "sections": 2,
+    "available": 0,
+    "types": [
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "hybrid",
+    "metrics": 1,
+    "sections": 2,
+    "available": 0,
+    "types": [
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "residential",
+    "metrics": 3,
+    "sections": 4,
+    "available": 0,
+    "types": [
+      "bar",
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "school_demand",
+    "metrics": 0,
+    "sections": 0,
+    "available": 0,
+    "types": []
+  },
+  {
+    "id": "grid_demand",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "forecast",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "line"
+    ]
+  },
+  {
+    "id": "cohort",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "line"
+    ]
+  },
+  {
+    "id": "demography",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "regional_forecast",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "validation",
+    "metrics": 3,
+    "sections": 4,
+    "available": 0,
+    "types": [
+      "bar",
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "school_validation",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "progression",
+    "metrics": 4,
+    "sections": 5,
+    "available": 0,
+    "types": [
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "athletics",
+    "metrics": 1,
+    "sections": 2,
+    "available": 0,
+    "types": [
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "sports_awards",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "science_awards",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "invention_awards",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "curriculum",
+    "metrics": 2,
+    "sections": 3,
+    "available": 0,
+    "types": [
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "curriculum_links",
+    "metrics": 1,
+    "sections": 2,
+    "available": 0,
+    "types": [
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "indicators",
+    "metrics": 16,
+    "sections": 17,
+    "available": 16,
+    "types": [
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "bar",
+      "scatter"
+    ]
+  },
+  {
+    "id": "similar",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "zones",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  },
+  {
+    "id": "walkshed",
+    "metrics": 0,
+    "sections": 1,
+    "available": 0,
+    "types": [
+      "bar"
+    ]
+  }
+]

@@ -1,0 +1,56 @@
+{
+  "schools": 272,
+  "candidates": 2121,
+  "coverage": {
+    "care": "인천교육청 초등돌봄포털 전체 표시 목록. 실제 운영·정원 전수 확인 아님",
+    "sports": "시립시설 26개 장소와 미추홀구 국민체육센터. 다른 군구·동네·학교 개방시설 미수집",
+    "counts": {
+      "welfare": 521,
+      "sports": 27
+    },
+    "subtypes": {
+      "초등돌봄교실": 269,
+      "지역아동센터": 176,
+      "다함께돌봄센터": 49,
+      "거점형늘봄센터": 2,
+      "청소년방과후아카데미": 12,
+      "아이돌봄서비스": 9,
+      "기타돌봄기관": 4,
+      "시립공공체육시설": 26,
+      "군구 국민체육센터": 1
+    },
+    "unresolved": {
+      "welfare": 3
+    },
+    "raw_care_count": 521
+  },
+  "offline_rebuild_byte_identical": true,
+  "priorities_sha256": "6374683cd2cc5403d42ee53025a64c91a962420c0048867c6c0554c359c5ed51",
+  "policy_test_methods": 6,
+  "dom_test": "passed",
+  "production_build": "passed",
+  "http": {
+    "assets/student-services.html": {
+      "http_status": 200,
+      "bytes": 6345,
+      "sha256": "7021f9e859bf7215851cc3bb39f86b3b0d4b2d3a028da7d7d41d50642ab63ab0"
+    },
+    "assets/student-services.js": {
+      "http_status": 200,
+      "bytes": 12769,
+      "sha256": "e1140a6147514e69344192eaaddfe52c4f7ffd792c12ce8b3a2a4597fa77e424"
+    },
+    "data_processed/student_services/priorities.json": {
+      "http_status": 200,
+      "bytes": 3323109,
+      "sha256": "6374683cd2cc5403d42ee53025a64c91a962420c0048867c6c0554c359c5ed51"
+    },
+    "data_processed/student_services/school_priorities.csv": {
+      "http_status": 200,
+      "bytes": 237933,
+      "sha256": "b0400cdadc768c15f9fd2afe85ee475de54cb7523fc71360fbc8c87ecfa548da"
+    }
+  },
+  "browser_visual_review": "unavailable_no_connected_browser",
+  "remote_deployment": "not_performed"
+}

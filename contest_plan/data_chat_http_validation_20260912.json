@@ -1,0 +1,212 @@
+{
+  "checked_at": "2026-09-11T23:34:35.829Z",
+  "checks": [
+    {
+      "url": "/",
+      "status": 200
+    },
+    {
+      "url": "/assets/answer-export.js",
+      "status": 200
+    },
+    {
+      "url": "/assets/vendor/docx/docx.js",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/context/school_designations.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/analysis_dataset.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/parks.csv",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/geocoded_playground.csv",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/student_services/priorities.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/library_access_preview.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/academies.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/context/facilities_construction.geojson",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/context/facilities_nightlife.geojson",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/redevelopment_geocoded.csv",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/large_apt_complexes_2025.csv",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/shared_parks.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/field_verification.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/road_resilience.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/academy_clusters.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/designation_diffusion.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/school_routes.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/candidate_barrier_routes_by_school.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/route_review.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/hybrid_walk_review.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/residential_scenario.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/school_age_demand.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/candidate_demand_v2.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/enrollment_forecasts.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/grade_cohort_scenarios.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/regional_demography.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/regional_age_forecasts.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/regional_age_forecast_validation.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/forecast_validation.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/school_progression.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/school_athletics.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/sports_awards.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/science_awards.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/invention_awards.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/curriculum_network.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/school_public_indicators.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/school_analysis.json",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/school_zones.geojson",
+      "status": 200
+    },
+    {
+      "url": "/data_processed/education/walkshed_500m.geojson",
+      "status": 200
+    },
+    {
+      "question": "보유 데이터와 분석 목록 보여줘",
+      "status": 200,
+      "mode": "catalog",
+      "summary": "보유 자료와 기존 분석을 질문으로 열 수 있습니다. 아래에서 자료를 선택하거나 학교·지역·연도와 궁금한 내용을 함께 적어 주세요. 결과는 Word·PNG와 표 데이터로 저장할 수 있습니다.",
+      "rows": 42,
+      "source_count": 0,
+      "interpreted": false
+    },
+    {
+      "question": "남동구 공원 목록 보여줘",
+      "status": 200,
+      "mode": "dataset",
+      "summary": "공원 시설 원장: 남동구 조건에서 241건을 확인했습니다. 공원면적를 확보한 156건의 중앙값은 1749, 평균은 42526.27입니다. 범위는 119~2665463.9입니다. 기준과 한계를 함께 검토해 주세요.",
+      "rows": 241,
+      "chart": "bar",
+      "source_count": 1,
+      "interpreted": false
+    },
+    {
+      "question": "2026 고등학교 장학금 금액과 학생 수 상관관계",
+      "status": 200,
+      "mode": "calculation",
+      "summary": "장학금 금액와 학생·원아 수를 함께 확보한 112곳에서 순위상관은 -0.162입니다. 값이 반대 방향으로 움직이는 정도를 나타내며, 원인이나 정책 효과를 뜻하지 않습니다.",
+      "rows": 112,
+      "chart": "scatter",
+      "source_count": 2,
+      "interpreted": false
+    },
+    {
+      "question": "초등학교 공원 공동 이용 부담 분석",
+      "status": 200,
+      "mode": "dataset",
+      "summary": "공원 공동 이용 부담: 인천 전체 · 초등학교 조건에서 272건을 확인했습니다. 공유 공원면적 ㎡/명를 확보한 271건의 중앙값은 1.68, 평균은 28.11입니다. 범위는 0~1177.3295063145808입니다. 기준과 한계를 함께 검토해 주세요.\n\n초등학교 공원 공동 이용 부담 자료는 인천 전체에서 272건이 확인됐고, 공유 공원면적 ㎡/명 값을 확보한 271건의 중앙값은 1.68, 평균은 28.11, 범위는 0~1177.3295입니다. 다만 이 값은 공원 제공면적의 대리지표이고, 실제 이용 가능 면적이나 수용능력은 아닙니다.",
+      "rows": 272,
+      "chart": "bar",
+      "source_count": 2,
+      "interpreted": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "completed_at": "2026-09-12T05:04:42.261841+00:00",
+  "deployment": {
+    "id": "0ed1021c-b64d-4364-9a3e-0c120011723c",
+    "status": "SUCCESS",
+    "createdAt": "2026-09-12T04:36:54.782Z",
+    "updatedAt": "2026-09-12T04:37:56.578Z",
+    "projectId": "819e8af2-e6db-4fbf-bab9-76731a7408d5",
+    "environmentId": "08a322cd-3447-4eef-8a9e-a7a8d8ead656",
+    "serviceId": "0959785c-35d7-4734-b4c0-63b2c8e4eeac",
+    "source": "Railway list_deployments",
+    "previousDeployment": "1bbfec65-ce03-419c-8b0b-2f958921ffe8",
+    "fixes": [
+      "distinct evidence labels",
+      "uploaded observations included in directional percentile distribution"
+    ]
+  },
+  "browser_cases": 8,
+  "live_domains": 42,
+  "formats": [
+    "CSV",
+    "TSV",
+    "XLSX",
+    "JSON"
+  ],
+  "valid_uploaded_rows": 12,
+  "word_file": "C:\\Users\\Mijin\\Desktop\\공공데이터공모전\\park-railway-deploy\\contest_plan\\HITL_배포와_실제질문_검증보고서_20260912.docx",
+  "word_sha256": "79e8fe31b8978110004a44c4b9ebb0362a3f2388f7abf7fc90f331660f396eb3",
+  "word_pages": 12,
+  "visual_review": "Assistant inspected every final rendered page PNG before this audit",
+  "checks": [
+    "active deployed revision SUCCESS",
+    "live source assets hash matched",
+    "8 actual complex questions captured",
+    "42 domains actual HTTP",
+    "CSV TSV XLSX JSON multi-upload with explicit weights",
+    "uploaded direction percentiles retained",
+    "legacy and missing coverage regression",
+    "same deployed and local HITL backend",
+    "Word contains all 9 question texts and screenshots",
+    "Word rendered and every page visually reviewed"
+  ]
+}

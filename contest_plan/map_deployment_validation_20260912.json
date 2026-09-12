@@ -1,0 +1,34 @@
+{
+  "deployment_id": "071bd66a-510d-4341-8538-4ce8bff35de2",
+  "status": "SUCCESS",
+  "url": "https://education-living-area-preview-production.up.railway.app",
+  "checked_at": "2026-09-12T03:40:03.943Z",
+  "assets": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "sha256": "de15a8d455eeadc2637178d7e8801eabb3aad143b9df07e996f95f50c8845312",
+      "matches_local": true
+    },
+    {
+      "file": "assets/school-map.js",
+      "status": 200,
+      "sha256": "ffd846115b5dfc97fd189b005a56e45bdaa0ab18b19150290671759ddab16647",
+      "matches_local": true
+    },
+    {
+      "file": "assets/simple-app.css",
+      "status": 200,
+      "sha256": "336714f1875b17b7ea1a86dca2cc9d4ee19ef9e1cbb2f6cc06194f2d91567f1d",
+      "matches_local": true
+    },
+    {
+      "file": "assets/hitl-workspace.js",
+      "status": 200,
+      "sha256": "6b8562bf7966b6d743986ee1ffa2d6cbbdc18260aafd42eff2a363553cb7b216",
+      "matches_local": true
+    }
+  ],
+  "school_count": 917,
+  "positioned": 917
+}

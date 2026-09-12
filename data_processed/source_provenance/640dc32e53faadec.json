@@ -1,0 +1,158 @@
+{
+  "file": "data_processed/context/school_designations.json",
+  "sha256": "1455a65d3ab09155399015b92fca0dfdc3e34d9850ad335960613e8b2b2500ef",
+  "originals": [
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3281742&bbsId=841&mi=11841",
+      "title": "ice_future_classroom_2024.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[0].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3315152&bbsId=863&mi=11841",
+      "title": "ice_ai_info_center_school_2025.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[6].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3319291&bbsId=788&mi=11841",
+      "title": "ice_edu_welfare_2025_school_list.xlsx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.records[21].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3320373&bbsId=841&mi=11841",
+      "title": "ice_future_classroom_2025.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[34].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3304861&bbsId=610&mi=11841",
+      "title": "ice_autonomous_school_2025_designation.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[44].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3320903",
+      "title": "ice_digital_tutor_2025.pdf",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.records[48].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3316288&bbsId=852&mi=11841",
+      "title": "ice_gyeoldaero_jaram_2025_operating_schools.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[347].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3359748",
+      "title": "ice_ai_focus_2026.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.records[443].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ginue.ac.kr/kor/CMS/Contents/Contents.do?mCode=MN081",
+      "title": "ginue_teaching_practice_MN081.html",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[550].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3367080&bbsId=610&mi=11841",
+      "title": "ice_autonomous_school_2026_designation.converted.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[593].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3369492&bbsId=720&mi=11841",
+      "title": "ice_multicultural_2026_research_korean_leading_schools.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.records[594].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3367588&bbsId=840&mi=11841",
+      "title": "ice_space_restructure_2026.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[694].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3355686&bbsId=788&mi=11841",
+      "title": "ice_edu_welfare_2026_school_list.xlsx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.records[715].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3353108",
+      "title": "ice_digital_designations_2026.xlsx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.records[927].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3360283&bbsId=852&mi=11841",
+      "title": "ice_gyeoldaero_jaram_2026_operating_schools.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-07",
+      "raw_path": null,
+      "locator": "$.records[1000].source.url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

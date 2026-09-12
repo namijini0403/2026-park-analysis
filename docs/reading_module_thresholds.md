@@ -1,3 +1,5 @@
+> 2026-09-12 관측 우선 구조로 전환했습니다. 아래 자동 부족 분류·종합점수·우선 행동 선택 규칙은 이전 버전 이력이며 현재 운영 규칙이 아닙니다. 최신 구현은 `contest_plan/observations_first_20260912.md`를 참조하세요.
+
 # 독서환경 격차 유형 임계값 근거 (P2 Task 2)
 
 산출 스크립트: `scripts/reading_module/apply_reading_gap_types.py`

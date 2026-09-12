@@ -37,6 +37,7 @@ export function normaliseIntervalMin(value) {
  */
 export function createScheduler({ getStore, runScan, log = () => {} }) {
   let timer = null;
+  let catchupTimer = null;
   let running = false;
   let effective = { enabled: false, interval_min: 0, source: "off" };
 
@@ -82,6 +83,7 @@ export function createScheduler({ getStore, runScan, log = () => {} }) {
   }
 
   function clearTimer() {
+    if(catchupTimer){clearTimeout(catchupTimer);catchupTimer=null;}
     if (timer) {
       clearInterval(timer);
       timer = null;
@@ -125,7 +127,7 @@ export function createScheduler({ getStore, runScan, log = () => {} }) {
         next_scan_at: nextAt,
         last_trigger: trigger,
         last_result: {
-          ok: true,
+          ok: !(result?.summary?.error || result?.summary?.red || result?.summary?.moved || result?.automatic?.some(item=>!item.ok)),
           summary: result && result.summary ? result.summary : null,
           event_count: result && Array.isArray(result.events) ? result.events.length : 0,
         },
@@ -155,6 +157,12 @@ export function createScheduler({ getStore, runScan, log = () => {} }) {
     effective = await loadConfig();
     armTimer();
     if (effective.enabled) {
+      const stored=await (await getStore()).getMeta(SCAN_STATUS_META_KEY)||{};
+      const last=Date.parse(stored.last_scan_at||'');
+      if(!Number.isFinite(last)||Date.now()-last>=effective.interval_min*60000){
+        catchupTimer=setTimeout(()=>runOnce('startup-catchup',{}).catch(()=>{}),1000);
+        catchupTimer.unref?.();
+      }
       const nextAt = new Date(Date.now() + effective.interval_min * 60 * 1000).toISOString();
       await recordStatus({ next_scan_at: nextAt, schedule_source: effective.source });
       log(`[scheduler] 자동 감시 ON — ${effective.interval_min}분 주기 (설정 출처: ${effective.source})`);

@@ -1,0 +1,8 @@
+'use strict';
+const {spawn}=require('node:child_process'),fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..'),port=43187,base='http://127.0.0.1:'+port;
+(async()=>{const child=spawn(process.execPath,['server.js'],{cwd:root,env:{...process.env,PORT:String(port),AI_EXPLAINER_ENABLED:'false',UPDATE_CENTER_SCAN_INTERVAL_MIN:'0'},windowsHide:true,stdio:'ignore'});try{let ready=false;for(let i=0;i<100;i++){try{const r=await fetch(base);if(r.ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,100));}assert(ready,'local server failed');
+ const original=fs.readFileSync(path.join(root,'../outputs/collection_upload_20260912/fixtures/현장.pdf')),large=Buffer.concat([original.subarray(0,original.lastIndexOf('startxref')),Buffer.from('%'+ ' '.repeat(1100000)+'\n'),original.subarray(original.lastIndexOf('startxref'))]);
+ const response=await fetch(base+'/api/chat-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'large.pdf',base64:large.toString('base64')})}),d=await response.json();assert.equal(response.status,200,JSON.stringify(d));assert.equal(d.parts.length,2);assert(d.parts[0].location.includes('1페이지'));assert(/^[a-f0-9]{64}$/.test(d.sha256));
+ const bad=await fetch(base+'/api/chat-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'wrong.exe',base64:'AAAA'})});assert.equal(bad.status,400);assert.equal((await fetch(base+'/api/chat-upload')).status,405);console.log('PASS real HTTP document endpoint, >1MB JSON body, page citations/hash, bad format and method');
+ }finally{child.kill();}})().catch(e=>{console.error(e);process.exitCode=1;});

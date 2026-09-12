@@ -51,7 +51,7 @@ const education=fs.readFileSync(path.join(root,'assets/education-layers.js'),'ut
 w.eval(fs.readFileSync(path.join(root,'assets/education-statistics.js'),'utf8'));
 w.eval(fs.readFileSync(path.join(root,'assets/education-networks.js'),'utf8'));
 w.eval(fs.readFileSync(path.join(root,'assets/education-questions.js'),'utf8'));
-w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer,runShortcutAction,renderSchoolDetail};');
+w.eval(education+'\n'+fs.readFileSync(path.join(root,'assets/school-zones.js'),'utf8')+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setSchoolPanelSelection,loadCandidateLayer,runShortcutAction,renderSchoolDetail};');
 (async()=>{
   const app=w.__app;
   await app.init();
@@ -60,6 +60,14 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert.equal(selector.disabled,false,'Boot must initialize the education extension');
   assert.equal(app.state.datasets.educationAllSchools.length,917);
   assert.equal(app.state.datasets.schools.length,272);
+  const zoneToggle=w.document.getElementById('toggleSchoolZones');
+  zoneToggle.checked=true;await w.SchoolZones.ensure();w.SchoolZones.render();
+  assert(app.state.overlays.schoolZonePolygons.length>=279,'Official elementary polygons render');
+  selector.value='유치원';selector.dispatchEvent(new w.Event('change'));
+  assert.equal(app.state.overlays.schoolZonePolygons.length,0,'No invented kindergarten boundary');
+  selector.value='중학교';selector.dispatchEvent(new w.Event('change'));
+  assert(app.state.overlays.schoolZonePolygons.length>=25,'Middle-school districts follow level selector');
+  zoneToggle.checked=false;w.SchoolZones.render();selector.value='초등학교';selector.dispatchEvent(new w.Event('change'));
   const mapResize=resizeObservers.find(observer=>observer.target.id==='map');
   const camera=new LatLng(37.5,126.7);
   app.state.map.setCenter(camera);
@@ -188,7 +196,8 @@ w.eval(education+'\n'+inline+'\nwindow.__app={state,init,getAiSchoolContext,setS
   assert(restoredReport.includes(restoredSchool.statistical_region_2025.historical_address));
   assert(restoredReport.includes('2025년 행정구역 기준 지역 전체 통계'));
   assert(!restoredReport.includes('해당 지역·학교급의 검증 가능한 예측 자료 미확보'));
-  assert(restoredReport.includes(`2025년 행정구역 ${restoredSchool.statistical_region_2025.region_name} 전체`));
+  assert(restoredReport.includes('시나리오는 인천 전체 해당 연령인구의 성장률'));
+  assert(restoredReport.includes('선택 학교의 소재 구에 따라 같은 후보의 값이 달라지지 않습니다'));
   const unresolvedSchool=app.state.datasets.educationAllSchools.find(s=>s.statistical_region_2025?.basis==='unverified');
   await w.EducationLayers.openReport(unresolvedSchool);
   assert(w.document.querySelector('.edu-body').textContent.includes('해당 지역·학교급의 검증 가능한 예측 자료 미확보'));

@@ -1,0 +1,227 @@
+{
+  "tested_at": "2026-09-12T18:45:49.893Z",
+  "domains": [
+    {
+      "id": "designations",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "schools",
+      "factors": 6,
+      "sections": 5
+    },
+    {
+      "id": "parks",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "playgrounds",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "services",
+      "factors": 4,
+      "sections": 2
+    },
+    {
+      "id": "books",
+      "factors": 6,
+      "sections": 3
+    },
+    {
+      "id": "library_access",
+      "factors": 3,
+      "sections": 2
+    },
+    {
+      "id": "library_scenarios",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "academies",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "construction",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "nightlife",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "redevelopment",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "apartments",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "shared_parks",
+      "factors": 7,
+      "sections": 2
+    },
+    {
+      "id": "park_review",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "resilience",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "clusters",
+      "factors": 3,
+      "sections": 2
+    },
+    {
+      "id": "diffusion",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "routes",
+      "factors": 4,
+      "sections": 2
+    },
+    {
+      "id": "candidate_routes",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "route_review",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "hybrid",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "residential",
+      "factors": 4,
+      "sections": 2
+    },
+    {
+      "id": "school_demand",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "grid_demand",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "forecast",
+      "factors": 2,
+      "sections": 5
+    },
+    {
+      "id": "cohort",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "demography",
+      "factors": 2,
+      "sections": 3
+    },
+    {
+      "id": "regional_forecast",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "validation",
+      "factors": 4,
+      "sections": 2
+    },
+    {
+      "id": "school_validation",
+      "factors": 6,
+      "sections": 2
+    },
+    {
+      "id": "progression",
+      "factors": 5,
+      "sections": 2
+    },
+    {
+      "id": "athletics",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "sports_awards",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "science_awards",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "invention_awards",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "curriculum",
+      "factors": 3,
+      "sections": 2
+    },
+    {
+      "id": "curriculum_links",
+      "factors": 2,
+      "sections": 2
+    },
+    {
+      "id": "indicators",
+      "factors": 21,
+      "sections": 2
+    },
+    {
+      "id": "similar",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "zones",
+      "factors": 1,
+      "sections": 2
+    },
+    {
+      "id": "walkshed",
+      "factors": 1,
+      "sections": 2
+    }
+  ],
+  "checks": [
+    "all domains",
+    "book totals and exact percentile",
+    "missing and duplicates excluded",
+    "no default weights or score",
+    "explicit weights",
+    "independent safety gates",
+    "legacy payload rejected",
+    "individual public indicators",
+    "uploaded duplicate audit",
+    "conversation choose/run/remove/change/re-run/direct query"
+  ]
+}

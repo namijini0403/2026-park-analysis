@@ -1,0 +1,34 @@
+{
+  "deployment_id": "64f8bc67-07fb-44ca-b42c-c651f33bf88b",
+  "deployment_status": "SUCCESS",
+  "http_200_paths": [
+    "index.html",
+    "assets/student-services.html",
+    "assets/student-services.js",
+    "data_processed/student_services/priorities.json",
+    "data_processed/student_services/school_priorities.csv",
+    "data_processed/policy_action_cards.json",
+    "data_processed/school_library_access.csv"
+  ],
+  "hashes": {
+    "index.html": "3c1a5833207b90b5ce0614cc23211b126c9165782697344d7f8fff4767a06be5",
+    "assets/student-services.html": "8a7b5191609b33ede723a7e60a9a7dd6d925abb929def639c3641416d059332e",
+    "assets/student-services.js": "5a9bbcd2ffa2089acea53cdf6157f652f4aa204881f33b6d0612e9822bb449cd",
+    "data_processed/student_services/priorities.json": "5a5523caf76f676102d2f03a0c7bedf966d66d8720b01e1127b8a1825f81a42e",
+    "data_processed/student_services/school_priorities.csv": "60384543e192ce531ffb975c87a5d32444f49bb7280e8d68ef4d1b9441b2631a",
+    "data_processed/policy_action_cards.json": "201541cd0d0d1d085d1178a2f021386ae8db6bbca4cb53831638236a3c932e51",
+    "data_processed/school_library_access.csv": "28ee1c7663ae59242084d9367132e4ac4750a1447f50d4bfbf3517702dbc9086"
+  },
+  "schools": 272,
+  "separate_track": 30,
+  "no_default_scores": true,
+  "no_forced_primary_action": true,
+  "unknown_is_not_shortage": true,
+  "tests": [
+    "5 data tests",
+    "DOM evidence gates",
+    "persisted legacy restore",
+    "full app boot"
+  ],
+  "visual_qa": "No connected browser; DOM and responsive structure checked"
+}

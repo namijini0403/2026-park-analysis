@@ -1,0 +1,74 @@
+{
+  "results": [
+    {
+      "question": "석암초등학교 도서관 장서 지원 근거는?",
+      "school_id": "B000002982",
+      "sections": 8,
+      "source_count": 3,
+      "ms": 556
+    },
+    {
+      "question": "석암초등학교 공원 지원 근거",
+      "school_id": "B000002982",
+      "sections": 14,
+      "source_count": 6,
+      "ms": 171
+    },
+    {
+      "question": "석암초등학교 돌봄 지원 근거",
+      "school_id": "B000002982",
+      "sections": 11,
+      "source_count": 3,
+      "ms": 112
+    },
+    {
+      "question": "석암초등학교 2031 학생 전망 비교",
+      "school_id": "B000002982",
+      "sections": 11,
+      "source_count": 4,
+      "ms": 284
+    },
+    {
+      "question": "석암초등학교 2026 지정사업 비교",
+      "school_id": "B000002982",
+      "sections": 5,
+      "source_count": 2,
+      "ms": 93
+    },
+    {
+      "question": "가림고등학교 공동교육과정 비교",
+      "school_id": "B000012290",
+      "sections": 10,
+      "source_count": 2,
+      "ms": 123
+    },
+    {
+      "question": "석암초등학교 지역 인구 전망 비교",
+      "school_id": "B000002982",
+      "sections": 6,
+      "source_count": 3,
+      "ms": 31
+    }
+  ],
+  "source_files_checked": [
+    "data_processed/education/library_access_preview.json",
+    "data_processed/student_services/priorities.json",
+    "data_processed/school_library_access.csv",
+    "data_processed/education/analysis_dataset.json",
+    "data_processed/education/shared_parks.json",
+    "data_processed/education/school_routes.json",
+    "data_processed/school_nearest_park.csv",
+    "data_processed/education/route_review.json",
+    "data_processed/education/hybrid_walk_review.json",
+    "data_processed/education/enrollment_forecasts.json",
+    "data_processed/education/school_age_demand.json",
+    "data_processed/education/forecast_validation.json",
+    "data_processed/context/school_designations.json",
+    "data_processed/education/designation_diffusion.json",
+    "data_processed/education/curriculum_network.json",
+    "data_processed/education/regional_demography.json",
+    "data_processed/education/regional_age_forecasts.json",
+    "data_processed/education/regional_age_forecast_validation.json"
+  ],
+  "current_ui_asset": true
+}

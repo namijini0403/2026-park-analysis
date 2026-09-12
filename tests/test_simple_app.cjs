@@ -1,0 +1,12 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{JSDOM}=require('jsdom'),model=require('../api/_school_summary');
+const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const dom=new JSDOM(html,{url:'http://localhost/',runScripts:'outside-only'}),w=dom.window,d=w.document;let calls=[],resolveSlow;
+w.localStorage.setItem('schoolData',JSON.stringify({primary_action:'external_supply_new',score:99}));
+w.fetch=async(url,opts)=>{calls.push(url);if(url==='/api/chat')return {ok:true,json:async()=>({answerable:true,summary:'확인 근거입니다.',sources:[{id:'policy#verification',title:'확인 조건',source:'rag/policy-guide.md',body:'미확보는 부족 확정이 아닙니다.'}]})};const u=new URL(url,'http://localhost');return {ok:true,json:async()=>u.searchParams.get('id')?model.summary(u.searchParams.get('id'),u.searchParams.get('kind')):{schools:model.list()}};};
+const tick=()=>new Promise(r=>setTimeout(r,20));
+function change(id,value){const el=d.getElementById(id);el.value=value;el.dispatchEvent(new w.Event('change'));}
+(async()=>{w.eval(fs.readFileSync(path.join(root,'assets/simple-app.js'),'utf8'));await tick();assert.equal(d.querySelectorAll('#school option').length,273);assert.equal(d.querySelectorAll('iframe').length,0);assert.equal(d.querySelectorAll('form').length,1);assert(!d.body.textContent.includes('통계 비교'));assert(!d.body.textContent.includes('질문 분석'));assert(!d.body.textContent.includes('external_supply_new'));
+change('school','B000002949');await tick();assert.equal(d.querySelectorAll('.card').length,3);assert.match(d.querySelector('#summary').textContent,/확인된 사실/);change('kind','sports');await tick();assert.match(d.querySelector('#summary').textContent,/전수|없다는 뜻/);
+d.getElementById('question').value='왜 판단을 보류하나요?';d.getElementById('chat-form').dispatchEvent(new w.Event('submit',{cancelable:true}));await tick();assert(calls.includes('/api/chat'));assert.equal(d.querySelectorAll('.message').length,1);assert.match(d.querySelector('.message').textContent,/확인 근거/);assert(!calls.some(s=>s.includes('ai-explainer')||s.includes('/api/analysis')));
+change('level','고등학교');await tick();assert.equal(d.getElementById('school').value,'');assert.equal(d.querySelectorAll('.card').length,0);assert.equal(d.querySelectorAll('.message').length,1);
+console.log('PASS simple UI: single chat, three cards, search/scope, legacy localStorage isolation, missing coverage, history stays labeled');dom.window.close();})().catch(e=>{console.error(e);dom.window.close();process.exitCode=1;});

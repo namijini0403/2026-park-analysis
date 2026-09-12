@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "test:education": "node tests/test_education_networks.cjs && node tests/test_education_statistics.cjs && node tests/test_education_profile.cjs && node tests/test_education_app_startup.cjs && node tests/test_education_ui.cjs && node tests/test_education_ai.cjs",
+    "test:education": "node tests/test_education_networks.cjs && node tests/test_education_statistics.cjs && node tests/test_education_profile.cjs && node tests/test_simple_app.cjs && node tests/test_simple_chat.cjs && node tests/test_education_ai.cjs",
     "build:ai-chunks": "node scripts/build_ai_explainer_chunks.mjs",
     "smoke:ai-explainer-v2": "node scripts/smoke_ai_explainer_v2.mjs",
     "qa:ai-explainer-v2": "node scripts/qa_ai_explainer_v2.mjs",
@@ -11,7 +11,13 @@
     "test:update-center": "node scripts/tests/test_update_center_core.cjs && node scripts/tests/test_update_center_persistence.cjs",
     "test:update-center-persistence": "node scripts/tests/test_update_center_persistence.cjs",
     "selftest:update-center-store": "node scripts/update_center/store.mjs --selftest",
-    "test:analysis": "node tests/test_analysis_engine.cjs && node tests/test_analysis_api.cjs && node tests/test_analysis_planner.cjs && node tests/test_education_questions.cjs"
+    "test:analysis": "node tests/test_analysis_engine.cjs && node tests/test_analysis_api.cjs && node tests/test_analysis_planner.cjs && node tests/test_education_questions.cjs && node tests/test_relative_position.cjs",
+    "test:simple": "node tests/test_simple_app.cjs && node tests/test_simple_chat.cjs && node tests/test_observation_restore.cjs && node tests/test_saved_conversations.cjs",
+    "start": "node server.js",
+    "test:education:legacy-ui": "node tests/test_education_app_startup.cjs && node tests/test_education_ui.cjs",
+    "test:hitl": "node tests/test_hitl_workspace.cjs",
+    "test:map": "node tests/test_school_map.cjs",
+    "test:relative": "node tests/test_relative_position.cjs"
   },
   "engines": {
     "node": ">=20"

@@ -1,0 +1,18 @@
+{
+  "file": "data_processed/education/curriculum_network.json",
+  "sha256": "0386a214d5632c9e0f476eca190cfb603c53d922bdd5f81802c2fa37c3644b5d",
+  "originals": [
+    {
+      "url": "https://songdo.icehs.kr/boardCnts/fileDown.do?fileSeq=78129af2ae95790b784247d9dbad3418",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

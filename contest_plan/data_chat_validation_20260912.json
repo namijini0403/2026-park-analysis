@@ -1,0 +1,351 @@
+{
+  "generated_at": "2026-09-12T18:46:27.074Z",
+  "checks": [
+    {
+      "id": "designations",
+      "file": "data_processed/context/school_designations.json",
+      "mode": "dataset",
+      "rows": 1090,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "schools",
+      "file": "data_processed/education/analysis_dataset.json",
+      "mode": "dataset",
+      "rows": 917,
+      "chart": "bar",
+      "map": 917
+    },
+    {
+      "id": "parks",
+      "file": "data_processed/parks.csv",
+      "mode": "dataset",
+      "rows": 1093,
+      "chart": "bar",
+      "map": 1088
+    },
+    {
+      "id": "playgrounds",
+      "file": "data_processed/geocoded_playground.csv",
+      "mode": "dataset",
+      "rows": 322,
+      "chart": "bar",
+      "map": 322
+    },
+    {
+      "id": "services",
+      "file": "data_processed/student_services/priorities.json",
+      "mode": "dataset",
+      "rows": 798,
+      "chart": "bar",
+      "map": 795
+    },
+    {
+      "id": "books",
+      "file": "data_processed/student_services/priorities.json",
+      "mode": "dataset",
+      "rows": 272,
+      "chart": "bar",
+      "map": 272
+    },
+    {
+      "id": "library_access",
+      "file": "data_processed/education/library_access_preview.json",
+      "mode": "dataset",
+      "rows": 917,
+      "chart": "bar",
+      "map": 917
+    },
+    {
+      "id": "library_scenarios",
+      "file": "data_processed/education/library_access_preview.json",
+      "mode": "dataset",
+      "rows": 40,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "academies",
+      "file": "data_processed/education/academies.json",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 1500
+    },
+    {
+      "id": "construction",
+      "file": "data_processed/context/facilities_construction.geojson",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 1500
+    },
+    {
+      "id": "nightlife",
+      "file": "data_processed/context/facilities_nightlife.geojson",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 1500
+    },
+    {
+      "id": "redevelopment",
+      "file": "data_processed/redevelopment_geocoded.csv",
+      "mode": "dataset",
+      "rows": 231,
+      "chart": "bar",
+      "map": 198
+    },
+    {
+      "id": "apartments",
+      "file": "data_processed/large_apt_complexes_2025.csv",
+      "mode": "dataset",
+      "rows": 536,
+      "chart": "bar",
+      "map": 535
+    },
+    {
+      "id": "shared_parks",
+      "file": "data_processed/education/shared_parks.json",
+      "mode": "dataset",
+      "rows": 917,
+      "chart": "bar",
+      "map": 917
+    },
+    {
+      "id": "park_review",
+      "file": "data_processed/education/field_verification.json",
+      "mode": "dataset",
+      "rows": 463,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "resilience",
+      "file": "data_processed/education/road_resilience.json",
+      "mode": "calculation",
+      "rows": 3,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "clusters",
+      "file": "data_processed/education/academy_clusters.json",
+      "mode": "calculation",
+      "rows": 30,
+      "chart": "map",
+      "map": 0
+    },
+    {
+      "id": "diffusion",
+      "file": "data_processed/education/designation_diffusion.json",
+      "mode": "calculation",
+      "rows": 7,
+      "chart": "line",
+      "map": 0
+    },
+    {
+      "id": "routes",
+      "file": "data_processed/education/school_routes.json",
+      "mode": "dataset",
+      "rows": 645,
+      "chart": "bar",
+      "map": 645
+    },
+    {
+      "id": "candidate_routes",
+      "file": "data_processed/candidate_barrier_routes_by_school.json",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 195
+    },
+    {
+      "id": "route_review",
+      "file": "data_processed/education/route_review.json",
+      "mode": "dataset",
+      "rows": 53,
+      "chart": "bar",
+      "map": 53
+    },
+    {
+      "id": "hybrid",
+      "file": "data_processed/education/hybrid_walk_review.json",
+      "mode": "dataset",
+      "rows": 53,
+      "chart": "bar",
+      "map": 53
+    },
+    {
+      "id": "residential",
+      "file": "data_processed/education/residential_scenario.json",
+      "mode": "dataset",
+      "rows": 645,
+      "chart": "bar",
+      "map": 645
+    },
+    {
+      "id": "school_demand",
+      "file": "data_processed/education/school_age_demand.json",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 645
+    },
+    {
+      "id": "grid_demand",
+      "file": "data_processed/education/candidate_demand_v2.json",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "forecast",
+      "file": "data_processed/education/enrollment_forecasts.json",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 917
+    },
+    {
+      "id": "cohort",
+      "file": "data_processed/education/grade_cohort_scenarios.json",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 548
+    },
+    {
+      "id": "demography",
+      "file": "data_processed/education/regional_demography.json",
+      "mode": "dataset",
+      "rows": 710,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "regional_forecast",
+      "file": "data_processed/education/regional_age_forecasts.json",
+      "mode": "dataset",
+      "rows": 240,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "validation",
+      "file": "data_processed/education/regional_age_forecast_validation.json",
+      "mode": "dataset",
+      "rows": 8,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "school_validation",
+      "file": "data_processed/education/forecast_validation.json",
+      "mode": "dataset",
+      "rows": 12,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "progression",
+      "file": "data_processed/education/school_progression.json",
+      "mode": "dataset",
+      "rows": 549,
+      "chart": "bar",
+      "map": 276
+    },
+    {
+      "id": "athletics",
+      "file": "data_processed/education/school_athletics.json",
+      "mode": "dataset",
+      "rows": 836,
+      "chart": "bar",
+      "map": 160
+    },
+    {
+      "id": "sports_awards",
+      "file": "data_processed/education/sports_awards.json",
+      "mode": "dataset",
+      "rows": 180,
+      "chart": "bar",
+      "map": 34
+    },
+    {
+      "id": "science_awards",
+      "file": "data_processed/education/science_awards.json",
+      "mode": "dataset",
+      "rows": 53,
+      "chart": "bar",
+      "map": 19
+    },
+    {
+      "id": "invention_awards",
+      "file": "data_processed/education/invention_awards.json",
+      "mode": "dataset",
+      "rows": 68,
+      "chart": "bar",
+      "map": 32
+    },
+    {
+      "id": "curriculum",
+      "file": "data_processed/education/curriculum_network.json",
+      "mode": "dataset",
+      "rows": 364,
+      "chart": "bar",
+      "map": 90
+    },
+    {
+      "id": "curriculum_links",
+      "file": "data_processed/education/curriculum_network.json",
+      "mode": "dataset",
+      "rows": 43,
+      "chart": "bar",
+      "map": 11
+    },
+    {
+      "id": "indicators",
+      "file": "data_processed/education/school_public_indicators.json",
+      "mode": "dataset",
+      "rows": 1500,
+      "chart": "bar",
+      "map": 548
+    },
+    {
+      "id": "similar",
+      "file": "data_processed/education/school_analysis.json",
+      "mode": "comparative",
+      "rows": 5,
+      "chart": null,
+      "map": 0
+    },
+    {
+      "id": "zones",
+      "file": "data_processed/education/school_zones.geojson",
+      "mode": "dataset",
+      "rows": 311,
+      "chart": "bar",
+      "map": 0
+    },
+    {
+      "id": "walkshed",
+      "file": "data_processed/education/walkshed_500m.geojson",
+      "mode": "dataset",
+      "rows": 917,
+      "chart": "bar",
+      "map": 917
+    }
+  ],
+  "tests": [
+    "all catalog entries through chat",
+    "no legacy scores",
+    "year scope",
+    "district substring",
+    "mixed measures",
+    "new public-metric correlation",
+    "missing coverage",
+    "cross-level KNN"
+  ]
+}

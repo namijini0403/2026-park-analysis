@@ -1,0 +1,56 @@
+{
+  "checked_at": "2026-09-11T18:32:50.661Z",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/assets/simple-app.js",
+      "status": 200
+    },
+    {
+      "path": "/assets/simple-app.css",
+      "status": 200
+    },
+    {
+      "path": "/api/school-summary",
+      "status": 200
+    },
+    {
+      "path": "/api/school-summary?id=B000002949&kind=sports",
+      "status": 200
+    },
+    {
+      "path": "/update-center.html",
+      "status": 200
+    },
+    {
+      "path": "/api/chat",
+      "status": 200,
+      "mode": "evidence"
+    },
+    {
+      "path": "/api/ai-explainer-v2",
+      "status": 200,
+      "mode": "evidence"
+    },
+    {
+      "path": "/api/ai-explainer",
+      "status": 200,
+      "mode": "evidence"
+    },
+    {
+      "path": "/api/chat",
+      "mode": "generated",
+      "summary": "이 학교 도서관 자료는 2026년 공시 기준 재학생 303명이고, 지도 도달권 안 시설 관측은 0곳입니다. 다만 이는 시설이 없다는 뜻이 아니라, 주변 시설 수집이 확인되지 않았다는 뜻입니다. 도서관 관련 판단을 하려면 이용자격, 개방시간, 안전, 실행 여건, 실제 출입구 경로를 따로 확인해야 합니다.",
+      "source_ids": [
+        "school#B000002949",
+        "policy#verification",
+        "policy#services",
+        "policy#correlation"
+      ]
+    }
+  ],
+  "visual_qa": "unavailable: no connected browser"
+}

@@ -1,0 +1,14 @@
+{
+  "url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+  "request": {
+    "searchWrd": "인천 풋살장",
+    "collection": "resource_cate1",
+    "viewType": "UnitPage",
+    "pageIndex": 2,
+    "sort": "RANK",
+    "order": "DESC"
+  },
+  "retrieved_at": "2026-09-11T11:24:11.125311+00:00",
+  "sha256": "8f7eb16ebdb285f553bedb8b7c5e55645f318be8717d557d00e2c893b07b85fa",
+  "raw_file": "data/student_services/raw/snapshots/8f7eb16ebdb285f553bedb8b7c5e55645f318be8717d557d00e2c893b07b85fa.html"
+}

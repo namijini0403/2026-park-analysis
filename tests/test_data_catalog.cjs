@@ -1,0 +1,12 @@
+process.env.AI_EXPLAINER_ENABLED='false';process.env.AI_ANALYSIS_ENABLED='false';
+const assert=require('node:assert/strict'),fs=require('node:fs'),answers=require('../api/_data_answers'),chat=require('../api/chat');
+(async()=>{const checks=[];for(const e of answers.catalog){const result=await chat.run({question:e.title+' 자료 보여줘',dataset_id:e.id,school_id:e.id==='similar'?'B000011417':null});assert(result.answerable,e.id);assert(result.visual?.table,e.id+' table');assert(result.sources.length,e.id+' provenance');assert(!result.visual.table.headers.some(s=>/priority_score|candidate_rank|primary_action|policy_scenarios/.test(s)),e.id);assert(result.visual.table.rows.every(r=>r.length===result.visual.table.headers.length),e.id+' alignment');checks.push({id:e.id,file:e.file,mode:result.mode,rows:result.visual.table.rows.length,chart:result.visual.chart?.kind||null,map:result.visual.map?.length||0});}
+const named=await chat.run({question:'남동구 공원 목록 보여줘'});assert.equal(named.query.gu,'남동구');assert(named.visual.table.rows.every(r=>r.includes('남동구')));
+const historical=await chat.run({question:'2025 초등학교 학생 수 자료 보여줘'});assert(historical.visual.table.rows.every(r=>r[3]===2025));
+const mixed=answers.run('학교 학생 수 예측 자료',{dataset_id:'forecast'});assert(!mixed.summary.includes('평균은'));
+const modern=await chat.run({question:'2026 고등학교 장학금 금액과 학생 수 상관관계'});assert.equal(modern.mode,'calculation');assert.equal(modern.calculation.metrics.n,112);assert.equal(modern.visual.chart.kind,'scatter');
+const missing=await chat.run({question:'2026 초등학교 장학금 자료'});assert.equal(missing.query.total,0);assert.match(missing.summary,/확보하지 못/);
+const similar=answers.run('이 학교 유사학교 자료',{dataset_id:'similar',school_id:'B000011417'});assert.equal(similar.visual.table.rows.length,4);
+assert(answers.run('공사장 자료',{dataset_id:'construction'}).visual.table.rows.length);
+const escaped=await chat.run({question:'보유 데이터 목록'});assert(escaped.suggestions.length>=40);
+fs.writeFileSync('contest_plan/data_chat_validation_20260912.json',JSON.stringify({generated_at:new Date().toISOString(),checks,tests:['all catalog entries through chat','no legacy scores','year scope','district substring','mixed measures','new public-metric correlation','missing coverage','cross-level KNN']},null,2));console.log('PASS data catalog:',checks.length,'data families, scope, new analysis, sources and no legacy recommendation fields');})().catch(e=>{console.error(e);process.exitCode=1;});

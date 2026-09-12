@@ -1,0 +1,18 @@
+{
+  "file": "data_processed/school_library_access.csv",
+  "sha256": "d412f058172e8947107b58c217e52afbc4cfeed2fab1015ad673439cdc608512",
+  "originals": [
+    {
+      "url": "https://kess.kedi.re.kr/post/6670396",
+      "title": "교육부/한국교육개발원(KEDI)",
+      "provider": "교육부/한국교육개발원(KEDI)",
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "data_sources.yaml → school_library",
+      "kind": "registered"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

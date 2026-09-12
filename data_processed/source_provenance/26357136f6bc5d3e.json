@@ -1,0 +1,18 @@
+{
+  "file": "data_processed/libraries.csv",
+  "sha256": "171e93033665fc176444132e5b4ce04d4ddbac792d06271a67c6a7d0cfef3f2c",
+  "originals": [
+    {
+      "url": "https://www.data.go.kr/data/15013109/standard.do",
+      "title": "문화체육관광부(제공 지자체·교육청)",
+      "provider": "문화체육관광부(제공 지자체·교육청)",
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "data_sources.yaml → libraries",
+      "kind": "registered"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

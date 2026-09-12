@@ -3,11 +3,15 @@ const fs=require('node:fs');
 const path=require('node:path');
 let data;
 let indicatorHistory;
+let dataStamp,indicatorStamp;
 const TOPIC=/학원|교습|예체능|수능|성취|학력|성적|운동부|선수 인원|수상|실적|메달|체육대회|발명|과학전람회|진학|졸업|취업|공시|장학|체력|동아리|방과후|paps/i;
 function load(){
-  if(!data) {
+  const file=path.join(__dirname,'../data_processed/context/education_school_evidence.json');
+  let stamp;try{stamp=fs.statSync(file).mtimeMs;}catch{return {};}
+  if(!data || stamp!==dataStamp) {
     try { data=JSON.parse(fs.readFileSync(path.join(__dirname,'../data_processed/context/education_school_evidence.json'),'utf8')); }
     catch { return {}; }
+    dataStamp=stamp;
   }
   return data;
 }
@@ -86,9 +90,12 @@ function build(row,question){
       if(/paps/i.test(q)) terms.push('체력');
       let groups=row.public_indicators||[];
       if(years.length) {
-        if(!indicatorHistory) {
+        const indicatorFile=path.join(__dirname,'../data_processed/education/school_public_indicators.json');
+        const stamp=fs.existsSync(indicatorFile)?fs.statSync(indicatorFile).mtimeMs:null;
+        if(!indicatorHistory || indicatorStamp!==stamp) {
           try { indicatorHistory=JSON.parse(fs.readFileSync(path.join(__dirname,'../data_processed/education/school_public_indicators.json'),'utf8')).schools; }
           catch { indicatorHistory={}; }
+          indicatorStamp=stamp;
         }
         groups=indicatorHistory[row.school_id]||[];
       }

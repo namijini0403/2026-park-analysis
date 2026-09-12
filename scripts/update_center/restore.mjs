@@ -103,7 +103,8 @@ export async function restoreActiveVersions({ store, log = () => {}, runRebuild 
     return summary;
   }
 
-  const entries = Object.entries((pointer && pointer.active) || {});
+  // Shared derived outputs must restore in publication order; later bundles win.
+  const entries = Object.entries((pointer && pointer.active) || {}).sort((a,b)=>Number(String(a[1]?.version_dir||'v0').slice(1))-Number(String(b[1]?.version_dir||'v0').slice(1)));
   summary.datasets_checked = entries.length;
   if (!entries.length) {
     log("[update-center] 활성 버전 복원: 보존된 활성 버전이 없습니다 (git 배포본 그대로 사용).");

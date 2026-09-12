@@ -1,0 +1,28 @@
+{
+  "file": "data_processed/education/sports_awards.json",
+  "sha256": "7d81734adb4327c1fc883729ed55c7d2f26b887d60fdac8ec1577f632ee963ed",
+  "originals": [
+    {
+      "url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=105&searchSidoCd=04",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012232[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://meet.sports.or.kr/history/medal/sido/list.do?searchGubun=G&searchGameno=106&searchSidoCd=04",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012232[2].source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

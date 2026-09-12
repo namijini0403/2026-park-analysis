@@ -1,0 +1,279 @@
+{
+  "url": "https://education-living-area-preview-production.up.railway.app",
+  "files": [
+    {
+      "file": "index.html",
+      "sha256": "8d72fb29ac1e6a781f43c01e8f0e8991f529cee207d28057a663af1a0f3d0133",
+      "status": 200
+    },
+    {
+      "file": "assets/school-zones.js",
+      "sha256": "70975ed4859ce96c63807c12f5facd2328fccf4bd66a716ee6985b29dd02fb3d",
+      "status": 200
+    },
+    {
+      "file": "assets/office-documents.js",
+      "sha256": "d80e7ec0c019f5fdbc130befe1c7fe9b9970f9bafc74a8d57c9aa62ea0acdbf9",
+      "status": 200
+    },
+    {
+      "file": "office-documents.html",
+      "sha256": "01e6b81bf16f693d7fef4cbd8bdfc51849bc1736aa68ec64d45cea4cf693f3de",
+      "status": 200
+    },
+    {
+      "file": "data_processed/education/school_zones.geojson",
+      "sha256": "9e4ff69ed7c11874edb48d6e7c7af5c88f2d82c2693df027345e7976007e194b",
+      "status": 200
+    }
+  ],
+  "schedule": {
+    "schedule": {
+      "enabled": true,
+      "interval_min": 1440,
+      "source": "env",
+      "env_interval_min": 1440,
+      "running": false,
+      "timer_armed": true,
+      "last_scan_at": null,
+      "next_scan_at": "2026-09-12T02:50:38.010Z",
+      "last_trigger": null,
+      "last_result": null,
+      "last_skipped_at": null,
+      "updated_at": null,
+      "actor": null
+    }
+  },
+  "coverage_counts": {
+    "validated_auto_apply": 1,
+    "collect_review_apply": 1,
+    "header_signal_only": 12,
+    "manual": 3
+  },
+  "formats": [
+    {
+      "format": "xlsx",
+      "matched": 12,
+      "status": "ok",
+      "document_deleted": true
+    },
+    {
+      "format": "docx",
+      "evidence_match": true,
+      "document_deleted": true
+    },
+    {
+      "format": "hwpx",
+      "evidence_match": true,
+      "document_deleted": true
+    }
+  ],
+  "unauthorized": 401,
+  "private_path": 404,
+  "school_zones_scan": {
+    "mode": "scan",
+    "summary": {
+      "baseline": 0,
+      "unchanged": 0,
+      "green": 1,
+      "yellow": 0,
+      "red": 0,
+      "moved": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    "events": [
+      {
+        "id": "1c308523-ddae-4d6a-8981-a8e0e179cbfc",
+        "dataset": "school_zones",
+        "detected_at": "2026-09-11T02:52:39.470Z",
+        "kind": "content",
+        "risk": "green",
+        "summary": "공식 학구도 311 → 311구역 · 원자료 해시 변경",
+        "diff_json": {
+          "candidate": {
+            "staging_id": "zones_1789095159387",
+            "persisted_files": 2,
+            "persist_error": null,
+            "staging_dir": "data/update_center/staging/zones_1789095159387",
+            "files": [
+              {
+                "name": "school_zones.geojson",
+                "bytes": 3234563,
+                "sha256": "f3ad3413be7207a860ae6fc1dde327289e271ee380c9b8820fc509909ec9ea53",
+                "target": "data_processed/education/school_zones.geojson"
+              }
+            ],
+            "target_file": "data_processed/education/school_zones.geojson",
+            "adapter": "generic(passthrough)",
+            "normalize_note": "수동 업로드 — 현재 적용본과 헤더가 같아 어댑터 정규화 생략",
+            "normalize_skipped": true,
+            "fetch": {
+              "provider": "한국교육시설안전원",
+              "source_url": "https://schoolzone.emac.kr/publicData/publicDataList.do",
+              "coverage": "인천광역시 공식 공개 학구도",
+              "sources": [
+                {
+                  "kind": "elementary",
+                  "title": "초등학교 통학구역",
+                  "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2957&atchFileId=FILE_000000100002979&fileSn=0",
+                  "sha256": "0630ed78d9c2b828622149f9f7f5d85f14cec226ca9a9827429dab61664f8ece",
+                  "count": 279
+                },
+                {
+                  "kind": "middle",
+                  "title": "중학교 학구 및 학군",
+                  "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2956&atchFileId=FILE_000000100002978&fileSn=0",
+                  "sha256": "3d63642020cf3c054e027bdda6ba65a9b9dbf19d3ef6663a1b3d1263ba6baa19",
+                  "count": 25
+                },
+                {
+                  "kind": "high",
+                  "title": "고등학교 학교군",
+                  "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2955&atchFileId=FILE_000000100002977&fileSn=0",
+                  "sha256": "8d5b1c2c448bb38564ff9f6b0452003a8280721b3c93d673313caa11608fbb71",
+                  "count": 7
+                },
+                {
+                  "kind": "high_nonstandard",
+                  "title": "고등학교 비평준화지역",
+                  "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2954&atchFileId=FILE_000000100002976&fileSn=0",
+                  "sha256": "a517b7aec2ab4bd9ff28afbd39ea8ea953a1c27b8843929d95d3ac85ca272184",
+                  "count": 0
+                },
+                {
+                  "kind": "links",
+                  "title": "학교-학구도 연계정보",
+                  "url": "https://schoolzone.emac.kr/publicData/publicDataFileDownload.do?nttId=2952&atchFileId=FILE_000000100002974&fileSn=0",
+                  "sha256": "97c7aeac5b3d9db2689197446830094c867f31457e8d1119f8b6da3204cf024a"
+                }
+              ],
+              "display_simplification_m": 2,
+              "crs": "EPSG:4326",
+              "kindergarten": {
+                "status": "not_published",
+                "note": "이 공식 공개자료의 대상은 초·중·고입니다. 유치원 학구 경계는 제공하지 않습니다."
+              },
+              "limitations": [
+                "통학구역·학교군은 직선/도보 500m 생활권과 다릅니다.",
+                "경계만으로 배정 가능 학교를 확정하지 않습니다. 공동·일방 학구와 예외학교는 교육청 고시 확인이 필요합니다."
+              ]
+            },
+            "quality": {
+              "records": 311,
+              "columns": [
+                "zone_id",
+                "name",
+                "zone_type",
+                "level",
+                "kind",
+                "reference_date",
+                "updated_date",
+                "office",
+                "source_url",
+                "topology_repaired",
+                "schools"
+              ],
+              "contract": "geojson",
+              "issues": [],
+              "status": "ok"
+            },
+            "quality_status": "ok",
+            "approval_blocked": false,
+            "risk": "green",
+            "schema_diff": {
+              "baseline_available": true,
+              "current_columns": [
+                "zone_id",
+                "name",
+                "zone_type",
+                "level",
+                "kind",
+                "reference_date",
+                "updated_date",
+                "office",
+                "source_url",
+                "topology_repaired",
+                "schools"
+              ],
+              "candidate_columns": [
+                "zone_id",
+                "name",
+                "zone_type",
+                "level",
+                "kind",
+                "reference_date",
+                "updated_date",
+                "office",
+                "source_url",
+                "topology_repaired",
+                "schools"
+              ],
+              "added": [],
+              "removed": [],
+              "mapping_suggestions": []
+            },
+            "record_diff": {
+              "primary_key": [],
+              "supported": false,
+              "note": "CSV 후보이면서 현재 적용본이 존재할 때만 레코드 단위 diff를 계산합니다.",
+              "added": 0,
+              "removed": 0,
+              "changed": 0,
+              "unchanged": 0,
+              "duplicate_keys": 0,
+              "examples": []
+            },
+            "affected_schools": {
+              "supported": false,
+              "note": "이 데이터셋에는 재분석 모듈이 없어 영향 학교 수를 계산하지 않았습니다."
+            },
+            "ok": true
+          },
+          "old_count": 311,
+          "new_count": 311,
+          "change_ratio": 0,
+          "schema_changed": false,
+          "content_hash": "f3ad3413be7207a860ae6fc1dde327289e271ee380c9b8820fc509909ec9ea53"
+        },
+        "ai_note": "[school_zones] content 변경 감지(green 등급). (결정론적 요약 — OPENAI_API_KEY 미설정 또는 호출 실패) 해설은 참고용입니다.",
+        "status": "pending",
+        "actor": null,
+        "updated_at": "2026-09-11T02:52:39.470Z"
+      }
+    ],
+    "log": [
+      "[candidate] 후보 zones_1789095159387 DB 보존 — 2개 파일 / 3237476B",
+      "[candidate] school_zones 후보 school_zones.geojson (3205195B) staged → 품질=ok, risk=green, DB보존=2개",
+      "[apply] 버전 v001 DB 보존 — 3개 파일 / 6469958B"
+    ],
+    "schedule": {
+      "enabled": true,
+      "interval_min": 1440,
+      "source": "env",
+      "env_interval_min": 1440,
+      "running": false,
+      "timer_armed": true,
+      "last_scan_at": "2026-09-11T02:52:40.881Z",
+      "next_scan_at": "2026-09-12T02:52:40.881Z",
+      "last_trigger": "manual",
+      "last_result": {
+        "ok": true,
+        "summary": {
+          "baseline": 0,
+          "unchanged": 0,
+          "green": 1,
+          "yellow": 0,
+          "red": 0,
+          "moved": 0,
+          "error": 0,
+          "skipped": 0
+        },
+        "event_count": 1
+      },
+      "last_skipped_at": null,
+      "updated_at": null,
+      "actor": null
+    }
+  }
+}

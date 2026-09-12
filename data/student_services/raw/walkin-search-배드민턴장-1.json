@@ -1,0 +1,14 @@
+{
+  "url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+  "request": {
+    "searchWrd": "인천 배드민턴장",
+    "collection": "resource_cate1",
+    "viewType": "UnitPage",
+    "pageIndex": 1,
+    "sort": "RANK",
+    "order": "DESC"
+  },
+  "retrieved_at": "2026-09-11T11:23:52.067056+00:00",
+  "sha256": "675a63caeccf9a8f93894907c6a8b248cbff87ad457046d2fd8980a256dd44b3",
+  "raw_file": "data/student_services/raw/snapshots/675a63caeccf9a8f93894907c6a8b248cbff87ad457046d2fd8980a256dd44b3.html"
+}

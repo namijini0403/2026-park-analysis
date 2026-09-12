@@ -1,0 +1,5 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'../..'),dir=path.join(root,'outputs/hitl-relevance'),file=path.join(dir,'release-manifest.json'),manifest=JSON.parse(fs.readFileSync(file));
+const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+for(const e of manifest.files){const dest=path.join(manifest.out,e.file),source=path.join(root,e.source);if(hash(dest)!==e.sha256)throw Error('Release changed: '+e.file);if(hash(source)!==e.source_sha256){if(e.source!=='assets/hitl-analysis.js')throw Error('Unexpected source change: '+e.source);fs.copyFileSync(source,dest);e.sha256=hash(dest);e.source_sha256=hash(source);}}
+manifest.finalized_at=new Date().toISOString();fs.writeFileSync(file,JSON.stringify(manifest,null,2));fs.writeFileSync(path.join(manifest.out,'question-release-manifest.json'),JSON.stringify(manifest,null,2));console.log('PASS finalized reviewed release; other-window files preserved');

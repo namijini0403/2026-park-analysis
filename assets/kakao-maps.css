@@ -1,0 +1,7 @@
+.kakao-school-dot{display:block!important;width:15px!important;height:15px!important;min-width:0!important;padding:0!important;margin:0!important;background:var(--dot-color)!important;border:2px solid white!important;border-radius:50%!important;box-shadow:0 1px 5px #16382d66;cursor:pointer;line-height:1!important}
+.kakao-school-dot.is-selected{width:22px!important;height:22px!important;border:3px solid #173d31!important;box-shadow:0 0 0 4px #fff9}
+.kakao-school-dot.is-shared{border-style:dashed!important;border-width:3px!important}
+.kakao-school-dot:focus-visible{outline:3px solid #173d31;outline-offset:3px}
+.kakao-evidence-popup{position:relative;width:260px;max-width:70vw;max-height:240px;overflow:auto;white-space:normal;background:#fff;padding:18px 14px 12px;border:1px solid #cfded3;border-radius:10px;box-shadow:0 4px 18px #213b3033;font:12px/1.6 'Malgun Gothic',sans-serif;color:#203f30}
+.kakao-evidence-popup p{margin:5px 0}.kakao-evidence-popup .text-button{display:block;text-align:left;font-size:12px}
+.kakao-popup-close{position:absolute;right:3px;top:1px;padding:0 5px!important;border:0!important;background:white!important;color:#274c3b!important;font-size:20px!important;line-height:1!important}

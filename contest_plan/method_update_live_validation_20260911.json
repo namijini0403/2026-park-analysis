@@ -1,0 +1,120 @@
+{
+  "deployment_id": "cede4f9f-7d6b-4c72-8ca8-371d791ef5d2",
+  "files": [
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 361125,
+      "sha256": "540d5b0c1cc6d64c522885338a11b24f2d579ba531fb3eda5ab182cebd0f5d56",
+      "matches_release": true
+    },
+    {
+      "path": "office-documents.html",
+      "status": 200,
+      "bytes": 3604,
+      "sha256": "01e6b81bf16f693d7fef4cbd8bdfc51849bc1736aa68ec64d45cea4cf693f3de",
+      "matches_release": true
+    },
+    {
+      "path": "assets/method-review.html",
+      "status": 200,
+      "bytes": 1687,
+      "sha256": "27292b57b84e134281b82171b3ae33b5f0b6c02e8d339730ea36b934237e1ed9",
+      "matches_release": true
+    },
+    {
+      "path": "assets/method-review-page.js",
+      "status": 200,
+      "bytes": 8945,
+      "sha256": "5cd7d9c86b03cf4b9b5c79781f3cdd0e74926431c9d3629850bc13fa5d5cbc40",
+      "matches_release": true
+    },
+    {
+      "path": "assets/education-layers.js",
+      "status": 200,
+      "bytes": 49927,
+      "sha256": "ffb3d9b0e61325269d0aa1da5a93bafa0c8c8433088a097a92ab4e3844f1c81d",
+      "matches_release": true
+    },
+    {
+      "path": "data_processed/candidate_grid_final.geojson",
+      "status": 200,
+      "bytes": 2387364,
+      "sha256": "c09ca4e9867fe220699de8c67469fe06695d2b47a0e1a04f95fd47e3d1bf875c",
+      "matches_release": true
+    },
+    {
+      "path": "ui-preview/dist/index.html",
+      "status": 200,
+      "bytes": 427,
+      "sha256": "0ac2a1342710dc074120e0b7851f9fd31e12ce24272bb2db727831466926b6a4",
+      "matches_release": true
+    },
+    {
+      "path": "data_processed/education/route_review.json",
+      "status": 200,
+      "bytes": 55931,
+      "sha256": "ee9977617030f087eb8bf7ad44d89aae8551274a673e25e9a208a0e62964e791",
+      "matches_release": true
+    },
+    {
+      "path": "data_processed/education/candidate_demand_v2.json",
+      "status": 200,
+      "bytes": 8781375,
+      "sha256": "2c4532a292018f5c8c163aaa5628f5fcf31489200f99f839a06e59ba99ce0822",
+      "matches_release": true
+    },
+    {
+      "path": "data_processed/education/enrollment_forecasts.json",
+      "status": 200,
+      "bytes": 1206219,
+      "sha256": "8370781764a187b2ed5062ee42917d00dba123efdb1abe2762fd33e2167b5a73",
+      "matches_release": true
+    },
+    {
+      "path": "data_processed/education/forecast_validation.json",
+      "status": 200,
+      "bytes": 459036,
+      "sha256": "3bd5b6f0ffbcdb6035397301592ce49c40e6328b665f65228173a5b2bfb3c167",
+      "matches_release": true
+    },
+    {
+      "path": "data_processed/education/grade_cohort_scenarios.json",
+      "status": 200,
+      "bytes": 919536,
+      "sha256": "685445e6103974efdd0696bd65edfe6bcbcac959009d2c7969684176c14b8103",
+      "matches_release": true
+    },
+    {
+      "path": "data_processed/education/school_enrollment_forecast_v2.csv",
+      "status": 200,
+      "bytes": 35850,
+      "sha256": "012b085ac2d249ee453c3f3f1de756c7fffd7735af1a3a019ffcd07d9e38ff02",
+      "matches_release": true
+    },
+    {
+      "path": "data_processed/education/school_analysis.json",
+      "status": 200,
+      "bytes": 37703320,
+      "sha256": "ac86190cb60754763da14753179f1ec15d5d935e388eb7c8db75fa628953d448",
+      "matches_release": true,
+      "verification": "embedded enrollment equals release; persisted context retained",
+      "checked_schools": 645
+    },
+    {
+      "path": "ui-preview/dist/assets/index-C6Rkx_RN.js",
+      "status": 200,
+      "bytes": 752860,
+      "sha256": "ac030f528cfbd38ca3e42ff99fee5974a295aa74fbfd439798cd8fcbd4880947",
+      "matches_release": true
+    },
+    {
+      "path": "ui-preview/dist/assets/index-DQ0t6qDA.css",
+      "status": 200,
+      "bytes": 39616,
+      "sha256": "bca0cffb9d6011d4d0e274f207bfae736f54d6d061ba5ec07f5b4538c964c5d5",
+      "matches_release": true
+    }
+  ],
+  "passed": true
+}

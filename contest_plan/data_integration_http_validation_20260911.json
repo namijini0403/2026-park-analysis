@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "authentication",
+    "CSV import",
+    "restart persistence",
+    "12-school join",
+    "provenance",
+    "private path 404",
+    "deletion",
+    "coverage endpoint"
+  ],
+  "generated_at": "2026-09-11T04:11:56.667Z"
+}

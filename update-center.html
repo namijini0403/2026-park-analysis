@@ -644,6 +644,8 @@
     <div>
       <h1>공공데이터 업데이트 센터</h1>
       <p class="sub">반경 너머, 정책 도달성으로</p>
+      <a href="/office-documents.html" target="_blank" rel="noopener">교육청 Excel·Word·한글 자료 함께 분석 ↗</a>
+      <p class="sub">매일 공개자료 검사 → 변경분 수집 → 관련 분석 재계산 → 검증 후 자동 반영. 학구도·도서관·학교/유치원 공시에 적용합니다. 출처별 범위와 실패 사유는 아래 자동 갱신 현황에서 확인할 수 있습니다.</p>
     </div>
     <div class="token-box">
       <label for="token-input">토큰</label>
@@ -742,6 +744,7 @@
     <pre id="upload-log" style="display:none; margin:10px 0 0; padding:10px; font-size:12px; white-space:pre-wrap; border-radius:8px; background:rgba(255,255,255,0.05); max-height:220px; overflow:auto;"></pre>
   </section>
 
+  <section class="panel"><h2>자동 갱신 현황</h2><div id="refresh-coverage">확인 중…</div></section>
   <section class="panel" id="events-panel">
     <div class="panel-head">
       <h2>③ 이벤트 목록</h2>
@@ -1663,7 +1666,7 @@
         el.textContent =
           "복원 상태: 기록 없음 (store=" + backend + ") — " +
           (backend === "file"
-            ? "DATABASE_URL 미설정: 재배포 시 버전이 휘발됩니다."
+            ? "파일 저장소: 재배포 후 유지하려면 저장 경로를 영구 볼륨에 연결해야 합니다."
             : "아직 기동 복원이 실행되지 않았습니다.");
         return;
       }
@@ -2119,6 +2122,11 @@
 
   function refreshAll() {
     return Promise.all([
+      apiFetch('/coverage').then(function(r){
+        if(!r.ok)return;
+        var labels={validated_auto_apply:'검증 후 자동 반영',collect_review_apply:'수집 후 검토',header_signal_only:'게시물 신호 감시',manual:'원출처 연결 필요'};
+        $('refresh-coverage').innerHTML='<div class="table-scroll"><table><thead><tr><th>자료</th><th>자동화 범위</th><th>최근 검사</th><th>상세</th></tr></thead><tbody>'+r.data.sources.map(function(s){var scan=s.last_scan||{};return '<tr><td>'+esc(s.dataset)+'</td><td>'+esc(labels[s.mode]||s.mode)+'</td><td>'+esc(scan.lastStatus||'검사 전')+'</td><td>'+esc(scan.error||s.coverage)+'</td></tr>';}).join('')+'</tbody></table></div>';
+      }),
       loadSchedule(),
       loadSources(),
       loadEvents(),

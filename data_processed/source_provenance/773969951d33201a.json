@@ -1,0 +1,9 @@
+{
+  "file": "data_processed/education/enrollment_forecasts.json",
+  "sha256": "8370781764a187b2ed5062ee42917d00dba123efdb1abe2762fd33e2167b5a73",
+  "originals": [],
+  "upstream": [
+    "data_processed/education/school_statistics.json"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

@@ -1,0 +1,49 @@
+{
+  "deployment_id": "9bc69e1e-4d26-435d-8b53-f7e05189a1bd",
+  "deployment_status": "SUCCESS",
+  "url": "https://education-living-area-preview-production.up.railway.app/assets/student-services.html",
+  "checks": [
+    {
+      "path": "index.html",
+      "http_status": 200,
+      "sha256": "b0c8d2ff13b007dc709ed104dbde52befd203ead2a0755217e5c874a00e1b393"
+    },
+    {
+      "path": "assets/student-services.html",
+      "http_status": 200,
+      "sha256": "0ebf144a4806a3275297a427ec10e4e439f6d87462d396fbe539c0290ca2bb5d"
+    },
+    {
+      "path": "assets/student-services.js",
+      "http_status": 200,
+      "sha256": "691d3cd7f22c09a3b89e55d70577ebcec75f6d4c47effe6cb1f25576fac64b71"
+    },
+    {
+      "path": "data_processed/student_services/facilities.json",
+      "http_status": 200,
+      "sha256": "fdbdc4f13f87b3113d56149e153bc4ab23953b1fcbb6827ee3dde44b9ff19053"
+    },
+    {
+      "path": "data_processed/student_services/priorities.json",
+      "http_status": 200,
+      "sha256": "5e05f01159764783388a33881d29811dcd20ee7bbed7591c0f97f6b7bc84412a"
+    },
+    {
+      "path": "data_processed/student_services/school_priorities.csv",
+      "http_status": 200,
+      "sha256": "251dbfbd26b972a82d3e7ede709769846921d380ec708340d4cfa357acc7ebe1"
+    }
+  ],
+  "sports": 25,
+  "welfare": 521,
+  "schools": 272,
+  "candidates": 2121,
+  "policy": "public_free_walkin_students_v1",
+  "legacy_sports_excluded": 27,
+  "unit_tests": 7,
+  "ui_tests": [
+    "student_services",
+    "method_review"
+  ],
+  "limitation": "Official explicit walk-in subset, not complete city inventory; no real browser visual QA available"
+}

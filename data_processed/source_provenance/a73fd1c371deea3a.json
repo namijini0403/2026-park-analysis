@@ -1,0 +1,38 @@
+{
+  "file": "data_processed/context/facilities_construction.geojson",
+  "sha256": "8567780fac6768286e838f9203ef8c9e62dd5639e2f073a3da2480d67b8861d6",
+  "originals": [
+    {
+      "url": "https://www.data.go.kr/data/15029299/fileData.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "2026-03-09",
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.features[0].properties.source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.data.go.kr/data/15029300/fileData.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "2025-09-25",
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.features[74].properties.source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.data.go.kr/data/15038929/fileData.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "2026-01-19",
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$.features[2045].properties.source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

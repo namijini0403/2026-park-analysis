@@ -1,0 +1,38 @@
+{
+  "file": "data_processed/education/school_progression.json",
+  "sha256": "5f3fc6aedd875a3f6b7674faa043d9e6ab25626bcbaad2a2bf7eb7fe4ef1b124",
+  "originals": [
+    {
+      "url": "https://kess.kedi.re.kr/contents/dataset?itemCode=04&menuId=m_02_04_03_02&tabId=m1",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "20250401",
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011829[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://kess.kedi.re.kr/contents/dataSet/downLoad.do?fileNm=2026162291710.xlsx&userfileNm=kess_2025_schools.xlsx",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.sources[0].download_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://kess.kedi.re.kr/contents/dataSet/downLoad.do?fileNm=2026835615251.xlsx&userfileNm=kess_2026_schools.xlsx",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.sources[1].download_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

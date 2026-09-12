@@ -1,0 +1,79 @@
+{
+  "matched": {
+    "total": 3,
+    "matched": 3,
+    "excluded": 0,
+    "mapping": {
+      "type": "school_name",
+      "key": 0,
+      "measure": 1,
+      "year": 2,
+      "existing": "schools:students",
+      "valueType": "numeric"
+    }
+  },
+  "year_groups": [
+    {
+      "group": "초등학교|2026",
+      "n": 3,
+      "pearson": -0.7196,
+      "spearman": -0.5
+    },
+    {
+      "group": "초등학교|2025",
+      "n": 3,
+      "pearson": -0.702,
+      "spearman": -0.5
+    }
+  ],
+  "total_groups": [
+    [
+      "초등학교 · 학생 수",
+      242,
+      0,
+      562,
+      448,
+      6,
+      2089
+    ],
+    [
+      "중학교 · 학생 수",
+      133,
+      0,
+      602,
+      518,
+      63,
+      1384
+    ],
+    [
+      "고등학교 · 학생 수",
+      116,
+      0,
+      633,
+      570,
+      207,
+      1301
+    ],
+    [
+      "유치원 · 학생 수",
+      345,
+      0,
+      95,
+      67,
+      2,
+      604
+    ]
+  ],
+  "checks": [
+    "CSV quoted fields",
+    "real XLSX cached formulas",
+    "duplicate exclusion",
+    "unmatched schools",
+    "numeric errors",
+    "year separation",
+    "categorical means",
+    "district school averages",
+    "school selection ignored for total scope",
+    "four separate school levels"
+  ]
+}

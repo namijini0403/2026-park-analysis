@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict');
+const {analyzeDocument,number}=require('../api/_office_documents.js');
+const engine=require('../api/_analysis_engine.js');
+const dataset={years:[2026],source_hashes:{public:'abc'},schools:Array.from({length:12},(_,i)=>({id:'S'+i,name:'학교'+i,level:'초등학교',gu:'남동구',lat:37.4+i*.001,lng:126.7,environment:{parks:i+2},observations:{2026:{students:100+i}},enrollment_trend:{observations:[{year:2026,students:100+i}]}}))};
+const doc={id:'a'.repeat(64),name:'검증.xlsx',tables:[{name:'Sheet1',rows:[['학교명','횟수'],...dataset.schools.map((s,i)=>[s.name,String(i*3)]),['미상','7'],['학교0','9'],['학교1','=SUM(A1)']]}],paragraphs:['학교2의 야외활동 사업 검토.']};
+const body={mode:'table',table_index:0,school_column:0,value_column:1,level:'초등학교',year:2026,compare_field:'parks'};
+const before=JSON.stringify(dataset),result=analyzeDocument(doc,body,dataset);
+assert.equal(result.metrics.n,10);assert.equal(result.metrics.spearman,1);assert.equal(result.join.issue_count,3);
+assert.equal(JSON.stringify(dataset),before);assert.equal(engine.fields.office_value,undefined);
+assert.equal(result.source_hashes.office_document,doc.id);
+assert.equal(number('1,234'),1234);assert.equal(number(''),null);assert.equal(number('0'),0);assert.equal(number('=1+1'),null);
+assert.throws(()=>analyzeDocument(doc,{...body,compare_field:'__proto__'},dataset));
+assert.throws(()=>analyzeDocument(doc,{...body,year:2010},dataset));
+const evidence=analyzeDocument(doc,{mode:'evidence',level:'초등학교',school_id:'S2'},dataset);assert.equal(evidence.matches[0].id,'S2');
+console.log('office documents: matching, duplicates, missing, scoped variable, provenance, evidence PASS');

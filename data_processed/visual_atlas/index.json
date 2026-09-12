@@ -1,0 +1,301 @@
+{
+  "version": 1,
+  "created_at": "2026-09-12T06:00:52.338Z",
+  "datasets": [
+    {
+      "id": "designations",
+      "title": "교육청 지정사업 원장",
+      "sections": 1,
+      "sha256": "3afe271747e0d1852b23e05c1ccb9195923e87e51fff9f0e6b4a4725daa487f8",
+      "bytes": 142297
+    },
+    {
+      "id": "schools",
+      "title": "학교 공원 녹지 관측",
+      "sections": 81,
+      "sha256": "bf615684d38be6d122a5c9edfc90aff00d8fb0543c77c54f8e5a22b7ee7616bf",
+      "bytes": 2239362
+    },
+    {
+      "id": "parks",
+      "title": "공원 시설 원장",
+      "sections": 3,
+      "sha256": "d6b187ff0893c5626d9537d929aa675353892f1271f04eb4e781e9b6f09c8248",
+      "bytes": 308634
+    },
+    {
+      "id": "playgrounds",
+      "title": "어린이 놀이시설",
+      "sections": 1,
+      "sha256": "c5df17fa5560713424f121d005943e10c8d19db87d7243135230cd66a14770e9",
+      "bytes": 28618
+    },
+    {
+      "id": "services",
+      "title": "도서관 운동 돌봄 시설",
+      "sections": 1,
+      "sha256": "a480deb0c04188f5e1a1320fbabd76f72f82e876b72b647f1f30f73e594ee662",
+      "bytes": 322856
+    },
+    {
+      "id": "books",
+      "title": "학교 장서 사서",
+      "sections": 16,
+      "sha256": "15dc9a8777413b4cb41a63df6a338943c1f079f80707250732bc45d567f96a4f",
+      "bytes": 371728
+    },
+    {
+      "id": "library_access",
+      "title": "도서관 거리별 접근",
+      "sections": 17,
+      "sha256": "f18d26e539f98bad38c51043aeaf9e7c299c9d5f72e78f79750417566a03d475",
+      "bytes": 611923
+    },
+    {
+      "id": "library_scenarios",
+      "title": "도서관 거리권 인구 시나리오",
+      "sections": 41,
+      "sha256": "9bb05f23bcbeaae424af4bd90ea64ae8620906379cc31ea7fe9e66960a1a9c40",
+      "bytes": 50929
+    },
+    {
+      "id": "academies",
+      "title": "학원 교습소",
+      "sections": 1,
+      "sha256": "7c19332ab0f85aa6d30d3bcf0bfd99737acd81ac6d7fe9b4a5b17636dd681290",
+      "bytes": 2078599
+    },
+    {
+      "id": "construction",
+      "title": "착공 신고 공사장",
+      "sections": 1,
+      "sha256": "796688dfc79e1106806aa5ce7593a43195167ed7b03c05796a51d0cfc43259ba",
+      "bytes": 984906
+    },
+    {
+      "id": "nightlife",
+      "title": "유흥 단란주점",
+      "sections": 1,
+      "sha256": "10b324d5ef4d9bfde1e1cf2f86efdba89eb91515b1debda945e0e03db292ae84",
+      "bytes": 502262
+    },
+    {
+      "id": "redevelopment",
+      "title": "재개발 사업",
+      "sections": 3,
+      "sha256": "c43de12a96381e468e798053defb502c91cf2c8192263f740ee6d56aca086546",
+      "bytes": 92531
+    },
+    {
+      "id": "apartments",
+      "title": "대단지 아파트",
+      "sections": 3,
+      "sha256": "4eb4856d92e2cbe8469aed0a727ea539bf1251263a665ba628d70a1becf4db40",
+      "bytes": 192243
+    },
+    {
+      "id": "shared_parks",
+      "title": "공원 공동 이용 부담",
+      "sections": 49,
+      "sha256": "58febfc33aacef5ebd4de092faf5bc12d38a26f72dc4f27262846c5dad6a3a41",
+      "bytes": 1459338
+    },
+    {
+      "id": "park_review",
+      "title": "공원별 현장 확인 범위",
+      "sections": 1,
+      "sha256": "7aae9bec6cad1c4f97de18be58232edca152dd3c6e7cc879ca5971ecbc08c2cb",
+      "bytes": 21441
+    },
+    {
+      "id": "resilience",
+      "title": "도로 구간 중단 시나리오",
+      "sections": 9,
+      "sha256": "e8fa62585234aa3688077893d5f7050bcf2706b9fa0beab95cc9b505136873a9",
+      "bytes": 292374
+    },
+    {
+      "id": "clusters",
+      "title": "학원 밀집 분석",
+      "sections": 17,
+      "sha256": "3192273a763c339a044a1048a317e6bab09a4c1363d3c2f9a3150170afae06f5",
+      "bytes": 585674
+    },
+    {
+      "id": "diffusion",
+      "title": "지정학교 확산 시나리오",
+      "sections": 1,
+      "sha256": "4f0caa9117cf71f55a64132e09057a749a05579a0863726b9fa352855a291d84",
+      "bytes": 2618
+    },
+    {
+      "id": "routes",
+      "title": "공원 보행 경로",
+      "sections": 19,
+      "sha256": "32ee6f7b2b52c99c8305a7b5fd0f82e82241dcba6c0924d6035829451870f13d",
+      "bytes": 674848
+    },
+    {
+      "id": "candidate_routes",
+      "title": "격자 연결 경로 관측",
+      "sections": 2,
+      "sha256": "a9b80cc2b71fb13134b0f35da2df46e4c34bb72feee06721635e5e120583f264",
+      "bytes": 221784
+    },
+    {
+      "id": "route_review",
+      "title": "보행 경로 재검토",
+      "sections": 1,
+      "sha256": "6ff851bf083dc53077c9d63fef7b6b8d6a4c94e980a614ab661467776b58a0e2",
+      "bytes": 13753
+    },
+    {
+      "id": "hybrid",
+      "title": "출입구 경로 교차 검토",
+      "sections": 1,
+      "sha256": "8c0d7ca5f349f68fbffa58722b78faad04b2582f01c99b733b6b53d916bce33f",
+      "bytes": 13316
+    },
+    {
+      "id": "residential",
+      "title": "주거 구역 내부 통행 시나리오",
+      "sections": 19,
+      "sha256": "69ff7815a73e69a9dab53189bcb5bcdd6d28b238e19146ede5b83a6ca58854fa",
+      "bytes": 652014
+    },
+    {
+      "id": "school_demand",
+      "title": "생활권 연령 인구 추정",
+      "sections": 17,
+      "sha256": "1a6d73921574c62cf8aea669ca80885a111106b641c70856fd8c12368ab423ac",
+      "bytes": 1858443
+    },
+    {
+      "id": "grid_demand",
+      "title": "250m 격자 수요 시나리오",
+      "sections": 9,
+      "sha256": "751a5738a3c17a2104cec485bcd1c639f8c7120e0d57a0f3a7072590ea5ef74c",
+      "bytes": 8548194
+    },
+    {
+      "id": "forecast",
+      "title": "학교 학생 수 예측",
+      "sections": 107,
+      "sha256": "942aa0042778acc5c0b2df85797281afd6fff0431c7b9961571d2f73ba7ccba5",
+      "bytes": 4063935
+    },
+    {
+      "id": "cohort",
+      "title": "학년 진급 시나리오",
+      "sections": 32,
+      "sha256": "f94014101a9ad1fa8d787babd761e8079ca78303c0d3245a975b96f8a653b9aa",
+      "bytes": 911462
+    },
+    {
+      "id": "demography",
+      "title": "지역 연령 인구 관측",
+      "sections": 133,
+      "sha256": "17e6d6594bc73e812d662d5ce9b39049576e08779bd9c6b0cd081123fad8e23e",
+      "bytes": 422766
+    },
+    {
+      "id": "regional_forecast",
+      "title": "지역 연령 인구 예측",
+      "sections": 49,
+      "sha256": "c68ffdb79f810914d8801ae78b8aa3896e02286c72ab25057eeaa2be48518daa",
+      "bytes": 129425
+    },
+    {
+      "id": "validation",
+      "title": "지역 인구 모형 검증",
+      "sections": 25,
+      "sha256": "256404b6609ecdaa083ce3e4b6c3d4acd95d51983bfad946ac712865353a1dad",
+      "bytes": 38766
+    },
+    {
+      "id": "school_validation",
+      "title": "학교 예측 성능 검증",
+      "sections": 61,
+      "sha256": "b3f69a592fe9187aa7cbc4ffaedc3fdad29b5960cbe863f9b8f68c5458de3c2b",
+      "bytes": 86786
+    },
+    {
+      "id": "progression",
+      "title": "졸업 후 진학 취업",
+      "sections": 33,
+      "sha256": "928fa5793e99fc5728f8e6c2e3da171a99ec1147e102e351f59a58833ab0158c",
+      "bytes": 556508
+    },
+    {
+      "id": "athletics",
+      "title": "학교 운동부 공시",
+      "sections": 150,
+      "sha256": "3ab654245343c89f04b2c60ed8ea53fdbf74d2f91e2f15f0d69a70a7748d16d2",
+      "bytes": 371557
+    },
+    {
+      "id": "sports_awards",
+      "title": "체육 대회 결과 관측",
+      "sections": 1,
+      "sha256": "67621ebdf94df8ee78c4090d01be24d9f5cfa3cb8bdb1a567bcfbb727e2eb000",
+      "bytes": 60818
+    },
+    {
+      "id": "science_awards",
+      "title": "과학전람회 결과 관측",
+      "sections": 1,
+      "sha256": "11e84ea226a7ec1e8cf4c2265e4fa3a4fd36e9bbd0ae23ccdc4aa38e77a9aa1c",
+      "bytes": 25848
+    },
+    {
+      "id": "invention_awards",
+      "title": "발명품 대회 결과 관측",
+      "sections": 1,
+      "sha256": "bb98e48aab4c2535f4f38620b697a57a4675db621b1be49f8b54172fae9e394b",
+      "bytes": 29954
+    },
+    {
+      "id": "curriculum",
+      "title": "공동교육과정 개설 과목",
+      "sections": 33,
+      "sha256": "22fd0842ba25dada8ce9beae2b614c6ea33955047a75ede17957b0852acf2912",
+      "bytes": 111170
+    },
+    {
+      "id": "curriculum_links",
+      "title": "공동교육과정 연결망",
+      "sections": 3,
+      "sha256": "5f33f4a39409e198806e302288b001252867fd4f48dcb436c840d72dc5aae58b",
+      "bytes": 11760
+    },
+    {
+      "id": "indicators",
+      "title": "학교 공시 지표",
+      "sections": 234,
+      "sha256": "3e4007647682a7fe14ed09a65d103963ec8d88359dd3ca2a52d2ad1055c1042b",
+      "bytes": 8422480
+    },
+    {
+      "id": "similar",
+      "title": "유사학교 비교",
+      "sections": 1,
+      "sha256": "d4be3c63cd6aea424ac5dad3c96b165405565fbf2332d9a587a4fa4408bbf2d2",
+      "bytes": 1388
+    },
+    {
+      "id": "zones",
+      "title": "학교 통학구역",
+      "sections": 1,
+      "sha256": "8ab7465fc108e185572bbbbd5b12fdf420f820bc86ed9c31a287ec52234139fb",
+      "bytes": 1205697
+    },
+    {
+      "id": "walkshed",
+      "title": "500m 보행 도달권",
+      "sections": 1,
+      "sha256": "e4a52c00bdd13bfc5bb629bebc7daca3ffdf90dadb88164ae7e3a55ab22faeb1",
+      "bytes": 1167627
+    }
+  ],
+  "updated_at": "2026-09-12T06:18:31.974Z"
+}

@@ -61,6 +61,7 @@
 // file backend end-to-end and prints "OK" on success (non-zero exit + message on failure).
 
 import fs from "node:fs";
+import zlib from 'node:zlib';
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
@@ -188,7 +189,31 @@ function loadDb() {
 
 function saveDb(db) {
   ensureDataDir();
-  fs.writeFileSync(FILE_STORE_PATH(), JSON.stringify(db, null, 2), "utf-8");
+  const temporary=FILE_STORE_PATH()+'.tmp';
+  fs.writeFileSync(temporary, JSON.stringify(db, null, 2), "utf-8");
+  fs.renameSync(temporary,FILE_STORE_PATH());
+}
+
+// Large analysis bundles are immutable compressed blobs, deduplicated by content hash.
+// Metadata/audit reads no longer parse hundreds of MB of repeated base64 content.
+function storeBlobs(files){
+  const dir=FILE_STORE_PATH()+'.blobs';fs.mkdirSync(dir,{recursive:true});
+  return files.map(({content,...meta})=>{
+    const dest=path.join(dir,meta.sha256+'.gz');
+    if(!fs.existsSync(dest)){
+      const temp=dest+'.tmp';fs.writeFileSync(temp,zlib.gzipSync(Buffer.from(content,'base64'),{level:6}));fs.renameSync(temp,dest);
+    }
+    return {...meta,blob_sha256:meta.sha256};
+  });
+}
+function expandBlobs(files){
+  return files.map(file=>{
+    if(!file.blob_sha256)return {...file}; // existing inline snapshots remain readable
+    if(!/^[a-f0-9]{64}$/.test(file.blob_sha256))throw Error('Invalid blob identifier');
+    const bytes=zlib.gunzipSync(fs.readFileSync(path.join(FILE_STORE_PATH()+'.blobs',file.blob_sha256+'.gz')),{maxOutputLength:MAX_PERSIST_FILE_BYTES});
+    if(crypto.createHash('sha256').update(bytes).digest('hex')!==file.sha256)throw Error('Stored blob checksum mismatch');
+    return {...file,content:bytes.toString('base64')};
+  });
 }
 
 function createFileStore() {
@@ -336,7 +361,7 @@ function createFileStore() {
       const { files: payload, totalBytes } = normaliseFilePayload(files, `버전 ${versionId}`);
       const db = loadDb();
       if (!db.version_files || typeof db.version_files !== "object") db.version_files = {};
-      db.version_files[String(versionId)] = payload;
+      db.version_files[String(versionId)] = storeBlobs(payload);
       if (manifest !== null && manifest !== undefined) {
         const version = db.versions.find((v) => v.id === versionId);
         if (version) {
@@ -356,7 +381,7 @@ function createFileStore() {
       return {
         version_id: String(versionId),
         manifest: version && version.manifest ? version.manifest : manifestFromFiles(files),
-        files: files.map((f) => ({ ...f })),
+        files: expandBlobs(files),
       };
     },
 
@@ -400,7 +425,7 @@ function createFileStore() {
       const db = loadDb();
       if (!db.version_files || typeof db.version_files !== "object") db.version_files = {};
       if (!db.meta || typeof db.meta !== "object") db.meta = {};
-      db.version_files[STAGING_ID_PREFIX + String(stagingId)] = payload;
+      db.version_files[STAGING_ID_PREFIX + String(stagingId)] = storeBlobs(payload);
       if (manifest !== null && manifest !== undefined) {
         db.meta[STAGED_MANIFEST_META_PREFIX + String(stagingId)] = manifest;
       }
@@ -416,7 +441,7 @@ function createFileStore() {
       return {
         staging_id: String(stagingId),
         manifest: manifest ?? manifestFromFiles(files),
-        files: files.map((f) => ({ ...f })),
+        files: expandBlobs(files),
       };
     },
   };

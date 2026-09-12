@@ -1,0 +1,141 @@
+{
+  "source_data_checks": "passed",
+  "preview": {
+    "passed": true,
+    "live": false,
+    "checked_at": "2026-09-12T08:29:28.738Z",
+    "checks": [
+      "12 layer toggles in collapsed groups",
+      "lazy data fetch",
+      "real Kakao rendering and viewport grouping",
+      "facility table and durable popup",
+      "clear preserves walking controls",
+      "academy membership drilldown",
+      "restored selections",
+      "mobile no overflow",
+      "slow response does not resurrect disabled layers"
+    ],
+    "errors": []
+  },
+  "existing_school_map_regression": "passed",
+  "deployment_status": "SUCCESS",
+  "runtime_files": [
+    "index.html",
+    "assets/school-map.js",
+    "assets/kakao-maps.js",
+    "assets/map-layers.js",
+    "assets/map-layers.css"
+  ],
+  "scope": "map layers only; existing analysis and walking behavior preserved",
+  "all_source_hashes_unchanged": true,
+  "deployment_id": "e2208459-b9ba-4794-9cd9-a0dc8e61e25d",
+  "public_files": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/school-map.js",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/kakao-maps.js",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/map-layers.js",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "assets/map-layers.css",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/academies.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/accidents.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/apartments.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/care.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/clusters.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/construction.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/libraries.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/manifest.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/parks.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/playgrounds.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/redevelopment.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/sports.json",
+      "status": 200,
+      "match": true
+    },
+    {
+      "file": "data_processed/map_layers/youth.json",
+      "status": 200,
+      "match": true
+    }
+  ],
+  "live": {
+    "passed": true,
+    "live": true,
+    "checked_at": "2026-09-12T08:36:01.872Z",
+    "checks": [
+      "12 layer toggles in collapsed groups",
+      "lazy data fetch",
+      "real Kakao rendering and viewport grouping",
+      "facility table and durable popup",
+      "clear preserves walking controls",
+      "academy membership drilldown",
+      "restored selections",
+      "mobile no overflow",
+      "slow response does not resurrect disabled layers"
+    ],
+    "errors": []
+  }
+}

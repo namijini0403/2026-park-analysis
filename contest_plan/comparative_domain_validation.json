@@ -1,0 +1,794 @@
+{
+  "cases": [
+    {
+      "id": "designations",
+      "school": "인천박문초등학교",
+      "sections": 5,
+      "charts": [
+        "bar",
+        "line",
+        "line",
+        "line"
+      ],
+      "sources": [
+        "data_processed/context/school_designations.json",
+        "data_processed/education/designation_diffusion.json"
+      ]
+    },
+    {
+      "id": "schools",
+      "school": "인천신흥초등학교",
+      "sections": 11,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "parks",
+      "school": "인천석암초등학교",
+      "sections": 14,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/parks.csv",
+        "data_processed/education/analysis_dataset.json",
+        "data_processed/education/shared_parks.json"
+      ]
+    },
+    {
+      "id": "playgrounds",
+      "school": "인천석암초등학교",
+      "sections": 11,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/geocoded_playground.csv",
+        "data_processed/education/analysis_dataset.json",
+        "data_processed/education/shared_parks.json"
+      ]
+    },
+    {
+      "id": "services",
+      "school": "인천석암초등학교",
+      "sections": 12,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/student_services/priorities.json",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "books",
+      "school": "인천갈월초등학교",
+      "sections": 16,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/student_services/priorities.json",
+        "data_processed/school_library_access.csv",
+        "data_processed/education/library_access_preview.json"
+      ]
+    },
+    {
+      "id": "library_access",
+      "school": "인천신흥초등학교",
+      "sections": 12,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/library_access_preview.json",
+        "data_processed/student_services/priorities.json",
+        "data_processed/school_library_access.csv"
+      ]
+    },
+    {
+      "id": "library_scenarios",
+      "school": "인천석암초등학교",
+      "sections": 10,
+      "charts": [
+        "line",
+        "line",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/library_access_preview.json",
+        "data_processed/student_services/priorities.json",
+        "data_processed/school_library_access.csv"
+      ]
+    },
+    {
+      "id": "academies",
+      "school": "인천석암초등학교",
+      "sections": 12,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/academies.json",
+        "data_processed/education/academy_clusters.json",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "construction",
+      "school": "인천석암초등학교",
+      "sections": 10,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/context/facilities_construction.geojson",
+        "data_processed/education/school_routes.json",
+        "data_processed/school_nearest_park.csv",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "nightlife",
+      "school": "인천석암초등학교",
+      "sections": 10,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/context/facilities_nightlife.geojson",
+        "data_processed/education/school_routes.json",
+        "data_processed/school_nearest_park.csv",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "redevelopment",
+      "school": "인천석암초등학교",
+      "sections": 8,
+      "charts": [
+        "bar",
+        "bar",
+        "line",
+        "line",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/redevelopment_geocoded.csv",
+        "data_processed/education/enrollment_forecasts.json",
+        "data_processed/large_apt_complexes_2025.csv"
+      ]
+    },
+    {
+      "id": "apartments",
+      "school": "인천석암초등학교",
+      "sections": 8,
+      "charts": [
+        "bar",
+        "bar",
+        "line",
+        "line",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/large_apt_complexes_2025.csv",
+        "data_processed/education/enrollment_forecasts.json",
+        "data_processed/redevelopment_geocoded.csv"
+      ]
+    },
+    {
+      "id": "shared_parks",
+      "school": "인천신흥초등학교",
+      "sections": 16,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/shared_parks.json",
+        "data_processed/education/analysis_dataset.json",
+        "data_processed/education/school_routes.json",
+        "data_processed/school_nearest_park.csv"
+      ]
+    },
+    {
+      "id": "park_review",
+      "school": "인천석암초등학교",
+      "sections": 11,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/field_verification.json",
+        "data_processed/education/shared_parks.json",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "resilience",
+      "school": "인천신흥초등학교",
+      "sections": 6,
+      "charts": [
+        "bar",
+        "bar",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/road_resilience.json",
+        "data_processed/education/school_routes.json",
+        "data_processed/school_nearest_park.csv",
+        "data_processed/education/route_review.json"
+      ]
+    },
+    {
+      "id": "clusters",
+      "school": "인천신흥초등학교",
+      "sections": 10,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/academy_clusters.json",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "diffusion",
+      "school": "인천석암초등학교",
+      "sections": 5,
+      "charts": [
+        "line",
+        "line",
+        "line",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/designation_diffusion.json",
+        "data_processed/context/school_designations.json"
+      ]
+    },
+    {
+      "id": "routes",
+      "school": "산마을고등학교",
+      "sections": 10,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/school_routes.json",
+        "data_processed/education/route_review.json",
+        "data_processed/education/hybrid_walk_review.json",
+        "data_processed/school_nearest_park.csv"
+      ]
+    },
+    {
+      "id": "candidate_routes",
+      "school": "인천부흥초등학교",
+      "sections": 3,
+      "charts": [
+        "bar",
+        "box",
+        "box"
+      ],
+      "sources": [
+        "data_processed/candidate_barrier_routes_by_school.json",
+        "data_processed/education/candidate_demand_v2.json"
+      ]
+    },
+    {
+      "id": "route_review",
+      "school": "인천백운초등학교",
+      "sections": 7,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/route_review.json",
+        "data_processed/education/school_routes.json",
+        "data_processed/school_nearest_park.csv",
+        "data_processed/education/hybrid_walk_review.json"
+      ]
+    },
+    {
+      "id": "hybrid",
+      "school": "인천송월초등학교",
+      "sections": 7,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/hybrid_walk_review.json",
+        "data_processed/education/school_routes.json",
+        "data_processed/school_nearest_park.csv",
+        "data_processed/education/route_review.json"
+      ]
+    },
+    {
+      "id": "residential",
+      "school": "산마을고등학교",
+      "sections": 8,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/residential_scenario.json",
+        "data_processed/education/school_routes.json",
+        "data_processed/education/hybrid_walk_review.json"
+      ]
+    },
+    {
+      "id": "school_demand",
+      "school": "인천여자상업고등학교",
+      "sections": 6,
+      "charts": [
+        "bar",
+        "bar",
+        "line",
+        "line",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/school_age_demand.json",
+        "data_processed/education/enrollment_forecasts.json"
+      ]
+    },
+    {
+      "id": "grid_demand",
+      "school": "인천석암초등학교",
+      "sections": 3,
+      "charts": [
+        "box",
+        "box"
+      ],
+      "sources": [
+        "data_processed/education/candidate_demand_v2.json",
+        "data_processed/education/school_age_demand.json"
+      ]
+    },
+    {
+      "id": "forecast",
+      "school": "인천여자상업고등학교",
+      "sections": 10,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "line",
+        "line",
+        "bar",
+        "bar",
+        "bar",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/enrollment_forecasts.json",
+        "data_processed/education/forecast_validation.json",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "cohort",
+      "school": "인천여자상업고등학교",
+      "sections": 8,
+      "charts": [
+        "line",
+        "bar",
+        "line",
+        "line",
+        "bar",
+        "bar",
+        "bar",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/grade_cohort_scenarios.json",
+        "data_processed/education/enrollment_forecasts.json",
+        "data_processed/education/forecast_validation.json"
+      ]
+    },
+    {
+      "id": "demography",
+      "school": "인천석암초등학교",
+      "sections": 4,
+      "charts": [
+        "line",
+        "bar",
+        "line",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/regional_demography.json",
+        "data_processed/education/regional_age_forecasts.json"
+      ]
+    },
+    {
+      "id": "regional_forecast",
+      "school": "인천석암초등학교",
+      "sections": 6,
+      "charts": [
+        "line",
+        "bar",
+        "line",
+        "bar",
+        "bar",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/regional_age_forecasts.json",
+        "data_processed/education/regional_demography.json",
+        "data_processed/education/regional_age_forecast_validation.json"
+      ]
+    },
+    {
+      "id": "validation",
+      "school": "인천석암초등학교",
+      "sections": 4,
+      "charts": [
+        "bar",
+        "bar",
+        "line",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/regional_age_forecast_validation.json",
+        "data_processed/education/regional_age_forecasts.json"
+      ]
+    },
+    {
+      "id": "school_validation",
+      "school": "인천석암초등학교",
+      "sections": 6,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "line",
+        "line",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/forecast_validation.json",
+        "data_processed/education/enrollment_forecasts.json"
+      ]
+    },
+    {
+      "id": "progression",
+      "school": "인천국제고등학교",
+      "sections": 8,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/school_progression.json",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "athletics",
+      "school": "부원중학교",
+      "sections": 3,
+      "charts": [
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/school_athletics.json",
+        "data_processed/education/sports_awards.json"
+      ]
+    },
+    {
+      "id": "sports_awards",
+      "school": "동산고등학교",
+      "sections": 3,
+      "charts": [
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/sports_awards.json",
+        "data_processed/education/school_athletics.json"
+      ]
+    },
+    {
+      "id": "science_awards",
+      "school": "인천과학고등학교",
+      "sections": 3,
+      "charts": [
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/science_awards.json",
+        "data_processed/context/school_designations.json"
+      ]
+    },
+    {
+      "id": "invention_awards",
+      "school": "산마을고등학교",
+      "sections": 3,
+      "charts": [
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/invention_awards.json",
+        "data_processed/context/school_designations.json"
+      ]
+    },
+    {
+      "id": "curriculum",
+      "school": "가림고등학교",
+      "sections": 7,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/curriculum_network.json"
+      ]
+    },
+    {
+      "id": "curriculum_links",
+      "school": "학익고등학교",
+      "sections": 7,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/curriculum_network.json"
+      ]
+    },
+    {
+      "id": "indicators",
+      "school": "인천여자상업고등학교",
+      "sections": 24,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/school_public_indicators.json",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "similar",
+      "school": "인천여자상업고등학교",
+      "sections": 6,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar"
+      ],
+      "sources": [
+        "data_processed/education/school_analysis.json",
+        "data_processed/education/analysis_dataset.json",
+        "data_processed/student_services/priorities.json"
+      ]
+    },
+    {
+      "id": "zones",
+      "school": "인천석암초등학교",
+      "sections": 6,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/school_zones.geojson",
+        "data_processed/education/walkshed_500m.geojson",
+        "data_processed/school_walkshed_500m_v3.geojson",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    },
+    {
+      "id": "walkshed",
+      "school": "인천갈월초등학교",
+      "sections": 9,
+      "charts": [
+        "bar",
+        "bar",
+        "bar",
+        "bar",
+        "scatter"
+      ],
+      "sources": [
+        "data_processed/education/walkshed_500m.geojson",
+        "data_processed/school_walkshed_500m_v3.geojson",
+        "data_processed/education/school_routes.json",
+        "data_processed/school_nearest_park.csv",
+        "data_processed/education/analysis_dataset.json"
+      ]
+    }
+  ],
+  "checks": [
+    "all 42 families through chat",
+    "finite chart data",
+    "table shape",
+    "self exclusion",
+    "legacy scores excluded",
+    "exact elementary books",
+    "future vs comparison year",
+    "missing coverage",
+    "latest sport and duplicate-date exclusion"
+  ]
+}

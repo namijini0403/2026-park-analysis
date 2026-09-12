@@ -1,0 +1,5942 @@
+{
+  "file": "data_processed/student_services/priorities.json",
+  "sha256": "5a5523caf76f676102d2f03a0c7bedf966d66d8720b01e1127b8a1825f81a42e",
+  "originals": [
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=530",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=529",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[1].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=528",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[2].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=527",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[3].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=526",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[4].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=525",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[5].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=524",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[6].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=523",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[7].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=522",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[8].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=521",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[9].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=520",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[10].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=519",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[11].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=518",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[12].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=517",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[13].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=515",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[14].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=514",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[15].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=513",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[16].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=512",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[17].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=511",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[18].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=510",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[19].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=509",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[20].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=508",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[21].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=507",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[22].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=506",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[23].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=505",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[24].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=504",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[25].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=503",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[26].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=502",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[27].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=501",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[28].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=500",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[29].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=499",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[30].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=498",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[31].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=497",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[32].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=496",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[33].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=495",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[34].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=494",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[35].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=493",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[36].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=492",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[37].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=491",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[38].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=490",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[39].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=489",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[40].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=488",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[41].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=487",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[42].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=486",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[43].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=485",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[44].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=484",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[45].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=483",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[46].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=482",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[47].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=481",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[48].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=480",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[49].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=479",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[50].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=478",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[51].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=477",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[52].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=476",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[53].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=475",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[54].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=474",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[55].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=473",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[56].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=472",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[57].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=471",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[58].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=470",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[59].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=469",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[60].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=468",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[61].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=467",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[62].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=466",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[63].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=465",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[64].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=464",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[65].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=463",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[66].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=462",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[67].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=461",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[68].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=460",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[69].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=459",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[70].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=458",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[71].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=457",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[72].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=456",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[73].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=455",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[74].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=454",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[75].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=453",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[76].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=452",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[77].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=451",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[78].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=450",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[79].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=449",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[80].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=447",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[81].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=446",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[82].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=445",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[83].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=444",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[84].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=443",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[85].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=442",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[86].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=441",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[87].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=440",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[88].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=439",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[89].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=438",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[90].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=437",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[91].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=436",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[92].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=435",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[93].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=434",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[94].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=433",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[95].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=432",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[96].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=431",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[97].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=430",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[98].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=429",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[99].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=428",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[100].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=427",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[101].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=426",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[102].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=425",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[103].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=424",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[104].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=423",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[105].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=422",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[106].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=421",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[107].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=420",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[108].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=419",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[109].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=418",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[110].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=417",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[111].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=416",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[112].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=415",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[113].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=414",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[114].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=413",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[115].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=412",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[116].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=411",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[117].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=410",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[118].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=409",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[119].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=408",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[120].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=407",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[121].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=406",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[122].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=405",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[123].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=404",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[124].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=403",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[125].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=402",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[126].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=401",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[127].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=400",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[128].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=399",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[129].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=398",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[130].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=397",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[131].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=396",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[132].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=395",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[133].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=394",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[134].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=393",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[135].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=392",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[136].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=391",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[137].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=390",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[138].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=389",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[139].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=388",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[140].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=387",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[141].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=386",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[142].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=385",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[143].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=384",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[144].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=383",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[145].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=382",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[146].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=381",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[147].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=380",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[148].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=379",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[149].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=378",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[150].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=377",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[151].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=376",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[152].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=375",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[153].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=374",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[154].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=373",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[155].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=372",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[156].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=371",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[157].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=370",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[158].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=369",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[159].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=368",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[160].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=367",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[161].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=366",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[162].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=365",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[163].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=364",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[164].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=363",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[165].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=362",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[166].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=361",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[167].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=360",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[168].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=359",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[169].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=358",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[170].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=357",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[171].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=356",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[172].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=355",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[173].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=354",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[174].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=353",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[175].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=352",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[176].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=351",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[177].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=350",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[178].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=349",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[179].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=348",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[180].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=347",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[181].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=346",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[182].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=345",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[183].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=344",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[184].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=343",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[185].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=342",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[186].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=341",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[187].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=340",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[188].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=339",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[189].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=338",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[190].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=337",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[191].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=336",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[192].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=335",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[193].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=334",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[194].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=333",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[195].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=332",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[196].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=331",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[197].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=330",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[198].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=329",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[199].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=328",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[200].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=327",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[201].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=326",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[202].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=325",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[203].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=324",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[204].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=323",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[205].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=322",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[206].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=321",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[207].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=320",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[208].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=319",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[209].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=318",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[210].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=317",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[211].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=316",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[212].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=315",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[213].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=314",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[214].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=313",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[215].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=312",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[216].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=311",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[217].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=310",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[218].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=309",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[219].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=308",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[220].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=307",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[221].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=306",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[222].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=305",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[223].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=304",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[224].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=303",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[225].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=302",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[226].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=301",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[227].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=300",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[228].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=299",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[229].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=298",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[230].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=297",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[231].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=296",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[232].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=295",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[233].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=294",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[234].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=293",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[235].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=292",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[236].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=291",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[237].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=290",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[238].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=289",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[239].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=288",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[240].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=287",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[241].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=286",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[242].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=285",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[243].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=284",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[244].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=283",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[245].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=282",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[246].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=281",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[247].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=280",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[248].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=279",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[249].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=278",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[250].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=277",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[251].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=276",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[252].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=275",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[253].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=274",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[254].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=273",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[255].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=272",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[256].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=271",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[257].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=270",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[258].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=269",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[259].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=268",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[260].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=267",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[261].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=266",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[262].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=265",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[263].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=264",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[264].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=263",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[265].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=262",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[266].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=261",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[267].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=260",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[268].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=259",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[269].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=258",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[270].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=257",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[271].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=256",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[272].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=255",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[273].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=254",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[274].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=253",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[275].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=252",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[276].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=251",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[277].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=250",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[278].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=249",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[279].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=248",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[280].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=247",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[281].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=246",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[282].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=245",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[283].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=244",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[284].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=243",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[285].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=242",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[286].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=241",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[287].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=240",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[288].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=239",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[289].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=238",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[290].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=237",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[291].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=236",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[292].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=235",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[293].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=234",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[294].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=233",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[295].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=232",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[296].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=231",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[297].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=230",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[298].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=229",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[299].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=228",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[300].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=227",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[301].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=226",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[302].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=225",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[303].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=224",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[304].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=223",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[305].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=222",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[306].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=221",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[307].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=220",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[308].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=219",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[309].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=218",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[310].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=217",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[311].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=216",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[312].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=215",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[313].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=214",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[314].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=213",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[315].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=212",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[316].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=211",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[317].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=210",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[318].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=209",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[319].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=208",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[320].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=207",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[321].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=206",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[322].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=204",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[323].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=203",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[324].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=202",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[325].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=201",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[326].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=200",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[327].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=199",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[328].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=198",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[329].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=197",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[330].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=196",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[331].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=195",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[332].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=194",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[333].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=193",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[334].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=192",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[335].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=191",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[336].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=190",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[337].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=189",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[338].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=188",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[339].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=187",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[340].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=186",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[341].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=185",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[342].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=184",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[343].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=183",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[344].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=182",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[345].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=181",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[346].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=180",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[347].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=179",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[348].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=178",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[349].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=177",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[350].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=176",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[351].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=175",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[352].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=174",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[353].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=173",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[354].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=172",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[355].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=171",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[356].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=170",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[357].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=169",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[358].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=168",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[359].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=167",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[360].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=166",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[361].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=165",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[362].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=164",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[363].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=163",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[364].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=162",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[365].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=161",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[366].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=160",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[367].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=159",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[368].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=158",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[369].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=157",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[370].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=156",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[371].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=155",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[372].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=154",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[373].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=153",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[374].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=152",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[375].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=151",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[376].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=150",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[377].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=149",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[378].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=148",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[379].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=147",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[380].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=146",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[381].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=145",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[382].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=143",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[383].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=142",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[384].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=141",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[385].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=140",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[386].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=139",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[387].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=138",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[388].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=137",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[389].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=136",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[390].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=135",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[391].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=134",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[392].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=133",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[393].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=132",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[394].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=131",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[395].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=130",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[396].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=129",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[397].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=128",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[398].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=127",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[399].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=126",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[400].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=125",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[401].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=124",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[402].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=123",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[403].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=122",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[404].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=121",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[405].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=120",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[406].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=119",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[407].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=118",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[408].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=117",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[409].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=116",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[410].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=115",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[411].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=114",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[412].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=113",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[413].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=112",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[414].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=111",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[415].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=109",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[416].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=108",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[417].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=107",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[418].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=106",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[419].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=105",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[420].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=104",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[421].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=103",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[422].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=102",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[423].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=101",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[424].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=100",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[425].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=99",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[426].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=98",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[427].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=97",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[428].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=96",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[429].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=95",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[430].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=94",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[431].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=93",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[432].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=92",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[433].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=91",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[434].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=90",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[435].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=89",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[436].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=88",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[437].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=87",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[438].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=86",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[439].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=85",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[440].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=84",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[441].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=83",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[442].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=82",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[443].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=81",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[444].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=80",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[445].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=79",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[446].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=78",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[447].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=77",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[448].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=76",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[449].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=75",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[450].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=74",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[451].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=73",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[452].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=72",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[453].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=70",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[454].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=69",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[455].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=68",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[456].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=67",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[457].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=66",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[458].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=65",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[459].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=64",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[460].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=63",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[461].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=62",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[462].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=61",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[463].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=60",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[464].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=59",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[465].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=57",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[466].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=55",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[467].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=54",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[468].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=53",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[469].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=52",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[470].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=51",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[471].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=50",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[472].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=49",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[473].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=48",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[474].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=47",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[475].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=46",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[476].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=45",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[477].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=44",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[478].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=43",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[479].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=41",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[480].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=40",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[481].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=39",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[482].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=38",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[483].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=37",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[484].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=36",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[485].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=35",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[486].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=34",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[487].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=33",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[488].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=32",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[489].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=31",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[490].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=30",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[491].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=29",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[492].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=28",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[493].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=27",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[494].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=26",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[495].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=25",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[496].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=24",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[497].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=23",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[498].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=22",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[499].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=21",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[500].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=20",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[501].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=19",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[502].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=18",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[503].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=17",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[504].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=16",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[505].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=15",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[506].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=14",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[507].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=13",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[508].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=12",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[509].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=11",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[510].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=10",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[511].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=9",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[512].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=8",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[513].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=7",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[514].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=6",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[515].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=5",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[516].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=4",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[517].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=3",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[518].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=2",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[519].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntView.do?insttSn=1",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[520].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q1852505",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[521].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q2557120",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[522].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q2851807",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[523].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q3702354",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[524].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q3843300",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[525].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q4442044",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[526].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q4935587",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[527].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q5541374",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[528].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q5753229",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[529].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R0142938",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[530].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R1005217",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[531].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R1122801",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[532].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R1458089",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[533].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R1823234",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[534].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R2812767",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[535].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R2944225",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[536].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R3150957",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[537].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M2011452",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[538].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M2548808",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[539].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M3018816",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[540].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M3531267",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[541].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M4749781",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[542].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M5611728",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[543].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M5929820",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[544].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09R1148077",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[545].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.data.go.kr/data/15013109/standard.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": "2026-04-30",
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.facilities[546].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/ad/func/spnt/spntList.do?mi=10916",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T10:32:13.807901+00:00",
+      "raw_path": "data/student_services/raw/snapshots/be964b69db4c4a01cc496f8e2cfe184697dd484393373d641bcdc5bd2825df1f.html",
+      "locator": "$.sources.care.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:23:14.269053+00:00",
+      "raw_path": "data/student_services/raw/snapshots/0963725aa3e6d80a88cbab4d8f53215061d4e4436c9217db5fc51f3c850a5102.html",
+      "locator": "$.sources.walkin-search-농구장-1.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011121",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:28.173191+00:00",
+      "raw_path": "data/student_services/raw/snapshots/1c37ca25a9ff54819a3d6eb9cec95e3b2974c643b64076970e6e211d05c859f9.html",
+      "locator": "$.sources.walkin-BA10A0011121.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011184",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:28.993817+00:00",
+      "raw_path": "data/student_services/raw/snapshots/461ba4f3d5851d36013804380cc4f8b69484317aa7cdbb5fc63e8ae4835dbc34.html",
+      "locator": "$.sources.walkin-BA10A0011184.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011430",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:29.755473+00:00",
+      "raw_path": "data/student_services/raw/snapshots/e4dfc7fe39adddf366dc4d67e5ae05d2f22fd7b0bfc241c2bfe3fca1f472d119.html",
+      "locator": "$.sources.walkin-BA10A0011430.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011565",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:30.600213+00:00",
+      "raw_path": "data/student_services/raw/snapshots/fad190ae28680d9c37daa16504bc684066206313538f5f4f6156758de0f21e6b.html",
+      "locator": "$.sources.walkin-BA10A0011565.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011569",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:31.346333+00:00",
+      "raw_path": "data/student_services/raw/snapshots/e5c2724d5e863b1cee9508eaa772df8ce8479b3d576f1b8d64cf07c2239fd4f3.html",
+      "locator": "$.sources.walkin-BA10A0011569.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0016384",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:32.823283+00:00",
+      "raw_path": "data/student_services/raw/snapshots/a13215eb4b686ba0ac3f8efa771f6403e536d84aadc2c6ca24f52b3448fad01e.html",
+      "locator": "$.sources.walkin-BA10A0016384.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BE20P5029454",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:35.017193+00:00",
+      "raw_path": "data/student_services/raw/snapshots/e9d8083706c9e8a1084b198830814aaf2224eecdfdb19840f46f9245d033f05e.html",
+      "locator": "$.sources.walkin-BE20P5029454.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL17J0619046",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:36.913779+00:00",
+      "raw_path": "data/student_services/raw/snapshots/38f4ee22f124795ba2e04e801c881e07fdedcb04b68fb22593b8543fc66bf285.html",
+      "locator": "$.sources.walkin-BL17J0619046.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31N5211131",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:38.442126+00:00",
+      "raw_path": "data/student_services/raw/snapshots/48604a328b8f9e3641bf5a415f5a2306b656c0c2f3d21de1a21c8a2e6502b291.html",
+      "locator": "$.sources.walkin-BL31N5211131.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31N5453846",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:40.015409+00:00",
+      "raw_path": "data/student_services/raw/snapshots/d1dc6d051d5bdbb48804b2c35b118be19343a63ff5cbc471666cce7c566acef8.html",
+      "locator": "$.sources.walkin-BL31N5453846.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O0834506",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:42.058193+00:00",
+      "raw_path": "data/student_services/raw/snapshots/9353d50d2929c165f3aa04f997fe6296103014de31814884c3289b7b848e658c.html",
+      "locator": "$.sources.walkin-BL31O0834506.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O1418889",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:43.935702+00:00",
+      "raw_path": "data/student_services/raw/snapshots/74f3e9d41af839500816cda775e6ea2965e6e5514044d8385c2724a0839e98b0.html",
+      "locator": "$.sources.walkin-BL31O1418889.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O4150453",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:46.028795+00:00",
+      "raw_path": "data/student_services/raw/snapshots/7198e2376fb5dd4fa3c191768a5b834401a30103fcebf13cbbeb9d099456dec0.html",
+      "locator": "$.sources.walkin-BL31O4150453.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O4440055",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:47.969665+00:00",
+      "raw_path": "data/student_services/raw/snapshots/e44c10807647b15bea5051d737e17fc28a063cfe1e28c49afc586fbd2a71eff4.html",
+      "locator": "$.sources.walkin-BL31O4440055.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O4626078",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:50.101582+00:00",
+      "raw_path": "data/student_services/raw/snapshots/21d5ba0ff6fc11311b73137c6f6904c62e4b29693ab868db577d418842c7435a.html",
+      "locator": "$.sources.walkin-BL31O4626078.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O4728542",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:52.152799+00:00",
+      "raw_path": "data/student_services/raw/snapshots/4dd00f144534a9cc97ce1168ff56080d017aee3402964e8f9bfc16e8f6d79e88.html",
+      "locator": "$.sources.walkin-BL31O4728542.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O5423342",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:54.217032+00:00",
+      "raw_path": "data/student_services/raw/snapshots/9a54688a9d6c26feb6fde5fd3fc5fd1327fdd20be112a4cd7ca3c7207f72d03a.html",
+      "locator": "$.sources.walkin-BL31O5423342.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31P0137567",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:56.197102+00:00",
+      "raw_path": "data/student_services/raw/snapshots/088ed846d900306226fb85bbcfe1745aefd465874744b0071e6e76f5761fe787.html",
+      "locator": "$.sources.walkin-BL31P0137567.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31P2254134",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:25:57.857218+00:00",
+      "raw_path": "data/student_services/raw/snapshots/e9ed5669e7da5ef8ca8642fa4752422a17addc5a5384822c6cacb7674b3c46c8.html",
+      "locator": "$.sources.walkin-BL31P2254134.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CD06M4945278",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:00.669571+00:00",
+      "raw_path": "data/student_services/raw/snapshots/431888f6111f20f4d729ca30674df2f9ed9f707d30b62ef3ee141bd233b53aeb.html",
+      "locator": "$.sources.walkin-CD06M4945278.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CD19K4553269",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:02.845023+00:00",
+      "raw_path": "data/student_services/raw/snapshots/bd569192ee5d9090feba4656f120330b92321b94d7ec030fb19a004ea7c46081.html",
+      "locator": "$.sources.walkin-CD19K4553269.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CD19K5847124",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:05.259659+00:00",
+      "raw_path": "data/student_services/raw/snapshots/696bf956fc4989f160ea6a84847c401eec3be67288e5b9f492735e3d65f265b3.html",
+      "locator": "$.sources.walkin-CD19K5847124.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CD19N0416738",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:08.006219+00:00",
+      "raw_path": "data/student_services/raw/snapshots/75b6756d295459d132abf883a403767db03b7b4ef64022afc774485656a8b48e.html",
+      "locator": "$.sources.walkin-CD19N0416738.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CF09N4907411",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:10.452714+00:00",
+      "raw_path": "data/student_services/raw/snapshots/ad1417b52787fee40c13f4835446db8214a7c91aef85ff69a1a129aa0c379c8d.html",
+      "locator": "$.sources.walkin-CF09N4907411.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CF30I5409204",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:12.703882+00:00",
+      "raw_path": "data/student_services/raw/snapshots/98e727a83ba921bc082eae5c04bb0c1c45092d73ba5a1615bfe6cbeb75252b9a.html",
+      "locator": "$.sources.walkin-CF30I5409204.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T0741349",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:15.222353+00:00",
+      "raw_path": "data/student_services/raw/snapshots/536cfe168c24620adfa012a58b290faac893cb7e9169600dbeccdc41bfb04399.html",
+      "locator": "$.sources.walkin-CH11T0741349.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T1123940",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:17.951199+00:00",
+      "raw_path": "data/student_services/raw/snapshots/2043510b9dc24bb14e94a4e5abfa17fd7d62f41911d213c127c0d6ce95ee9899.html",
+      "locator": "$.sources.walkin-CH11T1123940.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T1303568",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:20.707263+00:00",
+      "raw_path": "data/student_services/raw/snapshots/dbaa4978b9490e1e8b2e0b196059fcc05ffcf5f7cd134b0987b49f83569cdf8d.html",
+      "locator": "$.sources.walkin-CH11T1303568.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T1643116",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:23.741757+00:00",
+      "raw_path": "data/student_services/raw/snapshots/177fae99043f9912d307c3513205da9f55919701363d786f3dbe8203e80140b8.html",
+      "locator": "$.sources.walkin-CH11T1643116.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T1815624",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:27.172269+00:00",
+      "raw_path": "data/student_services/raw/snapshots/afd405334b7c4d9715af85108bdad880e440ed1ec93df2ea07ac52ea6acfb21a.html",
+      "locator": "$.sources.walkin-CH11T1815624.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17P2208485",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:30.313185+00:00",
+      "raw_path": "data/student_services/raw/snapshots/d26be82cdf67b780c0b602f0d8f06175d6e6b598024f9f275a2f402915335984.html",
+      "locator": "$.sources.walkin-FE17P2208485.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q0545881",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:33.144557+00:00",
+      "raw_path": "data/student_services/raw/snapshots/3b12812d6d981e06b58e253e73582a5439d688ffd1947ebc80a1961690fa09ac.html",
+      "locator": "$.sources.walkin-FE17Q0545881.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q1055704",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:35.595096+00:00",
+      "raw_path": "data/student_services/raw/snapshots/e591a7553e00950da34ac49ec02fbcc6154d664a4670fbea4e0862271db2abef.html",
+      "locator": "$.sources.walkin-FE17Q1055704.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q1322811",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:26:37.592397+00:00",
+      "raw_path": "data/student_services/raw/snapshots/3cda61d4d3879fb7fc20551cec41e81140a7d593b029a3898efdb1668837d9b4.html",
+      "locator": "$.sources.walkin-FE17Q1322811.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M3339973",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:17.084758+00:00",
+      "raw_path": "data/student_services/raw/snapshots/c036dc55205530e37893ab3f2edd8a21aef0fd116c213ee84f4f7c056d82eaed.html",
+      "locator": "$.sources.walkin-FH09M3339973.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M4132692",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:19.330015+00:00",
+      "raw_path": "data/student_services/raw/snapshots/07de072b2af2c4576fa6f7c77dd6afe5cd10139221cc0818333f47e039310123.html",
+      "locator": "$.sources.walkin-FH09M4132692.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M5202254",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:21.211046+00:00",
+      "raw_path": "data/student_services/raw/snapshots/0a1de5c6aaac4d9d5d157a62ec084bdba249ebabb1fdc9c29e5fb411fa65510a.html",
+      "locator": "$.sources.walkin-FH09M5202254.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M5514302",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:22.209522+00:00",
+      "raw_path": "data/student_services/raw/snapshots/f24084520bc04ebdcacb61524ef2c506ed09bd835c6d2dabd1d5a7e5fe2e28e7.html",
+      "locator": "$.sources.walkin-FH09M5514302.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GG11K813480",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:26.901152+00:00",
+      "raw_path": "data/student_services/raw/snapshots/54d1b96b85f29420deb0277ffbc1478559b56d9e0900a255af73cdef2c7b3df8.html",
+      "locator": "$.sources.walkin-GG11K813480.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GG11K813481",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:27.985044+00:00",
+      "raw_path": "data/student_services/raw/snapshots/9418ee2b20170abf5466921de1a1c01da475eb88a0e0d9794d7945cd531cabbc.html",
+      "locator": "$.sources.walkin-GG11K813481.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GH29M2642248",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:29.375225+00:00",
+      "raw_path": "data/student_services/raw/snapshots/533d73cc2581991a89435ddbc1d7cdde346721529ba00699c3f1bd9290d4847d.html",
+      "locator": "$.sources.walkin-GH29M2642248.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GH29M3613789",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:30.428212+00:00",
+      "raw_path": "data/student_services/raw/snapshots/5735a36b4e870d3fa680d8b787043d3f93f56964ca3ec0ed45b97b7b0b3cf872.html",
+      "locator": "$.sources.walkin-GH29M3613789.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GH29M4013265",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:31.415151+00:00",
+      "raw_path": "data/student_services/raw/snapshots/d61f5b6904a87b220a90cb8d22fbeef73b8269af2a030fb294d744be44fc5626.html",
+      "locator": "$.sources.walkin-GH29M4013265.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GL09F0522313",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-11T11:27:32.482977+00:00",
+      "raw_path": "data/student_services/raw/snapshots/e2e6bc6a958c02b15981674139deb6dc541e96792a696944165f4fbe01f2ca0f.html",
+      "locator": "$.sources.walkin-GL09F0522313.url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [
+    "data_processed/student_services/facilities.json",
+    "data_processed/libraries.csv",
+    "data_processed/school_library_access.csv"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

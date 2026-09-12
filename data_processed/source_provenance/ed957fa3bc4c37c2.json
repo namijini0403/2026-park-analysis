@@ -1,0 +1,18 @@
+{
+  "file": "data_processed/education/regional_demography.json",
+  "sha256": "8431f81524dbea3e82cdcc4c9bbddea42ae5dd4fa93b445f8e66274058fd5777",
+  "originals": [
+    {
+      "url": "https://jumin.mois.go.kr/ageStatMonth.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.인천광역시|유치원.source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

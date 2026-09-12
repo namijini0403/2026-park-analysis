@@ -1,0 +1,18 @@
+process.env.AI_EXPLAINER_ENABLED='false';
+const assert=require('node:assert/strict'),fs=require('node:fs'),data=require('../api/_data_answers'),model=require('../api/_school_summary'),chat=require('../api/chat'),domains=require('../api/_comparison_domains');
+(async()=>{
+ const registry=model.registry(),results=[];
+ for(const e of data.catalog){const rows=data.rowsFor(e,data.read(e).data),sid=rows.find(r=>registry.some(s=>s.id===(r.id||r.match?.school_id)))?.id||rows.find(r=>r.match?.school_id)?.match.school_id||'B000002982';const school=registry.find(s=>s.id===sid)||registry.find(s=>s.id==='B000002982');const answer=await chat.run({question:school.name+' '+e.title+' 상대 비교 분석',dataset_id:e.id,school_id:school.id});assert.equal(answer.mode,'comparative',e.id);assert(answer.visual.sections.length,e.id);assert(answer.sources.length,e.id);assert(answer.export_table.rows.every(r=>r.length===answer.export_table.headers.length),e.id+' CSV width');
+  for(const section of answer.visual.sections){const c=section.chart;if(c){for(const p of c.points||[]){if(c.kind==='bar')assert(Number.isFinite(p.value),e.id+' bar');else if(c.kind!=='map'){assert(Number.isFinite(p.x),e.id+' x');assert(Number.isFinite(p.y),e.id+' y');}}}if(section.table)assert(section.table.rows.every(r=>r.length===section.table.headers.length),e.id+' table width');}
+  assert(answer.comparison.groups.every(g=>!g.ids.includes(school.id)),e.id+' excludes self');
+  const visible=JSON.stringify({summary:answer.summary,visual:answer.visual});assert(!/priority_score|priority_rank|shortage_priority_rise|impact_score/.test(visible),e.id+' legacy score');
+  results.push({id:e.id,school:school.name,sections:answer.visual.sections.length,charts:answer.visual.sections.map(s=>s.chart?.kind).filter(Boolean),sources:answer.sources.map(s=>s.source)});
+ }
+ const example=await chat.run({question:'석암초등학교 도서관 장서 지원 근거'});assert.equal(example.comparison.metrics.find(m=>m.title==='학교 장서 총수').own,20761);assert(example.summary.includes('멀다고 주장할 수 없습니다'));assert(example.export_table.rows.length>200);
+ const sports=await chat.run({question:'석암초등학교 체육 시설 비교',dataset_id:'services'});assert(sports.comparison.metrics.filter(m=>m.title.includes('운동 직선')).every(m=>m.own===null));assert(!sports.comparison.metrics.some(m=>m.title.includes('장서')));
+ const future=await chat.run({question:'석암초등학교 2031 학생 전망 비교'});assert.equal(future.comparison.year,2026);assert(future.comparison.metrics.some(m=>m.period==='2031년 시나리오'));assert(future.comparison.groups[1].ids.length>0);
+ const missing=await chat.run({question:'석암초등학교 생활권 연령 인구 추정 비교',dataset_id:'school_demand'});assert(missing.visual.sections.some(s=>s.notes?.some(n=>n.includes('자료가 없어'))));
+ const fixture=[];domains.handle({id:'athletics',all:[{id:'a',sport:'검도',posted_date:'2026-01-01',post_id:'1',athletes:10},{id:'a',sport:'검도',posted_date:'2026-02-01',post_id:'2',athletes:20},{id:'b',sport:'검도',posted_date:'2026-02-01',post_id:'3',athletes:30},{id:'b',sport:'검도',posted_date:'2026-02-01',post_id:'4',athletes:40}],school:{id:'a'},peers:[{id:'b'}],year:2026,sections:[{notes:[]}],metric:(t,u,values)=>fixture.push(values),unique:require('../api/_comparative_evidence').unique});assert.equal(fixture[0].get('a'),20);assert.equal(fixture[0].get('b'),null);
+ fs.writeFileSync('contest_plan/comparative_domain_validation.json',JSON.stringify({cases:results,checks:['all 42 families through chat','finite chart data','table shape','self exclusion','legacy scores excluded','exact elementary books','future vs comparison year','missing coverage','latest sport and duplicate-date exclusion']},null,2));
+ console.log('PASS 42 comparative data families and semantic edge cases');
+})().catch(e=>{console.error(e);process.exitCode=1;});

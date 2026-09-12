@@ -1,0 +1,9 @@
+{
+  "file": "data_processed/education/grade_cohort_scenarios.json",
+  "sha256": "685445e6103974efdd0696bd65edfe6bcbcac959009d2c7969684176c14b8103",
+  "originals": [],
+  "upstream": [
+    "data_processed/education/school_statistics.json"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

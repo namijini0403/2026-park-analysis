@@ -1,0 +1,20 @@
+{
+  "file": "data_processed/education/school_public_indicators.json",
+  "sha256": "9d11189abb4586873594ac585f68575a520ddd2c26b52dc8852462729d2ee16c",
+  "originals": [
+    {
+      "url": "https://www.schoolinfo.go.kr/ng/go/pnnggo_a01_l2.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011417[0].observations[0].source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [
+    "data_processed/education/public_indicators_manifest.json"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

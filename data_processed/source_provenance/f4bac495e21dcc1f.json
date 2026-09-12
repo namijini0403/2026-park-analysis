@@ -1,0 +1,538 @@
+{
+  "file": "data_processed/education/science_awards.json",
+  "sha256": "269837db1ec785c37e8db7cca5b0acdaa91e9dd08f46280f5d6486d5719a64fa",
+  "originals": [
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30530",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30464",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[1].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30454",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[2].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30404",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[3].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30339",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[4].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30280",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[5].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=48013",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[6].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=48010",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[7].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47938",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[8].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47906",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[9].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47903",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[10].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47830",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[11].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=199",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[12].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=303",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[13].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=329",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000011828[14].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30522",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30429",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[1].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30292",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[2].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30266",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[3].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47965",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[4].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47944",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[5].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47842",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[6].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47767",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[7].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47763",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[8].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=61",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[9].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=110",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[10].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=151",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[11].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=176",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[12].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=212",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[13].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=236",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[14].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=343",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012269[15].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30502",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000008823[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30441",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000025755[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30257",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000025755[1].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30437",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000022834[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30409",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012251[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30393",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000008862[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30321",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000008866[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=30309",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000003007[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=72",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000003007[1].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=153",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000003007[2].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47994",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000008873[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47905",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012293[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47876",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000008789[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=335",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000008789[1].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47816",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000025751[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47757",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000008845[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/1079/bbs/423/moveBbsNttDetail.do?nttSn=47756",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000008861[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=86",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012250[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=196",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012277[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=275",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012277[1].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=296",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000025237[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.science.go.kr/mps/bbs/423/downBbsNttFile.do?atchmnflSn=75801#page=301",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.B000012286[0].source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

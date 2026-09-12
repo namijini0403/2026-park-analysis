@@ -1,0 +1,2 @@
+const model=require('./_school_summary.js');
+module.exports=(req,res)=>{res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');if(req.method!=='GET'){res.statusCode=405;res.end(JSON.stringify({error:'GET 요청만 지원합니다.'}));return;}try{const u=new URL(req.url,'http://localhost');const id=u.searchParams.get('id');res.end(JSON.stringify(id?model.summary(id,u.searchParams.get('kind')||'park'):{schools:model.list()}));}catch(error){res.statusCode=400;res.end(JSON.stringify({error:error.message}));}};

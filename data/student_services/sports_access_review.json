@@ -1,0 +1,1050 @@
+{
+  "policy": "public_free_walkin_students_v1",
+  "review": [
+    {
+      "id": "walkin-search-농구장-3:인천환경공단 승기사업소 송도지소(송도공공하수처리시설) 내농구장",
+      "name": "인천 환경공단 승기사업소 송도지소(송도공공하수처리시설) 내 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-배드민턴장-1:인천환경공단 가좌사업소배드민턴장",
+      "name": "인천 환경공단 가좌사업소 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-배드민턴장-1:굴포배드민턴장",
+      "name": "굴포 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-배드민턴장-1:일신배드민턴장",
+      "name": "일신 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-배드민턴장-2:굴포배드민턴장",
+      "name": "굴포 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-배드민턴장-2:연경산배드민턴장",
+      "name": "연경산 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-배드민턴장-2:학익체육관(배드민턴장, 게이트볼장)",
+      "name": "학익체육관( 배드민턴장 , 게이트볼장)",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-배드민턴장-3:연경산배드민턴장",
+      "name": "연경산 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-배드민턴장-3:승학산 실내배드민턴장",
+      "name": "승학산 실내 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-족구장-1:인천환경공단 가좌사업소족구장",
+      "name": "인천 환경공단 가좌사업소 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-족구장-1:인천환경공단 승기사업소 송도지소(송도공공하수처리시설) 내족구장",
+      "name": "인천 환경공단 승기사업소 송도지소(송도공공하수처리시설) 내 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-족구장-2:인천환경공단운북사업소송산수질복원센터족구장",
+      "name": "인천 환경공단운북사업소송산수질복원센터 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-족구장-3:거여목체육공원족구장",
+      "name": "거여목체육공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-족구장-3:장성제근린공원족구장",
+      "name": "장성제근린공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-1:[인천대공원] 대공원풋살장1",
+      "name": "[ 인천 대공원] 대공원 풋살장 1",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-1:[인천대공원] 대공원풋살장3",
+      "name": "[ 인천 대공원] 대공원 풋살장 3",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-1:[인천대공원] 대공원풋살장2",
+      "name": "[ 인천 대공원] 대공원 풋살장 2",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-1:인천중구국민체육센터풋살장",
+      "name": "인천 중구국민체육센터 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-1:영마루공원풋살장",
+      "name": "영마루공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-1:하늘체육공원풋살장",
+      "name": "하늘체육공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-1:하늘도시 22호 근린공원풋살장",
+      "name": "하늘도시 22호 근린공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-1:하늘도시 6호 근린공원풋살장",
+      "name": "하늘도시 6호 근린공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:문화공원(4지구)풋살장",
+      "name": "문화공원(4지구) 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:부평삼산풋살장",
+      "name": "부평삼산 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:부평십정녹지풋살장",
+      "name": "부평십정녹지 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:부평삼산유수지체육공원풋살장",
+      "name": "부평삼산유수지체육공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:부평남부체육센터풋살장",
+      "name": "부평남부체육센터 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:씨사이드파크풋살장",
+      "name": "씨사이드파크 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:달빛공원 풋살경기장",
+      "name": "달빛공원 풋살경기장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:인천환경공단 승기사업소 송도지소(송도공공하수처리시설) 내풋살장",
+      "name": "인천 환경공단 승기사업소 송도지소(송도공공하수처리시설) 내 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:미추홀구청 운동장(풋살장)",
+      "name": "미추홀구청 운동장( 풋살장 )",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-2:서운공원풋살장",
+      "name": "서운공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-3:송도LNG종합스포츠타운풋살장",
+      "name": "송도LNG종합스포츠타운 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-3:부평원적산체육공원풋살장",
+      "name": "부평원적산체육공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-3:미추홀구청 운동장(풋살장)",
+      "name": "미추홀구청 운동장( 풋살장 )",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-search-풋살장-3:제2용정근린공원풋살장",
+      "name": "제2용정근린공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+      "included": false,
+      "reasons": [
+        "외부 예약 페이지 연결; 무신청 이용 근거 미확보"
+      ]
+    },
+    {
+      "id": "walkin-BA10A0011121",
+      "name": "남촌다목적체육센터",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011121",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구"
+    },
+    {
+      "id": "walkin-BA10A0011184",
+      "name": "아단배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011184",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 법정 휴무일 휴무 ",
+      "provider": "인천광역시 남동구"
+    },
+    {
+      "id": "walkin-BA10A0011430",
+      "name": "서해구청소년센터 야외(농구장, 풋살장)",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011430",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 관련 문의 : 032-577-7979(서구청소년센터) ",
+      "provider": "인천광역시서구시설관리공단"
+    },
+    {
+      "id": "walkin-BA10A0011565",
+      "name": "덕적면사무소 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011565",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보",
+        "무료 확인 불가"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 옹진군 덕적면"
+    },
+    {
+      "id": "walkin-BA10A0011569",
+      "name": "승봉리 캠핑장 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0011569",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보",
+        "무료 확인 불가"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 옹진군 자월면"
+    },
+    {
+      "id": "walkin-BA10A0016384",
+      "name": "대학공원 배드민턴장 배드민턴장 밑",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BA10A0016384",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시연수구시설안전관리공단"
+    },
+    {
+      "id": "walkin-BE20P5029454",
+      "name": "씨사이드파크 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BE20P5029454",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ※ 코로나19 예방을 위해 마스크 미 착용시 사용이 제한 될 수 있습니다. ",
+      "provider": "인천시설공단 도시관리본부 영종공원사업단"
+    },
+    {
+      "id": "walkin-BL17J0619046",
+      "name": "한아름근린공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL17J0619046",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31N5211131",
+      "name": "승기근린공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31N5211131",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31N5453846",
+      "name": "승기근린공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31N5453846",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31O0834506",
+      "name": "전재울근린공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O0834506",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 주변 거주지 소음 민원 다수, 고성 등 자제 요망 ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31O1418889",
+      "name": "골마루근린공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O1418889",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 주변 거주지 소음 민원 다수, 고성 등 자제 요망 음주 등 취식행위 불가 ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31O4150453",
+      "name": "소래산입구 체육광장 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O4150453",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31O4440055",
+      "name": "서창배수지체육광장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O4440055",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31O4626078",
+      "name": "오봉산배수지체육광장 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O4626078",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31O4728542",
+      "name": "오봉산배수지체육광장 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O4728542",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31O5423342",
+      "name": "만월산배수지체육광장 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31O5423342",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보",
+        "학생 이용대상 확인 불가"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31P0137567",
+      "name": "만월산배수지체육광장 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31P0137567",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-BL31P2254134",
+      "name": "소래샛길체육시설 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BL31P2254134",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천광역시 남동구 행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-CD06M4945278",
+      "name": "인천계양체육관 야외농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CD06M4945278",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천시설공단"
+    },
+    {
+      "id": "walkin-CD19K4553269",
+      "name": "박석공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CD19K4553269",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 공원 이용 및 공원 내 체육시설 이용 시 마스크 착용 필수입니다. ",
+      "provider": "인천시설공단 도시관리본부 영종공원사업단"
+    },
+    {
+      "id": "walkin-CD19K5847124",
+      "name": "박석공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CD19K5847124",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 공원 내 마스크 미착용시 이용불가합니다. ",
+      "provider": "인천시설공단 도시관리본부 영종공원사업단"
+    },
+    {
+      "id": "walkin-CD19N0416738",
+      "name": "삼산월드체육관 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CD19N0416738",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " ",
+      "provider": "인천시설공단 문화체육본부 삼산월드체육관"
+    },
+    {
+      "id": "walkin-CF09N4907411",
+      "name": "청라생태공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CF09N4907411",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보",
+        "공공 운영 확인 불가"
+      ],
+      "specific_notice": " ",
+      "provider": "인천환경공단"
+    },
+    {
+      "id": "walkin-CF30I5409204",
+      "name": "삼산월드체육관 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CF30I5409204",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보",
+        "학생 이용대상 확인 불가"
+      ],
+      "specific_notice": " ",
+      "provider": "인천시설공단 문화체육본부 삼산월드체육관"
+    },
+    {
+      "id": "walkin-CH11T0741349",
+      "name": "문화3공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T0741349",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 이용자 안전수칙 1. 운동 전 준비운동을 철저히 하고 , 체력에 알맞은 운동을 하시기 바랍니다 . 2. 경기중에는 보호장비를 착용하시기 바랍니다 . 3. 인화성 물질이나 화학물질 , 오일 등은 반입을 금합니다 . 4. 입장전 이상 증상 ( 발열 , 기침 , 인후통 , 호흡곤란 등 ) 있을 시 방문을 중지합니다 . 5. 경기중에는 상대방의 플레이를 방해해서는 안되며 위험한 플레이는 삼가주시기 바랍니다 . 6. 신체에 이상을 느끼실 경우 운동을 중단하시고 충분한 휴식을 취해야 합니다 . 7. 공이나 기타 도구에 맞아 부상 당할 위험이 있으므로 , 주변을 잘 살피고 , 구조물이나 동료들의 움직임에 주의하시기 바랍니다 . 8. 허용된 체육기구 이외에 함부로 만지거나 체육기구에서 위험한 행동을 하지 않습니다 . 9. 이용자 부주의로 발생된 안전사고 ( 인전 , 물적 ) 의 책임은 본인에게 있습니다 . ",
+      "provider": "인천시설공단"
+    },
+    {
+      "id": "walkin-CH11T1123940",
+      "name": "문화3공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T1123940",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 이용자 안전수칙 1. 운동 전 준비운동을 철저히 하고 , 체력에 알맞은 운동을 하시기 바랍니다 . 2. 경기중에는 보호장비를 착용하시기 바랍니다 . 3. 인화성 물질이나 화학물질 , 오일 등은 반입을 금합니다 . 4. 입장전 이상 증상 ( 발열 , 기침 , 인후통 , 호흡곤란 등 ) 있을 시 방문을 중지합니다 . 5. 경기중에는 상대방의 플레이를 방해해서는 안되며 위험한 플레이는 삼가주시기 바랍니다 . 6. 신체에 이상을 느끼실 경우 운동을 중단하시고 충분한 휴식을 취해야 합니다 . 7. 공이나 기타 도구에 맞아 부상 당할 위험이 있으므로 , 주변을 잘 살피고 , 구조물이나 동료들의 움직임에 주의하시기 바랍니다 . 8. 허용된 체육기구 이외에 함부로 만지거나 체육기구에서 위험한 행동을 하지 않습니다 . 9. 이용자 부주의로 발생된 안전사고 ( 인전 , 물적 ) 의 책임은 본인에게 있습니다 . ",
+      "provider": "인천시설공단"
+    },
+    {
+      "id": "walkin-CH11T1303568",
+      "name": "문화3공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T1303568",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 이용자 안전수칙 1. 운동 전 준비운동을 철저히 하고 , 체력에 알맞은 운동을 하시기 바랍니다 . 2. 경기중에는 보호장비를 착용하시기 바랍니다 . 3. 인화성 물질이나 화학물질 , 오일 등은 반입을 금합니다 . 4. 입장전 이상 증상 ( 발열 , 기침 , 인후통 , 호흡곤란 등 ) 있을 시 방문을 중지합니다 . 5. 경기중에는 상대방의 플레이를 방해해서는 안되며 위험한 플레이는 삼가주시기 바랍니다 . 6. 신체에 이상을 느끼실 경우 운동을 중단하시고 충분한 휴식을 취해야 합니다 . 7. 공이나 기타 도구에 맞아 부상 당할 위험이 있으므로 , 주변을 잘 살피고 , 구조물이나 동료들의 움직임에 주의하시기 바랍니다 . 8. 허용된 체육기구 이외에 함부로 만지거나 체육기구에서 위험한 행동을 하지 않습니다 . 9. 이용자 부주의로 발생된 안전사고 ( 인전 , 물적 ) 의 책임은 본인에게 있습니다 . ",
+      "provider": "인천시설공단"
+    },
+    {
+      "id": "walkin-CH11T1643116",
+      "name": "문화1공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T1643116",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 이용자 안전수칙 1. 운동 전 준비운동을 철저히 하고 , 체력에 알맞은 운동을 하시기 바랍니다 . 2. 경기중에는 보호장비를 착용하시기 바랍니다 . 3. 인화성 물질이나 화학물질 , 오일 등은 반입을 금합니다 . 4. 입장전 이상 증상 ( 발열 , 기침 , 인후통 , 호흡곤란 등 ) 있을 시 방문을 중지합니다 . 5. 경기중에는 상대방의 플레이를 방해해서는 안되며 위험한 플레이는 삼가주시기 바랍니다 . 6. 신체에 이상을 느끼실 경우 운동을 중단하시고 충분한 휴식을 취해야 합니다 . 7. 공이나 기타 도구에 맞아 부상 당할 위험이 있으므로 , 주변을 잘 살피고 , 구조물이나 동료들의 움직임에 주의하시기 바랍니다 . 8. 허용된 체육기구 이외에 함부로 만지거나 체육기구에서 위험한 행동을 하지 않습니다 . 9. 이용자 부주의로 발생된 안전사고 ( 인전 , 물적 ) 의 책임은 본인에게 있습니다 . ",
+      "provider": "인천시설공단"
+    },
+    {
+      "id": "walkin-CH11T1815624",
+      "name": "문화1공원 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=CH11T1815624",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 이용자 안전수칙 1. 운동 전 준비운동을 철저히 하고 , 체력에 알맞은 운동을 하시기 바랍니다 . 2. 경기중에는 보호장비를 착용하시기 바랍니다 . 3. 인화성 물질이나 화학물질 , 오일 등은 반입을 금합니다 . 4. 입장전 이상 증상 ( 발열 , 기침 , 인후통 , 호흡곤란 등 ) 있을 시 방문을 중지합니다 . 5. 경기중에는 상대방의 플레이를 방해해서는 안되며 위험한 플레이는 삼가주시기 바랍니다 . 6. 신체에 이상을 느끼실 경우 운동을 중단하시고 충분한 휴식을 취해야 합니다 . 7. 공이나 기타 도구에 맞아 부상 당할 위험이 있으므로 , 주변을 잘 살피고 , 구조물이나 동료들의 움직임에 주의하시기 바랍니다 . 8. 허용된 체육기구 이외에 함부로 만지거나 체육기구에서 위험한 행동을 하지 않습니다 . 9. 이용자 부주의로 발생된 안전사고 ( 인전 , 물적 ) 의 책임은 본인에게 있습니다 . ",
+      "provider": "인천시설공단"
+    },
+    {
+      "id": "walkin-FE17P2208485",
+      "name": "희망체육공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17P2208485",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 이용료 및 예약시스템 없음 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q0545881",
+      "name": "신트리공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q0545881",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 사용료 및 예약 없음 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q1055704",
+      "name": "숲속어린이공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q1055704",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 사용료 및 예약 없음 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q1322811",
+      "name": "뫼골공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q1322811",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 사용료 및 예약 없음 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q1852505",
+      "name": "희망체육공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q1852505",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q2557120",
+      "name": "신트리공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q2557120",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q2851807",
+      "name": "신트리공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q2851807",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q3702354",
+      "name": "원적산체육공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q3702354",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q3843300",
+      "name": "원적산체육공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q3843300",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q4442044",
+      "name": "마장공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q4442044",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q4935587",
+      "name": "후정공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q4935587",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q5541374",
+      "name": "영성공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q5541374",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17Q5753229",
+      "name": "영성공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17Q5753229",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17R0142938",
+      "name": "나래놀이공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R0142938",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17R1005217",
+      "name": "삼산유수지체육공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R1005217",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17R1122801",
+      "name": "삼산유수지체육공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R1122801",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17R1458089",
+      "name": "대촌공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R1458089",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17R1823234",
+      "name": "부이놀이공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R1823234",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17R2812767",
+      "name": "청운공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R2812767",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17R2944225",
+      "name": "신궁동공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R2944225",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FE17R3150957",
+      "name": "동소정공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FE17R3150957",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M2011452",
+      "name": "갈산동 청소년농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M2011452",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M2548808",
+      "name": "나래공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M2548808",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M3018816",
+      "name": "햇살공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M3018816",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M3339973",
+      "name": "동심공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M3339973",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 사용료 및 예약 없음 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M3531267",
+      "name": "분수공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M3531267",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M4132692",
+      "name": "방촌공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M4132692",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 사용료 및 예약 없음 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M4749781",
+      "name": "부개공원 배드민턴장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M4749781",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M5202254",
+      "name": "세영공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M5202254",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 사용료 및 예약 없음 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M5514302",
+      "name": "구산어린이공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M5514302",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 사용료 및 예약 없음 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M5611728",
+      "name": "구산어린이공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M5611728",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09M5929820",
+      "name": "백운공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09M5929820",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-FH09R1148077",
+      "name": "열우물놀이공원 야외운동시설",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=FH09R1148077",
+      "included": true,
+      "reasons": [],
+      "specific_notice": " - 이용료 없음 - 예약없이 사용 ",
+      "provider": "인천광역시 부평구 자치행정국 체육진흥과"
+    },
+    {
+      "id": "walkin-GG11K813480",
+      "name": "농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GG11K813480",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보",
+        "공공 운영 확인 불가",
+        "학생 이용대상 확인 불가"
+      ],
+      "specific_notice": " 휴관안내 - 매월 마지막 주 월요일 및 설, 추석 연휴 휴관 ",
+      "provider": "인천국제공항공사"
+    },
+    {
+      "id": "walkin-GG11K813481",
+      "name": "족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GG11K813481",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보",
+        "공공 운영 확인 불가",
+        "학생 이용대상 확인 불가"
+      ],
+      "specific_notice": " 휴관안내 - 매월 마지막 주 월요일 및 설, 추석 연휴 휴관 ",
+      "provider": "인천국제공항공사"
+    },
+    {
+      "id": "walkin-GH29M2642248",
+      "name": "율도공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GH29M2642248",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 1.  대관 사용자는 공원 사용 중 발생하는 모든 쓰레기는 직접 수거하여 가져가야 함을 원칙으로 한다. 2. 사용의 원활함과 혼선을 방지하고자 예약제를 도입하여 시행함을 알려드립니다. (예약 없이 이용시에는, 예약제 도입에 따라 동 시간대 예약인 이용이 우선이며, 특정 개인 또는 단체의 독점사용은 불가합니다.) 3. 목적 외 사용을 금하며, 이에 대한 위반시 어떠한 책임도 지지 않습니다.(본 시설을 통해 개인의 영리를 취할 수 없습니다.) * 취사 및 유흥활동 금지 4. 많은 이용객 사용하는 시설입니다. 모두 내것처럼 사용해주시기 바라며, 사용 전 후로 반드시 주변 정리를 부탁드립니다. (정리정돈 하지 않을시, 향후 이용에 패널티 적용) ",
+      "provider": "인천광역시서구시설관리공단"
+    },
+    {
+      "id": "walkin-GH29M3613789",
+      "name": "석남체육공원 농구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GH29M3613789",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 1.  대관 사용자는 공원 사용 중 발생하는 모든 쓰레기는 직접 수거하여 가져가야 함을 원칙으로 한다. 2. 사용의 원활함과 혼선을 방지하고자 예약제를 도입하여 시행함을 알려드립니다. (예약 없이 이용시에는, 예약제 도입에 따라 동 시간대 예약인 이용이 우선이며, 특정 개인 또는 단체의 독점사용은 불가합니다.) 3. 목적 외 사용을 금하며, 이에 대한 위반시 어떠한 책임도 지지 않습니다.(본 시설을 통해 개인의 영리를 취할 수 없습니다.) * 취사 및 유흥활동 금지 4. 많은 이용객 사용하는 시설입니다. 모두 내것처럼 사용해주시기 바라며, 사용 전 후로 반드시 주변 정리를 부탁드립니다. (정리정돈 하지 않을시, 향후 이용에 패널티 적용) ",
+      "provider": "인천광역시서구시설관리공단"
+    },
+    {
+      "id": "walkin-GH29M4013265",
+      "name": "석남체육공원 족구장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GH29M4013265",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보"
+      ],
+      "specific_notice": " 1.  대관 사용자는 공원 사용 중 발생하는 모든 쓰레기는 직접 수거하여 가져가야 함을 원칙으로 한다. 2. 사용의 원활함과 혼선을 방지하고자 예약제를 도입하여 시행함을 알려드립니다. (예약 없이 이용시에는, 예약제 도입에 따라 동 시간대 예약인 이용이 우선이며, 특정 개인 또는 단체의 독점사용은 불가합니다.) 3. 목적 외 사용을 금하며, 이에 대한 위반시 어떠한 책임도 지지 않습니다.(본 시설을 통해 개인의 영리를 취할 수 없습니다.) * 취사 및 유흥활동 금지 4. 많은 이용객 사용하는 시설입니다. 모두 내것처럼 사용해주시기 바라며, 사용 전 후로 반드시 주변 정리를 부탁드립니다. (정리정돈 하지 않을시, 향후 이용에 패널티 적용) ",
+      "provider": "인천광역시서구시설관리공단"
+    },
+    {
+      "id": "walkin-GL09F0522313",
+      "name": "인천발전본부 풋살장",
+      "source_url": "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GL09F0522313",
+      "included": false,
+      "reasons": [
+        "시설별 예약·신청 불필요 근거 미확보",
+        "공공 운영 확인 불가"
+      ],
+      "specific_notice": " ○ 사용료 : 무료 ○ 기타사항 : 공공목적에 부합하는 행사에만 개방 가능, 사전출입신청 필요 ",
+      "provider": "한국중부발전(주)"
+    }
+  ],
+  "legacy_sports_excluded": 27,
+  "legacy_reason": "유료·강습·대관·예약 또는 무신청 이용 근거 미확보"
+}

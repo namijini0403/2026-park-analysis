@@ -16,11 +16,13 @@ const CONTEXT_TOPIC_PATTERN =
 
 let cache = null;
 let cacheDir = null;
+let cacheStamp = null;
 
 function loadContextData(contextDir) {
   const dir = contextDir || process.env.AI_CONTEXT_DIR || DEFAULT_CONTEXT_DIR;
-  if (cache && cacheDir === dir) return cache;
   try {
+    const stamp=['context_layers_manifest.json','school_context_summary.json'].map(name=>fs.statSync(path.join(dir,name)).mtimeMs).join(':');
+    if (cache && cacheDir === dir && cacheStamp===stamp) return cache;
     const manifest = JSON.parse(fs.readFileSync(path.join(dir, "context_layers_manifest.json"), "utf-8"));
     const summary = JSON.parse(fs.readFileSync(path.join(dir, "school_context_summary.json"), "utf-8"));
     const nameIndex = new Map();
@@ -32,6 +34,7 @@ function loadContextData(contextDir) {
     }
     cache = { manifest, summary, nameIndex };
     cacheDir = dir;
+    cacheStamp = stamp;
     return cache;
   } catch {
     return null; // 파일 부재/손상 시 근거 없음으로 처리(임의 생성 금지). 다음 요청에서 재시도.

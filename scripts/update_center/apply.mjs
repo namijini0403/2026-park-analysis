@@ -63,7 +63,7 @@ export function listVersionDirs() {
   return fs
     .readdirSync(dir)
     .filter((n) => VERSION_RE.test(n))
-    .sort();
+    .sort((a,b)=>Number(a.slice(1))-Number(b.slice(1)));
 }
 
 function nextVersionName() {
@@ -315,13 +315,24 @@ export async function applyStagedCandidate({ entry, stagingId, store, eventId, a
   const stagingManifest = verified.manifest;
   const files = stagingManifest.files || [];
   if (!files.length) throw new Error("staging 에 반영할 파일이 없습니다.");
+  const pipeline = entry.check?.type === 'refresh_pipeline';
+  if (pipeline) {
+    if(stagingManifest.pipeline !== entry.check.pipeline) throw Error('Pipeline identity mismatch');
+    for(const [target,expected] of Object.entries(stagingManifest.input_hashes || {})) {
+      const abs=path.join(applyRoot(),assertSafeRelPath(target));
+      if((fs.existsSync(abs)?sha256(fs.readFileSync(abs)):null)!==expected) throw Error('분석 입력이 변경되었습니다. 다시 수집·계산해야 합니다: '+target);
+    }
+  }
+  const pipelineValidator = pipeline ? (await import('./pipeline.mjs')).validatePipelineFile : null;
 
   // 2) 내용 재검사 — 저장된 판정이 아니라 실제 바이트로 다시 판정한다.
   const adapter = getAdapter(dataset);
   const filesDir = path.join(stagingDir(), String(stagingId), "files");
   const reanalysed = files.map((f) => {
     const buffer = fs.readFileSync(path.join(filesDir, path.basename(f.name)));
-    return { name: f.name, buffer, ...analyzeContent(buffer, f.name, { requiredColumns: adapter.requiredColumns || [] }) };
+    return { name: f.name, buffer, ...(pipelineValidator
+      ? pipelineValidator(buffer,f.target,path.join(applyRoot(),f.target))
+      : analyzeContent(buffer, f.name, { requiredColumns: adapter.requiredColumns || [] })) };
   });
   const overall = overallStatus(reanalysed);
   if (approvalBlocked(overall)) {
@@ -377,6 +388,8 @@ export async function applyStagedCandidate({ entry, stagingId, store, eventId, a
 
   // 6) 원자적 반영 (temp write + rename), 대상 루트마다
   const written = [];
+  const publish = () => {
+  try {
   for (let i = 0; i < files.length; i += 1) {
     const target = targets[i];
     const buffer = reanalysed[i].buffer;
@@ -388,6 +401,21 @@ export async function applyStagedCandidate({ entry, stagingId, store, eventId, a
       writeFileAtomic(abs, buffer);
       written.push(path.relative(applyRoot(), abs).split(path.sep).join("/"));
     }
+  }
+  } catch(error) {
+    // No await inside this block: requests cannot observe a half-written bundle.
+    for(const previous of previousEntries) for(const root of roots) {
+      const abs=path.join(root,previous.target);
+      if(previous.existed) writeFileAtomic(abs,fs.readFileSync(path.join(versionPrevDir,previous.name)));
+      else if(fs.existsSync(abs)) fs.unlinkSync(abs);
+    }
+    throw error;
+  }
+  };
+  if(!pipeline) publish();
+  else for(const target of targets) for(const root of roots){
+    const abs=path.join(root,target);
+    if(root===applyRoot()||fs.existsSync(abs))written.push(path.relative(applyRoot(),abs).split(path.sep).join('/'));
   }
 
   // 7) rebuild_command
@@ -415,7 +443,7 @@ export async function applyStagedCandidate({ entry, stagingId, store, eventId, a
   const contentHash = sha256(Buffer.from(manifestText, "utf-8"));
 
   // 8) active 포인터
-  writeActivePointer(dataset, versionName);
+  if(!pipeline) writeActivePointer(dataset, versionName);
 
   // 9) store 버전 행 (기존 ④ 버전 기록 UI 와 롤백 라우팅에 사용)
   const snapshotPayload = { update_center_version_dir: versionName, dataset, files: fileEntries.map((f) => f.target) };
@@ -436,12 +464,26 @@ export async function applyStagedCandidate({ entry, stagingId, store, eventId, a
   //     대신 감사 로그에 실패 사실을 남겨 "보존된 척"하지 않는다.
   let persisted = null;
   let persistError = null;
+  const previousPointer=pipeline?(await store.getActiveVersions()).active[dataset]:null;
   try {
     persisted = await persistVersionToStore({ store, versionId: version.id, versionName, manifest, log });
+    if(pipeline){
+      if(!persisted)throw Error('분석 묶음 영구 보존 실패');
+      for(const [target,expected] of Object.entries(stagingManifest.input_hashes)){
+        const file=path.join(applyRoot(),assertSafeRelPath(target));
+        if(!fs.existsSync(file)||sha256(fs.readFileSync(file))!==expected)throw Error('분석 중 입력 변경: '+target);
+      }
+    }
     if (store && typeof store.setActiveVersion === "function") {
       await store.setActiveVersion(dataset, version.id, { version_dir: versionName });
     }
+    if(pipeline){written.length=0;publish();writeActivePointer(dataset,versionName);}
   } catch (err) {
+    if(pipeline){
+      await store.setActiveVersion(dataset,previousPointer?.version_id||null,previousPointer||{});
+      await store.markVersionRolledBack(version.id);
+      throw err;
+    }
     persistError = err;
     log(`[apply] 경고 — 버전 ${versionName} DB 보존 실패: ${err.message}`);
   }

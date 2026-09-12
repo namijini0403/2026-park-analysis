@@ -1,0 +1,110 @@
+{
+  "file": "data_processed/education/school_analysis.json",
+  "sha256": "da17135a207042471626fcbe187193b860cc0b41808a11d790c14fefab7540ef",
+  "originals": [
+    {
+      "url": "https://www.data.go.kr/data/15021148/standard.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3319291&bbsId=788&mi=11841",
+      "title": "ice_edu_welfare_2025_school_list.xlsx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$[0].designations[0].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3355686&bbsId=788&mi=11841",
+      "title": "ice_edu_welfare_2026_school_list.xlsx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$[0].designations[1].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3353108",
+      "title": "ice_digital_designations_2026.xlsx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$[4].designations[0].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3320903",
+      "title": "ice_digital_tutor_2025.pdf",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$[9].designations[0].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3369492&bbsId=720&mi=11841",
+      "title": "ice_multicultural_2026_research_korean_leading_schools.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$[9].designations[2].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11785&nttSn=3359748",
+      "title": "ice_ai_focus_2026.hwpx",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": "2026-09-06",
+      "raw_path": null,
+      "locator": "$[31].designations[0].source.url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3300657",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$[63].awards[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?nttSn=3340610",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$[114].awards[0].source_url",
+      "kind": "recorded"
+    },
+    {
+      "url": "https://e-childschoolinfo.moe.go.kr/",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$[129].source_url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [
+    "data_processed/education/analysis_manifest.json"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

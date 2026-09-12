@@ -11,6 +11,12 @@
     },
     "api/analysis.js": {
       "includeFiles": "data_processed/education/{analysis_dataset,library_access_preview,academy_clusters,designation_diffusion,road_resilience}.json"
+    },
+    "api/chat.js": {
+      "includeFiles": "{rag/*.md,data_processed/context/*.json,data_processed/education/*.json,data_processed/context/school_designations.json,data_processed/education/analysis_dataset.json,data_processed/parks.csv,data_processed/geocoded_playground.csv,data_processed/student_services/priorities.json,data_processed/education/library_access_preview.json,data_processed/education/academies.json,data_processed/context/facilities_construction.geojson,data_processed/context/facilities_nightlife.geojson,data_processed/redevelopment_geocoded.csv,data_processed/large_apt_complexes_2025.csv,data_processed/education/shared_parks.json,data_processed/education/field_verification.json,data_processed/education/road_resilience.json,data_processed/education/academy_clusters.json,data_processed/education/designation_diffusion.json,data_processed/education/school_routes.json,data_processed/candidate_barrier_routes_by_school.json,data_processed/education/route_review.json,data_processed/education/hybrid_walk_review.json,data_processed/education/residential_scenario.json,data_processed/education/school_age_demand.json,data_processed/education/candidate_demand_v2.json,data_processed/education/enrollment_forecasts.json,data_processed/education/grade_cohort_scenarios.json,data_processed/education/regional_demography.json,data_processed/education/regional_age_forecasts.json,data_processed/education/regional_age_forecast_validation.json,data_processed/education/forecast_validation.json,data_processed/education/school_progression.json,data_processed/education/school_athletics.json,data_processed/education/sports_awards.json,data_processed/education/science_awards.json,data_processed/education/invention_awards.json,data_processed/education/curriculum_network.json,data_processed/education/school_public_indicators.json,data_processed/education/school_analysis.json,data_processed/education/school_zones.geojson,data_processed/education/walkshed_500m.geojson,data_processed/school_library_access.csv,data_processed/school_similar_schools_top5.csv,data_processed/school_walkshed_500m_v3.geojson,data_processed/school_nearest_park.csv}"
+    },
+    "api/school-summary.js": {
+      "includeFiles": "data_processed/{education/analysis_dataset.json,student_services/priorities.json}"
     }
   },
   "headers": [
@@ -31,6 +37,16 @@
           "value": "public, max-age=300"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/ai-explainer-v2",
+      "destination": "/api/chat"
+    },
+    {
+      "source": "/api/ai-explainer",
+      "destination": "/api/chat"
     }
   ]
 }

@@ -31,6 +31,8 @@ import yaml from "js-yaml";
 import { createStore } from "./store.mjs";
 import { fetchAllPages, buildStagedCandidate } from "./candidate.mjs";
 import { sourcesPath, statePath } from "./paths.mjs";
+import { checkSchoolZones } from './school_zones.mjs';
+import { checkPipeline } from './pipeline.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.join(__dirname, "..", "..");
@@ -352,7 +354,15 @@ async function checkJsonApi(entry, state, store, opts, log) {
     ? dataJson
     : Object.values(dataJson).find((v) => Array.isArray(v)) || [];
   const totalCount = dataJson.totalCount ?? dataJson.result?.totalCount ?? rows.length;
-  const contentHash = hashRows(rows);
+  // Monitor every page: first-page equality cannot prove the full source is unchanged.
+  let allRows=rows;
+  if(Number(totalCount)>rows.length){
+    const full=await fetchAllPages({url:dataUrl,fetchImpl:opts.fetchImpl,log});
+    if(full.truncated||full.errors.length||full.records.length!==Number(full.totalCount))
+      return await recordFailure(dataset,'전체 페이지 수집 불완전',full.errors.join('; '),null,entry,state,store,log,{},actor);
+    allRows=full.records;
+  }
+  const contentHash = hashRows(allRows);
 
   const nextState = {
     schema: remoteSchema,
@@ -782,7 +792,7 @@ export async function runScan(opts = {}) {
   }
 
   const effectiveActor = actor || "scan.mjs";
-  const state = loadState();
+  const state = (await store.getMeta('source_scan_state')) || loadState();
   const summary = { baseline: 0, unchanged: 0, green: 0, yellow: 0, red: 0, moved: 0, error: 0, skipped: 0 };
   const events = [];
 
@@ -805,6 +815,10 @@ export async function runScan(opts = {}) {
       result = await checkJsonApi(entry, state, store, { forceUrl, actor: effectiveActor, fetchCandidate, fetchImpl }, log);
     } else if (type === "file_head") {
       result = await checkFileHead(entry, state, store, { forceUrl, actor: effectiveActor, fetchCandidate, fetchImpl }, log);
+    } else if (type === "school_zones") {
+      result = await checkSchoolZones(entry,state,store,{actor:effectiveActor},log);
+    } else if (type === 'refresh_pipeline') {
+      result = await checkPipeline(entry,state,store,{actor:effectiveActor},log);
     } else {
       log(`[${entry.dataset}] unknown check.type "${type}" — skipping`);
       continue;
@@ -817,6 +831,7 @@ export async function runScan(opts = {}) {
   }
 
   saveState(state);
+  await store.setMeta('source_scan_state',state);
 
   await store.appendAudit({
     actor: effectiveActor,

@@ -1,0 +1,51 @@
+{
+  "kind": "libraries",
+  "work": "C:\\Users\\Mijin\\Desktop\\공공데이터공모전\\park-railway-deploy\\outputs\\refresh-validation-1789099414",
+  "files": [
+    {
+      "target": "data_processed/context/education_school_evidence.json",
+      "sha256": "8a316b3783036b36811a47382317335ee824a9da66af51672eb8bbaaf1ca19b7",
+      "bytes": 15629616
+    },
+    {
+      "target": "data_processed/education/analysis_dataset.json",
+      "sha256": "227e154f029232939c7565f8e7a0852d66a368e783259ed95d3bac686caaf49c",
+      "bytes": 1179790
+    },
+    {
+      "target": "data_processed/education/library_access_preview.json",
+      "sha256": "c8efbe0a98f3a68d2a9bdd726d780da2e12e33b7be41538c997ac8fc5c440c31",
+      "bytes": 906719
+    },
+    {
+      "target": "data_processed/education/library_access_scenarios.json",
+      "sha256": "1b30dd317c928fe4bd6c246e49d28bd8e19c6d145cd62420174a366270dec10e",
+      "bytes": 5505191
+    },
+    {
+      "target": "data_processed/education/library_refresh_coverage.json",
+      "sha256": "65eff797f9d5b64f34883b70a2fb9b7c27e79804da6a9a69e7a69394d65a80be",
+      "bytes": 673
+    },
+    {
+      "target": "data_processed/education/school_analysis.json",
+      "sha256": "6052c89a50fdc98a52bdca5907f4a1a4821bff1bc43e3b679978c5eae1495309",
+      "bytes": 37309456
+    },
+    {
+      "target": "data_processed/libraries.csv",
+      "sha256": "e692574395bfc560e54dc065dcee474b24ce69a66db9151f73e1f8f835b02bd1",
+      "bytes": 33406
+    },
+    {
+      "target": "data_processed/policy_action_cards.json",
+      "sha256": "640f3963a91e26a68c827acfe609ea814675b1ee2c3a6da35b9a2e372170f5ec",
+      "bytes": 326407
+    },
+    {
+      "target": "data_processed/school_library_access.csv",
+      "sha256": "d99315fee33d73a733aeb9acd56f0b3df4f5226d2dff7e09a5a5872cb7998cb3",
+      "bytes": 97641
+    }
+  ]
+}

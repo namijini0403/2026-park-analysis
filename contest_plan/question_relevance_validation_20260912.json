@@ -1,0 +1,108 @@
+{
+  "checked_at": "2026-09-12T06:41:36.812Z",
+  "passed": true,
+  "deployment": {
+    "id": "b8c847b7-c963-4aac-a37c-fb169daa63a1",
+    "status": "SUCCESS",
+    "createdAt": "2026-09-12T06:38:31.351Z",
+    "updatedAt": "2026-09-12T06:39:37.103Z",
+    "projectId": "819e8af2-e6db-4fbf-bab9-76731a7408d5",
+    "serviceId": "0959785c-35d7-4734-b4c0-63b2c8e4eeac",
+    "environmentId": "08a322cd-3447-4eef-8a9e-a7a8d8ead656",
+    "url": "https://education-living-area-preview-production.up.railway.app",
+    "verified_with": "Railway list_deployments"
+  },
+  "requirements": {
+    "clear_multi_selection": [
+      "exact question routes to polygon comparison",
+      "all school scope overrides map selection",
+      "three transparent spatial criteria",
+      "native Kakao map",
+      "no unrelated green or park-route candidates",
+      "checkbox multi-select/removal/count",
+      "optional weights default all normal",
+      "weight change and rerun",
+      "safety remains independent",
+      "mobile width",
+      "observational top ten",
+      "direct roster bypasses weights"
+    ],
+    "question_relevance": [
+      {
+        "question": "학구도랑 도보500m권이 가장 안 맞는 초등학교 상위 10개 뽑아줘",
+        "workflow": "overlap"
+      },
+      {
+        "question": "학구도와 보행권 중첩 차이 비교",
+        "workflow": "overlap"
+      },
+      {
+        "question": "어느 초등학교 도서관을 우선지원할지 정해야해",
+        "workflow": "factors"
+      },
+      {
+        "question": "등교길 안전인력 지원을 검토해줘",
+        "workflow": "factors"
+      },
+      {
+        "question": "초등학교 학생 수가 가장 많은 상위 10개",
+        "workflow": "ordered"
+      },
+      {
+        "question": "초등학교 학생수와 학급수 상관관계",
+        "workflow": "direct"
+      },
+      {
+        "question": "초등학교 방과후 지표 분포",
+        "workflow": "direct"
+      },
+      {
+        "question": "도서관 목록 보여줘",
+        "workflow": "direct"
+      },
+      {
+        "question": "공원까지 도보 경로 보여줘",
+        "workflow": "direct"
+      },
+      {
+        "question": "보행 500m 도달권 지도 보여줘",
+        "workflow": "direct"
+      },
+      {
+        "question": "2026 연구학교 선도학교 명단 보여줘",
+        "workflow": "direct"
+      },
+      {
+        "question": "학생 수 전망 보여줘",
+        "workflow": "direct"
+      },
+      {
+        "question": "장학금과 체력 지표를 함께 고려해서 지원 검토",
+        "workflow": "factors"
+      },
+      {
+        "question": "이 서비스 어떻게 사용해",
+        "workflow": "direct"
+      }
+    ],
+    "all_catalogs": 42,
+    "all_hitl_domains": 42,
+    "actual_polygon_comparison": {
+      "criterion": "mismatch",
+      "formula": "100 × (1 − 겹친 면적 ÷ 두 구역의 합집합 면적)",
+      "scope_count": 272,
+      "valid": 266,
+      "excluded": 6,
+      "limit": 10,
+      "crs": "EPSG:5179"
+    },
+    "live_assets": 4,
+    "concurrency": "latest other-window release verified against before files and retained"
+  },
+  "evidence": {
+    "backend": "outputs/hitl-relevance/backend.json",
+    "browser": "outputs/hitl-relevance/live/validation.json",
+    "responses": "outputs/hitl-relevance/live/responses.json",
+    "release": "outputs/hitl-relevance/release-manifest.json"
+  }
+}

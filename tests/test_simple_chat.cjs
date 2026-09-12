@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict');
+process.env.AI_EXPLAINER_ENABLED='false';process.env.AI_ANALYSIS_ENABLED='false';
+const chat=require('../api/chat'),model=require('../api/_school_summary');
+(async()=>{
+ const id='B000002949';
+ const summary=model.summary(id);assert.equal(summary.status,'pending');assert(!JSON.stringify(summary).includes('primary_action'));assert.equal(model.list().length,917);
+ const d=model.read('data_processed/student_services/priorities.json').data;const island=d.schools.find(s=>s.separate_track);assert(model.summary(island.id).separate_track);
+ const sports=model.summary(id,'sports');assert(sports.conditions.some(s=>/전수|없다는 뜻/.test(s)));
+ const old=d.schema_version;d.schema_version=1;assert(model.summary(id,'sports').conditions.some(s=>s.includes('확보하지 못했습니다')));d.schema_version=old;
+ const zero=model.registry().find(s=>s.environment?.parks===0);assert(model.summary(zero.id).conditions.some(s=>s.includes('확정 부족')));
+ const gate={comparison_eligible:true,verification:{},evidence:{}};for(const k of ['use','safety','execution','route']){gate.verification[k]='verified';gate.evidence[k]={source_url:'https://example.org/source'};}assert(model.verified(gate));gate.verification.safety='unknown';assert(!model.verified(gate));
+ const unsupported=await chat.run({question:'오늘 저녁 요리법'});assert.equal(unsupported.answerable,false);
+ const missing=await chat.run({question:'이 학교 관련 시설을 정리해줘'});assert.equal(missing.answerable,false);
+ await assert.rejects(()=>chat.run({question:'공원',school_id:'unknown'}));
+ const basic=await chat.run({question:'이 학교 확인 조건과 자료를 정리해줘',school_id:id,kind:'library',school_context:{students:99999999}});assert.equal(basic.mode,'retrieval');assert.equal(basic.rows.school.id,id);assert(!JSON.stringify(basic).includes('99999999'));assert(basic.sources[0].provenance[0].sha256);
+ const related=await chat.run({question:'이 학교 도서관 관련 자료와 확인 조건을 정리해줘',school_id:id,kind:'library'});assert(related.rows);assert(!related.calculation);
+ const ranking=await chat.run({question:'안전 미확인이지만 거리가 짧은 후보지를 추천해줘',school_id:id});assert.match(ranking.summary,/정할 수 없습니다/);assert(!ranking.calculation);
+ const stats=await chat.run({question:'초등학교 학생 수와 공원 수의 상관관계',school_id:id});assert.equal(stats.mode,'calculation');assert(stats.calculation.metrics.n>10);assert.equal(stats.calculation.plan.school_id,null);assert.match(stats.summary,/인과|원인|효과/);assert(stats.calculation.source_hashes);
+ const future=await chat.run({question:'이 학교 2029년 미래 학생수 예측을 알려줘',school_id:id});assert(future.sources.some(c=>c.source==='data_processed/education/enrollment_forecasts.json'));assert(future.visual.table.rows.every(r=>r.includes(2029)));assert(!future.sources.some(c=>c.id.endsWith('-candidate')));
+ const badPerformance=await chat.run({question:'이 학교 수능 성적을 알려줘',school_id:id});assert.equal(badPerformance.answerable,false);
+ for(const question of ['상관관계 방법','미래 예측 성능','도보 출입구 검증','KNN 유사학교','데이터 갱신 승인'])assert(chat.retrieve(question).length);
+ console.log('PASS simple chat: 917-school registry, missing/legacy coverage, island track, safety gate, no scores, source-backed retrieval, statistics, future evidence, unsupported questions');
+})().catch(e=>{console.error(e);process.exitCode=1;});

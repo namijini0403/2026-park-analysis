@@ -1,0 +1,14 @@
+{
+  "url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+  "request": {
+    "searchWrd": "인천 농구장",
+    "collection": "resource_cate1",
+    "viewType": "UnitPage",
+    "pageIndex": 1,
+    "sort": "RANK",
+    "order": "DESC"
+  },
+  "retrieved_at": "2026-09-11T11:23:14.269053+00:00",
+  "sha256": "0963725aa3e6d80a88cbab4d8f53215061d4e4436c9217db5fc51f3c850a5102",
+  "raw_file": "data/student_services/raw/snapshots/0963725aa3e6d80a88cbab4d8f53215061d4e4436c9217db5fc51f3c850a5102.html"
+}

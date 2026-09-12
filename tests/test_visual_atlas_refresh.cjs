@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const studio=require('../api/_policy_studio');
+(async()=>{const file=path.join(__dirname,'../data_processed/visual_atlas/books.json'),artifact=JSON.parse(fs.readFileSync(file));artifact.result.sources[0].provenance[0].sha256='stale-test';fs.writeFileSync(file,JSON.stringify(artifact));const result=await studio.handle({action:'studio_atlas',dataset_id:'books'});assert.equal(result.refreshed,true);assert.equal(result.stale,false);const again=await studio.handle({action:'studio_atlas',dataset_id:'books'});assert.equal(again.stale,false);assert(!again.refreshed);assert(result.result.visual.sections.some(s=>s.chart?.members?.length));console.log('PASS source revision invalidates and rebuilds the visual cache; second read reuses it');})().catch(e=>{console.error(e);process.exitCode=1;});

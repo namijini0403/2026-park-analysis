@@ -1,0 +1,14 @@
+{
+  "url": "https://www.eshare.go.kr/UserPortal/adv/unifdSearch/ConditionsSearch.do",
+  "request": {
+    "searchWrd": "인천 족구장",
+    "collection": "resource_cate1",
+    "viewType": "UnitPage",
+    "pageIndex": 1,
+    "sort": "RANK",
+    "order": "DESC"
+  },
+  "retrieved_at": "2026-09-11T11:24:00.598239+00:00",
+  "sha256": "4ee06669f9575ba4c1ce2f64d78432675c0195c6fcff87f22af392253a47f369",
+  "raw_file": "data/student_services/raw/snapshots/4ee06669f9575ba4c1ce2f64d78432675c0195c6fcff87f22af392253a47f369.html"
+}

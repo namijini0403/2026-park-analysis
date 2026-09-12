@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{JSDOM}=require('jsdom');
+const {enrich,safeURL}=require('../api/_source_provenance');const root=path.resolve(__dirname,'..');
+const source=(id,file)=>({sources:[{id,title:id,source:file,body:'관측값'}]});
+const academy=enrich(source('hitl#academies:lat','data_processed/education/academies.json'));
+assert(academy.sources[0].source_chain.originals.some(o=>o.url.includes('nttSn=3381948')&&o.reference_date==='2026-08-01'));
+const park=enrich(source('hitl#parks:area','data_processed/parks.csv'));assert.equal(park.sources[0].source_chain.status,'recorded');assert(park.sources[0].source_chain.originals.some(o=>o.url.includes('data.go.kr/data/15012890')&&o.kind==='portal'),'public portal page attached');
+const books=enrich(source('hitl#books:per_student','data_processed/student_services/priorities.json'));assert(books.sources[0].source_chain.originals.some(o=>o.url.includes('kess.kedi.re.kr')));assert(!books.sources[0].source_chain.originals.some(o=>o.url.includes('spntList')||o.url.includes('eshare.go.kr')),'Book observations must not cite care or sports records');
+const construction=enrich(source('hitl#construction:record','data_processed/context/facilities_construction.geojson'));assert(construction.sources[0].source_chain.originals.some(o=>o.url.includes('15029299')));assert(!construction.sources[0].source_chain.originals.some(o=>o.url.includes('15045018')),'Do not inherit unrelated nightlife sources');
+const changed=enrich({sources:[{source:'data_processed/education/academies.json',provenance:[{path:'data_processed/education/academies.json',sha256:'changed'}]}]});assert.equal(changed.sources[0].source_chain.originals.length,0);assert.match(changed.sources[0].source_chain.files[0].registry_status,/재확인/);
+assert.equal(safeURL('https://example.org/?serviceKey=private'),null);assert.equal(safeURL('javascript:alert(1)'),null);
+const dom=new JSDOM('<main></main>',{url:'https://example.org',runScripts:'outside-only'}),w=dom.window;w.eval(fs.readFileSync(path.join(root,'assets/source-evidence.js'),'utf8'));const ui=w.SourceEvidence;
+w.document.querySelector('main').innerHTML=ui.render(academy,true);assert(w.document.querySelector('a').href.includes('nttSn=3381948'));assert(w.document.body.textContent.includes('2026-08-01'));assert(w.document.body.textContent.includes('data_processed/education/academies.json'));
+assert(ui.lines(academy)[0].includes('nttSn=3381948'));assert(ui.lines(park)[0].includes('미확보'));
+assert.equal(ui.href('data_processed/../secret'),null);assert.equal(ui.href('https://example.org/?token=secret'),null);
+const legacy=ui.render({sources:[{title:'<img src=x onerror=alert(1)>',source:'data_processed/parks.csv'}]});assert(legacy.includes('&lt;img'));assert(legacy.includes('저장 당시'));assert(!legacy.includes('href="javascript'));
+console.log('PASS source provenance: original URLs/dates, missing originals, unrelated-source isolation, stale snapshots, legacy records, export paths and escaping');

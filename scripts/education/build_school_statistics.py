@@ -43,6 +43,7 @@ def summarize(rows, year):
 def main():
     indicators = json.loads((DATA / 'school_public_indicators.json').read_text(encoding='utf-8'))['schools']
     schools, hashes = {}, {}
+    years = sorted({r['year'] for file in (DATA/'disclosures').glob('*.json') for r in json.loads(file.read_text(encoding='utf-8')) if r.get('year',0)>=2025})
     with (DATA / 'institutions.csv').open(encoding='utf-8-sig', newline='') as source:
         registry_ids = {r['학교ID'] for r in csv.DictReader(source)}
     for file in sorted((DATA / 'disclosures').glob('*.json')):
@@ -51,7 +52,7 @@ def main():
         rows = json.loads(file.read_text(encoding='utf-8'))
         schools[file.stem] = {}
         hashes[file.name] = hashlib.sha256(file.read_bytes()).hexdigest()
-        for year in [2025, 2026]:
+        for year in years:
             result = summarize(rows, year)
             result.update(paps=None, afterschool=None, clubs=None)
             for group in indicators.get(file.stem, []):
@@ -64,7 +65,7 @@ def main():
                             result[key] = fields[field]
                     result['sources'].append({'item': group['item'], 'year': year, 'files': obs['source_files'], 'url': obs['source_url']})
             schools[file.stem][str(year)] = result
-    payload = {'years': [2025, 2026], 'schools': schools,
+    payload = {'years': years, 'schools': schools,
                'source_hashes': hashes, 'indicator_hash': hashlib.sha256((DATA / 'school_public_indicators.json').read_bytes()).hexdigest()}
     (DATA / 'school_statistics.json').write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':'), allow_nan=False), encoding='utf-8')
     print(f'Statistics table: {len(schools)} institutions, 2025/2026 observations')

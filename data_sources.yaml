@@ -27,6 +27,33 @@
 
 version: 1
 sources:
+  - dataset: student_services
+    local_file: data_processed/student_services/facilities.json
+    provider: 인천광역시교육청·인천광역시·체육시설 운영기관
+    source_url: https://www.ice.go.kr/ice/ad/func/spnt/spntList.do?mi=10916
+    license: 기관별 공개 현황 사실정보·출처 표시, 원문 이용조건은 개별 출처 참조
+    update_cycle: 수동 재수집 및 원문 구조 검사
+    coverage: 초등돌봄포털 521곳·공유누리 공공 무료 무신청 운동시설 25곳, 사설·예약·등록·조건 미확인 제외, 전수 목록 아님
+    auto_apply: false
+    check:
+      type: manual
+    notes: >-
+      python -m scripts.education.fetch_student_services --refresh 후
+      python -m scripts.education.build_student_service_priorities 실행.
+      원문 HTML·수집시각·SHA256·주소 지오코딩 캐시 보존.
+      신규 원천 자동 반영·기존 도서관/공시 갱신 시 자동 재계산은 아직 연결하지 않음.
+      파생 priorities.json과 school_priorities.csv는 같은 입력 스냅샷으로 함께 재생성한다.
+  - dataset: school_zones
+    local_file: data_processed/education/school_zones.geojson
+    provider: 한국교육시설안전원
+    source_url: https://schoolzone.emac.kr/publicData/publicDataList.do
+    license: 공식 공공데이터 공개자료 · 출처 표시
+    update_cycle: 반기 (3월·9월), 게시일은 별도
+    coverage: 인천 초등학교 통학구역·중학교 학구/학군·고등학교 학교군 및 비평준화지역, 유치원 미제공
+    auto_apply: true
+    check:
+      type: school_zones
+    notes: 최신 게시물 첨부 SHP와 학교 연계 CSV를 매회 수집. 품질 통과·동일 스키마·구역 수 변화 20% 이내만 자동 반영. 그 밖에는 검토 대기.
   - dataset: libraries
     local_file: data_processed/libraries.csv
     portal_pk: "15013109"
@@ -34,9 +61,11 @@ sources:
     provider: 문화체육관광부(제공 지자체·교육청)
     license: 공공데이터포털 표준 이용허락
     update_cycle: 연간
+    auto_apply: true
     source_url: https://www.data.go.kr/data/15013109/standard.do
     check:
-      type: json_api
+      type: refresh_pipeline
+      pipeline: libraries
       urls:
         columList: https://www.data.go.kr/download/columList.json?pk=15013109&ext=csv
         data: https://www.data.go.kr/download/standard.json?publicDataPk=15013109&svcTableNm=tn_pubr_public_lbrry_svc&perPage=10000&page=1
@@ -44,9 +73,20 @@ sources:
       - 전국도서관표준데이터
       - 도서관 표준데이터
     notes: >-
-      데모 대상 1종(P2에서 확보한 keyless JSON API). columList.json으로 원격 스키마,
-      standard.json 1페이지로 totalCount·내용 해시를 추적한다. 응답이 바뀌면(404 포함)
-      moved-detection이 search_keywords로 포털 재검색을 시도한다.
+      전 페이지를 UTF-8로 수집하고 실제 내용을 비교한다. 접근성·독서 격차·정책 카드·도서관 후보 시나리오·질문 분석을 격리 재계산 후 함께 반영한다. 좌표 미확보 시설은 별도 보존하고 분석은 좌표 확보 시설 기준 하한으로 표시한다. 원자료 범위 급변·좌표 오류는 기존 버전 유지.
+
+  - dataset: school_public_disclosures
+    local_file: data_processed/education/school_statistics.json
+    provider: 교육부 학교알리미·유치원알리미
+    source_url: https://www.schoolinfo.go.kr/ng/go/pnnggo_a01_l2.do
+    license: 공개용 공시자료 · 출처 표시
+    update_cycle: 공시 차수별
+    auto_apply: true
+    check:
+      type: refresh_pipeline
+      pipeline: disclosures
+    coverage: 기존 지도 기관과 연결되는 당해·전년도 공개 공시항목. 공개 차수 자동 탐색. 신규 기관 편입·과거 예측 모형 재학습은 별도 검증 대상.
+    notes: 학교별 공시·통계·활동 지표·분석 데이터·AI 근거를 묶어서 갱신. 공개 예외는 결측 유지. 기존 미래 예측은 학습 시점이 다른 별도 스냅샷으로 유지.
 
   - dataset: school_library
     local_file: data_processed/school_library_access.csv

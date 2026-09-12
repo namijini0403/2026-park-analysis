@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "deployment_status": "SUCCESS",
+  "deployment": "b93210d6-b14c-4946-95c6-0569f5e11010",
+  "api": {
+    "passed": true,
+    "checked_at": "2026-09-12T06:52:21.912Z",
+    "deployment": "b93210d6-b14c-4946-95c6-0569f5e11010",
+    "checks": [
+      {
+        "file": "index.html",
+        "matched": true
+      },
+      {
+        "file": "assets/hitl-analysis.js",
+        "matched": true
+      },
+      {
+        "file": "assets/hitl-analysis.css",
+        "matched": true
+      },
+      {
+        "file": "assets/question-conclusion.js",
+        "matched": true
+      }
+    ],
+    "summary": "현재 설정에서는 장서 총수 (권)을(를) 가장 중시합니다 (80%).\n장서 총수 (권): 가장 작은 관측: 영화초등학교 892. 작은 값을 중시하는 조건에서 검토할 선택지: 장서 최신성·대출 수요 확인 후 도서 구입·교체 또는 학교 간 공동 이용.\n지원 확정 전에는 이용 대상·안전·실행 가능성·출입구 경로 근거를 확인해야 합니다. 관측 최솟값·최댓값은 지원 순위나 부족 확정이 아닙니다.",
+    "schools": [
+      {
+        "track": "일반 검토",
+        "year": 2025,
+        "members": [
+          {
+            "name": "영화초등학교",
+            "value": 892
+          }
+        ]
+      },
+      {
+        "track": "도서·농어촌 별도 검토",
+        "year": 2025,
+        "members": [
+          {
+            "name": "덕적초등학교",
+            "value": 0
+          }
+        ]
+      },
+      {
+        "track": "일반 검토",
+        "year": null,
+        "members": []
+      }
+    ]
+  },
+  "browser": {
+    "passed": true,
+    "live": true,
+    "checked_at": "2026-09-12T06:52:12.037Z",
+    "checks": [
+      "related checkbox candidates",
+      "visible range levers after selection",
+      "auto analysis",
+      "local weight updates without API requests",
+      "changed substantive conclusion",
+      "actual school dot drilldown",
+      "mobile no overflow",
+      "all zero clears stale result",
+      "selection removal",
+      "topic history persists without current decision restore"
+    ],
+    "errors": [],
+    "analysis_requests": 3
+  },
+  "screenshots": "C:\\Users\\Mijin\\Desktop\\공공데이터공모전\\outputs\\question_levers_20260912\\workspace\\outputs\\question-levers\\live",
+  "concurrency_manifest": "C:\\Users\\Mijin\\Desktop\\공공데이터공모전\\outputs\\question_levers_20260912\\merge-manifest.json"
+}

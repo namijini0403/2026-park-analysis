@@ -1,0 +1,66 @@
+{
+  "verified_at": "2026-09-12T06:25:58.881Z",
+  "base": "https://education-living-area-preview-production.up.railway.app",
+  "files": [
+    {
+      "name": "index.html",
+      "sha256": "f583cf40ee07705ee14e5afa73555bc196deb7a3f6fe3160a2464c72ccefe1d8"
+    },
+    {
+      "name": "assets/visual-studio.js",
+      "sha256": "b114d8c1d9370feacd612bcc628d51b144039bd6360da8b7cddd67e7ba6c1276"
+    },
+    {
+      "name": "assets/analysis-topics.js",
+      "sha256": "05623b374f3b5c5426a741f88e2f8f675e5b92a8293b023066c951b1417a76ce"
+    },
+    {
+      "name": "assets/collection-assistant.js",
+      "sha256": "58b3ef36934b02c8a7c4a4f174318c173a2e8a56ccfc85bfde2e8944b1e8e963"
+    },
+    {
+      "name": "assets/policy-studio.js",
+      "sha256": "5d45cfd3b424bc6cf3f90e19d0706b1a05b43dda066f671ee34f7c00ab64409f"
+    },
+    {
+      "name": "assets/policy-studio.css",
+      "sha256": "f2c78130eafc4dba1d51f804c7e95a5343b5dff5faae153108745f58e0e7b853"
+    }
+  ],
+  "datasets": 42,
+  "views": 1181,
+  "atlas_stale": false,
+  "actual_example": [
+    "인천신흥초등학교",
+    19013,
+    30000,
+    10987,
+    "집행 보류",
+    "지원 대상·이용 자격 · 안전 · 실행·수용 여건 · 실제 이용 경로"
+  ],
+  "gates": "No unauthenticated or request-supplied verification adopted",
+  "policy_auth": "Authenticated validation reached; no production review record written",
+  "deployment_id": "ac2d447c-669c-4199-a7d1-23eaac2d23fc",
+  "deployment_status": "SUCCESS",
+  "browser_validation": {
+    "passed": true,
+    "checks": [
+      "real quantity",
+      "search all rows",
+      "dot click schools",
+      "bin click schools",
+      "indexeddb refresh",
+      "historical result warning",
+      "no recommendation restore",
+      "collection capability prompts",
+      "mobile width"
+    ],
+    "errors": []
+  },
+  "concurrent_work_preserved": [
+    "api/chat.js",
+    "api/_hitl_analysis.js",
+    "assets/chat-workspace.js",
+    "assets/hitl-analysis.js"
+  ]
+}

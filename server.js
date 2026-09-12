@@ -17,9 +17,18 @@
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
+const crypto = require('node:crypto');
 
 const aiExplainerHandler = require("./api/ai-explainer-v2.js");
+// Daily upstream checks by default; explicit 0 and saved runtime settings still win.
+process.env.UPDATE_CENTER_SCAN_INTERVAL_MIN ??= '1440';
+// Server-generated analysis bundles include the existing 37MB school analysis file.
+// Public uploads keep their separate 25MB input limit.
+process.env.UPDATE_CENTER_MAX_FILE_BYTES ??= String(64*1024*1024);
+process.env.UPDATE_CENTER_MAX_VERSION_BYTES ??= String(256*1024*1024);
 const analysisHandler = require("./api/analysis.js");
+const chatHandler = require('./api/chat.js');
+const schoolSummaryHandler = require('./api/school-summary.js');
 const updateCenterHandler = require("./api/update-center.js");
 
 const PORT = Number(process.env.PORT || 3000);
@@ -85,11 +94,11 @@ async function readJsonBody(req, maxBytes = MAX_BODY_BYTES) {
   }
 }
 
-async function handleApi(req, res, handler = aiExplainerHandler) {
+async function handleApi(req, res, handler = aiExplainerHandler, maxBytes = MAX_BODY_BYTES) {
   try {
     if (req.method === "POST") {
       // Vercel parses JSON bodies into req.body; reproduce that here.
-      req.body = await readJsonBody(req);
+      req.body = await readJsonBody(req, maxBytes);
     }
     await handler(req, res);
   } catch (error) {
@@ -114,7 +123,7 @@ async function handleApi(req, res, handler = aiExplainerHandler) {
 async function handleUpdateCenter(req, res) {
   try {
     if (req.method === "POST") {
-      const isUpload = String(req.url || "").startsWith("/api/update-center/upload");
+      const isUpload = /^\/api\/update-center\/(upload|documents\/import)/.test(String(req.url || ""));
       req.body = await readJsonBody(req, isUpload ? UPLOAD_BODY_BYTES : MAX_BODY_BYTES);
     }
     await updateCenterHandler(req, res);
@@ -142,7 +151,7 @@ function cacheControlFor(urlPath) {
     return "public, max-age=31536000, immutable";
   }
   if (/^\/data_processed\//.test(urlPath)) {
-    return "public, max-age=300";
+    return "public, max-age=0, must-revalidate";
   }
   return null;
 }
@@ -240,12 +249,25 @@ function serveUpdateCenterPage(req, res) {
 
 const server = http.createServer((req, res) => {
   const pathname = new URL(req.url, "http://localhost").pathname;
+  if(pathname==='/api/data-revision'&&(req.method==='GET'||req.method==='HEAD')){
+    const active=path.join(process.env.UPDATE_CENTER_HOME||path.join(__dirname,'data/update_center'),'active.json');
+    const content=fs.existsSync(active)?fs.readFileSync(active):Buffer.from('initial');
+    res.setHeader('Cache-Control','no-store');
+    return sendJson(res,200,{revision:crypto.createHash('sha256').update(content).digest('hex')});
+  }
+  if (pathname === '/api/chat-upload') {
+    handleApi(req,res,require('./api/chat-upload'),22*1024*1024);return;
+  }
   if (pathname === "/api/analysis") {
     handleApi(req, res, analysisHandler);
     return;
   }
-  if (pathname === "/api/ai-explainer-v2") {
-    handleApi(req, res);
+  if (pathname === '/api/school-summary') {
+    schoolSummaryHandler(req,res);
+    return;
+  }
+  if (['/api/chat','/api/ai-explainer','/api/ai-explainer-v2'].includes(pathname)) {
+    handleApi(req, res, chatHandler);
     return;
   }
   if (pathname.startsWith("/api/update-center/")) {
@@ -259,7 +281,13 @@ const server = http.createServer((req, res) => {
   serveStatic(req, res);
 });
 
-server.listen(PORT, HOST, () => {
+async function startServer() {
+  // Restore complete published bundles before accepting map/analysis requests.
+  const restored=await updateCenterHandler.restoreStartupState();
+  if(restored?.errors?.length)throw Error('Active data restore failed: '+restored.errors.join('; '));
+  require('./scripts/policy_cards/observed_cards.cjs').apply(__dirname);
+  require('./scripts/education/merge_enrollment_release.cjs').applyEnrollmentRelease(STATIC_ROOT);
+  server.listen(PORT, HOST, () => {
   console.log(`Server listening on http://${HOST}:${PORT}`);
   console.log(`Static root: ${STATIC_ROOT}`);
 
@@ -267,13 +295,6 @@ server.listen(PORT, HOST, () => {
   // 보존된 활성 버전의 파일을 data_processed/ 와 vercel_public/data_processed/ 로 다시
   // 반영한다. 어떤 store 백엔드로 붙었는지(store=postgres | store=file)도 여기서 남긴다.
   // 복원 실패는 절대 치명적이지 않다 — 로그만 남기고 git 배포본으로 계속 서비스한다.
-  if (typeof updateCenterHandler.restoreStartupState === "function") {
-    updateCenterHandler
-      .restoreStartupState()
-      .catch((error) => {
-        console.error("[update-center] 활성 버전 복원 실패(서비스는 계속됩니다):", error && error.message);
-      });
-  }
 
   // 자동 감시(주기 스캔) 기동. UPDATE_CENTER_SCAN_INTERVAL_MIN 이 없거나 0이고
   // 런타임 설정(POST /api/update-center/schedule)도 없으면 꺼진 채로 유지된다.
@@ -293,3 +314,5 @@ server.listen(PORT, HOST, () => {
       });
   }
 });
+}
+startServer().catch(error=>{console.error('[startup]',error.message);process.exitCode=1;});

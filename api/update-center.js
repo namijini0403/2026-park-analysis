@@ -138,7 +138,10 @@ async function performScan({ dataset = null, simulateChangeB64 = null, log = () 
     });
     events.push(updated || { ...ev, ai_note: note });
   }
-  return { ...result, events };
+  const {autoApplyEvents}=await import('../scripts/update_center/automatic.mjs');
+  const automatic=await autoApplyEvents(events,loadSourcesDoc().sources||[],store,{log});
+  const currentEvents=await Promise.all(events.map(async event=>(await store.getEvent(event.id))||event));
+  return { ...result, events:currentEvents, automatic };
 }
 
 let schedulerPromise = null;
@@ -996,6 +999,7 @@ async function handlePostScan(req, res) {
   return json(res, 200, {
     mode: result.mode,
     summary: result.mode === "scan" ? result.summary : null,
+    automatic: result.automatic || [],
     events: result.mode === "simulate" ? result.events : result.events,
     log: logLines,
     schedule: await scheduler.getStatus(),
@@ -1444,6 +1448,12 @@ module.exports = async function handler(req, res) {
 
   try {
     if (req.method === "GET" && subPath === "/sources") return await handleGetSources(res);
+    if (req.method === "GET" && subPath === "/coverage") {
+      const coverage=(await import('../scripts/update_center/coverage.mjs')).refreshCoverage();
+      const scans=(await (await getStore()).getMeta('source_scan_state'))||{};
+      return json(res,200,{...coverage,sources:coverage.sources.map(source=>({...source,last_scan:scans[source.dataset]||null}))});
+    }
+    if (subPath.startsWith("/documents/")) return await require('./_office_documents.js').handle(req,res,await getStore());
     if (req.method === "GET" && subPath === "/events") return await handleGetEvents(res, url);
     if (req.method === "GET" && subPath === "/audit") return await handleGetAudit(res, url);
     if (req.method === "GET" && subPath === "/versions") return await handleGetVersions(res, url);
@@ -1485,7 +1495,7 @@ async function restoreStartupState() {
   console.log(
     `[update-center] store=${backend}` +
       (backend === "file"
-        ? " (DATABASE_URL 미설정 — 재배포 시 이벤트/버전이 휘발됩니다)"
+        ? " (파일 저장소 — 저장 경로가 영구 볼륨에 연결되어 있으면 재배포 후 유지됩니다)"
         : " (DATABASE_URL 사용 — 버전·후보·활성 포인터가 DB 에 보존됩니다)")
   );
   const { restoreMod } = await loadModules();

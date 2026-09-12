@@ -1,0 +1,13 @@
+import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import assert from 'node:assert/strict';
+const root=fs.mkdtempSync(path.join(os.tmpdir(),'fullscan-'));
+process.env.UPDATE_CENTER_SOURCES_PATH=path.join(root,'sources.json');process.env.UPDATE_CENTER_STATE_PATH=path.join(root,'state.json');process.env.UPDATE_CENTER_STORE_PATH=path.join(root,'store.json');delete process.env.DATABASE_URL;
+fs.writeFileSync(process.env.UPDATE_CENTER_SOURCES_PATH,JSON.stringify({sources:[{dataset:'test',local_file:'data_processed/test.csv',check:{type:'json_api',urls:{columList:'https://fixture.test/schema',data:'https://fixture.test/data?perPage=1&page=1'}}}]}));
+let value=2,calls=[];
+globalThis.fetch=async raw=>{const url=new URL(raw);calls.push(url.href);return {ok:true,status:200,json:async()=>url.pathname==='/schema'?{columList:[{columNm:'id'}]}:{totalCount:2,data:[{id:url.searchParams.get('page')==='1'?1:value}]}};};
+const {runScan}=await import('../scripts/update_center/scan.mjs');
+assert.equal((await runScan({fetchCandidate:false})).summary.baseline,1);
+value=3;
+const changed=await runScan({fetchCandidate:false});assert.equal(changed.summary.green,1,'Change on second page must be detected');
+assert(calls.some(url=>url.includes('page=2')));
+assert.equal((await runScan({fetchCandidate:false})).summary.unchanged,1);
+console.log('Full source scanner: second-page-only change and durable baseline PASS');

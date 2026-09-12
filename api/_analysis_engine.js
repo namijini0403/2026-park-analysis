@@ -34,6 +34,7 @@ function distance(a,b){
   return 12742000*Math.asin(Math.sqrt(Math.sin(dlat/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dlng/2)**2));
 }
 function validatePlan(plan,dataset){
+  const fields={...module.exports.fields,...dataset.extra_fields};
   if(!levels.includes(plan.level))throw Error('학교급 하나를 선택해 주세요. 서로 다른 학교급을 섞지 않습니다.');
   if(!['relationship','difference','inequality','trend','spatial'].includes(plan.method))throw Error('지원하지 않는 계산 방법입니다.');
   if(!dataset.years.includes(Number(plan.year)))throw Error('선택한 공시연도 자료가 없습니다.');
@@ -44,6 +45,7 @@ function validatePlan(plan,dataset){
   if(plan.method==='trend'&&plan.x!=='students')throw Error('여러 해의 추세 분석은 학생·원아 수 이력에 지원합니다.');
 }
 function analyze(dataset,plan){
+  const fields={...module.exports.fields,...dataset.extra_fields};
   validatePlan(plan,dataset);
   const selected=dataset.schools.filter(s=>s.level===plan.level&&(!plan.gu||plan.gu==='전체'||s.gu===plan.gu)&&(!plan.school_id||s.id===plan.school_id));
   const rows=selected.map(s=>{

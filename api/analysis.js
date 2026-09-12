@@ -110,3 +110,4 @@ module.exports=async(req,res)=>{
   catch(error){res.statusCode=400;res.end(JSON.stringify({status:'error',summary:error.message}));}
 };
 module.exports.run=run;module.exports.localPlan=localPlan;
+module.exports.dataset=dataset;

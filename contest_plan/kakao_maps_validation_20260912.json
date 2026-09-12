@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "mode": "live",
+  "checked_at": "2026-09-12T05:34:23.842Z",
+  "school_union": 641,
+  "all_schools": 917,
+  "radius_m": 500,
+  "answer_markers": 103,
+  "kakao_tile_responses": 139,
+  "page_errors": [],
+  "checks": [
+    "native Kakao SDK and tiles",
+    "no Leaflet runtime",
+    "multi-level selection",
+    "co-located marker selection",
+    "500m and zones toggles",
+    "islands fit",
+    "answer locations / polygon holes / multipolygon / route",
+    "stale answer clearing",
+    "mobile no overflow"
+  ],
+  "deployment": {
+    "createdAt": "2026-09-12T05:31:46.531Z",
+    "environmentId": "08a322cd-3447-4eef-8a9e-a7a8d8ead656",
+    "id": "341e9742-5e1a-4f73-aaa5-596d92ff3d27",
+    "meta": {
+      "reason": "deploy"
+    },
+    "serviceId": "0959785c-35d7-4734-b4c0-63b2c8e4eeac",
+    "snapshotId": "b8d7c7ba-607c-41e2-8ee4-3c7afdf65916",
+    "status": "SUCCESS",
+    "updatedAt": "2026-09-12T05:32:49.718Z",
+    "url": null
+  },
+  "files": [
+    {
+      "file": "index.html",
+      "sha256": "521104ea51220716bc677c3ade8fc630ee4db2e262cc59ecf137e4dd74079e2b"
+    },
+    {
+      "file": "assets/kakao-config.js",
+      "sha256": "d83973f56f977cc81e5d233b7d22b28af312d393b13ea14fc18a3c0249997fbf"
+    },
+    {
+      "file": "assets/kakao-maps.js",
+      "sha256": "6cfcf0e72ee6bc9930ee6e10f40b5d700f87df0993519324e443d0c11534c341"
+    },
+    {
+      "file": "assets/kakao-maps.css",
+      "sha256": "bbc75a9b4071c5a6dc9b8974e871c0af200082d8f7234738803767d6971cb567"
+    },
+    {
+      "file": "assets/school-map.js",
+      "sha256": "33994f08867f372e60f540a453ec4a78dec12cf9ae283b39741b428b95e75cdc"
+    },
+    {
+      "file": "assets/chat-workspace.js",
+      "sha256": "5aae5a05e8eff3f17d00aef17e7965ea635886030eb9e0db4cc22dd223bff570"
+    }
+  ],
+  "hitl_question": "인천석암초등학교 도서관 지원을 검토하고 있어. 학생당 장서와 외부 도서관 거리, 공식 통학구역을 함께 고려해줘.",
+  "additional_checks": [
+    "actual three-factor HITL question",
+    "SDK blocked: school search and source tables remain",
+    "live six file hashes match source",
+    "visual inspection desktop mobile answer and HITL maps"
+  ]
+}

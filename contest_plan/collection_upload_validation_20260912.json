@@ -1,0 +1,54 @@
+{
+  "status": "SUCCESS",
+  "deployment_id": "951e79a7-856f-4e3a-a5a0-cf9da0d045d3",
+  "preview_passed": true,
+  "source_files_unchanged_since_release": true,
+  "files": [
+    "index.html",
+    "server.js",
+    "requirements.txt",
+    "api/chat.js",
+    "api/chat-upload.js",
+    "api/_collection_plan.js",
+    "api/_document_evidence.js",
+    "api/_source_provenance.js",
+    "scripts/education/parse_chat_attachment.py",
+    "assets/chat-upload.js",
+    "assets/attachment-reader.js",
+    "assets/attachment-support.css",
+    "assets/collection-assistant.js",
+    "assets/chat-workspace.js",
+    "assets/simple-app.js",
+    "assets/hitl-analysis.js"
+  ],
+  "live": {
+    "passed": true,
+    "live": true,
+    "formats": [
+      "csv",
+      "tsv",
+      "xlsx",
+      "xls",
+      "json",
+      "geojson",
+      "docx",
+      "hwpx",
+      "hwp",
+      "txt",
+      "md",
+      "pdf"
+    ],
+    "checks": [
+      "header row selection",
+      "DOCX table/document switch",
+      "HITL document dispatch",
+      "page citations",
+      "question-specific collection and official sources",
+      "downloadable collection template",
+      "mobile overflow",
+      "topic restore"
+    ],
+    "errors": []
+  },
+  "public_hashes_matched": true
+}

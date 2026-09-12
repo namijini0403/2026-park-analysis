@@ -1,0 +1,2952 @@
+
+
+
+
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- 2022 10 21 주석 처리 wty -->
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" /> -->
+    
+    <!-- 2022 10 21 meta 태그 변경 wty -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" /> 
+    
+    <title>공유누리</title>
+	<link rel="shortcut icon" href="/images/common/favicon.png" />
+<!-- 1차사업
+    <link rel="stylesheet" href="/css/font.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/cnt_ui.css" />
+    <link rel="stylesheet" href="/css/cnt_main.css" />
+    <link rel="stylesheet" href="/css/cnt_sub.css" />
+    <link rel="stylesheet" href="/css/search.css" />
+    <link rel="stylesheet" href="/css/upbSelOrgPop.css" />
+ -->
+    <!-- 2020 고도화 --> 
+    
+    <link rel="stylesheet" href="/js/lib/jquery-ui.min.css" />
+    <link rel="stylesheet" href="/js/lib/jquery-ui.theme.css" /> 
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css">
+
+    <link rel="stylesheet" href="/css/adv/font.css" />
+    <link rel="stylesheet" href="/css/adv/base.css" />
+    <link rel="stylesheet" href="/css/adv/layout.css?202103291010" />
+    <link rel="stylesheet" href="/css/adv/cnt_ui.min.css" />
+    <link rel="stylesheet" href="/css/adv/cnt_main.min.css" />
+    <link rel="stylesheet" href="/css/adv/cnt_sub.min.css" />
+	<link rel="stylesheet" href="/css/adv/password-toggle.css?v=20260820" />
+<!--     <link rel="stylesheet" href="/css/adv/search.css" /> --> <!-- 통합검색 CSS -->
+    <link rel="stylesheet" href="/css/adv/upbSelOrgPop.css" />
+    <link rel="stylesheet" href="/css/adv/adv_extension.css" />
+
+    <!-- // 2020 고도화 -->
+ 
+ 	<!-- 하이브리드앱을 위한 CSS -->
+    <link rel="stylesheet" href="/css/adv/hybrid.css" />
+ 	<!-- responsive CSS -->
+    <link rel="stylesheet" href="/css/adv/responsive.css?202103291010" />
+ 	
+    <link rel="stylesheet" href="/js/lib/owl.carousel.min.css" />
+    <link rel="stylesheet" href="/js/lib/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="/js/lib/slick.css" />
+    <link rel="stylesheet" href="/js/lib/slick-theme.css" />
+<!--     <link rel="stylesheet" href="/js/lib/jquery.mCustomScrollbar.min.css" /> -->
+
+    <link rel="stylesheet" type="text/css" href="/css/axicon_v_0_3/axicon/axicon.min.css" />
+ 
+    <script src="/js/lib/jquery-1.12.4.min.js"></script>
+    <script src="/js/lib/ie-checker-min.js"></script>
+    <script src="/js/lib/jquery-ui.min.js"></script>
+    <script src="/js/lib/jquery.bxslider.min.js"></script>
+	<script src="/js/lib/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/js/lib/jquery.mCustomScrollbar.min.js"></script>
+    <script src="/js/lib/slick.min.js"></script>
+	<script src="/js/lib/owl.carousel.min.js"></script>
+	<script src="/js/u_common.js?20210223071300"></script>
+	<script src="/js/common.js"></script>
+	<script src="/js/password-toggle.js?v=20260820" defer></script>
+	<script src="/js/search.js"></script>
+	<script src="/js/search_autocomplete.js"></script> <!-- 검색어 자동완성 -->
+    
+    <link rel="stylesheet" type="text/css" href="/js/lib/datetimepicker/jquery.datetimepicker.min.css" />
+    <script src="/js/lib/datetimepicker/jquery.datetimepicker.full.min.js"></script>
+
+    <link rel="stylesheet" href="/js/loader/loader.css">
+    <script type="text/javascript" src="/js/loader/loader.js"></script>
+    
+	<script type="text/javascript" src="/js/stt/stt_record.js?20200806" ></script>
+	
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script>
+    <link href="/css/esign/oacx-ux.css" rel="stylesheet">
+           <!-- 한컴위드 인증서 본인확인 -->
+<!--     <script src="/hwith/AnySign/anySign4PCInterface.js"></script> -->
+<!--     <script src="/hwith/AnySign/XecureKeyPad/js/xkeypad_config.js"></script> -->
+<!--     <script src="/hwith/AnySign/XecureKeyPad/js/xkeypad_html5.js"></script> -->
+
+    <!--[if lt IE 9]>
+	<script src="/js/lib/html5shiv.js"></script>
+	<script src="/js/lib/respond.js"></script>
+    <![endif]-->
+    
+    <!-- main renewal 추가 -->
+<!-- 	<link rel="stylesheet" type="text/css" href="/css/style_new_main.css"> -->
+	<!-- main renewal 추가 end -->
+	
+    
+    
+    <script type="text/javascript">
+   	$(document).ready( function() {
+   		
+   		
+   		if (document.documentMode && document.documentMode <= 8) {
+   			  var link = document.createElement("link");
+   			  link.rel = "stylesheet";
+   			  link.type = "text/css";
+   			  link.href = "/js/lib/jquery.mCustomScrollbar.min.css";
+   			  document.getElementsByTagName("head")[0].appendChild(link);
+   		}
+   		
+   		
+   		if(!isNative()){
+   	        let mberId = '';
+   	        let sessionTime = 1800; // 세션 타임아웃값 (초)
+   	        if(mberId.length > 0 ){
+                //(밀리세컨드 단위이므로 * 1000 )
+                setTimeout(loginTimeCheck,sessionTime*1000);
+   	        }
+   		}else{
+   			let mberId = '';
+   			window.app.stateLogin(mberId);
+   		}
+   	    
+		var pathname = window.document.location.pathname, pathsearch = window.document.location.search, title;
+		
+		$.ajax({
+			type: "POST",
+			data: {},
+			url : "/UserPortal/Upm/UsrMenuList/result.do",
+			success : function(data){
+				if(data.menuList.length > 0) {
+					data.menuList.forEach(function(el){
+						if( pathname.indexOf(el.url) == 0 && el.depth > 1 ) {
+                            //								title = el.upperPathMenuNm;
+							title = el.menuNm;
+							if( pathsearch.indexOf("CPS001.001") >= 0) title += "(체육시설)";
+							if( pathsearch.indexOf("CPS001.002") >= 0) title += "(문화·숙박)";
+							if( pathsearch.indexOf("CPS001.003") >= 0) title += "(숙박시설)";
+							if( pathsearch.indexOf("CPS001.004") >= 0) title += "(연구·실험장비)";
+							if( pathsearch.indexOf("CPS001.005") >= 0) title += "(물품(생활, 사무, 교통))";
+							if( pathsearch.indexOf("CPS001.006") >= 0) title += "(교육·강좌)";
+							if( pathsearch.indexOf("CPS001.007") >= 0) title += "(주차장)";
+							if( pathsearch.indexOf("CPS001.098") >= 0) title += "(명절 주차장)";
+							if( pathname == "/UserPortal/Upc/54/contents.do" ) title += "공유누리 소개";
+							document.title = title + " | 공유누리";
+							return false;
+						}
+					})
+				}
+				  
+				if( pathname == "/UserPortal/Upc/54/contents.do" ){
+					document.title = "공유누리 소개(상세) | 공유누리";
+				}
+				if( pathname == "/UserPortal/Upb/LoginUser/index.do" ){
+                    document.title = "로그인 | 공유누리";
+                }
+				if( pathname == "/UserPortal/Upb/UpbFindID/index.do" ){
+                    document.title = "아이디 찾기 | 공유누리";
+                }	
+				if( pathname == "/UserPortal/Upb/UpbFindPass/index.do" ){
+                    document.title = "비밀번호 찾기 | 공유누리";
+                }
+				if( "" == "20" ){
+					document.title = "공지사항 | 공유누리";
+				}
+                if( pathname == "/UserPortal/Upb/UpbAcceptTerm/index.do" ){
+                    document.title = "회원가입(약관동의) | 공유누리";
+                }
+                if( "" == "20" && ""){
+                    document.title = "공지사항(상세) | 공유누리";
+                }
+                if( pathname == "/UserPortal/Upm/Kkuleomi/index.do" ){
+                    document.title = "꾸러미 서비스 | 공유누리";
+                }
+				if( "" == "20" && ""){
+					document.title = "공지사항(상세) | 공유누리";
+				}
+				
+				if( "" == "21" ){
+					document.title = "이벤트 | 공유누리";
+				}
+				
+				if( "" == "22" ){
+					document.title = "자료실 | 공유누리";
+				}
+				
+				if( "" == "34" ){
+					document.title = "자료실 | 공유누리";
+				}
+				
+				if( "" == "35" ){
+					document.title = "언론보도 | 공유누리";
+				}
+				if( "" == "23" ){
+					document.title = "우리동네 공유소식 | 공유누리";
+				}
+				
+				if( "" == "3" ){
+					document.title = "참여마당 | 공유누리";
+				}
+				
+				if( "" == "4" ){
+					// 웹 접근성 관련 수정
+					if (pathname == '/UserPortal/cms/article/write.do') {
+						document.title = "글등록 | 질문과 답변 | 공유누리";
+					} else {
+						document.title = "질문과 답변 | 공유누리";
+					}
+				}
+				
+				if( "" == "28" ){
+					document.title = "자주묻는질문 | 공유누리";
+				}
+				
+				if( "" == "40" ){
+					document.title = "이벤트 게시판 | 공유누리";
+				}
+
+                if( pathsearch.indexOf("rsrcClsCd=010000") >= 0 ){
+                    document.title = "시설·공간(대관) | 공유누리";
+                }
+				
+				if( pathsearch.indexOf("rsrcClsCd=010100") >= 0 ){
+					document.title = "회의실 | 공유누리";
+				}
+				
+				if( pathsearch.indexOf("rsrcClsCd=010200") >= 0 ){
+					document.title = "강의실·강당 | 공유누리";
+				}
+				
+				if( pathsearch.indexOf("rsrcClsCd=010500") >= 0 ){
+					document.title = "체육시설 | 공유누리";
+				}
+				
+				if( pathsearch.indexOf("rsrcClsCd=010700") >= 0 ){
+					document.title = "주차장 | 공유누리";
+				}
+				
+				if( pathsearch.indexOf("rsrcClsCd=020000") >= 0 ){
+					document.title = "물품(생활,사무,교통) | 공유누리";
+				}
+				
+				if( pathsearch.indexOf("rsrcClsCd=030000") >= 0 ){
+					document.title = "연구·실험장비 | 공유누리";
+				}
+				
+				if( pathsearch.indexOf("rsrcClsCd=040000") >= 0 ){
+					document.title = "교육·강좌 | 공유누리";
+				}
+				
+				// 웹 접근성 관련 수정
+				if (pathname == '/UserPortal/Upp/UppInqReservUseList/index.do') {
+				    document.title = "이용·반납 현황 | 공유누리";
+				}
+			},
+		})	
+		var txtTitle = $('.sub_title').text();
+        var ttxt = $(document).find("title").text();
+        if(txtTitle.length > 0 && ttxt.length < 5){
+            document.title = txtTitle + " | 공유누리";
+        }
+   	});
+
+    function loginTimeCheck(){
+
+        let url = "/UserPortal/Upb/LoginUser/loginTimeCheck.do";
+        let cbFunc = function(dat){
+            if(dat.result == 'Y'){
+                setTimeout(loginTimeCheck,dat.sessionTime*1000);
+            }else{
+                alert("접속 시간이 종료되어 자동 로그아웃 처리되었습니다. 다시 로그인 후 사용하시기 바랍니다.");
+                location.href = '/UserPortal/Upb/LogOut/index.do';
+            }
+        }
+
+        callAjax(url, {}, cbFunc);
+
+    }
+
+	</script>
+   
+    
+</head>
+
+<body>
+	
+
+
+
+	<div class="modal_mask"></div>
+    <div class="wrapper">
+		
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/new/layout-header.css"/>
+<script src="/js/common-new.js" ></script>
+
+
+
+
+	
+	
+	
+
+	<script>
+	    function fn_link_login() {
+	        var loginfrm = $("body")
+	                .append("<form method='POST' action='/UserPortal/Upb/LoginUser/index.do' />")
+	                .find("form:last");
+	        loginfrm.append('<input type="hidden" name="beforeParam" value="rsrc_no=GH29M4013265" />');
+	        loginfrm.append("<input type='hidden' name='beforeUrl' value='/UserPortal/Upv/UprResrcFacl/index.do' />");
+	        loginfrm.submit();
+	    } 
+	</script>
+
+
+<script> 
+
+	//비회원은 토큰, 푸쉬토큰 저장 안해도 됨
+	
+	//정부24 연계 추가
+	var user_ci = '';
+	var user_id = '';
+		
+	$(function() {
+	
+		if(user_ci){
+			
+			//정부24의 ci와 id로 공유누리 회원가입 계정으로 로그인한다
+			//가입된 계정이 없으면 간편 회원가입 후 로그인
+			$.ajax({
+				type: "POST",
+				url: "/UserPortal/Upb/LoginUser/govCheck.do",
+				data: {"userCi" : user_ci, "userId" : user_id },
+				success: function(data) {
+	     			if(data.success) {
+	     				
+	    				urlpath = '/UserPortal/Upm/Main/index.do';
+						$("body").append("<form id='frmRedirect' method='post' action='"+urlpath+"'/>");
+						var frm = $("body").find("form:last");
+						
+						frm.submit();
+						alert(data.resultMsg);
+	     			} else {
+	     				alert(data.resultMsg);
+	     			}
+				}
+			});
+		};
+		//2022 10 27 wty 정부24 연계 추가
+		//앱 로그인 처리 
+		var app = isNative();
+		var session = '';
+		var appToken = '';
+		
+		if (app) {
+			if (session) {
+				if (!appToken) {
+					$.ajax({
+						type: "POST",
+						url: "/UserPortal/Upb/loginAppUesr/proc.do",
+						data: {},
+						datatype: "JSON",
+						success: function(data) {
+							if (data.success) {
+								var mberId = "";
+								
+								if (data.mberId) {
+									mberId = data.mberId;
+								} else {
+									mberId = 'nonMber';
+								}
+								window.app.passLoginData(mberId,data.mberNm,data.token,data.authorCode);
+								
+							}
+						}
+					});
+				}
+			}
+		}
+	});
+		
+	//앱로그인 성공 시 push토큰 저장
+	//2022 08 09 wty
+	function passMobileData(fcmVal,deviceId) {
+		
+		$.ajax({
+			type: "POST",
+			url: "/UserPortal/Upb/appPushToken/proc.do",
+			data: {"fcmVal" : fcmVal},
+			datatype: "JSON",
+			success: function(data) {
+								
+			}
+		});
+		
+	}
+		
+	let selMenu;
+			
+	function chat_popup(url) {
+	    //var option = 'height='+screen.height+',width='+ screen.width +',scrollbars=yes';
+	    var option = 'height=800, width=450, left=1200, top=100, scrollbars=yes';
+	    url = encodeURI(url);
+	
+	    window.open(url, '_blank', option);
+	}
+    		
+	 const HEADER_MENU_LIST =  [{"progrmDc":null,"menuNo":"USR_00001","openTypeCd":"CPS031.002","progrmFileId":null,"progrmKoreanNm":null,"url":null,"upperPathMenuNm":null,"menuOrdr":"0","path":"{\"USR_00001\"}","depth":"1","useAt":"Y","menuNm":"사용자포털","menuDc":"사용자포털","upperMenuNo":null},{"progrmDc":"시설\/공간 예약신청","menuNo":"USR_00145","openTypeCd":"CPS031.002","progrmFileId":"181","progrmKoreanNm":"시설\/공간 예약신청","url":"\/UserPortal\/adv\/resources\/AdvEsSearchResourcesMainView.do?rsrcClsCd=010000","upperPathMenuNm":"사용자포털>공유신청·예약","menuOrdr":"100","path":"{\"USR_00001\",\"USR_00145\"}","depth":"2","useAt":"Y","menuNm":"공유신청·예약","menuDc":"공유신청예약 - 시설공간 ","upperMenuNo":"USR_00001"},{"progrmDc":"지도(검색화면)","menuNo":"USR_00150","openTypeCd":"CPS031.001","progrmFileId":"125","progrmKoreanNm":"지도","url":"\/UserPortal\/Upc\/UpcMapSrch\/index.do","upperPathMenuNm":"사용자포털>공유지도","menuOrdr":"290","path":"{\"USR_00001\",\"USR_00150\"}","depth":"2","useAt":"Y","menuNm":"공유지도","menuDc":"공유지도","upperMenuNo":"USR_00001"},{"progrmDc":"우리동네 공유소식","menuNo":"USR_00146","openTypeCd":"CPS031.002","progrmFileId":"299","progrmKoreanNm":"우리동네 공유소식","url":"\/UserPortal\/cms\/article\/list.do?bbsNo=23","upperPathMenuNm":"사용자포털>커뮤니티","menuOrdr":"300","path":"{\"USR_00001\",\"USR_00146\"}","depth":"2","useAt":"Y","menuNm":"커뮤니티","menuDc":"커뮤니티 - 우리동네 공유소식","upperMenuNo":"USR_00001"},{"progrmDc":"예약 내역","menuNo":"USR_00148","openTypeCd":"CPS031.002","progrmFileId":"143","progrmKoreanNm":"예약 내역","url":"\/UserPortal\/Upp\/UppInqReservList\/index.do","upperPathMenuNm":"사용자포털>마이페이지","menuOrdr":"500","path":"{\"USR_00001\",\"USR_00148\"}","depth":"2","useAt":"Y","menuNm":"마이페이지","menuDc":"마이페이지 - 예약 내역","upperMenuNo":"USR_00001"},{"progrmDc":"안전하고 편리한 숲길, 전국 무장애나눔길 안내","menuNo":"USR_00193","openTypeCd":"CPS031.001","progrmFileId":"405","progrmKoreanNm":"무장애나눔길","url":"\/UserPortal\/Upd\/UpdBarrierSvcMap\/index.do","upperPathMenuNm":"공유지도>무장애나눔길","menuOrdr":"10","path":"{\"USR_00001\",\"USR_00150\",\"USR_00193\"}","depth":"3","useAt":"Y","menuNm":"무장애나눔길","menuDc":"무장애나눔길","upperMenuNo":"USR_00150"},{"progrmDc":"우리마을 예식장소 대관","menuNo":"USR_00194","openTypeCd":"CPS031.001","progrmFileId":"406","progrmKoreanNm":"예식장소 대관","url":"\/UserPortal\/Upd\/UpdWeddingHallSvcMap\/index.do","upperPathMenuNm":"공유지도>예식장소 대관","menuOrdr":"20","path":"{\"USR_00001\",\"USR_00150\",\"USR_00194\"}","depth":"3","useAt":"Y","menuNm":"예식장소 대관","menuDc":"예식장소 대관","upperMenuNo":"USR_00150"},{"progrmDc":"우리 지역 축제 안내","menuNo":"USR_00195","openTypeCd":"CPS031.001","progrmFileId":"407","progrmKoreanNm":"축제 안내","url":"\/UserPortal\/Upd\/UpdFestivalSvcMap\/index.do","upperPathMenuNm":"공유지도>축제 안내","menuOrdr":"30","path":"{\"USR_00001\",\"USR_00150\",\"USR_00195\"}","depth":"3","useAt":"Y","menuNm":"축제 안내","menuDc":"축제 안내","upperMenuNo":"USR_00150"},{"progrmDc":"우리 동네 물품 대여 안내","menuNo":"USR_00196","openTypeCd":"CPS031.001","progrmFileId":"408","progrmKoreanNm":"물품 대여","url":"\/UserPortal\/Upd\/UpdArticleSvcMap\/index.do","upperPathMenuNm":"공유지도>물품 대여","menuOrdr":"40","path":"{\"USR_00001\",\"USR_00150\",\"USR_00196\"}","depth":"3","useAt":"Y","menuNm":"물품 대여","menuDc":"물품 대여","upperMenuNo":"USR_00150"},{"progrmDc":"우리 동네 교육 강좌 안내","menuNo":"USR_00197","openTypeCd":"CPS031.001","progrmFileId":"409","progrmKoreanNm":"교육 강좌 안내","url":"\/UserPortal\/Upd\/UpdEduSvcMap\/index.do","upperPathMenuNm":"공유지도>교육 강좌 안내","menuOrdr":"50","path":"{\"USR_00001\",\"USR_00150\",\"USR_00197\"}","depth":"3","useAt":"Y","menuNm":"교육 강좌 안내","menuDc":"교육 강좌 안내","upperMenuNo":"USR_00150"},{"progrmDc":"도시공원·둘레길 안내 서비스","menuNo":"USR_00198","openTypeCd":"CPS031.001","progrmFileId":"410","progrmKoreanNm":"도시공원·둘레길","url":"\/UserPortal\/Upd\/UpdPubshrSvc\/EMS004\/index.do","upperPathMenuNm":"공유지도>도시공원·둘레길","menuOrdr":"60","path":"{\"USR_00001\",\"USR_00150\",\"USR_00198\"}","depth":"3","useAt":"Y","menuNm":"도시공원·둘레길","menuDc":"도시공원·둘레길","upperMenuNo":"USR_00150"},{"progrmDc":"전국 국공립 캠핑장·휴양림 안내","menuNo":"USR_00199","openTypeCd":"CPS031.001","progrmFileId":"411","progrmKoreanNm":"캠핑장·휴양림","url":"\/UserPortal\/Upd\/UpdPubshrSvc\/EMS002\/index.do","upperPathMenuNm":"공유지도>캠핑장·휴양림","menuOrdr":"70","path":"{\"USR_00001\",\"USR_00150\",\"USR_00199\"}","depth":"3","useAt":"Y","menuNm":"캠핑장·휴양림","menuDc":"캠핑장·휴양림","upperMenuNo":"USR_00150"},{"progrmDc":"테마서미스주차장지도","menuNo":"USR_00201","openTypeCd":"CPS031.002","progrmFileId":"413","progrmKoreanNm":"테마서미스주차장지도","url":"\/UserPortal\/Upd\/UpdParkingSvcMap\/index.do","upperPathMenuNm":"공유지도>주차장 안내","menuOrdr":"80","path":"{\"USR_00001\",\"USR_00150\",\"USR_00201\"}","depth":"3","useAt":"Y","menuNm":"주차장 안내","menuDc":"주차장 안내","upperMenuNo":"USR_00150"},{"progrmDc":"시설\/공간 예약신청","menuNo":"USR_00151","openTypeCd":"CPS031.002","progrmFileId":"181","progrmKoreanNm":"시설\/공간 예약신청","url":"\/UserPortal\/adv\/resources\/AdvEsSearchResourcesMainView.do?rsrcClsCd=010000","upperPathMenuNm":"공유신청·예약>시설·공간(대관)","menuOrdr":"101","path":"{\"USR_00001\",\"USR_00145\",\"USR_00151\"}","depth":"3","useAt":"Y","menuNm":"시설·공간(대관)","menuDc":"공유신청예약 - 시설\/공간","upperMenuNo":"USR_00145"},{"progrmDc":"생활자원\/물품 예약신청","menuNo":"USR_00156","openTypeCd":"CPS031.002","progrmFileId":"184","progrmKoreanNm":"물품(생활\/사무\/교통) 예약신청","url":"\/UserPortal\/adv\/resources\/AdvEsSearchResourcesMainView.do?rsrcClsCd=020000","upperPathMenuNm":"공유신청·예약>물품(대여)","menuOrdr":"102","path":"{\"USR_00001\",\"USR_00145\",\"USR_00156\"}","depth":"3","useAt":"Y","menuNm":"물품(대여)","menuDc":"공유신청예약 - 물품(생활\/사무\/교통)","upperMenuNo":"USR_00145"},{"progrmDc":"연구\/실험장비 예약신청","menuNo":"USR_00157","openTypeCd":"CPS031.002","progrmFileId":"183","progrmKoreanNm":"연구\/실험장비 예약신청","url":"\/UserPortal\/adv\/resources\/AdvEsSearchResourcesMainView.do?rsrcClsCd=030000","upperPathMenuNm":"공유신청·예약>연구·실험장비","menuOrdr":"103","path":"{\"USR_00001\",\"USR_00145\",\"USR_00157\"}","depth":"3","useAt":"Y","menuNm":"연구·실험장비","menuDc":"공유신청예약 - 연구\/실험장비","upperMenuNo":"USR_00145"},{"progrmDc":"교육\/강좌 예약신청","menuNo":"USR_00158","openTypeCd":"CPS031.002","progrmFileId":"185","progrmKoreanNm":"교육\/강좌 예약신청","url":"\/UserPortal\/adv\/resources\/AdvEsSearchResourcesMainView.do?rsrcClsCd=040000","upperPathMenuNm":"공유신청·예약>교육·강좌","menuOrdr":"104","path":"{\"USR_00001\",\"USR_00145\",\"USR_00158\"}","depth":"3","useAt":"Y","menuNm":"교육·강좌","menuDc":"공유신청예약 - 교육\/강좌","upperMenuNo":"USR_00145"},{"progrmDc":"공연·전시·행사","menuNo":"USR_00200","openTypeCd":"CPS031.002","progrmFileId":"412","progrmKoreanNm":"공연·전시·행사","url":"\/UserPortal\/adv\/resources\/AdvEsSearchResourcesMainView.do?rsrcClsCd=050000","upperPathMenuNm":"공유신청·예약>공연·전시·행사","menuOrdr":"105","path":"{\"USR_00001\",\"USR_00145\",\"USR_00200\"}","depth":"3","useAt":"Y","menuNm":"공연·전시·행사","menuDc":"공연·전시·행사","upperMenuNo":"USR_00145"},{"progrmDc":"자주묻는질문","menuNo":"USR_00181","openTypeCd":"CPS031.002","progrmFileId":"305","progrmKoreanNm":"자주묻는질문","url":"\/UserPortal\/cms\/article\/list.do?bbsNo=28","upperPathMenuNm":"커뮤니티>자주묻는질문","menuOrdr":"310","path":"{\"USR_00001\",\"USR_00146\",\"USR_00181\"}","depth":"3","useAt":"Y","menuNm":"자주묻는질문","menuDc":"커뮤니티 > 자주묻는질문","upperMenuNo":"USR_00146"},{"progrmDc":"질문과 답변","menuNo":"USR_00182","openTypeCd":"CPS031.002","progrmFileId":"304","progrmKoreanNm":"질문과 답변","url":"\/UserPortal\/cms\/article\/list.do?bbsNo=4","upperPathMenuNm":"커뮤니티>질문과 답변","menuOrdr":"320","path":"{\"USR_00001\",\"USR_00146\",\"USR_00182\"}","depth":"3","useAt":"Y","menuNm":"질문과 답변","menuDc":"커뮤니티 > 질문과 답변","upperMenuNo":"USR_00146"},{"progrmDc":"우리동네 공유소식","menuNo":"USR_00159","openTypeCd":"CPS031.002","progrmFileId":"299","progrmKoreanNm":"우리동네 공유소식","url":"\/UserPortal\/cms\/article\/list.do?bbsNo=23","upperPathMenuNm":"커뮤니티>우리동네 공유소식","menuOrdr":"340","path":"{\"USR_00001\",\"USR_00146\",\"USR_00159\"}","depth":"3","useAt":"Y","menuNm":"우리동네 공유소식","menuDc":"커뮤니티 - 우리동네 공유소식","upperMenuNo":"USR_00146"},{"progrmDc":"언론보도","menuNo":"USR_00161","openTypeCd":"CPS031.002","progrmFileId":"301","progrmKoreanNm":"언론보도","url":"\/UserPortal\/cms\/article\/list.do?bbsNo=35","upperPathMenuNm":"커뮤니티>언론보도","menuOrdr":"350","path":"{\"USR_00001\",\"USR_00146\",\"USR_00161\"}","depth":"3","useAt":"Y","menuNm":"언론보도","menuDc":"커뮤니티 - 언론보도","upperMenuNo":"USR_00146"},{"progrmDc":"공지사항","menuNo":"USR_00183","openTypeCd":"CPS031.002","progrmFileId":"303","progrmKoreanNm":"공지사항","url":"\/UserPortal\/cms\/article\/list.do?bbsNo=20","upperPathMenuNm":"커뮤니티>공지사항","menuOrdr":"360","path":"{\"USR_00001\",\"USR_00146\",\"USR_00183\"}","depth":"3","useAt":"Y","menuNm":"공지사항","menuDc":"커뮤니티 > 공지사항","upperMenuNo":"USR_00146"},{"progrmDc":"커뮤니티> 이벤트게시판","menuNo":"USR_00189","openTypeCd":"CPS031.002","progrmFileId":"373","progrmKoreanNm":"2023_Event","url":"\/UserPortal\/cms\/article\/list.do?bbsNo=43","upperPathMenuNm":"커뮤니티>이벤트 게시판","menuOrdr":"370","path":"{\"USR_00001\",\"USR_00146\",\"USR_00189\"}","depth":"3","useAt":"Y","menuNm":"이벤트 게시판","menuDc":"커뮤니티 > 이벤트 게시판","upperMenuNo":"USR_00146"},{"progrmDc":"OpenApi 데이터 개방안내 ","menuNo":"USR_00202","openTypeCd":"CPS031.002","progrmFileId":"308","progrmKoreanNm":"OpenApi 데이터 개방안내 ","url":"\/OpenApi\/Info\/index.do","upperPathMenuNm":"커뮤니티>OpenApi 데이터 개방안내","menuOrdr":"380","path":"{\"USR_00001\",\"USR_00146\",\"USR_00202\"}","depth":"3","useAt":"Y","menuNm":"OpenApi 데이터 개방안내","menuDc":"OpenApi 데이터 개방안내","upperMenuNo":"USR_00146"},{"progrmDc":"예약 내역","menuNo":"USR_00169","openTypeCd":"CPS031.002","progrmFileId":"143","progrmKoreanNm":"예약 내역","url":"\/UserPortal\/Upp\/UppInqReservList\/index.do","upperPathMenuNm":"마이페이지>예약 내역","menuOrdr":"501","path":"{\"USR_00001\",\"USR_00148\",\"USR_00169\"}","depth":"3","useAt":"Y","menuNm":"예약 내역","menuDc":"마이페이지 - 예약 내역","upperMenuNo":"USR_00148"},{"progrmDc":"추첨제예약 안내","menuNo":"USR_00185","openTypeCd":"CPS031.002","progrmFileId":"191","progrmKoreanNm":"추첨제예약 안내","url":"\/UserPortal\/Upv\/UpvGuidByLottery\/index.do","upperPathMenuNm":"마이페이지>추첨제예약 내역","menuOrdr":"502","path":"{\"USR_00001\",\"USR_00148\",\"USR_00185\"}","depth":"3","useAt":"Y","menuNm":"추첨제예약 내역","menuDc":"마이페이지 - 추첨제예약 내역 - 추첨제예약 안내","upperMenuNo":"USR_00148"},{"progrmDc":"예약문의내역","menuNo":"USR_00170","openTypeCd":"CPS031.002","progrmFileId":"309","progrmKoreanNm":"예약문의내역","url":"\/UserPortal\/Upp\/UppSmplReservList\/index.do","upperPathMenuNm":"마이페이지>예약·문의내역","menuOrdr":"503","path":"{\"USR_00001\",\"USR_00148\",\"USR_00170\"}","depth":"3","useAt":"Y","menuNm":"예약·문의내역","menuDc":"마이페이지 - 예약·문의내역","upperMenuNo":"USR_00148"},{"progrmDc":"즐겨찾기","menuNo":"USR_00172","openTypeCd":"CPS031.002","progrmFileId":"310","progrmKoreanNm":"즐겨찾기","url":"\/UserPortal\/Upp\/UppMyLink\/list.do","upperPathMenuNm":"마이페이지>즐겨찾기","menuOrdr":"505","path":"{\"USR_00001\",\"USR_00148\",\"USR_00172\"}","depth":"3","useAt":"Y","menuNm":"즐겨찾기","menuDc":"마이페이지 - 즐겨찾기","upperMenuNo":"USR_00148"},{"progrmDc":"자원 사용\/반납 목록","menuNo":"USR_00173","openTypeCd":"CPS031.002","progrmFileId":"167","progrmKoreanNm":"자원 사용\/반납 목록","url":"\/UserPortal\/Upp\/UppInqReservUseList\/index.do","upperPathMenuNm":"마이페이지>이용·반납 현황","menuOrdr":"506","path":"{\"USR_00001\",\"USR_00148\",\"USR_00173\"}","depth":"3","useAt":"Y","menuNm":"이용·반납 현황","menuDc":"마이페이지 - 이용\/반납 현황","upperMenuNo":"USR_00148"},{"progrmDc":"비밀번호 확인","menuNo":"USR_00175","openTypeCd":"CPS031.002","progrmFileId":"140","progrmKoreanNm":"비밀번호 확인","url":"\/UserPortal\/Upp\/UppCnfmPass\/index.do","upperPathMenuNm":"마이페이지>나의 정보관리","menuOrdr":"507","path":"{\"USR_00001\",\"USR_00148\",\"USR_00175\"}","depth":"3","useAt":"Y","menuNm":"나의 정보관리","menuDc":"마이페이지 - 나의 정보관리(비밀번호확인)","upperMenuNo":"USR_00148"},{"progrmDc":"추첨제예약 안내","menuNo":"USR_00186","openTypeCd":"CPS031.002","progrmFileId":"191","progrmKoreanNm":"추첨제예약 안내","url":"\/UserPortal\/Upv\/UpvGuidByLottery\/index.do","upperPathMenuNm":"추첨제예약 내역>추첨제예약 안내","menuOrdr":"100","path":"{\"USR_00001\",\"USR_00148\",\"USR_00185\",\"USR_00186\"}","depth":"4","useAt":"Y","menuNm":"추첨제예약 안내","menuDc":"마이페이지-추첨제예약 내역 - 추첨제예약 내역","upperMenuNo":"USR_00185"},{"progrmDc":"추첨제예약 결과조회","menuNo":"USR_00187","openTypeCd":"CPS031.002","progrmFileId":"193","progrmKoreanNm":"추첨제예약 결과조회","url":"\/UserPortal\/Upv\/UpvInqLotteryReslt\/index.do","upperPathMenuNm":"추첨제예약 내역>추첨예약 결과조회","menuOrdr":"200","path":"{\"USR_00001\",\"USR_00148\",\"USR_00185\",\"USR_00187\"}","depth":"4","useAt":"Y","menuNm":"추첨예약 결과조회","menuDc":"추첨예약 결과 조회","upperMenuNo":"USR_00185"}];
+// 	 console.log(HEADER_MENU_LIST);
+	 const HML_LENGTH =  HEADER_MENU_LIST.length;
+	 
+	 function fn_loadMenu() {
+		
+		const HEADER_MENU_AREA = $(".primaryMenu > .inner > ul");
+		
+		const CUR_URL = window.location.pathname + window.location.search; //현재 페이지에 대한 정보
+		
+		let url, depth, menuNm , menuNo, upperMenuNo, selUpperMenuNo, subMenuArea, mobileSubMenuArea, openTypeCd;
+		
+		for(let i = 0; i < HML_LENGTH; i++) {
+			depth = HEADER_MENU_LIST[i].depth;
+			menuNm = HEADER_MENU_LIST[i].menuNm;
+			menuNo = HEADER_MENU_LIST[i].menuNo;
+			upperMenuNo = HEADER_MENU_LIST[i].upperMenuNo;
+			openTypeCd = HEADER_MENU_LIST[i].openTypeCd;
+			url = HEADER_MENU_LIST[i].url;
+			
+			if((selMenu == null || selMenu == '') && depth == 3){
+				if(CUR_URL == url){
+					selMenu = HEADER_MENU_LIST[i];
+					$(".sub_visual_area h2.txt").html(selMenu.menuNm);
+				}
+			}
+			
+			if(depth == 2) { // 최상단 메뉴
+// 				if (menuNo=='USR_00150') { //공유지도
+// 					HEADER_MENU_AREA.append("<li class='shareMap "+ menuNo +"'><a href='" + url + "'><span>" + menuNm + "</span></a><div></div></li>");
+// 					$("." + menuNo + " > a").attr('title', menuNm + " 새창열기");
+// 				} else {
+					HEADER_MENU_AREA.append("<li class="+ menuNo +"><a href='" + url + "'><span>" + menuNm + "</span></a></li>");
+// 				}
+			}else if(depth == 3) { // 하위 메뉴 
+				
+				subMenuArea = $(".innerWrap." + upperMenuNo + " ul");
+				if(subMenuArea.length == 0){
+					$("li." + upperMenuNo).append("<div class='innerWrap " + upperMenuNo + "'><ul class='depth2'></ul></div>");
+					subMenuArea = $(".innerWrap." + upperMenuNo + " ul");
+				}
+
+				const mberId = '';		
+				const authorCode = '';
+				var holiParkIdChk = "";
+				
+				if(menuNm == "명절주차장"){
+					if (mberId.includes("holipark") || mberId.includes("holiadmin") || authorCode == "ROLE_VOC_ADMIN" || authorCode == "ROLE_EXCTV_ADMIN") {
+					    subMenuArea.append("<li class=" + menuNo +"><a href='" + url + "'>" + menuNm + "</a></li>");
+					}
+				}else if(menuNm == "나의 정보관리"){
+					if( mberId.includes("holipark") || mberId.includes("holiadmin")){
+						
+					}else{
+						
+						subMenuArea.append("<li class=" + menuNo +"><a href='" + url + "'>" + menuNm + "</a></li>");
+						
+					}
+				}else if(menuNm == "설명절주차장"){
+					subMenuArea.append("<li class=" + menuNo +"><a href='" + url + "' style='font-weight:550'>" + menuNm + "</a></li>");
+					$("." + menuNo + " > a").attr('title', menuNm + "(으)로 이동");
+				}else{
+					subMenuArea.append("<li class=" + menuNo +"><a href='" + url + "'>" + menuNm + "</a></li>");
+					$("." + menuNo + " > a").attr('title', menuNm + "(으)로 이동");
+				}
+			}
+			
+			$('.USR_00150').addClass('shareMap'); //공유지도
+			
+			if(openTypeCd == 'CPS031.001'){
+				$("." + menuNo + " > a").append("<i class='ico new_win'></i>");
+				$("." + menuNo + " > a").attr('target', '_blank');
+				$("." + menuNo + " > a").attr('title', menuNm + " 새창열림"); // 접근성: 새창 안내
+			}
+		}
+		 fn_setActiveMenu();
+	}
+
+	/*
+	 * 상세/처리 페이지가 목록 페이지와 다른 컨트롤러 디렉터리를 쓰는 경우, URL 추론(exact/prefix)이
+	 * 실패할 수 있다. 그런 페이지는 컨트롤러에서 modelMap.put("activeMenuUrl", "<목록 페이지 URL>")로
+	 * 소속을 직접 선언한다
+	 */
+	const ACTIVE_MENU_URL = '/UserPortal/adv/resources/AdvEsSearchResourcesMainView.do';
+
+	/* 현재 페이지에 해당하는 대메뉴 활성화 */
+	function fn_setActiveMenu() {
+		const CUR_PATH = window.location.pathname;
+		let exactUpperNo = null;   // 정확히 일치
+		let prefixUpperNo = null;  // 디렉터리 단위 일치 (상세/등록 페이지용)
+		let declaredUpperNo = null; // 컨트롤러가 activeMenuUrl로 직접 선언
+
+		for(let i = 0; i < HML_LENGTH; i++) {
+			const item = HEADER_MENU_LIST[i];
+			if(!item.url) continue;
+
+			const menuPath = item.url.split('?')[0];
+			const upperNo  = (item.depth == 3) ? item.upperMenuNo : item.menuNo;
+
+			if(ACTIVE_MENU_URL && menuPath === ACTIVE_MENU_URL && declaredUpperNo == null) {
+				declaredUpperNo = upperNo;
+			}
+
+			if(menuPath === CUR_PATH) {
+				if(item.depth == 3) { exactUpperNo = upperNo; break; }
+				if(exactUpperNo == null) exactUpperNo = upperNo;
+			} else if(prefixUpperNo == null) {
+				const dir = menuPath.substring(0, menuPath.lastIndexOf('/') + 1);
+				if(dir.length > 1 && CUR_PATH.indexOf(dir) === 0) prefixUpperNo = upperNo;
+			}
+		}
+
+		const targetNo = declaredUpperNo || exactUpperNo || prefixUpperNo;
+		if(targetNo) {
+			const $target = $('#gnb .primaryMenu .inner > ul > li.' + targetNo);
+			$target.addClass('on');
+			$target.children('a').attr('aria-current', 'page');
+		}
+	}
+
+	function fn_loadSubMenu() {
+		$.ajax({
+			type : 'post' ,
+			url : '/UserPortal/Upm/searchNewUserPortalRsrcCls.do',
+			dataType : 'json',
+	 		async : false,
+			success : function(data){
+				if(data.bestRsrcClsList != null && data.bestRsrcClsList.length > 1) {
+					var $detailMenu = $('.detailMenu').children('.inner');
+					$.each(data.bestRsrcClsList, function(index, item){
+						var lowestListKey = "lowestRsrcCls"+item.rsrc_cls_cd;
+						var lowestList = data[lowestListKey];
+						$detailMenu.append("<div id='menu"+item.rsrc_cls_cd+"'><strong><span><a href='/UserPortal/adv/resources/AdvEsSearchResourcesMainView.do?rsrcClsCd="+item.rsrc_cls_cd+"'>"+item.rsrc_cls_nm+"</a></span></strong><div><ul></ul></div></div>");
+						$.each(lowestList, function(idx, i){
+							$detailMenu.find('#menu'+item.rsrc_cls_cd+' > div > ul').append("<li><span><a href='/UserPortal/adv/resources/AdvEsSearchResourcesMainView.do?rsrcClsCd="+i.rsrc_cls_cd+"'>"+i.rsrc_cls_nm+"</a></span></li>");
+						});
+					});
+					$detailMenu.append("<div class='shareMapNav'><strong><span>공유지도</span></strong><div><ul>"
+							+"<li><a target='_blank' title='무장애나눔길 새창열림' href='/UserPortal/Upd/UpdBarrierSvcMap/index.do'><span>무장애나눔길</span></a></li>"
+							+"<li><a target='_blank' title='예식장소 대관 새창열림' href='/UserPortal/Upd/UpdWeddingHallSvcMap/index.do'><span>예식장소 대관</span></a></li>"
+							+"<li><a target='_blank' title='축제 안내 새창열림' href='/UserPortal/Upd/UpdFestivalSvcMap/index.do'><span>축제 안내</span></a></li>"
+							+"<li><a target='_blank' title='물품 대여 새창열림' href='/UserPortal/Upd/UpdArticleSvcMap/index.do'><span>물품 대여</span></a></li>"
+							+"<li><a target='_blank' title='교육 강좌 안내 새창열림' href='/UserPortal/Upd/UpdEduSvcMap/index.do'><span>교육 강좌 안내</span></a></li>"
+							+"<li><a target='_blank' title='도시공원·둘레길 새창열림' href='/UserPortal/Upd/UpdPubshrSvc/EMS004/index.do'><span>도시공원·둘레길</span></a></li>"
+							+"<li><a target='_blank' title='캠핑장·휴양림 새창열림' href='/UserPortal/Upd/UpdPubshrSvc/EMS002/index.do'><span>캠핑장·휴양림</span></a></li>"
+							+"</ul></div></div>");
+				}
+				fn_layout();
+			},
+			error : function(err){
+				console.log(err);
+			}
+		});
+		
+	}
+	
+	/* 검색어 인기 순위 */
+	function getSearchRankList(){
+		$.ajax({
+	        type : "POST",
+	        url  : "/UserPortal/Upm/Main/searchRank.do",
+	        dataType : 'html',
+	        contentType : "application/json; charset=UTF-8",
+	        success : function( html ){
+	        	$('.top_srch_tags').html(html);
+	        }
+	    }); 
+	}
+	
+	/* 모바일 메뉴 예약.반납 현황 */
+	function getReservReturn(){
+		$.ajax({
+	        type : "POST",
+	        url  : "/UserPortal/Upm/selectMainReservReturn.do",
+	        dataType : 'json',
+	        success : function( data ){
+	        	var html = '<p><br><strong>예약된 자원이 존재하지 않습니다.</strong></p>'
+	        	if(Object.keys(data).length != 0){
+	        		
+        			var reservReturn = data.reservReturn;
+        			
+        			if(reservReturn != null){
+        				var state = '';
+	        			if(reservReturn.rsrv_sts_dcd == 'CPS301.005'){
+	        				state = '<span class="label bg_blue white">반납완료</span>';}
+	        			else if(reservReturn.today_use_end_over_date > 0  && reservReturn.rsrv_sts_dcd != 'CPS301.005'){						
+							state = '<span class="label bg_blue white">기간만료</span>';}
+						else if(reservReturn.today_use_bgn_over_date > 0 && reservReturn.today_use_end_over_date < 0 && reservReturn.rsrv_sts_dcd != 'CPS301.005'){
+							state = '<span class="label bg_red white">이용중</span>';
+						}
+						else if(reservReturn.rsrv_sts_dcd == 'CPS301.003'){
+							state = '<span class="label bg_white black">이용전</span>'
+						}
+						else if(reservReturn.rsrv_sts_dcd == 'CPS301.004' && reservReturn.today_use_end_over_date >= 0){
+							state = '<span class="label bg_red white">미반납</span>';
+						}
+	        			html = '<p>'+reservReturn.applcnt_nm+' 님, <br>예약하신 <strong>'+reservReturn.rsrc_nm
+	        				+'('+ reservReturn.bgn_date+')</strong><br>'
+	        				+ state +' 상태 입니다.</p><a href="/UserPortal/Upp/UppInqReservUseList/index.do;">자세히 보기</a>'
+        			}
+	        	}
+	        	$('.gnb_due_date_bnr').html(html);
+	        }
+	    }); 
+	}
+	
+	$(document).ready(function() {
+		fn_loadMenu();
+		fn_loadSubMenu();
+// 		getReservReturn();
+		getSearchRankList();
+	});
+
+</script>
+
+<!-- 2025 UI/UX 개선 -->
+
+	<div class="skip_navi">
+		<strong class="sr-only">본문 바로가기</strong>
+		<ul>
+			<li><a class="skip_link" href="#sub_title_area">본문 바로가기</a></li>
+		</ul>
+	</div>
+	
+	<div class="screen_mask"></div>
+	
+	<form action="#" name="subIntgSrchForm" id="subIntgSrchForm" method="post">
+		<input type="hidden" name="searchWrd" value="" /> 
+		<input type="hidden" name="crtd" value="" />
+		<input type="hidden" name="sigg" value="" />
+	</form>
+	<form action="#" name="searchMapRsrc" id="searchMapRsrc" method="post"></form>
+
+<!-- skipNav -->
+<!-- <dl id="skipNav"> -->
+<!--     <dt>바로가기 메뉴</dt> -->
+<!--     <dd><a href="#container">본문 바로가기</a></dd> -->
+<!--     <dd><a href="#gnb">주메뉴 바로가기</a></dd> -->
+<!--     <dd><a href="#footer">풋터 바로가기</a></dd> -->
+<!-- </dl> -->
+<!-- //skipNav -->
+
+    <!-- header -->
+<header>
+    <div id="header">
+    <!-- noriBanner -->
+	<div class="noriBanner">
+	    <div class="inner">
+	        <p>이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>
+	    </div>
+	</div>
+	<!-- //noriBanner -->
+        <!-- inner -->
+        <div class="inner">
+            <h1>
+                <a href="/UserPortal/Upm/Main/index.do" aria-label="공공개방자원 다가치 나눔터 공유누리">공공개방자원 多가치 나눔터 공유누리</a>
+            </h1>
+            <!-- totalSrch -->
+            
+	            <div class="totalSrch">
+	                <div>
+	                    <input id="top_srch_txt" autocomplete="off" type="text" title="검색어 입력란" placeHolder="검색어를 입력해주세요.">
+	                    <div class="btnWrap">
+	                        <button id="top_srch_btn" type="button" class="iconBtn srch">검색하기</button>
+	                        <button id="mic_top" type="button" class="iconBtn mic" title="음성검색" onclick="initMic(this); return false;">음성검색</button>
+	                        <button type="button" class="iconBtn map" onclick="location.href='/UserPortal/Upc/UpcMapSrch/index.do?rsrc_nm='+$('#top_srch_txt').val()">지도검색</button>
+	                    </div>
+	                </div>
+	            </div>
+            
+            <!--// totalSrch -->
+            <!-- 모바일 gnb열기버튼 -->
+            <button type="button" class="m_menuOpen">메뉴열기</button>
+            <!--// 모바일 gnb열기버튼 -->
+            <!-- util -->
+            <div class="util">
+            
+	            
+	             
+		            <ul>
+	                    <li><a href="javascript:;" onclick="fn_link_login();">로그인</a></li>
+	                    <li><a href="/UserPortal/Upb/UpbAcceptTerm/index.do">회원가입</a></li>
+	                    <li><a href="/UserPortal/adv/sitemap/AdvEsSiteMapView.do">사이트맵</a></li>
+	                </ul>
+	            
+            
+                <p>상담센터 1644-6566 </p>
+            </div>
+            <!--// util -->
+        </div>
+        <!--// inner -->
+
+        <!-- gnb -->
+        <div id="gnb" class="">
+        	<!-- m_topArea -->
+            <div class="m_topArea">
+                
+                	
+                	
+                	<div class="util">
+	                	<ul>
+	                        <li><a href="javascript:;" onclick="fn_link_login();">로그인</a></li>
+	                        <li><a href="/UserPortal/Upb/UpbAcceptTerm/index.do">회원가입</a></li>
+	                        <li><a href="/UserPortal/adv/sitemap/AdvEsSiteMapView.do">사이트맵</a></li>
+	                    </ul>
+                    </div>
+                    <a href="javascript:;" onclick="fn_link_login();" class="loginBtn">로그인을 해주세요</a>
+                	
+                
+                <div class="totalSrch mobile">
+                    <div>
+                        <input type="text" id="top_srch_txt_mobile" title="통합검색 입력란" placeHolder="통합검색">
+                        <div class="btnWrap">
+                            <button type="button" id="top_srch_btn_mobile" class="iconBtn srch">검색하기</button>
+                        </div>
+                    </div>
+                </div>
+                <a href="" class="m_menuClose">메뉴닫기</a>
+            </div>
+            <!--// m_topArea -->
+	        <!-- 마우스오버시 나오는 메뉴 -->
+	        <nav class="primaryMenu">
+	        	<div class="inner">
+	        		<ul></ul>
+	        	</div>
+	        </nav>
+	        <!--// 마우스오버시 나오는 메뉴 -->
+	        <!-- 마우스 클릭시 나오는 메뉴 -->
+	        <nav class="detailMenu">
+	        	<div class="menuTop">
+	        		<div class="inner">
+	        			<strong>통합검색</strong>
+                        <a href="/UserPortal/adv/unifdSearch/UnifiedSearchMainView.do">찾으시는 공유 목록이 있으신가요?</a>
+	        		</div>
+	        	</div>
+	        	<div class="inner">
+	        	</div>
+	        </nav>
+	        <!--// 마우스 클릭시 나오는 메뉴 -->
+        </div>
+        <!--// gnb -->
+    </div>
+    <!--    <div class="dim"></div>-->
+    <!--// header -->
+</header>
+
+<!-- 2025 UI/UX 개선 끝 -->
+
+		
+
+		<!--sub_title_area 본문 바로가기 대상. 삭제금지-->
+		<div id="sub_title_area" tabindex="-1"></div>
+		
+
+
+
+
+
+<link rel="stylesheet" href="/js/lib/owl.carousel.min.css" />
+<link rel="stylesheet" href="/js/lib/owl.theme.default.min.css" />
+
+<script>
+	window.onpageshow = function(event) {
+		$("#dateChange").trigger("click");
+	}
+	
+	$(document).ready(function(){ 
+		var errorMsg = ''; 
+		if(errorMsg) alert(errorMsg.split("<br/>").join("\n"));
+		document.title = " 시설·공간(대관) 상세 | 공유누리"; 
+	
+        var clsText = "시설·공간(대관) > 체육시설 > 족구장";
+        var clsTextArr = clsText.trim().split('>');
+        clsTextArr.forEach(item => {
+            $(".locate").append("<li>" + item + "</li>");
+          });
+		
+		//위부분 공공예식장일때만 해주세요
+		$("#detail_head .head_title").css("display","flex");
+	});
+	
+	function fnLike(rsrcNo, isFvrt) {
+        // 플래그 설정
+        var flag =  '';
+        
+        if($('#favUnLike').hasClass('on')){
+            flag = 'D';
+        }else{
+            flag = 'A';
+        }
+        
+        var url = "/UserPortal/Upp/UppMyLink/save.do";
+        var prams = {
+                rsrcNo            : rsrcNo 
+              , flag              : flag
+        }
+        var cbFunc = function(data) {
+            // console.log(html); 
+            if(flag == 'A') {
+                $('#favUnLike').addClass('on');
+                $('#favUnLike').attr("title", '찜선택되어있는 버튼');
+                $('#favUnLike').find('.sr-only').text('찜선택되어있는 버튼');
+            } else {
+                $('#favUnLike').removeClass('on');
+                $('#favUnLike').attr("title", '찜해제되어있는 버튼');
+                $('#favUnLike').find('.sr-only').text('찜해제되어있는 버튼');
+            }
+        }
+
+        callAjax(url, prams, cbFunc);
+    }
+	
+	function fn_login(){
+        alert("로그인 후 이용가능합니다.");
+        return false;
+    }
+	
+
+	function fnGoBackList() {  
+	    $("#UprResrcSearchForm").attr("action", '');
+	    $("#UprResrcSearchForm").submit();
+	}
+	
+	//공공예식장 분류시
+
+// 	function fn_ketering(_target){
+// 	    var url = "/UserPortal/Upv/UprCatering/cateringSearchPopFirst.do";
+// 	    var prams = {};
+// 	    var cbFunc = function(html) {
+
+// 	        modalOpen('divKatorPop', _target);
+// 	    };
+// 	    callAjax(url, prams, cbFunc);
+// 	}
+	
+	// 상세 조회 간편
+    function fn_ketering(){
+
+    	var popupWindow = window.open("popupWindowRsrv" ,"popupWindowRsrv", "toolbar=no, width=925, height=1050, directories=no, status=yes, scrollbars=no, resizable=yes, top=0,left=0");
+        var frmObj = document.divKatorPop;//$('#frmRsrcDetail');
+        frmObj.action = "/UserPortal/Upv/UprCatering/cateringSearchPopFirst.do"; 
+        frmObj.method = "POST";
+        frmObj.target = "popupWindowRsrv";
+        frmObj.rsrcNo.value = "GH29M4013265";
+        //alert("GH29M4013265");
+        frmObj.SinglePop.value = 'Y';
+        frmObj.submit();
+        
+    }
+</script>
+
+<form name="divKatorPop" id='divKatorPop' method="post">       
+    <input type="hidden" name="SinglePop"  id="SinglePop" value='' />
+    <input type="hidden" name="rsrcNo"  id="rsrcNo" value='' />
+</form>
+
+<form id="UprResrcSearchForm" name="UprResrcSearchForm" method="post">
+  <input type="hidden" id="searchParam" name="searchParam" value=""/> 
+</form>
+
+<!-- ============== sub_cnt_area[s] ============== -->
+<div class="sub_cnt_area subPage" id="cnt_share_item_detail">
+
+<!--sub_title_area[s]-->
+<div class="subTitle">
+	<div class="breadCrumb">
+		<strong class="sr-only">현재위치</strong>
+		<ul class="locate" role="img" aria-label="공유 신청 및 예약 메뉴의 시설·공간(대관) 카테고리 페이지입니다.">
+	        <li class="home"><a href="/"><span>홈</span></a></li>
+			<li>공유신청·예약</li>
+	    </ul>
+	</div>
+</div>
+<!--sub_title_area[e]-->
+
+        <!--wsize[s]-->
+        <div class="wsize">
+            <h4 class="sr-only">자원상세 정보</h4>
+            <article class="article" id="detail_head">
+			<div class="head_title clearfix">    <!-- 찜하기 버튼 추가 (신규) : 2020-09-24 -->
+                <!-- 찜하기 버튼 클릭시  클래스 on 추가 : btn.fav.on -->
+                 
+                <em class="ti">석남체육공원 족구장</em>
+                
+                
+                
+			</div>
+			<div class="info_box clearfix">
+				
+				
+
+
+<div class="con1">
+	<!--inner[s]-->
+	<div class="inner">
+	<h5 class="sr-only">공공개방자원 사진목록</h5>
+	<!--photo_group[s]-->
+	<div class="photo_group">
+		<!--photo_view[s]-->
+		<div class="photo_view" title="이미지 상세"> 
+			<div class="owl-carousel owl-theme" id="photo_view_lsit">
+				
+					
+					
+						
+							
+							
+								
+									<div class="item">
+										<div role="button" class="thumb" style="background-image: url(/UserPortal/Upv/239927/fileDetail.do?file_sn=1&thumb_yn=Y)">
+											<img src="/UserPortal/Upv/239927/fileDetail.do?file_sn=1&thumb_yn=Y" alt="석남체육공원 족구장 1">
+										</div>
+									</div>
+								
+									<div class="item">
+										<div role="button" class="thumb" style="background-image: url(/UserPortal/Upv/239927/fileDetail.do?file_sn=2&thumb_yn=Y)">
+											<img src="/UserPortal/Upv/239927/fileDetail.do?file_sn=2&thumb_yn=Y" alt="석남체육공원 족구장 2">
+										</div>
+									</div>
+								
+									<div class="item">
+										<div role="button" class="thumb" style="background-image: url(/UserPortal/Upv/239927/fileDetail.do?file_sn=3&thumb_yn=Y)">
+											<img src="/UserPortal/Upv/239927/fileDetail.do?file_sn=3&thumb_yn=Y" alt="석남체육공원 족구장 3">
+										</div>
+									</div>
+								
+									<div class="item">
+										<div role="button" class="thumb" style="background-image: url(/UserPortal/Upv/239927/fileDetail.do?file_sn=4&thumb_yn=Y)">
+											<img src="/UserPortal/Upv/239927/fileDetail.do?file_sn=4&thumb_yn=Y" alt="석남체육공원 족구장 4">
+										</div>
+									</div>
+								
+							
+						
+					
+				
+			</div>
+		</div>
+		<!--photo_view[e]-->
+		<!--photo_page[s]-->
+		<div class="photo_page">
+			<div class="owl-carousel owl-theme" id="photo_page_lsit">
+				
+					
+					
+						
+							<div class="item">
+								<a href="javascript:void(0);" class="thumb" role="button" style="background-image: url(/UserPortal/Upv/239927/fileDetail.do?file_sn=1&thumb_yn=Y)">
+									<img src="/UserPortal/Upv/239927/fileDetail.do?file_sn=1&thumb_yn=Y" alt="석남체육공원 족구장 1">
+								</a>
+							</div>
+						
+							<div class="item">
+								<a href="javascript:void(0);" class="thumb" role="button" style="background-image: url(/UserPortal/Upv/239927/fileDetail.do?file_sn=2&thumb_yn=Y)">
+									<img src="/UserPortal/Upv/239927/fileDetail.do?file_sn=2&thumb_yn=Y" alt="석남체육공원 족구장 2">
+								</a>
+							</div>
+						
+							<div class="item">
+								<a href="javascript:void(0);" class="thumb" role="button" style="background-image: url(/UserPortal/Upv/239927/fileDetail.do?file_sn=3&thumb_yn=Y)">
+									<img src="/UserPortal/Upv/239927/fileDetail.do?file_sn=3&thumb_yn=Y" alt="석남체육공원 족구장 3">
+								</a>
+							</div>
+						
+							<div class="item">
+								<a href="javascript:void(0);" class="thumb" role="button" style="background-image: url(/UserPortal/Upv/239927/fileDetail.do?file_sn=4&thumb_yn=Y)">
+									<img src="/UserPortal/Upv/239927/fileDetail.do?file_sn=4&thumb_yn=Y" alt="석남체육공원 족구장 4">
+								</a>
+							</div>
+						
+					
+				
+			</div>
+		</div>
+		<!--photo_page[e]-->
+		</div>
+		<!--photo_group[e]-->
+	</div>
+	<!--inner[e]-->
+</div>
+
+             	
+
+                
+                    
+
+
+	
+	
+		
+			
+			
+			
+			
+				
+
+
+
+
+
+
+
+	
+
+<script type="text/javascript">
+String.prototype.lpad = function(padLen, padStr) {
+    var str = this;
+    if (padStr.length > padLen) {
+        console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+        return str + "";
+    }
+    while (str.length < padLen)
+        str = padStr + str;
+    str = str.length >= padLen ? str.substring(0, padLen) : str;
+    return str;
+};
+
+Date.prototype.yyyymmdd = function() {
+	  var mm = this.getMonth() + 1; // getMonth() is zero-based
+	  var dd = this.getDate();
+
+	  return [this.getFullYear(),
+	          (mm>9 ? '' : '0') + mm,
+	          (dd>9 ? '' : '0') + dd
+	         ].join('-');
+}
+
+Date.prototype.lastDay = function() {
+	  return new Date(this.getFullYear(),this.getMonth()+1 ,0).getDate();
+}
+Date.prototype.getWeek = function() {
+	  return new Date(this.getFullYear(),this.getMonth() ,1).getDay();
+}
+
+Number.prototype.format = function(){
+    if(this==0) return 0;
+
+    var reg = /(^[+-]?\d+)(\d{3})/;
+    var n = (this + '');
+
+    while (reg.test(n)) n = n.replace(reg, '$1' + ',' + '$2');
+
+    return n;
+};
+
+function getToday(){
+	return new Date().yyyymmdd();
+}
+
+var data_date  	= new Date();
+var possibleData;
+var gubun;
+var dateStr;
+var check;
+
+function setYear(){
+	var year = new Date().getFullYear();
+	$("#searchYear").empty();
+	$("#searchYear").append("<option value='"+year+"' >"+year+"년</option>");
+	$("#searchYear").append("<option value='"+(year+1)+"' >"+(year+1)+"년</option>");
+	$("#searchYear").append("<option value='"+(year+2)+"' >"+(year+2)+"년</option>");
+	$("#searchYear").append("<option value='"+(year+3)+"' >"+(year+3)+"년</option>");
+	$("#searchYear").append("<option value='"+(year+4)+"' >"+(year+4)+"년</option>");
+}
+function setChangeYear(){
+	var year = data_date.getFullYear();
+	$("#searchYear").val(year).prop("selected", true);
+
+}
+
+function getYear(){
+	return data_date.getFullYear();
+}
+
+Number.prototype.format = function(){
+    if(this==0) return 0;
+
+    var reg = /(^[+-]?\d+)(\d{3})/;
+    var n = (this + '');
+
+    while (reg.test(n)) n = n.replace(reg, '$1' + ',' + '$2');
+
+    return n;
+};
+
+function abbrNum(number, decPlaces) {
+    // 2 decimal places => 100, 3 => 1000, etc
+    decPlaces = Math.pow(10,decPlaces);
+
+    // Enumerate number abbreviations
+    var abbrev = [ "k", "m", "b", "t" ];
+
+    // Go through the array backwards, so we do the largest first
+    for (var i=abbrev.length-1; i>=0; i--) {
+
+        // Convert array index to "1000", "1000000", etc
+        var size = Math.pow(10,(i+1)*3);
+
+        // If the number is bigger or equal do the abbreviation
+        if(size <= number) {
+             // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+             // This gives us nice rounding to a particular decimal place.
+             number = Math.round(number*decPlaces/size)/decPlaces;
+
+             // Handle special case where we round up to the next abbreviation
+             if((number == 1000) && (i < abbrev.length - 1)) {
+                 number = 1;
+                 i++;
+             }
+
+             // Add the letter for the abbreviation
+             number += abbrev[i];
+
+             // We are done... stop
+             break;
+        }
+    }
+
+    return number;
+}
+function createData(date,day){
+
+	if(day == null){
+// 		return '<a href="javascript:(0);" class="" title="예약불가능"></a>';
+		return '<div class="" title="예약불가능"></div>';
+	}else{
+
+		var data = possibleData[date-1];
+		var able = 'disable';
+		var able_text = '예약불가';
+		var able_icon = '';
+		var bt_remn_cnt = '0';
+		var btm_margin = "";
+		
+	
+
+		if(data.useYn == 'Y' || data.useYn == 'S' || data.useYn == 'E'){ 
+			able = 'able';
+			able_text = '예약가능';
+			able_icon = '<span class="state"><i>예약</i>가능</span>';
+			
+			bt_remn_cnt = data.btRemnCnt;
+			btm_margin = "";
+			if (isEmpty(bt_remn_cnt) == false){
+				able_icon ='<i class="axi axi-check-circle-o" style=\'color:#00d210;\'></i>&nbsp;';
+
+                able_icon += '<i class="able_num" style="font-size: 12px;">'+abbrNum(Number(bt_remn_cnt),2)+'</i>';
+
+                able_text = '예약가능 [수량 : ' +Number(bt_remn_cnt).format()+ '개]';
+                btm_margin = "margin-bottom: 4px;";
+			}
+			if(data.drawYn == 'Y'){
+				able_text = '추첨';
+				able_icon = '<span class="state"><i style=\'color:#00d210;\'>추첨</i></span>';
+				var applsdtm = data.applsdtm.slice(0,10);
+				var appledtm = data.appledtm.slice(0,10);
+				
+				if(getToday() < applsdtm || getToday() > appledtm ){
+					able_text = '추첨제신청기간:' +applsdtm +' ~ '+appledtm;
+					able_icon = '';
+					able = 'disable';
+				}
+			}
+			
+		}
+
+		if(able == 'able' && data.magamcheck == 'Y'){
+			able      = 'disable';
+			able_text = '예약마감';
+			able_icon = '';
+		}
+
+
+		if(getToday() == data.date){
+			if (able == 'able') {
+
+				return '<a href="javascript:;" role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '" class="'+able+' today" title="'+able_text+'" data-date="'+data.date+'"data-draw="'+data.drawYn+'"><i class="num" style="'+btm_margin+'">'+date+'</i><span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '</span>'+able_icon+'</a>';
+			} else {
+				
+				var maxLength = 4;
+				var able_text_full = able_text;
+				
+				if (data.exclShareYn == 'Y' && data.excelShareMsg != null && data.excelShareMsg != '') {
+				    able_text = data.excelShareMsg;
+				}
+				
+				var able_text_full = able_text;
+				
+				if (able_text.length > maxLength) {
+				    able_text = able_text.substring(0, maxLength) + '...';
+				}
+				
+
+				
+				
+
+				return '<div role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '" class="'+able+' today" title="'+able_text_full+'" data-date="'+data.date+'"data-draw="'+data.drawYn+'"><i class="num" style="'+btm_margin+'">'+date+'</i><span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '</span><span class="state">'+able_text+'</span>'+able_icon+'</div>';
+
+			}
+
+		}else{
+			if (able == 'able') {
+				
+				return '<a href="javascript:;" role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 ' + able_text + '" class="'+able+'" title="'+able_text+'" data-date="'+data.date+'"data-draw="'+data.drawYn+'"><i class="num" style="'+btm_margin+'">'+date+'</i><span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일' + able_text + '</span>'+able_icon+'</a>';
+			} else {
+				
+				var maxLength = 4;
+				
+				if (data.exclShareYn == 'Y' && data.excelShareMsg != null && data.excelShareMsg != '') {
+				    able_text = data.excelShareMsg;
+				}
+				
+				var able_text_full = able_text;
+				
+				if (able_text.length > maxLength) {
+				    able_text = able_text.substring(0, maxLength) + '...';
+				}
+				
+
+				var html = '';
+				html += '<div role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 ' + able_text + '" ';
+				html += ' class="'+able+'" title="'+able_text_full+'" data-date="'+data.date+'">';
+				html += ' <i class="num" style="'+btm_margin+'">'+date+ '</i>';
+				html += ' <span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 ' + able_text + '</span>';
+				html += ' <span class="state">'+able_text+'</span>'; // able_text가 달력 칸에 표시되도록 추가
+				html += able_icon;
+				html += '</div>';
+
+				return html;
+			}
+		}
+	}
+}
+
+function createDataAccommodation(date,day){ // 숙박시설의 경우 달력에 클릭 이벤트 추가를 위해 별도로 생성하는 함수
+
+	if(day == null){
+// 		return '<a href="javascript:(0);" class="" title="예약불가능"></a>';
+		return '<div class="" title="예약불가능"></div>';
+	}else{
+
+		var data = possibleData[date-1];
+		var able = 'disable';
+		var able_text = '예약불가';
+		var able_icon = '';
+		var bt_remn_cnt = '0';
+		var btm_margin = "";
+		
+		
+		
+		// 추후 수정 필요 // 
+		check = $("#orderForm > div.wsize > article:nth-child(1) > div > ol > li.on").attr('title');
+		// 추후 수정 필요 // 
+		
+		
+		if(data.useYn == 'Y' || data.useYn == 'S' || data.useYn == 'E'){ 
+			
+			if(data.exclShareYn != 'Y'){
+				
+				able = 'able';
+				able_text = '예약가능';
+				able_icon = '<span class="state"><i>예약</i>가능</span>';
+				
+				bt_remn_cnt = data.btRemnCnt;
+				btm_margin = "";
+				if (isEmpty(bt_remn_cnt) == false){
+					able_icon ='<i class="axi axi-check-circle-o" style=\'color:#00d210;\'></i>&nbsp;';
+
+	                able_icon += '<i class="able_num" style="font-size: 12px;">'+abbrNum(Number(bt_remn_cnt),2)+'</i>';
+
+	                able_text = '예약가능 [수량 : ' +Number(bt_remn_cnt).format()+ '개]';
+	                btm_margin = "margin-bottom: 4px;";
+				}
+				if(data.drawYn == 'Y'){
+					able_text = '추첨';
+					able_icon = '<span class="state"><i style=\'color:#00d210;\'>추첨</i></span>';
+					var applsdtm = data.applsdtm.slice(0,10);
+					var appledtm = data.appledtm.slice(0,10);
+					
+					if(getToday() < applsdtm || getToday() > appledtm ){
+						able_text = '추첨제신청기간 : ' +applsdtm +' ~ '+appledtm;
+						able_icon = '';
+						able = 'disable';
+					}
+				}
+	
+			}
+			
+		}
+		
+
+
+		if(getToday() == data.date){
+			
+			
+			 if(typeof check === 'string'){
+				 
+				 var maxLength = 4;
+
+				 	if (data.exclShareYn == 'Y' && data.excelShareMsg != null && data.excelShareMsg != '') {
+					    able_text = data.excelShareMsg;
+					}
+				 	
+				 	var able_text_full = able_text;
+				 
+					if (able_text.length > maxLength) {
+					    able_text = able_text.substring(0, maxLength) + '...';
+					}
+					if(data.magamcheck == 'Y'){
+						able_text = '예약마감';
+					}
+					
+					return '<div role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '" class="'+able+' today" title="'+able_text_full+'" data-date="'+data.date+'"><i class="num" style="'+btm_margin+'">'+date+'</i><span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '</span><span class="state">'+able_text+'</span>'+able_icon+'</div>';
+
+			} else {
+				
+				if (able == 'able') {
+					if(data.magamcheck == 'Y'){
+						able_text = '예약마감';
+						able_icon = '';
+					}
+					
+					return '<a href="javascript:;" onclick = openModal(\'' + data.date + '\',event); role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '" class="'+able+' today" title="'+able_text+'" data-date="'+data.date+'"><i class="num" style="'+btm_margin+'">'+date+'</i><span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '</span>'+able_icon+'</a>';
+				} else {
+					
+					if(data.magamcheck == 'Y'){
+						able = 'able'
+						able_text = '예약마감';
+					}
+					
+
+					var maxLength = 4;
+					
+					if (data.exclShareYn == 'Y' && data.excelShareMsg != null && data.excelShareMsg != '') {
+					    able_text = data.excelShareMsg;
+					}
+					
+
+					var able_text_full = able_text;
+					
+					if (able_text.length > maxLength) {
+					    able_text = able_text.substring(0, maxLength) + '...';
+					}
+					
+
+					return '<div role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '" class="'+able+' today" title="'+able_text_full+'" data-date="'+data.date+'"><i class="num" style="'+btm_margin+'">'+date+'</i><span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 오늘 ' + able_text + '</span><span class="state">'+able_text+'</span>'+able_icon+'</div>';
+
+				}
+				
+			} 
+			
+
+		}else{
+			
+			if(typeof check === 'string'){
+				
+
+					if( data.exclShareYn == 'Y' && data.excelShareMsg != null && data.excelShareMsg != '' ){
+						able_text = data.excelShareMsg;
+					}
+
+					var html = '';
+					html += '<div role="button" style="pointer-events: none;" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 ' + able_text + '" ';
+					html += '	class="'+able+'" title="'+able_text+'" data-date="'+data.date+'">';
+					html += '	<i class="num" style="'+btm_margin+'">'+date+ '</i>';
+					html += '	<span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일' + able_text + '</span>';
+					html += 	able_icon
+					html += '</div>';
+
+					return html;
+
+				
+			} else {
+				
+				if (able == 'able') {
+					return '<a href="javascript:;" onclick = openModal(\'' + data.date + '\',event); role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 ' + able_text + '" class="'+able+'" title="'+able_text+'" data-date="'+data.date+'"><i class="num" style="'+btm_margin+'">'+date+'</i><span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일' + able_text + '</span>'+able_icon+'</a>';
+				} else {
+
+					
+					if (data.exclShareYn == 'Y' && data.excelShareMsg != null && data.excelShareMsg != '') {
+					    able_text = data.excelShareMsg;
+					}
+					
+					var maxLength = 4;
+					var able_text_full = able_text;
+					
+					if (able_text.length > maxLength) {
+					    able_text = able_text.substring(0, maxLength) + '...';
+					}
+					
+
+					var html = '';
+					html += '<div role="button" aria-label="'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 ' + able_text + '" ';
+					html += ' class="'+able+'" title="'+able_text_full+'" data-date="'+data.date+'">';
+					html += ' <i class="num" style="'+btm_margin+'">'+date+ '</i>';
+					html += ' <span class="hide_date">'+$("#searchYear").val()+'년 '+$("#searchMonth").val()+'월 '+date+'일 ' + able_text + '</span>';
+					html += ' <span class="state">'+able_text+'</span>'; // able_text가 달력 칸에 표시되도록 추가
+					html += able_icon;
+					html += '</div>';
+
+					return html;
+
+				}
+			}
+			
+			
+			
+			
+		}
+	}
+}
+
+function createCalendar(){	//현재 달 달력 만들기
+	
+	var year = getYear();	//년도 getYear();
+	var month = data_date.getMonth()+1;	//월
+	var startDay   = data_date.getWeek();		//요일 시작일
+	var day = data_date.getWeek();
+	var startDate = 1;
+	var lastDate = (new Date(year,data_date.getMonth(),"1")).lastDay();
+	
+	// 달력 처리
+	var yearNext = year;
+	var monthNext = month + 1;
+	
+	if(month + 1 > 12){
+		monthNext = 1;
+		yearNext = yearNext + 1 
+	}
+	
+	var lastDate2 = (new Date(yearNext,monthNext-1,"1")).lastDay();
+	// 달력 처리
+	
+	$.ajax({
+		type : "POST",
+		url : "/UserPortal/Upv/GH29M4013265/selectCpsResvExclShareCalendar.do",
+		data: {
+			startDate : year+'-'+((month))+'-01',
+			endDate   : yearNext+'-'+((monthNext))+'-'+lastDate2
+		},
+		async: false,
+		success : function(data, status, xhr) {
+			possibleData = data;
+			
+			//2024.03.25 서동인 예약제외일자땜빵
+			for(i=0;i<data.length;i++){
+				if(data[i].excelShareMsg != ""){
+					data[i].useYn = 'N'
+				}
+			}
+			
+		},
+		
+		error : function(jqXHR, textStatus, errorThrown ){
+			alert("등록 처리중인 자원입니다\n관리자에게 문의 바랍니다.");
+			history.back(-1);
+		}
+	});
+
+    $("#searchYear").val(year).prop("selected", true);
+	$("#searchMonth").val((month));
+	$("#calendarBody tr").remove();
+
+	var cnt = 0;
+	var dayCnt = 1;
+	
+	console.dir(possibleData);
+
+	for(var i = 0;i<6;i++){
+		$("#calendarBody").append("<tr></tr>");
+		for(var j = 0;j<7;j++){
+
+			$("#calendarBody tr:eq('"+i+"')").append("<td></td>");
+
+			if(lastDate >= dayCnt && cnt >= startDay ){
+				
+				if(typeof possibleData[0]['rsrcDcd'] === 'undefined'){
+					$("#calendarBody tr:eq('"+i+"') td").eq(j).html(createData(dayCnt,day));
+				} else if(possibleData[0]['rsrcDcd']['rsrc_dcd'] == 'CPS001.003'){ // 숙박시설의 경우에 한해서 지정된 함수를 태움
+					$("#calendarBody tr:eq('"+i+"') td").eq(j).html(createDataAccommodation(dayCnt,day));
+				} else {
+					$("#calendarBody tr:eq('"+i+"') td").eq(j).html(createData(dayCnt,day));
+				}
+				
+				
+				
+				dayCnt++;
+				day++;
+				if(day == 8){
+					day = 0;
+				}
+			}else{
+				if(lastDate <= dayCnt){
+					if(i == 5 && j == 0){
+						break;
+					}else{
+						$("#calendarBody tr:eq('"+i+"') td").eq(j).html(createData(null,null));
+					}
+				}else{
+					$("#calendarBody tr:eq('"+i+"') td").eq(j).html(createData(null,null));
+				}
+			}
+			cnt++;
+		}
+	}
+
+	if($("[name='selectionStartDay']").val() == $("[name='selectionEndDay']").val()){
+		
+		if(typeof possibleData[0]['rsrcDcd'] !== 'undefined'){
+			
+			 if(possibleData[0]['rsrcDcd']['rsrc_dcd'] != 'CPS001.003'){
+					
+			     $("#calendarBody .able[data-date='"+$("[name='selectionStartDay']").val()+"']").trigger("click");
+					
+			 }			
+		} 
+		
+		
+		
+	}else{
+		var selectionStartDay = $("[name='selectionStartDay']").val();
+		var selectionEndDay = $("[name='selectionEndDay']").val();
+		for(var i = (selectionStartDay.replace(/-/gi,"")*1) ;i<(selectionEndDay.replace(/-/gi,"")*1)+1;i++){
+			i = i+"";
+			var targetDate = [i.slice(0, 4), "-", i.slice(4,6),"-",i.slice(6)].join('');
+			$("a[data-date='"+targetDate+"']").addClass("selected");
+            $("a[data-date='"+targetDate+"']").attr("aria-label", "선택");
+            
+            $("div[data-date='"+targetDate+"']").addClass("selected");
+            $("div[data-date='"+targetDate+"']").attr("aria-label", "선택");
+		}
+	}
+}
+
+// 시작일시 원하는 형태로 가공하기
+function formatDate(inputDate) {
+    // 문자열에서 Date 객체 생성
+    var dateParts = inputDate.split('-');
+    var dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+    // 요일 배열
+    var days = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'];
+
+    // 원하는 형식으로 날짜 문자열 생성
+    var formattedDate = dateObj.getFullYear() + '.' +
+                        ('0' + (dateObj.getMonth() + 1)).slice(-2) + '.' +
+                        ('0' + dateObj.getDate()).slice(-2) + ' ' +
+                        days[dateObj.getDay()];
+
+    return formattedDate;
+}
+
+
+//sort 숫자 비교 위한 펑션
+function compareNumbers(a, b)
+{
+    return a - b;
+}
+
+function openModal(date,event){
+	
+	 if (!event.isTrusted) {
+	        event.preventDefault();  // 프로그램에 의한 클릭을 방지합니다.
+	        return;
+	    }
+	
+	// 시작일 및 종료일 초기화
+	$("#startDate").val("");
+    $("#endDate").val("");
+    $("[name='selectionStartDay']").val("");
+    $("[name='selectionEndDay']").val("");
+    
+    $("#startDate").val(date);
+    $("[name='selectionStartDay']").val($("#startDate").val());
+   
+    var drawYn = "N";
+	// 날짜 선택 초기화
+	for (var i = 0; i < possibleData.length; i++) {
+		
+	    var dateValue = possibleData[i].date;
+		var elementSel = $('[data-date="'+dateValue+'"]');
+		elementSel.removeClass('selected');
+		
+		if(possibleData[i].date == date && possibleData[i].drawYn == "Y"){
+			drawYn = "Y";
+			alert("추첨 기간에는 최대 1박2일만 가능합니다.");
+		}
+	}
+	// 날짜 선택 초기화
+	
+	// 날짜 선택 
+	var elementSel = $('[data-date="'+date+'"]');
+	elementSel.addClass('selected');
+	// 날짜 선택 
+	
+	// 이용 시작일시 가공하기
+	var popSelectedUseDt = date;
+	var popSelectedUseDtL1 = formatDate(popSelectedUseDt);
+	$("#popSelectedUseDt").text(popSelectedUseDtL1);
+	
+	// 자원 이름 팝업에 삽입
+	$("#popSelectedGoodsNm").text(possibleData[0]['rsrcDcd']['rsrc_nm']);
+	
+	// 박수 삽입
+	var maxInd = possibleData[0]['rsrcDcd']['rsrv_max_dt'];
+	
+	if(maxInd == 0 || maxInd == "null" || drawYn == "Y"){
+		maxInd = 2;
+	}
+	
+	var sequence = Array.from({length: maxInd}, (_, i) => i + 1);
+	var htmlStr = "";
+	
+	$("#popComboSelectUseDt").html("");
+
+	var flag = "Y";
+	dateStr = date;
+		
+	for (var i = 0; i < sequence.length-1; i++) {
+		
+		//////////////////////////// 인덱스 매칭 작업 ///////////////////////////
+		var j = sequence[i];
+		var nextj = j + 1 
+
+		// 문자열을 Date 객체로 변환
+		var dateObj = new Date(dateStr);
+		var dateObj2 = new Date(dateStr);
+		
+		// i일 추가
+		dateObj.setDate(dateObj.getDate() + i);
+		dateObj2.setDate(dateObj2.getDate() + j);
+
+		// Date 객체를 YYYY-MM-DD 형식의 문자열로 변환
+		var updatedDateStr = dateObj.toISOString().split('T')[0];
+		var updatedDateStr2 = dateObj2.toISOString().split('T')[0];
+		
+		// pos 배열에서 updatedDateStr와 일치하는 date 값을 가진 객체의 인덱스를 찾기
+		var index = possibleData.findIndex(function(item) {
+		    return item.date === updatedDateStr;
+		});
+		
+   	 	var htmlStr = '<label for="daysel'+j+'"><input type="radio" id="daysel'+j+'" name="daysel" value="'+updatedDateStr2+'"> '+j+'박'+nextj+'일</label><p>';
+   	 	$("#popComboSelectUseDt").append(htmlStr);
+   	 	
+		// 해당 인덱스의 useYn 값 가져오기
+		if (index !== -1) {
+			
+		    var useYnValue = possibleData[index].useYn;
+		    drawYn = possibleData[index].drawYn;
+		    if(useYnValue == "N" || flag == "N" || (drawYn == "Y" && i != 0)) {
+		    	
+		    	flag = "N"
+		    	$('input[type="radio"][value="'+updatedDateStr2+'"]').prop('disabled', true);
+		    } 
+		    
+		} else {
+			$('input[type="radio"][value="'+updatedDateStr2+'"]').prop('disabled', true);
+		}
+		////////////////////////////인덱스 매칭 작업 ///////////////////////////			
+	    
+	}
+	
+   modalOpen("modal_org");
+	
+}
+
+
+$(document).ready(function(){
+	setYear();
+	createCalendar();
+	// tip
+    $( document ).tooltip();
+
+
+	$("#todayPick").click(function(){
+		data_date = new Date((new Date().yyyymmdd()).substr(0,4), ((new Date().yyyymmdd()).substr(5,2)-1) , 1);
+		setChangeYear();
+		createCalendar();
+	});
+
+	$(".calnav_prev").attr("role", "button").attr("aria-label", "지난달").click(function(){
+
+		data_date = new Date(data_date.getFullYear(), data_date.getMonth() - 1, 1);
+
+		if(new Date().getFullYear() > data_date.getFullYear() ){
+			data_date = new Date(data_date.getFullYear(), data_date.getMonth() + 1, 1);
+		}else{
+			setChangeYear();
+			createCalendar();
+		}
+
+	});
+
+	$(".calnav_next").attr("role", "button").attr("aria-label", "다음달").click(function(){
+		data_date = new Date(data_date.getFullYear(), data_date.getMonth() + 1, 1);
+
+		if(new Date().getFullYear()+4 < data_date.getFullYear() ){
+			data_date = new Date(data_date.getFullYear(), data_date.getMonth() - 1, 1);
+		}else{
+			setChangeYear();
+			createCalendar();
+		}
+
+	});
+
+	$("#dateChange").click(function(){
+		data_date = new Date($("#searchYear").val(), ($("#searchMonth").val()-1) , 1);
+		setChangeYear();
+		createCalendar();
+	});
+	
+ 	$("#accomModation").click(function(){
+ 		
+		var checkedVal =  $('input[name="daysel"]:checked').val();
+        $("#endDate").val(checkedVal);
+        $("[name='selectionEndDay']").val($("#endDate").val());
+        
+        if($("#useEndSchdDtm").val() != undefined ){
+            $("#useEndSchdDtm").val($("#endDate").val()); 
+        }
+		
+      //모달팝업 숨기기
+        $("#modal_org").hide();                
+        $(".mask").fadeOut();
+        $("#modal_org").find("#layerCloseTop").trigger("click");
+        
+
+	}); 
+	
+	
+});
+
+</script>
+
+<!-- 박수 선택 팝업 시작 -->
+<div class="modal_popup new_modal" id="modal_org" style="width:400px; display:none;" >
+	<div class="tit">
+	<div style="overflow: hidden; background:#dae7fa; padding:20px; border-bottom :1px solid black;">
+			<h2 style="float:left">숙박 선택</h2>
+			<button type="button" tabindex="0" id="layerCloseTop" class="close" style="float:right">Close</button>
+		</div>
+	</div>
+	
+	<div class="con">
+		<div class="con_inner">
+	
+			<table class="tbl row_tb">
+		                <caption>예약일정 선택의 시설이름, 사용시작일, 박수선택의 항목에 관한 표입니다.</caption>
+		                <colgroup>
+		                    <col style="width:20%">
+		                    <col style="width:80%">
+		
+		                </colgroup>
+		                <tbody>
+		                <tr>
+		                    <th class="center">시설이름</th>
+		                    <td class="left" id="popSelectedGoodsNm"></td>
+		                </tr>
+		                <tr>
+		                    <th class="center">사용시작일</th>
+		                    <td class="left" id="popSelectedUseDt"></td>
+		                </tr>
+		                <tr style="line-height:10px;">
+		                    <th class="center">일정선택</th>
+		                    <td class="left" id="popComboSelectUseDt">
+		                    
+		                    </td>
+		                </tr>
+		                <tr id="popSelectedDscrt_ID02030036" hidden="true">
+		                    <th colspan="2">
+		                        ※야영데크는 성수기(7월~8월)에만 9시~익일9시까지 이용이 가능하며, 비성수기에는 9시~당일18시까지만 이용이 가능합니다.
+		                    </th>
+		                </tr>
+		                <tr id="popSelectedDscrt_ID02030043" hidden="true">
+		                    <th colspan="2">
+		                        ※ 평상데크는 5/1 ~ 10/31까지, 9시~당일19시까지만 이용 가능합니다.
+		                    </th>
+		                </tr>
+		                </tbody>
+		            </table>
+		            
+		            <h2 class="row_text">* 예약일자 뿐 아니라 입실시간 및<br> 퇴실시간을 확인 바랍니다.</h2>
+		            
+				<form id="searchVO" name="searchVO" action="/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=GH29M4013265" method="post">
+				</form>
+
+		</div>
+	</div>
+	<div class="btn_wrap modal_foot_btn">
+		<div class="taC">
+			<a href="#this" id="accomModation" class="btn lg bold bg_gray">선택 적용</a>
+			<a href="#this" class="btn lg" id="layerCloseBottom">취소</a>	
+		</div>
+	</div>
+</div>
+<!-- 기관선택 연결 팝업 끝 -->
+
+<script type="text/javascript">
+var minTime = "60";
+var maxTime = "120";
+var rervPossible = '';
+var useCapa				= 0;									// (현재예약가능인원 온라인-현재예약인원)
+var minCapa				= "1"*1;	// 최소허용예약인원
+var maxCapa				= "8"*1;	// 최대허용예약인원
+var onlRsrvPsblNofpr	= "8"*1;// 온라인예약허용인원
+
+$(document).ready(function(){
+
+    var datTarget = $("#timezone .able.timePicker");   
+    datTarget.attr("title","");
+	$(".reg_time_list").on("click","#timezone .able.timePicker",function(){
+		if(!$(this).hasClass("selected")){
+			$(this).addClass("selected");
+			if($("#timezone .timePicker.selected").length > 1){	// 시간의 연속성 체크
+				var drawYn = $(this).attr("data-draw");
+				if(drawYn == "Y"){
+					alert("추첨제 자원은 한 타임만 선택이 가능합니다.");
+					$(this).removeClass("selected");
+				}
+				var timeSeq = $("#timezone .timePicker.selected").map(function() { return $(this).data("seq"); }).get().join(',');
+				var startIdx = 0;
+				var out = false;
+				$.each(timeSeq.split(",").sort(compareNumbers),function(i,v){
+					if(startIdx == 0 ){
+						startIdx = v*1;
+					}else{
+// 						console.log( (startIdx+i) + " // "+v);
+						if( (startIdx+i)  <  v){
+							out = true;
+						}
+					}
+				});
+
+				if(out){
+					alert("연속된 시간만 선택 가능합니다.");
+					$(this).removeClass("selected");
+				}
+			}
+
+		}else{
+
+			$(this).removeClass("selected");
+
+			if($("#timezone .timePicker.selected").length > 1){	// 시간의 연속성 체크
+				var drawYn = $(this).attr("data-draw");
+				if(drawYn == "Y"){
+					alert("추첨제 자원은 한 타임만 선택이 가능합니다.");
+					$(this).removeClass("selected");
+				}
+				var timeSeq = $("#timezone .timePicker.selected").map(function() { return $(this).data("seq"); }).get().join(',');
+				var startIdx = 0;
+				var out = false;
+				$.each(timeSeq.split(",").sort(compareNumbers),function(i,v){
+					if(startIdx == 0 ){
+						startIdx = v*1;
+					}else{
+						if( (startIdx+i)  <  v){
+							$("#timezone .timePicker.selected[data-seq='"+v+"']").removeClass("selected");
+						}
+					}
+				});
+			}
+		}
+		$("#timezone :checkbox").prop("checked",false);
+		$("#timezone .timePicker.selected :checkbox").prop("checked",true);
+		
+
+        var datTarget = $("#timezone .able.timePicker");   
+        datTarget.attr("title","");
+        
+        var selItm = $("#timezone .able.timePicker.selected");
+        selItm.attr("title","예약선택");
+        
+	});
+
+	/*공공개방자원 신청 및 예약 상세 - 예약 가능날짜 선택 달력 ResrcTopCalendar004.jsp */
+    $("#calendarBody").on("click",".able",function(e){
+
+        var datTarget = $("#calendarBody td a");
+        datTarget.removeClass("selected");   
+        datTarget.attr("title","");
+        
+    	$("#calendarBody .selected").removeClass("selected");
+        $(this).addClass("selected");
+        $(this).attr("title",$(this).attr("data-date")+" 예약선택");
+        $(".start_date").html($(this).data("date"));
+
+        $("[name=selectionStartDay]").val($(this).data("date"));
+        $("[name=selectionEndDay]").val($(this).data("date"));
+        
+        var drawYn = $(this).attr("data-draw");
+
+        $.ajax({
+    		type : "POST",
+    		url : "/UserPortal/Upv/GH29M4013265/searchCpsGnrResvSchedDetlQty.do",
+    		data: {
+    			searchDate : $(this).data("date")
+    		},
+    		async: false,
+    		success : function(data, status, xhr) {
+    			if($("#timezone").length == 0){
+    				$(".reg_time_list").append('<ul class="list clearfix" id="timezone" ></ul>');
+   				}
+   				$("#timezone").empty();
+				$.each(data,function(i,timeData){
+					var usePsblBgnTm,usePsblEndTm ;  
+					if(timeData.usePsblBgnTm != "" ){
+						usePsblBgnTm = timeData.usePsblBgnTm.substring(0,2)+":"+timeData.usePsblBgnTm.substring(2,4)
+					}
+
+					if(timeData.usePsblEndTm != "" ){
+						usePsblEndTm = timeData.usePsblEndTm.substring(0,2)+":"+timeData.usePsblEndTm.substring(2,4)
+					}
+
+					if((timeData.useCapa - timeData.useCapaQty > 0 && timeData.useCapa - timeData.useCapaQty >= minCapa && timeData.rsrvStdrdClsCd == "CPS335.001") 
+							|| (timeData.useCapaQty <= 0 && timeData.rsrvStdrdClsCd == "CPS335.002")){
+						var html = '<li><a class="able timePicker" href="javascript:;" title="" data-seq="'+timeData.dtlSeq+'" data-min="'+timeData.startEndClacMin+'" data-draw="'+drawYn+'">';
+						html += '<input type="checkbox" name="selectionTimeSeq" value="'+timeData.dtlSeq+'" style="display:none" /><span class="txt_a">'+usePsblBgnTm+' ~ '+usePsblEndTm+'</span>';
+						if(drawYn == "Y"){
+							html += '<span class="txt_b"><i style="color:#00d210;">추첨</i></span></a></li>';
+						}
+						else{
+							html +='<span class="txt_b">( <i class="count">'+(timeData.useCapa-timeData.useCapaQty)+'명</i> 예약가능 )</span></a></li>'	;							
+						}
+						
+						$("#timezone").append(html);
+					}else{
+						$("#timezone").append(
+								'<li><a class="disable timePicker" href="javascript:;" title="예약불가능" tabindex="-1" data-seq="'+timeData.dtlSeq+'"><input type="checkbox" name="selectionTimeSeq" value="'+timeData.dtlSeq+'" style="display:none" /><span class="txt_a">'+usePsblBgnTm+' ~ '+usePsblEndTm+'</span><span class="txt_b">예약불가</span></a></li>'
+						);
+					}
+				});
+				
+    		},
+    		error : function(jqXHR, textStatus, errorThrown ){
+    			alert("처리 중 오류가 발생하였습니다.\n[" + jqXHR.status + "]" + jqXHR.responseText);
+    		}
+    	});
+
+        $("#emptyDate").hide();
+
+        return false;
+    });
+
+	$("#calendarBody .today.able").trigger("click");
+
+	if($("#calendarBody .selected.able").length == 0){
+		$("#emptyDate").show();
+	}
+});
+function timeCalc(){
+	var ret = 0;
+	$.each($(".able.selected","#timezone"),function(){
+		ret = ret + $(this).data("min");
+	});
+	return ret;
+}
+function fn_reservation(){
+	if($("[name=selectionStartDay]").val() == ""){
+		alert("예약일을 선택하세요");
+	}else if($("[name=selectionEndDay]").val() == ""){
+		alert("예약일을 선택하세요");
+	}else if($("[name='selectionTimeSeq']:checked").length  == 0){
+		alert("시간을 선택하세요");
+	}else if(minTime != "" && minTime > timeCalc() ){
+		alert("최소 이용 시간은 "+minTime+" 분입니다");
+	}else if(maxTime != "" && maxTime < timeCalc()){
+		alert("최대 이용 시간은 "+maxTime+" 분입니다");
+    }else if(rervPossible == "false"){
+    	alert("[1일 예약한도 초과]\n해당자원의 예약정책은 회원당 일일 예약 건까지 가능합니다.");
+	}else{
+		
+		// 시간 넘겨주는 부분 추가 - 20230915 
+		var timeTexts = [];
+
+		$('.able.timePicker.selected .txt_a').each(function() {
+		    var timeText = $(this).text();
+		    var convertedTime = timeText.replace(/(\d+)시 (\d+)분/g, "$1:$2");
+		    timeTexts.push(convertedTime);
+		});
+
+		// 최소 시간 (첫 번째 요소의 시작 시간)
+		var startTime = timeTexts[0].split(' ~ ')[0];
+
+		// 최대 시간 (마지막 요소의 종료 시간)
+		var endTime = timeTexts[timeTexts.length - 1].split(' ~ ')[1];
+		
+		$("#selectionStartTime").val(startTime);
+		$("#selectionEndTime").val(endTime);
+
+        $("#cpsRsrcMaster")[0].submit();
+	}
+}
+
+function fn_login(){
+	alert("로그인 후 이용가능합니다.");
+    fn_link_login();
+}
+
+function fn_permiss_callback(biz_no, permiss_no) {
+	$("[name=biz_no]").val(biz_no);
+	$("[name=permiss_no]").val(permiss_no);
+	
+	if(!isEmpty(biz_no) && !isEmpty(permiss_no)) {
+		$("#cpsRsrcMaster")[0].submit();
+	}
+}
+</script>
+<form name="returnForm" id="returnForm" method="post">
+	<input type="hidden" name="beforeUrlYn" value="Y"> <input
+		type="hidden" name="rsrcNo" value="GH29M4013265">
+</form>
+<div class="con2">
+	<div class="inner">
+		<em class="sr-only">예약일 선택영역</em>
+		<!--calinerbox[s]-->
+		<div class="calendarBox mb30">
+			<div class="cal_header">
+				<a href="javascript:;;" class="calnav_prev" title="이전달">이전달</a>
+				<fieldset>
+					<legend>희망 년,월 선택</legend>
+					<span class="select_year">
+						<button type="button" id="todayPick"
+							class="btn md bg_blue submit_btn" title="오늘 날짜를 적용합니다">
+							<span>오늘</span>
+						</button> <label class="sr-only" for="searchYear">예약희망 년도 선택</label> <select
+						name="searchYear" id="searchYear" title="예약희망 년도 선택">
+					</select> <label class="sr-only" for="searchMonth">예약희망 월 선택</label> <select
+						name="searchMonth" id="searchMonth" title="예약희망 월 선택">
+							<option value="1">1월</option>
+							<option value="2">2월</option>
+							<option value="3">3월</option>
+							<option value="4">4월</option>
+							<option value="5">5월</option>
+							<option value="6">6월</option>
+							<option value="7">7월</option>
+							<option value="8">8월</option>
+							<option value="9">9월</option>
+							<option value="10">10월</option>
+							<option value="11">11월</option>
+							<option value="12">12월</option>
+					</select>
+						<button type="button" id="dateChange"
+							class="btn md bg_gray submit_btn" title="선택한 날짜를 적용합니다">
+							<span>적용</span>
+						</button>
+					</span>
+				</fieldset>
+				<a href="javascript:;;" class="calnav_next" title="다음달">다음달</a>
+			</div>
+			<table class="calendar">
+				<caption>예약일자 선택 가능한 일자를 나타나는 달력 정보입니다. 한달치 예약가능,불가능 정보를
+					제공합니다.</caption>
+				<colgroup>
+					<col class="wd14">
+					<col class="wd14">
+					<col class="wd14">
+					<col class="wd14">
+					<col class="wd14">
+					<col class="wd14">
+					<col class="wd14">
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col" class="sun">일</th>
+						<th scope="col">월</th>
+						<th scope="col">화</th>
+						<th scope="col">수</th>
+						<th scope="col">목</th>
+						<th scope="col">금</th>
+						<th scope="col" class="sat">토</th>
+					</tr>
+				</thead>
+				<tbody id="calendarBody">
+				</tbody>
+
+			</table>
+
+			<div class="marker_info">
+				<span class="sr-only">달력에 표현되는 항목 안내</span> <em class="marker today">오늘</em><em
+					class="marker able">예약가능</em><em class="marker disable">예약불가</em><em
+					class="marker selected">선택</em>
+			</div>
+		</div>
+		<!--calinerbox[e]-->
+
+
+		<form id="cpsRsrcMaster" action="/UserPortal/Upv/UpvBookgFclt/index.do" method="post">
+			<input type="hidden" name="selectionStartDay">
+			<input type="hidden" name="selectionEndDay">
+			<input type="hidden" name="mode">
+			<input type="hidden" name="rsrc_no" value="GH29M4013265" />
+			<input type="hidden" name="biz_no" />
+			<input type="hidden" name="permiss_no" />
+			<input type="hidden" name="selectionStartTime" id="selectionStartTime" />
+			<input type="hidden" name="selectionEndTime" id="selectionEndTime" />
+			
+				
+
+				
+				
+				
+					
+					<!--예약버튼[s]-->
+					
+						
+						
+						
+							<!--reg_time_list[s]-->
+							<div class="reg_time_list">
+								<div class="head mb10 clearfix">
+									<em class="headding2 mg_none floatL">예약현황</em>
+									<p class="floatR mt5 select_date">
+										<em class="bold black mr10">선택날짜 </em><span
+											class="start_date red"></span>
+									</p>
+								</div>
+								<strong class="sr-only">시간대별 예약가능,불가능에 대한 정보 목록</strong>
+								<div class="info_box bg_gray taC mb0" id="emptyDate"
+									style="display: none;">선택된 날짜가 없습니다. 날짜를 선택해주세요.</div>
+							</div>
+							<!--reg_time_list[e]-->
+							<div class="reg_btn_group clearfix">
+								<button type="button" class="btn lg wd100 bg_red go_regi"
+									onclick="fn_login()" title="예약하기">
+									예약하기<span class="ico ico_go ico_white"></span>
+								</button>
+							</div>
+						
+					
+
+				
+			
+
+		</form>
+	</div>
+</div>
+
+<!--modal_popup[s]-->
+<div class="modal_popup" id="permissModal"></div>
+<!--modal_popup[e]-->
+
+			
+			
+			
+			
+		
+	
+
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$("select").change(function(){
+			var i = $(this).find("option:selected").text();
+			$(this).attr("title",i + " 선택됨").focus();
+			$(this).attr("style","border: 3px datted black");
+		
+		});
+		
+
+	});
+	
+	
+</script>
+                
+                
+			</div>
+            </article>
+			
+			
+
+
+
+
+
+
+
+<style>
+.lst_features .item {
+    display: inline-block;
+
+
+    font-size: 14px;
+    line-height: 14px;
+    color: #666;
+    text-align: center;
+    vertical-align: top;
+}
+
+.lst_features .item:nth-child(n+1){
+    display: inline-block;
+	margin-left:20px;
+
+    font-size: 14px;
+    line-height: 14px;
+    color: #666;
+    text-align: center;
+    vertical-align: top;
+}
+
+</style>
+<script src="/js/lib/jquery.form.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#reviewBoard").load("/UserPortal/Upv/GH29M4013265/searchUseReviw.do");
+	//$("#rsrvBoard").load("/UserPortal/Upv/GH29M4013265/rsrcBoard.do");
+	fn_applyContentImgAlt("rsrcIntrcnArea", "rsrcIntrcnImgAltVal");
+	fn_applyContentImgAlt("atpnArea", "atpnImgAltVal");
+});
+function fn_review_search(page){
+	$("#reviewBoard").load("/UserPortal/Upv/GH29M4013265/searchUseReviw.do?pageIndex="+page);
+}
+
+/*modal 레이어 팝업 */
+function modalOpenReview(prmID,prmOpener,rsrvNo,rsrcNo, revwSeq){
+	$("#reviewModal").load("/UserPortal/Upu/UpuEntUserRevw/index.do?rsrv_no=" + rsrvNo + "&rsrc_no="+rsrcNo+"&revw_seq="+revwSeq,function() {
+		 modal_opener = prmOpener;
+		    //event.preventDefault();
+		    //alert($(window).scrollTop());
+		    var targetID = $("#"+prmID);
+		    var winHeight = $(window).height()/2;
+		    var winWidth = $(window).width()/2 ;
+		    var modalHeight = targetID.height();
+		    var modalWidth = targetID.width() ;
+		    var newTop = (winHeight - modalHeight) / 2 + ($(window).scrollTop()) + "px";
+		    var newLeft = (winWidth - Number(modalWidth) ) /2  + $(window).scrollLeft()+20 + "px" ;
+		   
+		    var newMask = $('<div />', {
+		        id:'newmodalmask'
+		      , class: ''  
+		      , style : 'display: block;z-index: 99;    position: fixed;    top: 0;    left: 0;    width: 100%;    height: 100%;    background: rgba(0,0,0,0.5);'
+		    });
+		    
+		    targetID.css("z-index","100"); 
+		        
+		    $('body').append(newMask);
+		    targetID.attr("tabindex","0");
+		    targetID.fadeIn();
+		  //  targetID.find(".topCloseBtn").focus();    
+		    targetID.find('.closebtn').click(function(){
+		        event.preventDefault();
+		        targetID.hide();                
+		        newMask.remove();
+		    });
+
+		    targetID.find(".close, .topCloseBtn, .bottomCloseBtn, #layerCloseTop, #layerCloseBottom").click(function(){
+		        event.preventDefault();
+		        targetID.hide();                
+		        newMask.remove();
+		    });
+		    
+		    if(revwSeq == 0){
+
+	            targetID.find("[name=revw_ttl]").val('');
+	            targetID.find("[name=revw_ctnt]").val('');
+	            
+	            if ($.browser.msie) { // ie 일때 input[type=file] init.
+	            //  $("#sssbj888").replaceWith( $("#filename").clone(true) ); 
+	            } else { // other browser 일때    input[type=file] init. 
+	            //  $("#sssbj888").val(""); 
+	            }
+
+	            // 별점 초기화
+	            var max = 0;
+	            var scor = $("#scor").val();
+	            if(!isEmpty(scor)) {
+	                if((scor*1) > 0) {
+	                    max = (scor*1) - 1;
+	                }
+	            }
+	            fn_makeStar(max);
+		    }
+	});
+}
+ 
+
+function fnGoMiniHome(){ 
+    var pageUrl = "/UserPortal/adv/instt/board/AdvEsInsttBoardMainView.do";
+    $('#fm_formIO').remove();
+    var frmObj
+    if(!isNative()){
+    	frmObj = $('<form>', {'id': 'fm_formIO'
+                              , 'action': pageUrl
+                              , 'method':'POST'
+                              , 'target':'_blank'
+                              });
+	}else{
+    	frmObj = $('<form>', {'id': 'fm_formIO'
+                              , 'action': pageUrl
+                              , 'method':'POST'
+                              });
+	}
+
+    frmObj.append($('<input>', {'name':'instt_code', 'type':'hidden', 'value':'B551296'}));
+    $(document.body).append(frmObj);
+    $('#fm_formIO').submit(); 
+}
+function fn_applyContentImgAlt(areaId, altValId){
+	var $area = $("#" + areaId);
+	if($area.length === 0) return;
+
+	var $imgs = $area.find("img");
+	if($imgs.length === 0) return;
+
+	var altText = $.trim($("#" + altValId).val() || "");
+	var isFirstMeaningful = true;
+
+	$imgs.each(function(){
+		// 에디터가 넣은 파일명 title 제거 (툴팁으로 파일명 노출 방지)
+		$(this).removeAttr("title");
+
+		var curAlt = $.trim($(this).attr("alt") || "");
+		if(curAlt.length > 0) return;
+
+		if(isFirstMeaningful && altText.length > 0){
+			$(this).attr("alt", altText);
+			isFirstMeaningful = false;
+		}else{
+			$(this).attr("alt", "");
+		}
+	});
+}
+</script>
+
+
+<form id="reservMapForm">
+	<input type="hidden" name="searchKeyword" />
+</form>
+
+ <article class="article" id="detail_summery">
+	<h4 class="headding1 ico1" style="width:150px; display: inline;">기본정보</h4>
+	 
+
+
+
+
+<meta property="og:image" content="https://www.eshare.go.kr/images/common/top_logo.png"/>
+<meta property="og:image:height" content="100" />
+<meta property="og:image:width" content="200" /> 
+
+
+
+
+
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+<script type="text/javascript">
+	var url_default_fb = "https://www.facebook.com/sharer/sharer.php?u=";
+	var url_default_naver = "https://share.naver.com/web/shareView.nhn?url=";
+	var title_default_naver = "&title=";
+	var url_this_page = location.href.substring(0, location.href.indexOf("index.do")) +"/index.do?rsrc_no=GH29M4013265&rsrc_dcd=CPS001.001";
+	//var url_this_page = "https://www.eshare.go.kr/UserPortal/Upv/UprResrcFacl/index.do?rsrc_no=BD13O2038495&rsrc_dcd=CPS001.002";
+	var title_this_page = document.title;
+	var url_combine_fb = url_default_fb + encodeURIComponent(url_this_page);
+	var url_combine_naver = url_default_naver + encodeURIComponent(url_this_page) + title_default_naver + encodeURIComponent(title_this_page);
+	
+	$(document).ready(function() {
+		var kakaoJSKey = "8c9d182ee7f99bcff2758e5edc5fe533";
+ 
+		if(kakaoJSKey != null && kakaoJSKey != "") {
+			// 사용할 앱의 JavaScript 키를 설정해 주세요.
+			Kakao.init(kakaoJSKey);
+ 
+			// 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+			Kakao.Link.createDefaultButton({
+				container: "#kakao-link-btn",
+				objectType: "feed",
+				installTalk : true,
+				content: {
+					title: "[공유누리] 석남체육공원 족구장",
+					imageUrl: "https://www.eshare.go.kr/UserPortal/Upv/239927/fileDetail.do?file_sn=1", // full path
+					link: {
+						mobileWebUrl : url_this_page,
+						webUrl : url_this_page
+					}
+				},
+				buttons: [{
+					title: '웹으로 보기',
+					link: {
+						mobileWebUrl : url_this_page,
+						webUrl : url_this_page
+					}
+				}]
+			});
+		 
+			
+
+		}
+	});
+	
+	function fn_showSns(type) {
+		if(type != null && type != "") {
+			if(type == "fb") {
+				window.open(url_combine_fb, '페이스북 공유하기', 'scrollbars=no, width=600, height=600');
+			} else if(type == "naver") {
+				window.open(url_combine_naver, '', 'scrollbars=no, width=600, height=600');
+			}
+		} else {
+			alert("공유기능을 사용할 수 없습니다.");
+		}
+	}
+</script>
+
+<!-- SNS버튼 [시작] -->
+<div class="sns_link_box">
+	<em class="sr-only">SNS공유하기</em>
+	<a href="javascript:void(0);" class="sns_btn facebook" onclick="fn_showSns('fb');" title="페이스북 공유하기 새창열림" role="button" aria-label="페이스북 공유하기"><span class="sr-only">페이스북 공유하기</span></a>
+	<a href="javascript:void(0);" class="sns_btn naver" onclick="fn_showSns('naver');" title="네이버 공유하기 새창열림" role="button" aria-label="네이버 공유하기"><span class="sr-only">네이버 공유하기</span></a>
+	<a href="javascript:void(0);" class="sns_btn kakao" id="kakao-link-btn" title="카카오톡 공유하기 새창열림" role="button" aria-label="카카오톡 공유하기"><span class="sr-only">카카오톡 공유하기</span></a>
+</div>
+<!-- SNS버튼 [끝] -->
+		<div class="info_box clearfix" style="margin-top:15px;">
+			   <div class="inner">
+					<div class="form_table smMultiColBreak">
+						<table>
+							<caption>기본정보 표로 자원분류, 자원명칭, 장소/위치, 제공기관, 담당자 정보, 예약방법, 예약문의, 이용대상, 준비시간, 
+							신청서식, 이용정원, 심사여부, 이용요금, 미니홈페이지, 주차담당자 연락처를 상세히 나타낸 표입니다.</caption>
+							<colgroup>
+								<col class="wd12">
+								<col>
+								<col class="wd12">
+								<col>
+							</colgroup>
+							<tbody>
+								<tr>
+									<th scope="row">자원 분류</th>
+									<td data-cell-header="자원 분류">
+										시설·공간(대관) > 체육시설 > 족구장
+										&nbsp;
+									</td>
+									<th scope="row">자원 명칭</th>
+									<td data-cell-header="자원 명칭">
+										석남체육공원 족구장
+										&nbsp;
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">장소/위치</th>
+									<td data-cell-header="장소/위치">
+										
+											
+												인천 서해구 석남동 483 석남체육공원 족구장 
+                                                <button type="button"  class="btn xsm bg_blue02" title="지도보기" onclick="javascript:fnRsrcMapSearch('GH29M4013265');" style="margin: 1px;">지도보기<span class="ico ico_visit"></span></button>
+											
+											
+										
+									</td>
+									<th scope="row">제공 기관</th>
+									<td data-cell-header="제공 기관">
+									
+										
+										
+											인천광역시서구시설관리공단
+										
+									
+										&nbsp;
+									</td>
+								</tr>
+								<tr>
+									<!-- 담당자 정보 : 이메일만 출력 (이름/전화번호 제외) 20260526 -->
+									<th scope="row">담당자 정보</th>
+									<td data-cell-header="담당자 정보">
+										<p>
+											
+												
+													ghkwk5916@issi.or.kr
+												
+												
+											
+										</p>
+									</td>
+									<th scope="row">예약 방법</th>
+									<td data-cell-header="예약 방법">
+										
+										
+											온라인 직접 예약
+											
+										
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">예약 문의</th>
+									<td data-cell-header="예약 문의">
+										
+											
+											
+											
+											
+												032-567-9685  
+											
+										&nbsp;
+									</td>
+									<th scope="row">이용 대상</th>
+									<td data-cell-header="이용 대상">
+											
+										
+											
+											
+												전체
+											
+										
+									</td>
+								</tr>
+								
+									
+									
+										
+										<tr>
+											<th scope="row">최소 이용 시간</th>
+											<td data-cell-header="최소 이용 시간">
+													60분
+												&nbsp;
+											</td>
+											<th scope="row">최대 이용 시간</th>
+											<td data-cell-header="최대 이용 시간">
+													120분
+												&nbsp;
+											</td>
+										</tr>
+										
+										<tr>
+											<th scope="row">준비 시간</th>
+											<td data-cell-header="준비 시간">
+												
+													
+														없음
+													
+													
+												
+											</td>
+											<th scope="row">신청 서식</th>
+											<td data-cell-header="신청 서식">
+												
+												&nbsp;
+											</td>
+										</tr>
+									
+								
+
+								<tr>
+									<th scope="row">이용 정원</th>
+									<td data-cell-header="이용 정원">
+										
+											
+											
+
+											
+											
+
+											
+											
+
+											
+											
+
+											
+												8명
+											
+										
+										&nbsp;
+									</td>
+									<th scope="row">심사 여부</th>
+									<td data-cell-header="심사 여부">
+										
+											
+											
+												해당사항 없음.
+											
+										
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">이용 요금</th>
+									<td data-cell-header="이용 요금">
+										
+											
+											
+											
+												무료
+											
+										
+									</td>
+									<th scope="row">미니 홈페이지</th>
+									<td data-cell-header="미니 홈페이지">
+                                    
+                                    
+                                        
+                                    
+                                    </td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</article>
+		
+		<article class="article" id="detail_conveninfo">
+			<h4 class="headding1 ico1">편의정보</h4>
+			<div class="info_box clearfix">
+				<div class="inner">
+					<div class="form_table smMultiColBreak">
+					<table>
+					<caption>자원의 편의물품, 실내외 여부, 규모면적, 주차가능여부 등을 나타내는 표입니다.</caption>
+					<colgroup><col class="wd12"><col><col class="wd12"><col></colgroup>
+					<tbody>
+						
+						
+						
+						
+						
+						
+						
+						
+						<tr>
+						<th scope="row">실내·외 구분</th>
+						<td data-cell-header="실내·외 구분">등록된 정보가 없습니다.</td>
+						<th scope="row">규모 면적</th>
+						<td data-cell-header="규모 면적">등록된 정보가 없습니다.</td>
+						</tr>
+						<tr>
+						<th scope="row">주차가능 여부</th>
+						<td data-cell-header="주차가능 여부">등록된 정보가 없습니다.</td>
+						<th scope="row">제공 편의물품</th>
+						<td data-cell-header="제공 편의물품">등록된 정보가 없습니다.</td>
+						</tr>
+					</tbody>
+					</table>
+					</div>
+				</div>
+			</div>
+		</article>
+		
+		<article class="article" id="detail_descript">
+			<h4 class="headding1 ico1">상세설명</h4>
+			<div class="info_box">
+				<div class="inner"  id="rsrcIntrcnArea" style="word-break:break-all;">
+					<div align="" style=""><div class="italicFont" style="font-style:italic"><h2><b style="font-size: 12px; font-style: normal;"><span style="color: rgb(255, 0, 0); font-size: 14pt;"><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div></span></b><span style="font-size: 12px; font-style: normal; font-weight: 400;"><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div>석남체육공원 내 족구장 입니다.</span><br style="font-size: 12px; font-style: normal; font-weight: 400;"><span style="font-size: 12px; font-style: normal; font-weight: 400;">ㅇ 이용대상 : 누구나</span><br style="font-size: 12px; font-style: normal; font-weight: 400;"><span style="font-size: 12px; font-style: normal; font-weight: 400;">ㅇ 이용시간 : 09:00 ~ 22:00</span><br style="font-size: 12px; font-style: normal; font-weight: 400;"><span style="font-size: 12px; font-style: normal; font-weight: 400;">ㅇ 이용요금 : 무료<br></span><span style="font-size: 12px; font-style: normal; font-weight: 400;">ㅇ 이용일자 : 2025. 11월 1일 부터&nbsp;</span><span style="font-size: 12px; font-style: normal; font-weight: 400; color: rgb(58, 50, 195);"><b>* 단, 폭염 및 폭설, 폭우시 이용불가<br></b></span><span style="font-size: 12px; font-style: normal; font-weight: 400;">ㅇ 예약방법 : 1인 2시간 예약가능합니다. (1시간 단위, 2시간까지 예약 하세요.)<br></span><span style="font-size: 12px; font-style: normal; font-weight: 400;">&nbsp;* 예약없이 사용할 시, 예약자에게 우선 사용권이 있음.</span></h2></div></div>
+				</div>
+			</div>
+			<input type="hidden" id="rsrcIntrcnImgAltVal" value="" />
+		</article>
+		
+		<article class="article" id="detail_attention">
+			<h4 class="headding1 ico1">주의사항</h4>
+			<div class="info_box">
+				<div class="inner" id="atpnArea" style="word-break:break-all;">
+						<div align="" style=""><div class="italicFont" style="font-style:italic"><span style="font-style: normal;"><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div></span><span style="font-style: normal;"><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><div style="font-style:normal"></div><br>1.&nbsp; 대관 사용자는 공원 사용 중 발생하는 모든 쓰레기는 직접 수거하여 가져가야 함을 원칙으로 한다.</span><span style="font-style: normal;"><br><br>2. 사용의 원활함과 혼선을 방지하고자 예약제를 도입하여 시행함을 알려드립니다.</span><br style="font-style: normal;"><span style="font-style: normal;">&nbsp; (예약 없이 이용시에는, 예약제 도입에 따라 동 시간대 예약인 이용이 우선이며, 특정 개인 또는 단체의 독점사용은 불가합니다.)</span><br style="font-style: normal;"><span style="font-style: normal;">&nbsp;&nbsp;</span><br style="font-style: normal;"><span style="font-style: normal;">3.&nbsp;</span><span style="font-style: normal;">목적 외 사용을 금하며, 이에 대한 위반시 어떠한 책임도 지지 않습니다.(본 시설을 통해 개인의 영리를 취할 수 없습니다.)</span><br style="font-style: normal;"><span style="font-style: normal;">&nbsp; &nbsp;* 취사 및 유흥활동 금지</span><br style="font-style: normal;"><br style="font-style: normal;"><span style="font-style: normal;">4. 많은 이용객 사용하는 시설입니다. 모두 내것처럼 사용해주시기 바라며, 사용 전 후로 반드시 주변 정리를 부탁드립니다.</span><br style="font-style: normal;"><span style="font-style: normal;">&nbsp; (정리정돈 하지 않을시, 향후 이용에 패널티 적용)&nbsp;&nbsp;</span></div></div><p><br></p>
+				</div>
+			</div>
+			<input type="hidden" id="atpnImgAltVal" value="" />
+		</article>
+
+<article class="article" id="detail_post">
+	<div class="clearfix mb20">
+		<h4 class="headding1 ico1 mg_none floatL">이용후기</h4>
+	</div>
+	<div class="top_link">
+		<span class="txt" style="line-height: 2.4em; font-size:medium;">공유서비스를 직접 이용한 이용자들의 생생한 이용후기를 만나보세요!</span>
+	</div>
+	
+<!--이용후기 등록 레이어-->
+<!--modal_popup[s]-->
+<div class="modal_popup" id="reviewModal" ></div>
+<div class="info_box" id="reviewBoard"></div>
+</article>
+
+
+			
+			
+
+
+
+
+<article class="article" id="detail_relation">
+	<h4 class="headding1 ico1">연관자원</h4>
+	<!--info_box[s]-->
+	<div class="info_box">
+		
+			<div class="post_list">
+				<div class="list_none">
+					연관자원 목록이 존재 하지 않습니다.
+				</div>
+			</div>
+		
+		
+	</div>
+	<!--info_box[e]-->
+</article>
+
+            <div class="btn_group taC">
+            	
+				
+                
+            </div>
+        </div>
+        <!--wsize[e]-->
+</div>
+
+
+<style>
+    .con2Con{
+        background-color: #fafafa;
+        display:flex;
+        align-items: center; justify-content: center;
+        flex-direction: column; font-size:3em;
+        height:520px;
+
+        box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.2);
+    }
+    .con2-text {
+        width:96%;
+        height:500px;
+        border: 3px solid white;
+        font-weight:800;
+        background-color: #fafafa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color:white;
+    }
+
+    .openClass{
+        font-size:2em;
+        color:rgb(68, 68, 68);
+        font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        margin-top:1em;
+    }
+
+    #dday-count{
+        border-top : 3px solid rgb(200, 200, 200);
+        border-bottom : 3px solid rgb(200, 200, 200);
+        line-height:1.5em;
+        margin-top:2em;
+        color:rgb(68, 68, 68);
+    }
+
+    #dday-count2{
+        border-bottom : 3px solid rgb(200, 200, 200);
+        line-height:1.5em;
+        color:rgb(68, 68, 68);
+    }
+
+    @media screen and (max-width: 768px) {
+        .con2Con{height: 350px;}
+        .con2-text{height:300px; }
+        .openClass{font-size:1em;}
+    }
+
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var commOpenFlag = 'Y';
+        var commOpenTime = '';
+
+        var commOpenDay = commOpenTime.substring(0, 10);
+        var commTpenT = commOpenTime.substring(11, 16);
+
+        if(commOpenFlag == 'N' && commOpenDay != null && commOpenDay != '') {
+            document.getElementById("dday-count").innerText = commOpenDay;
+            document.getElementById("dday-count2").innerText = commTpenT;
+        }
+    });
+</script>
+<!-- ============== sub_cnt_area[e] ============== -->
+
+		
+
+
+<link rel="stylesheet" href="/css/new/layout-footer.css"/>
+<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript"> 
+//2022-10-07 네이버 애널리틱스 스크립트 추가
+if(!wcs_add) 
+	var wcs_add = {}; 
+	wcs_add["wa"] = "12dd5422c8c04e0";
+	
+	if(window.wcs) {
+		wcs_do(); 
+	}
+	
+$(document).ready(function() { 
+	// 관련사이트
+	const $btn = $('.relateLink > button');
+	const $detail = $('.relateLinkDetail');
+	const $close = $('.relateLinkClose');
+
+	$btn.on('click', function(e){
+		e.preventDefault();
+		if ($(window).width() <= 768) {
+			$detail.stop().slideToggle(200);
+		} else {
+			if($(this).hasClass('show')) {
+				$(this).removeClass('show');
+				$detail.css('display', 'none');
+			} else {
+				$(this).addClass('show');
+				$detail.css('display', 'block');
+			}
+		}
+	});
+	$close.on('click', function(e){
+		e.preventDefault();
+		if ($(window).width() <= 768) {
+			$detail.stop().slideUp(200);
+		} else {
+			$detail.css('display', 'none');
+			$btn.removeClass('show');
+		}
+	});
+	
+	$btn.on('focus', function(e){
+		if ($(window).width() > 768 && !usingMouse) {
+			$(this).addClass('show');
+			$detail.css('display', 'block');
+		}
+	});
+	$close.on('focusout', function(e){
+		if ($(window).width() > 768) {
+			$detail.css('display', 'none');
+			$btn.removeClass('show');
+		}
+	});
+});
+</script>
+
+
+<!--2025 UI/UX 개선 footer[s]-->
+
+<footer>
+    <div id="footer">
+        <!-- noticeArea -->
+        <div class="noticeArea">
+            <div class="inner">
+                <a href="/UserPortal/cms/article/list.do?bbsNo=20">공지사항</a>
+                <div class="relateLink">
+                    <button type="button">관련사이트</button>
+                    <div class="relateLinkDetail">
+                        <strong>관련사이트</strong>
+                        <ul>
+                            <li><a href="http://yeyak.seoul.go.kr/" target="_blank" title="서울특별시 공공서비스 예약 새창열림">서울특별시 공공서비스 예약</a></li>
+                            <li><a href="https://yes.gimhae.go.kr/" target="_blank" title="김해 공공시설예약 서비스 새창열림">김해 공공시설예약 서비스</a></li>
+                            <li><a href="https://yeyak.daegu.go.kr/" target="_blank" title="대구광역시 통합예약 시스템 새창열림">대구광역시 통합예약 시스템</a></li>
+                            <li><a href="https://share.siheung.go.kr/" target="_blank" title="시흥시 통합예약포털 새창열림">시흥시 통합예약포털</a></li>
+                            <li><a href="https://www.zeus.go.kr/main" target="_blank" title="ZEUS(장비활용종합포털) 새창열림">ZEUS(장비활용종합포털)</a></li>
+                            <li><a href="https://sotong.go.kr/front/main/index.do" target="_blank" title="소통24(구 온국민소통) 새창열림">소통24(구 온국민소통)</a></li>
+                            <li><a href="https://www.anyang.go.kr/reserve/index.do" target="_blank" title="안양시 통합예약 새창열림">안양시 통합예약</a></li>
+                            <li><a href="https://www.suwon.go.kr/web/shareSuwon/index.do" target="_blank" title="수원시 공유수원 새창열림">수원시 공유수원</a></li>
+                            <li><a href="https://share.gg.go.kr/index" target="_blank" title="경기도 경기공유서비스 새창열림">경기도 경기공유서비스</a></li>
+                            <li><a href="https://onestop.sejong.go.kr/Usr/main/main.do" target="_blank" title="세종시 통합예약시스템 새창열림">세종시 통합예약시스템</a></li>
+                        </ul>
+                        <a href="" class="relateLinkClose">닫기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--// noticeArea -->
+        <div class="inner">
+            <!-- footerTop -->
+            <div class="footerTop">
+                <div>
+                    <div>
+                        <a href="https://www.mois.go.kr/" class="mois" title="행정안전부 바로가기(새창열림)" target="_blank">행정안전부</a>
+                        <a href="https://www.eshare.go.kr/" class="eshare" title="공유누리 바로가기(새창열림)" target="_blank">공유누리</a>
+                    </div>
+                    <address>
+                    	<em>30112</em> 세종특별자치시 도움6로 42(어진동)<br>
+                    	<em>35208</em> 대전광역시 서구 청사로 189 정부대전청사 3동
+                    </address>
+                </div>
+                <div>
+                    <ul class="snsList">
+                        <li><a href="http://pf.kakao.com/_xmxadTK" class="kakao" title="공유누리 카카오 채널 바로가기(새창열림)" target="_blank">카카오채널</a></li>
+                        <li><a href="https://www.instagram.com/eshare365/" class="insta" title="공유누리 인스타그램 바로가기(새창열림)" target="_blank">인스타그램</a></li>
+                        <li><a href="https://www.youtube.com/channel/UC2crZAsoOB9GnnAr0Ir9BtA" class="youtube" title="공유누리 유튜브 바로가기(새창열림)" target="_blank">유튜브</a></li>
+                        <li><a href="https://www.facebook.com/profile.php?id=100055750434232" class="facebook" title="공유누리 페이스북 바로가기(새창열림)" target="_blank">페이스북</a></li>
+                        <li><a href="https://blog.naver.com/eshare365" class="naverblog" title="공유누리 네이버블로그 바로가기(새창열림)" target="_blank">네이버블로그</a></li>
+                    </ul>
+                    <a href="http://www.webwatch.or.kr/Situation/WA_Situation.html?MenuCD=110" target="_blank" title="국가 공인 인증기관 : 웹와치 새창열림" class="webwatch">과학기술정보통신부 WEB ACCESSIBILITY 마크(웹 접근성 품질인증 마크)</a>
+                    <a href="http://www.wa.or.kr/" target="_blank" title="한국웹접근성 심사 통과 로고 새창열림" class="wa">앱접근성 통과 인증 로고</a>
+                </div>
+            </div>
+            <!--// footerTop -->
+            <!-- footerBottom -->
+            <div class="footerBottom">
+                <ul>
+                	<li><a href="/UserPortal/Upc/54/contents.do">공유누리 소개</a></li>
+                	<li><a href="/UserPortal/Upc/56/contents.do">활용가이드</a></li>
+                    <li class="blueTxt"><a href="/UserPortal/Upm/UpmPolcyPersInfo/index.do">개인정보처리방침</a></li>
+                    <li><a href="/UserPortal/Upm/UpmTermsCond/index.do">이용약관</a></li>
+                    <li><a href="/UserPortal/Upc/61/contents.do">이메일주소무단수집거부</a></li>
+                    <li><a href="/UserPortal/Helper/index.do">고객센터</a></li>
+                    <li><a href="/OpenApi/Info/index.do" target="_blank" title="공유누리 OPEN API 새창열림">OPEN API</a></li>
+                </ul>
+                <p class="copyright">© 2025 Ministry of the Interior and Safety.<br class="pcHide"> All rights reserved.</p>
+            </div>
+            <!--// footerBottom -->
+        </div>
+    </div>
+</footer>
+<!--2025 UI/UX 개선 footer[e]-->
+
+
+<!--photo view 공통 레이어-->
+<!--modal_photo[s]-->
+<div class="modal_photo" id="modal_photo_view" >
+	<button type="button" tabindex="0" class="close topCloseBtn">레이어 닫기</button>
+    <h2 class="sr-only">포토뷰</h2>
+	<!-- photo_inner[s]-->
+	<div class="photo_inner"></div>
+	<!-- photo_inner[e]-->
+</div>
+<!--modal_popup[e]-->
+  
+<!--처리중-->
+<div class="loading_screen">
+    <div class="load-wrapp">
+        <div class="load-3">
+            <p>처리중입니다.</p>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+    </div>
+</div>
+
+
+	</div>
+    <div class="loader"></div> 
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+[
+  {
+    "format": ".docx",
+    "file": "교육청보고 서식.docx",
+    "tables": 10,
+    "paragraphs": 53,
+    "warnings": [
+      "병합 셀·여러 줄 머리글은 미리보기에서 열 위치를 확인하세요."
+    ]
+  },
+  {
+    "format": ".xlsx",
+    "file": "붙임2 (양식5) 예선기관 추천팀 참가자 현황.xlsx",
+    "tables": 1,
+    "paragraphs": 0,
+    "warnings": [
+      "수식은 실행하지 않습니다. 수식 셀은 분석에서 결측으로 처리합니다."
+    ]
+  },
+  {
+    "format": ".hwpx",
+    "file": "교육공공데이터 AI활용 공모전 추가 제출 서류.hwpx",
+    "tables": 10,
+    "paragraphs": 79,
+    "warnings": [
+      "병합 셀·여러 줄 머리글은 미리보기에서 열 위치를 확인하세요."
+    ]
+  },
+  {
+    "format": ".hwp",
+    "file": "8회 교육공공데이터 일반부분 대상 성과 보고.hwp",
+    "tables": 0,
+    "paragraphs": 63,
+    "warnings": [
+      "HWP 본문·표 셀의 텍스트 근거를 추출했습니다. 수치 비교용 표 구조는 HWPX 또는 Excel로 저장하여 넣어 주세요."
+    ]
+  }
+]

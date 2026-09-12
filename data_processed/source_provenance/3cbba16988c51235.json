@@ -1,0 +1,9 @@
+{
+  "file": "data_processed/education/academy_clusters.json",
+  "sha256": "03ee4af1d7fa51e96521802c47f910501a6f98a460c7701efee81ef3a9111fdb",
+  "originals": [],
+  "upstream": [
+    "data_processed/education/academies_manifest.json"
+  ],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

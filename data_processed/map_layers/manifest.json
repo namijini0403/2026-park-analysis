@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "layers": [
+    {
+      "id": "parks",
+      "label": "공원",
+      "group": "nature",
+      "color": "#278154",
+      "count": 1093,
+      "missing_coordinates": 0,
+      "note": "보유 공원 위치 자료입니다. 전체 녹지·산림 지도가 아니며 출입구와 이용 조건은 별도 확인합니다. 원천: 전국도시공원정보표준데이터(기준일은 원문 확인).",
+      "source_url": "https://www.data.go.kr/data/15012890/standard.do",
+      "source_title": "전국도시공원정보표준데이터 · 공공데이터포털"
+    },
+    {
+      "id": "playgrounds",
+      "label": "놀이터",
+      "group": "nature",
+      "color": "#84922d",
+      "count": 322,
+      "missing_coordinates": 0,
+      "note": "보유 놀이터 위치 자료 · 주소 기반 좌표가 포함됩니다. 개방 여부·기준일 별도 확인.",
+      "source_url": "https://www.openstreetmap.org/copyright",
+      "source_title": "OpenStreetMap 놀이터 지물 · 기여자 라이선스"
+    },
+    {
+      "id": "libraries",
+      "label": "도서관",
+      "group": "learning",
+      "color": "#416eaf",
+      "count": 252,
+      "missing_coordinates": 0,
+      "note": "공공·작은도서관 보유 자료. 운영 시간과 이용 자격은 방문 전에 확인합니다.",
+      "source_url": "https://www.data.go.kr/data/15013109/standard.do",
+      "source_title": "전국도서관표준데이터 · 공공데이터포털"
+    },
+    {
+      "id": "youth",
+      "label": "청소년 방과후시설",
+      "group": "learning",
+      "color": "#97619e",
+      "count": 12,
+      "missing_coordinates": 0,
+      "note": "보유 목록만 표시합니다. 청소년 시설은 방과후아카데미이며 청소년 복지시설 전수 목록이 아닙니다. 대상·정원·개방 조건 별도 확인.",
+      "source_url": "https://www.ice.go.kr/ice/ad/func/spnt/spntList.do?mi=10916",
+      "source_title": "인천광역시교육청 초등돌봄·방과후 시설 안내"
+    },
+    {
+      "id": "care",
+      "label": "아동 돌봄·복지",
+      "group": "learning",
+      "color": "#bb688c",
+      "count": 506,
+      "missing_coordinates": 3,
+      "note": "보유 기관 목록이며 전체 공급이나 즉시 이용 가능성을 뜻하지 않습니다. 대상·정원·운영 조건을 확인하세요.",
+      "source_url": "https://www.ice.go.kr/ice/ad/func/spnt/spntList.do?mi=10916",
+      "source_title": "인천광역시교육청 초등돌봄·방과후 시설 안내"
+    },
+    {
+      "id": "sports",
+      "label": "공공 야외체육",
+      "group": "nature",
+      "color": "#35948c",
+      "count": 25,
+      "missing_coordinates": 0,
+      "note": "보유 기관 목록이며 전체 공급이나 즉시 이용 가능성을 뜻하지 않습니다. 대상·정원·운영 조건을 확인하세요.",
+      "source_url": "https://www.ice.go.kr/ice/ad/func/spnt/spntList.do?mi=10916",
+      "source_title": "인천광역시교육청 공공 체육시설 안내"
+    },
+    {
+      "id": "academies",
+      "label": "학원·교습소",
+      "group": "learning",
+      "color": "#387f9c",
+      "count": 6810,
+      "missing_coordinates": 29,
+      "note": "공개 등록 위치입니다. 교육 품질·참여율·실제 통학 접근성을 뜻하지 않습니다.",
+      "source_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11841&nttSn=3381948",
+      "source_title": "인천광역시교육청 학원·교습소 등록 현황"
+    },
+    {
+      "id": "clusters",
+      "label": "학원가 · 밀집 구역",
+      "group": "learning",
+      "color": "#6c69af",
+      "count": 119,
+      "missing_coordinates": 0,
+      "note": "300m·10곳은 탐색 조건이며 공인 학원가 기준이 아닙니다. 경계는 시설 주변 100m 범위의 합집합입니다. 구역을 누르면 소속 학원을 확인합니다.",
+      "source_url": "https://www.ice.go.kr/ice/na/ntt/selectNttInfo.do?mi=11841&nttSn=3381948",
+      "source_title": "인천광역시교육청 학원·교습소 등록 현황"
+    },
+    {
+      "id": "apartments",
+      "label": "대단지 아파트",
+      "group": "housing",
+      "color": "#a0783d",
+      "count": 536,
+      "missing_coordinates": 0,
+      "note": "500세대 이상 보유 단지의 대표 위치 · 2025년 자료. 실제 단지 경계나 향후 학생 수가 아닙니다.",
+      "source_url": "https://www.data.go.kr/data/15048743/fileData.do",
+      "source_title": "인천광역시_공동주택내 체육시설 정보제공 · 공공데이터포털"
+    },
+    {
+      "id": "redevelopment",
+      "label": "재개발·재건축",
+      "group": "housing",
+      "color": "#b37b59",
+      "count": 198,
+      "missing_coordinates": 33,
+      "note": "정비사업 대표 위치입니다. 진행 단계는 보유 자료 기준이며 현재 착공·준공·입주를 뜻하지 않습니다. 기준일 미확보.",
+      "source_url": "https://www.data.go.kr/data/15055212/fileData.do",
+      "source_title": "인천광역시_도시 및 주거환경 정비사업 추진현황 · 공공데이터포털",
+      "source_url_extra": "https://www.data.go.kr/data/15072776/fileData.do"
+    },
+    {
+      "id": "construction",
+      "label": "공사 · 착공 행정기록",
+      "group": "housing",
+      "color": "#b56438",
+      "count": 3521,
+      "missing_coordinates": 208,
+      "note": "계양구·미추홀구·연수구 일부 자료. 착공 행정기록이며 현재 공사 중·통학로 위험을 확정하지 않습니다.",
+      "source_url": "https://www.data.go.kr/data/15029299/fileData.do",
+      "source_title": "착공 신고 현황(연수·미추홀·계양구) · 공공데이터포털"
+    },
+    {
+      "id": "accidents",
+      "label": "사고다발구역",
+      "group": "safety",
+      "color": "#b4494e",
+      "count": 11,
+      "missing_coordinates": 0,
+      "note": "2024년 인천 사고다발지역의 공식 중심 위치입니다. 현재 위험도나 개별 학교의 안전 판정이 아닙니다. 표시 밖도 안전하다는 뜻은 아닙니다. 원자료 경계의 좌표계 미명시로 면 대신 중심점을 표시합니다.",
+      "source_url": "https://www.data.go.kr/data/15029185/standard.do",
+      "source_title": "교통사고다발지역표준데이터 · 공공데이터포털"
+    }
+  ],
+  "source_hashes": {
+    "parks.csv": "26c16e48434f7f64c8f5b341583e643e6c182bad0c94f220a62a71e0f412aeb7",
+    "geocoded_playground.csv": "b1f53664d8eb5624130bd3ea5f4466049d9e461a37cf2bd7494763ce0c78e5e8",
+    "libraries.csv": "171e93033665fc176444132e5b4ce04d4ddbac792d06271a67c6a7d0cfef3f2c",
+    "student_services/facilities.json": "fdbdc4f13f87b3113d56149e153bc4ab23953b1fcbb6827ee3dde44b9ff19053",
+    "education/academies_map.json": "a18ec96f2f3516141e14fed3830d569ec11c4460f03ad04f9c0a94858574d8de",
+    "education/academy_clusters.json": "03ee4af1d7fa51e96521802c47f910501a6f98a460c7701efee81ef3a9111fdb",
+    "large_apt_complexes_2025.csv": "3c5ac272beb7865b1da90c69013452890d75005d6fa1d8a1b8e5918364a3f1e3",
+    "redevelopment_geocoded.csv": "f90efa2b6fda502d4a14ee541024b7d4eef180bdbf4eaacb1b1de6bcd69d4107",
+    "context/facilities_construction.geojson": "8567780fac6768286e838f9203ef8c9e62dd5639e2f073a3da2480d67b8861d6",
+    "context/accidents_incheon.json": "a0fe7e77f2f281d38d7ace8a0035ae3036fdeb9b0f11c9fa2177aea5118f71f0"
+  }
+}

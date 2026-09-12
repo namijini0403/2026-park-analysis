@@ -503,6 +503,7 @@ export function analyzeContent(content, name, options = {}) {
       } else if (ext === ".geojson" || parsed.type === "FeatureCollection") {
         records = checkGeoJson(parsed, issues);
         contract = "geojson";
+        columns = [...new Set((parsed.features || []).flatMap(f => Object.keys(f?.properties || {})))];
       } else if (Array.isArray(parsed)) {
         records = parsed.length;
         if (records === 0) {

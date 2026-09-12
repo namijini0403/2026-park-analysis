@@ -1,0 +1,28 @@
+{
+  "file": "data_processed/education/school_statistics.json",
+  "sha256": "d4281847ec726c00c433b19af4af3c9bacb9c6510df5b8e1b3326ec44fe5b8b9",
+  "originals": [
+    {
+      "url": "https://www.schoolinfo.go.kr/ng/go/pnnggo_a01_l2.do",
+      "title": "교육부 학교알리미·유치원알리미",
+      "provider": "교육부 학교알리미·유치원알리미",
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "data_sources.yaml → school_public_disclosures",
+      "kind": "registered"
+    },
+    {
+      "url": "https://e-childschoolinfo.moe.go.kr/openData.do",
+      "title": "자료에 기록된 원문",
+      "provider": null,
+      "reference_date": null,
+      "retrieved_at": null,
+      "raw_path": null,
+      "locator": "$.schools.KLOCAL-000e957d3ab6431c.2025.sources[0].url",
+      "kind": "recorded"
+    }
+  ],
+  "upstream": [],
+  "scope": "자료집에 기록된 원본 경로입니다. 개별 주장과 모든 링크가 일대일 대응하는 것은 아닙니다."
+}

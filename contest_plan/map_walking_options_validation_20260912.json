@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "live": true,
+  "checked_at": "2026-09-12T07:17:42.616Z",
+  "checks": [
+    "real Kakao polygons",
+    "elementary source linked by ID",
+    "walking and straight toggles independent",
+    "walking route exact distance",
+    "missing elementary route disclosed",
+    "clear school clears layers",
+    "mobile options and no overflow"
+  ],
+  "errors": [],
+  "deployment": "91fdf774-932a-4457-8dc8-0ef9f5454bf7",
+  "deployment_status": "SUCCESS"
+}

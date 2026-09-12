@@ -1,0 +1,20 @@
+{
+  "url": "http://127.0.0.1:3100",
+  "checked_at": "2026-09-12T03:31:03.895Z",
+  "school_union": 641,
+  "all_schools": 917,
+  "elementary_zones": 279,
+  "selected_school": "B000002949",
+  "selected_zones": 1,
+  "kindergarten_boundary": "not_published",
+  "mobile_width": 390,
+  "horizontal_overflow": false,
+  "page_errors": [],
+  "screenshots": [
+    "desktop-all-islands.png",
+    "desktop-school.png",
+    "desktop-start.png",
+    "mobile-school.png",
+    "mobile-start.png"
+  ]
+}

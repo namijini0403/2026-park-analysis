@@ -176,6 +176,13 @@ def recent_contiguous_history(history):
 
 
 def forecast(enrollment, registry):
+    from scripts.education.enrollment_model_v2 import build
+    result, validation = build(enrollment, registry)
+    save("forecast_validation.json", validation)
+    return result
+
+
+def forecast_legacy_v1(enrollment, registry):
     result, validation = {}, {}
     for level, group in registry.groupby("학교급구분"):
         raw_histories = {sid: dict(sorted(enrollment.get(sid, {}).items())) for sid in group["학교ID"]}

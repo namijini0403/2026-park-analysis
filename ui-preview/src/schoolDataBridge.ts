@@ -143,6 +143,7 @@ function n(value: unknown, fallback = 0): number {
 }
 
 function maybeNumber(value: unknown): number | undefined {
+  if (value === null || value === undefined || value === '') return undefined;
   const num = Number(value);
   return Number.isFinite(num) ? num : undefined;
 }
@@ -736,10 +737,10 @@ export function mapCandidateFeatures(
   },
 ): Candidate[] {
   const external: Candidate[] = features.map((feature) => ({
-    resident_children_2029: n(feature.pred_beneficiary_2029 ?? feature.xgb_predicted_2029 ?? feature.forecast_2029),
-    resident_children_2031: n(feature.pred_beneficiary_2031 ?? feature.xgb_predicted_2031 ?? feature.forecast_2031),
-    walkshed_potential_2029: n(feature.walkshed_beneficiary_2029 ?? feature.pred_beneficiary_2029 ?? feature.xgb_predicted_2029 ?? feature.forecast_2029),
-    walkshed_potential_2031: n(feature.walkshed_beneficiary_2031 ?? feature.pred_beneficiary_2031 ?? feature.xgb_predicted_2031 ?? feature.forecast_2031),
+    resident_children_2029: feature.demand_model_version === 'source_allocation_v2_20260911' ? maybeNumber(feature.pred_beneficiary_2029) ?? NaN : n(feature.pred_beneficiary_2029 ?? feature.xgb_predicted_2029 ?? feature.forecast_2029),
+    resident_children_2031: feature.demand_model_version === 'source_allocation_v2_20260911' ? maybeNumber(feature.pred_beneficiary_2031) ?? NaN : n(feature.pred_beneficiary_2031 ?? feature.xgb_predicted_2031 ?? feature.forecast_2031),
+    walkshed_potential_2029: feature.demand_model_version === 'source_allocation_v2_20260911' ? maybeNumber(feature.potential_demand_2029) ?? NaN : n(feature.walkshed_beneficiary_2029 ?? feature.pred_beneficiary_2029 ?? feature.xgb_predicted_2029 ?? feature.forecast_2029),
+    walkshed_potential_2031: feature.demand_model_version === 'source_allocation_v2_20260911' ? maybeNumber(feature.potential_demand_2031) ?? NaN : n(feature.walkshed_beneficiary_2031 ?? feature.pred_beneficiary_2031 ?? feature.xgb_predicted_2031 ?? feature.forecast_2031),
     grid_id: s(feature.grid_id, "CG_UNKNOWN"),
     cx: n(feature.cx),
     cy: n(feature.cy),

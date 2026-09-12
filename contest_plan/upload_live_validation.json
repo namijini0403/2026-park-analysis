@@ -1,0 +1,26 @@
+{
+  "total_groups": 10,
+  "upload": {
+    "total": 3,
+    "matched": 3,
+    "excluded": 0,
+    "mapping": {
+      "type": "school_id",
+      "key": 0,
+      "measure": 1,
+      "year": 2,
+      "existing": "schools:students",
+      "valueType": "numeric"
+    }
+  },
+  "statistics": [
+    {
+      "group": "초등학교|2026",
+      "n": 3,
+      "pearson": -0.7196,
+      "spearman": -0.5
+    }
+  ],
+  "options": 32,
+  "assets": true
+}
