@@ -58,3 +58,7 @@ npm run test:analysis
 직전 메인 화면은 `archive/20260912-before-simple/index.html`에 보존했습니다. `ui-preview/`, 과거 지도·통계 자산과 분석 파이프라인은 연구·복구 참고용이며 기본 화면의 의존성이 아닙니다. 과거 UI 전용 테스트는 `test:education:legacy-ui`로 구분했습니다. 옛 챗봇 API 주소 두 개는 같은 `/api/chat` 처리기로 연결합니다.
 
 과거의 Case 분류, 자동 우선안, 종합점수, 가중합 순위는 현재 판단 규칙이 아닙니다. 최신 철학은 workspace `AGENTS.md`와 `rag/policy-guide.md`를 따릅니다. DATA_ROCK 원본 제출 HWP는 수정하지 않았습니다.
+
+## 파이썬 스크립트 의존성
+
+`scripts/requirements.txt` (루트에 두면 Railway Railpack이 Python 프로젝트로 감지해 npm 빌드가 실패합니다).
