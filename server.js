@@ -285,8 +285,11 @@ async function startServer() {
   // Restore complete published bundles before accepting map/analysis requests.
   const restored=await updateCenterHandler.restoreStartupState();
   if(restored?.errors?.length)throw Error('Active data restore failed: '+restored.errors.join('; '));
-  require('./scripts/policy_cards/observed_cards.cjs').apply(__dirname);
-  require('./scripts/education/merge_enrollment_release.cjs').applyEnrollmentRelease(STATIC_ROOT);
+  // Startup refreshes are best-effort: the git deployment already ships prebuilt outputs, and the Railway
+  // container has no Python, so a missing interpreter must not take the whole service down.
+  for(const [label,step] of [['observed policy cards',()=>require('./scripts/policy_cards/observed_cards.cjs').apply(__dirname)],['enrollment release merge',()=>require('./scripts/education/merge_enrollment_release.cjs').applyEnrollmentRelease(STATIC_ROOT)]]){
+    try{step();}catch(error){console.warn(`[startup] ${label} skipped: ${error.message} — serving prebuilt outputs`);}
+  }
   server.listen(PORT, HOST, () => {
   console.log(`Server listening on http://${HOST}:${PORT}`);
   console.log(`Static root: ${STATIC_ROOT}`);
