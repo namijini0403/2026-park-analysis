@@ -12,14 +12,15 @@
     "test:update-center-persistence": "node scripts/tests/test_update_center_persistence.cjs",
     "selftest:update-center-store": "node scripts/update_center/store.mjs --selftest",
     "test:analysis": "node tests/test_analysis_engine.cjs && node tests/test_analysis_api.cjs && node tests/test_analysis_planner.cjs && node tests/test_education_questions.cjs && node tests/test_relative_position.cjs",
-    "test:simple": "node tests/test_simple_app.cjs && node tests/test_agent_tools.cjs && node tests/test_chat_agent_ui.cjs && node tests/test_observation_restore.cjs && node tests/test_saved_conversations.cjs",
+    "test:simple": "node tests/test_simple_app.cjs && node tests/test_agent_tools.cjs && node tests/test_chat_agent_ui.cjs && node tests/test_observation_restore.cjs && node tests/test_saved_conversations.cjs && node tests/test_profile_guardrails.cjs",
     "start": "node server.js",
     "test:education:legacy-ui": "node tests/test_education_app_startup.cjs && node tests/test_education_ui.cjs",
     "test:hitl": "node tests/test_hitl_workspace.cjs",
     "test:map": "node tests/test_school_map.cjs",
     "test:relative": "node tests/test_relative_position.cjs",
     "test:agent": "node tests/test_agent_tools.cjs && node tests/test_chat_agent_ui.cjs",
-    "build:boundary": "node scripts/agent/build_boundary_comparison.cjs"
+    "build:boundary": "node scripts/agent/build_boundary_comparison.cjs",
+    "test:profile": "node tests/test_indicator_dictionary.cjs && node tests/test_indicator_stats.cjs && node tests/test_school_profile.cjs && node tests/test_domain_stats.cjs && node tests/test_profile_http.cjs && node tests/test_indicator_charts.cjs && node tests/test_school_profile_ui.cjs && node tests/test_domain_stats_ui.cjs && node tests/test_summary_trim.cjs && node tests/test_profile_guardrails.cjs"
   },
   "engines": {
     "node": ">=20"
