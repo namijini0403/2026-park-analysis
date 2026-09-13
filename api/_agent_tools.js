@@ -9,16 +9,28 @@ const mean=a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:null;
 function ranks(v){const a=v.map((v,i)=>({v,i})).sort((a,b)=>a.v-b.v),r=[];for(let i=0;i<a.length;){let j=i+1;while(j<a.length&&a[j].v===a[i].v)j++;for(let k=i;k<j;k++)r[a[k].i]=(i+j-1)/2+1;i=j;}return r;}
 function pearson(x,y){const a=mean(x),b=mean(y),xx=x.map(v=>v-a),yy=y.map(v=>v-b),den=Math.sqrt(xx.reduce((s,v)=>s+v*v,0)*yy.reduce((s,v)=>s+v*v,0));return den?xx.reduce((s,v,i)=>s+v*yy[i],0)/den:null;}
 
+// Models sometimes send the strings "null"/"전체"/"" instead of JSON null; treat those as unset.
+const unset=v=>v==null||v===''||v==='null'||v==='undefined'||v==='전체'||v==='인천 전체'||v==='전체 지역';
+function resolveGu(value){
+ if(unset(value))return null;
+ const all=[...new Set(table.build().rows.map(r=>r.gu).filter(Boolean))],q=String(value).trim();
+ const hit=all.find(g=>g===q)||all.find(g=>g.replace(/[구군]$/,'')===q.replace(/[구군]$/,''))||all.find(g=>q.includes(g));
+ if(!hit)throw Error(`군·구 이름을 확인해 주세요: ${q}. 사용 가능한 값: ${all.join(', ')}`);
+ return hit;
+}
 function scope(ctx,p){
  const T=table.build();let rows=T.rows;
  if(ctx.extra)rows=rows.map(r=>({...r,...(ctx.extra.values.get(r.id)!=null?{[ctx.extra.column]:ctx.extra.values.get(r.id)}:{})}));
- const level=p.level&&p.level!=='전체'?p.level:ctx.level&&ctx.level!=='전체'&&!p.level?ctx.level:null;
+ const asked=unset(p.level)?null:String(p.level).trim();
+ const level=asked||(unset(ctx.level)?null:ctx.level);
  if(level&&!LEVELS.includes(level))throw Error('학교급은 초등학교·중학교·고등학교·유치원·전체 중 하나입니다.');
  if(level)rows=rows.filter(r=>r.level===level);
- if(p.gu)rows=rows.filter(r=>r.gu===p.gu);
- if(p.island==='exclude')rows=rows.filter(r=>!r.island);if(p.island==='only')rows=rows.filter(r=>r.island);
- if(Array.isArray(p.school_ids)&&p.school_ids.length){const set=new Set(p.school_ids);rows=rows.filter(r=>set.has(r.id));}
- return {rows,level,gu:p.gu||null,label:`${level||'전체 학교급'} · ${p.gu||'인천 전체'}${p.island==='exclude'?' · 도서지역 제외':p.island==='only'?' · 도서지역만':''}`};
+ const gu=resolveGu(p.gu);
+ if(gu)rows=rows.filter(r=>r.gu===gu);
+ const island=unset(p.island)?null:p.island;
+ if(island==='exclude')rows=rows.filter(r=>!r.island);if(island==='only')rows=rows.filter(r=>r.island);
+ if(Array.isArray(p.school_ids)&&p.school_ids.length){const set=new Set(p.school_ids.filter(id=>!unset(id)));if(set.size)rows=rows.filter(r=>set.has(r.id));}
+ return {rows,level,gu,island,label:`${level||'전체 학교급'} · ${gu||'인천 전체'}${island==='exclude'?' · 도서지역 제외':island==='only'?' · 도서지역만':''}`};
 }
 function col(ctx,c){if(ctx.extra&&c===ctx.extra.column)return {label:ctx.extra.label,unit:ctx.extra.unit||'',user:true};if(!table.COLUMNS[c])throw Error(`알 수 없는 열: ${c}`);return table.COLUMNS[c];}
 function sourcesFor(ctx,cols){const seen=new Map();for(const c of cols){if(ctx.extra&&c===ctx.extra.column){seen.set('upload',{id:'user-upload',title:ctx.extra.name||'사용자 첨부 표',source:'사용자 제공 첨부 표',body:`첨부 열 ‘${ctx.extra.label}’ · 연결 ${ctx.extra.values.size}개교`});continue;}const s=table.sourceFor(c);if(!seen.has(s.key))seen.set(s.key,{id:'table#'+s.key,title:s.title,source:s.path,provenance:[{path:s.path,sha256:s.sha256}],body:[...new Set(cols.filter(x=>(table.COLUMN_SOURCE[x]||'dataset')===s.key).map(x=>table.label(x)))].join(', ')});}return [...seen.values()];}
@@ -30,25 +42,26 @@ function geometries(ids,kinds){
    out.push({type:'Feature',geometry:f.geometry,properties:{name:(kind==='zone'?'학구도 · ':'보행 500m · ')+(f.properties.name||f.properties.학교명),color:kind==='zone'?'#8359ae':'#25866d'}});}}
  return out;
 }
+const show=v=>typeof v==='boolean'?(v?'예':'아니오'):v;
 const tools_level=q=>/초$|초등/.test(q)?'초등학교':/중$|중학/.test(q)?'중학교':/고$|고등/.test(q)?'고등학교':/유치원/.test(q)?'유치원':null;
 function fmtRow(ctx,r,cols){const o={name:r.name};for(const c of cols)if(c!=='name'){const v=r[c];o[c]=typeof v==='number'?round(v,Math.abs(v)>=100?0:Math.abs(v)>=10?1:2):v;}return o;}
 
 // ---- tools ----
 function query_schools(ctx,p){
  const s=scope(ctx,p);let rows=s.rows;const usedCols=new Set(['name','gu']);
- for(const w of p.where||[]){col(ctx,w.column);usedCols.add(w.column);const v=w.value,v2=w.value2;
+ for(const w of (p.where||[]).filter(w=>w&&!unset(w.column)&&!unset(w.op))){col(ctx,w.column);usedCols.add(w.column);const v=w.value,v2=w.value2;
   rows=rows.filter(r=>{const x=r[w.column];switch(w.op){case 'is_null':return x==null;case 'not_null':return x!=null;case 'contains':return String(x??'').includes(String(v));case '==':return x==v;case '!=':return x!=v;case '>':return x!=null&&x>Number(v);case '>=':return x!=null&&x>=Number(v);case '<':return x!=null&&x<Number(v);case '<=':return x!=null&&x<=Number(v);case 'between':return x!=null&&x>=Number(v)&&x<=Number(v2);default:throw Error('지원하지 않는 조건: '+w.op);}});}
  const matched=rows.length;
- if(p.aggregate?.by){
+ if(p.aggregate&&!unset(p.aggregate.by)&&!unset(p.aggregate.column)){
   const by=p.aggregate.by,c=p.aggregate.column;col(ctx,c);usedCols.add(c);const groups=new Map();
   for(const r of rows){const k=by==='island'?(r.island?'도서·농어촌':'도시'):r[by]||'미확인';if(r[c]==null)continue;(groups.get(k)||groups.set(k,[]).get(k)).push(r[c]);}
   const out=[...groups].map(([k,v])=>({group:k,n:v.length,mean:round(mean(v)),median:round(median(v)),min:round(Math.min(...v)),max:round(Math.max(...v)),sum:round(v.reduce((a,b)=>a+b,0),0)})).sort((a,b)=>(b[p.aggregate.stat||'mean']??0)-(a[p.aggregate.stat||'mean']??0));
   const stat=p.aggregate.stat||'mean',unit=col(ctx,c).unit||'';
   return {llm:{scope:s.label,column:c,groups:out},sources:sourcesFor(ctx,[...usedCols]),visual:{title:`${by==='gu'?'군·구':by==='level'?'학교급':'지역 유형'}별 ${table.label(c)} (${{mean:'평균',median:'중앙값',sum:'합계',min:'최솟값',max:'최댓값'}[stat]||stat})`,chart:{kind:'bar',unit,points:out.map(g=>({name:g.group,value:g[stat]}))},table:{headers:['구분','학교 수','평균','중앙값','최솟값','최댓값','합계'],rows:out.map(g=>[g.group,g.n,g.mean,g.median,g.min,g.max,g.sum])},notes:[`${s.label} · 값이 있는 학교만 집계 (${out.reduce((n,g)=>n+g.n,0)}개교).`]}};
  }
- const sortBy=p.sort_by;if(sortBy){col(ctx,sortBy);usedCols.add(sortBy);rows=rows.filter(r=>r[sortBy]!=null).sort((a,b)=>(p.order==='asc'?1:-1)*(a[sortBy]-b[sortBy])||a.name.localeCompare(b.name,'ko'));}
- const excluded=matched-rows.length,limit=Math.min(50,Math.max(1,p.limit||15));
- const cols=[...new Set(['name','gu',...(sortBy?[sortBy]:[]),...(p.columns||[]).filter(c=>c!=='name')])].slice(0,9);cols.forEach(c=>{col(ctx,c);usedCols.add(c);});
+ const sortBy=unset(p.sort_by)?null:p.sort_by;if(sortBy){col(ctx,sortBy);usedCols.add(sortBy);rows=rows.filter(r=>r[sortBy]!=null).sort((a,b)=>(p.order==='asc'?1:-1)*(a[sortBy]-b[sortBy])||a.name.localeCompare(b.name,'ko'));}
+ const excluded=matched-rows.length,limit=Math.min(50,Math.max(1,Number(p.limit)||15));
+ const cols=[...new Set(['name','gu',...(sortBy?[sortBy]:[]),...(p.columns||[]).filter(c=>!unset(c)&&c!=='name')])].slice(0,9);cols.forEach(c=>{col(ctx,c);usedCols.add(c);});
  const shown=rows.slice(0,limit),all=sortBy?rows.map(r=>r[sortBy]):[];
  const stats=sortBy&&all.length?{n:all.length,median:round(median(all)),min:round(Math.min(...all)),max:round(Math.max(...all))}:null;
  const numericCols=cols.filter(c=>c!=='name'&&c!=='gu'&&shown.some(r=>typeof r[c]==='number'));
@@ -56,7 +69,7 @@ function query_schools(ctx,p){
  const wantBoundary=cols.some(c=>/^zone_|^walk_/.test(c))||p.map==='boundaries';
  const visual={title:sortBy?`${table.label(sortBy)} ${p.order==='asc'?'낮은':'높은'} 순 · ${s.label}`:`${s.label} 학교 목록`,map:points(shown),geometries:wantBoundary&&shown.length<=25?geometries(shown.map(r=>r.id),['zone','walkshed']):[],
   chart:chartCol&&shown.length>1?{kind:'bar',unit:col(ctx,chartCol).unit||'',title:table.label(chartCol),points:shown.map(r=>({name:r.name,value:r[chartCol],selected:r.id===ctx.school_id}))}:null,
-  table:{headers:cols.map(c=>c==='name'?'학교':c==='gu'?'군·구':`${col(ctx,c).label}${col(ctx,c).unit?' ('+col(ctx,c).unit+')':''}`),rows:shown.map(r=>cols.map(c=>r[c]??'—'))},
+  table:{headers:cols.map(c=>c==='name'?'학교':c==='gu'?'군·구':`${col(ctx,c).label}${col(ctx,c).unit?' ('+col(ctx,c).unit+')':''}`),rows:shown.map(r=>cols.map(c=>show(r[c])??'—'))},
   notes:[`조건에 맞는 학교 ${matched}개교${excluded?` 중 ${sortBy?table.label(sortBy):'정렬 기준'} 값이 없는 ${excluded}개교 제외`:''} · 표시 ${shown.length}개교.`,...(stats?[`${table.label(sortBy)} 중앙값 ${stats.median}${col(ctx,sortBy).unit||''} · 범위 ${stats.min}~${stats.max}.`]:[]),...(wantBoundary?['보라색 면은 공식 학구도, 초록색 면은 보행망 500m 도달권입니다.']:[])]};
  return {llm:{scope:s.label,matched,excluded_missing:excluded,shown:shown.length,stats,rows:shown.map(r=>fmtRow(ctx,r,cols))},visual,sources:sourcesFor(ctx,[...usedCols])};
 }
@@ -68,7 +81,7 @@ function school_profile(ctx,p){
   if(hits.length>1){const level=tools_level(q);if(level&&hits.some(x=>x.level===level))hits=hits.filter(x=>x.level===level);}
   if(hits.length===1)r=hits[0];else if(hits.length>1)return {llm:{error:'여러 학교가 일치합니다. 하나를 고르세요.',candidates:hits.slice(0,8).map(h=>({id:h.id,name:h.name,level:h.level,gu:h.gu}))},visual:null,sources:[]};}
  if(!r)throw Error('학교를 찾지 못했습니다. 학교명을 정확히 적어 주세요.');
- const peers=T.rows.filter(x=>x.level===r.level),cols=(p.columns?.length?p.columns:['students','class_size','student_change_pct','forecast_change_pct_2031','parks_walk','green_ratio','nearest_park_m','walk_area_ratio_to_circle','zone_walk_mismatch_pct','zone_outside_walk_pct','books_per_student','librarians','nearest_public_library_m','academies_500m','nightlife_500m','child_accident_nearest_m','large_apt_households_500m','designations_current']).filter(c=>table.COLUMNS[c]&&!['text','bool'].includes(table.COLUMNS[c].type)&&r[c]!=null);
+ const peers=T.rows.filter(x=>x.level===r.level),cols=((p.columns||[]).filter(c=>!unset(c)).length?p.columns.filter(c=>!unset(c)):['students','class_size','student_change_pct','forecast_change_pct_2031','parks_walk','green_ratio','nearest_park_m','walk_area_ratio_to_circle','zone_walk_mismatch_pct','zone_outside_walk_pct','books_per_student','librarians','nearest_public_library_m','academies_500m','nightlife_500m','child_accident_nearest_m','large_apt_households_500m','designations_current']).filter(c=>table.COLUMNS[c]&&!['text','bool'].includes(table.COLUMNS[c].type)&&r[c]!=null);
  const rows=cols.map(c=>{const vals=peers.map(x=>x[c]).filter(v=>v!=null).sort((a,b)=>a-b);const below=vals.filter(v=>v<r[c]).length,ties=vals.filter(v=>v===r[c]).length;const pct=round(100*(below+ties/2)/vals.length,0);return {column:c,label:table.label(c),unit:table.unit(c),value:r[c],level_median:round(median(vals)),percentile:pct,n:vals.length};});
  const sim=data.read({id:'table:similar',file:table.FILES.similar}).data.find(x=>x.학교ID===r.id);
  const similar=sim?[1,2,3,4,5].map(i=>sim[`similar_school_${i}_name`]).filter(Boolean):[];
@@ -98,14 +111,14 @@ function distribution(ctx,p){
  return {llm,visual,sources:sourcesFor(ctx,[p.column])};
 }
 function weighted_rank(ctx,p){
- const s=scope(ctx,p);const criteria=(p.criteria||[]).filter(c=>c&&c.column);if(!criteria.length||criteria.length>8)throw Error('기준은 1~8개입니다.');
+ const s=scope(ctx,p);const criteria=(p.criteria||[]).filter(c=>c&&!unset(c.column));if(!criteria.length||criteria.length>8)throw Error('기준은 1~8개입니다.');
  criteria.forEach(c=>{col(ctx,c.column);c.weight=Math.max(0,Number(c.weight??1));c.prefer=c.prefer==='low'?'low':'high';});
  const total=criteria.reduce((n,c)=>n+c.weight,0);if(!total)throw Error('가중치 합이 0입니다.');
  const rows=s.rows.filter(r=>criteria.every(c=>r[c.column]!=null)),excluded=s.rows.length-rows.length;
  if(rows.length<2)throw Error(`모든 기준 값이 있는 학교가 2개 미만입니다(${s.label}). 기준별 값 보유 학교 수: `+criteria.map(c=>`${c.column}=${s.rows.filter(r=>r[c.column]!=null).length}`).join(', ')+'. 값이 없는 기준을 빼거나 학교급을 바꾸세요.');
  const range={};for(const c of criteria){const v=rows.map(r=>r[c.column]);range[c.column]=[Math.min(...v),Math.max(...v)];}
  const scored=rows.map(r=>{const parts=criteria.map(c=>{const [lo,hi]=range[c.column];let n=hi===lo?0.5:(r[c.column]-lo)/(hi-lo);if(c.prefer==='low')n=1-n;return {column:c.column,raw:r[c.column],normalized:round(n,3),contribution:round(100*n*c.weight/total)};});return {id:r.id,name:r.name,gu:r.gu,lat:r.lat,lng:r.lng,score:round(parts.reduce((n,x)=>n+x.contribution,0)),parts};}).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name,'ko'));
- const limit=Math.min(30,Math.max(1,p.limit||10)),top=scored.slice(0,limit),own=ctx.school_id?scored.findIndex(x=>x.id===ctx.school_id):-1;
+ const limit=Math.min(30,Math.max(1,Number(p.limit)||10)),top=scored.slice(0,limit),own=ctx.school_id?scored.findIndex(x=>x.id===ctx.school_id):-1;
  const llm={scope:s.label,method:'각 기준을 범위 내 0~1로 정규화(prefer=low는 뒤집음) 후 가중 평균 ×100',weights:criteria.map(c=>({column:c.column,prefer:c.prefer,weight:c.weight,share_pct:round(100*c.weight/total,0)})),n_ranked:scored.length,excluded_missing:excluded,top:top.map((x,i)=>({rank:i+1,name:x.name,gu:x.gu,score:x.score,...Object.fromEntries(x.parts.map(pp=>[pp.column,pp.raw]))})),selected_school:own>=0?{rank:own+1,name:scored[own].name,score:scored[own].score}:null};
  const visual={title:`가중 우선순위 · ${s.label}`,map:points(top),chart:{kind:'bar',unit:'점',title:'가중 점수(0~100)',points:top.map(x=>({name:x.name,value:x.score,selected:x.id===ctx.school_id}))},
   table:{headers:['순위','학교','군·구','점수',...criteria.map(c=>`${table.label(c.column)}${c.prefer==='low'?'↓':'↑'} (${round(100*c.weight/total,0)}%)`)],rows:top.map((x,i)=>[i+1,x.name,x.gu,x.score,...x.parts.map(pp=>`${pp.raw} → ${pp.contribution}`)])},
