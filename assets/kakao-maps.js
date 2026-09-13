@@ -51,7 +51,7 @@ window.EducationMaps=(()=>{
    }return points;
   }
   function route(group,coordinates,content,{dashed=false}={}){const path=coordinates.map(([lng,lat])=>point(lat,lng));const layer=track(group,new kakao.maps.Polyline({path,strokeColor:'#aa7240',strokeWeight:3,strokeStyle:dashed?'shortdash':'solid',zIndex:300}));if(content)kakao.maps.event.addListener(layer,'click',event=>open(event.latLng,content));return path;}
-  function circle(group,position){return track(group,new kakao.maps.Circle({center:position,radius:500,strokeColor:'#277f88',strokeWeight:2,strokeStyle:'dash',fillColor:'#277f88',fillOpacity:.06,zIndex:200}));}
+  function circle(group,position,{light=false}={}){return track(group,new kakao.maps.Circle({center:position,radius:500,strokeColor:'#277f88',strokeWeight:light?1:2,strokeOpacity:light?.6:1,strokeStyle:'dash',fillColor:'#277f88',fillOpacity:light?.03:.06,zIndex:200}));}
   function clear(group,keepPopup=false){(layers.get(group)||[]).forEach(layer=>layer.setMap(null));layers.delete(group);if(!keepPopup)close();}
   function destroy(){disposed=true;observer.disconnect();for(const group of layers.keys())clear(group);close();container.replaceChildren();}
   return {map,point,dot,polygons,route,circle,open,close,clear,fit,destroy,select:(lat,lng)=>{map.setCenter(point(lat,lng));map.setLevel(4);}};

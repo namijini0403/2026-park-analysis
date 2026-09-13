@@ -65,8 +65,9 @@ window.SchoolMap=(() => {
   }
   function drawRadius() {
     if(!map)return;map.clear('radius');
-    const s=rows.find(s=>s.id===selected);
-    if(el('map-radius').checked&&s&&position(s))map.circle('radius',map.point(s.lat,s.lng));
+    if(!el('map-radius').checked)return;
+    const s=rows.find(s=>s.id===selected),targets=(s?[s]:rows).filter(position);
+    for(const t of targets)map.circle('radius',map.point(t.lat,t.lng),{light:!s});
   }
   function walkingData(file){
     if(!walkingCache.has(file)){const request=fetch('/data_processed/'+file,{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('자료 연결 실패');return r.json();}).catch(e=>{walkingCache.delete(file);throw e;});walkingCache.set(file,request);}return walkingCache.get(file);
@@ -89,7 +90,7 @@ window.SchoolMap=(() => {
     const status=el('map-walking-status'),school=rows.find(s=>s.id===selected),showArea=el('map-walkshed').checked,showRoute=!!window.MapLayers?.isChosen?.('parks');
     el('school-map').dataset.walkingSchool='';el('school-map').dataset.walkingAreas='0';el('school-map').dataset.walkingRoutes='0';
     if(!showArea&&!showRoute){status.textContent='도보권 표시 꺼짐 · 공원 경로는 ‘자연과 놀이 › 공원’을 켜면 표시됩니다.';return;}
-    if(!school){status.textContent=showRoute?'학교를 선택하면 도보 500m 도달권과 가장 가까운 공원까지의 보행 경로·거리를 확인할 수 있습니다.':'학교를 선택하면 도보 500m 도달권을 확인할 수 있습니다. 공원 경로는 ‘자연과 놀이 › 공원’을 켜면 함께 표시됩니다.';return;}
+    if(!school)return drawAllWalksheds(revision,showArea,showRoute);
     status.textContent=school.name+'의 보행 자료를 불러오는 중입니다…';
     const tasks=[];
     if(showArea)tasks.push(walkingData(school.level==='초등학교'?'school_walkshed_500m_v3.geojson':'education/walkshed_500m.geojson').then(d=>({kind:'area',data:d})));
@@ -113,6 +114,27 @@ window.SchoolMap=(() => {
       }
     }
     status.textContent=school.name+' · '+messages.join(' / ');el('map-walking-fit').hidden=!walkingPoints.length;
+  }
+  // District view: no school selected → every displayed school's walkshed is drawn at once.
+  async function drawAllWalksheds(revision,showArea,showRoute){
+    const status=el('map-walking-status'),shown=rows.filter(position),routeHint=showRoute?' 공원 보행 경로·거리는 학교를 선택하면 표시됩니다.':'';
+    if(!showArea){status.textContent='도보권 표시 꺼짐 ·'+routeHint;return;}
+    if(!shown.length){status.textContent='표시할 학교가 없어 도보권을 그리지 않습니다.';return;}
+    status.textContent='표시 학교 '+shown.length+'곳의 도보 500m 도달권을 불러오는 중입니다…';
+    const files=[...new Set(shown.map(s=>s.level==='초등학교'?'school_walkshed_500m_v3.geojson':'education/walkshed_500m.geojson'))];
+    const results=await Promise.allSettled(files.map(walkingData));if(revision!==walkingRevision)return;
+    const byId=new Map(shown.map(s=>[s.id,s]));let drawn=0,failed=false;
+    for(const result of results){
+      if(result.status==='rejected'){failed=true;continue;}
+      for(const feature of result.value.features||[]){
+        const s=byId.get(feature.properties?.학교ID);if(!s)continue;drawn++;
+        walkingPoints.push(...map.polygons('walkshed',feature,{color:'#21875a',opacity:.14,content:()=>{const box=document.createElement('div');box.innerHTML='<b>'+escape(s.name)+' · 도보 500m 도달권</b><p>보행망을 따라 500m까지 도달하는 범위입니다. 출입구·통행허용·안전은 별도 확인이 필요합니다.</p><small>분석 방법: '+escape(feature.properties.method||'원자료 확인')+'</small>';const button=document.createElement('button');button.className='text-button';button.textContent=s.name+' 살펴보기 →';button.onclick=()=>callbacks.onSelect(s.id);box.append(button);return box;}}));
+      }
+    }
+    el('school-map').dataset.walkingAreas=String(drawn);
+    const missing=shown.length-drawn;
+    status.textContent=(failed?'도보권 자료 일부를 불러오지 못했습니다. 옵션을 껐다 켜면 재시도합니다. ':'')+'표시 학교 '+shown.length+'곳 중 '+drawn+'곳의 도보 500m 도달권 표시 중'+(missing>0?' · 자료 미확보 '+missing+'곳(도달 범위가 없다는 뜻은 아닙니다)':'')+' · 학교를 누르면 그 학교만 봅니다.'+routeHint;
+    el('map-walking-fit').hidden=!walkingPoints.length;
   }
   async function drawZones() {
     if(!map)return;map.clear('zones');zonePoints=[];el('map-zone-fit').hidden=true;
