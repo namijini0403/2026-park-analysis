@@ -10,3 +10,6 @@
 .question-flow #evidence-panel.is-stale{opacity:.45;pointer-events:none}
 
 .hitl-plan .conclusion-dot{white-space:nowrap;overflow-wrap:normal;line-height:26px;padding:0}@media(max-width:600px){.hitl-plan .conclusion-dot{width:22px;min-width:22px;font-size:10px}}
+
+/* agent chat */
+.agent-summary{white-space:pre-line;line-height:1.7}.agent-highlights{margin:.5rem 0 .5rem 1.2rem;padding:0}.agent-highlights li{margin:.2rem 0}.agent-caveats{color:#5c7063}.agent-followups{margin:.3rem 0 .8rem}.agent-actions{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:.6rem}.agent-meta{color:#7a8a80}.agent-weights,.agent-input{padding:12px;border:1px solid #cad9d0;border-radius:12px;background:#f7faf8;margin:.8rem 0}.agent-weights h4,.agent-input h4{margin:0 0 .5rem}.agent-weights h4 small{font-weight:400;color:#5c7063;display:block}.agent-weights .hitl-selected{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.agent-weights fieldset{margin:0}.agent-data .collection-card{border:1px solid #d6e2d9;border-radius:8px;padding:8px 10px;margin:.4rem 0;background:#fff}.agent-message .source-evidence{margin-top:.6rem}
