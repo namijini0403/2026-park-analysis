@@ -32,7 +32,13 @@
 
 `direction`은 **표시용 주석일 뿐 백분위를 뒤집지 않는다.** 방향으로 값을 뒤집으면 그 자체가 평가등급이 되어 AGENTS.md의 "공원과 독서 등급을 교환 가능한 숫자로 비교 금지"에 걸린다.
 
-`_relative_position.js`는 자체 지표 목록 대신 이 사전을 참조하도록 바꾼다. 질문 정규식(`match`)과 도서지역 분리 규칙은 그대로 둔다.
+**`_relative_position.js`는 이번 작업에서 건드리지 않는다.** 착수 전 두 목록을 실제로 비교한 결과, 통합이 이 기능의 범위를 넘어선다:
+
+- `_relative_position.js`의 지표 20개 중 **9개가 같은 뜻을 다른 id로 쓴다** (`route_distance_m`↔`nearest_park_m`, `green`↔`green_ratio`, `academy`↔`academies_500m`, `library`↔`libraries_walk`, `library_distance_m`↔`nearest_public_library_m`, `shared_area_per_student`↔`shared_park_m2_per_student`, `forecast_change_pct`↔`forecast_change_pct_2031`, `books_staff`↔`librarians`, `parks`↔`parks_walk`).
+- 더 심각한 것: **`paps`는 id가 같은데 정의가 반대다.** `_school_table.js`는 `PAPS 체력 1·2등급 비율`, `_relative_position.js`는 `PAPS 4·5등급 비율`로 라벨링한다. 어느 쪽이 맞는지는 원자료 확인이 필요한 **별도 정합성 조사**다.
+- 두 모듈은 읽는 경로도 다르다. `_relative_position.js`는 학교별 `observations`를 직접 읽고, `_school_table.js`는 여러 파일을 조인한다.
+
+따라서 이번 작업은 `COLUMNS`에 `domain`·`direction`을 **추가만** 하고, 프로필은 `_school_table.js` 위에서만 만든다. 통합과 `paps` 정의 충돌은 후속 과제로 §9에 남긴다.
 
 ### 3.2 영역(domain) 구성
 
@@ -172,7 +178,6 @@ percentile = 100 × (값이 더 작은 학교 수 + 0.5 × 동점 학교 수) / 
 | `api/_school_profile.js` | 신규 — 프로필·영역 통계 계산 |
 | `api/school-profile.js` | 신규 — GET 핸들러 |
 | `api/domain-stats.js` | 신규 — GET 핸들러 |
-| `api/_relative_position.js` | 자체 지표 목록 → 공유 사전 참조 |
 | `api/_school_summary.js` | facts·options 제거, conditions 축소 |
 | `assets/school-profile.js` | 신규 — 패널 렌더 + 레이더/막대 SVG |
 | `assets/domain-stats.js` | 신규 — 통계 탭 |
@@ -196,7 +201,8 @@ percentile = 100 × (값이 더 작은 학교 수 + 0.5 × 동점 학교 수) / 
 
 `npm run test:profile`로 등록하고 `test:simple`에 포함한다.
 
-## 9. 열린 항목
+## 9. 후속 과제 (이번 범위 밖)
 
+- **`paps` 정의 충돌** — `_school_table.js`는 `1·2등급 비율`, `_relative_position.js`는 `4·5등급 비율`로 같은 id를 반대로 라벨링한다. 원자료로 어느 쪽이 맞는지 확인하고 한쪽을 고쳐야 한다. 확인 전까지 패널은 `_school_table.js`의 라벨을 그대로 쓰되, 이 지표를 레이더 대표 지표로 쓰지 않는다.
+- **지표 사전 통합** — 두 모듈의 중복 9건을 한 사전으로 합치는 별도 리팩터링. 착수 시 `npm run test:relative`로 질문 매칭 회귀를 확인한다.
 - `gu`가 null인 고등학교 1곳의 원인 — 미확보 목록에서 추적
-- `_relative_position.js` 지표 목록 통합 시 기존 질문 매칭 회귀 여부는 `npm run test:relative`로 확인
