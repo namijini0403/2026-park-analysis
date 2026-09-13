@@ -62,3 +62,4 @@ npm run test:analysis
 ## 파이썬 스크립트 의존성
 
 `scripts/requirements.txt` (루트에 두면 Railway Railpack이 Python 프로젝트로 감지해 npm 빌드가 실패합니다).
+
