@@ -23,7 +23,7 @@ window.AnalysisTopics=(()=>{
   catch(e){status.textContent='저장 실패: '+e.message+' · 답변의 JSON 저장 버튼으로 파일에 보관해 주세요.';}
   finally{saveButton.disabled=!session.entries.length;}
  }
- function reset(){session.entries=[];session.savedId=null;session.dirty=false;bar.querySelector('.chat-save-name').value='';$('messages').replaceChildren();const panel=$('evidence-panel');if(panel)panel.innerHTML='<p class="eyebrow">지도 · 자료 · 출처</p><h3>질문하면 근거가 여기에 나타나요.</h3><p class="muted">목록은 지도와 표로, 분석은 차트와 해석으로 확인하세요.</p>';refreshBar();}
+ function reset(){session.entries=[];session.savedId=null;session.dirty=false;bar.querySelector('.chat-save-name').value='';$('messages').replaceChildren();const panel=$('evidence-panel');if(panel)panel.innerHTML='<p class="eyebrow">근거 · 지도 · 표 · 출처</p><h3>답변의 근거가 여기에 표시됩니다.</h3><p class="muted">목록은 지도와 표로, 분석은 차트와 수치로 확인합니다. 출처를 누르면 제공기관 원문이 열립니다.</p>';refreshBar();}
  saveButton.onclick=save;bar.querySelector('.chat-new').onclick=()=>{if(session.entries.length&&session.dirty&&!confirm('저장하지 않은 대화가 있습니다. 새 대화를 시작할까요?'))return;reset();};
  // Saved conversations tab
  const listHost=$('saved-list'),savedStatus=$('saved-status');
@@ -40,7 +40,7 @@ window.AnalysisTopics=(()=>{
  }
  async function list(){
   if(!listHost)return;
-  try{const rows=(await op('readonly',s=>s.getAll())).filter(t=>Array.isArray(t.entries)).sort((a,b)=>String(b.updated||b.created).localeCompare(String(a.updated||a.created)));listHost.replaceChildren();if(!rows.length){listHost.innerHTML='<div class="saved-empty">저장된 대화가 없습니다. ‘02 정책 길잡이’에서 질문한 뒤 ‘대화 저장하기’를 누르세요.</div>';return;}for(const t of rows)listHost.append(article(t));if(savedStatus)savedStatus.textContent=`저장된 대화 ${rows.length}건 · 이 브라우저에만 보관됩니다.`;}
+  try{const rows=(await op('readonly',s=>s.getAll())).filter(t=>Array.isArray(t.entries)).sort((a,b)=>String(b.updated||b.created).localeCompare(String(a.updated||a.created)));listHost.replaceChildren();if(!rows.length){listHost.innerHTML='<div class="saved-empty">저장된 대화가 없습니다. ‘02 자료에 묻기’에서 질문한 뒤 ‘대화 저장하기’를 누르세요.</div>';return;}for(const t of rows)listHost.append(article(t));if(savedStatus)savedStatus.textContent=`저장된 대화 ${rows.length}건 · 이 브라우저에만 보관됩니다.`;}
   catch(e){if(savedStatus)savedStatus.textContent='이 브라우저에서 저장 기능을 사용할 수 없습니다: '+e.message;}
  }
  $('saved-import')?.addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const t=JSON.parse(await file.text());if(!t||!Array.isArray(t.entries)||!t.name)throw Error('대화 JSON 형식이 아닙니다.');t.id=t.id||crypto.randomUUID();t.schema=VERSION;t.updated=new Date().toISOString();await op('readwrite',s=>s.put(t));savedStatus.textContent=`‘${t.name}’을(를) 불러왔습니다.`;await list();}catch(err){savedStatus.textContent='불러오기 실패: '+err.message;}finally{e.target.value='';}});

@@ -59,7 +59,7 @@ window.MapLayers=(()=>{
    }
   }
   el('school-map').dataset.contextCount=String(visible.length);
-  el('map-layer-status').textContent=chosen.size?'현재 지도 화면 · '+status.join(' / ')+' · 표시가 없어도 시설 부재나 안전을 뜻하지 않습니다.':'원하는 영역을 펼쳐 시설과 주변 환경을 지도에 겹쳐 보세요.';
+  el('map-layer-status').textContent=chosen.size?'현재 지도 화면 · '+status.join(' / ')+' · 표시가 없어도 시설 부재나 안전을 뜻하지 않습니다.':'항목을 펼쳐 시설과 주변 환경을 지도에 겹쳐 보세요. 표시가 없어도 시설 부재를 뜻하지 않습니다.';
   const chips=el('map-layer-selected');chips.replaceChildren();
   for(const layer of manifest.filter(l=>chosen.has(l.id))){const b=document.createElement('button');b.className='map-layer-chip';b.style.setProperty('--layer-color',layer.color);b.textContent=layer.label+' ×';b.setAttribute('aria-label',layer.label+' 표시 해제');b.onclick=()=>{document.querySelector('[data-context-layer="'+layer.id+'"]').checked=false;toggle(layer.id,false);};chips.append(b);}
   for(const section of document.querySelectorAll('[data-layer-group]'))section.querySelector('.layer-group-count').textContent=String(manifest.filter(l=>l.group===section.dataset.layerGroup&&chosen.has(l.id)).length);

@@ -4,7 +4,7 @@ window.HitlAnalysis=(()=>{
  const $=id=>document.getElementById(id),escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let ticket=0;
  async function post(payload){const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(65000)});const d=await r.json();if(!r.ok)throw Error(d.summary||'요청 실패');return d;}
- const enabled=document.createElement('label');enabled.className='hitl-toggle';enabled.innerHTML='<input id="hitl-enabled" type="checkbox" checked> 질문 → 변수 체크 → 가중치 조절 → 근거와 답변';$('messages').before(enabled,$('chat-form'));
+ const enabled=document.createElement('label');enabled.className='hitl-toggle';enabled.innerHTML='<input id="hitl-enabled" type="checkbox" checked> 단계별 분석 · 순위·통계는 바로 계산하고, 정책 검토 질문은 고려 요소를 고른 뒤 분석합니다';$('messages').before(enabled,$('chat-form'));
  function scope(question){return {question,scope:$('chat-scope').value,school_id:$('school').value||null,level:$('chat-level')?.value||$('level').value,dataset_id:$('question').dataset.datasetId};}
  async function start(event){
   if(!$('hitl-enabled').checked)return;event.preventDefault();event.stopImmediatePropagation();const question=$('question').value.trim();if(!question)return;
