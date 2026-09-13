@@ -22,6 +22,13 @@ const FILES={
  forecastValidation:'data_processed/education/forecast_validation.json',
 };
 const PUBLIC={dataset:'학교알리미 공시·전국초중등학교위치표준데이터',priority:'도시공원표준데이터·OSM 보행망 분석',library:'초중고 학교도서관 현황(KESS)·전국도서관표준데이터',libraryAccess:'전국도서관표준데이터·주민등록 인구',sharedParks:'도시공원표준데이터·학교알리미',boundary:'한국교육시설안전원 학구도·OSM 보행망',walkshed:'OSM 보행망 500m 도달권',walkshedV3:'OSM 보행망 500m 도달권 v3',context:'인천교육청 지정사업·LOCALDATA 인허가·구별 착공신고',academy:'인천교육청 학원·교습소 등록',clusters:'인천교육청 학원·교습소 등록',routes:'도시공원표준데이터·OSM 보행망 경로',accidents:'도로교통공단 어린이 보행자 사고다발지역',similar:'학교알리미·정비사업·공동주택 자료(KNN)'};
+// 영역(domain): 패널 카드와 통계 탭의 묶음 단위. direction: 값이 클수록 유리(up)·불리(down)·정책 판단 필요(neutral).
+// direction은 표시용 주석이며 백분위를 뒤집지 않는다 (뒤집으면 그 자체가 평가등급이 된다).
+const DOMAINS=[{id:'designation',label:'지정·지원사업'},{id:'park',label:'공원·야외'},{id:'reading',label:'도서·독서'},{id:'academy',label:'학원'},{id:'safety',label:'안전 환경'},{id:'boundary',label:'도보권·학구도'},{id:'trend',label:'학생 추세'},{id:'school',label:'학생·교원'},{id:'development',label:'주변 개발'}];
+const DOMAIN_OF={designation:['designations_current','designation_names'],park:['parks_walk','green_ratio','nearest_park_m','park_route_m','park_detour_ratio','playgrounds_walk','shared_park_m2_per_student','park_sharing_schools','park_case'],reading:['books_total','books_per_student','library_seats','librarians','libraries_walk','nearest_public_library_m'],academy:['academies_500m','academies_per_km2'],safety:['nightlife_500m','nightlife_nearest_m','construction_500m','child_accident_nearest_m'],boundary:['walk_area_m2','walk_area_ratio_to_circle','zone_area_m2','zone_walk_mismatch_pct','zone_outside_walk_pct','walk_outside_zone_pct'],trend:['students_2020','student_change_pct','sen_slope','forecast_2029','forecast_2031','forecast_change_pct_2031'],school:['students','classes','teachers','class_size','students_per_teacher','paps','afterschool','clubs'],development:['large_apt_500m','large_apt_households_500m','redev_active']};
+// 값이 클수록 유리한 것과 불리한 것만 적고, 나머지는 neutral로 둔다.
+const UP=['green_ratio','parks_walk','playgrounds_walk','shared_park_m2_per_student','books_total','books_per_student','library_seats','librarians','libraries_walk','walk_area_m2','walk_area_ratio_to_circle','nightlife_nearest_m','child_accident_nearest_m','afterschool','clubs','teachers'];
+const DOWN=['nearest_park_m','park_route_m','park_detour_ratio','park_sharing_schools','nearest_public_library_m','nightlife_500m','construction_500m','zone_walk_mismatch_pct','zone_outside_walk_pct','walk_outside_zone_pct','students_per_teacher'];
 // Column dictionary: id → {label, unit, group, note}. Groups keep the system prompt short and scannable.
 const COLUMNS={
  name:{label:'학교명',group:'기본',type:'text'},level:{label:'학교급',group:'기본',type:'text'},gu:{label:'군·구',group:'기본',type:'text'},island:{label:'도서·농어촌(강화·옹진)',group:'기본',type:'bool'},
@@ -35,6 +42,8 @@ const COLUMNS={
  designations_current:{label:'2026 지정·지원사업 수',unit:'건',group:'지정사업',note:'교육청 공개 명단 기준'},designation_names:{label:'2026 지정사업명',group:'지정사업',type:'text'},
  park_case:{label:'공원 접근 유형(Case)',group:'공원·야외',type:'text',note:'초등 · 이전 분석의 분류'},
 };
+for(const [domain,cols] of Object.entries(DOMAIN_OF))for(const c of cols)if(COLUMNS[c])COLUMNS[c].domain=domain;
+for(const c of Object.keys(COLUMNS)){if(['name','level','gu','island'].includes(c))continue;COLUMNS[c].direction=UP.includes(c)?'up':DOWN.includes(c)?'down':'neutral';}
 const num=v=>typeof v==='number'&&Number.isFinite(v)?v:v==null||v===''?null:Number.isFinite(Number(v))?Number(v):null;
 const round=(v,d=1)=>v==null?null:Number(v.toFixed(d));
 const hav=(a,b,c,d)=>{const R=6371000,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h));};
@@ -82,4 +91,4 @@ function numericColumns(){return Object.keys(COLUMNS).filter(k=>!['text','bool']
 function label(col){return COLUMNS[col]?.label||col;}
 function unit(col){return COLUMNS[col]?.unit||'';}
 function sourceFor(col){const t=build(),k=COLUMN_SOURCE[col]||'dataset';return {key:k,...t.sources[k],title:PUBLIC[k]};}
-module.exports={build,COLUMNS,dictionary,numericColumns,label,unit,sourceFor,FILES,PUBLIC,COLUMN_SOURCE};
+module.exports={build,COLUMNS,DOMAINS,dictionary,numericColumns,label,unit,sourceFor,FILES,PUBLIC,COLUMN_SOURCE};
