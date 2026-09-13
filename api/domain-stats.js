@@ -1,0 +1,2 @@
+const model=require('./_domain_stats');
+module.exports=(req,res)=>{res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');if(req.method!=='GET'){res.statusCode=405;res.end(JSON.stringify({error:'GET 요청만 지원합니다.'}));return;}try{const u=new URL(req.url,'http://localhost');res.end(JSON.stringify(model.domainStats({domain:u.searchParams.get('domain'),level:u.searchParams.get('level')||'초등학교',schoolId:u.searchParams.get('school')||null})));}catch(error){res.statusCode=400;res.end(JSON.stringify({error:error.message}));}};

@@ -17,6 +17,12 @@
     },
     "api/school-summary.js": {
       "includeFiles": "data_processed/{education/analysis_dataset.json,student_services/priorities.json}"
+    },
+    "api/school-profile.js": {
+      "includeFiles": "data_processed/{education/*.json,education/*.geojson,context/*.json,student_services/*.json,*.csv,*.geojson}"
+    },
+    "api/domain-stats.js": {
+      "includeFiles": "data_processed/{education/*.json,education/*.geojson,context/*.json,student_services/*.json,*.csv,*.geojson}"
     }
   },
   "headers": [

@@ -29,6 +29,8 @@ process.env.UPDATE_CENTER_MAX_VERSION_BYTES ??= String(256*1024*1024);
 const analysisHandler = require("./api/analysis.js");
 const chatHandler = require('./api/chat.js');
 const schoolSummaryHandler = require('./api/school-summary.js');
+const schoolProfileHandler = require('./api/school-profile.js');
+const domainStatsHandler = require('./api/domain-stats.js');
 const updateCenterHandler = require("./api/update-center.js");
 
 const PORT = Number(process.env.PORT || 3000);
@@ -264,6 +266,14 @@ const server = http.createServer((req, res) => {
   }
   if (pathname === '/api/school-summary') {
     schoolSummaryHandler(req,res);
+    return;
+  }
+  if (pathname === '/api/school-profile') {
+    schoolProfileHandler(req,res);
+    return;
+  }
+  if (pathname === '/api/domain-stats') {
+    domainStatsHandler(req,res);
     return;
   }
   if (['/api/chat','/api/ai-explainer','/api/ai-explainer-v2'].includes(pathname)) {
