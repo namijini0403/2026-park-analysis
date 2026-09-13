@@ -11,10 +11,10 @@ async function run(failZones=false){
  const dom=new JSDOM(fs.readFileSync(path.join(root,'index.html'),'utf8'),{url:'http://localhost',runScripts:'outside-only',pretendToBeVisual:true}),w=dom.window,d=w.document;
  w.SVGSVGElement.prototype.createSVGRect=()=>({});w.ResizeObserver=class{observe(){}};
  let release;const pending=new Promise(resolve=>{release=resolve;});let zoneRequests=0;
- w.fetch=async url=>{if(url.includes('school_zones')){zoneRequests++;await pending;return {ok:!failZones,json:async()=>zoneData};}const u=new URL(url,'http://localhost');return {ok:true,json:async()=>u.searchParams.get('id')?model.summary(u.searchParams.get('id'),u.searchParams.get('kind')):{schools:sampleSchools}};};
+ w.fetch=async url=>{if(url.includes('school_zones')){zoneRequests++;await pending;return {ok:!failZones,json:async()=>zoneData};}const u=new URL(url,'http://localhost');if(u.pathname==='/api/school-profile')return {ok:true,json:async()=>require('../api/_school_profile').profile(u.searchParams.get('id'))};return {ok:true,json:async()=>u.searchParams.get('id')?model.summary(u.searchParams.get('id'),u.searchParams.get('kind')):{schools:sampleSchools}};};
  require('./map_test_double.cjs')(w);
  for(const file of ['school-map.js'])w.eval(fs.readFileSync(path.join(root,'assets',file),'utf8'));
- w.eval(['simple-app.js','hitl-workspace.js'].map(file=>fs.readFileSync(path.join(root,'assets',file),'utf8')).join('\n'));await tick();
+ w.eval(['indicator-charts.js','school-profile.js','simple-app.js','hitl-workspace.js'].map(file=>fs.readFileSync(path.join(root,'assets',file),'utf8')).join('\n'));await tick();
  const count=()=>[...d.querySelectorAll('[data-school-count]')].reduce((n,e)=>n+Number(e.dataset.schoolCount),0);
  function change(id,value){d.getElementById(id).value=value;d.getElementById(id).dispatchEvent(new w.Event('change'));}
  function toggle(selector,checked){const el=d.querySelector(selector);el.checked=checked;el.dispatchEvent(new w.Event('change'));}

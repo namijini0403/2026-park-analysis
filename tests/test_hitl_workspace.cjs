@@ -6,6 +6,7 @@ let saved;
 w.localStorage.setItem('review',JSON.stringify({score:99,primary_action:'external_supply_new',outcome:'approved'}));
 w.fetch=async url=>({ok:true,json:async()=>{
   const u=new URL(url,'http://localhost');
+  if(u.pathname==='/api/school-profile')return require('../api/_school_profile').profile(u.searchParams.get('id'));
   return u.searchParams.has('id')?model.summary(u.searchParams.get('id'),u.searchParams.get('kind')):{schools:model.list()};
 }});
 w.URL.createObjectURL=blob=>{saved=blob;return 'blob:test';};w.URL.revokeObjectURL=()=>{};w.HTMLAnchorElement.prototype.click=()=>{};
@@ -13,7 +14,7 @@ const tick=()=>new Promise(r=>setTimeout(r,25));
 function change(id,value){d.getElementById(id).value=value;d.getElementById(id).dispatchEvent(new w.Event('change'));}
 async function readBlob(blob){return new Promise(resolve=>{const reader=new w.FileReader();reader.onload=()=>resolve(JSON.parse(reader.result));reader.readAsText(blob);});}
 (async()=>{
-  w.eval(['simple-app.js','hitl-workspace.js'].map(file=>fs.readFileSync(path.join(root,'assets',file),'utf8')).join('\n'));
+  w.eval(['indicator-charts.js','school-profile.js','simple-app.js','hitl-workspace.js'].map(file=>fs.readFileSync(path.join(root,'assets',file),'utf8')).join('\n'));
   await tick();
   assert.equal(d.querySelectorAll('.workspace-page:not([hidden])').length,1);
   assert(d.getElementById('save-review').disabled);

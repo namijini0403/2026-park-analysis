@@ -10,10 +10,10 @@ const store=new Map();
 w.indexedDB={open(){const req={};setTimeout(()=>{req.result={transaction(){const tx={};const os={put(v){store.set(v.id,v);return {result:v.id};},get(id){return {result:store.get(id)};},getAll(){return {result:[...store.values()]};},delete(id){store.delete(id);return {result:undefined};}};tx.objectStore=()=>os;setTimeout(()=>tx.oncomplete?.(),0);return tx;}};req.onsuccess?.();},0);return req;}};
 w.crypto.randomUUID||=(()=>{let n=0;return()=>'id-'+(++n);})();
 w.confirm=()=>true;
-w.fetch=async(url)=>{if(url==='/api/chat')return {ok:true,json:async()=>({answerable:true,mode:'relative',summary:'학생당 장서 기준 가장 적은 학교: A초 2.4권/명',sources:[{id:'relative#x',title:'학교 장서',source:'data_processed/student_services/priorities.json',body:'계산'}],visual:{title:'학생당 장서',sections:[],notes:[]}})};const u=new URL(url,'http://localhost');return {ok:true,json:async()=>u.searchParams.get('id')?model.summary(u.searchParams.get('id'),u.searchParams.get('kind')):{schools:model.list()}};};
+w.fetch=async(url)=>{if(url==='/api/chat')return {ok:true,json:async()=>({answerable:true,mode:'relative',summary:'학생당 장서 기준 가장 적은 학교: A초 2.4권/명',sources:[{id:'relative#x',title:'학교 장서',source:'data_processed/student_services/priorities.json',body:'계산'}],visual:{title:'학생당 장서',sections:[],notes:[]}})};const u=new URL(url,'http://localhost');if(u.pathname==='/api/school-profile')return {ok:true,json:async()=>require('../api/_school_profile').profile(u.searchParams.get('id'))};return {ok:true,json:async()=>u.searchParams.get('id')?model.summary(u.searchParams.get('id'),u.searchParams.get('kind')):{schools:model.list()}};};
 const tick=(ms=25)=>new Promise(r=>setTimeout(r,ms));
 (async()=>{
- w.eval(['simple-app.js','hitl-workspace.js','analysis-topics.js'].map(f=>fs.readFileSync(path.join(root,'assets',f),'utf8')).join('\n'));await tick();
+ w.eval(['indicator-charts.js','school-profile.js','simple-app.js','hitl-workspace.js','analysis-topics.js'].map(f=>fs.readFileSync(path.join(root,'assets',f),'utf8')).join('\n'));await tick();
  const bar=d.querySelector('.chat-save-bar');assert(bar);assert(bar.querySelector('.chat-save').disabled);
  d.getElementById('question').value='어떤 학교에 책이 부족하니?';d.getElementById('chat-form').dispatchEvent(new w.Event('submit',{cancelable:true}));await tick();
  assert.equal(d.querySelectorAll('.message').length,1);assert(!bar.querySelector('.chat-save').disabled);assert.match(bar.querySelector('.chat-save-status').textContent,/이번 대화 1건/);
