@@ -26,14 +26,20 @@ function indicatorRow(ind){
   +smallGu+`</div>`;
 }
 
-function domainCard(domain){
- const avail=domain.indicators.filter(i=>!i.missing).length,miss=domain.indicators.length-avail;
- return `<details class="domain-card"${avail?' open':''}>`
-  +`<summary><span class="domain-name">${esc(domain.label)}</span>`
-  +`<span class="domain-count">확보 ${avail} · 미확보 ${miss}</span></summary>`
-  +`<button type="button" class="text-button" data-domain-stats="${esc(domain.id)}">이 영역 전체 통계 →</button>`
+function domainTab(domain,active){
+ const avail=domain.indicators.filter(i=>!i.missing).length,miss=domain.indicators.length-avail,id=esc(domain.id);
+ return `<button type="button" role="tab" data-domain-tab="${id}" id="domain-tab-${id}" aria-controls="domain-panel-${id}"`
+  +` aria-selected="${active?'true':'false'}" tabindex="${active?'0':'-1'}">`
+  +`<span class="domain-name">${esc(domain.label)}</span>`
+  +`<span class="domain-count">확보 ${avail} · 미확보 ${miss}</span></button>`;
+}
+
+function domainPanel(domain,active){
+ const id=esc(domain.id);
+ return `<section class="domain-card" role="tabpanel" id="domain-panel-${id}" aria-labelledby="domain-tab-${id}"${active?'':' hidden'}>`
+  +`<button type="button" class="text-button" data-domain-stats="${id}">이 영역 전체 통계 →</button>`
   +domain.indicators.map(indicatorRow).join('')
-  +`</details>`;
+  +`</section>`;
 }
 
 function radarBlock(data,basis){
@@ -49,6 +55,9 @@ function radarBlock(data,basis){
 function render(el,data){
  if(!el)return;
  let basis='overall';
+ const domainIds=(data.domains||[]).map(d=>d.id);
+ // 학교를 바꿔도 보던 영역 탭을 유지한다.
+ let active=domainIds.includes(el.__domainTab)?el.__domainTab:domainIds[0];
  const draw=()=>{
   const s=data.school||{};
   const badges=(data.track==='island'?'<span class="badge">도서지역 별도 검토</span>':'')
@@ -57,13 +66,32 @@ function render(el,data){
    +`<span class="badge">${esc(s.level)}${s.gu?' · '+esc(s.gu):''}</span>${badges}</div>`
    +`<p class="muted profile-scope">같은 학교급 안에서 비교합니다${data.track==='island'?' (강화·옹진 도서지역끼리 비교)':''}. 확보 ${data.coverage.available} · 미확보 ${data.coverage.missing} 지표.</p>`
    +`<section class="radar-section" aria-label="영역 대표 지표 상대 위치">${radarBlock(data,basis)}</section>`
-   +`<div class="domain-cards">${data.domains.map(domainCard).join('')}</div>`
+   +`<div class="domain-tablist" role="tablist" aria-label="영역 선택">${data.domains.map(d=>domainTab(d,d.id===active)).join('')}</div>`
+   +`<div class="domain-cards">${data.domains.map(d=>domainPanel(d,d.id===active)).join('')}</div>`
    +((data.conditions||[]).length?`<section class="conditions-section"><h3>더 확인할 조건</h3>${data.conditions.map(c=>`<p class="condition">${esc(c)}</p>`).join('')}</section>`:'')
    +`<details class="profile-sources"><summary>출처 · 공개 원문</summary>`
    +((data.originals||[]).map(o=>`<p><a href="${esc(o.url)}" target="_blank" rel="noopener">${esc(o.title)} ↗</a>${o.provider?' · '+esc(o.provider):''}</p>`).join('')||'<p>공개 원문 미기록</p>')
    +`<p class="fine">분석 파일: ${(data.sources||[]).map(x=>`<code>${esc(x.path)}</code> (${esc(String(x.sha256||'').slice(0,12))})`).join(', ')}</p></details>`
    +((data.limits||[]).length?`<details class="profile-limits"><summary>분석의 한계</summary>${data.limits.map(c=>`<p class="condition">${esc(c)}</p>`).join('')}</details>`:'');
   el.querySelectorAll('.radar-basis button').forEach(b=>b.onclick=()=>{basis=b.dataset.basis;draw();});
+  const tabs=[...el.querySelectorAll('[data-domain-tab]')];
+  const select=(id,focus)=>{
+   active=id;el.__domainTab=id;
+   tabs.forEach(t=>{const on=t.dataset.domainTab===id;t.setAttribute('aria-selected',on?'true':'false');t.tabIndex=on?0:-1;if(on&&focus)t.focus();});
+   el.querySelectorAll('[role="tabpanel"]').forEach(p=>{p.hidden=p.id!=='domain-panel-'+id;});
+  };
+  tabs.forEach((t,i)=>{
+   t.onclick=()=>select(t.dataset.domainTab,false);
+   t.onkeydown=e=>{
+    const n=tabs.length;let j=-1;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown')j=(i+1)%n;
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp')j=(i-1+n)%n;
+    else if(e.key==='Home')j=0;
+    else if(e.key==='End')j=n-1;
+    else return;
+    e.preventDefault();select(tabs[j].dataset.domainTab,true);
+   };
+  });
   if(typeof el.__onDomainStats==='function')
    el.querySelectorAll('[data-domain-stats]').forEach(b=>b.onclick=()=>el.__onDomainStats(b.dataset.domainStats));
  };

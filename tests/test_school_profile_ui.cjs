@@ -12,6 +12,33 @@ assert.equal(host.querySelectorAll('.radar-basis button').length,2,'구 기준 /
 assert(host.textContent.includes('모양 비교용'),'레이더 고지 문구');
 assert(host.textContent.includes('백분위 (값이 큰 쪽)'),'백분위 정의를 화면에 쓴다');
 assert.equal(host.querySelectorAll('[data-domain-stats]').length,9,'영역마다 통계 링크');
+// 영역은 탭으로 나뉘고 한 번에 하나만 보인다
+const tabs=[...host.querySelectorAll('[role="tab"]')];
+assert.equal(tabs.length,9,'영역 탭 9개');
+const panels=()=>[...host.querySelectorAll('[role="tabpanel"]')];
+assert.equal(panels().filter(p=>!p.hidden).length,1,'열린 영역은 하나');
+assert.equal(tabs[0].getAttribute('aria-selected'),'true','첫 영역이 기본 선택');
+assert.equal(panels()[0].hidden,false,'첫 영역 패널만 열림');
+tabs[3].dispatchEvent(new w.Event('click',{bubbles:true}));
+assert.equal(tabs[3].getAttribute('aria-selected'),'true','누른 탭이 선택된다');
+assert.equal(tabs[0].getAttribute('aria-selected'),'false','이전 탭은 해제된다');
+assert.equal(panels().filter(p=>!p.hidden).length,1,'전환 뒤에도 하나만 열림');
+assert.equal(panels()[3].hidden,false,'누른 영역의 패널이 열린다');
+assert.equal(tabs[3].tabIndex,0,'선택 탭만 탭 이동 대상');
+assert.equal(tabs[0].tabIndex,-1,'비선택 탭은 화살표로 이동');
+// 화살표 키로 옆 영역으로 이동한다
+const key=(el,k)=>el.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,bubbles:true,cancelable:true}));
+key(tabs[3],'ArrowRight');
+assert.equal(tabs[4].getAttribute('aria-selected'),'true','→ 키로 다음 영역');
+key(tabs[4],'Home');
+assert.equal(tabs[0].getAttribute('aria-selected'),'true','Home 키로 첫 영역');
+// 기준 전환으로 다시 그려도 보던 영역을 유지한다
+tabs[2].dispatchEvent(new w.Event('click',{bubbles:true}));
+const keptId=host.querySelectorAll('[role="tab"]')[2].dataset.domainTab;
+host.querySelectorAll('.radar-basis button')[1].dispatchEvent(new w.Event('click',{bubbles:true}));
+const openPanel=[...host.querySelectorAll('[role="tabpanel"]')].find(p=>!p.hidden);
+assert.equal(openPanel.id,'domain-panel-'+keptId,'기준을 바꿔도 보던 영역이 유지된다');
+host.querySelectorAll('.radar-basis button')[0].dispatchEvent(new w.Event('click',{bubbles:true})); // 아래 기준 전환 검사를 위해 인천 전체로 되돌린다
 // 제거된 것
 for(const gone of ['확인된 사실','검토할 선택지','기존 공원과 연결 검토'])assert(!host.textContent.includes(gone),gone+' 제거');
 
