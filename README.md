@@ -1,4 +1,6 @@
 # 반경 너머 · 정책 도달성으로
+
+**디자인팀 작업 기준:** `feat/all-school-levels-academy-public-metrics` 브랜치 · 이 저장소 루트가 앱 루트입니다. [최신 기능·디자인 인수인계 및 배포 경로](contest_plan/design_team_handoff.md)를 먼저 확인하세요.
 [학교별 지원안·시각화 1,181개 보기·주제 저장 개선](contest_plan/policy_studio_20260912.md) — 2026-09-12 운영 반영·검증 완료.
 
 
