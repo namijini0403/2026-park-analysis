@@ -1,0 +1,25 @@
+/* Presentation-only adaptation for the existing four-workspace Railway app.
+   Original text, cards, controls, handlers and approved design assets are intact. */
+.workspace-nav:has(> button:nth-child(4):last-child) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#manager-school-details #summary {
+  container: railway-observations / inline-size;
+}
+
+@container railway-observations (max-width: 680px) {
+  #manager-school-details #summary > .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 780px) {
+  .workspace-nav:has(> button:nth-child(4):last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspace-nav > button:nth-child(4):last-child {
+    grid-column: auto;
+  }
+}
