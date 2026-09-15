@@ -1,0 +1,90 @@
+/* The approved film is a new presentation surface; the app underneath is unchanged. */
+.manager-cover {
+  position: relative;
+  min-height: 760px;
+  height: 100svh;
+  max-height: 1200px;
+  isolation: isolate;
+  overflow: hidden;
+  background: #071c2b url('/assets/manager-night-panorama.png') 63% center / cover no-repeat;
+  color: #fffdf3;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 0 max(48px, calc((100vw - 1630px) / 2));
+}
+.manager-cover-film {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% center;
+  transform: translateX(4%);
+  z-index: -3;
+  pointer-events: none;
+}
+.manager-cover-film.has-error { opacity: 0; }
+.manager-cover-shade {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(90deg, #031622f5 0%, #041926ed 23%, #041a27c9 40%, #041a273b 65%, #041a270c 100%),
+    linear-gradient(0deg, #031621bb, transparent 28%, transparent 74%, #041722ad);
+  pointer-events: none;
+}
+.manager-cover-top { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 102px; border-bottom: 1px solid #d3e9e629; }
+.manager-cover-brand { display: flex; gap: 12px; align-items: center; color: #fffdf3; font-weight: 800; font-size: 28px; text-decoration: none; letter-spacing: -1px; }
+.manager-cover-brand img { display: block; width: 52px; height: 52px; object-fit: contain; filter: drop-shadow(0 0 12px #64e4d52a); }
+.manager-cover-tagline { color: #dceae9; font-size: 12px; letter-spacing: .2px; }
+.manager-cover-copy { align-self: center; max-width: 655px; padding: 44px 0 50px; }
+.manager-cover-eyebrow { margin: 0 0 24px; color: #98e9dc; font-size: 12px; letter-spacing: 1.5px; font-weight: 700; }
+.manager-cover-copy h1 { margin: 0 0 27px; color: #fcfff9; font-size: clamp(48px, 4.7vw, 76px); line-height: 1.16; letter-spacing: -2.5px; font-weight: 850; }
+.manager-cover-copy h1 span { color: #8debdc; }
+.manager-cover-copy h2 { margin: 0 0 23px; color: #e5f8f1; font-size: clamp(23px, 2vw, 30px); line-height: 1.5; letter-spacing: -.9px; }
+.manager-cover-description { max-width: 540px; color: #d3e1e3; font-size: 14px; line-height: 1.95; margin: 0 0 30px; word-break: keep-all; }
+.manager-cover-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.manager-cover-actions button { display: flex; align-items: center; justify-content: space-between; gap: 30px; min-width: 190px; min-height: 58px; padding: 14px 22px; border: 1px solid #b4faec; border-radius: 12px; background: #91efdc; color: #073a3d; font-size: 16px; font-weight: 800; box-shadow: 0 6px 28px #14dbc425; }
+.manager-cover-actions button:nth-child(2) { background: #fff5da; border-color: #fff5da; color: #284957; box-shadow: 0 6px 26px #00000024; }
+.manager-cover-actions button:hover { background: #c1ffee; border-color: #e1fff6; transform: translateY(-1px); }
+.manager-cover-actions button:nth-child(2):hover { background: #fffdf4; }
+.manager-cover-actions button span { font-size: 23px; font-weight: 500; }
+.manager-cover-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 0 28px; }
+.manager-cover-scroll { display: inline-flex; align-items: center; gap: 12px; color: #f4f5e9; font-size: 12px; text-decoration: none; }
+.manager-cover-scroll span { display: inline-grid; place-items: center; width: 38px; height: 38px; border: 1px solid #bbd6d47d; border-radius: 50%; font-size: 19px; }
+.manager-cover-motion { min-height: 40px; min-width: 115px; padding: 9px 15px; border: 1px solid #c7dddb8c; border-radius: 9px; background: #061d2dd6; color: #f5f5e9; font-size: 12px; font-weight: 600; }
+.manager-cover-motion:hover { background: #234557; border-color: #e3fff5; }
+.manager-cover :is(a, button):focus-visible { outline: 3px solid #fcf1c8; outline-offset: 5px; }
+.workspace-nav, #workspace-explore { scroll-margin-top: 16px; }
+@media (max-width: 1100px) {
+  .manager-cover { padding-inline: 32px; }
+  .manager-cover-copy { max-width: 590px; }
+  .manager-cover-description { max-width: 480px; }
+  .manager-cover-copy h1 { font-size: 61px; }
+}
+@media (min-width: 641px) and (max-height: 850px) {
+  .manager-cover-top { min-height: 82px; }
+  .manager-cover-copy { padding-block: 28px 30px; }
+  .manager-cover-bottom { padding-block: 16px 20px; }
+}
+@media (max-width: 640px) {
+  .manager-cover { min-height: 740px; height: 100svh; max-height: none; padding-inline: 23px; }
+  .manager-cover-top { min-height: 82px; gap: 12px; }
+  .manager-cover-brand { font-size: 23px; gap: 9px; }
+  .manager-cover-brand img { width: 42px; height: 42px; }
+  .manager-cover-tagline { max-width: 125px; font-size: 10px; line-height: 1.7; text-align: right; }
+  .manager-cover-copy { padding: 40px 0 26px; }
+  .manager-cover-eyebrow { font-size: 10px; letter-spacing: .5px; margin-bottom: 22px; }
+  .manager-cover-copy h1 { font-size: clamp(39px, 11vw, 54px); line-height: 1.2; margin-bottom: 24px; letter-spacing: -1.7px; }
+  .manager-cover-copy h2 { font-size: 22px; line-height: 1.5; margin-bottom: 20px; }
+  .manager-cover-description { font-size: 12px; line-height: 1.95; max-width: 350px; margin-bottom: 26px; }
+  .manager-cover-shade { background: linear-gradient(90deg, #031622ef, #041926d4 50%, #0419267a), linear-gradient(0deg, #03162199, transparent 50%); }
+  .manager-cover-film { transform: none; object-position: 63% center; }
+  .manager-cover-actions { gap: 9px; }
+  .manager-cover-actions button { min-width: 0; flex: 1; min-height: 53px; padding: 12px 14px; font-size: 13px; gap: 7px; border-radius: 10px; }
+  .manager-cover-actions button span { font-size: 20px; }
+  .manager-cover-bottom { padding-block: 16px 22px; }
+  .manager-cover-scroll { font-size: 11px; gap: 8px; }
+  .manager-cover-motion { min-width: 105px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { .manager-cover * { scroll-behavior: auto; transition: none; } }
+@media print { .manager-cover { display: none; } }
