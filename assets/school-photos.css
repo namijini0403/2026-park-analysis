@@ -1,0 +1,9 @@
+.school-photos{margin:20px 0;padding:20px;border:1px solid #dce5dd;border-radius:14px;background:#f8faf5;min-width:0;color:#284d36}
+.school-photos h3{font-size:15px;margin:0 0 6px}.school-photos p{font-size:12px;line-height:1.7;margin:6px 0;color:#627567}
+.school-photos .photo-controls{display:flex;gap:10px;align-items:end;margin:14px 0}.school-photos label{flex:1;min-width:0}.school-photos select{display:block;margin-top:5px;width:100%;font-size:13px}
+.school-photos button{border:1px solid #bdcfbf;border-radius:9px;background:#edf2eb;color:#315e43;padding:11px 14px;font-size:12px;white-space:nowrap}.school-photos button:disabled{opacity:.55}
+.school-photos .photo-status{padding:10px 12px;background:#fff;border-radius:9px}.school-photos .photo-results{max-width:100%;overflow-wrap:anywhere}
+.school-photos gmp-place-search{display:block;width:100%;border:0;border-radius:12px;color-scheme:light;--gmp-mat-color-primary:#315e43;--gmp-mat-color-surface:#fff;--gmp-mat-color-on-surface:#284d36;--gmp-mat-color-on-surface-variant:#627567;--gmp-mat-font-family:inherit}
+.school-photos [hidden]{display:none!important}
+.school-photos .photo-detail{margin-top:16px}.school-photos .photo-detail h4{font-size:13px;margin:0 0 10px}.school-photos gmp-place-details{display:block;width:100%;max-width:400px;border:1px solid #dce5dd;border-radius:12px;color-scheme:light;--gmp-mat-color-primary:#315e43;--gmp-mat-color-surface:#fff;--gmp-mat-color-on-surface:#284d36;--gmp-mat-font-family:inherit}
+@media(max-width:600px){.school-photos{padding:14px}.school-photos .photo-controls{flex-wrap:wrap}.school-photos label{flex-basis:100%}.school-photos button{width:100%}}

@@ -1,0 +1,18 @@
+.statistical-chart{margin:16px 0;padding:18px 12px 12px;background:#fff;border:1px solid #e0e9e4;border-radius:16px;color:#234438}
+.statistical-chart .statistical-chart-scroll{overflow-x:auto;overscroll-behavior-x:contain}
+.statistical-chart svg{display:block;width:100%;height:auto;min-width:680px;font-family:inherit}
+.statistical-chart svg text{font-size:13px;fill:#496258}
+.statistical-chart svg .sc-name{font-size:14px;fill:#233d34}
+.statistical-chart svg .sc-value{font-size:14px;font-weight:650;fill:#254e3d}
+.statistical-chart svg .sc-axis{font-size:13px;font-weight:600}
+.statistical-chart .sc-grid{stroke:#e5ece8;stroke-width:1}
+.statistical-chart .sc-row{stroke:#edf1ef;stroke-width:2}
+.statistical-chart .sc-dot{fill:#39795f}
+.statistical-chart .sc-selected{fill:#b76432;stroke:#6c351b;stroke-width:2}
+.statistical-chart .sc-predicted{fill:#b76432}
+.statistical-chart .sc-line{fill:none;stroke:#39795f;stroke-width:2.5}
+.statistical-chart .sc-forecast{stroke:#b76432;stroke-dasharray:6 5}
+.statistical-chart svg .sc-missing{fill:#7a857f;font-size:13px}
+.statistical-chart figcaption{margin:10px 8px 0;font-size:12px;line-height:1.7;color:#65756d}
+.statistical-chart-empty{font-size:14px}
+@media(max-width:600px){.statistical-chart{padding:12px 4px}.statistical-chart figcaption{margin:8px}.statistical-chart .statistical-chart-scroll{padding-bottom:8px}}

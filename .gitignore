@@ -1,4 +1,6 @@
 # Secrets
+map.env
+**/map.env
 .env
 .env.*
 !.env.example

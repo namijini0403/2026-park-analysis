@@ -251,6 +251,7 @@ function serveUpdateCenterPage(req, res) {
 
 const server = http.createServer((req, res) => {
   const pathname = new URL(req.url, "http://localhost").pathname;
+  if(pathname==='/api/google-places-config')return require('./api/google-places-config')(req,res);
   if(pathname==='/api/data-revision'&&(req.method==='GET'||req.method==='HEAD')){
     const active=path.join(process.env.UPDATE_CENTER_HOME||path.join(__dirname,'data/update_center'),'active.json');
     const content=fs.existsSync(active)?fs.readFileSync(active):Buffer.from('initial');

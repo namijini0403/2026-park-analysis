@@ -23,7 +23,7 @@ const table=require('../api/_school_table'),tools=require('../api/_agent_tools')
  r=tools.run('correlate',ctx,{x:'academies_500m',y:'class_size'});assert(r.llm.n>200&&Math.abs(r.llm.spearman_rho)<=1);
  r=tools.run('distribution',ctx,{column:'books_per_student'});assert(r.llm.selected_school.name==='인천갈월초등학교');
  r=tools.run('weighted_rank',ctx,{criteria:[{column:'parks_walk',prefer:'low',weight:2},{column:'students',prefer:'high',weight:1}],limit:5,island:'exclude'});
- assert.equal(r.llm.top.length,5);assert(r.llm.top[0].score>=r.llm.top[4].score);assert.equal(r.llm.weights[0].share_pct,67);assert.equal(r.visual.table.headers.length,6);
+ assert.equal(r.llm.observations[0].rows.length,5);assert.equal(r.llm.weights[0].share_pct,66.7);assert.equal(r.sections.length,2);assert(!JSON.stringify(r).includes('\"score\"'));assert(!r.visual.table.headers.includes('점수'));
  assert.throws(()=>tools.run('query_schools',ctx,{sort_by:'nonexistent'}),/알 수 없는 열/);
  // upload column joins into the table
  const extra=chat.context({question:'x',level:'초등학교',upload:{name:'t.csv',headers:['학교명','값'],rows:[['인천갈월초등학교',10],['인천신흥초등학교',20],['없는학교',5]],mapping:{type:'school_name',key:0,measure:1,year:null,defaultYear:2026,existing:'schools:students',valueType:'numeric'}}}).extra;

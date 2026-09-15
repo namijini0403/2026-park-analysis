@@ -8,6 +8,13 @@ window.ChatWorkspace=(()=>{
  let map=null,revision=0;
  function chart(c){
   if(!c||c.kind==='map')return '';
+  if(window.StatisticalCharts){
+   if(c.kind==='scatter')return window.StatisticalCharts.scatter(c);
+   if(c.kind==='line')return window.StatisticalCharts.line(c);
+   const histogram=c.kind==='bar'&&(/구간|히스토그램/.test(c.title||'')||(/분포/.test(c.title||'')&&(c.points||[]).some(p=>/[-~–∼]|이상|미만|이하|초과/.test(p.name||''))));
+   if(c.kind==='bar'&&!histogram)return window.StatisticalCharts.dotPlot(c);
+  }
+  if(c.points){c={...c,points:c.points.filter(p=>c.kind!=='bar'||Number.isFinite(p.value))};if(!c.points.length)return '<p class="fine">이 차트에 표시할 관측값이 없습니다. 값 없음은 0이 아닙니다.</p>';}
   if(c.kind==='bar'){const min=Math.min(0,...c.points.map(p=>p.value)),max=Math.max(0,...c.points.map(p=>p.value)),range=max-min||1,X=v=>160+(v-min)/range*305,height=50+c.points.length*32;return `<figure><svg viewBox="0 0 560 ${height}" role="img" aria-label="${escape(c.title||'항목별 관측 집계')}">${c.points.map((p,i)=>`<text x="8" y="${28+i*32}">${escape(p.name)}</text><rect x="${X(Math.min(0,p.value))}" y="${12+i*32}" width="${Math.abs(p.value)/range*305}" height="20" fill="${p.selected?'#b56a30':'#558c73'}"/><text x="${X(p.value)+10}" y="${28+i*32}">${escape(number(p.value))}${escape(c.unit||'개교')}</text>`).join('')}</svg><figcaption>표시된 자료의 집계이며 정책 우선순위가 아닙니다.</figcaption></figure>`;}
 
   const points=c.points||[],box=c.kind==='box',values=box?c.groups.flatMap(g=>[g.min,g.max]):points.map(p=>p.y),xs=box?[0,1]:points.map(p=>p.x);
@@ -20,11 +27,13 @@ window.ChatWorkspace=(()=>{
    marks+=points.map(p=>`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="${p.selected?7:c.kind==='scatter'?3:4}" fill="${p.selected||p.name==='예측'?'#b58732':'#36705b'}" opacity=".7"><title>${escape(p.name||'관측')}: ${escape(number(p.x))}, ${escape(number(p.y))}</title></circle>`).join('');}
   return `<figure><svg viewBox="0 0 560 300" role="img" aria-label="${escape(c.kind==='scatter'?'관측값 산점도':box?'분포 상자그림':'연속 관측 그래프')}"><path d="M60 35V235H510" fill="none" stroke="#a3b1a8"/>${[0,.5,1].map(t=>{const v=ymin+(ymax-ymin)*t;return `<text x="54" y="${Y(v)+4}" text-anchor="end">${escape(number(v))}</text>`;}).join('')}${marks}${box?'':`<text x="60" y="256">${escape(number(xmin))}</text><text x="500" y="256" text-anchor="end">${escape(number(xmax))}</text>`}<text x="60" y="20">${escape((c.y||['누적 관측값 비율']).join(' · '))}</text><text x="280" y="285" text-anchor="middle">${escape((c.x||[box?'지역':'누적 기관 비율']).join(' · '))}</text></svg><figcaption>정확한 수치는 아래 표에서 확인할 수 있습니다.</figcaption></figure>`;
  }
- function show(d,q){
+ function show(d,q,opt={}){
   map?.destroy();map=null;const current=++revision;
-  const panel=document.getElementById('evidence-panel'),raw=d.visual||{},v={...raw,map:[...(raw.map||[]),...(raw.sections||[]).flatMap(s=>s.map||[])],geometries:[...(raw.geometries||[]),...(raw.sections||[]).flatMap(s=>s.geometries||[])],routes:[...(raw.routes||[]),...(raw.sections||[]).flatMap(s=>s.routes||[])]},points=(v.map.length?v.map:(v.chart?.kind==='map'?v.chart.points:[])).filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lng));
-  panel.innerHTML=`<p class="eyebrow">이 답변의 근거</p><h3>${escape(v.title||'관련 자료')}</h3><p class="panel-question">${escape(q)}</p>${(points.length||v.geometries?.length||v.routes?.length)?'<div id="answer-map" aria-label="관련 학교 위치 지도"></div><p id="answer-map-status" class="fine">학교 위치 · 카카오맵을 불러오는 중입니다…</p>':''}${chart(v.chart)}${(v.sections||[]).map(s=>`<section class="comparison-section"><h4>${escape(s.title)}</h4>${chart(s.chart)}${(s.notes||[]).map(n=>`<p class="fine">${escape(n)}</p>`).join('')}${table(s.table)}</section>`).join('')}${(v.notes||[]).map(n=>`<p class="fine">${escape(n)}</p>`).join('')}${table(v.table)}${d.rows?.facilities?.length?'<h4>관련 시설</h4>'+table({headers:['시설','주소','이용조건','출처'],rows:d.rows.facilities.map(f=>[f.name,f.address,f.condition,{url:f.url,label:'원문'}])}):''}${window.SourceEvidence?window.SourceEvidence.render(d):'<p>출처 표시 모듈을 불러오지 못했습니다.</p>'}`;
-  if(points.length||v.geometries?.length||v.routes?.length){
+  const panel=document.getElementById('evidence-panel'),raw=opt.omitMap?{...d.visual,map:[],geometries:[],routes:[],sections:(d.visual?.sections||[]).map(s=>({...s,map:[],geometries:[],routes:[]}))}:(d.visual||{}),v={...raw,map:[...(raw.map||[]),...(raw.sections||[]).flatMap(s=>s.map||[])],geometries:[...(raw.geometries||[]),...(raw.sections||[]).flatMap(s=>s.geometries||[])],routes:[...(raw.routes||[]),...(raw.sections||[]).flatMap(s=>s.routes||[])]},points=(v.map.length?v.map:(v.chart?.kind==='map'?v.chart.points:[])).filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lng));
+  window.ChatMap?.dispose(panel);
+  panel.innerHTML=`<p class="eyebrow">이 답변의 근거</p><h3>${escape(v.title||'관련 자료')}</h3><p class="panel-question">${escape(q)}</p>${(!window.ChatMap&&(points.length||v.geometries?.length||v.routes?.length))?'<div id="answer-map" aria-label="관련 학교 위치 지도"></div><p id="answer-map-status" class="fine">학교 위치 · 카카오맵을 불러오는 중입니다…</p>':''}${chart(v.chart)}${(v.sections||[]).map(s=>`<section class="comparison-section"><h4>${escape(s.title)}</h4>${chart(s.chart)}${(s.notes||[]).map(n=>`<p class="fine">${escape(n)}</p>`).join('')}${s.table?`<details><summary>수치 표 보기 · ${s.table.rows.length}행</summary>${table(s.table)}</details>`:''}</section>`).join('')}${(v.notes||[]).map(n=>`<p class="fine">${escape(n)}</p>`).join('')}${v.table?`<details><summary>전체 수치 표 보기 · ${v.table.rows.length}행</summary>${table(v.table)}</details>`:''}${d.rows?.facilities?.length?'<h4>관련 시설</h4>'+table({headers:['시설','주소','이용조건','출처'],rows:d.rows.facilities.map(f=>[f.name,f.address,f.condition,{url:f.url,label:'원문'}])}):''}${window.SourceEvidence?'<details><summary>출처와 검증 상태</summary>'+window.SourceEvidence.render(d)+'</details>':'<p>출처 표시 모듈을 불러오지 못했습니다.</p>'}`;
+  if(window.ChatMap){const host=document.createElement('div');panel.querySelector('.panel-question').after(host);window.ChatMap.mount(host,d);}
+  if(!window.ChatMap&&(points.length||v.geometries?.length||v.routes?.length)){
    const container=document.getElementById('answer-map'),status=document.getElementById('answer-map-status');
    window.EducationMaps.ready().then(()=>{
     if(current!==revision||!container.isConnected)return;
@@ -36,11 +45,13 @@ window.ChatWorkspace=(()=>{
     map.fit(bounds);status.textContent='학교·시설 위치 · 지도 배경 © Kakao · 경로의 출처와 검증 상태는 아래 근거를 확인하세요.';
    }).catch(()=>{if(current===revision&&status.isConnected)status.textContent='카카오맵을 불러오지 못했습니다. 아래 표에서 자료를 확인해 주세요.';});
   }
-  if(window.AnswerExport){const toolbar=document.createElement('div');toolbar.className='export-actions';for(const [format,label] of [['docx','Word 보고서 ↓'],['png','PNG 보고서 ↓'],['csv','전체 표 CSV ↓']]){if(format==='csv'&&!v.table)continue;const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=async()=>{b.disabled=true;status.textContent='보고서를 만들고 있습니다…';try{await window.AnswerExport.save(format,d,q);status.textContent='저장 파일을 만들었습니다.';}catch(e){status.textContent=e.message;}finally{b.disabled=false;}};toolbar.append(b);}const status=document.createElement('p');status.className='fine';status.setAttribute('role','status');toolbar.append(status);panel.prepend(toolbar);}
+  if(window.AnswerExport){const toolbar=document.createElement('div');toolbar.className='export-actions';for(const [format,label] of [['docx','Word 보고서 ↓'],['png','PNG 보고서 ↓'],['csv','전체 표 CSV ↓']]){if(format==='csv'&&!v.table)continue;const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=async()=>{b.disabled=true;status.textContent='보고서를 만들고 있습니다…';try{await window.AnswerExport.save(format,d,q);status.textContent='저장 파일을 만들었습니다.';}catch(e){status.textContent=e.message;}finally{b.disabled=false;}};toolbar.append(b);}const status=document.createElement('p');status.className='fine';status.setAttribute('role','status');toolbar.append(status);const exports=document.createElement('details');exports.innerHTML='<summary>분석 자료 내려받기</summary>';exports.append(toolbar);panel.append(exports);}
   if(d.suggestions?.length){const list=document.createElement('div');list.className='prompts';for(const item of d.suggestions){const b=document.createElement('button');b.type='button';b.textContent=item.label;b.onclick=()=>{document.getElementById('question').value=item.question;document.getElementById('question').dataset.datasetId=item.dataset_id;document.getElementById('question').focus();};list.append(b);}panel.prepend(list);}
 
  }
  const originalShow=show;
- function enhancedShow(d,q){originalShow(d,q);window.CollectionAssistant?.mount(document.getElementById('evidence-panel'),q,d);window.VisualStudio?.enhance(document.getElementById('evidence-panel'),d);}
- return {show:enhancedShow,chart};
+ function safeResult(d){const legacy=d&&!d.observation_version&&(d.weights?.length||d.lever_analysis||d.factor_analysis||(d.visual?.sections||[]).some(s=>s.chart?.unit==='점'||s.table?.headers?.includes('점수')));return legacy?{answerable:false,summary:'이전 방식으로 저장된 가중 점수·추천입니다. 현재 기준으로 질문을 다시 보내 관측값과 확인 조건을 검토해 주세요.',visual:{sections:[]},sources:[]}:d;}
+ function enhancedShow(d,q,opt){d=safeResult(d);originalShow(d,q,opt);window.CollectionAssistant?.mount(document.getElementById('evidence-panel'),q,d);// The split pane already renders charts, tables and sources; legacy enhancement duplicates the answer.
+}
+ return {show:enhancedShow,chart,table,safeResult};
 })();

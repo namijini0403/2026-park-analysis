@@ -32,9 +32,9 @@ function scope(ctx,p){
  if(Array.isArray(p.school_ids)&&p.school_ids.length){const set=new Set(p.school_ids.filter(id=>!unset(id)));if(set.size)rows=rows.filter(r=>set.has(r.id));}
  return {rows,level,gu,island,label:`${level||'전체 학교급'} · ${gu||'인천 전체'}${island==='exclude'?' · 도서지역 제외':island==='only'?' · 도서지역만':''}`};
 }
-function col(ctx,c){if(ctx.extra&&c===ctx.extra.column)return {label:ctx.extra.label,unit:ctx.extra.unit||'',user:true};if(!table.COLUMNS[c])throw Error(`알 수 없는 열: ${c}`);return table.COLUMNS[c];}
+function col(ctx,c){if(ctx.extra&&c===ctx.extra.column)return {label:ctx.extra.label,unit:ctx.extra.unit||'',user:true};if(c==='paps')throw Error('PAPS 등급 정의 확인 전에는 비교할 수 없습니다.');if(!table.COLUMNS[c])throw Error(`알 수 없는 열: ${c}`);return table.COLUMNS[c];}
 function sourcesFor(ctx,cols){const seen=new Map();for(const c of cols){if(ctx.extra&&c===ctx.extra.column){seen.set('upload',{id:'user-upload',title:ctx.extra.name||'사용자 첨부 표',source:'사용자 제공 첨부 표',body:`첨부 열 ‘${ctx.extra.label}’ · 연결 ${ctx.extra.values.size}개교`});continue;}const s=table.sourceFor(c);if(!seen.has(s.key))seen.set(s.key,{id:'table#'+s.key,title:s.title,source:s.path,provenance:[{path:s.path,sha256:s.sha256}],body:[...new Set(cols.filter(x=>(table.COLUMN_SOURCE[x]||'dataset')===s.key).map(x=>table.label(x)))].join(', ')});}return [...seen.values()];}
-function points(rows){return rows.filter(r=>Number.isFinite(r.lat)).slice(0,60).map(r=>({name:r.name,lat:r.lat,lng:r.lng,detail:r.gu||''}));}
+function points(rows){return rows.filter(r=>Number.isFinite(r.lat)).slice(0,60).map(r=>({id:r.id,name:r.name,lat:r.lat,lng:r.lng,detail:r.gu||''}));}
 function geometries(ids,kinds){
  const out=[],set=new Set(ids);
  for(const kind of kinds){const e=data.catalog.find(e=>e.id===(kind==='zone'?'zones':'walkshed'));const b=data.read(e);
@@ -81,7 +81,7 @@ function school_profile(ctx,p){
   if(hits.length>1){const level=tools_level(q);if(level&&hits.some(x=>x.level===level))hits=hits.filter(x=>x.level===level);}
   if(hits.length===1)r=hits[0];else if(hits.length>1)return {llm:{error:'여러 학교가 일치합니다. 하나를 고르세요.',candidates:hits.slice(0,8).map(h=>({id:h.id,name:h.name,level:h.level,gu:h.gu}))},visual:null,sources:[]};}
  if(!r)throw Error('학교를 찾지 못했습니다. 학교명을 정확히 적어 주세요.');
- const peers=T.rows.filter(x=>x.level===r.level),cols=((p.columns||[]).filter(c=>!unset(c)).length?p.columns.filter(c=>!unset(c)):['students','class_size','student_change_pct','forecast_change_pct_2031','parks_walk','green_ratio','nearest_park_m','walk_area_ratio_to_circle','zone_walk_mismatch_pct','zone_outside_walk_pct','books_per_student','librarians','nearest_public_library_m','academies_500m','nightlife_500m','child_accident_nearest_m','large_apt_households_500m','designations_current']).filter(c=>table.COLUMNS[c]&&!['text','bool'].includes(table.COLUMNS[c].type)&&r[c]!=null);
+ const peers=T.rows.filter(x=>x.level===r.level),cols=((p.columns||[]).filter(c=>!unset(c)).length?p.columns.filter(c=>!unset(c)):['students','class_size','student_change_pct','forecast_change_pct_2031','parks_walk','green_ratio','nearest_park_m','walk_area_ratio_to_circle','zone_walk_mismatch_pct','zone_outside_walk_pct','books_per_student','librarians','nearest_public_library_m','academies_500m','nightlife_500m','child_accident_nearest_m','large_apt_households_500m','designations_current']).filter(c=>c!=='paps'&&table.COLUMNS[c]&&!['text','bool'].includes(table.COLUMNS[c].type)&&r[c]!=null);
  const rows=cols.map(c=>{const vals=peers.map(x=>x[c]).filter(v=>v!=null).sort((a,b)=>a-b);const below=vals.filter(v=>v<r[c]).length,ties=vals.filter(v=>v===r[c]).length;const pct=round(100*(below+ties/2)/vals.length,0);return {column:c,label:table.label(c),unit:table.unit(c),value:r[c],level_median:round(median(vals)),percentile:pct,n:vals.length};});
  const sim=data.read({id:'table:similar',file:table.FILES.similar}).data.find(x=>x.학교ID===r.id);
  const similar=sim?[1,2,3,4,5].map(i=>sim[`similar_school_${i}_name`]).filter(Boolean):[];
@@ -101,29 +101,30 @@ function correlate(ctx,p){
  return {llm,visual,sources:sourcesFor(ctx,[p.x,p.y])};
 }
 function distribution(ctx,p){
- const s=scope(ctx,p);col(ctx,p.column);const rows=s.rows.filter(r=>r[p.column]!=null),vals=rows.map(r=>r[p.column]).sort((a,b)=>a-b);
+ const s=scope(ctx,p);col(ctx,p.column);const rows=s.rows.filter(r=>Number.isFinite(r[p.column])),vals=rows.map(r=>r[p.column]).sort((a,b)=>a-b);
  if(!vals.length)throw Error('값이 있는 학교가 없습니다.');
- const bins=8,lo=vals[0],hi=vals.at(-1),step=(hi-lo)/bins||1,hist=Array.from({length:bins},(_,i)=>({name:`${round(lo+step*i)}~${round(lo+step*(i+1))}`,value:0,members:[]}));
- for(const r of rows){const b=hist[Math.min(bins-1,Math.floor((r[p.column]-lo)/step))];b.value++;b.members.push(r.name);}
- const own=ctx.school_id?rows.find(r=>r.id===ctx.school_id):null,pct=own?round(100*vals.filter(v=>v<own[p.column]).length/vals.length,0):null;
- const llm={scope:s.label,column:p.column,n:vals.length,min:round(lo),q1:round(quantile(vals,.25)),median:round(median(vals)),q3:round(quantile(vals,.75)),max:round(hi),mean:round(mean(vals)),histogram:hist.map(h=>[h.name,h.value]),selected_school:own?{name:own.name,value:own[p.column],percentile:pct}:null,lowest:rows.slice().sort((a,b)=>a[p.column]-b[p.column]).slice(0,5).map(r=>[r.name,r[p.column]]),highest:rows.slice().sort((a,b)=>b[p.column]-a[p.column]).slice(0,5).map(r=>[r.name,r[p.column]])};
- const visual={title:`${table.label(p.column)} 분포 · ${s.label}`,chart:{kind:'bar',unit:'개교',title:'구간별 학교 수',points:hist.map(h=>({name:h.name,value:h.value,selected:own&&h.members.includes(own.name)}))},table:{headers:['학교 수','최솟값','1사분위','중앙값','3사분위','최댓값','평균'],rows:[[llm.n,llm.min,llm.q1,llm.median,llm.q3,llm.max,llm.mean]]},notes:[own?`${own.name}: ${own[p.column]}${table.unit(p.column)} · 같은 범위에서 하위 ${pct}% 위치.`:'구간 이름은 관측값 범위입니다.']};
+ const lo=vals[0],hi=vals.at(-1),bins=lo===hi?1:8,step=(hi-lo)/bins;
+ const hist=Array.from({length:bins},(_,i)=>({from:lo+step*i,to:i===bins-1?hi:lo+step*(i+1),value:0,members:[]}));
+ for(const r of rows){const index=step?Math.min(bins-1,Math.max(0,Math.floor((r[p.column]-lo)/step))):0;hist[index].value++;hist[index].members.push(r.id);}
+ for(const h of hist)h.name=h.from===h.to?String(h.from):`${h.from}~${h.to}`;
+ const own=ctx.school_id?rows.find(r=>r.id===ctx.school_id):null,pct=own?round(100*(vals.filter(v=>v<own[p.column]).length+vals.filter(v=>v===own[p.column]).length/2)/vals.length,1):null;
+ const llm={scope:s.label,column:p.column,n:vals.length,total:s.rows.length,missing:s.rows.length-vals.length,min:round(lo),q1:round(quantile(vals,.25)),median:round(median(vals)),q3:round(quantile(vals,.75)),max:round(hi),mean:round(mean(vals)),histogram:hist.map(h=>[h.name,h.value]),selected_school:own?{name:own.name,value:own[p.column],percentile:pct}:null,lowest:rows.slice().sort((a,b)=>a[p.column]-b[p.column]).slice(0,5).map(r=>[r.name,r[p.column]]),highest:rows.slice().sort((a,b)=>b[p.column]-a[p.column]).slice(0,5).map(r=>[r.name,r[p.column]])};
+ const visual={title:`${table.label(p.column)} 분포 · ${s.label}`,chart:{kind:'bar',unit:'개교',title:'구간별 학교 수',points:hist.map(h=>({name:h.name,value:h.value,selected:!!own&&h.members.includes(own.id)}))},table:{headers:['학교 수','최솟값','1사분위','중앙값','3사분위','최댓값','평균'],rows:[[llm.n,llm.min,llm.q1,llm.median,llm.q3,llm.max,llm.mean]]},notes:[`대상 ${llm.total}개교 · 유효값 ${llm.n}개교 · 미확보 ${llm.missing}개교. 미확보는 0으로 집계하지 않습니다.`,own?`${own.name}: ${own[p.column]}${table.unit(p.column)} · 값 크기 기준 백분위 ${pct}% (동점 절반 반영).`:'구간은 왼쪽 경계를 포함하고 오른쪽 경계를 제외하며 마지막 구간만 양쪽을 포함합니다.',...(vals.length<10?['유효 학교가 10개 미만이므로 분포 해석에 주의가 필요합니다.']:[])]};
  return {llm,visual,sources:sourcesFor(ctx,[p.column])};
 }
 function weighted_rank(ctx,p){
- const s=scope(ctx,p);const criteria=(p.criteria||[]).filter(c=>c&&!unset(c.column));if(!criteria.length||criteria.length>8)throw Error('기준은 1~8개입니다.');
- criteria.forEach(c=>{col(ctx,c.column);c.weight=Math.max(0,Number(c.weight??1));c.prefer=c.prefer==='low'?'low':'high';});
+ const criteria=(p.criteria||[]).filter(c=>c&&!unset(c.column)).map(c=>({...c}));
+ if(!criteria.length||criteria.length>8)throw Error('기준은 1~8개입니다.');
+ criteria.forEach(c=>{col(ctx,c.column);if(!Number.isFinite(Number(c.weight))||Number(c.weight)<0)throw Error('비중은 0 이상의 숫자여야 합니다.');c.weight=Number(c.weight);});
  const total=criteria.reduce((n,c)=>n+c.weight,0);if(!total)throw Error('가중치 합이 0입니다.');
- const rows=s.rows.filter(r=>criteria.every(c=>r[c.column]!=null)),excluded=s.rows.length-rows.length;
- if(rows.length<2)throw Error(`모든 기준 값이 있는 학교가 2개 미만입니다(${s.label}). 기준별 값 보유 학교 수: `+criteria.map(c=>`${c.column}=${s.rows.filter(r=>r[c.column]!=null).length}`).join(', ')+'. 값이 없는 기준을 빼거나 학교급을 바꾸세요.');
- const range={};for(const c of criteria){const v=rows.map(r=>r[c.column]);range[c.column]=[Math.min(...v),Math.max(...v)];}
- const scored=rows.map(r=>{const parts=criteria.map(c=>{const [lo,hi]=range[c.column];let n=hi===lo?0.5:(r[c.column]-lo)/(hi-lo);if(c.prefer==='low')n=1-n;return {column:c.column,raw:r[c.column],normalized:round(n,3),contribution:round(100*n*c.weight/total)};});return {id:r.id,name:r.name,gu:r.gu,lat:r.lat,lng:r.lng,score:round(parts.reduce((n,x)=>n+x.contribution,0)),parts};}).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name,'ko'));
- const limit=Math.min(30,Math.max(1,Number(p.limit)||10)),top=scored.slice(0,limit),own=ctx.school_id?scored.findIndex(x=>x.id===ctx.school_id):-1;
- const llm={scope:s.label,method:'각 기준을 범위 내 0~1로 정규화(prefer=low는 뒤집음) 후 가중 평균 ×100',weights:criteria.map(c=>({column:c.column,prefer:c.prefer,weight:c.weight,share_pct:round(100*c.weight/total,0)})),n_ranked:scored.length,excluded_missing:excluded,top:top.map((x,i)=>({rank:i+1,name:x.name,gu:x.gu,score:x.score,...Object.fromEntries(x.parts.map(pp=>[pp.column,pp.raw]))})),selected_school:own>=0?{rank:own+1,name:scored[own].name,score:scored[own].score}:null};
- const visual={title:`가중 우선순위 · ${s.label}`,map:points(top),chart:{kind:'bar',unit:'점',title:'가중 점수(0~100)',points:top.map(x=>({name:x.name,value:x.score,selected:x.id===ctx.school_id}))},
-  table:{headers:['순위','학교','군·구','점수',...criteria.map(c=>`${table.label(c.column)}${c.prefer==='low'?'↓':'↑'} (${round(100*c.weight/total,0)}%)`)],rows:top.map((x,i)=>[i+1,x.name,x.gu,x.score,...x.parts.map(pp=>`${pp.raw} → ${pp.contribution}`)])},
-  notes:[`기준 ${criteria.length}개 · 모든 값이 있는 ${scored.length}개교를 정렬${excluded?`, 값이 없는 ${excluded}개교 제외`:''}.`,'점수는 선택한 가중치에서의 상대 순위이며 가중치를 바꾸면 달라집니다. 기준 열의 “원값 → 기여점수”를 함께 표시했습니다.'],weights:llm.weights};
- return {llm,visual,sources:sourcesFor(ctx,criteria.map(c=>c.column))};
+ const weights=criteria.map(c=>({...c,share_pct:round(100*c.weight/total,1)}));
+ const results=weights.filter(c=>c.weight>0).sort((a,b)=>b.weight-a.weight).map(c=>{
+  const r=query_schools(ctx,{...p,sort_by:c.column,order:c.prefer==='low'?'asc':'desc',columns:criteria.map(x=>x.column),limit:p.limit||10});
+  r.visual.notes.push(`관심 비중 ${c.share_pct}% · 기준별 원값을 따로 확인합니다. 학교 종합점수·투자 순위가 아닙니다.`);
+  return r;
+ });
+ const sections=results.map(r=>r.visual);sections[0].weights=weights;
+ return {llm:{scope:scope(ctx,p).label,weights,method:'관심 비중에 따라 기준별 관측 패널의 표시 순서만 변경. 합산 점수 없음.',observations:results.map(r=>r.llm),constraints:'이용대상·안전·실행·출입구 경로는 별도 필수 확인. 미확인 조건은 가중치로 상쇄하지 않음. 도서 학교는 별도 검토.'},visual:sections[0],sections,sources:[...new Map(results.flatMap(r=>r.sources).map(s=>[s.id,s])).values()]};
 }
 function guide(ctx,p){
  const hits=require('./_guide_chunks').retrieve(p.topic||'').slice(0,2);
@@ -136,7 +137,7 @@ const TOOLS=[
  {name:'school_profile',description:'한 학교의 주요 지표와 같은 학교급 내 백분위·중앙값, 유사학교, 지정사업을 봅니다. 특정 학교 질문·“이 학교”·상대 위치 질문에 사용.',parameters:{type:'object',properties:{school_id:{type:['string','null']},name:{type:['string','null']},columns:{type:['array','null'],items:{type:'string'},description:'보고 싶은 열 id. null이면 기본 18개'}},required:['school_id','name','columns'],additionalProperties:false},strict:true},
  {name:'correlate',description:'두 수치 열의 상관(Pearson·Spearman)과 산점도.',parameters:{type:'object',properties:{level:{type:['string','null']},gu:{type:['string','null']},x:{type:'string'},y:{type:'string'}},required:['level','gu','x','y'],additionalProperties:false},strict:true},
  {name:'distribution',description:'한 열의 분포(사분위·히스토그램·최저/최고 학교)와 선택 학교의 백분위.',parameters:{type:'object',properties:{level:{type:['string','null']},gu:{type:['string','null']},column:{type:'string'}},required:['level','gu','column'],additionalProperties:false},strict:true},
- {name:'weighted_rank',description:'여러 기준에 가중치를 두어 학교 우선순위를 계산합니다. prefer=high는 값이 클수록 우선, low는 작을수록 우선. 정책·지원 우선순위·종합 판단 질문에 사용. 사용자가 가중치를 말하지 않았으면 합리적 기본 가중치로 먼저 계산하고, 답변에서 가중치를 조정할 수 있다고 안내합니다.',parameters:{type:'object',properties:{level:{type:['string','null']},gu:{type:['string','null']},island:{type:['string','null'],enum:['include','exclude','only',null]},criteria:{type:'array',items:{type:'object',properties:{column:{type:'string'},prefer:{type:'string',enum:['high','low']},weight:{type:'number'}},required:['column','prefer','weight'],additionalProperties:false}},limit:{type:['integer','null']}},required:['level','gu','island','criteria','limit'],additionalProperties:false},strict:true},
+ {name:'weighted_rank',description:'사용자가 명시한 관심 비중에 따라 기준별 관측 패널의 표시 순서만 바꿉니다. 합산 점수나 투자 순위를 계산하지 않습니다. 기준별 원값·표·차트를 제공합니다. 기본 비중을 임의로 제안하지 마세요.',parameters:{type:'object',properties:{level:{type:['string','null']},gu:{type:['string','null']},island:{type:['string','null'],enum:['include','exclude','only',null]},criteria:{type:'array',items:{type:'object',properties:{column:{type:'string'},prefer:{type:'string',enum:['high','low']},weight:{type:'number'}},required:['column','prefer','weight'],additionalProperties:false}},limit:{type:['integer','null']}},required:['level','gu','island','criteria','limit'],additionalProperties:false},strict:true},
  {name:'guide',description:'분석 방법·자료 범위·판단 원칙 설명 문서를 찾습니다. “어떻게 계산했나”, “무엇을 돕는 서비스인가”, 방법론 질문에만 사용.',parameters:{type:'object',properties:{topic:{type:'string'}},required:['topic'],additionalProperties:false},strict:true},
  {name:'ask_user',description:'질문이 모호해 결과가 크게 달라질 때만 사용자에게 선택지를 제시합니다(예: 비교 기준 열이 여러 개일 때, 가중치를 사용자가 정해야 할 때). 당연한 판단은 직접 내리고 이 도구를 쓰지 마세요. 호출하면 대화가 사용자에게 넘어갑니다.',parameters:{type:'object',properties:{prompt:{type:'string'},options:{type:['array','null'],items:{type:'object',properties:{id:{type:'string'},label:{type:'string'},description:{type:['string','null']}},required:['id','label','description'],additionalProperties:false}},multi:{type:['boolean','null']},weights:{type:['array','null'],description:'가중치 슬라이더로 보여줄 기준 제안',items:{type:'object',properties:{column:{type:'string'},prefer:{type:'string',enum:['high','low']},weight:{type:'number'}},required:['column','prefer','weight'],additionalProperties:false}}},required:['prompt','options','multi','weights'],additionalProperties:false},strict:true},
 ];

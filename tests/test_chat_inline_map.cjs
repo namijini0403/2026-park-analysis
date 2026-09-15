@@ -1,0 +1,21 @@
+'use strict';
+const fs=require('fs'),path=require('path'),assert=require('node:assert/strict'),{JSDOM}=require('jsdom');
+const root=path.resolve(__dirname,'..'),dom=new JSDOM('<div id="messages"><article id="a"></article><article id="b"></article></div>',{runScripts:'outside-only'}),w=dom.window,d=w.document;
+const maps=[];let ready=()=>Promise.resolve();
+w.EducationMaps={ready:()=>ready(),create(container){const m={container,dots:[],shapes:[],clears:[],destroyed:false,point:(lat,lng)=>({lat,lng}),dot(group,p,o){this.dots.push({group,p,o});},polygons(group,f,o){this.shapes.push({group,f,o});return [{lat:37,lng:126}];},route(){return [];},fit(points){this.bounds=points;},select(lat,lng){this.selected=[lat,lng];},clear(group){this.clears.push(group);},destroy(){this.destroyed=true;}};maps.push(m);return m;}};
+w.eval(fs.readFileSync(path.join(root,'assets/chat-map.js'),'utf8'));
+const point={id:'school-a',name:'학교 A',lat:37.5,lng:126.7},feature={type:'Feature',geometry:{type:'Polygon',coordinates:[[[126,37],[127,37],[127,38],[126,37]]]},properties:{name:'학구도 · 학교 A'}};
+const data={answerable:true,visual:{map:[point],geometries:[feature],sections:[{map:[point],geometries:[feature]}]}};
+const tick=()=>new Promise(r=>setTimeout(r,5));
+(async()=>{
+ const a=d.getElementById('a'),b=d.getElementById('b');w.ChatMap.mount(a,data);await tick();
+ assert(a.querySelector('.chat-map-canvas'));assert(!a.querySelector('.chat-map-canvas').closest('details'));assert.equal(maps[0].dots.length,1);assert.equal(maps[0].shapes.length,1,'duplicate geometries removed');
+ a.querySelector('select').value='0';a.querySelector('select').dispatchEvent(new w.Event('change'));assert.deepEqual(maps[0].selected,[37.5,126.7]);
+ const toggle=a.querySelector('input');toggle.checked=false;toggle.dispatchEvent(new w.Event('change'));assert.deepEqual(maps[0].clears,['zone']);
+ w.ChatMap.mount(b,data);await tick();assert.equal(maps.length,2);assert(!maps[0].destroyed,'previous answer map survives a new answer');assert.equal(d.querySelectorAll('.chat-map-canvas').length,2);
+ w.ChatMap.dispose(a);assert(maps[0].destroyed);assert(!maps[1].destroyed);
+ w.ChatMap.dispose(b);b.replaceChildren();let resolve;ready=()=>new Promise(r=>{resolve=r;});w.ChatMap.mount(b,data);w.ChatMap.dispose(b);b.replaceChildren();resolve();await tick();assert.equal(maps.length,2,'a disposed pending map never mounts');
+ ready=()=>Promise.reject(Error('offline'));w.ChatMap.mount(b,data);await tick();assert.equal(b.querySelector('.chat-map-retry').hidden,false);assert.match(b.textContent,/지도 연결을 완료하지 못했습니다/);
+ ready=()=>Promise.resolve();b.querySelector('.chat-map-retry').click();await tick();assert.equal(maps.length,3);assert.equal(b.querySelector('.chat-map-retry').hidden,true);
+ w.ChatMap.dispose(d.getElementById('messages'));assert(maps[2].destroyed);dom.window.close();console.log('PASS inline maps: visible, independent, school focus, boundary toggle, deduplication, cleanup, retry');
+})().catch(e=>{dom.window.close();console.error(e);process.exitCode=1;});

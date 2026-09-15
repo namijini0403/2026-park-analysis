@@ -13,7 +13,7 @@ window.EducationMaps=(()=>{
    script.onload=()=>{if(!window.kakao?.maps){clearTimeout(timer);reject(Error('카카오맵 인증을 확인해 주세요.'));return;}kakao.maps.load(()=>{clearTimeout(timer);resolve();});};
    document.head.append(script);
   });
-  return loading;
+  return loading=loading.catch(error=>{loading=null;throw error;});
  }
  const point=(lat,lng)=>new kakao.maps.LatLng(lat,lng);
  function create(container,{center=[37.49,126.68],level=8}={}){

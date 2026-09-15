@@ -1,65 +1,64 @@
 'use strict';
-// 05 영역별 통계 탭. 영역·학교급을 고르면 지표마다 분포·군구 비교·커버리지를 그린다.
-// 미확보는 분포·평균에서 빠지며 사유별 개교 수로만 표시한다 (0으로 요약하지 않는다).
 (function(global){
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const finite=Number.isFinite;
-const $=id=>global.document.getElementById(id);
-const DOMAIN_OPTIONS=[['designation','지정·지원사업'],['park','공원·야외'],['reading','도서·독서'],['academy','학원'],['safety','안전 환경'],['boundary','도보권·학구도'],['trend','학생 추세'],['school','학생·교원'],['development','주변 개발']];
-const DIRECTION_TEXT={up:'많을수록 유리 ↑',down:'많을수록 불리 ↓',neutral:'해석에 정책 판단 필요 ·'};
-const fmt=v=>finite(v)?(Math.round(v*100)/100).toLocaleString('ko-KR'):'미확보';
-let ticket=0;
-
-function indicatorBlock(i,level){
- const u=esc(i.unit||'');
- const head=`<h3>${esc(i.label)}${i.unit?` <small>(${u})</small>`:''} <span class="stat-dir">${esc(DIRECTION_TEXT[i.direction]||'')}</span></h3>`
-  +(i.note?`<p class="fine">${esc(i.note)}</p>`:'');
- const missTotal=i.coverage.missing.reduce((a,b)=>a+b.n,0);
- const coverage=`<p class="stat-coverage">확보 ${i.coverage.available} · 미확보 ${missTotal}</p>`
-  +(i.coverage.missing.length?`<ul class="stat-missing">${i.coverage.missing.map(m=>`<li>${esc(m.detail)} ${m.n}곳</li>`).join('')}</ul>`:'');
- if(!i.overall.n)
-  return `<article class="stat-indicator">${head}<p class="stat-empty">관측된 값이 없습니다. 아래 미확보 사유를 확인하세요.</p>${coverage}</article>`;
- const chart=global.IndicatorCharts?global.IndicatorCharts.histogram({bins:i.histogram,selectedValue:i.selected&&i.selected.value,unit:i.unit}):'';
- const summary=`<p class="stat-summary">유효 ${i.overall.n}개교 · 평균 ${fmt(i.overall.mean)}${u} · 중앙값 ${fmt(i.overall.median)}${u} · 범위 ${fmt(i.overall.min)}~${fmt(i.overall.max)}${u}</p>`;
- const picked=i.selected?`<p class="stat-selected">선택 학교 ${fmt(i.selected.value)}${u} · 백분위 (값이 큰 쪽) ${fmt(i.selected.percentile)}% · ${i.selected.track==='island'?'도서지역 ':''}${i.overall.n}개교 중 ${i.selected.rank}위</p>`:'';
- const island=i.island.n?`<p class="stat-island">강화·옹진 도서지역 ${i.island.n}개교 · 평균 ${fmt(i.island.mean)}${u} · 중앙값 ${fmt(i.island.median)}${u} (별도 집계)</p>`:'';
- const gu=i.gu.length?`<details class="stat-gu"><summary>군·구별 비교</summary><div class="table-scroll"><table><thead><tr><th>군·구</th><th>개교</th><th>평균</th><th>중앙값</th></tr></thead><tbody>`
-  +i.gu.map(g=>`<tr><td>${esc(g.name)}</td><td>${g.n}</td><td>${fmt(g.mean)}${u}</td><td>${fmt(g.median)}${u}</td></tr>`).join('')
-  +`</tbody></table></div><p class="fine">개교 수가 적은 군·구는 평균이 흔들립니다. 순위 근거로 쓰지 마세요.</p></details>`:'';
- return `<article class="stat-indicator">${head}${chart}${summary}${picked}${island}${gu}${coverage}</article>`;
+const finite=Number.isFinite,$=id=>global.document.getElementById(id);
+const OPTIONS=[['designation','지정·지원사업'],['park','공원·야외'],['reading','도서·독서'],['academy','학원'],['safety','안전 환경'],['boundary','도보권·학구도'],['trend','학생 추세'],['school','학생·교원'],['development','주변 개발']];
+const fmt=v=>finite(v)?v.toLocaleString('ko-KR',{maximumSignificantDigits:6}):'미확보';
+let ticket=0,current=null,column=null,track='general',view='distribution',district='',pairColumn='students';const cache=new Map();
+function range(s,extent,selected){
+ if(!s.n)return '<span class="ds-empty">관측된 값이 없습니다</span>';
+ const pos=v=>extent.max===extent.min?50:Math.max(0,Math.min(100,100*(v-extent.min)/(extent.max-extent.min)));
+ const mark=(v,cls,label)=>finite(v)?`<i class="${cls}" style="left:${pos(v)}%" title="${label} ${fmt(v)}"></i>`:'';
+ return `<div class="ds-range" role="img" aria-label="최소 ${fmt(s.min)}, 중간 50% ${fmt(s.q1)}부터 ${fmt(s.q3)}, 중앙값 ${fmt(s.median)}, 평균 ${fmt(s.mean)}, 최대 ${fmt(s.max)}${finite(selected)?', 선택 학교 '+fmt(selected):''}"><span class="ds-whisker" style="left:${pos(s.min)}%;width:${pos(s.max)-pos(s.min)}%"></span><span class="ds-iqr" style="left:${pos(s.q1)}%;width:${pos(s.q3)-pos(s.q1)}%"></span>${mark(s.min,'ds-end','최소')}${mark(s.max,'ds-end','최대')}${mark(s.median,'ds-median','중앙값')}${mark(s.mean,'ds-mean','평균')}${mark(selected,'ds-picked','선택 학교')}</div>`;
 }
-
+function render(){
+ if(!current)return;
+ const list=current.indicators,i=list.find(x=>x.column===column)||list[0];
+ if(!i){$('stats-body').innerHTML='<p>이 영역에는 비교할 수치 지표가 없습니다.</p>';return;}
+ column=i.column;
+ const s=track==='island'?i.island:i.overall,c=i.coverage[track],u=esc(i.unit),forecast=/forecast|predict/.test(i.column),selected=i.selected?.track===track?i.selected:null;
+ const unit=v=>`${fmt(v)}<small>${u}</small>`;
+ const headline=!s.n?'관측된 값이 없습니다':s.n===1?'값이 확보된 학교가 한 곳뿐입니다':s.min===s.max?'확보된 학교의 값이 모두 같습니다':`중간 50% 학교는 ${fmt(s.q1)}~${fmt(s.q3)}${u}에 분포합니다`;
+ const groups=i.gu.filter(g=>g.track===track).sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+ const tableRows=groups.map(g=>`<tr><th>${esc(g.name)}</th><td>${g.n}/${g.total}</td><td>${fmt(g.min)}</td><td>${fmt(g.q1)}</td><td>${fmt(g.median)}</td><td>${fmt(g.mean)}</td><td>${fmt(g.q3)}</td><td>${fmt(g.max)}</td></tr>`).join('');
+ $('stats-body').innerHTML=`<div class="ds-dashboard"><div class="ds-indicators" role="group" aria-label="살펴볼 지표">${list.map(x=>`<button type="button" data-indicator="${esc(x.column)}" aria-pressed="${x===i}">${esc(x.label)}</button>`).join('')}</div><div class="ds-tracks" role="group" aria-label="비교 지역"><button type="button" data-track="general" aria-pressed="${track==='general'}">일반지역</button><button type="button" data-track="island" aria-pressed="${track==='island'}">강화·옹진 별도 검토</button></div><p class="fine">${track==='island'?'강화군·옹진군을 별도로 집계합니다. 행정구역 기준이며 개별 섬 여부를 확정하지 않습니다.':'강화군·옹진군을 제외한 같은 학교급끼리 비교합니다.'}</p><article class="ds-overview"><p class="ds-kicker">${esc(i.label)} · ${forecast?'예측값 분포':'확보된 값의 분포'}</p><h3>${headline}</h3>${forecast?'<p>예측 모형의 지원 신호이며 실제 변화가 확정된 값은 아닙니다.</p>':''}<div class="ds-metrics"><div><span>중앙값</span><strong>${unit(s.median)}</strong></div><div><span>중간 50% 범위</span><strong>${s.n?unit(s.q1)+' ~ '+unit(s.q3):'미확보'}</strong></div><div><span>자료 확보 / 대상 학교</span><strong>${c.available}<small> / ${c.total}곳</small></strong><span>미확보 ${c.missing_n}곳</span></div></div><div class="ds-coverage" role="img" aria-label="확보 ${c.available}곳, 미확보 ${c.missing_n}곳"><span style="width:${c.total?100*c.available/c.total:0}%"></span></div>${s.n?`<div class="ds-main-range">${range(s,s,selected?.value)}<div class="ds-axis"><span>최소 ${fmt(s.min)}${u}</span><span>최대 ${fmt(s.max)}${u}</span></div></div><p class="ds-legend"><span>━ 중간 50%</span><span>│ 중앙값</span><span>● 평균 ${fmt(s.mean)}${u}</span>${selected?'<span class="ds-selected-label">◆ 선택 학교</span>':''}</p>`:'<p>미확보는 0이 아닙니다. 자료 확보 전 비교를 보류합니다.</p>'}${selected?`<p class="ds-school">${esc(selected.name||'선택 학교')} <strong>${fmt(selected.value)}${u}</strong> · 같은 범위 ${selected.population_n}곳 기준 값 크기 백분위 ${fmt(selected.percentile)}%<br><small>값의 상대 위치이며 유불리나 지원 순위가 아닙니다.</small></p>`:i.selected?'<p class="fine">선택 학교는 다른 비교 지역에 있어 이 분포에는 표시하지 않습니다.</p>':''}${s.n>0&&s.n<10?'<p class="fine">확보 학교가 10곳 미만입니다. 소수 학교의 값에 따라 요약치가 크게 달라질 수 있습니다.</p>':''}</article><section class="ds-districts"><h3>군·구별, 어디에서 차이가 날까요?</h3><p class="fine">이름순 · 같은 수치축 · 굵은 띠는 중간 50%, 세로선은 중앙값, 점은 평균 · 단위 ${u||'없음'}</p>${groups.map(g=>`<div class="ds-district"><div><strong>${esc(g.name)}</strong><small>확보 ${g.n}/${g.total}곳${g.n&&g.n<10?' · 표본 적음':''}</small></div>${range(g,s)}<span>${fmt(g.median)}${u}</span></div>`).join('')}${s.n?`<div class="ds-axis ds-district-axis"><span>${fmt(s.min)}${u}</span><span>${fmt(s.max)}${u}</span></div>`:''}</section><details class="ds-details"><summary>정확한 수치 · 미확보 사유 · 읽는 방법</summary><p>${esc(i.note||'동일한 지표 안에서만 값을 비교합니다.')}</p><p>얇은 선은 실제 최솟값~최댓값이며, 굵은 띠는 25~75백분위 범위입니다. 이상치 판정이나 신뢰구간이 아닙니다. 사분위는 정렬된 값의 (n−1)p 위치를 선형 보간합니다.</p><p>전체 지역 합계: 확보 ${i.coverage.available} · 미확보 ${i.coverage.missing_n} / ${i.coverage.total}곳</p><ul>${c.missing.map(m=>`<li>${esc(m.detail)}: ${m.n}곳</li>`).join('')||'<li>현재 비교 범위에서 미확보 값이 없습니다.</li>'}</ul><div class="table-scroll"><table><caption>군·구별 수치 (${u})</caption><thead><tr><th>군·구</th><th>확보/대상</th><th>최소</th><th>25%</th><th>중앙값</th><th>평균</th><th>75%</th><th>최대</th></tr></thead><tbody>${tableRows}</tbody></table></div></details>${(current.excluded_indicators||[]).map(x=>`<p class="fine">${esc(x.detail)}</p>`).join('')}</div>`;
+ enhance(i,s,groups);
+ $('stats-body').querySelectorAll('[data-indicator]').forEach(b=>b.addEventListener('click',()=>{column=b.dataset.indicator;render();}));
+ $('stats-body').querySelectorAll('[data-track]').forEach(b=>b.addEventListener('click',()=>{track=b.dataset.track;render();}));
+}
+function histogramChart(bins,i){
+ if(!bins?.length)return '<p class="ds-empty">분포를 그릴 관측값이 없습니다. 비교를 보류합니다.</p>';
+ const max=Math.max(...bins.map(b=>b.count)),w=600/bins.length;
+ return `<figure class="statistical-chart"><div class="statistical-chart-scroll" tabindex="0" role="region" aria-label="구간별 학교 수 그래프"><svg viewBox="0 0 720 300" role="img" aria-label="${esc(i.label)} 도수 분포">${[0,.5,1].map(t=>`<path d="M60 ${240-t*190}H670" stroke="#e1e9e4"/><text x="48" y="${244-t*190}" text-anchor="end" font-size="12">${fmt(max*t)}</text>`).join('')}${bins.map((b,j)=>`<rect x="${60+j*w+2}" y="${240-b.count/max*190}" width="${w-4}" height="${b.count/max*190}" rx="3" fill="#548772"><title>${fmt(b.from)} 이상 ~ ${fmt(b.to)}${j===bins.length-1?' 이하':' 미만'} ${esc(i.unit)}: ${b.count}곳</title></rect>`).join('')}<text x="60" y="270" font-size="12">${fmt(bins[0].from)}</text><text x="665" y="270" text-anchor="end" font-size="12">${fmt(bins.at(-1).to)} ${esc(i.unit)}</text><text x="60" y="25" font-size="12">학교 수 (곳)</text></svg></div><figcaption>구간별 학교 수 · 마지막 구간만 상한 포함 · 미확보 값 제외. 막대에 마우스를 올리면 정확한 범위를 확인합니다.</figcaption></figure>`;
+}
+function pearson(points){if(points.length<3)return null;const n=points.length,mx=points.reduce((s,p)=>s+p.x,0)/n,my=points.reduce((s,p)=>s+p.y,0)/n;let xy=0,xx=0,yy=0;for(const p of points){xy+=(p.x-mx)*(p.y-my);xx+=(p.x-mx)**2;yy+=(p.y-my)**2;}return xx&&yy?Math.max(-1,Math.min(1,xy/Math.sqrt(xx*yy))):null;}
+function downloadRows(i,rows){const cell=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const csv='\ufeff'+[['학교명','군·구',i.label+' ('+i.unit+')','자료 상태'],...rows.map(r=>[r.name,r.gu,r.value,finite(r.value)?'확보':'미확보'])].map(row=>row.map(cell).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='전체통계-'+i.column+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function enhance(i,s,groups){
+ const host=$('stats-body').querySelector('.ds-dashboard');
+ const tabs=document.createElement('nav');tabs.className='ds-view-tabs';tabs.setAttribute('aria-label','통계 분석 화면');tabs.innerHTML=[['distribution','전체 분포'],['district','군·구 비교'],['relationship','두 지표 관계'],['data','학교별 자료']].map(([id,label])=>`<button type="button" data-view="${id}" aria-pressed="${view===id}">${label}</button>`).join('');host.querySelector('.ds-overview').before(tabs);
+ const overview=host.querySelector('.ds-overview');overview.hidden=view!=='distribution';
+ const hist=document.createElement('section');hist.className='ds-chart-card';hist.hidden=view!=='distribution';hist.innerHTML='<p class="ds-kicker">분포의 모양</p><h3>값이 어느 구간에 모여 있을까요?</h3>'+histogramChart(track==='island'?i.island_histogram:i.histogram,i);overview.after(hist);
+ const districts=host.querySelector('.ds-districts');districts.hidden=view!=='district';
+ const regionChart=document.createElement('div');regionChart.className='ds-region-chart';regionChart.innerHTML=global.StatisticalCharts?.dotPlot({title:i.label+' · 군·구별 중앙값',unit:i.unit,points:groups.map(g=>({name:g.name,value:g.median}))})||'';districts.querySelector('h3').after(regionChart);
+ const coverage=document.createElement('details');coverage.className='ds-details ds-domain-coverage';coverage.innerHTML='<summary>이 영역의 자료 확보 현황</summary><p class="fine">각 지표의 확보율이며 영역 점수가 아닙니다.</p>'+current.indicators.map(x=>{const c=x.coverage[track];return `<div class="ds-coverage-row"><span>${esc(x.label)}</span><meter min="0" max="${c.total||1}" value="${c.available}" aria-label="${esc(x.label)} 확보 ${c.available}/${c.total}"></meter><small>${c.available}/${c.total}곳</small></div>`;}).join('');host.append(coverage);
+ const relationship=document.createElement('section');relationship.className='ds-chart-card ds-relationship';relationship.hidden=view!=='relationship';relationship.innerHTML='<p class="ds-kicker">영역을 넘나드는 비교</p><h3>두 지표는 함께 어떻게 달라질까요?</h3><p class="fine">X축은 현재 선택 지표입니다. Y축은 다른 영역에서도 고를 수 있습니다. 두 값이 모두 확보된 같은 학교만 비교합니다.</p><label>Y축 지표<select id="stats-pair"></select></label><div id="stats-pair-result" aria-live="polite"></div>';host.append(relationship);
+ const catalog=current.catalog||current.indicators.map(x=>({...x,domain:current.domain})),choices=catalog.filter(x=>x.column!==i.column);if(!choices.some(x=>x.column===pairColumn))pairColumn=choices[0]?.column;
+ relationship.querySelector('select').innerHTML=OPTIONS.map(([domain,label])=>`<optgroup label="${label}">${choices.filter(x=>x.domain===domain).map(x=>`<option value="${x.column}" ${x.column===pairColumn?'selected':''}>${esc(x.label)}</option>`).join('')}</optgroup>`).join('');
+ async function drawPair(){const target=relationship.querySelector('#stats-pair-result'),other=choices.find(x=>x.column===pairColumn);if(!other){target.textContent='함께 비교할 지표가 없습니다.';return;}const wanted=pairColumn;target.textContent='두 지표의 공통 자료를 확인하고 있습니다…';try{let data=current;if(other.domain!==current.domain){const key=current.level+':'+other.domain;data=cache.get(key);if(!data){const r=await fetch(`/api/domain-stats?domain=${other.domain}&level=${encodeURIComponent(current.level)}`);if(!r.ok)throw Error('비교 자료를 불러오지 못했습니다.');data=await r.json();cache.set(key,data);}}if(!target.isConnected||wanted!==pairColumn)return;const y=data.indicators.find(x=>x.column===wanted),byId=new Map((y?.observations||[]).map(r=>[r.id,r.value])),rows=(i.observations||[]).filter(r=>r.track===track),points=rows.filter(r=>finite(r.value)&&finite(byId.get(r.id))).map(r=>({name:r.name,x:r.value,y:byId.get(r.id),forecast:/forecast/.test(i.column)||/forecast/.test(wanted),selected:r.id===$('school')?.value})),r=pearson(points);target.innerHTML=`<div class="ds-pair-metrics"><strong>공통 자료 ${points.length} / ${rows.length}곳</strong><span>한쪽 이상 미확보 ${rows.length-points.length}곳</span><span>피어슨 r ${r===null?'계산 보류':r.toFixed(3)}</span></div><p class="fine">${points.length<10?'표본이 적어 일부 학교의 영향이 큽니다. ':''}${r===null?'공통 자료가 3곳 미만이거나 값의 변화가 없어 상관을 계산하지 않습니다. ':''}상관은 인과관계나 정책 효과가 아닙니다. 자료의 기준연도·단위가 다를 수 있습니다.</p>${global.StatisticalCharts?.scatter({title:i.label+' × '+other.label,x:[i.label+' ('+i.unit+')'],y:[other.label+' ('+other.unit+')'],points})||''}<details><summary>공통 학교 수치 보기</summary><div class="table-scroll"><table><thead><tr><th>학교</th><th>${esc(i.label)}</th><th>${esc(other.label)}</th></tr></thead><tbody>${points.map(p=>`<tr><td>${esc(p.name)}</td><td>${fmt(p.x)}</td><td>${fmt(p.y)}</td></tr>`).join('')}</tbody></table></div></details>`;}catch(e){if(target.isConnected)target.textContent=e.message;}}
+ relationship.querySelector('select').onchange=e=>{pairColumn=e.target.value;drawPair();};if(view==='relationship')drawPair();
+ const data=document.createElement('section');data.className='ds-chart-card ds-school-data';data.hidden=view!=='data';data.innerHTML='<p class="ds-kicker">관측 근거 확인</p><h3>학교별 자료를 살펴보세요</h3><div class="ds-data-filters"><label>군·구<select id="stats-district"><option value="">현재 비교 지역 전체</option>'+groups.map(g=>`<option value="${esc(g.name)}">${esc(g.name)}</option>`).join('')+'</select></label><label>학교명 검색<input id="stats-search" type="search" placeholder="학교명 입력"></label><button type="button" id="stats-csv">현재 목록 CSV ↓</button></div><div id="stats-school-table"></div>';host.append(data);
+ if(!groups.some(g=>g.name===district))district='';data.querySelector('select').value=district;let visible=[];
+ function drawRows(){const q=data.querySelector('input').value.trim();visible=(i.observations||[]).filter(r=>r.track===track&&(!district||r.gu===district)&&(!q||r.name.includes(q))).sort((a,b)=>a.name.localeCompare(b.name,'ko'));data.querySelector('#stats-school-table').innerHTML=`<p class="fine">${visible.length}곳 · 학교명순 · ${esc(i.label)} (${esc(i.unit)}) · 미확보는 판단 보류</p><div class="table-scroll"><table><thead><tr><th>학교</th><th>군·구</th><th>값</th><th>상태</th></tr></thead><tbody>${visible.map(r=>`<tr><td><a href="/?school=${encodeURIComponent(r.id)}" target="_blank" rel="noopener">${esc(r.name)} ↗</a></td><td>${esc(r.gu)}</td><td>${fmt(r.value)}</td><td>${finite(r.value)?'확보':'미확보 · 판단 보류'}</td></tr>`).join('')||'<tr><td colspan="4">조건에 맞는 학교가 없습니다.</td></tr>'}</tbody></table></div>`;}
+ data.querySelector('select').onchange=e=>{district=e.target.value;drawRows();};data.querySelector('input').oninput=drawRows;data.querySelector('#stats-csv').onclick=()=>downloadRows(i,visible);drawRows();
+ host.append(host.querySelector('.ds-details'),coverage);
+ tabs.querySelectorAll('button').forEach(b=>b.onclick=()=>{view=b.dataset.view;render();});
+}
 async function load(){
- const mine=++ticket,domain=$('stats-domain').value,level=$('stats-level').value;
- const school=$('school')&&$('school').value?$('school').value:'';
- $('stats-status').textContent='통계를 계산하고 있습니다…';
- try{
-  const r=await fetch(`/api/domain-stats?domain=${encodeURIComponent(domain)}&level=${encodeURIComponent(level)}${school?'&school='+encodeURIComponent(school):''}`,{cache:'no-store'});
-  const data=await r.json();
-  if(mine!==ticket)return;
-  if(!r.ok)throw Error(data.error||'통계를 불러오지 못했습니다.');
-  $('stats-status').textContent=`${data.label} · ${data.level} 기준 · 지표 ${data.indicators.length}개`;
-  $('stats-body').innerHTML=data.indicators.map(i=>indicatorBlock(i,data.level)).join('')
-   ||'<p class="muted">이 영역에는 수치 지표가 없습니다.</p>';
- }catch(e){
-  if(mine!==ticket)return;
-  $('stats-status').textContent=e.message;
-  $('stats-body').innerHTML='';
- }
+ const mine=++ticket,domain=$('stats-domain').value,level=$('stats-level').value,school=$('school')?.value||'';
+ $('stats-status').textContent='통계를 계산하고 있습니다…';$('stats-body').setAttribute('aria-busy','true');
+ try{const r=await fetch(`/api/domain-stats?domain=${encodeURIComponent(domain)}&level=${encodeURIComponent(level)}${school?'&school='+encodeURIComponent(school):''}`,{cache:'no-store'});const data=await r.json();if(mine!==ticket)return;if(!r.ok)throw Error(data.error||'통계를 불러오지 못했습니다.');current=data;cache.set(data.level+':'+data.domain,data);$('stats-status').textContent=`${data.label} · ${data.level} · 지표 ${data.indicators.length}개`;render();}catch(e){if(mine!==ticket)return;$('stats-status').textContent=e.message;$('stats-body').innerHTML='';}finally{if(mine===ticket)$('stats-body').removeAttribute('aria-busy');}
 }
-
-function init(){
- const sel=$('stats-domain');if(!sel)return;
- if(!sel.options.length)sel.innerHTML=DOMAIN_OPTIONS.map(([id,label])=>`<option value="${esc(id)}">${esc(label)}</option>`).join('');
- if(!sel.dataset.bound){sel.dataset.bound='1';sel.addEventListener('change',load);$('stats-level').addEventListener('change',load);}
-}
-function open(domain){
- init();
- if(domain)$('stats-domain').value=domain;
- const button=global.document.querySelector('.workspace-nav [data-workspace="stats"]');
- if(button)button.click();
- load();
-}
-global.DomainStats={init,open,load};
-if(global.document)global.document.addEventListener('DOMContentLoaded',init);
+function init(){const sel=$('stats-domain');if(!sel)return;if(!sel.options.length)sel.innerHTML=OPTIONS.map(([id,label])=>`<option value="${id}">${label}</option>`).join('');if(!sel.dataset.bound){sel.dataset.bound='1';sel.value='park';global.document.querySelector('.workspace-nav [data-workspace="stats"]')?.addEventListener('click',load);sel.addEventListener('change',load);$('stats-level').addEventListener('change',load);}}
+function open(domain){init();if(domain)$('stats-domain').value=domain;global.document.querySelector('.workspace-nav [data-workspace="stats"]')?.click();}
+global.DomainStats={init,open,load};if(global.document)global.document.addEventListener('DOMContentLoaded',init);
 })(typeof window!=='undefined'?window:globalThis);

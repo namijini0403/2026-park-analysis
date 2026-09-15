@@ -11,6 +11,7 @@ const outputDir = path.join(root, "vercel_public");
 
 const requiredRootFiles = ["index.html", "logo.png", "update-center.html", "office-documents.html"];
 const requiredDataFiles = [
+  "school_priority.csv",
   "school_priority_with_functional_park_layer.csv",
   "schools.csv",
   "student_trend.csv",

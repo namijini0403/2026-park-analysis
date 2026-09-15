@@ -1,0 +1,72 @@
+/* Conversation and selected evidence occupy separate, equal panes. */
+#workspace-ask .chat-section{max-width:1600px;margin:0 auto}
+#workspace-ask .chat-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+#workspace-ask .conversation{min-width:0}
+#workspace-ask #messages{display:flex;flex-direction:column;gap:24px;max-height:none;overflow:visible}
+#workspace-ask .agent-message{padding:0;border:0;background:transparent;box-shadow:none}
+#workspace-ask .agent-message>h3{margin:20px 0 24px auto;padding:14px 20px;max-width:85%;width:fit-content;border-radius:20px 20px 4px 20px;background:#e4eee8;font-size:1rem;font-weight:500;line-height:1.6}
+#workspace-ask .agent-summary{white-space:pre-line;font-size:1.06rem;line-height:1.9;font-weight:400;margin:0 0 16px;color:#203c34}
+#workspace-ask .agent-highlights{line-height:1.8;padding-left:22px}
+#workspace-ask .agent-inline-visual>section{border:1px solid #dce6df;border-radius:16px;padding:18px;margin:18px 0;background:white}
+#workspace-ask .agent-inline-visual h4{margin:0 0 16px;font-size:.95rem}
+#workspace-ask .agent-inline-visual figure{margin:0}
+#workspace-ask .agent-inline-visual svg{display:block;width:100%;height:auto;max-height:none}
+#workspace-ask .agent-inline-visual figcaption{font-size:.78rem;color:#677970;margin:8px 0 16px}
+#workspace-ask .agent-message details{margin:12px 0;font-size:.88rem}
+#workspace-ask summary{cursor:pointer;line-height:1.7}
+#workspace-ask .agent-weights{background:#f6f8f6;padding:14px 18px;border:1px solid #dde7df;border-radius:12px}
+#workspace-ask .agent-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;font-size:.8rem}
+#workspace-ask #evidence-panel{position:static;width:100%;max-height:none;overflow:visible;box-shadow:none;margin:12px 0;min-width:0}
+#workspace-ask .chat-workspace> #evidence-panel{display:block;position:sticky;top:16px;max-height:calc(100vh - 48px);overflow:auto;margin:0;padding:24px;background:#f7f9f7;border:1px solid #dce6df;border-radius:20px}
+#workspace-ask #chat-form{position:sticky;bottom:8px;z-index:5;display:flex;gap:12px;padding:12px;border:1px solid #d6e2d9;border-radius:18px;background:white;box-shadow:0 5px 24px #183b2412;margin-top:20px;align-items:end}
+#workspace-ask #question{border:0;background:transparent;resize:vertical;min-height:64px;flex:1;min-width:0;padding:10px}
+#workspace-ask #send{border-radius:12px;white-space:nowrap;padding:12px 18px}
+#workspace-ask .chat-save-bar{font-size:.8rem;margin:16px 0;padding:12px;background:transparent}
+#workspace-ask .agent-followups button{border-radius:18px;font-size:.85rem;padding:8px 14px}
+@media(max-width:640px){#workspace-ask .agent-inline-visual>section{padding:10px}#workspace-ask .agent-summary{font-size:1rem}#workspace-ask #chat-form{gap:4px;padding:8px}#workspace-ask #send{padding:12px 10px}#workspace-ask .agent-message>h3{max-width:95%}#workspace-ask .agent-inline-visual figure{overflow-x:auto}#workspace-ask .agent-inline-visual svg{min-width:500px}}
+
+#workspace-ask #messages:empty + .chat-save-bar{display:none}
+#workspace-ask .chat-save-bar>summary{font-size:.85rem;color:#64776b}
+
+#workspace-ask .agent-inline-map{min-width:0;margin:18px 0 22px;padding:14px;background:#fff;border:1px solid #dce6df;border-radius:16px}
+#workspace-ask .chat-map-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:.95rem}
+#workspace-ask .chat-map-toolbar strong{margin-right:auto}
+#workspace-ask .chat-map-toolbar button,#workspace-ask .chat-map-toolbar select{width:auto;font-size:.85rem;padding:8px 10px;max-width:100%}
+#workspace-ask .chat-map-canvas{height:420px;width:100%;border-radius:10px;overflow:hidden;background:#edf2ef;isolation:isolate}
+#workspace-ask .chat-map-layers{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:.82rem}
+#workspace-ask .chat-map-layers label{display:flex;gap:6px;align-items:center;margin:0}
+#workspace-ask .chat-map-layers input{width:auto;margin:0}
+#workspace-ask .chat-map-layers i{width:12px;height:12px;border-radius:3px}
+#workspace-ask .chat-map-status{margin:10px 0 0;line-height:1.6}
+@media(max-width:640px){#workspace-ask .agent-inline-map{padding:10px}#workspace-ask .chat-map-canvas{height:340px}#workspace-ask .chat-map-toolbar select{max-width:190px}}
+
+#workspace-ask .chat-flow{display:flex;gap:20px;list-style:none;padding:14px 0;margin:12px 0 24px;border-bottom:1px solid #dce6df;font-size:.82rem;color:#597366}
+#workspace-ask .chat-variable-step{padding:22px;border:1px solid #dce6df;border-radius:18px;background:#fff}
+#workspace-ask .chat-variable-step h4{font-size:1.08rem;margin:8px 0}
+#workspace-ask .chat-result-label{font-size:.75rem;letter-spacing:.04em;color:#577666;margin:18px 0 10px}
+#workspace-ask .chat-variable-options{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+#workspace-ask .chat-variable-options label{display:flex;gap:7px;align-items:center;border:1px solid #dce6df;border-radius:20px;padding:8px 12px;font-size:.84rem;cursor:pointer}
+#workspace-ask .chat-variable-options label:has(:checked){background:#e4eee8;border-color:#527a65}
+#workspace-ask .chat-variable-options input{width:auto;margin:0}
+#workspace-ask .chat-step-actions{display:flex;gap:10px;margin-top:20px}
+#workspace-ask .chat-analysis-steps{line-height:2;color:#52685d;padding-left:20px}
+#workspace-ask #evidence-panel .export-actions{display:flex;flex-wrap:wrap;gap:6px}
+#workspace-ask #evidence-panel .export-actions button{font-size:.75rem;padding:7px 10px}
+#workspace-ask #evidence-panel svg{max-width:100%;height:auto}
+#workspace-ask #evidence-panel .table-scroll{max-height:340px;overflow:auto}
+#workspace-ask .agent-summary{margin-top:12px}
+#workspace-ask .chat-section>.fine{max-width:720px}
+.chat-delete.danger,.saved-actions .danger{color:#a13d35;background:#fff5f3;border:1px solid #e6c3be}
+@media(max-width:900px){#workspace-ask .chat-workspace{grid-template-columns:minmax(0,1fr)}#workspace-ask .chat-workspace> #evidence-panel{position:static;max-height:none;padding:16px}#workspace-ask .chat-flow{gap:14px;font-size:.75rem}}
+
+#workspace-ask #messages:empty::before{content:"무엇을 함께 살펴볼까요?";display:block;text-align:center;padding:70px 20px 50px;font-size:1.5rem;font-weight:600;color:#294d3d}
+#workspace-ask .chat-settings{margin:16px 0;color:#586f62;font-size:.86rem}
+#workspace-ask .chat-settings[open]{padding:14px 18px;background:#f7f9f7;border-radius:12px}
+#workspace-ask .conversation>.upload-box{margin-top:16px}
+
+#workspace-ask .chat-variable-options{display:grid;grid-template-columns:1fr}
+#workspace-ask .chat-variable-options label{border-radius:12px;align-items:start;padding:12px}
+#workspace-ask .chat-variable-options input{margin-top:4px}
+#workspace-ask .chat-variable-options strong,#workspace-ask .chat-variable-options small{display:block}
+#workspace-ask .chat-variable-options small{color:#5b7064;line-height:1.6;margin-top:4px}
+#workspace-ask .chat-plan-summary{font-size:.95rem;line-height:1.8}

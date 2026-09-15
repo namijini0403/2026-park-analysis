@@ -65,6 +65,7 @@ function render(el,data){
   el.innerHTML=`<div class="school-heading"><h2>${esc(s.name)}</h2>`
    +`<span class="badge">${esc(s.level)}${s.gu?' · '+esc(s.gu):''}</span>${badges}</div>`
    +`<p class="muted profile-scope">같은 학교급 안에서 비교합니다${data.track==='island'?' (강화·옹진 도서지역끼리 비교)':''}. 확보 ${data.coverage.available} · 미확보 ${data.coverage.missing} 지표.</p>`
+   +`<section data-school-photos aria-label="학교와 주변 시설 사진"></section>`
    +`<section class="radar-section" aria-label="영역 대표 지표 상대 위치">${radarBlock(data,basis)}</section>`
    +`<div class="domain-tablist" role="tablist" aria-label="영역 선택">${data.domains.map(d=>domainTab(d,d.id===active)).join('')}</div>`
    +`<div class="domain-cards">${data.domains.map(d=>domainPanel(d,d.id===active)).join('')}</div>`
@@ -73,7 +74,8 @@ function render(el,data){
    +((data.originals||[]).map(o=>`<p><a href="${esc(o.url)}" target="_blank" rel="noopener">${esc(o.title)} ↗</a>${o.provider?' · '+esc(o.provider):''}</p>`).join('')||'<p>공개 원문 미기록</p>')
    +`<p class="fine">분석 파일: ${(data.sources||[]).map(x=>`<code>${esc(x.path)}</code> (${esc(String(x.sha256||'').slice(0,12))})`).join(', ')}</p></details>`
    +((data.limits||[]).length?`<details class="profile-limits"><summary>분석의 한계</summary>${data.limits.map(c=>`<p class="condition">${esc(c)}</p>`).join('')}</details>`:'');
-  el.querySelectorAll('.radar-basis button').forEach(b=>b.onclick=()=>{basis=b.dataset.basis;draw();});
+  global.SchoolPhotos?.mount(el.querySelector('[data-school-photos]'),data.photoSchool||s);
+  const bindRadar=()=>el.querySelectorAll('.radar-basis button').forEach(b=>b.onclick=()=>{basis=b.dataset.basis;el.querySelector('.radar-section').innerHTML=radarBlock(data,basis);bindRadar();});bindRadar();
   const tabs=[...el.querySelectorAll('[data-domain-tab]')];
   const select=(id,focus)=>{
    active=id;el.__domainTab=id;

@@ -29,8 +29,10 @@ const tick=(ms=25)=>new Promise(r=>setTimeout(r,ms));
  assert.equal(d.getElementById('workspace-saved').hidden,false);assert.equal(d.getElementById('workspace-ask').hidden,true);
  const items=d.querySelectorAll('#saved-list article');assert.equal(items.length,1);assert.match(items[0].textContent,/장서 검토/);assert.match(items[0].textContent,/질문 2건/);
  assert.equal(items[0].querySelectorAll('.saved-entry').length,2);
+ // Delete from the save menu, keep the visible conversation, then save again.
+ assert(!bar.querySelector('.chat-delete').disabled);bar.querySelector('.chat-delete').click();await tick(60);assert.equal(store.size,0);assert.equal(d.querySelectorAll('.message').length,2);assert(bar.querySelector('.chat-delete').disabled);bar.querySelector('.chat-save').click();await tick(60);assert.equal(store.size,1);
  // New conversation clears the in-memory session and the message log.
  bar.querySelector('.chat-new').click();assert.equal(d.querySelectorAll('.message').length,0);assert(bar.querySelector('.chat-save').disabled);
- items[0].querySelector('.saved-actions button.danger').click();await tick(60);assert.equal(store.size,0);assert.match(d.getElementById('saved-list').textContent,/저장된 대화가 없습니다/);
+ d.querySelector('#saved-list .saved-actions button.danger').click();await tick(60);assert.equal(store.size,0);assert.match(d.getElementById('saved-list').textContent,/저장된 대화가 없습니다/);
  console.log('PASS saved conversations: manual save only, update on re-save, saved tab list/restore/delete, no separate walk-route toggle');dom.window.close();
 })().catch(e=>{console.error(e);dom.window.close();process.exitCode=1;});

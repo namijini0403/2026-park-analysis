@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const {JSDOM}=require('jsdom');
+const dom=new JSDOM('<section id="host"></section>',{runScripts:'outside-only',url:'http://localhost'}),w=dom.window;
+w.eval(fs.readFileSync('assets/school-photos.js','utf8'));
+assert.deepEqual(Array.from(w.SchoolPhotos.nearby({lat:null,lng:null},[{lat:37,lng:126}])),[]);
+const school={name:'검증학교',lat:37.5,lng:126.7};
+assert.equal(w.SchoolPhotos.nearby(school,[{name:'근처',lat:37.5001,lng:126.7},{name:'멀리',lat:38,lng:127},{lat:null,lng:null}]).length,1);
+let googleCalls=0;
+w.fetch=async url=>{if(url.includes('google-places')){googleCalls++;return {ok:true,json:async()=>({enabled:false})};}return {ok:false};};
+const host=w.document.getElementById('host');w.SchoolPhotos.mount(host,school);
+assert.equal(googleCalls,0,'No Google request on school selection');
+(async()=>{
+ await host.querySelector('button').onclick();
+ assert.match(host.textContent,/아직 연결되지/);
+ assert.equal(host.querySelector('button').disabled,false);
+ assert.match(host.textContent,/일부 시설 자료/);
+ assert.equal(host.querySelector('.photo-results').children.length,0);
+ w.SchoolPhotos.mount(host,{name:'<img src=x onerror=alert(1)>'});
+ assert.equal(host.querySelector('img'),null);
+ assert.match(host.textContent,/좌표가 없어/);
+ console.log('PASS school photos: missing coordinates, 500m filter, no automatic calls, missing configuration, coverage failure, escaping');
+ dom.window.close();
+})().catch(e=>{console.error(e);process.exitCode=1;});
