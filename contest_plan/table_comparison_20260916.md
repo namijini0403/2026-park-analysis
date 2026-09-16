@@ -12,3 +12,5 @@
 검증: tests/verify_table_comparison.cjs (선택 연동, 0/결측, 페이지, 4개 한도, 혼합단위 제외, 원본 출처 링크, 모바일), tests/verify_table_comparison_live.cjs (실제 query_schools 반환 학교 자료 + 현재 앱 CSS), npm run test:simple 통과.
 
 실제 응답 데이터 검증은 서버 도구 query_schools를 직접 호출한 것으로, LLM 답변 문장과 표의 학교 선정 일치까지 보장하는 검증은 아니다. 원본 응답의 조회 범위 안내와 출처는 유지한다.
+
+배포 확인: Railway e39b4701-d5be-40c3-9914-6e7b52309cb3 SUCCESS. 공개 파일 4개 SHA-256 일치. 로컬 파일 주입 없이 공개 사이트에서 선택 변수 동기화·페이지 이동·실제 학교 데이터·모바일 검증 통과.
