@@ -5,10 +5,10 @@ const base=process.env.QA_BASE||'http://127.0.0.1:8877',out='outputs/visualizati
 try{const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(base);await page.locator('.workspace-nav [data-workspace=stats]').click();await page.locator('.ds-context').waitFor();
 await page.locator('[data-indicator=green_ratio]').click();await page.locator('.ds-context').screenshot({path:out+'/decision-context.png'});
-await page.locator('.ds-chart-card:not([hidden])').screenshot({path:out+'/distribution.png'});
-assert.equal(await page.locator('.ds-districts .ds-spread-details').count(),1);assert.equal(await page.locator('.ds-spread-details').isVisible(),false);
+await page.locator('.ds-main-histogram').screenshot({path:out+'/distribution.png'});
+assert.equal(await page.locator('.ds-districts .ds-spread-details').count(),1);assert.equal(await page.locator('.ds-spread-details').evaluate(e=>e.open),false);
 const counts=await page.locator('.ds-hist-count').allTextContents();assert(counts.length>0);
-await page.locator('[data-next-view=district]').click();await page.locator('.ds-districts').screenshot({path:out+'/district.png'});
+await page.locator('[data-view=district]').click();await page.locator('.ds-districts').screenshot({path:out+'/district.png'});
 const district=await page.locator('[data-district-open]').first().getAttribute('data-district-open');await page.locator('[data-district-open]').first().click();
 assert.equal(await page.locator('#stats-district').inputValue(),district);assert((await page.locator('#stats-school-table tbody tr').count())>0);
 assert((await page.locator('#stats-school-table tbody tr td:nth-child(2)').allTextContents()).every(x=>x===district));

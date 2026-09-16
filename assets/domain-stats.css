@@ -49,3 +49,50 @@
 #workspace-stats .ds-hist-table{max-height:260px;overflow:auto}
 @media(max-width:900px){#workspace-stats .ds-decision-steps{grid-template-columns:1fr}#workspace-stats .ds-decision-steps article{padding:15px}#workspace-stats .ds-context{padding:20px}#workspace-stats .ds-metrics{gap:10px}#workspace-stats .ds-metrics>div{padding:12px}}
 @media(max-width:640px){#workspace-stats .ds-metrics{grid-template-columns:1fr}#workspace-stats .ds-metrics>div:last-child{grid-column:auto}#workspace-stats .ds-context h3{font-size:23px}#workspace-stats .ds-view-tabs{scroll-margin-top:20px}#workspace-stats .ds-decision-steps strong{font-size:19px}}
+/* Chart-first statistics: override the manager reading cards at the same scope. */
+#workspace-stats .ds-dashboard .ds-context{margin:10px 0;padding:12px 16px;border-radius:12px;background:#edf5f6;color:#214854;box-shadow:none;border:1px solid #cbdfe2}
+#workspace-stats .ds-dashboard .ds-context-heading{align-items:center;gap:8px 16px;color:#4b6370;font-size:12px}
+#workspace-stats .ds-dashboard .ds-context-heading strong{color:#183b4e;font-size:16px}
+#workspace-stats .ds-dashboard .ds-context-heading strong span{font-weight:400;font-size:12px}
+#workspace-stats .ds-dashboard .ds-context-count{margin-left:auto;color:#21636c;font-weight:650}
+#workspace-stats .ds-dashboard .ds-context-checks{margin-top:7px;font-size:12px;color:#506873}
+#workspace-stats .ds-dashboard .ds-context-checks summary{cursor:pointer;line-height:1.6}
+#workspace-stats .ds-dashboard .ds-context-checks summary span{margin-left:12px;text-decoration:underline;text-underline-offset:3px}
+#workspace-stats .ds-dashboard .ds-context-checks p{font-size:12px;color:#506873;margin:8px 0 0}
+#workspace-stats .ds-dashboard .ds-view-tabs{margin:12px 0;padding:4px;gap:4px}
+#workspace-stats .ds-dashboard .ds-view-tabs button{padding:8px 10px;min-height:36px;font-size:13px}
+#workspace-stats .ds-dashboard .ds-chart-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:16px;align-items:start}
+#workspace-stats .ds-dashboard .ds-chart-grid[data-view=district]{grid-template-columns:minmax(0,1fr)}
+#workspace-stats .ds-dashboard .ds-chart-grid>.ds-chart-card,#workspace-stats .ds-dashboard .ds-chart-grid>.ds-districts{margin:0;padding:17px 18px;background:#fff;border-top:3px solid var(--ds-tone);min-width:0}
+#workspace-stats .ds-dashboard .ds-chart-grid h3{font-size:19px;margin:4px 0 15px;line-height:1.45}
+#workspace-stats .ds-dashboard .ds-chart-grid .ds-kicker{font-size:10px;letter-spacing:.09em;margin:0;color:#54808c}
+#workspace-stats .ds-dashboard .ds-main-histogram .statistical-chart{border:0;box-shadow:none;padding:0;margin:0;background:transparent}
+#workspace-stats .ds-dashboard .ds-main-histogram .statistical-chart svg{min-width:0;max-height:none;width:100%;height:auto;min-height:275px}
+#workspace-stats .ds-dashboard .ds-main-histogram .statistical-chart-scroll{overflow:visible}
+#workspace-stats .ds-dashboard .ds-main-histogram .statistical-chart figcaption{font-size:11px;margin:8px 0;line-height:1.6}
+#workspace-stats .ds-dashboard .ds-chart-grid details{margin:10px 0 0;padding:7px 10px;border-radius:8px}
+#workspace-stats .ds-dashboard .ds-chart-grid details>summary{min-height:0;font-size:12px;line-height:1.6}
+#workspace-stats .ds-dashboard .ds-bar-heading{display:flex;justify-content:space-between;font-size:10px;color:#667984;padding-bottom:6px;border-bottom:1px solid #dce8eb}
+#workspace-stats .ds-dashboard .ds-bar-row{display:grid;grid-template-columns:57px minmax(0,1fr) 60px 35px;gap:8px;align-items:center;width:100%;padding:10px 0;background:transparent;border:0;border-bottom:1px solid #edf2f4;border-radius:0;color:#284956;text-align:left;min-height:39px;box-shadow:none}
+#workspace-stats .ds-dashboard .ds-bar-row:hover{background:#edf6f8}
+#workspace-stats .ds-dashboard .ds-bar-name{font-size:12px;font-weight:650;white-space:nowrap}
+#workspace-stats .ds-dashboard .ds-bar-track{position:relative;display:block;height:19px;background:repeating-linear-gradient(90deg,#e9eff2 0,#e9eff2 1px,transparent 1px,transparent 25%);border-radius:3px}
+#workspace-stats .ds-dashboard .ds-bar-fill{position:absolute;top:0;height:19px;border-radius:0 4px 4px 0;min-width:0}
+#workspace-stats .ds-dashboard .ds-bar-zero{position:absolute;top:-3px;height:25px;border-left:1px solid #b7cbd1}
+#workspace-stats .ds-dashboard .ds-bar-row strong{font-size:12px;font-variant-numeric:tabular-nums;text-align:right;color:#284956}
+#workspace-stats .ds-dashboard .ds-bar-row small{font-size:10px;text-align:right;color:#6b7e85}
+#workspace-stats .ds-dashboard .ds-bar-missing{font-size:11px;color:#77878e}
+#workspace-stats .ds-dashboard .ds-bars-caption{font-size:11px;color:#5b737f;line-height:1.6;margin:10px 0}
+#workspace-stats .ds-dashboard .ds-chart-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:10px}
+#workspace-stats .ds-dashboard .ds-chart-actions button{background:#edf5f8;color:#28617b;border:1px solid #d3e3e9;border-radius:7px;padding:6px 8px;font-size:11px}
+#workspace-stats .ds-dashboard .ds-numeric-details{margin:13px 0;padding:12px 15px;border:1px solid #d8e3e7;border-radius:10px;background:#f5f8f8}
+#workspace-stats .ds-dashboard .ds-numeric-details>summary{cursor:pointer;font-size:13px;color:#315461;line-height:1.6;font-weight:650}
+#workspace-stats .ds-dashboard .ds-numeric-details>summary span{font-size:11px;font-weight:400;color:#667d86;margin-left:12px}
+#workspace-stats .ds-dashboard .ds-overview{padding:15px;margin:12px 0 0;border-top:0}
+#workspace-stats .ds-dashboard .ds-overview h3{font-size:17px}
+#workspace-stats .ds-dashboard .ds-metrics>div{min-height:0;padding:10px}
+#workspace-stats .ds-dashboard .ds-metrics>div strong{font-size:22px}
+@media(max-width:1100px){#workspace-stats .ds-dashboard .ds-chart-grid{grid-template-columns:minmax(0,1fr)}#workspace-stats .ds-dashboard .ds-main-histogram .statistical-chart svg{min-height:0}#workspace-stats .ds-dashboard .ds-context-count{margin-left:0}}
+@media(max-width:640px){#workspace-stats .ds-dashboard .ds-chart-grid>.ds-chart-card,#workspace-stats .ds-dashboard .ds-chart-grid>.ds-districts{padding:13px}#workspace-stats .ds-dashboard .ds-view-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}#workspace-stats .ds-dashboard .ds-bar-row{grid-template-columns:54px minmax(0,1fr) 55px 31px;gap:5px}#workspace-stats .ds-dashboard .ds-context-heading strong{width:100%}#workspace-stats .ds-dashboard .ds-main-histogram .statistical-chart svg text{font-size:15px}}
+#workspace-stats .ds-dashboard .ds-context .ds-compact-selection{font-size:12px;line-height:1.5;margin:8px 0 0;color:#795132}
+#workspace-stats .ds-dashboard .ds-context .ds-compact-selection strong{font-size:13px}

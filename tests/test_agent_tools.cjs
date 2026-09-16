@@ -14,6 +14,13 @@ const table=require('../api/_school_table'),tools=require('../api/_agent_tools')
  // filter + level override + island exclude
  r=tools.run('query_schools',ctx,{level:'중학교',island:'exclude',where:[{column:'class_size',op:'>',value:25}],sort_by:'class_size',order:'desc',limit:5});
  assert(r.llm.rows.every(x=>x.class_size>25));assert(!r.llm.rows.some(x=>/강화|옹진/.test(x.gu)));
+ // Every requested variable reaches the visual table (no silent 9-column truncation).
+ const many=['students','classes','teachers','class_size','books_total','books_per_student','library_seats','librarians','libraries_walk','nearest_public_library_m'];
+ const multi=tools.run('query_schools',ctx,{columns:many,limit:3,island:'exclude'});
+ assert.equal(multi.visual.table.headers.length,many.length+2);
+ assert(multi.visual.table.rows.every(row=>row.length===many.length+2));
+ assert(many.every(c=>Object.hasOwn(multi.llm.rows[0],c)));
+ assert.throws(()=>tools.run('query_schools',ctx,{columns:[...many,'nonexistent']}),/알 수 없는 열/);
  // aggregate
  r=tools.run('query_schools',ctx,{aggregate:{by:'gu',column:'students',stat:'sum'}});assert(r.llm.groups.length>=10);assert.equal(r.visual.chart.kind,'bar');
  // profile by id, by ambiguous name resolved with level
