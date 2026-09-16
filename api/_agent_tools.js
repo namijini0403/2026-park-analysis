@@ -53,11 +53,11 @@ function query_schools(ctx,p){
   rows=rows.filter(r=>{const x=r[w.column];switch(w.op){case 'is_null':return x==null;case 'not_null':return x!=null;case 'contains':return String(x??'').includes(String(v));case '==':return x==v;case '!=':return x!=v;case '>':return x!=null&&x>Number(v);case '>=':return x!=null&&x>=Number(v);case '<':return x!=null&&x<Number(v);case '<=':return x!=null&&x<=Number(v);case 'between':return x!=null&&x>=Number(v)&&x<=Number(v2);default:throw Error('지원하지 않는 조건: '+w.op);}});}
  const matched=rows.length;
  if(p.aggregate&&!unset(p.aggregate.by)&&!unset(p.aggregate.column)){
-  const by=p.aggregate.by,c=p.aggregate.column;col(ctx,c);usedCols.add(c);const groups=new Map();
+  const by=p.aggregate.by,c=p.aggregate.column;col(ctx,c);usedCols.add(c);const additive=!col(ctx,c).nonAdditive;if(p.aggregate.stat==='sum'&&!additive)throw Error('이 지표는 중복 권역·비율·거리 등의 특성 때문에 학교 간 합계를 제공하지 않습니다. 평균·중앙값·범위로 비교하세요.');const groups=new Map();
   for(const r of rows){const k=by==='island'?(r.island?'도서·농어촌':'도시'):r[by]||'미확인';if(r[c]==null)continue;(groups.get(k)||groups.set(k,[]).get(k)).push(r[c]);}
-  const out=[...groups].map(([k,v])=>({group:k,n:v.length,mean:round(mean(v)),median:round(median(v)),min:round(Math.min(...v)),max:round(Math.max(...v)),sum:round(v.reduce((a,b)=>a+b,0),0)})).sort((a,b)=>(b[p.aggregate.stat||'mean']??0)-(a[p.aggregate.stat||'mean']??0));
+  const out=[...groups].map(([k,v])=>({group:k,n:v.length,mean:round(mean(v)),median:round(median(v)),min:round(Math.min(...v)),max:round(Math.max(...v)),...(additive?{sum:round(v.reduce((a,b)=>a+b,0),0)}:{})})).sort((a,b)=>(b[p.aggregate.stat||'mean']??0)-(a[p.aggregate.stat||'mean']??0));
   const stat=p.aggregate.stat||'mean',unit=col(ctx,c).unit||'';
-  return {llm:{scope:s.label,column:c,groups:out},sources:sourcesFor(ctx,[...usedCols]),visual:{title:`${by==='gu'?'군·구':by==='level'?'학교급':'지역 유형'}별 ${table.label(c)} (${{mean:'평균',median:'중앙값',sum:'합계',min:'최솟값',max:'최댓값'}[stat]||stat})`,chart:{kind:'bar',unit,points:out.map(g=>({name:g.group,value:g[stat]}))},table:{headers:['구분','학교 수','평균','중앙값','최솟값','최댓값','합계'],rows:out.map(g=>[g.group,g.n,g.mean,g.median,g.min,g.max,g.sum])},notes:[`${s.label} · 값이 있는 학교만 집계 (${out.reduce((n,g)=>n+g.n,0)}개교).`]}};
+  return {llm:{scope:s.label,column:c,groups:out},sources:sourcesFor(ctx,[...usedCols]),visual:{title:`${by==='gu'?'군·구':by==='level'?'학교급':'지역 유형'}별 ${table.label(c)} (${{mean:'평균',median:'중앙값',sum:'합계',min:'최솟값',max:'최댓값'}[stat]||stat})`,chart:{kind:'bar',unit,points:out.map(g=>({name:g.group,value:g[stat]}))},table:{headers:['구분','학교 수','평균','중앙값','최솟값','최댓값',...(additive?['합계']:[])],rows:out.map(g=>[g.group,g.n,g.mean,g.median,g.min,g.max,...(additive?[g.sum]:[])])},notes:[`${s.label} · 값이 있는 학교만 집계 (${out.reduce((n,g)=>n+g.n,0)}개교).`]}};
  }
  const sortBy=unset(p.sort_by)?null:p.sort_by;if(sortBy){col(ctx,sortBy);usedCols.add(sortBy);rows=rows.filter(r=>r[sortBy]!=null).sort((a,b)=>(p.order==='asc'?1:-1)*(a[sortBy]-b[sortBy])||a.name.localeCompare(b.name,'ko'));}
  const excluded=matched-rows.length,limit=Math.min(50,Math.max(1,Number(p.limit)||15));
@@ -142,5 +142,11 @@ const TOOLS=[
  {name:'ask_user',description:'질문이 모호해 결과가 크게 달라질 때만 사용자에게 선택지를 제시합니다(예: 비교 기준 열이 여러 개일 때, 가중치를 사용자가 정해야 할 때). 당연한 판단은 직접 내리고 이 도구를 쓰지 마세요. 호출하면 대화가 사용자에게 넘어갑니다.',parameters:{type:'object',properties:{prompt:{type:'string'},options:{type:['array','null'],items:{type:'object',properties:{id:{type:'string'},label:{type:'string'},description:{type:['string','null']}},required:['id','label','description'],additionalProperties:false}},multi:{type:['boolean','null']},weights:{type:['array','null'],description:'가중치 슬라이더로 보여줄 기준 제안',items:{type:'object',properties:{column:{type:'string'},prefer:{type:'string',enum:['high','low']},weight:{type:'number'}},required:['column','prefer','weight'],additionalProperties:false}}},required:['prompt','options','multi','weights'],additionalProperties:false},strict:true},
 ];
 const IMPL={query_schools,school_profile,correlate,distribution,weighted_rank,guide,ask_user};
-function run(name,ctx,args){if(!IMPL[name])throw Error('알 수 없는 도구: '+name);return IMPL[name](ctx,args||{});}
+function run(name,ctx,args){
+ if(!IMPL[name])throw Error('알 수 없는 도구: '+name);const p=args||{},result=IMPL[name](ctx,p);
+ const ids=[...new Set([...(p.columns||[]),p.column,p.sort_by,p.x,p.y,p.aggregate?.column,...(p.where||[]).map(x=>x?.column),...(p.criteria||[]).map(x=>x?.column)])].filter(id=>id!=='paps'&&table.COLUMNS[id]);
+ const definitions=ids.map(column=>{const c=table.COLUMNS[column];return {column,label:c.label,unit:c.unit||'',kind:c.kind||'observation',non_additive:!!c.nonAdditive,note:c.note||null};});
+ if(definitions.length){result.llm.indicator_definitions=definitions;const notes=definitions.filter(d=>d.note).map(d=>d.label+': '+d.note);for(const visual of result.sections||[result.visual])if(visual)visual.notes=[...(visual.notes||[]),...notes];}
+ return result;
+}
 module.exports={TOOLS,run,scope,geometries,LEVELS};

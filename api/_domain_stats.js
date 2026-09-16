@@ -51,7 +51,7 @@ function domainStats({domain,level,schoolId=null}){
    const island=stats.isIsland(selected.gu),pop=island?isl:main;
    sel={name:selected.name,value:selected[column],population_n:pop.n,percentile:stats.percentile(pop.values,selected[column]),rank:stats.rank(pop.values,selected[column]),track:island?'island':'general'};
   }
-  return {column,label:c.label,unit:c.unit||'',direction:c.direction,note:c.note||null,
+  return {column,label:c.label,unit:c.unit||'',direction:c.direction,kind:c.kind||'observation',note:c.note||null,
    overall:distribution(main),island:distribution(isl),
    observations:levelRows.map(r=>({id:r.id,name:r.name,gu:r.gu,track:stats.isIsland(r.gu)?'island':'general',value:finite(r[column])?r[column]:null})),
    histogram:histogram(main.values),island_histogram:histogram(isl.values),gu,

@@ -5,7 +5,8 @@ const table=require('../api/_school_table'),tools=require('../api/_agent_tools')
 (async()=>{
  const T=table.build();assert.equal(T.rows.length,917);
  const g=T.byId.get('B000003024');assert.equal(g.name,'인천갈월초등학교');assert(g.students>0&&g.books_per_student>0&&g.zone_walk_mismatch_pct>0&&g.walk_area_m2>0);
- assert(table.dictionary().length<4000,'dictionary must stay small for the prompt');
+ assert(table.dictionary({compact:true}).length<12000,'expanded prompt dictionary stays bounded');
+ assert(table.dictionary({compact:true}).length<table.dictionary().length*.65,'send detailed definitions only for queried indicators');
  for(const c of Object.keys(table.COLUMNS))assert(T.rows.some(r=>r[c]!=null),'empty column '+c);
  const ctx={level:'초등학교',school_id:'B000003024'};
  // ranking + boundaries on the map

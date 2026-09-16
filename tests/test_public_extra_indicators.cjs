@@ -1,0 +1,25 @@
+'use strict';
+const assert=require('node:assert/strict'),model=require('../api/_school_summary'),extra=require('../api/_public_extra_indicators');
+const realRead=model.read,fixture={};for(const key of Object.keys(extra.FILES))fixture[extra.FILES[key]]={data:{schools:{}},hash:'fixture'};
+fixture[extra.FILES.extraForecast].data={schools:[{id:'H',forecast:[{year:2027,students:123},{year:2028,students:0},{year:2030,students:null}]}]};
+fixture[extra.FILES.extraPublic].data.schools.H=[{item:'55',observations:[{publication_year:2025,status:'available',metrics:[{field:'SCHO_AMT',value:500}]},{publication_year:2026,status:'unavailable',metrics:[{field:'SCHO_AMT',value:0}]},{publication_year:2026,status:'available',metrics:[{field:'SCHO_NMPR_FGR',value:0},{field:'SCE_RDCTN_AMT',value:'20'},{field:'SCE_RDCTN_NMPR_FGR',value:5},{field:'SCE_RDCTN_NMPR_FGR',value:6}]}]}];
+fixture[extra.FILES.extraProgression].data.schools={H:[{year:2025,status:'available',metrics:{graduates:10,advanced:8,published_progression_pct:80,employed:0}},{year:2026,status:'progression_pending_publication',metrics:{graduates:12,advanced:0,published_progression_pct:0}}],Z:[{year:2026,status:'progression_pending_publication',metrics:{graduates:0}}],M:[{year:2026,status:'no_graduates',metrics:{graduates:0,advanced:0,published_progression_pct:0}}]};
+fixture[extra.FILES.extraCohort].data.schools.H={base_year:2026,status:'scenario_not_selected_model',snapshots:{2026:{grades:[10,0,20,99]}},forecast:[{year:2029,students:77},{year:2031,students:88}]};
+fixture[extra.FILES.extraAge].data={base_year:2024,schools:{H:{straight_500m:{levels:{고등학교:{status:'missing_age_observations',estimated_residents:null,known_subtotal:999}}},walkshed_500m:{levels:{고등학교:{status:'estimated',estimated_residents:0,known_subtotal:0},초등학교:{status:'estimated',estimated_residents:100}}}}}};
+try{
+ model.read=path=>fixture[path];
+ const result=extra.load([{id:'H',level:'고등학교'},{id:'Z',level:'고등학교'},{id:'M',level:'중학교'},{id:'K',level:'유치원'}]),h=result.byId.get('H');
+ assert.equal(h.scholarship_students_2026,0);assert.equal(h.scholarship_amount_2026,null,'older year and unavailable 0 not substituted');assert.equal(h.tuition_support_amount_2026,null,'numeric strings not silently interpreted');assert.equal(h.tuition_support_students_2026,null,'duplicate metric cannot arbitrarily win');
+ assert.equal(h.high_advanced_2025,8);assert.equal(h.high_published_progression_pct_2025,80);assert.equal(h.graduates_2026,12);assert.equal(h.middle_advanced_2026,null);assert.equal(result.byId.get('Z').graduates_2026,null,'pending zero is not confirmed');assert.equal(result.byId.get('M').middle_progression_pct_2026,null,'zero denominator has no rate');assert.equal(result.byId.get('M').graduates_2026,0);
+ assert.equal(h.grade2_students_2026,0);assert.equal(h.grade4_students_2026,null,'high school cannot acquire grade 4');assert.equal(result.byId.get('K').grade1_students_2026,null);
+ assert.equal(h.age_residents_straight_500m_2024,null,'known subtotal is not full estimate');assert.equal(h.age_residents_walkshed_500m_2024,0,'own level only and real 0 retained');
+ assert.equal(h.forecast_2027,123);assert.equal(h.forecast_2028,0);assert.equal(h.cohort_scenario_2029,77);assert.equal(extra.COLUMNS.cohort_scenario_2029.kind,'scenario');assert.equal(extra.COLUMNS.age_residents_walkshed_500m_2024.kind,'estimate');assert.equal(extra.COLUMNS.forecast_2027.kind,'forecast');
+ fixture[extra.FILES.extraCohort].data.schools.H.status='unavailable';assert.equal(extra.load([{id:'H',level:'고등학교'}]).byId.get('H').cohort_scenario_2029,null);
+}finally{model.read=realRead;}
+const schools=model.read('data_processed/education/analysis_dataset.json').data.schools,result=extra.load(schools),h=result.byId.get('B000011417');
+assert.equal(result.byId.size,schools.length);assert.equal(h.scholarship_amount_2026,61200000);assert.equal(h.creative_clubs_2026,42);assert.equal(h.afterschool_participants_2026,246);assert.equal(h.grade1_students_2026,156);
+const count=id=>[...result.byId.values()].filter(r=>Number.isFinite(r[id])).length;
+assert.equal(count('scholarship_students_2026'),200);assert.equal(count('creative_clubs_2026'),545);assert.equal(count('afterschool_participants_2026'),547);assert.equal(count('grade1_students_2026'),547);assert.equal(count('grade6_students_2026'),271);assert.equal(count('middle_progression_pct_2026'),144);assert.equal(count('high_published_progression_pct_2025'),127);
+for(const school of schools)for(const year of [2027,2028,2030])assert.equal(result.byId.get(school.id)['forecast_'+year],school.forecast?.find(f=>f.year===year)?.students??null,'same forecast as existing school dataset');
+for(const [id,c] of Object.entries(extra.COLUMNS)){assert(!/paps|score|rank/i.test(id));assert.equal(c.direction,'neutral');assert(c.note);assert(result.sources[extra.COLUMN_SOURCE[id]].sha256.length===64);}
+console.log('PASS public extra indicators: '+Object.keys(extra.COLUMNS).length+' explicit indicators, coverage, missing status, year, source, grades, forecasts and scenarios');

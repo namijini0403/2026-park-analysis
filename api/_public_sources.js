@@ -24,6 +24,8 @@ const files={
  'data_processed/education/analysis_dataset.json':[SCHOOLINFO,KINDERINFO,PARKS,OSM],
  'data_processed/education/school_statistics.json':[SCHOOLINFO,KINDERINFO],
  'data_processed/education/school_public_indicators.json':[SCHOOLINFO],
+ 'data_processed/education/library_indicators_2026.json':[SCHOOLINFO],
+ 'data_processed/education/curriculum_network.json':[{url:'https://songdo.icehs.kr/boardCnts/fileDown.do?fileSeq=78129af2ae95790b784247d9dbad3418',title:'2026학년도 2학기 공동교육과정 공고',provider:'인천광역시교육청·송도고등학교'}],
  'data_processed/education/enrollment_forecasts.json':[SCHOOLINFO,KINDERINFO],
  'data_processed/education/forecast_validation.json':[SCHOOLINFO,KINDERINFO],
  'data_processed/education/grade_cohort_scenarios.json':[SCHOOLINFO],

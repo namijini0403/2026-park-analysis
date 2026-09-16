@@ -3,6 +3,7 @@
 // The LLM never sees this table; it only sees the column dictionary and compact tool results.
 const fs=require('node:fs'),path=require('node:path');
 const model=require('./_school_summary'),data=require('./_data_answers');
+const additional=require('./_additional_indicators');
 const ROOT=path.join(__dirname,'..');
 const FILES={
  dataset:'data_processed/education/analysis_dataset.json',
@@ -20,6 +21,7 @@ const FILES={
  accidents:'data_processed/context/accidents_incheon.json',
  similar:'data_processed/school_similar_schools_top5.csv',
  forecastValidation:'data_processed/education/forecast_validation.json',
+ ...additional.FILES,
 };
 const PUBLIC={dataset:'학교알리미 공시·전국초중등학교위치표준데이터',priority:'도시공원표준데이터·OSM 보행망 분석',library:'초중고 학교도서관 현황(KESS)·전국도서관표준데이터',libraryAccess:'전국도서관표준데이터·주민등록 인구',sharedParks:'도시공원표준데이터·학교알리미',boundary:'한국교육시설안전원 학구도·OSM 보행망',walkshed:'OSM 보행망 500m 도달권',walkshedV3:'OSM 보행망 500m 도달권 v3',context:'인천교육청 지정사업·LOCALDATA 인허가·구별 착공신고',academy:'인천교육청 학원·교습소 등록',clusters:'인천교육청 학원·교습소 등록',routes:'도시공원표준데이터·OSM 보행망 경로',accidents:'도로교통공단 어린이 보행자 사고다발지역',similar:'학교알리미·정비사업·공동주택 자료(KNN)'};
 // 영역(domain): 패널 카드와 통계 탭의 묶음 단위. direction: 값이 클수록 유리(up)·불리(down)·정책 판단 필요(neutral).
@@ -42,10 +44,17 @@ const COLUMNS={
  designations_current:{label:'2026 지정·지원사업 수',unit:'건',group:'지정사업',note:'교육청 공개 명단 기준'},designation_names:{label:'2026 지정사업명',group:'지정사업',type:'text'},
  park_case:{label:'공원 접근 유형(Case)',group:'공원·야외',type:'text',note:'초등 · 이전 분석의 분류'},
 };
+Object.assign(COLUMNS,additional.COLUMNS);
+Object.assign(PUBLIC,additional.PUBLIC);
 for(const [domain,cols] of Object.entries(DOMAIN_OF))for(const c of cols)if(COLUMNS[c])COLUMNS[c].domain=domain;
 COLUMNS.park_route_m.note='학교·공원 대표점 간 OSM 보행망 추정(양끝 연결거리 포함). 출입구·통행허용·안전 미검증. 기존 최근접 거리 원장과 산출 방법이 다릅니다.';
 COLUMNS.park_detour_ratio.note='동일 학교·공원 대표점의 보행망 추정거리÷직선거리. 1.5배는 직선보다 50% 긴 경로. 직선거리 0 또는 유효 경로 미확보 시 미산출.';
-for(const c of Object.keys(COLUMNS)){if(['name','level','gu','island'].includes(c))continue;COLUMNS[c].direction=UP.includes(c)?'up':DOWN.includes(c)?'down':'neutral';}
+for(const id of ['books_total','books_per_student','library_seats','librarians']){COLUMNS[id].label+=' (2025 KESS)';COLUMNS[id].note='초등학교 KESS 2025 원장. 새 2026 학교알리미 도서관 지표와 연도·집계 정의를 구분합니다.';}
+for(const id of ['green_ratio','park_route_m','park_detour_ratio','walk_area_m2','walk_area_ratio_to_circle'])COLUMNS[id].kind='estimate';
+COLUMNS.shared_park_m2_per_student.kind='scenario';
+for(const c of Object.keys(COLUMNS)){if(['name','level','gu','island'].includes(c))continue;COLUMNS[c].direction=UP.includes(c)?'up':DOWN.includes(c)?'down':COLUMNS[c].direction||'neutral';COLUMNS[c].kind??=/forecast/.test(c)?'forecast':'observation';}
+// A school-centred area overlaps neighbouring schools; ratios and distances are not totals.
+for(const [id,c] of Object.entries(COLUMNS))c.nonAdditive=['park','boundary','safety','academy','development'].includes(c.domain)||['%','배','m','명/년','권/명','개/명','㎡/명'].includes(c.unit)||/^age_residents_|^libraries_/.test(id);
 const num=v=>typeof v==='number'&&Number.isFinite(v)?v:v==null||v===''?null:Number.isFinite(Number(v))?Number(v):null;
 const round=(v,d=1)=>v==null?null:Number(v.toFixed(d));
 const hav=(a,b,c,d)=>{const R=6371000,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h));};
@@ -61,6 +70,7 @@ function build(){
  const walkBy=new Map();for(const f of [...walk.data.features,...walkV3.data.features])if(!walkBy.has(f.properties.학교ID))walkBy.set(f.properties.학교ID,f.properties);
  const clusterBy=new Map((clusters.data.schools||[]).map(s=>[s.id,s])),simBy=by(similar.data);
  const acc=(accidents.data.rows||[]).filter(r=>Number.isFinite(r.lat)&&Number.isFinite(r.lng));
+ const extra=additional.load(ds.data.schools);
  const rows=ds.data.schools.map(s=>{
   const years=Object.keys(s.observations||{}).sort(),y=years.at(-1),o=s.observations?.[y]||{},p=prioBy.get(s.id),l=libBy.get(s.id),la=libAccessBy.get(s.id),sp=sharedBy.get(s.id),b=boundaryBy.get(s.id),w=walkBy.get(s.id),c=ctx.data.schools?.[s.id],a=academy.data[s.id],cl=clusterBy.get(s.id),rt=routes.data[s.id],sim=simBy.get(s.id);
   const hist=s.enrollment_trend?.observations||[],first=hist.find(h=>h.year===2020),f29=(s.forecast||[]).find(f=>f.year===2029),f31=(s.forecast||[]).find(f=>f.year===2031);
@@ -71,23 +81,26 @@ function build(){
    id:s.id,name:s.name,level:s.level,gu:s.gu||null,lat:s.lat??null,lng:s.lng??null,island:['강화군','옹진군'].includes(s.gu),data_year:y?Number(y):null,
    park_route_missing_detail:rt?.status==='available'?null:rt?.origin_snap_m>150?'학교 대표점과 보행망 연결거리가 계산 기준 150m를 넘어 보류했습니다. 출입구 위치와 연결 보행로를 확인해야 합니다.':rt?'보유 보행망에서 연결거리 각각 150m·총거리 15km 이내의 유효 공원 경로를 확보하지 못했습니다. 접근 불가를 뜻하지 않습니다.':'경로 자료를 아직 산출하지 않았습니다.',
    students:num(o.students),classes:num(o.classes),teachers:num(o.teachers),class_size:num(o.class_size),students_per_teacher:o.students&&o.teachers?round(o.students/o.teachers):null,paps:round(num(o.paps)),afterschool:num(o.afterschool),clubs:num(o.clubs),
-   students_2020:num(first?.students),student_change_pct:first?.students&&o.students?round(100*(o.students-first.students)/first.students):null,sen_slope:round(num(s.enrollment_trend?.sen_slope_students_per_year)),forecast_2029:num(f29?.students),forecast_2031:num(f31?.students),forecast_change_pct_2031:f31?.students&&o.students?round(100*(f31.students-o.students)/o.students):null,
+   students_2020:num(first?.students),student_change_pct:first?.students>0&&Number.isFinite(o.students)?round(100*(o.students-first.students)/first.students):null,sen_slope:round(num(s.enrollment_trend?.sen_slope_students_per_year)),forecast_2029:num(f29?.students),forecast_2031:num(f31?.students),forecast_change_pct_2031:Number.isFinite(f31?.students)&&o.students>0?round(100*(f31.students-o.students)/o.students):null,
    parks_walk:num(s.environment?.parks),green_ratio:round(num(s.environment?.green)),nearest_park_m:nearestPark,park_route_m:rt?.status==='available'?round(num(rt.route_distance_m),0):null,park_detour_ratio:rt?.status==='available'?round(num(rt.detour_ratio),2):null,nearest_park_name:p?null:rt?.park_name||null,playgrounds_walk:p?num(p.iso_playground_count):null,shared_park_m2_per_student:sp?round(num(sp.shared_area_per_student)):null,park_sharing_schools:sp?num(sp.sharing_school_count):null,park_case:p?.case_label||null,
    walk_area_m2:w?Math.round(num(w.area_m2)):null,walk_area_ratio_to_circle:w?round(num(w.area_ratio_to_circle),2):null,zone_area_m2:b?.status==='computed'?Math.round(b.zone_m2):null,zone_walk_mismatch_pct:b?.status==='computed'?round(b.mismatch):null,zone_outside_walk_pct:b?.status==='computed'?round(b.zone_outside):null,walk_outside_zone_pct:b?.status==='computed'?round(b.walk_outside):null,zone_dates:b?.zone_dates||null,
    books_total:l?.matched===1?num(l.장서수):null,books_per_student:l?.matched===1?num(l.인당장서수):null,library_seats:l?.matched===1?num(l.좌석수):null,librarians:l?.matched===1?num(l.사서합계):null,libraries_walk:l?num(l.iso_library_count):num(s.environment?.library),nearest_public_library_m:la?round(num(la.nearest_m?.public_children),0):l?num(l.nearest_library_euclid_m):null,
    academies_500m:a?num(a.straight_500m_count):num(s.environment?.academy),academies_per_km2:cl?round(num(cl.facilities_per_km2_500m)):null,nightlife_500m:nightlife?.status==='partial'||nightlife?.status==='available'?num(nightlife.observed_count):nightlife?.observed_count??null,nightlife_nearest_m:num(nightlife?.nearest_observed_m),construction_500m:cons?.status==='unknown'?null:num(cons?.observed_count),child_accident_nearest_m:nearestAcc==null?null:Math.round(nearestAcc),large_apt_500m:sim?num(sim.large_apt_count_500m):null,large_apt_households_500m:sim?num(sim.large_apt_households_500m):null,redev_active:p?(num(p.redev_진행중수)||0)+(num(p.redev_예정수)||0):null,
    designations_current:c?desig.length:null,designation_names:desig.length?[...new Set(desig.map(d=>d.program_name||d.designation_type))].join(' · '):null,
+   ...extra.byId.get(s.id),
   };
  });
  const coverage={};for(const col of Object.keys(COLUMNS)){coverage[col]={};for(const r of rows)if(r[col]!=null&&r[col]!=='')coverage[col][r.level]=(coverage[col][r.level]||0)+1;}
  const sources={dataset:{path:FILES.dataset,sha256:ds.hash},priority:{path:FILES.priority,sha256:prio.hash},library:{path:FILES.library,sha256:lib.hash},libraryAccess:{path:FILES.libraryAccess,sha256:libAccess.hash},sharedParks:{path:FILES.sharedParks,sha256:shared.hash},boundary:{path:FILES.boundary,sha256:boundary.hash},walkshed:{path:FILES.walkshed,sha256:walk.hash},walkshedV3:{path:FILES.walkshedV3,sha256:walkV3.hash},context:{path:FILES.context,sha256:ctx.hash},academy:{path:FILES.academy,sha256:academy.hash},clusters:{path:FILES.clusters,sha256:clusters.hash},routes:{path:FILES.routes,sha256:routes.hash},accidents:{path:FILES.accidents,sha256:accidents.hash},similar:{path:FILES.similar,sha256:similar.hash}};
+ Object.assign(sources,extra.sources);
  cache={key,rows,byId:new Map(rows.map(r=>[r.id,r])),coverage,sources};return cache;
 }
 // Which file backs each column (for source citations).
 const COLUMN_SOURCE={students:'dataset',classes:'dataset',teachers:'dataset',class_size:'dataset',students_per_teacher:'dataset',paps:'dataset',afterschool:'dataset',clubs:'dataset',students_2020:'dataset',student_change_pct:'dataset',sen_slope:'dataset',forecast_2029:'dataset',forecast_2031:'dataset',forecast_change_pct_2031:'dataset',parks_walk:'dataset',green_ratio:'dataset',nearest_park_m:'priority',park_route_m:'routes',park_detour_ratio:'routes',playgrounds_walk:'priority',shared_park_m2_per_student:'sharedParks',park_sharing_schools:'sharedParks',park_case:'priority',walk_area_m2:'walkshed',walk_area_ratio_to_circle:'walkshed',zone_area_m2:'boundary',zone_walk_mismatch_pct:'boundary',zone_outside_walk_pct:'boundary',walk_outside_zone_pct:'boundary',books_total:'library',books_per_student:'library',library_seats:'library',librarians:'library',libraries_walk:'library',nearest_public_library_m:'libraryAccess',academies_500m:'academy',academies_per_km2:'clusters',nightlife_500m:'context',nightlife_nearest_m:'context',construction_500m:'context',child_accident_nearest_m:'accidents',large_apt_500m:'similar',large_apt_households_500m:'similar',redev_active:'priority',designations_current:'context',designation_names:'context'};
-function dictionary(){
+Object.assign(COLUMN_SOURCE,additional.COLUMN_SOURCE);
+function dictionary({compact=false}={}){
  const t=build(),groups={};
- for(const [id,c] of Object.entries(COLUMNS)){const cov=t.coverage[id]||{},covText=Object.entries(cov).map(([l,n])=>l.replace('학교','').replace('유치원','유')+n).join('/');(groups[c.group]||=[]).push(`${id}=${c.label}${c.unit?'('+c.unit+')':''}${c.note?' ※'+c.note:''} [${covText||'없음'}]`);}
+ for(const [id,c] of Object.entries(COLUMNS)){if(id==='paps')continue;const cov=t.coverage[id]||{},covText=Object.entries(cov).map(([l,n])=>l.replace('학교','').replace('유치원','유')+n).join('/');(groups[c.group]||=[]).push(`${id}=${c.label}${c.unit?'('+c.unit+')':''}${c.kind&&c.kind!=='observation'?' {'+c.kind+'}':''}${!compact&&c.note?' ※'+c.note:''} [${covText||'없음'}]`);}
  return Object.entries(groups).map(([g,cols])=>`[${g}] `+cols.join('; ')).join('\n');
 }
 function numericColumns(){return Object.keys(COLUMNS).filter(k=>!['text','bool'].includes(COLUMNS[k].type)&&k!=='name');}
