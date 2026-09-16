@@ -30,3 +30,6 @@
 @media(max-width:600px){.statistical-chart{padding:12px 4px}.statistical-chart figcaption{margin:8px}.statistical-chart .statistical-chart-scroll{padding-bottom:8px}}
 
 .statistical-chart .sc-legend .sc-key-predicted{width:9px;height:9px;border:0;border-radius:50%;background:#b76432}
+
+/* Fit the desktop conversation pane so values stay visible without horizontal scrolling. */
+@media(min-width:900px){.chat-section .statistical-chart svg{min-width:0}}
