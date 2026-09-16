@@ -19,3 +19,5 @@
 - tests/verify_table_comparison_live.cjs: 실제 query_schools 10개 숫자 열 반환과 현재 앱 전체 스타일에서 확대 렌더 검증
 
 출력: outputs/adaptive-dashboard-20260916, outputs/table-comparison-20260916.
+
+배포 검증: Railway c17beff5-7560-44eb-8878-e65d097b66cd SUCCESS. 공개 5개 파일 SHA-256 일치. 로컬 파일 주입 없이 공개 사이트에서 전체통계 차트/군구 연결/도서 분리/모바일, 실제 10변수 확대 및 자동모드·상태복귀 테스트 모두 통과.
