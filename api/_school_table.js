@@ -43,6 +43,8 @@ const COLUMNS={
  park_case:{label:'공원 접근 유형(Case)',group:'공원·야외',type:'text',note:'초등 · 이전 분석의 분류'},
 };
 for(const [domain,cols] of Object.entries(DOMAIN_OF))for(const c of cols)if(COLUMNS[c])COLUMNS[c].domain=domain;
+COLUMNS.park_route_m.note='학교·공원 대표점 간 OSM 보행망 추정(양끝 연결거리 포함). 출입구·통행허용·안전 미검증. 기존 최근접 거리 원장과 산출 방법이 다릅니다.';
+COLUMNS.park_detour_ratio.note='동일 학교·공원 대표점의 보행망 추정거리÷직선거리. 1.5배는 직선보다 50% 긴 경로. 직선거리 0 또는 유효 경로 미확보 시 미산출.';
 for(const c of Object.keys(COLUMNS)){if(['name','level','gu','island'].includes(c))continue;COLUMNS[c].direction=UP.includes(c)?'up':DOWN.includes(c)?'down':'neutral';}
 const num=v=>typeof v==='number'&&Number.isFinite(v)?v:v==null||v===''?null:Number.isFinite(Number(v))?Number(v):null;
 const round=(v,d=1)=>v==null?null:Number(v.toFixed(d));
@@ -67,6 +69,7 @@ function build(){
   const nearestPark=p?num(p.nearest_park_dist_m):rt?.status==='available'?num(rt.route_distance_m):null;
   return {
    id:s.id,name:s.name,level:s.level,gu:s.gu||null,lat:s.lat??null,lng:s.lng??null,island:['강화군','옹진군'].includes(s.gu),data_year:y?Number(y):null,
+   park_route_missing_detail:rt?.status==='available'?null:rt?.origin_snap_m>150?'학교 대표점과 보행망 연결거리가 계산 기준 150m를 넘어 보류했습니다. 출입구 위치와 연결 보행로를 확인해야 합니다.':rt?'보유 보행망에서 연결거리 각각 150m·총거리 15km 이내의 유효 공원 경로를 확보하지 못했습니다. 접근 불가를 뜻하지 않습니다.':'경로 자료를 아직 산출하지 않았습니다.',
    students:num(o.students),classes:num(o.classes),teachers:num(o.teachers),class_size:num(o.class_size),students_per_teacher:o.students&&o.teachers?round(o.students/o.teachers):null,paps:round(num(o.paps)),afterschool:num(o.afterschool),clubs:num(o.clubs),
    students_2020:num(first?.students),student_change_pct:first?.students&&o.students?round(100*(o.students-first.students)/first.students):null,sen_slope:round(num(s.enrollment_trend?.sen_slope_students_per_year)),forecast_2029:num(f29?.students),forecast_2031:num(f31?.students),forecast_change_pct_2031:f31?.students&&o.students?round(100*(f31.students-o.students)/o.students):null,
    parks_walk:num(s.environment?.parks),green_ratio:round(num(s.environment?.green)),nearest_park_m:nearestPark,park_route_m:rt?.status==='available'?round(num(rt.route_distance_m),0):null,park_detour_ratio:rt?.status==='available'?round(num(rt.detour_ratio),2):null,nearest_park_name:p?null:rt?.park_name||null,playgrounds_walk:p?num(p.iso_playground_count):null,shared_park_m2_per_student:sp?round(num(sp.shared_area_per_student)):null,park_sharing_schools:sp?num(sp.sharing_school_count):null,park_case:p?.case_label||null,

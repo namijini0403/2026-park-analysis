@@ -1,5 +1,7 @@
 """OSM walking routes to public park representative points, with explicit snap costs."""
 import json
+import argparse
+import hashlib
 from pathlib import Path
 
 import geopandas as gpd
@@ -45,6 +47,9 @@ def path_geometry_points(graph, path):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--elementary-only', action='store_true', help='Add elementary routes, preserving existing other levels')
+    args = parser.parse_args()
     graph = ox.project_graph(ox.load_graphml(ROOT.parent / "_cache/incheon_walk_graph_v3.graphml"), to_crs=5179)
     graph = ox.convert.to_undirected(graph)
     keep = set().union(*(c for c in nx.connected_components(graph) if len(c) >= 30))
@@ -52,6 +57,10 @@ def main():
     parks = pd.read_csv(ROOT / "data_processed/parks_with_function_class.csv")
     parks = parks[(parks["시설유형"] != "놀이터") & parks["위도"].notna() & parks["경도"].notna()].copy().reset_index(drop=True)
     schools = pd.read_csv(OUT / "new_school_coords.csv")
+    if args.elementary_only:
+        dataset = json.loads((OUT / 'analysis_dataset.json').read_text(encoding='utf-8'))
+        schools = pd.DataFrame([{'학교ID': s['id'], '위도': s['lat'], '경도': s['lng']}
+                                for s in dataset['schools'] if s['level'] == '초등학교'])
     def snap(frame):
         points = gpd.GeoSeries(gpd.points_from_xy(frame["경도"], frame["위도"]), crs=4326).to_crs(5179)
         nodes = ox.distance.nearest_nodes(graph, X=points.x, Y=points.y)
@@ -69,11 +78,11 @@ def main():
     for node, j in park_by_node.items():
         graph.add_edge(virtual, node, length=float(po[j]))
     distances, paths = nx.single_source_dijkstra(graph, virtual, cutoff=15000, weight="length")
-    output = {}
+    output = json.loads((OUT / 'school_routes.json').read_text(encoding='utf-8')) if args.elementary_only else {}
     for i, school in schools.iterrows():
         result = {"method": "OSM 보행망·대표점 최근접 노드·양끝 연결거리 포함", "origin_snap_m": round(so[i],1),
                   "scope": "15km 이내 탐색, 양끝 보행망 연결거리 각각 150m 이하", "status": "no_valid_route_within_search_scope"}
-        if sn[i] in distances and so[i] <= 150:
+        if sn[i] in distances and so[i] <= 150 and distances[sn[i]] + so[i] <= 15000:
             distance = distances[sn[i]] + so[i]
             j = park_by_node[paths[sn[i]][1]]
             path = list(reversed(paths[sn[i]][1:]))
@@ -90,6 +99,13 @@ def main():
         if (i+1)%100==0: print(f"Routes {i+1}/{len(schools)}",flush=True)
     (OUT / "school_routes.json").write_text(json.dumps(output,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
     print(f"Routes complete: {len(output)}",flush=True)
+    inputs = [ROOT.parent / '_cache/incheon_walk_graph_v3.graphml', ROOT / 'data_processed/parks_with_function_class.csv',
+              OUT / ('analysis_dataset.json' if args.elementary_only else 'new_school_coords.csv')]
+    report = {'scope': 'elementary addition' if args.elementary_only else 'new school levels',
+              'schools': len(schools), 'available': sum(output[sid]['status'] == 'available' for sid in schools['학교ID']),
+              'inputs': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
+              'limitations': '대표점·OSM 보행망 추정. 양끝 연결선은 실제 통행 검증 아님. 출입구·통행허용·안전 별도 확인. 미확보는 접근 불가를 뜻하지 않음.'}
+    (OUT / 'school_routes_build_report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
 
 
 if __name__ == "__main__":

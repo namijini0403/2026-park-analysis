@@ -72,19 +72,6 @@ window.SchoolMap=(() => {
   function walkingData(file){
     if(!walkingCache.has(file)){const request=fetch('/data_processed/'+file,{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('자료 연결 실패');return r.json();}).catch(e=>{walkingCache.delete(file);throw e;});walkingCache.set(file,request);}return walkingCache.get(file);
   }
-  const nearestCache=new Map();
-  function nearestParks(){
-    if(!nearestCache.has('csv'))nearestCache.set('csv',fetch('/data_processed/school_nearest_park.csv',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('자료 연결 실패');return r.text();}).then(text=>{const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(Boolean),head=lines.shift().split(','),map=new Map();for(const line of lines){const cells=line.split(','),row=Object.fromEntries(head.map((k,i)=>[k,cells[i]]));map.set(row.학교ID,{park:row.nearest_park_name,distance:Number(row.nearest_park_dist_m)});}return map;}).catch(e=>{nearestCache.delete('csv');throw e;}));
-    return nearestCache.get('csv');
-  }
-  const straight=(a,b)=>{const rad=Math.PI/180,x=(a.lng-b.lng)*rad*Math.cos((a.lat+b.lat)*rad/2),y=(a.lat-b.lat)*rad;return 6371000*Math.hypot(x,y);};
-  // Park routes belong to the 공원 layer: when it is on, the selected school's nearest-park walk is drawn with it.
-  async function elementaryRoute(school){
-    const nearest=(await nearestParks()).get(school.id);if(!nearest||!Number.isFinite(nearest.distance))return null;
-    const parks=await window.MapLayers.rows('parks'),same=parks.filter(p=>p.name===nearest.park&&position(p));
-    const park=same.sort((a,b)=>straight(a,school)-straight(b,school))[0];
-    return {park_name:nearest.park,route_distance_m:nearest.distance,straight_distance_m:park?Math.round(straight(park,school)):null,coordinates:park?[[school.lng,school.lat],[park.lng,park.lat]]:null,method:'공공 공원 대상 보행망 최근접 거리 원장 · 경로선은 대표점 직선 표시'};
-  }
   async function drawWalking(){
     const revision=++walkingRevision;if(!map)return;map.clear('walkshed');map.clear('walking-route');walkingPoints=[];el('map-walking-fit').hidden=true;
     const status=el('map-walking-status'),school=rows.find(s=>s.id===selected),showArea=el('map-walkshed').checked,showRoute=!!window.MapLayers?.isChosen?.('parks');
@@ -94,7 +81,7 @@ window.SchoolMap=(() => {
     status.textContent=school.name+'의 보행 자료를 불러오는 중입니다…';
     const tasks=[];
     if(showArea)tasks.push(walkingData(school.level==='초등학교'?'school_walkshed_500m_v3.geojson':'education/walkshed_500m.geojson').then(d=>({kind:'area',data:d})));
-    if(showRoute)tasks.push((school.level==='초등학교'?elementaryRoute(school):walkingData('education/school_routes.json').then(d=>{const r=d[school.id];return r?.status==='available'&&Number.isFinite(r.route_distance_m)&&Array.isArray(r.route_coordinates)&&r.route_coordinates.length>=2?{park_name:r.park_name,route_distance_m:r.route_distance_m,straight_distance_m:r.straight_distance_m,coordinates:r.route_coordinates,method:r.method||'보행망 분석'}:null;})).then(d=>({kind:'route',data:d})));
+    if(showRoute)tasks.push((walkingData('education/school_routes.json').then(d=>{const r=d[school.id];return r?.status==='available'&&Number.isFinite(r.route_distance_m)&&Array.isArray(r.route_coordinates)&&r.route_coordinates.length>=2?{park_name:r.park_name,route_distance_m:r.route_distance_m,straight_distance_m:r.straight_distance_m,coordinates:r.route_coordinates,method:r.method||'보행망 분석'}:null;})).then(d=>({kind:'route',data:d})));
     const results=await Promise.allSettled(tasks);if(revision!==walkingRevision)return;
     const messages=[];el('school-map').dataset.walkingSchool=school.id;
     for(const [i,result] of results.entries()){

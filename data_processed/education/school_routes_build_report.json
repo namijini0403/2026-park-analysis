@@ -1,0 +1,11 @@
+{
+  "scope": "elementary addition",
+  "schools": 272,
+  "available": 251,
+  "inputs": {
+    "incheon_walk_graph_v3.graphml": "57eefc57c37a9abb7a98b1f018d50f4bba309f02a654b0db4eeddbcc62b9dfa6",
+    "parks_with_function_class.csv": "68bd4254206b2df0edd4602166f3b1d36127438d5fdb2fdd17f18f0007a057c6",
+    "analysis_dataset.json": "4fbd4581f194b885b4a6b9554a6cb0f25fea814b2601d1b1eae7e84df807f110"
+  },
+  "limitations": "대표점·OSM 보행망 추정. 양끝 연결선은 실제 통행 검증 아님. 출입구·통행허용·안전 별도 확인. 미확보는 접근 불가를 뜻하지 않음."
+}

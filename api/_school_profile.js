@@ -25,7 +25,7 @@ function indicator(column,row,built){
  const c=table.COLUMNS[column],base={column,label:c.label,unit:c.unit||'',direction:c.direction,note:c.note||null};
  const raw=row[column];
  if(c.type==='text'){const has=raw!=null&&raw!=='';return {...base,value:null,text:has?String(raw):null,overall:null,gu:null,missing:has?null:missingFor(column,row.level,t)};}
- if(!finite(raw))return {...base,value:null,text:null,overall:null,gu:null,missing:missingFor(column,row.level,t)};
+ if(!finite(raw))return {...base,value:null,text:null,overall:null,gu:null,missing:['park_route_m','park_detour_ratio'].includes(column)&&row.park_route_missing_detail?{reason:'route_unverified',detail:row.park_route_missing_detail}:missingFor(column,row.level,t)};
  const island=stats.isIsland(row.gu);
  const all=stats.population(column,row.level,{island,built:t});
  const overall={n:all.n,percentile:stats.percentile(all.values,raw),rank:stats.rank(all.values,raw),mean:all.mean,median:all.median,min:all.min,max:all.max};
