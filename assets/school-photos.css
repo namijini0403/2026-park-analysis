@@ -7,3 +7,5 @@
 .school-photos [hidden]{display:none!important}
 .school-photos .photo-detail{margin-top:16px}.school-photos .photo-detail h4{font-size:13px;margin:0 0 10px}.school-photos gmp-place-details{display:block;width:100%;max-width:400px;border:1px solid #dce5dd;border-radius:12px;color-scheme:light;--gmp-mat-color-primary:#315e43;--gmp-mat-color-surface:#fff;--gmp-mat-color-on-surface:#284d36;--gmp-mat-font-family:inherit}
 @media(max-width:600px){.school-photos{padding:14px}.school-photos .photo-controls{flex-wrap:wrap}.school-photos label{flex-basis:100%}.school-photos button{width:100%}}
+
+.school-photos .photo-previews{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px;margin-top:16px}.school-photos .photo-preview{min-width:0}.school-photos .photo-preview h4{font-size:13px;margin:0 0 10px;color:#315e43}
