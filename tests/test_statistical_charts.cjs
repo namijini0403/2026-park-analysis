@@ -17,4 +17,16 @@ for(const c of [{title:'미래 수요 예측',points:[{value:2}]},{points:[{valu
 }
 assert(ctx.window.ChatWorkspace.chart({kind:'bar',points:[{name:'학교',value:1}]}).includes('statistical-chart-dot'));
 assert(!ctx.window.ChatWorkspace.chart({kind:'bar',title:'값 구간 분포',points:[{name:'0~10',value:1}]}).includes('statistical-chart-dot'));
+// Category appearance must not imply high/low risk, change with values, or invent missing bars.
+const categoryHtml=value=>charts.dotPlot({points:[{name:'중구',value},{name:'미확보',value:null}]});
+assert.equal(categoryHtml(1).match(/style="fill:(#[a-f0-9]+)"/)[1],categoryHtml(99).match(/style="fill:(#[a-f0-9]+)"/)[1]);
+assert.equal((categoryHtml(1).match(/class="sc-stem"/g)||[]).length,1);
+assert(categoryHtml(1).includes('색은 항목 구분 · 우열을 뜻하지 않음'));
+assert(categoryHtml(1).includes('표시 1개 · 자료 없음 1개'));
+html=charts.line({x:['연도','년'],y:['학생 수','명'],points:[{x:2020,y:10},{x:2021,y:12},{x:2022,y:null},{x:2023,y:15,name:'예측'}]});
+assert(html.includes('>2020</text>'));assert(html.includes('>2021</text>'));assert(!html.includes('2,020'));assert(!html.includes('2020.75'));
+assert.equal((html.match(/class="sc-point-label"/g)||[]).length,3);
+assert(html.includes('예측 포함 · 확정값 아님'));assert.equal((html.match(/class="sc-line/g)||[]).length,1);
+html=charts.scatter({points:[{x:1,y:2,forecast:true}]});assert(!html.includes('sc-key-observed'));assert(html.includes('sc-key-predicted'));
+html=charts.dotPlot({points:[{value:2,forecast:true}]});assert(!html.includes('sc-key-forecast'));
 console.log('Statistical chart regression checks passed');

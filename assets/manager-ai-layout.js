@@ -13,6 +13,7 @@
     const messages = document.getElementById('messages');
     const evidence = document.getElementById('evidence-panel');
     const context = document.getElementById('chat-context');
+    const settings = section?.querySelector('.chat-settings');
     if (!section || !workspace || !conversation || !form || !messages || !evidence) return;
     if (document.getElementById('manager-ai-tools')) return;
 
@@ -72,7 +73,12 @@
       }
 
       const saveControls = [...conversation.children].filter(element => element.matches('.chat-save-bar'));
-      const core = [scope, context, form, messages, ...saveControls].filter(Boolean);
+      // The current app groups scope and examples in one native disclosure.
+      // Keep that entire live node (including its open state) beside the form;
+      // do not extract its context or leave an empty legacy scope box behind.
+      const scopeBlock = settings || (scope.children.length ? scope : null);
+      const standaloneContext = settings?.contains(context) ? null : context;
+      const core = [scopeBlock, standaloneContext, form, messages, ...saveControls].filter(Boolean);
       const coreSet = new Set(core);
 
       // Move only stand-alone tools. Never inspect or rearrange anything inside
@@ -82,8 +88,8 @@
       }
 
       for (const element of [...section.children]) {
-        if (element === workspace || element === context || element === form || element === messages) continue;
-        if (element.matches('.step, #chat-title, script, style, template')) continue;
+        if (element === workspace || coreSet.has(element)) continue;
+        if (element.matches('.step, #chat-title, .chat-flow, script, style, template')) continue;
         toTools(element);
       }
 

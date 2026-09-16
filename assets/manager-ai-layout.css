@@ -87,12 +87,100 @@
 }
 
 #workspace-ask .manager-ai-conversation #chat-form {
+  position: relative;
+  bottom: auto;
+  z-index: 1;
   order: 0;
   margin: 0;
   padding: 14px;
   border: 2px solid #168b7e;
   background: #fffef8;
   box-shadow: 0 0 0 4px #dcecdf, 0 6px 18px #123d420c;
+}
+
+/* Current conversation UI: retain the original settings and save disclosures. */
+#workspace-ask .manager-ai-layout > .chat-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 0;
+  border: 0;
+}
+
+#workspace-ask .manager-ai-layout > .chat-flow li {
+  padding: 10px 14px;
+  border: 1px solid #c4d5ca;
+  border-radius: 10px;
+  background: #edf2e8;
+  color: #345962;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+#workspace-ask .manager-ai-conversation > .chat-settings {
+  width: 100%;
+  margin: 0;
+  padding: 12px 15px;
+  border: 1px solid #b7cec0;
+  border-radius: 12px;
+  background: #edf4e9;
+  color: #345962;
+}
+
+#workspace-ask .manager-ai-conversation > .chat-settings > summary {
+  color: #21575b;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.8;
+}
+
+#workspace-ask .manager-ai-conversation .chat-settings #chat-context { margin: 12px 0; }
+#workspace-ask .manager-ai-conversation .chat-settings .chat-scope-label {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 7px;
+  width: calc(50% - 9px);
+  margin: 12px 5px 6px 0;
+  vertical-align: top;
+  color: #345962;
+  font-size: 13px;
+  font-weight: 700;
+}
+#workspace-ask .manager-ai-conversation .chat-settings select { width: 100%; min-width: 0; }
+#workspace-ask .manager-ai-conversation .chat-settings .question-examples {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #cad9cb;
+  border-radius: 10px;
+  background: #fffdf7;
+}
+
+#workspace-ask .manager-ai-conversation details.chat-save-bar { display: block; }
+#workspace-ask .manager-ai-conversation #messages:empty + details.chat-save-bar { display: none; }
+#workspace-ask .manager-ai-conversation details.chat-save-bar > summary {
+  color: #21575b;
+  font-weight: 750;
+  line-height: 1.8;
+}
+#workspace-ask .manager-ai-conversation details.chat-save-bar[open] > :not(summary) {
+  max-width: 100%;
+  margin-top: 10px;
+}
+#workspace-ask .manager-ai-conversation .agent-inline-map {
+  border-color: #bfd2c6;
+  background: #fffdf7;
+}
+#workspace-ask .manager-ai-conversation .agent-inline-visual figure { overflow-x: auto; }
+#workspace-ask .manager-ai-conversation .chat-map-toolbar { align-items: start; }
+#workspace-ask .manager-ai-conversation .chat-map-toolbar select { min-width: 0; }
+
+@media (max-width: 600px) {
+  #workspace-ask .manager-ai-layout > .chat-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  #workspace-ask .manager-ai-layout > .chat-flow li { padding: 9px 11px; font-size: 12px; }
+  #workspace-ask .manager-ai-conversation > .chat-settings { padding: 11px 12px; }
+  #workspace-ask .manager-ai-conversation .chat-settings .chat-scope-label { width: 100%; margin-right: 0; }
 }
 
 #workspace-ask .manager-ai-conversation #chat-form:focus-within {

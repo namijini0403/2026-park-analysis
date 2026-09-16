@@ -1,0 +1,295 @@
+/* Presentation only for the latest photos and statistics UI.
+   Keep original data, chart geometry, disclosure states and Google attribution. */
+
+/* The current renderer places one dashboard inside the older card-grid host. */
+#workspace-stats #stats-body {
+  display: block;
+  min-width: 0;
+}
+
+#workspace-stats .ds-dashboard {
+  --ds-ink: #183447;
+  --ds-green: #087c78;
+  --ds-light: #dcece4;
+  color: var(--review-ink, #183447);
+  min-width: 0;
+}
+
+#workspace-stats .stats-controls {
+  display: grid;
+  grid-template-columns: minmax(160px, 240px) minmax(160px, 240px) minmax(0, 1fr);
+  align-items: end;
+  gap: 18px;
+  background: #eaf0e7;
+  border-color: #c5d6ce;
+}
+
+#workspace-stats .stats-controls label { min-width: 0; }
+#workspace-stats #stats-status { margin: 0; line-height: 1.75; }
+
+#workspace-stats :is(.stats-controls, .ds-chart-card) :is(select, input) {
+  min-width: 0;
+  min-height: 46px;
+  color: var(--review-ink, #183447);
+  background: var(--review-paper, #fffdf7);
+  border: 1px solid #9fbdb4;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+#workspace-stats :is(.ds-indicators, .ds-tracks) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow: visible;
+  margin-block: 16px;
+}
+
+#workspace-stats .ds-tracks { border-top-color: #d1dcd4; }
+
+#workspace-stats :is(.ds-indicators, .ds-tracks, .ds-view-tabs) button {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 11px 15px;
+  border: 1px solid #b7cbc2;
+  border-radius: 10px;
+  background: var(--review-paper, #fffdf7);
+  color: #315461;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+#workspace-stats :is(.ds-indicators, .ds-tracks, .ds-view-tabs) button:hover:not(:disabled) {
+  color: #075d5a;
+  background: #e6f1ea;
+  border-color: #6da99b;
+}
+
+#workspace-stats :is(.ds-indicators, .ds-tracks, .ds-view-tabs) button[aria-pressed="true"],
+#workspace-stats :is(.ds-indicators, .ds-tracks, .ds-view-tabs) button[aria-pressed="true"]:hover {
+  color: #fffdf7;
+  background: #087c78;
+  border-color: #06615e;
+  box-shadow: inset 0 0 0 1px #b9e8d550, 0 2px 7px #18344714;
+  font-weight: 750;
+}
+
+#workspace-stats .ds-view-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+  margin-block: 22px;
+  overflow: visible;
+  border: 1px solid #c8d8cf;
+  background: #e6eee6;
+  border-radius: 14px;
+}
+
+#workspace-stats :is(.ds-overview, .ds-chart-card, .ds-districts) {
+  min-width: 0;
+  padding: clamp(18px, 2.4vw, 28px);
+  border: 1px solid #d3ded5;
+  border-radius: 16px;
+  background: var(--review-paper, #fffdf7);
+  box-shadow: 0 4px 16px #18344706;
+}
+
+#workspace-stats .ds-overview { border-top: 3px solid #73b7a2; }
+
+#workspace-stats :is(.ds-overview, .ds-chart-card, .ds-districts) h3 {
+  color: var(--review-ink, #183447);
+  font-size: clamp(20px, 2.2vw, 27px);
+  font-weight: 750;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+#workspace-stats .ds-kicker { color: #08716d; font-size: 13px; font-weight: 700; }
+#workspace-stats .ds-metrics { gap: 14px; align-items: stretch; }
+
+#workspace-stats .ds-metrics > div {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid #dce4d9;
+  border-radius: 12px;
+  background: #f2f4eb;
+  gap: 9px;
+}
+
+#workspace-stats .ds-metrics span { color: #536875; font-size: 13px; line-height: 1.6; }
+#workspace-stats .ds-metrics strong {
+  color: #183447;
+  font-size: clamp(23px, 2.3vw, 32px);
+  font-weight: 750;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+#workspace-stats .ds-metrics small { color: #536875; font-size: 13px; font-weight: 500; }
+#workspace-stats .ds-coverage { background-color: #e5e9df; }
+#workspace-stats .ds-coverage > span { background: #309689; }
+#workspace-stats .ds-whisker { background: #8aa89f; }
+#workspace-stats .ds-iqr { background: #b9dacc; }
+#workspace-stats .ds-end { border-color: #819d93; }
+#workspace-stats .ds-median { border-color: #086b66; }
+#workspace-stats .ds-mean { box-shadow: 0 0 0 2px #246b63; }
+#workspace-stats :is(.ds-axis, .ds-legend, .ds-empty) { color: #536875; line-height: 1.7; }
+#workspace-stats .ds-selected-label { color: #975020; }
+
+/* Orange remains the original selected/predicted meaning in chart captions. */
+#workspace-stats .ds-school {
+  background: #faf0df;
+  border-left-color: #b96b32;
+  color: #674d36;
+  font-size: 14px;
+}
+#workspace-stats .ds-school small { color: #76634d; }
+#workspace-stats .ds-district { border-bottom-color: #dce4db; }
+#workspace-stats .ds-district small { color: #536875; }
+#workspace-stats .ds-district > span:last-child { color: #284a55; }
+
+#workspace-stats :is(.ds-details, .ds-chart-card details) {
+  padding: 12px 17px;
+  border: 1px solid #cedcd1;
+  border-radius: 12px;
+  background: #f5f5ec;
+}
+#workspace-stats :is(.ds-details, .ds-chart-card details) > summary {
+  min-height: 44px;
+  color: #285c63;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.65;
+}
+#workspace-stats :is(.ds-details, .ds-chart-card) :is(p, li, figcaption) { line-height: 1.8; }
+#workspace-stats .ds-pair-metrics { color: #536875; gap: 12px 22px; }
+#workspace-stats .ds-pair-metrics strong { color: #076f69; }
+
+#workspace-stats .ds-data-filters {
+  padding: 16px;
+  gap: 14px;
+  border: 1px solid #d1dfd3;
+  border-radius: 12px;
+  background: #eef3e9;
+}
+#workspace-stats .ds-data-filters label { min-width: 0; flex: 1 1 190px; }
+#workspace-stats .ds-data-filters :is(select, input) { max-width: none; }
+#workspace-stats #stats-csv {
+  min-height: 46px;
+  color: #fffdf7;
+  background: #087c78;
+  border-color: #06615e;
+}
+#workspace-stats #stats-csv:hover:not(:disabled) { color: #fffdf7; background: #06615e; }
+
+#workspace-stats :is(.table-scroll, .statistical-chart-scroll) {
+  max-width: 100%;
+  scrollbar-color: #8fb2a5 #f0f2e9;
+  scrollbar-width: thin;
+}
+#workspace-stats :is(.ds-chart-card, .ds-details) table { color: #284752; font-variant-numeric: tabular-nums; }
+#workspace-stats :is(.ds-chart-card, .ds-details) th { color: #254e59; background: #e6eee3; }
+#workspace-stats :is(.ds-chart-card, .ds-details) :is(th, td) { border-bottom-color: #d9e2d6; }
+#workspace-stats .ds-coverage-row { color: #31525d; }
+#workspace-stats .ds-coverage-row small { color: #536875; }
+#workspace-stats .ds-coverage-row meter { accent-color: #087c78; }
+
+#workspace-stats .statistical-chart {
+  min-width: 0;
+  background: #fffef9;
+  border-color: #d7e0d6;
+  color: #284752;
+}
+#workspace-stats .statistical-chart svg { max-height: none; }
+#workspace-stats .statistical-chart svg text { fill: #536875; }
+#workspace-stats .statistical-chart svg .sc-name { fill: #183447; }
+#workspace-stats .statistical-chart svg .sc-value { fill: #1d5454; }
+#workspace-stats .statistical-chart .sc-grid { stroke: #dae4dc; }
+#workspace-stats .statistical-chart .sc-row { stroke: #e9eee6; }
+#workspace-stats .statistical-chart .sc-dot:not(.sc-selected):not(.sc-predicted) { fill: #168579; }
+#workspace-stats .statistical-chart .sc-line:not(.sc-forecast) { stroke: #168579; }
+#workspace-stats .statistical-chart figcaption { color: #536875; }
+
+/* Style only the app-owned photo shell, not Google's shadow DOM or lightbox. */
+#summary .school-photos {
+  container-name: manager-school-photos;
+  container-type: inline-size;
+  margin-block: 20px;
+  padding: 18px;
+  border: 1px solid #c9dacf;
+  border-top: 3px solid #7ab8a3;
+  border-radius: 14px;
+  background: #f2f5ec;
+  color: #183447;
+}
+#summary .school-photos h3 { color: #183447; font-size: 17px; line-height: 1.55; }
+#summary .school-photos p { color: #536875; font-size: 13px; line-height: 1.8; }
+#summary .school-photos .photo-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+#summary .school-photos label { min-width: 0; color: #31535e; font-size: 13px; font-weight: 650; }
+#summary .school-photos select {
+  min-width: 0;
+  min-height: 46px;
+  border-color: #9fbdb4;
+  color: #183447;
+  background: #fffdf7;
+  font-size: 14px;
+}
+#summary .school-photos .photo-controls > button {
+  min-height: 46px;
+  border-color: #06615e;
+  background: #087c78;
+  color: #fffdf7;
+  font-size: 14px;
+  line-height: 1.55;
+}
+#summary .school-photos .photo-controls > button:hover:not(:disabled) { color: #fffdf7; background: #06615e; }
+#summary .school-photos .photo-status {
+  padding: 12px;
+  border: 1px solid #d5e0d3;
+  border-radius: 10px;
+  background: #fffdf7;
+}
+#summary .school-photos .photo-detail { padding-top: 15px; border-top: 1px solid #d2dfd4; }
+#summary .school-photos .photo-detail h4 { color: #234954; font-size: 15px; line-height: 1.6; }
+
+#workspace-stats :is(button, select, input, summary, a, .statistical-chart-scroll):focus-visible,
+#summary .school-photos :is(button, select):focus-visible {
+  outline: 3px solid #148a85;
+  outline-offset: 3px;
+}
+
+@container manager-school-photos (max-width: 500px) {
+  #summary .school-photos .photo-controls { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 900px) {
+  #workspace-stats .stats-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #workspace-stats #stats-status { grid-column: 1 / -1; }
+}
+
+@media (max-width: 640px) {
+  #workspace-stats .ds-view-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; padding: 7px; }
+  #workspace-stats :is(.ds-indicators, .ds-tracks, .ds-view-tabs) button { padding: 10px 12px; font-size: 13px; }
+  #workspace-stats :is(.ds-overview, .ds-chart-card, .ds-districts) { padding: 16px; }
+  #workspace-stats .ds-metrics { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  #workspace-stats .ds-metrics > div { grid-column: auto; padding: 14px; gap: 5px; }
+  #workspace-stats .ds-metrics strong { font-size: 25px; }
+  #workspace-stats .ds-data-filters { display: grid; grid-template-columns: minmax(0, 1fr); padding: 13px; }
+  #workspace-stats .ds-data-filters label { width: 100%; }
+  #workspace-stats :is(.stats-controls, .ds-chart-card) :is(select, input) { font-size: 16px; }
+  #workspace-stats :is(.ds-details, .ds-chart-card details) { padding-inline: 12px; }
+  #workspace-stats .ds-coverage-row { grid-template-columns: minmax(0, 1.1fr) minmax(55px, 1fr) 60px; }
+  #summary .school-photos { padding: 14px; }
+  #summary .school-photos select { font-size: 16px; }
+}
