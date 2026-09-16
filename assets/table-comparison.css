@@ -1,0 +1,24 @@
+#evidence-panel .table-comparison{margin:16px 0;padding:18px;background:#fffef9;border:1px solid #c3d9cd;border-radius:16px;min-width:0}
+#evidence-panel .table-comparison h4{margin:0 0 8px;font-size:19px;color:#175a57}
+#evidence-panel .table-comparison fieldset{border:0;padding:0;margin:14px 0;display:flex;flex-wrap:wrap;gap:8px}
+#evidence-panel .table-comparison legend{font-weight:700;margin-bottom:8px}
+#evidence-panel .table-comparison label{display:flex;align-items:center;gap:7px;border:1px solid #ccdcd4;background:#f1f6f1;padding:8px 10px;border-radius:9px;font-size:13px;cursor:pointer}
+#evidence-panel .table-comparison label:has(input:checked){background:#e0f1eb;border-color:#228378;color:#125c54}
+#evidence-panel .table-comparison input{width:17px;height:17px;accent-color:#087f78;margin:0;flex:none}
+#evidence-panel .tc-scroll{overflow-x:auto;margin-top:14px}
+#evidence-panel .tc-grid{display:grid;grid-template-columns:150px repeat(var(--tc-cols),minmax(125px,1fr));min-width:calc(150px + var(--tc-cols)*125px);font-size:13px}
+#evidence-panel .tc-head{padding:10px 9px;background:#eef4ee;border-top:3px solid var(--tc-color,#587c70);font-weight:700}
+#evidence-panel .tc-head small{display:block;font-size:11px;font-weight:400;color:#61796f;margin-top:6px}
+#evidence-panel .tc-name,#evidence-panel .tc-cell{padding:12px 9px;border-bottom:1px solid #e2e9e2;min-width:0;background:#fff}
+#evidence-panel .tc-name{font-weight:700;overflow-wrap:anywhere}
+#evidence-panel .tc-cell{border-left:1px solid #edf1ed;font-variant-numeric:tabular-nums;color:var(--tc-color);font-weight:700}
+#evidence-panel .tc-track{position:relative;height:9px;background:#edf1ec;border-radius:3px;margin-top:8px}
+#evidence-panel .tc-track b{position:absolute;height:9px;background:var(--tc-color);border-radius:3px}
+#evidence-panel .tc-zero{position:absolute;top:-2px;height:13px;width:1px;background:#6a7f75}
+#evidence-panel .tc-missing{font-size:11px;color:#78827a;font-weight:400;margin-top:4px}
+#evidence-panel .tc-pager{display:flex;justify-content:center;align-items:center;gap:12px;margin:12px 0}
+#evidence-panel .tc-pager[hidden]{display:none}
+#evidence-panel .tc-pager button{padding:7px 10px;font-size:12px}
+#evidence-panel .tc-table th{min-width:95px}
+#evidence-panel .tc-table th:first-child{min-width:130px}
+@media(max-width:600px){#evidence-panel .table-comparison{padding:12px}#evidence-panel .tc-grid{grid-template-columns:125px repeat(var(--tc-cols),125px);min-width:calc(125px + var(--tc-cols)*125px)}}
