@@ -19,6 +19,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require('node:crypto');
 
+require("./api/_env.js"); // 로컬 개발: 리포 루트 .env → 워크스페이스 루트 .env (운영은 Railway Variables)
 const aiExplainerHandler = require("./api/ai-explainer-v2.js");
 // Daily upstream checks by default; explicit 0 and saved runtime settings still win.
 process.env.UPDATE_CENTER_SCAN_INTERVAL_MIN ??= '1440';

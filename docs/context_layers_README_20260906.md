@@ -45,7 +45,7 @@
 
 ```bash
 # 0) (선택) 원천 좌표 보강 — Kakao Local API. 캐시가 있으면 네트워크 호출 없이 동일 결과 재현
-export KAKAO_REST_KEY=...          # 또는 워크스페이스 루트 1.env 의 'rest:' 줄에서 자동 로드
+export KAKAO_REST_KEY=...          # 또는 워크스페이스 루트 .env 의 KAKAO_REST_KEY= 줄에서 자동 로드(2026-09-20: 1.env 통합)
 python scripts/context/geocode_missing_kakao.py            # 유흥·단란주점 좌표 미확보 행
 python scripts/context/normalize_construction.py           # 계양·미추홀 정규화 + 연수 미매핑 재시도
 python scripts/context/normalize_designations.py           # raw/ 원문 → 지정 명단 CSV
@@ -76,7 +76,7 @@ node scripts/deploy/build_vercel_static.mjs
 
 ## 지오코딩 재실행 방법
 
-1. 키 준비: `KAKAO_REST_KEY` 환경변수 또는 워크스페이스 루트 `1.env` 의 `rest: <키>` 줄.
+1. 키 준비: `KAKAO_REST_KEY` 환경변수 또는 워크스페이스 루트 `.env` 의 `KAKAO_REST_KEY=<키>` 줄(구 `1.env` 의 `rest:` 줄은 폴백으로만 남음).
    **키를 리포 안 파일에 쓰지 마세요.** 캐시 파일에도 질의·응답만 저장됩니다.
 2. 초당 약 5회로 제한되고 429/5xx는 지수 백오프로 재시도합니다.
 3. 캐시(`data/context_sources/geocode_cache/kakao_cache.json`)가 있으면 같은 질의는 호출 없이 재사용되므로

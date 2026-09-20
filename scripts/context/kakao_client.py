@@ -36,11 +36,37 @@ MIN_INTERVAL_S = 0.2  # 약 5 req/s
 MAX_RETRIES = 4
 
 
+DOTENV_FILES = (REPO_ROOT / ".env", WORKSPACE_ROOT / ".env")
+
+
+def _read_dotenv_value(path: Path, names: tuple[str, ...]) -> str:
+    """KEY=VALUE 형식의 .env 에서 names 중 첫 번째로 값이 있는 항목을 돌려준다(없으면 빈 문자열)."""
+    if not path.exists():
+        return ""
+    found: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        key, value = stripped.split("=", 1)
+        found[key.strip()] = value.strip().strip('"').strip("'")
+    for name in names:
+        if found.get(name):
+            return found[name]
+    return ""
+
+
 def load_key(key_file: Path | None = None) -> str:
-    """환경변수 우선, 없으면 리포 밖 키 파일의 `rest:` 줄. 리포에 기록하지 않는다."""
-    env = (os.environ.get("KAKAO_REST_KEY") or "").strip()
-    if env:
-        return env
+    """환경변수 → 리포 루트 .env → 워크스페이스 루트 .env(KAKAO_REST_KEY=) → 구 1.env 의 `rest:` 줄.
+    키를 리포에 기록하지 않는다."""
+    for name in ("KAKAO_REST_KEY", "KAKAO_REST_API_KEY"):
+        env = (os.environ.get(name) or "").strip()
+        if env:
+            return env
+    for dotenv in DOTENV_FILES:
+        value = _read_dotenv_value(dotenv, ("KAKAO_REST_KEY", "KAKAO_REST_API_KEY"))
+        if value:
+            return value
     path = key_file or DEFAULT_KEY_FILE
     if path.exists():
         for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -51,7 +77,7 @@ def load_key(key_file: Path | None = None) -> str:
                     return value
     raise RuntimeError(
         "Kakao REST 키를 찾지 못했습니다. 환경변수 KAKAO_REST_KEY 를 설정하거나 "
-        f"{path} 에 'rest: <키>' 줄을 두세요. (키를 리포 안 파일에 쓰지 마세요.)"
+        f"{WORKSPACE_ROOT / '.env'} 에 'KAKAO_REST_KEY=<키>' 줄을 두세요. (키를 리포 안 파일에 쓰지 마세요.)"
     )
 
 

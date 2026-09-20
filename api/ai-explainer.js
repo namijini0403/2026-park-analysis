@@ -11,37 +11,8 @@ const ALLOWED_ORIGIN_PATTERNS = [
   /^http:\/\/127\.0\.0\.1:\d+$/,
 ];
 
-loadLocalEnvForDevelopment();
-
-function loadLocalEnvForDevelopment() {
-  if (process.env.OPENAI_API_KEY) return;
-  const candidates = [
-    path.join(__dirname, "..", ".env"),
-    path.join(__dirname, "..", "..", ".env"),
-    path.join(__dirname, "..", "..", ".env.txt"),
-  ];
-
-  for (const filePath of candidates) {
-    if (!fs.existsSync(filePath)) continue;
-    const raw = fs.readFileSync(filePath, "utf-8").trim();
-    if (!raw) continue;
-
-    for (const line of raw.split(/\r?\n/)) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith("#")) continue;
-      if (trimmed.startsWith("OPENAI_API_KEY=")) {
-        process.env.OPENAI_API_KEY = trimmed.slice("OPENAI_API_KEY=".length).trim().replace(/^["']|["']$/g, "");
-      } else if (trimmed.startsWith("sk-")) {
-        process.env.OPENAI_API_KEY = trimmed;
-      } else if (trimmed.includes("=")) {
-        const [key, ...rest] = trimmed.split("=");
-        if (!process.env[key]) process.env[key] = rest.join("=").trim().replace(/^["']|["']$/g, "");
-      }
-    }
-
-    if (process.env.OPENAI_API_KEY) return;
-  }
-}
+// 로컬 개발용 키는 api/_env.js 가 리포 루트 .env → 워크스페이스 루트 .env 순으로 한 번만 읽는다.
+require("./_env");
 
 function applyCors(req, res) {
   const origin = req.headers?.origin;
