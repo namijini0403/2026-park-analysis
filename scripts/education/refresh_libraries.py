@@ -116,19 +116,24 @@ def rebuild(root):
         access.loc[idx,'nearest_library_euclid_m']=str(round(float(distances[near]),2))
     access.to_csv(data/'school_library_access.csv',index=False)
     gap=importlib.import_module('scripts.reading_module.apply_reading_gap_types')
-    gap.ACCESS_CSV=data/'school_library_access.csv';gap.FORECAST_CSV=data/'school_enrollment_forecast_20260418_model1.csv'
-    df=gap.load_access();forecast=gap.load_forecast();dist=gap.compute_distribution(df,forecast)
-    classified,*_=gap.classify(df,forecast,dist)
-    classified[gap.BASE_COLUMNS+gap.ADDED_COLUMNS].to_csv(gap.ACCESS_CSV,index=False)
+    saved_root=gap.ROOT
+    try:
+        gap.ROOT=root
+        gap.main()
+    finally:gap.ROOT=saved_root
     policy=importlib.import_module('scripts.policy_cards.build_policy_cards')
-    for name in ['PARK_CSV','LIBRARY_CSV','FORECAST_CSV','READING_YAML','OUTPUT_JSON']:
-        setattr(policy,name,root/getattr(policy,name).relative_to(policy.ROOT))
-    policy.ROOT=root
-    policy.main()
+    saved_data=policy.DATA
+    try:
+        policy.DATA=data
+        policy.main()
+    finally:policy.DATA=saved_data
     analysis=read(edu/'school_analysis.json')
     source_coverage=read(edu/'library_refresh_coverage.json')
     extended=gpd.read_file(edu/'walkshed_500m.geojson').to_crs(4326).set_index('학교ID')
     for school in analysis:
+        # Persisted threshold recommendations must not survive a facts-only refresh.
+        school['policy_scenarios']={}
+        if 'reading_gap' in school:school['reading_gap']['internal_low']=None
         sid=school['학교ID']
         if sid not in extended.index:continue
         mask=points.intersects(extended.loc[sid].geometry).to_numpy()
@@ -142,11 +147,6 @@ def rebuild(root):
         context['straight_500m_count']=int(points.intersects(circle).sum())
         if 'reading_gap' in school:
             external=bool(mask.any());school['reading_gap']['external_observed']=external
-            for barrier in (False,True):
-                action=policy.park_base_action(school['case_type'],barrier)
-                if school['reading_gap'].get('internal_low') and school['case_type']>=3:
-                    action='institution_link' if external else 'internal_investment'
-                school.setdefault('policy_scenarios',{})[str(barrier).lower()]=policy.build_scenarios(action,barrier)
     write(edu/'school_analysis.json',analysis)
     module=importlib.import_module('scripts.education.analyze_library_access')
     module.ROOT=root;module.DATA=data;module.EDU=edu;module.SOURCE=root/'data/education_sources/candidate_age_allocation.json'

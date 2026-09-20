@@ -35,6 +35,24 @@ def predict(values, horizon, model=None, weight=0):
     return results
 
 
+def fill_limited_history_scenario(result, target_year=2031):
+    """Explicit last-observation scenario; never manufacture a trend from short history."""
+    history = result.get('history', [])
+    if result.get('forecast') or not history:
+        return result
+    latest = max(history, key=lambda row: row['year'])
+    value = latest.get('students')
+    if value is None or not np.isfinite(value) or value < 0:
+        return result
+    origin = int(latest['year'])
+    result.update(model_status='limited_history_constant_scenario',
+                  scenario_method='last_observation_carried_forward',
+                  limitations='연속 관측 3년 미만으로 최근 재학생 수를 유지하는 참고 시나리오. 추세 예측·검증 완료 모형이 아님.')
+    result['forecast'] = [{'year': year, 'students': round(value), 'horizon': year-origin}
+                          for year in range(origin+1, target_year+1)]
+    return result
+
+
 def fit_at(rows, origin):
     available = [r for r in rows if r['year'] <= origin]
     if not available:
@@ -113,5 +131,6 @@ def build(enrollment, registry):
                                       for h, v in enumerate(predict(values, max(0, 2031-origin), model, weight), 1)]
             elif len(values) == 2:
                 result['student_slope'] = values[-1]-values[0]
+            fill_limited_history_scenario(result)
             output[sid] = result
     return output, validation

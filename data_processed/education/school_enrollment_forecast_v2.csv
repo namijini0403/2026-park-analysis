@@ -68,7 +68,7 @@ B000003192,교동초등학교,18,5,2,5,2,weighted_trend_lightgbm,origin_safe_res
 B000003134,인천경명초등학교,891,515,340,515,340,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
 B000003184,삼성초등학교,23,5,2,5,2,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
 B000022839,인천청일초등학교,829,632,547,632,547,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
-B000026471,인천신검단초등학교,,,,,,insufficient_history,origin_safe_residual_v2,origin_safe_heldout_target
+B000026471,인천신검단초등학교,,1651,1651,1651,1651,limited_history_constant_scenario,origin_safe_residual_v2,unvalidated_short_history_scenario
 B000003141,인천양지초등학교,243,176,136,176,136,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
 B000003190,삼산초등학교,14,7,5,7,5,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
 B000026467,인천해든초등학교,1668,1376,1396,1376,1396,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
@@ -265,7 +265,7 @@ B000003039,인천백운초등학교,478,407,371,407,371,weighted_trend_lightgbm,
 B000003081,인천인수초등학교,252,159,109,159,109,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
 B000003078,인천석정초등학교,793,656,590,656,590,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
 B000003162,인천가석초등학교,209,113,65,113,65,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
-B000025225,인천송빛초등학교,762,,,,,insufficient_history,origin_safe_residual_v2,origin_safe_heldout_target
+B000025225,인천송빛초등학교,762,1228,1228,1228,1228,limited_history_constant_scenario,origin_safe_residual_v2,unvalidated_short_history_scenario
 B000003165,인천당하초등학교,699,378,199,378,199,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
 B000003108,인천효성남초등학교,633,629,618,629,618,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target
 B000003118,인천양촌초등학교,186,82,37,82,37,weighted_trend_lightgbm,origin_safe_residual_v2,origin_safe_heldout_target

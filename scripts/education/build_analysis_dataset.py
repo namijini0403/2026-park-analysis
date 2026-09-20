@@ -59,6 +59,9 @@ def main():
                                      'shared_park_area': school['shared_area_per_student']},
                      'enrollment_trend': trend(enrollment.get(sid, {}).get('history', [])),
                      'forecast': enrollment.get(sid, {}).get('forecast', []),
+                     'forecast_origin_year': max((r['year'] for r in enrollment.get(sid, {}).get('history', [])), default=None),
+                     'forecast_model_version': enrollment.get(sid, {}).get('model_version'),
+                     'forecast_limitations': enrollment.get(sid, {}).get('limitations'),
                      'forecast_status': enrollment.get(sid, {}).get('model_status', 'unavailable')})
     grid = read(paths[9])
     coverage = {}

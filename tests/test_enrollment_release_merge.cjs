@@ -1,0 +1,16 @@
+const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto');
+const {applyEnrollmentRelease}=require('../scripts/education/merge_enrollment_release.cjs');
+const root=fs.mkdtempSync(path.join(os.tmpdir(),'enrollment-merge-')),dir=path.join(root,'data_processed/education');fs.mkdirSync(dir,{recursive:true});
+const save=(name,value)=>fs.writeFileSync(path.join(dir,name),JSON.stringify(value));
+const old={history:[{year:2026,students:10}],forecast:[],model_status:'insufficient_history'};
+const next={...old,forecast:[{year:2029,students:10},{year:2031,students:10}],model_status:'limited_history_constant_scenario'};
+const newer={history:[{year:2027,students:20}],forecast:[{year:2029,students:25}],model_status:'weighted_trend'};
+save('enrollment_forecasts.json',{a:next,b:next});save('school_analysis.json',[{학교ID:'a',enrollment:old},{학교ID:'b',enrollment:newer}]);
+save('analysis_dataset.json',{schools:[{id:'a',level:'초등학교',observations:{2026:{students:10}},forecast:[],forecast_origin_year:2026},{id:'b',level:'초등학교',observations:{2027:{students:20}},forecast:newer.forecast,forecast_origin_year:2027}],coverage:{초등학교:{forecast:1}},source_hashes:{}});
+applyEnrollmentRelease(root);
+const result=JSON.parse(fs.readFileSync(path.join(dir,'analysis_dataset.json')));
+assert.deepEqual(result.schools[0].observations,{2026:{students:10}});assert.deepEqual(result.schools[0].forecast,next.forecast);
+assert.equal(result.schools[0].forecast_status,'limited_history_constant_scenario');assert.deepEqual(result.schools[1].forecast,newer.forecast);assert.equal(result.coverage.초등학교.forecast,2);
+assert.equal(result.source_hashes['data_processed/education/enrollment_forecasts.json'],crypto.createHash('sha256').update(fs.readFileSync(path.join(dir,'enrollment_forecasts.json'))).digest('hex'));
+const before=JSON.stringify(result);applyEnrollmentRelease(root);assert.equal(fs.readFileSync(path.join(dir,'analysis_dataset.json'),'utf8'),before);
+console.log('PASS startup merge preserves newer data, observed values, scenario status, source hashes and idempotence');
