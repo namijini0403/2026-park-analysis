@@ -928,3 +928,25 @@ HTTP 401 + `{"errorCode":"AGW-E40102","errorMessage":"유효하지 않은 이용
 Variables 에 넣은 뒤 재배포해야 시작된다.
 
 **여전히 미확인**: 일일 호출 한도(플랫폼 전역 미표기).
+
+## 11. 운영 빌드 설정 — `railpack.json` (2026-09-20)
+
+`railway up` 으로 이 디렉터리를 올리면 Railpack 이 루트의 `requirements.txt` 때문에 언어를
+**Python 으로 오판**하고, Python 시작 명령을 못 찾아 빌드가 실패한다(2026-09-20 13:52 배포
+실패: `Detected Python` / `No start command detected`). 이 리포는 런타임이 Node 이고
+파이썬 스크립트는 오프라인 전처리·재빌드 전용이다.
+
+그래서 루트에 `railpack.json` 을 두어 공급자와 시작 명령을 명시한다:
+
+```json
+{ "$schema": "https://schema.railpack.com", "provider": "node", "deploy": { "startCommand": "node server.js" } }
+```
+
+- 이 설정은 기존 운영 이미지와 동일하다(직전 성공 배포도 Node 공급자 + `node server.js`).
+  즉 **동작 변화 없이 오판만 막는 설정**이다. 운영 이미지에 Python 은 원래 없다 —
+  `rebuild_command`(python) 는 운영에서 실행되지 않고 감사 로그에 실패로 남는다는 기존 한계
+  그대로다.
+- `railway.json`(2026-08-05) 의 `buildCommand`·`startCommand` 는 현재 서비스 설정에 반영되어
+  있지 않다(`describe-service` 의 build/deploy 에 해당 값 없음). Railpack 단계에서 실패하므로
+  빌드 시점에 읽히는 `railpack.json` 으로 고치는 것이 맞다. Railway 는 Config as Code
+  (`railway.json`) 를 2026-12-01 까지만 지원한다고 경고하므로, 이관 시점에 정리 대상이다.
