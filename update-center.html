@@ -630,6 +630,16 @@
   }
 
   @media (max-width: 640px) {
+    body { padding: 16px 12px 32px; }
+    .wrap > *, header.top > *, .panel-head > * { min-width: 0; max-width: 100%; }
+    header.top, section.panel { padding: 16px; }
+    .token-box { flex-wrap: wrap; width: 100%; }
+    .token-box label { width: 100%; }
+    input.token-input { flex: 1 1 150px; min-width: 0; max-width: 100%; }
+    .token-box button { flex-shrink: 0; white-space: nowrap; }
+    #upload-panel input, #upload-panel select { min-width: 0 !important; width: 100%; max-width: 100%; }
+    .table-scroll { max-width: 100%; }
+    .status-line, .sub, .audit-item, #global-msg { overflow-wrap: anywhere; }
     .audit-item { flex-direction: column; gap: 2px; }
     .audit-item .at { min-width: 0; }
     .schedule-grid { flex-direction: column; align-items: stretch; }
@@ -974,6 +984,8 @@
     var lastState = source.last_state || {};
     if (checkType === "manual") return '<span class="badge badge-neutral">수동 확인</span>';
     if (!lastState.lastStatus) return '<span class="badge badge-neutral">미확인</span>';
+    if (lastState.lastStatus === "ok" && checkType === "file_head") return '<span class="badge badge-yellow">헤더만 확인 · 원자료 미검증</span>';
+    if (lastState.lastStatus === "ok" && checkType === "page_notice") return '<span class="badge badge-neutral">게시글 확인 · 첨부 내용 미검증</span>';
     if (lastState.lastStatus === "ok") return '<span class="badge badge-green">정상</span>';
     if (lastState.lastStatus === "moved") return '<span class="badge badge-moved">이동 감지</span>';
     if (lastState.lastStatus === "error") return '<span class="badge badge-red">확인 실패</span>';
@@ -2124,7 +2136,7 @@
     return Promise.all([
       apiFetch('/coverage').then(function(r){
         if(!r.ok)return;
-        var labels={validated_auto_apply:'검증 후 자동 반영',collect_review_apply:'수집 후 검토',header_signal_only:'게시물 신호 감시',manual:'원출처 연결 필요'};
+        var labels={validated_auto_apply:'검증 후 자동 반영',collect_review_apply:'수집 후 검토',header_signal_only:'헤더 신호만 확인',notice_signal_only:'게시글·첨부 참조 감시',manual:'수동 수집·검토'};
         $('refresh-coverage').innerHTML='<div class="table-scroll"><table><thead><tr><th>자료</th><th>자동화 범위</th><th>최근 검사</th><th>상세</th></tr></thead><tbody>'+r.data.sources.map(function(s){var scan=s.last_scan||{};return '<tr><td>'+esc(s.dataset)+'</td><td>'+esc(labels[s.mode]||s.mode)+'</td><td>'+esc(scan.lastStatus||'검사 전')+'</td><td>'+esc(scan.error||s.coverage)+'</td></tr>';}).join('')+'</tbody></table></div>';
       }),
       loadSchedule(),

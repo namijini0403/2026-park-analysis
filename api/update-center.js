@@ -855,7 +855,7 @@ async function handleGetSources(res) {
     ...s,
     last_state: state[s.dataset] || null,
     next_check_at: schedule && schedule.enabled && s.check?.type !== "manual" ? schedule.next_scan_at : null,
-    auto_pollable: s.check?.type === "json_api" || s.check?.type === "file_head",
+    auto_pollable: ["json_api", "file_head", "page_notice", "school_zones", "refresh_pipeline"].includes(s.check?.type),
     never_auto_apply: s.never_auto_apply === true,
   }));
   return json(res, 200, { sources: merged, schedule });
@@ -1143,6 +1143,10 @@ async function handlePostApprove(req, res) {
   }
 
   const diff = event.diff_json || {};
+
+  if (diff.observation_only) {
+    return json(res, 409, {error: "게시글 변경 알림은 바로 반영할 수 없습니다. 원자료를 수집하고 검증한 후보가 필요합니다.", event});
+  }
 
   // --- P6 경로: 스캔이 실제로 수집·정규화해 staging 에 남긴 후보가 있으면
   // 원자적 반영 + 불변 버전 생성으로 처리한다(데이터셋 무관).

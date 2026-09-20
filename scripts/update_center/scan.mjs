@@ -29,10 +29,11 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
 import { createStore } from "./store.mjs";
-import { fetchAllPages, buildStagedCandidate } from "./candidate.mjs";
+import { fetchAllPages, buildStagedCandidate, extractRows, extractTotalCount, detectApiError } from "./candidate.mjs";
 import { sourcesPath, statePath } from "./paths.mjs";
 import { checkSchoolZones } from './school_zones.mjs';
 import { checkPipeline } from './pipeline.mjs';
+import { checkPageNotice } from './page_notice.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.join(__dirname, "..", "..");
@@ -248,60 +249,102 @@ function parseArgs(argv) {
 // check: json_api (libraries)
 // ---------------------------------------------------------------------------
 
+// keyed_json_api: check.auth = { header: <헤더 이름>, env: <환경변수 이름> }.
+// 키 값은 환경변수에서만 읽고 매니페스트·상태·이벤트 어디에도 기록하지 않는다.
+// 키가 없으면 { headers:null, missing:<env> } — 호출은 시도하지 않는다(판단 보류).
+function resolveAuth(entry) {
+  const auth = entry.check?.auth;
+  if (!auth || typeof auth !== "object") return { headers: null, missing: null, envName: null };
+  const headerName = String(auth.header || "").trim();
+  const envName = String(auth.env || "").trim();
+  if (!headerName || !envName) return { headers: null, missing: null, envName: null, invalid: true };
+  const value = process.env[envName];
+  if (!value || !String(value).trim()) return { headers: null, missing: envName, envName };
+  return { headers: { [headerName]: String(value).trim() }, missing: null, envName };
+}
+
+function schemaFromRows(rows) {
+  const keys = new Set();
+  for (const row of rows) {
+    if (row && typeof row === "object" && !Array.isArray(row)) for (const k of Object.keys(row)) keys.add(k);
+  }
+  return [...keys].sort();
+}
+
 async function checkJsonApi(entry, state, store, opts, log) {
   const dataset = entry.dataset;
-  const columListUrl = entry.check.urls.columList;
+  const columListUrl = entry.check.urls?.columList || null;
   const dataUrl = opts.forceUrl || entry.check.urls.data;
   const prev = state[dataset] || null;
   const actor = opts.actor || "scan.mjs";
+  const pageParam = entry.check.page_param || "page";
 
-  // 1. columList.json -> remote schema
-  let columListRes;
-  try {
-    columListRes = await fetchWithTimeout(columListUrl);
-  } catch (err) {
-    return await recordFailure(dataset, "columList.json 요청 실패(네트워크/타임아웃)", err.message, null, entry, state, store, log, {}, actor);
+  // 0. 인증(keyed_json_api). 키가 없으면 red 로 올리지 않고 "보류(skipped)" 로 남긴다 —
+  //    확인 불가는 실패가 아니라 판단 보류라는 정책과 같은 규칙이다.
+  const auth = resolveAuth(entry);
+  if (auth.invalid) {
+    return await recordFailure(dataset, "check.auth 설정 불완전(header/env 필요)", null, null, entry, state, store, log, {}, actor);
   }
-  if (!columListRes.ok) {
-    if (columListRes.status === 404) {
-      return await recordMoved(dataset, columListUrl, entry, state, store, log, "columList.json 404", actor);
+  if (auth.missing) {
+    state[dataset] = { ...(prev || {}), lastCheckedAt: nowIso(), lastStatus: "key_missing", keyEnv: auth.missing };
+    log(`[${dataset}] API 키 미설정(${auth.missing}) — 호출하지 않고 보류(판단 보류, 이벤트 없음)`);
+    return { outcome: "skipped", reason: "api_key_missing", env: auth.missing };
+  }
+  const fetchOpts = auth.headers ? { headers: auth.headers } : {};
+
+  // 1. columList.json -> remote schema (data.go.kr 전용). columList 가 없는 소스
+  //    (keyed_json_api)는 1페이지 레코드의 키 합집합을 스키마로 쓴다.
+  let remoteSchema = [];
+  if (columListUrl) {
+    let columListRes;
+    try {
+      columListRes = await fetchWithTimeout(columListUrl, fetchOpts);
+    } catch (err) {
+      return await recordFailure(dataset, "columList.json 요청 실패(네트워크/타임아웃)", err.message, null, entry, state, store, log, {}, actor);
     }
-    return await recordFailure(
-      dataset,
-      `columList.json 요청 실패: HTTP ${columListRes.status}`,
-      null,
-      columListRes.status,
-      entry,
-      state,
-      store,
-      log,
-      {},
-      actor
-    );
+    if (!columListRes.ok) {
+      if (columListRes.status === 404) {
+        return await recordMoved(dataset, columListUrl, entry, state, store, log, "columList.json 404", actor);
+      }
+      return await recordFailure(
+        dataset,
+        `columList.json 요청 실패: HTTP ${columListRes.status}`,
+        null,
+        columListRes.status,
+        entry,
+        state,
+        store,
+        log,
+        {},
+        actor
+      );
+    }
+    let columListJson;
+    try {
+      columListJson = await columListRes.json();
+    } catch (err) {
+      return await recordFailure(dataset, "columList.json 파싱 실패", err.message, null, entry, state, store, log, {}, actor);
+    }
+    remoteSchema = Array.isArray(columListJson.columList)
+      ? columListJson.columList.map((c) => c.columNm || c.columCode).filter(Boolean).sort()
+      : [];
   }
-  let columListJson;
-  try {
-    columListJson = await columListRes.json();
-  } catch (err) {
-    return await recordFailure(dataset, "columList.json 파싱 실패", err.message, null, entry, state, store, log, {}, actor);
-  }
-  const remoteSchema = Array.isArray(columListJson.columList)
-    ? columListJson.columList.map((c) => c.columNm || c.columCode).filter(Boolean).sort()
-    : [];
 
   // Evaluate the schema diff now (columList already succeeded) so a subsequent
   // standard.json failure doesn't silently swallow a real schema change under
   // the generic error event — surfaced via recordFailure's extraDiff param.
-  const schemaDiff = prev && prev.schema ? diffSchema(prev.schema, remoteSchema) : null;
+  const schemaDiff = columListUrl && prev && prev.schema ? diffSchema(prev.schema, remoteSchema) : null;
 
   // 2. standard.json (first page) -> totalCount + content hash
+  //    keyed_json_api 는 data.go.kr 이 아니므로 오류 문구에 "standard.json" 대신 "데이터 API" 를 쓴다.
+  const dataLabel = columListUrl ? "standard.json" : "데이터 API";
   let dataRes;
   try {
-    dataRes = await fetchWithTimeout(dataUrl);
+    dataRes = await fetchWithTimeout(dataUrl, fetchOpts);
   } catch (err) {
     return await recordFailure(
       dataset,
-      "standard.json 요청 실패(네트워크/타임아웃)",
+      `${dataLabel} 요청 실패(네트워크/타임아웃)`,
       err.message,
       null,
       entry,
@@ -314,12 +357,30 @@ async function checkJsonApi(entry, state, store, opts, log) {
   }
   if (!dataRes.ok) {
     if (dataRes.status === 404) {
-      return await recordMoved(dataset, dataUrl, entry, state, store, log, "standard.json 404", actor);
+      return await recordMoved(dataset, dataUrl, entry, state, store, log, `${dataLabel} 404`, actor);
+    }
+    const authHint =
+      !columListUrl && (dataRes.status === 401 || dataRes.status === 403)
+        ? " — 인증키가 거부됨(해당 API 사용신청이 승인되지 않았거나 키가 잘못됨)"
+        : "";
+    // 게이트웨이 오류 본문(예: {"errorCode":"AGW-E40102","errorMessage":"유효하지 않은 이용자 서비스 키"})을
+    // 이벤트에 남겨 운영자가 원인을 바로 읽을 수 있게 한다. 본문에 키 값은 없다.
+    let gatewayMsg = null;
+    try {
+      const text = (await dataRes.text()).slice(0, 500);
+      try {
+        const j = JSON.parse(text);
+        gatewayMsg = [j.errorCode, j.errorMessage || j.message || j.resultMsg].filter(Boolean).join(" ") || text || null;
+      } catch {
+        gatewayMsg = text || null;
+      }
+    } catch {
+      gatewayMsg = null;
     }
     return await recordFailure(
       dataset,
-      `standard.json 요청 실패: HTTP ${dataRes.status}`,
-      null,
+      `${dataLabel} 요청 실패: HTTP ${dataRes.status}${authHint}`,
+      gatewayMsg,
       dataRes.status,
       entry,
       state,
@@ -335,7 +396,7 @@ async function checkJsonApi(entry, state, store, opts, log) {
   } catch (err) {
     return await recordFailure(
       dataset,
-      "standard.json 파싱 실패",
+      `${dataLabel} 파싱 실패`,
       err.message,
       null,
       entry,
@@ -346,18 +407,29 @@ async function checkJsonApi(entry, state, store, opts, log) {
       actor
     );
   }
-  const rows = Array.isArray(dataJson.data)
-    ? dataJson.data
-    : Array.isArray(dataJson.result?.data)
-    ? dataJson.result.data
-    : Array.isArray(dataJson)
-    ? dataJson
-    : Object.values(dataJson).find((v) => Array.isArray(v)) || [];
-  const totalCount = dataJson.totalCount ?? dataJson.result?.totalCount ?? rows.length;
+  // 게이트웨이가 HTTP 200 에 오류 본문(인증키 누락·미승인·한도 초과 등)을 실어 보내는 경우.
+  const apiError = detectApiError(dataJson);
+  if (apiError) {
+    return await recordFailure(
+      dataset,
+      `API 오류 응답: ${apiError.code}${apiError.msg ? ` ${apiError.msg}` : ""}`,
+      apiError.msg,
+      dataRes.status,
+      entry,
+      state,
+      store,
+      log,
+      { schemaDiff, apiError },
+      actor
+    );
+  }
+  const rows = extractRows(dataJson);
+  const totalCount = extractTotalCount(dataJson, rows.length);
+  if (!columListUrl) remoteSchema = schemaFromRows(rows);
   // Monitor every page: first-page equality cannot prove the full source is unchanged.
   let allRows=rows;
   if(Number(totalCount)>rows.length){
-    const full=await fetchAllPages({url:dataUrl,fetchImpl:opts.fetchImpl,log});
+    const full=await fetchAllPages({url:dataUrl,maxPages:entry.check?.max_pages,fetchImpl:opts.fetchImpl,log,pageParam,headers:auth.headers||undefined});
     if(full.truncated||full.errors.length||full.records.length!==Number(full.totalCount))
       return await recordFailure(dataset,'전체 페이지 수집 불완전',full.errors.join('; '),null,entry,state,store,log,{},actor);
     allRows=full.records;
@@ -462,11 +534,14 @@ function worstRisk(a, b) {
 async function collectCandidate(entry, dataUrl, store, opts, log) {
   const stagingId = `${entry.dataset}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
   try {
+    const auth = resolveAuth(entry);
     const paged = await fetchAllPages({
       url: dataUrl,
       maxPages: entry.check?.max_pages,
       fetchImpl: opts.fetchImpl,
       log,
+      pageParam: entry.check?.page_param || "page",
+      headers: auth.headers || undefined,
     });
     if (paged.errors.length && paged.records.length === 0) {
       return { ok: false, error: `전체 페이지 수집 실패: ${paged.errors.join(" / ")}`, fetch: paged };
@@ -509,6 +584,7 @@ async function recordFailure(dataset, summary, errMessage, httpStatus, entry, st
   const prev = state[dataset] || null;
   const signature = sha256(`error:${summary}:${errMessage || ""}:${httpStatus ?? ""}`);
   if (prev && prev.lastStatus === "error" && prev.lastErrorSignature === signature) {
+    state[dataset] = { ...prev, lastCheckedAt: nowIso() };
     log(`[${dataset}] error persists (no new event): ${summary}`);
     return { outcome: "error-unchanged" };
   }
@@ -596,6 +672,9 @@ async function checkFileHead(entry, state, store, opts, log) {
     lastModified: res.headers.get("last-modified"),
     contentLength: res.headers.get("content-length"),
   };
+  if (Object.values(headers).every((value) => value === null || value === "")) {
+    return await recordFailure(dataset, "변경 확인 불가 — 원문이 비교 가능한 HTTP 헤더를 제공하지 않습니다. 첨부파일이나 게시 내용을 별도로 확인해 주세요.", null, res.status, entry, state, store, log, { reason: "missing_change_validators" }, actor);
+  }
   const nextState = { ...headers, lastCheckedAt: nowIso(), lastStatus: "ok" };
 
   // Baseline when no real header fields were ever recorded yet. Presence-based
@@ -605,7 +684,7 @@ async function checkFileHead(entry, state, store, opts, log) {
   // all, so a status-based check would wrongly skip the baseline branch on the
   // first successful HEAD after an error and diff real headers against
   // undefined, producing a spurious "content changed" event.
-  const hasPriorHeaders = prev && (prev.etag !== undefined || prev.lastModified !== undefined || prev.contentLength !== undefined);
+  const hasPriorHeaders = prev && [prev.etag, prev.lastModified, prev.contentLength].some((value) => value !== undefined && value !== null && value !== "");
   if (!hasPriorHeaders) {
     state[dataset] = nextState;
     await store.appendAudit({
@@ -811,10 +890,14 @@ export async function runScan(opts = {}) {
       summary.skipped++;
       log(`[${entry.dataset}] manual check.type — skip (수동 확인 필요, 이벤트 없음)`);
       continue;
-    } else if (type === "json_api") {
+    } else if (type === "json_api" || type === "keyed_json_api") {
+      // keyed_json_api = json_api + check.auth(헤더 인증키) + check.page_param(페이지 쿼리 이름),
+      // columList 없이 레코드 키로 스키마 추론. KoreaConnect(api.koreaconnect.kr) 등 게이트웨이용.
       result = await checkJsonApi(entry, state, store, { forceUrl, actor: effectiveActor, fetchCandidate, fetchImpl }, log);
     } else if (type === "file_head") {
       result = await checkFileHead(entry, state, store, { forceUrl, actor: effectiveActor, fetchCandidate, fetchImpl }, log);
+    } else if (type === 'page_notice') {
+      result = await checkPageNotice(entry, state, store, {actor: effectiveActor, fetchImpl: fetchImpl || undefined}, log);
     } else if (type === "school_zones") {
       result = await checkSchoolZones(entry,state,store,{actor:effectiveActor},log);
     } else if (type === 'refresh_pipeline') {
@@ -825,7 +908,7 @@ export async function runScan(opts = {}) {
     }
     const outcome = result?.outcome || "unknown";
     const bucketKey = outcome.replace("-unchanged", "");
-    if (outcome === "unchanged" || outcome.endsWith("-unchanged")) summary.unchanged++;
+    if (outcome === "unchanged") summary.unchanged++;
     else if (summary[bucketKey] !== undefined) summary[bucketKey]++;
     if (result?.event) events.push(result.event);
   }

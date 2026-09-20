@@ -1,5 +1,11 @@
 # 업데이트 센터 (Update Center) — P4 시제품 문서
 
+> **2026-09-18 연결 상태 점검:** 현재 등록 원천은 19개이며, 아래 과거 시제품의
+> ‘13개’ 설명과 다릅니다. 교육청 공고 6개는 `page_notice`로 제목·본문·첨부 참조를
+> 비교하고 원자료 직접 반영은 차단합니다. `file_head`의 비교용 헤더가 없으면
+> 정상으로 표시하지 않습니다. 최신 원천별 연결 상태·Airbyte 검토·사용자 작업은
+> [2026-09-18 점검 보고서](../contest_plan/airbyte_source_audit_20260918.md)를 참조하세요.
+
 > 검증 완료 2026-08-09 — 아래 "데모 시나리오"의 전 과정(시뮬레이션 스캔 → green
 > 이벤트 → AI 해설 → 승인 → 전후 비교 적용 → 버전 기록 → 롤백 → 감사 로그)을
 > 로컬 서버(`server.js`, 파일 백엔드)에 대해 curl로 실제 실행하고 결과를 이 문서와
@@ -392,6 +398,7 @@ $ curl -s "http://127.0.0.1:3921/api/update-center/audit?limit=10" \
 | `UPDATE_CENTER_SCAN_INTERVAL_MIN` | 선택 | (없음/0 = 자동 감시 OFF) | 자동 감시 주기(분). 1~10080 범위로 정규화된다. 관리 화면 ⑧ 에서 바꾼 런타임 설정(store meta)이 이 값보다 **우선**하므로, 운영 중 껐다 켜는 것은 재배포 없이 가능하다 |
 | `UPDATE_CENTER_MAX_PAGES` | 선택 | `50` | `json_api` 전 페이지 수집의 페이지 상한. 도달하면 수집을 멈추고 이벤트에 `truncated: true` 로 보고한다(소스별 `check.max_pages` 로 개별 지정 가능) |
 | `UPDATE_CENTER_FETCH_TIMEOUT_MS` | 선택 | `15000` | 후보 수집(페이지 요청) 타임아웃. 초과 시 예외가 아니라 이벤트의 `candidate.error` 로 기록된다 |
+| `KOREACONNECT_API_KEY` | 선택 | (없음 → `kc_*` 소스는 호출 없이 보류) | KoreaConnect 데이터·API 마켓(portal.koreaconnect.kr)에서 로그인(정부 통합인증 Any-ID) 후 각 API 를 "사용신청"하면 발급되는 **API 이용자 키 아이디**. `check.type: keyed_json_api` 소스가 HTTP 헤더 `api_user_key_id` 로 보낸다. 값은 매니페스트·상태·이벤트 어디에도 기록되지 않는다. 미설정 시 해당 소스는 스캔 요약의 `skipped` 로 집계되고 이벤트가 생기지 않는다(확인 불가 = 판단 보류). Railway Variables 에 직접 입력한다. 조사 근거: `contest_plan/koreaconnect_market_inventory_20260920.md` |
 | `UPDATE_CENTER_REBUILD_TIMEOUT_MS` | 선택 | `600000` | `rebuild_command` 실행 타임아웃(밀리초) |
 | `UPDATE_CENTER_SKIP_REBUILD` | 선택 | (없음) | `"1"` 이면 `rebuild_command` 를 실행하지 않고 건너뛴 사실만 기록한다(테스트·점검용) |
 | `UPDATE_CENTER_RESTORE_RUN_REBUILD` | 선택 | (없음 = 건너뜀) | `"1"` 이면 기동 복원이 파일을 재적용한 데이터셋에 대해 `rebuild_command` 도 실행한다. 기본은 건너뛴다 — 승인 당시 재빌드 산출물이 그 자체로 반영 대상 파일이면 버전에 포함되어 함께 복원되고, 재빌드는 기동을 수 분간 붙잡기 때문 |
@@ -876,3 +883,48 @@ POST /onboarding/register modules/<slug>.yaml + data_sources.yaml + 스니펫
 신규 store 메서드 라운드트립 / 승인 시 버전·매니페스트·활성 포인터 보존 /
 버전 디렉터리 삭제 후 store 보존본에서 롤백 / staging 디렉터리 삭제 후 승인 시 복원 /
 기동 복원이 달라진 파일만 재적용하고 동일 파일은 건너뜀 / 용량 가드(25MB·60MB)·해시 불일치 거부.
+
+## 10. 헤더 인증키 API 원천 — `keyed_json_api` (2026-09-20)
+
+KoreaConnect 데이터·API 마켓(portal.koreaconnect.kr) 조사 결과, 마켓 오픈API는 전부
+게이트웨이 `https://api.koreaconnect.kr/01/1/…` 아래에 있고 인증은 HTTP 헤더
+`api_user_key_id` 하나로 통일되어 있다(쿼리 `serviceKey` 가 아니다). 기존 `json_api` 는
+data.go.kr 무키 엔드포인트(columList.json + standard.json) 전용이라 이 원천을 붙일 수 없어
+`keyed_json_api` 를 추가했다.
+
+- `check.auth: { header: api_user_key_id, env: KOREACONNECT_API_KEY }` — 키는 환경변수에서만
+  읽고 로그·상태·이벤트에 남기지 않는다(`test_update_center_keyed_api.cjs` 가 검증).
+- `check.page_param` — 페이지 쿼리 이름(`pageNo`, 놀이시설 API 는 `pageIndex`).
+  perPage 는 URL 의 `numOfRows`/`recordCountPerPage` 에서 읽는다(마켓 상한 100).
+- columList 가 없으므로 스키마는 1페이지 레코드 키의 합집합이다.
+- 키가 없으면 호출하지 않고 `skipped` 로 집계한다 — 확인 불가는 실패가 아니라 판단 보류.
+- HTTP 200 에 실린 오류 본문(`header.resultCode` ≠ `00`, 예: 미승인 키)은 red 오류 이벤트.
+- 응답 본문은 `{header, body:{items[], totalCount}}` 표준(`response.body.items.item[]` 도 허용).
+
+등록된 원천(`data_sources.yaml`, 접두사 `kc_`): 어린이놀이시설 기구정보, 스쿨존 어린이
+사고다발지역, 보행어린이 사고다발지역, 단란주점 인허가, 유흥주점 인허가. 전용 어댑터가
+없으므로 후보는 통과 어댑터로 staging 되어 품질 `unsupported`(검토 전용, 승인 불가)이며,
+모두 `never_auto_apply: true` 다. 낙인 위험 레이어(사고·유해업소)는 자동 반영을 금지한다.
+
+**발급·승인 구조(2026-09-20 실측)**: API 이용자 키는 계정당 1개이며 사용신청 전에 이미
+발급돼 있다. 각 API 는 별도로 "사용신청"해야 하며, 실측으로는 12건 전부 제출 즉시 "사용"
+상태(자동 승인, 기간 제한 없음)가 됐다. 사용신청 폼은 계정 이메일(인증 필요)과 소속이
+비어 있으면 제출이 거부되므로 계정 정보를 먼저 채워야 한다. 승인되지 않은 API 호출은
+HTTP 401 + `{"errorCode":"AGW-E40102","errorMessage":"유효하지 않은 이용자 서비스 키"}` 로
+돌아오며, 스캐너는 이를 red 오류 이벤트(요약에 "인증키가 거부됨", 상세에 게이트웨이 본문)로
+기록한다(키 미설정 = skipped 와 구분된다). 마켓의 "데이터파일" 유형은 사용신청 버튼이 없는
+외부링크형이라 CSV 는 data.go.kr 원천에서 받는다.
+
+**응답 형태(2026-09-20 실측, 파서가 모두 처리)**:
+- 놀이시설 `ride4/getRide4`: `response.header` + `response.body{items[], totalCnt, totalPageCnt, pageIndex, recordCountPerPage}`. `rgnNm=인천광역시`(23,987건). `rgnNm=인천` 은 0건.
+- 인허가 `singing_bars/info`·`entertainment_bars/info`: `response.body{items[], totalCount, numOfRows, pageNo}`. `cond[ROAD_NM_ADDR::LIKE]=인천광역시` 로 각 812건·1,486건. 컬럼은 영문 코드(BPLC_NM, ROAD_NM_ADDR, CRD_INFO_X/Y, DTL_SALS_STTS_CD, DAT_UPDT_PNT …), 좌표는 EPSG:5174.
+- 도로교통공단 `getRestSchoolzoneChild`·`getRestFrequentzoneChild`: 최상위 평면 `{resultCode, resultMsg, items:{item:[]}, totalCount}`. `guGun=` 이 빈 값이라도 반드시 있어야 하고 `type=json` 이 없으면 XML. 자료 없는 연도는 `resultCode 03 NODATA_ERROR`(red).
+
+**실측 스캔 결과(2026-09-20, 격리 store)**: 5개 `kc_*` 원천 모두 베이스라인 기록 성공.
+단란주점 812건(9페이지, 2초), 유흥주점 1,486건(15페이지, 2초), 스쿨존 사고다발 2건,
+보행어린이 사고다발 5건(각 1페이지), 놀이시설 기구 23,987건(240페이지, **약 20분**).
+놀이시설은 게이트웨이가 페이지당 약 3~5초 걸리므로 자동 감시 주기를 짧게 잡지 않는다
+(변경 감시도 전 페이지를 다시 읽는다). 운영 반영은 `KOREACONNECT_API_KEY` 를 Railway
+Variables 에 넣은 뒤 재배포해야 시작된다.
+
+**여전히 미확인**: 일일 호출 한도(플랫폼 전역 미표기).

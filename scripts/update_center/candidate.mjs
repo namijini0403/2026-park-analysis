@@ -66,21 +66,63 @@ function getQueryParam(url, key) {
   }
 }
 
-function extractRows(payload) {
+// data.go.kr/KoreaConnect 게이트웨이 표준 응답({header, body:{items}}) 또는
+// {response:{body:{items:{item:[]}}}} 형태의 본문을 찾는다. 없으면 null.
+function standardBody(payload) {
+  if (!payload || typeof payload !== "object") return null;
+  if (payload.body && typeof payload.body === "object") return payload.body;
+  if (payload.response && payload.response.body && typeof payload.response.body === "object") return payload.response.body;
+  return null;
+}
+
+export function extractRows(payload) {
   if (Array.isArray(payload)) return payload;
   if (!payload || typeof payload !== "object") return [];
   if (Array.isArray(payload.data)) return payload.data;
   if (payload.result && Array.isArray(payload.result.data)) return payload.result.data;
+  // 도로교통공단 계열: {resultCode, items:{item:[...]}, totalCount} 평면 구조.
+  if (payload.items) {
+    if (Array.isArray(payload.items)) return payload.items;
+    if (Array.isArray(payload.items.item)) return payload.items.item;
+    if (payload.items.item && typeof payload.items.item === "object") return [payload.items.item];
+  }
+  const body = standardBody(payload);
+  if (body) {
+    if (Array.isArray(body.items)) return body.items;
+    if (body.items && Array.isArray(body.items.item)) return body.items.item;
+    if (body.items && typeof body.items === "object" && body.items.item && !Array.isArray(body.items.item)) return [body.items.item];
+    const bodyArray = Object.values(body).find((v) => Array.isArray(v));
+    if (bodyArray) return bodyArray;
+  }
   const arrayValue = Object.values(payload).find((v) => Array.isArray(v));
   return arrayValue || [];
 }
 
-function extractTotalCount(payload, fallback) {
+export function extractTotalCount(payload, fallback) {
   if (!payload || typeof payload !== "object") return fallback;
   if (Number.isFinite(Number(payload.totalCount))) return Number(payload.totalCount);
   if (payload.result && Number.isFinite(Number(payload.result.totalCount))) return Number(payload.result.totalCount);
   if (Number.isFinite(Number(payload.matchCount))) return Number(payload.matchCount);
+  const body = standardBody(payload);
+  if (body && Number.isFinite(Number(body.totalCount))) return Number(body.totalCount);
+  // 행안부 어린이놀이시설 API(ride4 등)는 totalCnt/totalPageCnt 를 쓴다.
+  if (body && body.totalCnt !== undefined && body.totalCnt !== null && Number.isFinite(Number(body.totalCnt))) return Number(body.totalCnt);
   return fallback;
+}
+
+// API 게이트웨이가 HTTP 200 에 오류 본문을 실어 보내는 경우(인증키 누락·미승인·한도 초과 등)를
+// 감지한다. resultCode 가 정상 코드('00'/'0'/'OK'/'NORMAL_SERVICE')가 아니면 {code,msg} 를 돌려준다.
+export function detectApiError(payload) {
+  if (!payload || typeof payload !== "object") return null;
+  const header = payload.header && typeof payload.header === "object" ? payload.header
+    : payload.response && payload.response.header && typeof payload.response.header === "object" ? payload.response.header
+    : payload;
+  const code = header.resultCode ?? header.returnReasonCode ?? header.code ?? null;
+  const msg = header.resultMsg ?? header.returnAuthMsg ?? header.errMsg ?? header.msg ?? header.message ?? null;
+  if (code === null || code === undefined) return null;
+  const normalized = String(code).trim().toUpperCase();
+  if (["00", "0", "OK", "NORMAL_SERVICE", "INFO-000", "200"].includes(normalized)) return null;
+  return { code: String(code), msg: msg === null || msg === undefined ? null : String(msg) };
 }
 
 /**
@@ -91,13 +133,18 @@ function extractTotalCount(payload, fallback) {
  * @param {number} [params.maxPages]   상한 (초과 시 truncated=true)
  * @param {Function} [params.fetchImpl]
  * @param {Function} [params.log]
+ * @param {string}   [params.pageParam]  페이지 번호 쿼리 이름(기본 "page"; KoreaConnect 는 "pageNo"/"pageIndex")
+ * @param {object}   [params.headers]    매 요청에 실을 추가 헤더(인증키 등). 로그에는 남기지 않는다.
  * @returns {Promise<{records:object[], totalCount:number|null, perPage:number, pagesFetched:number,
  *                    truncated:boolean, pagesExpected:number|null, errors:string[]}>}
  */
-export async function fetchAllPages({ url, maxPages, fetchImpl, log = () => {} }) {
+export async function fetchAllPages({ url, maxPages, fetchImpl, log = () => {}, pageParam = "page", headers }) {
   const doFetch = fetchImpl || defaultFetch;
   const cap = Number(maxPages || process.env.UPDATE_CENTER_MAX_PAGES || DEFAULT_MAX_PAGES);
-  const perPage = Number(getQueryParam(url, "perPage") || getQueryParam(url, "numOfRows") || DEFAULT_PER_PAGE);
+  const perPage = Number(
+    getQueryParam(url, "perPage") || getQueryParam(url, "numOfRows") || getQueryParam(url, "recordCountPerPage") || DEFAULT_PER_PAGE
+  );
+  const fetchOpts = headers ? { headers } : undefined;
   const records = [];
   const errors = [];
   let totalCount = null;
@@ -111,10 +158,10 @@ export async function fetchAllPages({ url, maxPages, fetchImpl, log = () => {} }
       log(`[candidate] 페이지 상한 ${cap} 도달 — 수집을 중단하고 잘린 사실을 이벤트에 기록합니다.`);
       break;
     }
-    const pageUrl = setQueryParam(url, "page", page);
+    const pageUrl = setQueryParam(url, pageParam || "page", page);
     let response;
     try {
-      response = await doFetch(pageUrl);
+      response = fetchOpts ? await doFetch(pageUrl, fetchOpts) : await doFetch(pageUrl);
     } catch (err) {
       errors.push(`page=${page} 요청 실패: ${err.message}`);
       break;
@@ -128,6 +175,11 @@ export async function fetchAllPages({ url, maxPages, fetchImpl, log = () => {} }
       payload = await response.json();
     } catch (err) {
       errors.push(`page=${page} JSON 파싱 실패: ${err.message}`);
+      break;
+    }
+    const apiError = detectApiError(payload);
+    if (apiError) {
+      errors.push(`page=${page} API 오류 응답: ${apiError.code}${apiError.msg ? ` ${apiError.msg}` : ""}`);
       break;
     }
     const rows = extractRows(payload);
