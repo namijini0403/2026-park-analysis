@@ -950,3 +950,24 @@ Variables 에 넣은 뒤 재배포해야 시작된다.
   있지 않다(`describe-service` 의 build/deploy 에 해당 값 없음). Railpack 단계에서 실패하므로
   빌드 시점에 읽히는 `railpack.json` 으로 고치는 것이 맞다. Railway 는 Config as Code
   (`railway.json`) 를 2026-12-01 까지만 지원한다고 경고하므로, 이관 시점에 정리 대상이다.
+
+### 11.1 빌드 명령도 `package.json` 으로 옮김 (2026-09-20)
+
+`railpack.json` 추가 후 배포는 성공했지만 **모든 정적 경로가 404** 였다. `server.js` 는
+`vercel_public/` 를 정적 루트로 쓰는데(`STATIC_ROOT`), 이 디렉터리는 `.gitignore` 대상이라
+업로드되지 않고 빌드 때 `npm run build:vercel` 로 생성돼야 한다. 그 빌드 명령이 실행되지
+않은 것이다.
+
+원인은 `railway.json`(Config as Code) 이 더 이상 CLI 업로드 배포에 적용되지 않는다는 것이다
+(Railway CLI 가 2026-12-01 종료 예고 경고를 출력한다). 그래서 거기 적힌 `buildCommand` 와
+`startCommand` 가 둘 다 무시됐고, 시작 명령 누락은 13:52 빌드 실패로, 빌드 명령 누락은
+14:30 배포의 404 로 각각 드러났다.
+
+조치: `package.json` 에 `"build": "npm run build:vercel"` 을 추가했다. Railpack 의 Node
+공급자는 `build` 스크립트가 있으면 빌드 단계에서 자동 실행한다. 시작 명령은
+`railpack.json` 의 `deploy.startCommand` 가 담당한다.
+
+- 구 `railway.json` 의 `npm --prefix ui-preview ci --include=dev` 부분은 **의도적으로 제외**했다.
+  `scripts/deploy/build_vercel_static.mjs` 는 ui-preview 를 전혀 참조하지 않으며(`api/_data_catalog.js`
+  와 리포 파일만 사용), ui-preview 산출물은 `vercel_public/` 에 포함되지 않는다.
+- 로컬 검증: `npm run build:vercel` → `vercel_public` 1,210개 파일 / 약 263MB, `index.html` 생성 확인.

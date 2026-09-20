@@ -7,6 +7,7 @@
     "qa:ai-explainer-v2": "node scripts/qa_ai_explainer_v2.mjs",
     "build:ui-preview": "npm --prefix ui-preview run build",
     "build:vercel": "node scripts/deploy/build_vercel_static.mjs",
+    "build": "npm run build:vercel",
     "validate:modules": "node scripts/validate_module_contract.mjs",
     "test:update-center": "node scripts/tests/test_update_center_core.cjs && node scripts/tests/test_update_center_persistence.cjs && node scripts/tests/test_update_center_detection.cjs && node scripts/tests/test_update_center_notice.mjs && node scripts/tests/test_update_center_keyed_api.cjs",
     "test:update-center-persistence": "node scripts/tests/test_update_center_persistence.cjs",
