@@ -18,7 +18,7 @@
     "test:hitl": "node tests/test_hitl_workspace.cjs",
     "test:map": "node tests/test_school_map.cjs",
     "test:relative": "node tests/test_relative_position.cjs",
-    "test:agent": "node tests/test_variable_plan.cjs && node tests/test_chat_inline_map.cjs && node tests/test_chat_answer_recovery.cjs && node tests/test_agent_tools.cjs && node tests/test_chat_agent_ui.cjs",
+    "test:agent": "node tests/test_variable_plan.cjs && node tests/test_chat_inline_map.cjs && node tests/test_chat_answer_recovery.cjs && node tests/test_agent_tools.cjs && node tests/test_chat_agent_ui.cjs && node tests/test_variable_selection_once.cjs && node tests/test_agent_synthesis.cjs && node tests/test_answer_display.cjs",
     "build:boundary": "node scripts/agent/build_boundary_comparison.cjs",
     "test:profile": "node tests/test_indicator_dictionary.cjs && node tests/test_indicator_stats.cjs && node tests/test_school_profile.cjs && node tests/test_domain_stats.cjs && node tests/test_profile_http.cjs && node tests/test_indicator_charts.cjs && node tests/test_school_profile_ui.cjs && node tests/test_domain_stats_ui.cjs && node tests/test_summary_trim.cjs && node tests/test_profile_guardrails.cjs",
     "test:statistics": "node tests/test_domain_stats.cjs && node tests/test_domain_stats_ui.cjs && node tests/test_statistical_charts.cjs && node tests/test_distribution_guardrails.cjs"

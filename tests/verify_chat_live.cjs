@@ -1,0 +1,30 @@
+'use strict';
+// Explicit live smoke test: real public API, DOM rendering, and a second answer after changing preferences.
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{JSDOM}=require('jsdom');
+const base=process.env.CHAT_TEST_BASE||'https://education-living-area-preview-production.up.railway.app';
+const dir=path.join(__dirname,'../outputs/chat-repair');fs.mkdirSync(dir,{recursive:true});
+let activeDom;
+const pause=()=>new Promise(r=>setTimeout(r,300));
+(async()=>{
+ const html=await (await fetch(base)).text();assert(html.includes('chat-agent.js?v=conversation20260914b'));assert(!html.includes('src="/assets/hitl-analysis.js'));
+ const dom=activeDom=new JSDOM(html,{url:base,runScripts:'outside-only'}),w=dom.window,d=w.document;
+ const results=[];
+ w.EducationMaps={ready:async()=>{throw Error('Map UI unavailable in DOM test');}};
+ w.fetch=async(url,opts)=>{const response=await fetch(new URL(url,base),opts);if(url==='/api/chat'){const data=await response.clone().json();results.push(data);fs.writeFileSync(path.join(dir,'public-response-'+results.length+'.json'),JSON.stringify(data,null,2));console.log('Response',results.length,'received:',data.agent?.ms,'ms');}return response;};
+ const files=['chat-workspace.js','source-evidence.js','collection-assistant.js','indicator-charts.js','school-profile.js','simple-app.js','chat-agent.js'];
+ for(const file of files)w.eval(await (await fetch(base+'/assets/'+file)).text());
+ d.getElementById('chat-scope').value='all';d.getElementById('question').value='학구도 조정이 필요할만한 학교를 10개만 추려줄래?';
+ d.getElementById('question').dispatchEvent(new w.KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));
+ let deadline=Date.now()+70000;while(d.getElementById('send').disabled&&Date.now()<deadline)await pause();
+ assert(!d.getElementById('send').disabled,'send unlocked');assert.equal(results.length,1);assert(results[0].answerable);assert.equal(results[0].observation_version,1);
+ assert(results[0].visual.sections.some(s=>s.table?.rows.length===10));assert(d.querySelector('.agent-inline-visual svg'));assert(d.querySelector('.agent-summary').textContent.length>100);assert(!d.querySelector('.agent-map-details').open);
+ d.getElementById('question').value='공원 수는 작은 값부터, 학생 수는 큰 값부터 보고 싶어. 관심 비중은 공원 수 70%, 학생 수 30%로 보여줘.';
+ await w.ChatAgent.submit();
+ assert(results[1]?.weights?.length===2,'explicit preferences produce adjustable observations');
+ const message=d.querySelectorAll('.agent-message')[1],panel=message.querySelector('.agent-weights');assert(panel&&!panel.open);
+ panel.open=true;const slider=panel.querySelector('input[type=range]');slider.value='50';slider.dispatchEvent(new w.Event('input'));
+ const button=panel.querySelector('.hitl-run');button.click();deadline=Date.now()+70000;while(button.disabled&&Date.now()<deadline)await pause();
+ assert.equal(results.length,3);assert(results[2].summary.length>100);assert.equal(results[2].agent.model,'gpt-5.4');assert.equal(results[2].weights[0].share_pct,62.5);assert.equal(results[2].weights[1].share_pct,37.5);assert(results[2].visual.sections.length===2);assert.equal(d.querySelectorAll('#evidence-panel').length,1);assert.equal(message.querySelectorAll('.agent-inline-visual svg').length,2);
+ const record={at:new Date().toISOString(),base,passed:true,questions:results.map(r=>({summary:r.summary,rows:r.visual?.sections.map(s=>s.table?.rows.length),weights:r.weights,agent:r.agent})),browser_pixels_verified:false};
+ fs.writeFileSync(path.join(dir,'public-live-validation.json'),JSON.stringify(record,null,2));console.log(JSON.stringify(record,null,2));dom.window.close();
+})().catch(e=>{activeDom?.window.close();console.error(e);process.exitCode=1;});

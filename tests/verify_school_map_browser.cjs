@@ -40,8 +40,9 @@ const output=path.resolve(__dirname,'../outputs/map-review');fs.mkdirSync(output
   await page.locator('#summary h2').filter({hasText:'인천신흥초등학교'}).waitFor();
   await page.locator('#map-options>summary').click();await page.locator('#school-map').scrollIntoViewIfNeeded();
   await page.screenshot({path:path.join(output,'mobile-school.png'),fullPage:true});
-  await page.locator('.workspace-nav [data-workspace="review"]').click();await page.locator('#review-purpose').fill('경계와 통학 조건 확인');await page.locator('#review-reason').fill('출입구 보행 경로 확인 후 판단');
-  assert.equal(await page.locator('#save-review').isEnabled(),true);
+  assert.equal(await page.locator('.workspace-nav [data-workspace="review"]').count(),0);
+  await page.locator('.workspace-nav [data-workspace="saved"]').click();
+  assert.equal(await page.locator('#workspace-saved').isVisible(),true);
   assert.equal(await page.locator('.workspace-page:visible').count(),1);
   await page.locator('.workspace-nav [data-workspace="explore"]').click();
   assert.equal(await page.locator('#school-map').isVisible(),true);assert.equal(errors.length,0,errors.join('\n'));

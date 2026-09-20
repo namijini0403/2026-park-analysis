@@ -8,7 +8,7 @@ window.ChatAgent=(()=>{
  function download(value,name){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  async function post(payload){const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(65000)});const d=await r.json();if(!r.ok&&!d.summary)throw Error('요청 실패');return d;}
  function scope(){const s=(typeof schools!=='undefined'?schools:[]).find(s=>s.id===$('school').value),all=$('chat-scope').value==='all';return {scope:all?'all':'school',school_id:all?null:($('school').value||null),level:s&&!all?s.level:($('chat-level')?.value||$('level').value),kind:$('kind').value,school_name:all?null:s?.name};}
- function askText(q){$('question').value=q;submit();}
+ function askText(q,confirmed){$('question').value=q;submit(undefined,confirmed);}
  function chips(items,onClick){if(!items?.length)return null;const box=document.createElement('div');box.className='prompts agent-followups';for(const t of items){const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>onClick(t);box.append(b);}return box;}
  function weightPanel(article,d,question){
   const weights=d.weights||d.needs_input?.weights||[];if(!weights.length)return;
@@ -30,7 +30,7 @@ window.ChatAgent=(()=>{
  function inputPanel(article,d,question){
   const n=d.needs_input;if(!n)return;const box=document.createElement('section');box.className='hitl-plan agent-input';
   const opts=n.options||[];box.innerHTML=`<h4>선택해 주세요</h4>${opts.length?`<div class="hitl-related">${opts.map((o,i)=>`<label class="hitl-choice"><input type="${n.multi?'checkbox':'radio'}" name="agent-opt" value="${esc(o.id)}" ${!n.multi&&!i?'checked':''}><span><strong>${esc(o.label)}</strong>${o.description?`<small>${esc(o.description)}</small>`:''}</span></label>`).join('')}</div>`:''}<label>직접 입력 (선택)<input class="agent-free" maxlength="200" placeholder="예: 학생 수를 더 중요하게"></label><button type="button" class="hitl-run">이 조건으로 답변</button>`;
-  box.querySelector('.hitl-run').onclick=()=>{const chosen=[...box.querySelectorAll('input[name=agent-opt]:checked')].map(i=>opts.find(o=>o.id===i.value)?.label).filter(Boolean),free=box.querySelector('.agent-free').value.trim();const parts=[...chosen,free].filter(Boolean);if(!parts.length){box.querySelector('.hitl-run').textContent='선택하거나 입력해 주세요';return;}history.push({q:question,a:d.summary});askText(`${question} — 선택: ${parts.join(', ')}`);};
+  box.querySelector('.hitl-run').onclick=()=>{const chosen=[...box.querySelectorAll('input[name=agent-opt]:checked')].map(i=>opts.find(o=>o.id===i.value)?.label).filter(Boolean),free=box.querySelector('.agent-free').value.trim();const parts=[...chosen,free].filter(Boolean);if(!parts.length){box.querySelector('.hitl-run').textContent='선택하거나 입력해 주세요';return;}history.push({q:question,a:d.summary});askText(`${question} — 선택: ${parts.join(', ')}`,article.requestContext);};
   article.append(box);
   if(n.weights?.length)weightPanel(article,{weights:n.weights,weights_scope:null},question);
  }
@@ -39,9 +39,10 @@ window.ChatAgent=(()=>{
   const existingPanel=$('evidence-panel');if(existingPanel&&article.contains(existingPanel))document.querySelector('.chat-workspace').append(existingPanel);
   window.ChatMap?.dispose(article);
   const head=article.querySelector('h3').outerHTML;
-  article.innerHTML=head+`<p class="agent-summary">${esc(d.summary||d.blocked_reason||'답변에 필요한 근거가 없습니다.')}</p>`;
-  article.querySelector('.agent-summary').insertAdjacentHTML('beforebegin','<p class="chat-result-label">04 결과 · 확인된 내용</p>');
-  if(d.highlights?.length)article.insertAdjacentHTML('beforeend',`<ul class="agent-highlights">${d.highlights.map(h=>`<li>${esc(h)}</li>`).join('')}</ul>`);
+  const answerText=text=>window.ChatWorkspace?.schoolText?window.ChatWorkspace.schoolText(text,d):esc(text);
+  article.innerHTML=head+`<p class="agent-summary">${answerText(d.summary||d.blocked_reason||'답변에 필요한 근거가 없습니다.')}</p>`;
+  article.querySelector('.agent-summary').insertAdjacentHTML('beforebegin','<p class="chat-result-label">04 결과 · 종합 결론</p>');
+  if(d.highlights?.length)article.insertAdjacentHTML('beforeend',`<details class="agent-observations"><summary>변수별 주요 관측 보기</summary><ul class="agent-highlights">${d.highlights.map(h=>`<li>${answerText(h)}</li>`).join('')}</ul></details>`);
   if(d.caveats?.length)article.insertAdjacentHTML('beforeend',`<p class="fine agent-caveats">${d.caveats.map(esc).join(' · ')}</p>`);
 
   if(d.needs_input)inputPanel(article,d,question);else if(d.weights?.length)weightPanel(article,d,question);
@@ -52,9 +53,9 @@ window.ChatAgent=(()=>{
   for(const [label,fn] of [['지도·통계 보기 →',()=>window.ChatWorkspace?.show(d,question)],['답변·근거 JSON 저장 ↓',()=>download({question,...d},'반경너머-질문근거.json')]]){const b=document.createElement('button');b.type='button';b.className='text-button';b.textContent=label;b.onclick=fn;actions.append(b);}
 
   if(d.agent?.usage)actions.insertAdjacentHTML('beforeend',`<details><summary>응답 정보</summary><small class="fine agent-meta">${esc(d.agent.model)} · 도구 ${d.agent.calls?.length||0}회 · 토큰 ${d.agent.usage.input+d.agent.usage.output}${d.agent.usage.cached?` (캐시 ${d.agent.usage.cached})`:''} · ${((d.agent.ms||0)/1000).toFixed(1)}s</small></details>`);
-  if(d.answerable===false){const retry=document.createElement('button');retry.type='button';retry.textContent='다시 답변 받기';retry.onclick=()=>askText(question);actions.append(retry);}
+  if(d.answerable===false){const retry=document.createElement('button');retry.type='button';retry.textContent='다시 답변 받기';retry.onclick=()=>askText(question,article.requestContext);actions.append(retry);}
   article.append(actions);
-  if(article.selectedVariables?.length){const context=document.createElement('details');context.className='chat-analysis-context';const summary=document.createElement('summary');summary.textContent='분석에 사용한 질문 조건';const text=document.createElement('p');text.textContent=article.selectedVariables.join(' · ');context.append(summary,text);article.querySelector('.agent-summary').before(context);}
+  if(article.selectedVariables?.length){const context=document.createElement('details');context.className='chat-analysis-context';const summary=document.createElement('summary');summary.textContent='분석에 사용한 질문 조건';const text=document.createElement('p');text.textContent=article.selectedVariables.join(' · ');context.append(summary,text);article.append(context);}
   window.ChatWorkspace?.show(d,question);
  }
  function chooseVariables(article,q,plan){
@@ -72,26 +73,26 @@ window.ChatAgent=(()=>{
    article.append(box);
   });
  }
- async function submit(event){
+ async function submit(event,confirmed){
   event?.preventDefault();const q=$('question').value.trim();if(!q||busy)return;
   let attachment;try{attachment=window.ChatUpload?.payload();}catch(e){$('upload-status').textContent=e.message;return;}
   const sc=scope();if(sc.scope==='school'&&!sc.school_id){$('chat-context').textContent='학교를 선택하거나 질문 범위를 전체 통계로 바꾸세요.';return;}
   const article=document.createElement('article');article.className='message agent-message';article.innerHTML=`<h3>${esc(sc.school_name||sc.level+' 전체')} · ${esc(q)}</h3><p role="status">질문에 맞는 자료를 찾고 답변을 작성하고 있습니다…</p>`;$('messages').append(article);article.scrollIntoView?.({block:'nearest'});
   busy=true;$('send').disabled=true;$('send').textContent='변수 선택 중…';$('question').value='';
   $('send').textContent='변수 제안 중…';article.querySelector('[role=status]').textContent='AI가 질문을 해석하고 변수 후보와 추천 이유를 정리하고 있습니다…';
-  let plan;try{plan=await post({action:'plan_variables',question:q,...sc,upload:attachment,history:history.slice(-2)});if(plan.mode!=='variable_plan')throw Error(plan.summary||'변수 제안을 받지 못했습니다.');}
+  let plan=confirmed?.variable_plan;try{if(!confirmed)plan=await post({action:'plan_variables',question:q,...sc,upload:attachment,history:history.slice(-2)});if(plan.mode!=='variable_plan')throw Error(plan.summary||'변수 제안을 받지 못했습니다.');}
   catch(e){article.querySelector('[role=status]').textContent='변수 제안을 받지 못했습니다. 다시 시도해 주세요.';const retry=document.createElement('button');retry.type='button';retry.textContent='변수 제안 다시 받기';retry.onclick=()=>askText(q);article.append(retry);busy=false;$('send').disabled=false;$('send').textContent='보내기 ↑';return;}
   $('send').textContent='변수 선택 중…';
-  const selected=await chooseVariables(article,q,plan);
+  const selected=confirmed?confirmed.selected_variables:await chooseVariables(article,q,plan);
   if(selected===null){busy=false;$('send').disabled=false;$('send').textContent='보내기 ↑';return;}
   try{attachment=window.ChatUpload?.payload();}catch(e){article.querySelector('[role=status]').textContent=e.message;busy=false;$('send').disabled=false;$('send').textContent='보내기 ↑';return;}
   article.selectedVariables=selected;
-  const payload={question:q,selected_variables:selected,variable_plan:plan,scope:sc.scope,school_id:sc.school_id,level:sc.level,kind:sc.kind,upload:attachment,history:history.slice(-3)};
+  const payload={question:q,selected_variables:selected,variables_confirmed:true,variable_plan:plan,scope:sc.scope,school_id:sc.school_id,level:sc.level,kind:sc.kind,upload:attachment,history:history.slice(-3)};
   article.requestContext={...payload,history:undefined};
   $('send').textContent='분석 중…';
   const ref=await record('start',q,payload);
   try{const d=await post(payload);await record('finish',ref,d);render(article,d,q);if(d.answerable!==false&&d.mode!=='needs_input')history.push({q,a:(d.summary||'').slice(0,400),school_ids:schoolIds(d)});}
-  catch(e){await record('finish',ref,null,e.message);article.querySelector('[role=status]')?.remove();article.insertAdjacentHTML('beforeend',`<p class="error">${esc(e.name==='TimeoutError'?'답변이 지연되고 있습니다. 질문을 나누어 다시 시도해 주세요.':'답변 연결에 실패했습니다. 잠시 후 다시 질문해 주세요.')}</p>`);const retry=document.createElement('button');retry.type='button';retry.textContent='이 질문 다시 보내기';retry.onclick=()=>askText(q);article.append(retry);}
+  catch(e){await record('finish',ref,null,e.message);article.querySelector('[role=status]')?.remove();article.insertAdjacentHTML('beforeend',`<p class="error">${esc(e.name==='TimeoutError'?'답변이 지연되고 있습니다. 질문을 나누어 다시 시도해 주세요.':'답변 연결에 실패했습니다. 잠시 후 다시 질문해 주세요.')}</p>`);const retry=document.createElement('button');retry.type='button';retry.textContent='이 질문 다시 보내기';retry.onclick=()=>askText(q,payload);article.append(retry);}
   finally{busy=false;$('send').disabled=false;$('send').textContent='보내기 ↑';}
  }
  $('chat-form').onsubmit=submit;

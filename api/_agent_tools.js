@@ -44,7 +44,8 @@ function geometries(ids,kinds){
 }
 const show=v=>typeof v==='boolean'?(v?'예':'아니오'):v;
 const tools_level=q=>/초$|초등/.test(q)?'초등학교':/중$|중학/.test(q)?'중학교':/고$|고등/.test(q)?'고등학교':/유치원/.test(q)?'유치원':null;
-function fmtRow(ctx,r,cols){const o={name:r.name};for(const c of cols)if(c!=='name'){const v=r[c];o[c]=typeof v==='number'?round(v,Math.abs(v)>=100?0:Math.abs(v)>=10?1:2):v;}return o;}
+function forecastEvidence(r){return {status:r.forecast_status,origin_year:r.forecast_origin_year,model_version:r.forecast_model_version,limitations:r.forecast_limitations};}
+function fmtRow(ctx,r,cols){const o={id:r.id,name:r.name};for(const c of cols)if(c!=='name'){const v=r[c];o[c]=typeof v==='number'?round(v,Math.abs(v)>=100?0:Math.abs(v)>=10?1:2):v;}if(cols.some(c=>c.startsWith('forecast_')))o.forecast_evidence=forecastEvidence(r);return o;}
 
 // ---- tools ----
 function query_schools(ctx,p){
@@ -71,6 +72,9 @@ function query_schools(ctx,p){
   chart:chartCol&&shown.length>1?{kind:'bar',unit:col(ctx,chartCol).unit||'',title:table.label(chartCol),points:shown.map(r=>({name:r.name,value:r[chartCol],selected:r.id===ctx.school_id}))}:null,
   table:{headers:cols.map(c=>c==='name'?'학교':c==='gu'?'군·구':`${col(ctx,c).label}${col(ctx,c).unit?' ('+col(ctx,c).unit+')':''}`),rows:shown.map(r=>cols.map(c=>show(r[c])??'—'))},
   notes:[`조건에 맞는 학교 ${matched}개교${excluded?` 중 ${sortBy?table.label(sortBy):'정렬 기준'} 값이 없는 ${excluded}개교 제외`:''} · 표시 ${shown.length}개교.`,...(stats?[`${table.label(sortBy)} 중앙값 ${stats.median}${col(ctx,sortBy).unit||''} · 범위 ${stats.min}~${stats.max}.`]:[]),...(wantBoundary?['보라색 면은 공식 학구도, 초록색 면은 보행망 500m 도달권입니다.']:[])]};
+ // Keep a bounded continuation for the optional extra-candidate panel. It does
+ // not change the requested answer/table/map size or the rows sent to the LLM.
+ visual.evidence={school_ids:shown.map(r=>r.id),columns:cols,candidate_pool:{school_ids:rows.slice(0,limit+10).map(r=>r.id),eligible_school_ids:rows.map(r=>r.id),fixed_school_ids:!!p.school_ids?.length,label:s.label,sort_by:sortBy,order:sortBy?(p.order==='asc'?'asc':'desc'):null,where:(p.where||[]).filter(w=>w&&!unset(w.column)&&!unset(w.op)).map(w=>({...w,label:col(ctx,w.column).label}))}};
  return {llm:{scope:s.label,matched,excluded_missing:excluded,shown:shown.length,stats,rows:shown.map(r=>fmtRow(ctx,r,cols))},visual,sources:sourcesFor(ctx,[...usedCols])};
 }
 function school_profile(ctx,p){
@@ -90,6 +94,8 @@ function school_profile(ctx,p){
   chart:{kind:'bar',unit:'%',title:'같은 학교급 내 백분위(값이 큰 쪽 기준)',points:rows.map(x=>({name:x.label,value:x.percentile}))},
   table:{headers:['지표','이 학교','학교급 중앙값','백분위(%)','비교 학교 수'],rows:rows.map(x=>[x.label+(x.unit?' ('+x.unit+')':''),x.value,x.level_median,x.percentile,x.n])},
   notes:['백분위는 같은 학교급에서 이 값보다 작은 학교의 비율입니다(동점 절반 반영). 지표마다 좋고 나쁨의 방향이 다릅니다.',...(similar.length?[`KNN 유사학교(학생 규모·추세·주변 개발 기준): ${similar.join(', ')}`]:[]),...(r.designation_names?[`2026 지정·지원사업: ${r.designation_names}`]:[])]};
+ visual.evidence={school_ids:[r.id],columns:cols};
+ if(cols.some(c=>c.startsWith('forecast_')))llm.forecast_evidence=forecastEvidence(r);
  return {llm,visual,sources:sourcesFor(ctx,cols.concat(similar.length?['large_apt_500m']:[]))};
 }
 function correlate(ctx,p){
@@ -147,6 +153,9 @@ function run(name,ctx,args){
  const ids=[...new Set([...(p.columns||[]),p.column,p.sort_by,p.x,p.y,p.aggregate?.column,...(p.where||[]).map(x=>x?.column),...(p.criteria||[]).map(x=>x?.column)])].filter(id=>id!=='paps'&&table.COLUMNS[id]);
  const definitions=ids.map(column=>{const c=table.COLUMNS[column];return {column,label:c.label,unit:c.unit||'',kind:c.kind||'observation',non_additive:!!c.nonAdditive,note:c.note||null};});
  if(definitions.length){result.llm.indicator_definitions=definitions;const notes=definitions.filter(d=>d.note).map(d=>d.label+': '+d.note);for(const visual of result.sections||[result.visual])if(visual)visual.notes=[...(visual.notes||[]),...notes];}
+ const forecastRows=result.llm.forecast_evidence?[result.llm]:[...(result.llm.rows||[]),...(result.llm.observations||[]).flatMap(o=>o.rows||[])];
+ const forecastNotes=[...new Set(forecastRows.filter(r=>r.forecast_evidence?.status==='limited_history_constant_scenario').map(r=>`${r.name}: ${r.forecast_evidence.origin_year}년 관측 기준 · ${r.forecast_evidence.limitations||'최근 학생 수 유지 참고 시나리오이며 검증된 추세 예측이 아닙니다.'}`))];
+ for(const visual of result.sections||[result.visual])if(visual&&forecastNotes.length)visual.notes=[...(visual.notes||[]),...forecastNotes];
  return result;
 }
 module.exports={TOOLS,run,scope,geometries,LEVELS};

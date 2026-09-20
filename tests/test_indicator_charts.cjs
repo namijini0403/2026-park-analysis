@@ -39,3 +39,21 @@ assert(C.radar({axes,basis:'gu'}).includes('stroke-dasharray'));
 const empty=C.radar({axes:axes.map(a=>({...a,percentile_overall:null,percentile_gu:null,missing:{reason:'x',detail:'y'}})),basis:'overall'});
 assert(empty.includes('표시할 값이 없습니다'));
 console.log('test_indicator_charts: OK');
+
+// 레이더 방향 통일: 같은 긍정 상태는 같은 반지름. 원자료 막대에는 영향을 주지 않는다.
+const aligned=[{domain_label:'긍정',label:'많을수록 유리',direction:'up',percentile_overall:80,percentile_gu:60},
+ {domain_label:'부정',label:'적을수록 유리',direction:'down',percentile_overall:20,percentile_gu:40},
+ {domain_label:'중립',label:'정책 판단',direction:'neutral',percentile_overall:95,percentile_gu:90},
+ {domain_label:'누락',label:'미수집',direction:'down',percentile_overall:null,percentile_gu:null}];
+const host=w.document.getElementById('x');
+for(const basis of ['overall','gu']){
+ host.innerHTML=C.radar({axes:aligned,basis});
+ const dots=[...host.querySelectorAll('.dot')];
+ assert.equal(dots.length,2,'중립과 결측값에 점을 찍지 않는다');
+ const radius=el=>Math.hypot(Number(el.getAttribute('cx'))-150,Number(el.getAttribute('cy'))-150);
+ assert(Math.abs(radius(dots[0])-radius(dots[1]))<0.1,'긍정 방향을 일치시킨다');
+ assert.equal(host.querySelectorAll('.broken').length,1,'부정 지표의 결측도 0으로 뒤집지 않는다');
+ assert(!host.textContent.includes('정책 판단'),'중립 지표를 긍정 수치로 표시하지 않는다');
+ assert(host.textContent.includes('100 − 원자료 백분위'),'변환을 설명한다');
+}
+assert(C.percentileBar({percentile:20,value:20}).includes('값이 큰 쪽) 20%'),'상세 막대는 원자료 백분위 유지');

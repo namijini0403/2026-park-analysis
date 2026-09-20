@@ -6,7 +6,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const finite=Number.isFinite;
 const MIN_GU_N=10;
 const DIRECTION_TEXT={up:'많을수록 유리 ↑',down:'많을수록 불리 ↓',neutral:'해석에 정책 판단 필요 ·'};
-const RADAR_NOTE='모양 비교용이며 순위·종합점수가 아닙니다. 축마다 단위와 성격이 다릅니다. 미확보 축은 값이 없어 끊어진 축으로 그립니다.';
+const RADAR_NOTE='바깥쪽일수록 긍정, 안쪽일수록 부정 방향입니다. 많을수록 불리한 지표는 100 − 원자료 백분위로 표시합니다. ↑·↓는 원자료의 유리한 방향입니다. 모양 비교용이며 순위·종합점수가 아닙니다. 축마다 단위와 성격이 다릅니다. 미확보 축은 값이 없어 끊어진 축으로 그립니다.';
 const EMPTY='<div class="empty"><span class="empty-symbol">⌂</span><h2>학교를 선택하면 지표 프로필이 표시됩니다.</h2><p>영역별로 이 학교의 값과 같은 학교급 안에서의 상대 위치를 보여줍니다. 자료가 없는 항목은 미확보로 표시하며 0으로 보지 않습니다.</p></div>';
 const fmt=v=>finite(v)?(Math.round(v*100)/100).toLocaleString('ko-KR'):'';
 
@@ -47,9 +47,11 @@ function radarBlock(data,basis){
  const buttons=`<button type="button" class="${basis==='overall'?'on':''}" data-basis="overall">인천 전체 기준</button>`
   +(gu?`<button type="button" class="${basis==='gu'?'on':''}" data-basis="gu">${esc(gu)} 기준</button>`:'');
  const svg=global.IndicatorCharts?global.IndicatorCharts.radar({axes:data.radar.axes,basis}):'';
+ const neutral=data.radar.axes.filter(a=>a.direction!=='up'&&a.direction!=='down');
  return `<div class="radar-basis" role="group" aria-label="비교 기준">${buttons}</div>`
   +`<div class="radar-holder">${svg}</div>`
-  +`<p class="fine radar-note">${esc(RADAR_NOTE)}</p>`;
+  +`<p class="fine radar-note">${esc(RADAR_NOTE)}</p>`
+  +(neutral.length?`<p class="fine radar-neutral">긍정·부정 방향을 단정할 수 없어 레이더에서 제외: ${neutral.map(a=>esc(a.label||a.domain_label)).join(', ')}. 원자료는 아래 영역별 지표에서 확인할 수 있습니다.</p>`:'');
 }
 
 function render(el,data){

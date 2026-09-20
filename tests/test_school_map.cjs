@@ -36,7 +36,7 @@ async function run(failZones=false){
  d.getElementById('map-all-levels').click();assert.equal(count(),4);assert.match(d.getElementById('map-zone-status').textContent,/311개/);
  for(const el of d.querySelectorAll('[data-map-level]'))toggle(`[data-map-level="${el.dataset.mapLevel}"]`,false);
  assert.equal(count(),0);assert.equal(d.querySelectorAll('[data-test-map-group="zones"]').length,0);assert.match(d.getElementById('map-status').textContent,/하나 이상/);
- await tick();assert.equal(d.getElementById('chat-level').value,'초등학교');assert.equal(d.getElementById('save-review').disabled,true);
+ await tick();assert.equal(d.getElementById('chat-level').value,'초등학교');assert.equal(d.getElementById('workspace-review'),null);
  dom.window.close();
 }
 (async()=>{await run();await run(true);console.log('PASS school map: 917 coordinates, multi-level union, official ID-linked boundaries, kindergarten coverage, 500m toggle, stale fetch and failure, empty filters, independent chat scope');})().catch(e=>{console.error(e);process.exitCode=1;});

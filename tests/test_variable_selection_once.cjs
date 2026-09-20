@@ -1,0 +1,26 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{JSDOM}=require('jsdom'),agent=require('../api/_agent');
+const root=path.resolve(__dirname,'..'),original=global.fetch;
+(async()=>{
+ let body;
+ global.fetch=async(_,opts)=>{body=JSON.parse(opts.body);return {ok:true,text:async()=>JSON.stringify({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(body.text.format.name==='variable_plan'?{summary:'학교와 주변 독서 자원을 함께 검토합니다.',variables:[{column:'name',why:'식별'},{column:'level',why:'학교급'},{column:'books_per_student',why:'장서'},{column:'paps',why:'제외'}],data_requests:[]}:{summary:'여러 검토안을 확인합니다.',highlights:[],caveats:[],followups:[],data_requests:[]})}]}]})};};
+ const plan=await agent.plan({level:'초등학교'},'학교 도서관 우선 지원 대상 초등학교 5개 찾아줘');
+ assert.deepEqual(plan.variables.map(v=>v.column),['students','forecast_2029','forecast_2031','nearest_public_library_m','libraries_walk','books_per_student']);
+ for(const id of ['name','level','paps'])assert(!body.text.format.schema.properties.variables.items.properties.column.enum.includes(id));
+ const islandPlan=await agent.plan({level:'초등학교'},'도서 학교 환경 개선 지원 대상');
+ assert(!islandPlan.variables.some(v=>v.column==='nearest_public_library_m'),'island schools are not a library keyword');
+ await agent.answer({level:'초등학교',variables_confirmed:true},'학교 도서관 지원 검토');
+ assert(!body.tools.some(t=>t.name==='ask_user'),'confirmed selection cannot reopen variable questions');
+ assert.match(body.input[0].content,/이미 확정/);
+ const dom=new JSDOM(fs.readFileSync(path.join(root,'index.html'),'utf8'),{url:'http://localhost',runScripts:'outside-only'}),w=dom.window,d=w.document,requests=[];
+ w.ChatWorkspace={show:()=>{}};w.SourceEvidence={mount:()=>{}};
+ w.fetch=async(_,opts)=>{const req=JSON.parse(opts.body);requests.push(req);return {ok:true,json:async()=>req.action==='plan_variables'?plan:{answerable:false,summary:'일시적 연결 실패',sources:[]}};};
+ w.eval(fs.readFileSync(path.join(root,'assets/chat-agent.js'),'utf8'));
+ d.getElementById('chat-scope').value='all';d.getElementById('question').value='도서관 지원 대상 초등학교 5개';
+ const pending=w.ChatAgent.submit();await new Promise(r=>setTimeout(r,10));
+ d.querySelector('.chat-variable-options input').checked=true;d.querySelector('.chat-run-analysis').click();await pending;
+ const retry=[...d.querySelectorAll('button')].find(b=>b.textContent==='다시 답변 받기');assert(retry);retry.click();await new Promise(r=>setTimeout(r,20));
+ assert.equal(requests.filter(r=>r.action==='plan_variables').length,1,'retry preserves confirmed selection');
+ assert.equal(requests.length,3);assert.equal(requests[2].variables_confirmed,true);assert.deepEqual(requests[2].selected_variables,requests[1].selected_variables);
+ assert.equal(d.querySelectorAll('.chat-variable-options').length,0);dom.window.close();
+ console.log('PASS implicit identity/scope, related library access, confirmed selection and retry reuse');
+})().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>{global.fetch=original;});

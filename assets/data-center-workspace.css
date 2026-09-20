@@ -1,0 +1,11 @@
+.workspace-nav button[data-workspace=data]:not([aria-current]) { background: #fff5df; border-top-color: #c9ad6e; }
+.data-center-section { padding: 28px; border: 1px solid #cfd9d0; border-radius: 18px; background: #f6f2e9; color: #153c49; }
+.data-center-section h2 { margin: 8px 0 14px; }
+.data-center-section .eyebrow { color: #087e78; }
+.data-center-section .muted, .data-center-section .fine { color: #526976; }
+.data-center-section a { color: #08756e; }
+#data-center-frame { display: block; width: 100%; min-height: 900px; border: 0; border-radius: 12px; background: #050b14; }
+@media (max-width: 640px) {
+  .data-center-section { padding: 16px 8px; }
+  .data-center-section > p, .data-center-section > h2 { margin-left: 8px; margin-right: 8px; }
+}

@@ -1,0 +1,14 @@
+'use strict';
+const fs=require('fs'),path=require('path'),crypto=require('crypto'),assert=require('assert/strict'),{JSDOM}=require('jsdom');
+const base='https://education-living-area-preview-production.up.railway.app';let dom;
+(async()=>{
+ const html=await(await fetch(base)).text();assert(html.includes('domain-stats.css?v=stats20260914'));assert(html.includes('statistical-charts.js?v=stats20260914'));
+ const files=['domain-stats.js','domain-stats.css','statistical-charts.js','statistical-charts.css','chat-workspace.js'],scripts={};
+ for(const f of files){const remote=Buffer.from(await(await fetch(base+'/assets/'+f)).arrayBuffer()),local=fs.readFileSync(path.join(__dirname,'../assets',f));assert(remote.equals(local),f+' deployed bytes');scripts[f]=remote.toString('utf8');}
+ dom=new JSDOM(html,{url:base,runScripts:'outside-only'});const w=dom.window,d=w.document;
+ w.fetch=(url,opt)=>fetch(new URL(url,base),opt);w.eval(scripts['domain-stats.js']);w.DomainStats.init();d.getElementById('stats-domain').value='reading';await w.DomainStats.load();assert(d.querySelector('.ds-main-range'));assert(d.querySelector('.ds-districts'));d.querySelector('[data-track="island"]').click();assert.equal(d.querySelectorAll('.ds-district').length,2);
+ const data=await(await fetch(base+'/api/domain-stats?domain=reading&level='+encodeURIComponent('초등학교'))).json();for(const i of data.indicators){assert.equal(i.coverage.general.available,i.overall.n);assert.equal(i.coverage.island.available,i.island.n);assert.equal(i.coverage.general.total+i.coverage.island.total,i.coverage.total);if(i.overall.n)assert(i.overall.q1<=i.overall.median&&i.overall.median<=i.overall.q3);}
+ w.eval(scripts['statistical-charts.js']);w.eval(scripts['chat-workspace.js']);
+ const response=await fetch(base+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scope:'all',level:'초등학교',question:'강화군 옹진군을 제외한 초등학교의 군구별 학급당 학생 수 평균을 비교해줘',history:[]})});assert(response.ok);const result=await response.json();assert(result.answerable);assert(result.summary.length>30);const charts=[result.visual?.chart,...(result.visual?.sections||[]).map(s=>s.chart)].filter(Boolean);assert(charts.length);assert(charts.map(c=>w.ChatWorkspace.chart(c)).join('').includes('statistical-chart-dot'));
+ const report={at:new Date().toISOString(),passed:true,assets:files,domain_indicators:data.indicators.length,chat_summary:result.summary,chart_count:charts.length,agent:result.agent,browser_pixels_verified:false};const out=path.join(__dirname,'../outputs/statistics');fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'public-validation.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));w.close();
+})().catch(e=>{dom?.window.close();console.error(e);process.exitCode=1;});

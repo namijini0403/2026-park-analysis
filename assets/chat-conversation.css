@@ -52,7 +52,7 @@
 #workspace-ask .chat-analysis-steps{line-height:2;color:#52685d;padding-left:20px}
 #workspace-ask #evidence-panel .export-actions{display:flex;flex-wrap:wrap;gap:6px}
 #workspace-ask #evidence-panel .export-actions button{font-size:.75rem;padding:7px 10px}
-#workspace-ask #evidence-panel svg{max-width:100%;height:auto}
+#workspace-ask #evidence-panel svg:not(.chat-map-canvas svg){max-width:100%;height:auto}
 #workspace-ask #evidence-panel .table-scroll{max-height:340px;overflow:auto}
 #workspace-ask .agent-summary{margin-top:12px}
 #workspace-ask .chat-section>.fine{max-width:720px}
@@ -70,3 +70,9 @@
 #workspace-ask .chat-variable-options strong,#workspace-ask .chat-variable-options small{display:block}
 #workspace-ask .chat-variable-options small{color:#5b7064;line-height:1.6;margin-top:4px}
 #workspace-ask .chat-plan-summary{font-size:.95rem;line-height:1.8}
+
+/* Map controls are geographic marks, exempt from the reading theme button size. */
+#workspace-ask .chat-map-canvas{min-height:340px;flex-shrink:0}
+#workspace-ask .chat-map-canvas .kakao-school-dot{width:9px!important;height:9px!important;min-height:0!important;border-width:1.5px!important;box-shadow:0 1px 3px #16382d55}
+#workspace-ask .chat-map-canvas .kakao-school-dot.is-selected{width:13px!important;height:13px!important;border-width:2px!important;box-shadow:0 0 0 2px #fff9}
+#workspace-ask .comparison-section{margin:14px 0;padding:12px 0;border-top:1px solid #dce6df}

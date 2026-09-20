@@ -1,4 +1,4 @@
-.kakao-school-dot{display:block!important;width:15px!important;height:15px!important;min-width:0!important;padding:0!important;margin:0!important;background:var(--dot-color)!important;border:2px solid white!important;border-radius:50%!important;box-shadow:0 1px 5px #16382d66;cursor:pointer;line-height:1!important}
+.kakao-school-dot{display:block!important;width:15px!important;height:15px!important;min-width:0!important;min-height:0!important;box-sizing:border-box!important;padding:0!important;margin:0!important;background:var(--dot-color)!important;border:2px solid white!important;border-radius:50%!important;box-shadow:0 1px 5px #16382d66;cursor:pointer;line-height:1!important}
 .kakao-school-dot.is-selected{width:22px!important;height:22px!important;border:3px solid #173d31!important;box-shadow:0 0 0 4px #fff9}
 .kakao-school-dot.is-shared{border-style:dashed!important;border-width:3px!important}
 .kakao-school-dot:focus-visible{outline:3px solid #173d31;outline-offset:3px}

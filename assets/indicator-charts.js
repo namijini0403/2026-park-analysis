@@ -1,6 +1,6 @@
 'use strict';
 // 지표 시각화 SVG. 순수 함수로 문자열만 만든다 (DOM을 만지지 않는다).
-// 규칙: 백분위는 값이 큰 쪽 기준 고정이며 방향으로 뒤집지 않는다. 미확보는 0이 아니라 값 없음으로 그린다.
+// 원자료 백분위 막대는 값이 큰 쪽 기준. 레이더만 바깥쪽이 긍정이 되도록 맞춘다. 미확보는 값 없음이다.
 (function(global){
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const finite=Number.isFinite;
@@ -54,10 +54,10 @@ function histogram(o){
 // 레이더. 축 = 영역 대표 지표 1개씩이며 영역을 합산하지 않는다.
 // 값이 없는 축은 0으로 찍지 않고 점선 축으로만 남긴다 (없음과 0을 구분한다).
 function radar(o){
- const axes=Array.isArray(o.axes)?o.axes:[],basis=o.basis==='gu'?'gu':'overall';
+ const axes=(Array.isArray(o.axes)?o.axes:[]).filter(a=>a.direction==='up'||a.direction==='down'),basis=o.basis==='gu'?'gu':'overall';
  const S=300,C=S/2,R=104;
- const valueOf=a=>basis==='gu'?a.percentile_gu:a.percentile_overall;
- const open=`<svg class="radar" viewBox="0 0 ${S} ${S}" width="100%" height="${S}" role="img" aria-label="영역 대표 지표 상대 위치">`;
+ const valueOf=a=>{const p=basis==='gu'?a.percentile_gu:a.percentile_overall;return finite(p)?(a.direction==='down'?100-p:p):null;};
+ const open=`<svg class="radar" viewBox="0 0 ${S} ${S}" width="100%" height="${S}" role="img" aria-label="영역 대표 지표 상대 위치 · 바깥쪽일수록 긍정">`;
  if(!axes.length||!axes.some(a=>finite(valueOf(a))))
   return open+`<text class="radar-empty" x="${C}" y="${C}" text-anchor="middle">표시할 값이 없습니다.</text></svg>`;
  const n=axes.length;
@@ -82,7 +82,7 @@ function radar(o){
  const shape=filled.length>=3?`<polygon class="area" points="${poly}"></polygon>`
   :filled.length===2?`<polyline class="area-line" points="${poly}"></polyline>`:'';
  const dots=filled.map(x=>{const [px,py]=pt(x.i,R*Math.max(0,Math.min(100,x.v))/100);
-  return `<circle class="dot" cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3"><title>${esc(x.a.domain_label)} · ${esc(x.a.label)} ${esc(num(x.v))}%</title></circle>`;}).join('');
+  return `<circle class="dot" cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3"><title>${esc(x.a.domain_label)} · ${esc(x.a.label)} · 긍정 방향 상대 위치 ${esc(num(x.v))}%${x.a.direction==='down'?' (100 − 원자료 백분위)':''}</title></circle>`;}).join('');
  return open+rings+spokes+shape+dots+labels+`</svg>`;
 }
 

@@ -30,6 +30,8 @@ async function run(p){
  const analysisQuestion=selected.length?q+' — 함께 분석할 변수·확인 조건: '+selected.join(', '):q;
  if(p.action!=='plan_variables'&&p.upload?.kind==='document')return require('./_document_evidence').run(analysisQuestion,p.upload);
  const ctx=context(p);
+ ctx.selected_variables=selected;
+ ctx.variables_confirmed=p.variables_confirmed===true||Array.isArray(p.selected_variables);
  if(!process.env.OPENAI_API_KEY||process.env.AI_EXPLAINER_ENABLED==='false')return block('AI 분석 키가 설정되지 않아 질문에 답할 수 없습니다. 관리자에게 OPENAI_API_KEY 설정을 요청해 주세요.');
  if(p.action==='plan_variables'){if(p.upload?.kind==='document')ctx.document=require('./_document_evidence').select(q,p.upload).map(s=>({title:s.title,text:s.body.slice(0,800)}));return agent.plan(ctx,q,Array.isArray(p.history)?p.history:[]);}
  const result=p.action==='reweight'?await agent.reweight(ctx,q,p.criteria||[],{level:p.rank_level||ctx.level,gu:p.rank_gu||null,island:p.rank_island||null,limit:p.limit}):await agent.answer(ctx,analysisQuestion,Array.isArray(p.history)?p.history:[]);
