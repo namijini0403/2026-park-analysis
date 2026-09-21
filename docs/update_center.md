@@ -971,3 +971,29 @@ Variables 에 넣은 뒤 재배포해야 시작된다.
   `scripts/deploy/build_vercel_static.mjs` 는 ui-preview 를 전혀 참조하지 않으며(`api/_data_catalog.js`
   와 리포 파일만 사용), ui-preview 산출물은 `vercel_public/` 에 포함되지 않는다.
 - 로컬 검증: `npm run build:vercel` → `vercel_public` 1,210개 파일 / 약 263MB, `index.html` 생성 확인.
+
+### 11.2 운영 호스트에서 KoreaConnect 게이트웨이가 차단됨 (2026-09-21)
+
+배포 후 운영(Railway, us-west/sfo)에서 `kc_*` 원천을 스캔하면 HTTP 200 에 **HTML 오류 페이지**가
+돌아온다. 본문은 다음과 같다.
+
+```
+The request / response that are contrary to the Web firewall security policies have been blocked.
+Detect client IP: 10.100.200.131 (x-forward-for : <Railway 이그레스 IP>)
+```
+
+즉 데이터 문제나 인증 문제가 아니라 **원천 게이트웨이 앞단의 웹 방화벽이 호출지를 차단**한 것이다.
+같은 시각 같은 URL·같은 키로 국내 네트워크에서 호출하면 정상 JSON 이 온다(단란주점 812건 확인).
+데이터센터·해외 IP 차단으로 추정한다.
+
+대응과 한계:
+
+- 스캐너는 이를 **red 오류 이벤트**로 남기고, 요약에 "응답이 JSON 이 아님 — 게이트웨이가 HTML/텍스트
+  오류 페이지를 반환"이라고 적으며 `diff_json.responseSnippet` 에 실제 방화벽 문구를 보존한다.
+  운영자가 원인을 바로 읽을 수 있다. 같은 오류가 반복되면 이벤트를 다시 만들지 않는다(중복 억제).
+- **서비스 리전 이전은 하지 않는다.** 영구 볼륨(`education-data-runtime`)이 sfo 리전에 묶여 있어
+  리전을 옮기면 볼륨과 분리된다. 아시아 리전도 국내가 아니라 차단이 풀린다는 보장이 없다.
+- 실무 경로는 **국내 네트워크에서 스캔 → 후보 검토 → 업로드·승인** 이다. 업데이트 센터의 수동 업로드
+  (`POST /upload`)와 승인 흐름이 이미 이 경로를 지원한다. 사람이 확인하고 반영하는 이 프로젝트의
+  원칙과도 어긋나지 않는다.
+- 기관 이관 시 기관 내부망에서 운영하면 이 제약은 사라질 수 있다. 이관 검토 항목으로 남긴다.

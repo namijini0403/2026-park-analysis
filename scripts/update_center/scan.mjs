@@ -390,20 +390,33 @@ async function checkJsonApi(entry, state, store, opts, log) {
       actor
     );
   }
+  // 본문을 먼저 텍스트로 읽는다 — JSON 이 아닐 때(게이트웨이 오류 페이지 등) 실제 내용을
+  // 이벤트에 남겨야 운영자가 원인을 읽을 수 있다. 본문에 인증키는 포함되지 않는다.
+  let dataText;
+  try {
+    dataText = await dataRes.text();
+  } catch (err) {
+    return await recordFailure(dataset, `${dataLabel} 본문 읽기 실패`, err.message, null, entry, state, store, log, { schemaDiff }, actor);
+  }
   let dataJson;
   try {
-    dataJson = await dataRes.json();
+    dataJson = JSON.parse(dataText);
   } catch (err) {
+    const snippet = dataText.replace(/\s+/g, " ").trim().slice(0, 300);
+    const looksHtml = /^\s*(<|&lt;)/.test(dataText);
+    const summary = looksHtml
+      ? `${dataLabel} 응답이 JSON 이 아님 — 게이트웨이가 HTML/텍스트 오류 페이지를 반환했습니다(HTTP 200). 호출 위치의 네트워크·IP 제한이나 게이트웨이 점검을 확인하세요.`
+      : `${dataLabel} 파싱 실패`;
     return await recordFailure(
       dataset,
-      `${dataLabel} 파싱 실패`,
-      err.message,
-      null,
+      summary,
+      `${err.message} · 응답 본문(앞 300자): ${snippet}`,
+      dataRes.status,
       entry,
       state,
       store,
       log,
-      { schemaDiff },
+      { schemaDiff, responseSnippet: snippet, contentType: dataRes.headers.get("content-type") || null },
       actor
     );
   }

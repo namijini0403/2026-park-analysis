@@ -125,6 +125,17 @@ const ITEMS = [
   const persisted = JSON.stringify(await store.getMeta('source_scan_state')) + JSON.stringify(result.events);
   assert.equal(persisted.includes('test-key-123'), false, 'key value never reaches events/state');
 
+  // 7. HTTP 200 carrying an HTML/text error page (gateway or network/IP restriction):
+  //    red, and the event must carry the real body so an operator can read the cause.
+  global.fetch = async () => new Response('<br>\r\n<br><b>Warning</b>: not allowed from this address', {
+    status: 200, headers: {'content-type': 'text/html'},
+  });
+  result = await runScan({dataset: 'kc_test'});
+  assert.equal(result.summary.error, 1);
+  assert.match(result.events[0].summary, /JSON 이 아님/, 'HTML body is named as such, not a cryptic parse error');
+  assert.match(result.events[0].diff_json.responseSnippet, /not allowed from this address/);
+  assert.equal(result.events[0].diff_json.contentType, 'text/html');
+
   global.fetch = originalFetch;
   console.log('test_update_center_keyed_api: ok');
 })().catch((err) => { global.fetch = originalFetch; console.error(err); process.exit(1); });
