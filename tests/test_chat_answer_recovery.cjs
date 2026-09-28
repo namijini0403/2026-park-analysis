@@ -21,7 +21,7 @@ const reply=output=>({ok:true,text:async()=>JSON.stringify({output,usage:{input_
  r=tools.run('weighted_rank',ctx,{criteria:[{column:'parks_walk',prefer:'low',weight:90},{column:'students',prefer:'high',weight:10}],limit:10});
  assert(!JSON.stringify(r).includes('"score"'));assert.equal(r.sections.length,2);assert.match(r.llm.constraints,/상쇄하지/);
  assert.throws(()=>tools.run('weighted_rank',ctx,{criteria:[{column:'students',weight:Infinity}]}),/숫자/);
- assert.throws(()=>tools.run('query_schools',ctx,{sort_by:'paps'}),/등급 정의/);
+ assert.throws(()=>tools.run('query_schools',ctx,{sort_by:'paps'}),/PAPS 4·5등급 비율.*비교에 쓰지 않습니다/);
  assert(!tools.run('school_profile',ctx,{school_id:'B000003024',columns:['paps']}).llm.indicators.some(i=>i.column==='paps'));
  const missing=tools.run('query_schools',ctx,{where:[{column:'zone_walk_mismatch_pct',op:'is_null'}],sort_by:'zone_walk_mismatch_pct'});
  assert.equal(missing.llm.rows.length,0);assert(missing.llm.excluded_missing>0);

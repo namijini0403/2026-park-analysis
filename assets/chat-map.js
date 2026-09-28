@@ -13,7 +13,7 @@ window.ChatMap=(()=>{
  function mount(host,d){
   const v=collect(d);if(d.answerable===false||(!v.points.length&&!v.geometries.length&&!v.routes.length))return null;
   const card=document.createElement('section');card.className='agent-inline-map';
-  card.innerHTML='<div class="chat-map-toolbar"><strong>이 답변의 지도</strong><button type="button" class="chat-map-fit">전체 보기</button></div><div class="chat-map-canvas" aria-label="답변에 나온 학교와 경계 지도"></div><div class="chat-map-layers"></div><p class="fine chat-map-status" role="status">지도를 불러오는 중입니다…</p><button type="button" class="chat-map-retry" hidden>지도 다시 불러오기</button>';
+  card.innerHTML='<div class="chat-map-toolbar"><strong>이 답변의 지도</strong><button type="button" class="chat-map-fit">전체 보기</button></div><div class="chat-map-canvas" aria-label="답변에 나온 학교와 경계 지도"></div><div class="chat-map-layers"></div><p class="fine chat-map-status" role="status">이 자리가 화면에 보이면 지도를 불러옵니다.</p><button type="button" class="chat-map-retry" hidden>지도 다시 불러오기</button>';
   const canvas=card.querySelector('.chat-map-canvas'),status=card.querySelector('.chat-map-status'),retry=card.querySelector('.chat-map-retry'),controls=card.querySelector('.chat-map-layers');
   const state={map:null,observer:null,disposed:false,busy:false};mounted.set(card,state);host.append(card);
   const groups=[{id:'zone',label:'학구도',color:'#8359ae',features:[]},{id:'walk',label:'보행 500m 분석 범위',color:'#25866d',features:[]},{id:'other',label:'기타 경계',color:'#56836c',features:[]}];

@@ -154,13 +154,20 @@ const writeRaw = (rows) => fs.writeFileSync(RAW_FILE, JSON.stringify(rows));
   assert.equal(r3.outcome, 'error', '[9] a different failure is a new event');
   assert.doesNotMatch(r3.event.summary, /Python/);
 
+  // [11] 스캔 상태는 store 가 진실 — 상태 파일이 사라져도(재배포) /sources 가 마지막 검사 결과를 보여준다
+  if (fs.existsSync(process.env.UPDATE_CENTER_STATE_PATH)) fs.unlinkSync(process.env.UPDATE_CENTER_STATE_PATH);
+  await handler({method: 'GET', url: '/api/update-center/sources', headers: {'x-update-center-token': 'isolated-test'}}, res);
+  assert.equal(res.statusCode, 200);
+  const cy = body.sources.find((s) => s.dataset === 'construction_yeonsu');
+  assert.ok(cy.last_state && cy.last_state.lastStatus === 'ok', '[11] last_state survives state-file loss (read from store meta)');
+
   // [10] 관리 화면 인라인 스크립트 구문 검사 (따옴표 하나가 화면 전체를 멈추는 회귀 방지)
   const html = fs.readFileSync(path.join(__dirname, '../../update-center.html'), 'utf8');
   const inline = [...html.matchAll(/<script(?![^>]*src)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
   assert.ok(inline.length >= 1, '[10] inline script present');
   for (const s of inline) new Function(s); // SyntaxError 면 여기서 throw
 
-  console.log('PASS update-center airbyte_catalog: skipped/baseline/unchanged/yellow/stale/raw-normalize/API + pipeline ENOENT dedup + update-center.html syntax');
+  console.log('PASS update-center airbyte_catalog: skipped/baseline/unchanged/yellow/stale/raw-normalize/API + pipeline ENOENT dedup + update-center.html syntax + state-from-store');
 })().catch((error) => {console.error(error); process.exitCode = 1;}).finally(() => {
   const base = path.resolve(os.tmpdir());
   if (path.dirname(path.resolve(tmp)) === base && path.basename(tmp).startsWith('uc_airbyte_')) fs.rmSync(tmp, {recursive: true, force: true});

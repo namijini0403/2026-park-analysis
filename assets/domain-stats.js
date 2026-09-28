@@ -69,7 +69,7 @@ function enhance(i,s,groups){
  const chartGrid=document.createElement('div');chartGrid.className='ds-chart-grid';chartGrid.dataset.view=view;chartGrid.hidden=!['distribution','district'].includes(view);summary.before(chartGrid);
  const hist=document.createElement('section');hist.className='ds-chart-card ds-main-histogram';hist.hidden=view!=='distribution';hist.innerHTML='<p class="ds-kicker">'+esc(i.label)+' · 학교 수</p><h3>어느 값에 학교가 모여 있나요?</h3>'+histogramChart(track==='island'?i.island_histogram:i.histogram,i);chartGrid.append(hist);
  const districts=host.querySelector('.ds-districts');districts.hidden=!['distribution','district'].includes(view);chartGrid.append(districts);
- districts.querySelector('h3').textContent='군·구의 중앙값은 어떻게 다른가요?';districts.insertAdjacentHTML('afterbegin','<p class="ds-kicker">DISTRICT · '+esc(i.unit||'같은 지표')+'</p>');
+ districts.querySelector('h3').textContent='군·구의 중앙값은 어떻게 다른가요?';districts.insertAdjacentHTML('afterbegin','<p class="ds-kicker">군·구 비교 · '+esc(i.unit||'같은 지표')+'</p>');
  const regionChart=document.createElement('div');regionChart.className='ds-region-chart';regionChart.innerHTML=districtBars(groups,i);districts.querySelector('h3').after(regionChart);
  const spread=document.createElement('details');spread.className='ds-details ds-spread-details';spread.innerHTML='<summary>군·구 안의 차이 · 중간 50%와 전체 범위</summary>';districts.querySelectorAll(':scope > .fine, :scope > .ds-district, :scope > .ds-district-axis').forEach(el=>spread.append(el));regionChart.after(spread);
  districts.insertAdjacentHTML('beforeend','<div class="ds-chart-actions"><button type="button" data-next-view="district">군·구 자세히 →</button><button type="button" data-next-view="data">학교별 자료 →</button></div>');

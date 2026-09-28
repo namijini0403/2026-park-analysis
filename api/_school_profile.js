@@ -3,7 +3,7 @@
 // 종합점수·영역 점수를 만들지 않는다. 미확보는 값이 아니라 사유로 남긴다.
 const table=require('./_school_table'),stats=require('./_indicator_stats'),publicSources=require('./_public_sources');
 const finite=Number.isFinite;
-// 레이더 대표 지표: 영역마다 해당 학교급에 값이 있는 첫 번째를 고른다. paps는 정의 충돌(스펙 §9)로 제외한다.
+// 레이더 대표 지표: 영역마다 해당 학교급에 값이 있는 첫 번째를 고른다. paps는 공시 평가행 인원 합계 기준(전교생 비율 아님)이라 비교 축에서 제외한다(스펙 §9).
 const RADAR_PRIORITY={designation:['designations_current'],park:['green_ratio','parks_walk','nearest_park_m'],reading:['books_per_student','nearest_public_library_m','libraries_walk'],academy:['academies_per_km2','academies_500m'],safety:['child_accident_nearest_m','nightlife_500m','construction_500m'],boundary:['zone_walk_mismatch_pct','walk_area_ratio_to_circle'],trend:['forecast_change_pct_2031','student_change_pct','sen_slope'],school:['class_size','students','students_per_teacher'],development:['large_apt_500m','redev_active']};
 // 공시 항목 자체가 달라 해당 없는 것
 const NOT_APPLICABLE={유치원:['teachers','students_per_teacher','paps','afterschool','clubs']};

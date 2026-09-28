@@ -60,6 +60,6 @@ function domainStats({domain,level,schoolId=null}){
  return {domain,label:meta.label,level,school_id:schoolId,indicators,
   catalog:Object.entries(table.COLUMNS).filter(([id,c])=>id!=='paps'&&c.domain&&c.type!=='text'&&c.type!=='bool').map(([id,c])=>({column:id,label:c.label,domain:c.domain,unit:c.unit||''})),
   quantile_method:'linear_interpolation_n_minus_1',
-  excluded_indicators:numericColumns.includes('paps')?[{column:'paps',reason:'definition_conflict',detail:'PAPS 등급 정의가 자료 간 일치하지 않아 원자료 확인 전 비교를 보류합니다.'}]:[]};
+  excluded_indicators:numericColumns.includes('paps')?[{column:'paps',reason:'definition_conflict',detail:'PAPS 4·5등급 비율은 공시 평가행 인원 합계 기준(전교생 비율 아님)이며 학교마다 평가 대상 범위가 달라 학교 간 비교 지표로 쓰지 않습니다.'}]:[]};
 }
 module.exports={domainStats,histogram,quantile};

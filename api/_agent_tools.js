@@ -32,7 +32,7 @@ function scope(ctx,p){
  if(Array.isArray(p.school_ids)&&p.school_ids.length){const set=new Set(p.school_ids.filter(id=>!unset(id)));if(set.size)rows=rows.filter(r=>set.has(r.id));}
  return {rows,level,gu,island,label:`${level||'전체 학교급'} · ${gu||'인천 전체'}${island==='exclude'?' · 도서지역 제외':island==='only'?' · 도서지역만':''}`};
 }
-function col(ctx,c){if(ctx.extra&&c===ctx.extra.column)return {label:ctx.extra.label,unit:ctx.extra.unit||'',user:true};if(c==='paps')throw Error('PAPS 등급 정의 확인 전에는 비교할 수 없습니다.');if(!table.COLUMNS[c])throw Error(`알 수 없는 열: ${c}`);return table.COLUMNS[c];}
+function col(ctx,c){if(ctx.extra&&c===ctx.extra.column)return {label:ctx.extra.label,unit:ctx.extra.unit||'',user:true};if(c==='paps')throw Error('PAPS 4·5등급 비율은 공시 평가행 인원 합계 기준(전교생 비율 아님)이라 학교 간 비교에 쓰지 않습니다.');if(!table.COLUMNS[c])throw Error(`알 수 없는 열: ${c}`);return table.COLUMNS[c];}
 function sourcesFor(ctx,cols){const seen=new Map();for(const c of cols){if(ctx.extra&&c===ctx.extra.column){seen.set('upload',{id:'user-upload',title:ctx.extra.name||'사용자 첨부 표',source:'사용자 제공 첨부 표',body:`첨부 열 ‘${ctx.extra.label}’ · 연결 ${ctx.extra.values.size}개교`});continue;}const s=table.sourceFor(c);if(!seen.has(s.key))seen.set(s.key,{id:'table#'+s.key,title:s.title,source:s.path,provenance:[{path:s.path,sha256:s.sha256}],body:[...new Set(cols.filter(x=>(table.COLUMN_SOURCE[x]||'dataset')===s.key).map(x=>table.label(x)))].join(', ')});}return [...seen.values()];}
 function points(rows){return rows.filter(r=>Number.isFinite(r.lat)).slice(0,60).map(r=>({id:r.id,name:r.name,lat:r.lat,lng:r.lng,detail:r.gu||''}));}
 function geometries(ids,kinds){

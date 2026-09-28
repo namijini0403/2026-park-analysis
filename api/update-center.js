@@ -834,12 +834,23 @@ async function handleGetSources(res) {
     return json(res, 500, { error: `data_sources.yaml 파싱 실패: ${err.message}` });
   }
   const sources = Array.isArray(doc?.sources) ? doc.sources : [];
-  let state = {};
-  if (fs.existsSync(STATE_PATH())) {
-    try {
-      state = JSON.parse(fs.readFileSync(STATE_PATH(), "utf-8") || "{}");
-    } catch {
-      state = {};
+  // 스캔 상태는 store meta(source_scan_state)가 진실이다 — runScan 이 그것을 읽고 쓴다. 로컬 파일은
+  // 컴테이너 재배포 시 사라지므로 파일만 읽으면 배포 직후 모든 원천이 "미확인"으로 보이는 회귀가 있었다(2026-09-28).
+  let state = null;
+  try {
+    const store = await getStore();
+    state = await store.getMeta("source_scan_state");
+  } catch {
+    state = null;
+  }
+  if (!state || typeof state !== "object") {
+    state = {};
+    if (fs.existsSync(STATE_PATH())) {
+      try {
+        state = JSON.parse(fs.readFileSync(STATE_PATH(), "utf-8") || "{}");
+      } catch {
+        state = {};
+      }
     }
   }
   // 다음 검사 예정 시각은 소스별 값이 아니라 스케줄 전체의 값이다 — UI 의 소스별
