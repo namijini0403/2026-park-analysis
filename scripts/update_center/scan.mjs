@@ -34,6 +34,7 @@ import { sourcesPath, statePath } from "./paths.mjs";
 import { checkSchoolZones } from './school_zones.mjs';
 import { checkPipeline } from './pipeline.mjs';
 import { checkPageNotice } from './page_notice.mjs';
+import { checkAirbyteCatalog } from './airbyte_raw.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.join(__dirname, "..", "..");
@@ -915,6 +916,9 @@ export async function runScan(opts = {}) {
       result = await checkSchoolZones(entry,state,store,{actor:effectiveActor},log);
     } else if (type === 'refresh_pipeline') {
       result = await checkPipeline(entry,state,store,{actor:effectiveActor},log);
+    } else if (type === 'airbyte_catalog') {
+      // Airbyte(수집 계층)이 적재한 공공데이터포털 카탈로그를 읽어 변갱 신호만 낸다. 자동 반영 없음.
+      result = await checkAirbyteCatalog(entry,state,store,{actor:effectiveActor, rows: opts.airbyteRows || null, reader: opts.airbyteReader || undefined},log);
     } else {
       log(`[${entry.dataset}] unknown check.type "${type}" — skipping`);
       continue;

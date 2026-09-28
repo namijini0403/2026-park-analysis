@@ -851,14 +851,56 @@ async function handleGetSources(res) {
   } catch {
     schedule = null;
   }
-  const merged = sources.map((s) => ({
-    ...s,
-    last_state: state[s.dataset] || null,
-    next_check_at: schedule && schedule.enabled && s.check?.type !== "manual" ? schedule.next_scan_at : null,
-    auto_pollable: ["json_api", "file_head", "page_notice", "school_zones", "refresh_pipeline"].includes(s.check?.type),
-    never_auto_apply: s.never_auto_apply === true,
-  }));
-  return json(res, 200, { sources: merged, schedule });
+  // Airbyte 수집 계층(원자료 저장소) 요약 — 실패해도 소스 목록은 그대로 낸다(수집 계층 장애 != 판단 계층 장애).
+  let airbyte = null;
+  try {
+    const mod = await import("../scripts/update_center/airbyte_raw.mjs");
+    airbyte = await mod.summarizeAirbyteRaw();
+  } catch (err) {
+    airbyte = { configured: false, ok: false, error: err.message };
+  }
+  const merged = sources.map((s) => {
+    const pk = s.check?.portal_pk || s.airbyte?.portal_pk || s.portal_pk || null;
+    const catalog = pk && airbyte && airbyte.latest ? airbyte.latest[String(pk)] || null : null;
+    return {
+      ...s,
+      last_state: state[s.dataset] || null,
+      next_check_at: schedule && schedule.enabled && s.check?.type !== "manual" ? schedule.next_scan_at : null,
+      auto_pollable: ["json_api", "keyed_json_api", "file_head", "page_notice", "school_zones", "refresh_pipeline", "airbyte_catalog"].includes(s.check?.type),
+      never_auto_apply: s.never_auto_apply === true,
+      airbyte_catalog: pk ? { portal_pk: String(pk), latest: catalog } : null,
+    };
+  });
+  return json(res, 200, { sources: merged, schedule, airbyte });
+}
+
+// GET /api/update-center/airbyte — Airbyte 수집 계층 요약(원자료 저장소 상태, 마지막 수집 시각, pk 별 카탈로그).
+async function handleGetAirbyte(res) {
+  try {
+    const mod = await import("../scripts/update_center/airbyte_raw.mjs");
+    const summary = await mod.summarizeAirbyteRaw();
+    let doc = { sources: [] };
+    try {
+      doc = loadSourcesDoc();
+    } catch {
+      /* 소스 문서 오류는 아래 sources 공란으로 드러난다 */
+    }
+    const sources = (doc.sources || [])
+      .map((s) => ({ dataset: s.dataset, check_type: s.check?.type || null, portal_pk: s.check?.portal_pk || s.airbyte?.portal_pk || s.portal_pk || null }))
+      .filter((s) => s.portal_pk)
+      .map((s) => ({ ...s, portal_pk: String(s.portal_pk), latest: summary.latest ? summary.latest[String(s.portal_pk)] || null : null }));
+    return json(res, 200, {
+      ...summary,
+      sources,
+      layer: {
+        collector: "Airbyte (모두의 AI 실험실 개발지원도구) — 카탈로그 커넥터 airbyte/source-datagokr-catalog.yaml",
+        judgment: "이 앱의 업데이트 센터 — 변갱 감지 → 품질검사 → 전후 비교 → 담당자 승인 → 버전 → 롤백",
+        rule: "동기화 성공 ≠ 자료 최신 ≠ 분석 검증 완료. Airbyte는 원자료 저장소까지만 쓴다.",
+      },
+    });
+  } catch (err) {
+    return json(res, 500, { error: `Airbyte 요약 실패: ${err.message}` });
+  }
 }
 
 async function handleGetSchedule(res) {
@@ -1145,7 +1187,9 @@ async function handlePostApprove(req, res) {
   const diff = event.diff_json || {};
 
   if (diff.observation_only) {
-    return json(res, 409, {error: "게시글 변경 알림은 바로 반영할 수 없습니다. 원자료를 수집하고 검증한 후보가 필요합니다.", event});
+    const signalLabel = diff.airbyte ? "Airbyte 카탈로그 변경 알림" : "게시글 변경 알림";
+    await store.appendAudit({actor: ACTOR, action: "approve_rejected_observation", dataset: event.dataset, event_id: event.id, detail: `승인 거부 — ${signalLabel}은 관측 신호이며 반영 대상이 아님(원자료 후보 필요)`});
+    return json(res, 409, {error: `${signalLabel}은 바로 반영할 수 없습니다. 원자료를 수집하고 검증한 후보가 필요합니다(② 파일 업로드 → 품질검사 → 승인).`, event});
   }
 
   // --- P6 경로: 스캔이 실제로 수집·정규화해 staging 에 남긴 후보가 있으면
@@ -1452,6 +1496,7 @@ module.exports = async function handler(req, res) {
 
   try {
     if (req.method === "GET" && subPath === "/sources") return await handleGetSources(res);
+    if (req.method === "GET" && subPath === "/airbyte") return await handleGetAirbyte(res);
     if (req.method === "GET" && subPath === "/coverage") {
       const coverage=(await import('../scripts/update_center/coverage.mjs')).refreshCoverage();
       const scans=(await (await getStore()).getMeta('source_scan_state'))||{};

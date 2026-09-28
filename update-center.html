@@ -655,7 +655,7 @@
       <h1>공공데이터 업데이트 센터</h1>
       <p class="sub">반경 너머, 정책 도달성으로</p>
       <a href="/office-documents.html" target="_blank" rel="noopener">교육청 Excel·Word·한글 자료 함께 분석 ↗</a>
-      <p class="sub">매일 공개자료 검사 → 변경분 수집 → 관련 분석 재계산 → 검증 후 자동 반영. 학구도·도서관·학교/유치원 공시에 적용합니다. 출처별 범위와 실패 사유는 아래 자동 갱신 현황에서 확인할 수 있습니다.</p>
+      <p class="sub">수집은 기계가, 반영은 사람이 합니다. 공공데이터 API·파일·카탈로그 → 수집(Airbyte·자쳌 수집기) → 변경 감지 → 품질검사 → 전후 비교 → 담당자 승인 → 버전 → 롤백. 동기화 성공은 자료가 최신이라는 뜻도, 분석 검증이 끝났다는 뜻도 아니며, 확인할 수 없는 원천은 판단 보류로 표시합니다. 출처별 범위와 실패 사유는 아래 자동 갱신 현황에서 확인할 수 있습니다.</p>
     </div>
     <div class="token-box">
       <label for="token-input">토큰</label>
@@ -754,7 +754,18 @@
     <pre id="upload-log" style="display:none; margin:10px 0 0; padding:10px; font-size:12px; white-space:pre-wrap; border-radius:8px; background:rgba(255,255,255,0.05); max-height:220px; overflow:auto;"></pre>
   </section>
 
-  <section class="panel"><h2>자동 갱신 현황</h2><div id="refresh-coverage">확인 중…</div></section>
+  <section class="panel" id="airbyte-panel">
+        <div class="panel-head">
+          <h2>⑨ Airbyte 수집 계층 (모두의 AI 실험실 개발지원도구)</h2>
+          <span class="status-line" id="airbyte-status">확인 중…</span>
+        </div>
+        <p class="status-line" style="margin:0 0 10px;">
+          Airbyte는 공공데이터포털 카탈로그(수정일·버전명·형식)를 예약 수집해 원자료 저장소에 쌓습니다. 이 앱은 그 저장소를 읽어 변경 신호만 내고,
+          원자료 본문 반영은 ② 파일 업로드 → 품질검사 → 담당자 승인 순서를 그대로 거칩니다. Airbyte에는 운영 분석 테이블 쓰기 권한이 없습니다.
+        </p>
+        <div id="airbyte-summary"></div>
+      </section>
+      <section class="panel"><h2>자동 갱신 현황</h2><div id="refresh-coverage">확인 중…</div></section>
   <section class="panel" id="events-panel">
     <div class="panel-head">
       <h2>③ 이벤트 목록</h2>
@@ -984,6 +995,11 @@
     var lastState = source.last_state || {};
     if (checkType === "manual") return '<span class="badge badge-neutral">수동 확인</span>';
     if (!lastState.lastStatus) return '<span class="badge badge-neutral">미확인</span>';
+    if (lastState.lastStatus === "skipped") return '<span class="badge badge-neutral" title="' + esc(lastState.skipReason || "") + '">확인 불가 · 판단 보류</span>';
+    if (lastState.lastStatus === "ok" && checkType === "airbyte_catalog") {
+      var stale = lastState.airbyte && lastState.airbyte.stale;
+      return '<span class="badge ' + (stale ? "badge-yellow" : "badge-green") + '">Airbyte 카탈로그 확인' + (stale ? " · 수집 지연" : "") + ' · 원자료 미검증</span>';
+    }
     if (lastState.lastStatus === "ok" && checkType === "file_head") return '<span class="badge badge-yellow">헤더만 확인 · 원자료 미검증</span>';
     if (lastState.lastStatus === "ok" && checkType === "page_notice") return '<span class="badge badge-neutral">게시글 확인 · 첨부 내용 미검증</span>';
     if (lastState.lastStatus === "ok") return '<span class="badge badge-green">정상</span>';
@@ -1009,12 +1025,16 @@
             : esc(sourceUrl);
         var nextCell = s.next_check_at ? fmtTime(s.next_check_at) : (checkType === "manual" ? "-" : "자동 감시 꺼짐");
         var lockTag = s.never_auto_apply ? ' <span class="badge badge-yellow">확인 필요</span>' : "";
+        var catalog = s.airbyte_catalog && s.airbyte_catalog.latest ? s.airbyte_catalog.latest : null;
+        var catalogNote = catalog
+          ? '<div class="status-line" style="margin-top:4px;">Airbyte 카탈로그 · 수정일 ' + esc(catalog.dateModified || "-") + (catalog.alternateName ? " · " + esc(catalog.alternateName) : "") + "</div>"
+          : (checkType === "airbyte_catalog" ? '<div class="status-line" style="margin-top:4px;">Airbyte 카탈로그 · 수집 이력 없음</div>' : "");
         return (
           "<tr>" +
           "<td>" + esc(s.dataset) + lockTag + "</td>" +
           "<td>" + esc(s.provider || "-") + "</td>" +
           "<td>" + esc(s.update_cycle || "-") + "</td>" +
-          "<td>" + esc(checkType) + "</td>" +
+          "<td>" + esc(checkType) + catalogNote + "</td>" +
           "<td>" + sourceStatusChip(s) + "</td>" +
           "<td>" + fmtTime(lastState.lastCheckedAt || null) + "</td>" +
           "<td>" + nextCell + "</td>" +
@@ -2129,6 +2149,54 @@
   $("onboarding-submit-btn").addEventListener("click", submitOnboarding);
 
   // ---------------------------------------------------------------------
+  // ⑨ Airbyte 수집 계층 요약
+  // ---------------------------------------------------------------------
+
+  function loadAirbyte() {
+    return apiFetch("/airbyte").then(function (r) {
+      var status = $("airbyte-status");
+      var box = $("airbyte-summary");
+      if (!r.ok) {
+        status.textContent = "요약 로드 실패";
+        box.innerHTML = '<div class="empty">' + esc((r.data && r.data.error) || "오류") + "</div>";
+        return;
+      }
+      var d = r.data;
+      if (!d.configured) {
+        status.textContent = "미설정";
+        box.innerHTML = '<div class="empty">Airbyte 원자료 저장소가 설정되지 않았습니다(AIRBYTE_RAW_DATABASE_URL). airbyte_catalog 원천은 확인 불가 · 판단 보류로 표시됩니다.</div>';
+        return;
+      }
+      if (!d.ok) {
+        status.textContent = "저장소 읽기 실패";
+        box.innerHTML = '<div class="empty">' + esc(d.table || "") + " — " + esc(d.error || "") + "<br/>첫 동기화 전이거나 destination 스키마/스트림 이름이 다를 수 있습니다. airbyte_catalog 원천은 확인 불가로 남습니다.</div>";
+        return;
+      }
+      status.textContent = d.stale ? "수집 지연" : "정상";
+      var rows = (d.sources || []).map(function (s) {
+        var l = s.latest;
+        return (
+          "<tr><td>" + esc(s.dataset) + "</td><td>" + esc(s.portal_pk) + "</td><td>" + esc(s.check_type || "-") + "</td>" +
+          "<td>" + (l ? esc(l.name || "-") : '<span class="badge badge-neutral">수집 이력 없음</span>') + "</td>" +
+          "<td>" + (l ? esc(l.dateModified || "-") : "-") + "</td>" +
+          "<td>" + (l ? esc(l.alternateName || "-") : "-") + "</td>" +
+          "<td>" + (l ? fmtTime(l.extracted_at) : "-") + "</td></tr>"
+        );
+      });
+      box.innerHTML =
+        '<div class="schedule-grid" style="margin-bottom:10px;">' +
+        '<div class="schedule-stat"><span class="label">원자료 저장소</span><span class="value">' + esc(d.table || "-") + " (" + esc(d.backend) + ")</span></div>" +
+        '<div class="schedule-stat"><span class="label">마지막 수집</span><span class="value">' + fmtTime(d.last_extracted_at) + (d.stale ? ' <span class="badge badge-yellow">' + d.max_age_hours + "시간 이상 지연</span>" : "") + "</span></div>" +
+        '<div class="schedule-stat"><span class="label">누적 행 / 데이터셋</span><span class="value">' + esc(String(d.total_rows)) + " / " + esc(String(d.distinct_pks)) + "</span></div>" +
+        "</div>" +
+        '<div class="table-scroll"><table><thead><tr><th>원천</th><th>포털 pk</th><th>확인방식</th><th>카탈로그 이름</th><th>수정일</th><th>버전명</th><th>수집 시각</th></tr></thead><tbody>' +
+        (rows.length ? rows.join("") : '<tr><td colspan="7" class="empty">portal_pk 가 등록된 원천이 없습니다.</td></tr>') +
+        "</tbody></table></div>" +
+        '<p class="status-line" style="margin:8px 0 0;">' + esc(d.note || "") + "</p>";
+    });
+  }
+
+  // ---------------------------------------------------------------------
   // refresh / init
   // ---------------------------------------------------------------------
 
@@ -2136,11 +2204,12 @@
     return Promise.all([
       apiFetch('/coverage').then(function(r){
         if(!r.ok)return;
-        var labels={validated_auto_apply:'검증 후 자동 반영',collect_review_apply:'수집 후 검토',header_signal_only:'헤더 신호만 확인',notice_signal_only:'게시글·첨부 참조 감시',manual:'수동 수집·검토'};
+        var labels={validated_auto_apply:'검증 후 자동 반영',collect_review_apply:'수집 후 검토',header_signal_only:'헤더 신호만 확인',notice_signal_only:'게시글·첨부 참조 감시',airbyte_catalog_signal:'Airbyte 카탈로그 신호(수정일·버전명) · 파일은 수동 후보',manual:'수동 수집·검토'};
         $('refresh-coverage').innerHTML='<div class="table-scroll"><table><thead><tr><th>자료</th><th>자동화 범위</th><th>최근 검사</th><th>상세</th></tr></thead><tbody>'+r.data.sources.map(function(s){var scan=s.last_scan||{};return '<tr><td>'+esc(s.dataset)+'</td><td>'+esc(labels[s.mode]||s.mode)+'</td><td>'+esc(scan.lastStatus||'검사 전')+'</td><td>'+esc(scan.error||s.coverage)+'</td></tr>';}).join('')+'</tbody></table></div>';
       }),
       loadSchedule(),
       loadSources(),
+      loadAirbyte(),
       loadEvents(),
       loadVersions(),
       loadRestoreStatus(),

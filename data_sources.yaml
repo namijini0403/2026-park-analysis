@@ -18,6 +18,13 @@
 #               페이지 쿼리 이름(pageNo/pageIndex)을 지정한다. 환경변수가 비어 있으면 호출 없이
 #               skipped(판단 보류)로 남기고 이벤트를 만들지 않는다. HTTP 200 에 실린 오류 본문
 #               (resultCode≠00)은 red 오류 이벤트로 올린다. KoreaConnect(api.koreaconnect.kr) 용.
+#   airbyte_catalog - (2026-09-28) Airbyte(모두의 AI 실험실 개발지원도구)가 예약 수집해 원자료 저장소
+#               (AIRBYTE_RAW_DATABASE_URL/DATABASE_URL 의 airbyte_raw.datagokr_catalog)에 적재한
+#               공공데이터포털 카탈로그 JSON(schema.org Dataset)을 읽는다. check.portal_pk(없으면
+#               entry.portal_pk)로 최신 1건을 찾아 수정일·버전명·형식·URL 변화를 yellow 이벤트로 낸다.
+#               원자료 본문은 수집하지 않으므로 자동 반영 대상이 아니며, 파일은 ② 수동 후보 → 품질검사
+#               → 승인 절차를 그대로 거친다. 저장소 미설정·수집 이력 없음은 skipped(확인 불가, 판단 보류).
+#               커넥터 정의: airbyte/source-datagokr-catalog.yaml, 읽기 모듈: scripts/update_center/airbyte_raw.mjs
 #   manual    - no automated polling; scan.mjs counts it as skipped, no event/audit written
 #
 # 선택 필드:
@@ -63,6 +70,10 @@ sources:
   - dataset: libraries
     local_file: data_processed/libraries.csv
     portal_pk: "15013109"
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15013109"
+      signal_only: true   # 보조 신호. check.type 은 유지한다.
     uddi: "uddi:b385489f-f5a7-4668-a067-ab2124d7963d"
     provider: 문화체육관광부(제공 지자체·교육청)
     license: 공공데이터포털 표준 이용허락
@@ -97,6 +108,10 @@ sources:
   - dataset: school_library
     local_file: data_processed/school_library_access.csv
     portal_pk: "15040972"
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15040972"
+      signal_only: true   # 보조 신호. check.type 은 유지한다.
     uddi: "uddi:8c403b97-69c0-44a4-a0cc-9b021d9bf597"
     provider: 교육부/한국교육개발원(KEDI)
     license: 이용제한 없음(KEDI 출처표시)
@@ -124,7 +139,12 @@ sources:
     update_cycle: 추가 확인 필요
     source_url: https://www.data.go.kr/data/15012890/standard.do
     check:
-      type: manual
+      type: airbyte_catalog
+      portal_pk: "15012890"
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15012890"
+      signal_only: true
     search_keywords:
       - 인천 도시공원 현황
       - 인천광역시 공원 정보표준데이터
@@ -146,7 +166,12 @@ sources:
     update_cycle: 추가 확인 필요
     source_url: https://www.data.go.kr/data/15021148/standard.do
     check:
-      type: manual
+      type: airbyte_catalog
+      portal_pk: "15021148"
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15021148"
+      signal_only: true
     search_keywords:
       - 인천 초등학교 현황
       - 인천광역시교육청 학교기본정보
@@ -167,7 +192,12 @@ sources:
     related_source_urls:
       - https://www.data.go.kr/data/15072776/fileData.do
     check:
-      type: manual
+      type: airbyte_catalog
+      portal_pk: "15055212"
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15055212"
+      signal_only: true
     search_keywords:
       - 인천 재개발 구역 현황
       - 인천광역시 정비사업 현황
@@ -199,9 +229,14 @@ sources:
     coverage: 전국 원자료 → 인천 필터(영업/정상 971건, 좌표 유효 796건)
     source_url: https://www.data.go.kr/data/15045018/fileData.do
     check:
-      type: file_head
-      urls:
-        head: https://file.localdata.go.kr/file/download/entertainment_bars/info
+      type: airbyte_catalog
+      portal_pk: "15045018"
+      # 2026-09-28 이전 file_head 대상(HEAD 403 또는 비교 헤더 없음으로 확인 실패). 참고용으로 보존.
+      legacy_head_url: https://file.localdata.go.kr/file/download/entertainment_bars/info
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15045018"
+      signal_only: true
     search_keywords:
       - 유흥주점영업 LOCALDATA
       - 지방행정 인허가 유흥주점
@@ -223,9 +258,14 @@ sources:
     coverage: 전국 원자료 → 인천 필터(영업/정상 563건, 좌표 유효 426건)
     source_url: https://www.data.go.kr/data/15045017/fileData.do
     check:
-      type: file_head
-      urls:
-        head: https://file.localdata.go.kr/file/download/singing_bars/info
+      type: airbyte_catalog
+      portal_pk: "15045017"
+      # 2026-09-28 이전 file_head 대상(HEAD 403 또는 비교 헤더 없음으로 확인 실패). 참고용으로 보존.
+      legacy_head_url: https://file.localdata.go.kr/file/download/singing_bars/info
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15045017"
+      signal_only: true
     search_keywords:
       - 단란주점영업 LOCALDATA
       - 지방행정 인허가 단란주점
@@ -246,9 +286,14 @@ sources:
     coverage: 연수구 74건 중 15건만 전체주소 정확일치로 좌표 확보(나머지 59건 미매핑 보존)
     source_url: https://www.data.go.kr/data/15029299/fileData.do
     check:
-      type: file_head
-      urls:
-        head: https://www.data.go.kr/data/15029299/fileData.do
+      type: airbyte_catalog
+      portal_pk: "15029299"
+      # 2026-09-28 이전 file_head 대상(HEAD 403 또는 비교 헤더 없음으로 확인 실패). 참고용으로 보존.
+      legacy_head_url: https://www.data.go.kr/data/15029299/fileData.do
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15029299"
+      signal_only: true
     search_keywords:
       - 인천광역시 연수구 건축물 착공신고 현황
       - 연수구 착공신고
@@ -269,9 +314,14 @@ sources:
     coverage: 미추홀구 1,971건 중 1,851건 Kakao 주소 지오코딩 좌표 확보(2026-09-06)
     source_url: https://www.data.go.kr/data/15029300/fileData.do
     check:
-      type: file_head
-      urls:
-        head: https://www.data.go.kr/data/15029300/fileData.do
+      type: airbyte_catalog
+      portal_pk: "15029300"
+      # 2026-09-28 이전 file_head 대상(HEAD 403 또는 비교 헤더 없음으로 확인 실패). 참고용으로 보존.
+      legacy_head_url: https://www.data.go.kr/data/15029300/fileData.do
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15029300"
+      signal_only: true
     search_keywords:
       - 인천광역시 미추홀구 건축물 착공신고 현황
       - 미추홀구 착공신고
@@ -292,9 +342,14 @@ sources:
     coverage: 계양구 1,684건(착공·사용승인 기록 있는 행) 중 1,620건 좌표 확보(2026-09-06)
     source_url: https://www.data.go.kr/data/15038929/fileData.do
     check:
-      type: file_head
-      urls:
-        head: https://www.data.go.kr/data/15038929/fileData.do
+      type: airbyte_catalog
+      portal_pk: "15038929"
+      # 2026-09-28 이전 file_head 대상(HEAD 403 또는 비교 헤더 없음으로 확인 실패). 참고용으로 보존.
+      legacy_head_url: https://www.data.go.kr/data/15038929/fileData.do
+    airbyte:
+      stream: datagokr_catalog
+      portal_pk: "15038929"
+      signal_only: true
     search_keywords:
       - 인천광역시 계양구 건축착공사용승인현황
       - 계양구 착공 사용승인

@@ -70,8 +70,21 @@ export async function checkPipeline(entry,state,store,{actor='scheduler',collect
     }
     return {outcome:'green',event};
   }catch(error){
-    state[entry.dataset]={lastCheckedAt:new Date().toISOString(),lastStatus:'error',error:error.message};
-    const event=await store.recordEvent({dataset:entry.dataset,kind:'error',risk:'red',status:'pending',summary:'자동 수집·재분석 실패 · 기존 정상 버전 유지',diff_json:{error:error.message}});
+    // 실행환경에 Python 이 없으면(spawn python ENOENT) 수집기가 아니라 배포 환경의 문제다.
+    // 같은 원인의 실패를 매 검사마다 새 red 이벤트로 쌓지 않고(recordFailure 와 같은 서명 방식),
+    // 상태에는 "확인 불가" 사유를 정직하게 남긴다. 기존 정상 버전은 그대로 유지된다.
+    const prev=state[entry.dataset]||null;
+    const pythonMissing=/ENOENT/.test(error.message)&&/python/i.test(error.message);
+    const summary=pythonMissing
+      ?'자동 수집·재분석 불가 · 실행환경에 Python 없음(확인 보류) · 기존 정상 버전 유지'
+      :'자동 수집·재분석 실패 · 기존 정상 버전 유지';
+    const signature=sha(Buffer.from(`pipeline_error:${summary}:${error.message}`));
+    state[entry.dataset]={lastCheckedAt:new Date().toISOString(),lastStatus:'error',error:(pythonMissing?'실행환경에 Python 없음 — ':'')+error.message,lastErrorSignature:signature,python_missing:pythonMissing};
+    if(prev&&prev.lastStatus==='error'&&prev.lastErrorSignature===signature){
+      log(`[${entry.dataset}] pipeline error persists (no new event): ${summary}`);
+      return {outcome:'error-unchanged'};
+    }
+    const event=await store.recordEvent({dataset:entry.dataset,kind:'error',risk:'red',status:'pending',summary,diff_json:{error:error.message,python_missing:pythonMissing,note:pythonMissing?'배포 이미지에 Python 과 requirements.txt 를 포함해야 자동 수집이 재개된다. 그 전까지 이 원천은 ② 파일 업로드(수동 후보) 또는 Airbyte 카탈로그 신호로만 확인한다.':null}});
     return {outcome:'error',event};
   }finally{
     // The worker directory is generated under a fixed workspace; never remove user paths.

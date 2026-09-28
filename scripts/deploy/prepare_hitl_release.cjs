@@ -8,6 +8,7 @@ function copy(from,to=from){const source=path.join(root,from),dest=path.join(out
 for(const dir of ['api','assets','modules','rag','refresh_seed'])copy(dir);
 for(const name of ['update_center','education','reading_module','policy_cards','context'])copy('scripts/'+name);
 copy('scripts/validate_module_contract.mjs');
+if(fs.existsSync(path.join(root,'airbyte')))copy('airbyte'); // Airbyte connector manifest (documentation only; not executed by the app)
 for(const name of ['server.js','package.json','package-lock.json','data_sources.yaml','index.html','logo.png','update-center.html','office-documents.html','requirements.txt'])copy(name);
 copy('vercel_public');
 for(const name of ['index.html','logo.png','update-center.html','office-documents.html'])copy(name,'vercel_public/'+name);
