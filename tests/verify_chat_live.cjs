@@ -24,7 +24,7 @@ const pause=()=>new Promise(r=>setTimeout(r,300));
  const message=d.querySelectorAll('.agent-message')[1],panel=message.querySelector('.agent-weights');assert(panel&&!panel.open);
  panel.open=true;const slider=panel.querySelector('input[type=range]');slider.value='50';slider.dispatchEvent(new w.Event('input'));
  const button=panel.querySelector('.hitl-run');button.click();deadline=Date.now()+70000;while(button.disabled&&Date.now()<deadline)await pause();
- assert.equal(results.length,3);assert(results[2].summary.length>100);assert.equal(results[2].agent.model,'gpt-5.4');assert.equal(results[2].weights[0].share_pct,62.5);assert.equal(results[2].weights[1].share_pct,37.5);assert(results[2].visual.sections.length===2);assert.equal(d.querySelectorAll('#evidence-panel').length,1);assert.equal(message.querySelectorAll('.agent-inline-visual svg').length,2);
+ assert.equal(results.length,3);assert(results[2].summary.length>100);assert.equal(results[2].agent.model,'gpt-5.6-sol');assert.equal(results[2].weights[0].share_pct,62.5);assert.equal(results[2].weights[1].share_pct,37.5);assert(results[2].visual.sections.length===2);assert.equal(d.querySelectorAll('#evidence-panel').length,1);assert.equal(message.querySelectorAll('.agent-inline-visual svg').length,2);
  const record={at:new Date().toISOString(),base,passed:true,questions:results.map(r=>({summary:r.summary,rows:r.visual?.sections.map(s=>s.table?.rows.length),weights:r.weights,agent:r.agent})),browser_pixels_verified:false};
  fs.writeFileSync(path.join(dir,'public-live-validation.json'),JSON.stringify(record,null,2));console.log(JSON.stringify(record,null,2));dom.window.close();
 })().catch(e=>{activeDom?.window.close();console.error(e);process.exitCode=1;});

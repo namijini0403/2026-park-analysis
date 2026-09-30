@@ -3,8 +3,8 @@
 const table=require('./_school_table'),tools=require('./_agent_tools');
 const {buildVisual,overviewSources}=require('./_answer_overview');
 require('./ai-explainer-v2');// loads OPENAI_API_KEY from local .env for development
-const MODEL=process.env.AI_AGENT_MODEL||process.env.AI_EXPLAINER_MODEL||'gpt-5.4-mini';
-const ANSWER_MODEL=process.env.AI_AGENT_ANSWER_MODEL||'gpt-5.4';
+const MODEL=process.env.AI_AGENT_MODEL||process.env.AI_EXPLAINER_MODEL||'gpt-5.6-luna';
+const ANSWER_MODEL=process.env.AI_AGENT_ANSWER_MODEL||'gpt-5.6-sol';
 const MAX_STEPS=Number(process.env.AI_AGENT_MAX_STEPS||6),TIMEOUT=Number(process.env.AI_AGENT_TIMEOUT_MS||55000);
 const FINAL_SCHEMA={type:'object',additionalProperties:false,required:['summary','highlights','caveats','followups','data_requests','focus_school_ids'],properties:{
  focus_school_ids:{type:'array',items:{type:'string'},description:'summary의 종합결론에 명시한 학교 ID만, 본문 등장 순서로. 도구가 실제 반환한 ID만 허용. 검토 5곳을 답하면 그 5곳만 포함. 변수별 전체 조회 목록·맥락상 선택 학교를 추가하지 않는다. 학교를 특정하지 않는 집계 답변은 빈 배열.'},

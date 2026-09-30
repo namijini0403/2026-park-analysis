@@ -3,7 +3,7 @@ const path = require("node:path");
 const contextEvidence = require("./_context_evidence.js");
 const educationEvidence = require("./_education_evidence.js");
 
-const MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.4-mini";
+const MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.6-luna";
 const MAX_OUTPUT_TOKENS = Number(process.env.AI_EXPLAINER_MAX_OUTPUT_TOKENS || 900);
 const MIN_RETRIEVAL_SCORE = Number(process.env.AI_EXPLAINER_V2_MIN_SCORE || 8);
 // 주제 친화도(+14)만으로는 chunk가 선택되지 않도록, 질문 단어가 chunk에 실제로

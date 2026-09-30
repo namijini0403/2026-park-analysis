@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.4-mini";
+const MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.6-luna";
 const MAX_OUTPUT_TOKENS = Number(process.env.AI_EXPLAINER_MAX_OUTPUT_TOKENS || 700);
 const CHUNKS_PATH = path.join(__dirname, "ai_explainer_chunks.json");
 const ALLOWED_ORIGIN_PATTERNS = [

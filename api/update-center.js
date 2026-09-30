@@ -47,7 +47,7 @@ if (!process.env.UPDATE_CENTER_TOKEN) {
   console.warn("[update-center] UPDATE_CENTER_TOKEN 미설정 — 시연용 기본 토큰 '2026' 사용 중");
 }
 
-const AI_MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.4-mini";
+const AI_MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.6-luna";
 const AI_TIMEOUT_MS = 10000;
 const AI_MAX_OUTPUT_TOKENS = 300;
 
