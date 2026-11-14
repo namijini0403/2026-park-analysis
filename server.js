@@ -250,8 +250,15 @@ function serveUpdateCenterPage(req, res) {
   stream.pipe(res);
 }
 
-const server = http.createServer((req, res) => {
+const {createPortalGuard} = require('./portal-guard.cjs');
+const portalGuard = createPortalGuard({allowNativeAuth:true,app:'beyond',origin:'https://park-analysis-web-production.up.railway.app'});
+const server = http.createServer(async (req, res) => {
+  if (!(await portalGuard(req, res))) return;
   const pathname = new URL(req.url, "http://localhost").pathname;
+  if (!req.portalUser && pathname !== '/update-center' && !pathname.startsWith('/api/update-center/') && pathname !== '/health') {
+    if (pathname.startsWith('/api/')) return sendJson(res,401,{error:'portal_login_required'});
+    res.writeHead(302,{Location:'/__portal/start','Cache-Control':'no-store'});res.end();return;
+  }
   if(pathname==='/api/google-places-config')return require('./api/google-places-config')(req,res);
   if(pathname==='/api/data-revision'&&(req.method==='GET'||req.method==='HEAD')){
     const active=path.join(process.env.UPDATE_CENTER_HOME||path.join(__dirname,'data/update_center'),'active.json');

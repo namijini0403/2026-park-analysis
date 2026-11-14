@@ -1491,9 +1491,9 @@ async function handlePostRollback(req, res) {
 // ---------------------------------------------------------------------------
 
 module.exports = async function handler(req, res) {
-  const expectedToken = process.env.UPDATE_CENTER_TOKEN || "2026";
+  const expectedToken = process.env.UPDATE_CENTER_TOKEN;
   const providedToken = req.headers[TOKEN_HEADER];
-  if (providedToken !== expectedToken) {
+  if (!['principal','vice','admin'].includes(req.portalUser?.role) && (!expectedToken || providedToken !== expectedToken)) {
     return json(res, 401, { error: `인증 실패 — ${TOKEN_HEADER} 헤더가 올바르지 않습니다.` });
   }
 
