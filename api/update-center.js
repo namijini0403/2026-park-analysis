@@ -7,9 +7,9 @@
 // import() and cached, since a CommonJS module cannot require() an ESM file.
 //
 // Token gate: every request (GET and POST alike) must carry header
-// x-update-center-token equal to process.env.UPDATE_CENTER_TOKEN || "2026" —
-// demo-grade, same trust level as the app's existing ACCESS_CODE gate
-// (see docs/superpowers/plans/2026-08-09-p4-update-center.md Global Constraints).
+// x-update-center-token equal to process.env.UPDATE_CENTER_TOKEN, unless the
+// teacher-portal SSO session belongs to principal/vice/admin. There is no
+// default token: if UPDATE_CENTER_TOKEN is unset, token requests are refused.
 //
 // Every mutating action (scan/approve/hold/rollback) appends an audit_log entry
 // with actor="web-admin" (scan.mjs's own internal audit calls, e.g.
@@ -44,7 +44,7 @@ const TOKEN_HEADER = "x-update-center-token";
 const ACTOR = "web-admin";
 
 if (!process.env.UPDATE_CENTER_TOKEN) {
-  console.warn("[update-center] UPDATE_CENTER_TOKEN 미설정 — 시연용 기본 토큰 '2026' 사용 중");
+  console.warn("[update-center] UPDATE_CENTER_TOKEN 미설정 — 토큰 인증 요청은 모두 거부됩니다 (포털 관리자 로그인만 허용)");
 }
 
 const AI_MODEL = process.env.AI_EXPLAINER_MODEL || "gpt-5.6-luna";
